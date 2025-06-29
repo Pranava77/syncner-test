@@ -1,0 +1,173 @@
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import apiService from '../../services/api';
+
+interface GeminiState {
+  isApiKeyValid: boolean;
+  isLoading: boolean;
+  error: string | null;
+  lastResponse: string | null;
+}
+
+const initialState: GeminiState = {
+  isApiKeyValid: false,
+  isLoading: false,
+  error: null,
+  lastResponse: null,
+};
+
+// Async thunks
+export const generateContent = createAsyncThunk(
+  'gemini/generateContent',
+  async (prompt: string, { rejectWithValue }) => {
+    try {
+      const response = await apiService.generatePersonalizedContent(prompt);
+      return response.data.content;
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'Failed to generate content');
+    }
+  }
+);
+
+export const generatePersonalizedContent = createAsyncThunk(
+  'gemini/generatePersonalizedContent',
+  async (topic: string, { rejectWithValue }) => {
+    try {
+      const response = await apiService.generatePersonalizedContent(topic);
+      return response.data.content;
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'Failed to generate personalized content');
+    }
+  }
+);
+
+export const generateFeedback = createAsyncThunk(
+  'gemini/generateFeedback',
+  async ({ taskId, submission }: { taskId: string; submission: string }, { rejectWithValue }) => {
+    try {
+      const response = await apiService.generateFeedback(taskId, submission);
+      return response.data.feedback;
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'Failed to generate feedback');
+    }
+  }
+);
+
+export const generateResumeContent = createAsyncThunk(
+  'gemini/generateResumeContent',
+  async (userData: any, { rejectWithValue }) => {
+    try {
+      const response = await apiService.enhanceResume(userData);
+      return response.data.content;
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'Failed to generate resume content');
+    }
+  }
+);
+
+export const chatWithAI = createAsyncThunk(
+  'gemini/chatWithAI',
+  async ({ message, context }: { message: string; context?: string }, { rejectWithValue }) => {
+    try {
+      const response = await apiService.chatWithAI(message, context);
+      return response.data.message;
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'Failed to get AI response');
+    }
+  }
+);
+
+const geminiSlice = createSlice({
+  name: 'gemini',
+  initialState,
+  reducers: {
+    setApiKeyValid: (state, action: PayloadAction<boolean>) => {
+      state.isApiKeyValid = action.payload;
+    },
+    clearError: (state) => {
+      state.error = null;
+    },
+    clearResponse: (state) => {
+      state.lastResponse = null;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      // Generate content
+      .addCase(generateContent.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(generateContent.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.lastResponse = action.payload;
+        state.error = null;
+      })
+      .addCase(generateContent.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      
+      // Generate personalized content
+      .addCase(generatePersonalizedContent.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(generatePersonalizedContent.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.lastResponse = action.payload;
+        state.error = null;
+      })
+      .addCase(generatePersonalizedContent.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      
+      // Generate feedback
+      .addCase(generateFeedback.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(generateFeedback.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.lastResponse = action.payload;
+        state.error = null;
+      })
+      .addCase(generateFeedback.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      
+      // Generate resume content
+      .addCase(generateResumeContent.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(generateResumeContent.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.lastResponse = action.payload;
+        state.error = null;
+      })
+      .addCase(generateResumeContent.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      
+      // Chat with AI
+      .addCase(chatWithAI.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(chatWithAI.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.lastResponse = action.payload;
+        state.error = null;
+      })
+      .addCase(chatWithAI.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      });
+  },
+});
+
+export const { setApiKeyValid, clearError, clearResponse } = geminiSlice.actions;
+export default geminiSlice.reducer; 
