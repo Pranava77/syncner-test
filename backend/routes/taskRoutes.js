@@ -22,7 +22,7 @@ router.get('/', protect, getAllTasks);
 router.get('/submissions', protect, async (req, res) => {
   try {
     const submissions = await Submission.find()
-      .populate('user', 'name email')
+      .populate('student', 'name email')
       .populate('task', 'title difficulty')
       .sort({ submittedAt: -1 });
     

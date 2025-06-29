@@ -42,11 +42,6 @@ const LoginPage: React.FC = () => {
     }
   };
 
-  const handleTestLogin = (testEmail: string, testPassword: string) => {
-    setEmail(testEmail);
-    setPassword(testPassword);
-  };
-
   const handleToggleDarkMode = () => {
     dispatch(toggleDarkMode());
   };
@@ -74,18 +69,18 @@ const LoginPage: React.FC = () => {
         </div>
 
         {/* Login Form */}
-        <div className="bg-white/10 dark:bg-black/20 backdrop-blur-md rounded-xl shadow-2xl p-6 lg:p-8 border border-white/10">
-          <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-6">
-            {error && (
-              <div className="bg-red-500/20 border border-red-500/30 rounded-lg p-3 lg:p-4 flex items-center space-x-3">
-                <AlertCircle className="h-4 w-4 lg:h-5 lg:w-5 text-red-400 flex-shrink-0" />
-                <span className="text-red-200 text-sm">{error}</span>
-              </div>
-            )}
+        <div className="bg-white/5 dark:bg-black/10 backdrop-blur-sm rounded-xl p-6 lg:p-8 border border-white/10">
+          {error && (
+            <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center space-x-2">
+              <AlertCircle className="h-4 w-4 text-red-400 flex-shrink-0" />
+              <span className="text-red-400 text-sm">{error}</span>
+            </div>
+          )}
 
+          <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-6">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
-                Email Address
+                Email
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 lg:h-5 lg:w-5 text-gray-400" />
@@ -141,48 +136,6 @@ const LoginPage: React.FC = () => {
               <Link to="/register" className="text-blue-400 hover:text-blue-300 font-medium">
                 Create one here
               </Link>
-            </p>
-          </div>
-        </div>
-
-        {/* Demo Credentials */}
-        <div className="mt-4 lg:mt-6 bg-white/5 dark:bg-black/10 backdrop-blur-sm rounded-lg p-3 lg:p-4 border border-white/10">
-          <p className="text-sm font-medium text-white mb-3">Demo Credentials:</p>
-          <div className="space-y-2">
-            <button
-              onClick={() => handleTestLogin('owner@owner.com', '12345')}
-              className="w-full text-left bg-white/10 hover:bg-white/20 rounded-lg p-2 transition-colors"
-            >
-              <div className="text-xs lg:text-sm text-blue-100">
-                <p><strong className="text-white">Platform Owner:</strong> owner@owner.com / 12345</p>
-                <p className="text-blue-200 text-xs mt-1">Full admin access to all features</p>
-              </div>
-            </button>
-            
-            <button
-              onClick={() => handleTestLogin('student@university.edu', 'password')}
-              className="w-full text-left bg-white/10 hover:bg-white/20 rounded-lg p-2 transition-colors"
-            >
-              <div className="text-xs lg:text-sm text-blue-100">
-                <p><strong className="text-white">Student:</strong> student@university.edu / password</p>
-                <p className="text-blue-200 text-xs mt-1">Student dashboard and learning features</p>
-              </div>
-            </button>
-            
-            <button
-              onClick={() => handleTestLogin('admin@university.edu', 'password')}
-              className="w-full text-left bg-white/10 hover:bg-white/20 rounded-lg p-2 transition-colors"
-            >
-              <div className="text-xs lg:text-sm text-blue-100">
-                <p><strong className="text-white">Admin:</strong> admin@university.edu / password</p>
-                <p className="text-blue-200 text-xs mt-1">College admin features and analytics</p>
-              </div>
-            </button>
-          </div>
-          
-          <div className="mt-3 pt-3 border-t border-white/10">
-            <p className="text-blue-200 text-xs text-center">
-              Click any credential above to auto-fill, or use any email/password combination
             </p>
           </div>
         </div>

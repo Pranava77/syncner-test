@@ -86,44 +86,6 @@ const login = async (req, res) => {
 
     const { email, password } = req.body;
 
-    // Special test account handling
-    if (email === 'owner@owner.com' && password === '12345') {
-      // Create or find the test owner account
-      let user = await User.findOne({ email: 'owner@owner.com' });
-      
-      if (!user) {
-        // Create the test owner account
-        user = await User.create({
-          name: 'Platform Owner',
-          email: 'owner@owner.com',
-          password: '12345',
-          college: 'Syncner Platform',
-          role: 'admin',
-          department: 'Administration',
-          profileComplete: true,
-          isActive: true
-        });
-      }
-
-      // Update last active
-      await user.updateLastActive();
-
-      // Generate token
-      const token = generateToken(user._id);
-
-      // Remove password from response
-      user.password = undefined;
-
-      return res.status(200).json({
-        success: true,
-        message: 'Login successful',
-        data: {
-          user,
-          token
-        }
-      });
-    }
-
     // Check if user exists and include password for comparison
     const user = await User.findOne({ email }).select('+password');
     if (!user) {

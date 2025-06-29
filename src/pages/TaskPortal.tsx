@@ -6,7 +6,6 @@ import { useTasks } from '../hooks/useTasks';
 import { useProgress } from '../hooks/useProgress';
 import { 
   Briefcase, 
-  Calendar, 
   Clock, 
   Star, 
   Filter, 
@@ -23,8 +22,7 @@ import {
   Target,
   Award,
   BookOpen,
-  X,
-  Menu,
+
   Loader2
 } from 'lucide-react';
 
@@ -50,7 +48,7 @@ const TaskPortal: React.FC = () => {
     );
   }
   const { tasks = [], loading: tasksLoading, submitTask } = useTasks(user.careerTrack);
-  const { progress, loading: progressLoading } = useProgress();
+  const { loading: progressLoading } = useProgress();
 
   const getCategoryIcon = (category: string) => {
     switch (category) {

@@ -359,30 +359,6 @@ npm run dev
 
 The frontend will be running at `http://localhost:5173`
 
-## 🔐 Test Accounts
-
-After seeding the database, you can use these test accounts:
-
-### Platform Owner (Full Admin Access)
-- **Email**: `owner@owner.com`
-- **Password**: `12345`
-- **Features**: Complete platform administration, analytics, user management
-
-### Student Account
-- **Email**: `student@university.edu`
-- **Password**: `password`
-- **Features**: Learning modules, task submissions, progress tracking
-
-### College Admin
-- **Email**: `admin@university.edu`
-- **Password**: `password`
-- **Features**: Student management, task reviews, college analytics
-
-### Instructor
-- **Email**: `instructor@university.edu`
-- **Password**: `password`
-- **Features**: Content creation, student mentoring, grading
-
 ## 📁 Project Structure
 
 ```

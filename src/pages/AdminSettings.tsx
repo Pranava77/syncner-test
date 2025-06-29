@@ -20,7 +20,6 @@ import {
   AlertTriangle,
   Loader2
 } from 'lucide-react';
-import { useCareerTrack } from '../hooks/useCareerTracks';
 
 const AdminSettings: React.FC = () => {
   const [activeTab, setActiveTab] = useState('general');
@@ -28,9 +27,6 @@ const AdminSettings: React.FC = () => {
   const [editingTrack, setEditingTrack] = useState<string | null>(null);
   const [newTrackName, setNewTrackName] = useState('');
   const [loading, setLoading] = useState(false);
-
-  // Use real API data instead of mock data
-  // const { track, loading: trackLoading } = useCareerTrack('all');
 
   // Settings state - in a real app, this would come from API
   const [settings, setSettings] = useState({

@@ -30,14 +30,18 @@ interface AuthState {
   isLoading: boolean;
   error: string | null;
   isAuthenticated: boolean;
+  isRestoringSession: boolean;
 }
+
+const token = localStorage.getItem('token');
 
 const initialState: AuthState = {
   user: null,
-  token: localStorage.getItem('token'),
+  token,
   isLoading: false,
   error: null,
-  isAuthenticated: !!localStorage.getItem('token'),
+  isAuthenticated: !!token, // Set to true if token exists
+  isRestoringSession: false,
 };
 
 // Async thunks
@@ -122,7 +126,16 @@ const authSlice = createSlice({
       state.token = null;
       state.isAuthenticated = false;
       state.error = null;
+      state.isRestoringSession = false;
       localStorage.removeItem('token');
+    },
+    restoreSession: (state) => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        state.token = token;
+        state.isAuthenticated = true;
+        state.isRestoringSession = true;
+      }
     },
   },
   extraReducers: (builder) => {
@@ -137,6 +150,7 @@ const authSlice = createSlice({
         state.user = action.payload.user;
         state.token = action.payload.token;
         state.isAuthenticated = true;
+        state.isRestoringSession = false;
         state.error = null;
         localStorage.setItem('token', action.payload.token);
       })
@@ -144,6 +158,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload as string;
         state.isAuthenticated = false;
+        state.isRestoringSession = false;
       })
       
       // Register
@@ -156,6 +171,7 @@ const authSlice = createSlice({
         state.user = action.payload.user;
         state.token = action.payload.token;
         state.isAuthenticated = true;
+        state.isRestoringSession = false;
         state.error = null;
         localStorage.setItem('token', action.payload.token);
       })
@@ -163,6 +179,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload as string;
         state.isAuthenticated = false;
+        state.isRestoringSession = false;
       })
       
       // Fetch current user
@@ -173,6 +190,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.user = action.payload.user;
         state.isAuthenticated = true;
+        state.isRestoringSession = false;
         state.error = null;
       })
       .addCase(fetchCurrentUser.rejected, (state, action) => {
@@ -181,6 +199,7 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
         state.user = null;
         state.token = null;
+        state.isRestoringSession = false;
         localStorage.removeItem('token');
       })
       
@@ -214,6 +233,7 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
         state.isLoading = false;
         state.error = null;
+        state.isRestoringSession = false;
         localStorage.removeItem('token');
       })
       .addCase(logoutUser.rejected, (state, action) => {
@@ -222,10 +242,11 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
         state.isLoading = false;
         state.error = action.payload as string;
+        state.isRestoringSession = false;
         localStorage.removeItem('token');
       });
   },
 });
 
-export const { clearError, setLoading, clearAuth } = authSlice.actions;
+export const { clearError, setLoading, clearAuth, restoreSession } = authSlice.actions;
 export default authSlice.reducer;

@@ -109,16 +109,9 @@ const userSchema = new mongoose.Schema({
 });
 
 // Indexes
-userSchema.index({ email: 1 });
+// userSchema.index({ email: 1 }); // Removed - email field already has unique: true
 userSchema.index({ college: 1, careerTrack: 1 });
 userSchema.index({ role: 1, isActive: 1 });
-
-// Virtual for user's progress percentage
-userSchema.virtual('progressPercentage').get(function() {
-  if (!this.careerTrack) return 0;
-  // This would be calculated based on completed modules/tasks
-  return Math.min(Math.round((this.completedModules.length / 10) * 100), 100);
-});
 
 // Hash password before saving
 userSchema.pre('save', async function(next) {

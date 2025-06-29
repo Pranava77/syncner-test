@@ -21,11 +21,11 @@ import {
 const TrainingModule: React.FC = () => {
   const { moduleId } = useParams();
   const { user } = useAppSelector((state) => state.auth);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [currentLesson, setCurrentLesson] = useState(0);
   const [showQuiz, setShowQuiz] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState('');
   const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set());
+  const [isPlaying, setIsPlaying] = useState(false);
 
   // Get the career track and module data from API
   const userTrack = user?.careerTrack || '';

@@ -1,9 +1,9 @@
 import  { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './redux/store';
-import { fetchCurrentUser } from './redux/slices/authSlice';
+import { fetchCurrentUser, restoreSession } from './redux/slices/authSlice';
 import { setApiKeyValid } from './redux/slices/geminiSlice';
-import apiService from './services/api';
+import { getDefaultRoute } from './utils/routing';
 import Layout from './components/Layout';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
@@ -22,7 +22,7 @@ import ApiKeyModal from './components/ApiKeyModal';
 
 function App() {
   const dispatch = useAppDispatch();
-  const { isAuthenticated, user, isLoading } = useAppSelector((state) => state.auth);
+  const { isAuthenticated, user, isLoading, isRestoringSession } = useAppSelector((state) => state.auth);
   const { isDarkMode } = useAppSelector((state) => state.theme);
   
   const [geminiApiKey, setGeminiApiKey] = useState(
@@ -32,17 +32,29 @@ function App() {
   const [isInitializing, setIsInitializing] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    
-    if (token && !isAuthenticated) {
-      apiService.refreshToken();
-      dispatch(fetchCurrentUser()).catch((error) => {
-        console.error('App: Failed to fetch current user:', error);
-      });
-    }
-    
-    setIsInitializing(false);
-  }, [dispatch, isAuthenticated, user]);
+    const initializeAuth = async () => {
+      // Restore session from localStorage
+      dispatch(restoreSession());
+      
+      const token = localStorage.getItem('token');
+      
+      if (token && !user) {
+        try {
+          // Fetch current user data
+          await dispatch(fetchCurrentUser()).unwrap();
+        } catch (error) {
+          console.error('App: Failed to fetch current user:', error);
+          // Clear invalid token
+          localStorage.removeItem('token');
+          dispatch(restoreSession()); // Update state after clearing
+        }
+      }
+      
+      setIsInitializing(false);
+    };
+
+    initializeAuth();
+  }, []); // Only run once on mount
 
   useEffect(() => {
     // Apply theme on mount
@@ -65,8 +77,8 @@ function App() {
     dispatch(setApiKeyValid(!!apiKey));
   };
 
-  // Show loading while initializing authentication
-  if (isInitializing || isLoading) {
+  // Show loading while initializing authentication or restoring session
+  if (isInitializing || isLoading || isRestoringSession) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
@@ -83,8 +95,20 @@ function App() {
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/login" element={
+            isAuthenticated && user && !isLoading && !isRestoringSession ? (
+              <Navigate to={getDefaultRoute(user)} replace />
+            ) : (
+              <LoginPage />
+            )
+          } />
+          <Route path="/register" element={
+            isAuthenticated && user && !isLoading && !isRestoringSession ? (
+              <Navigate to={getDefaultRoute(user)} replace />
+            ) : (
+              <RegisterPage />
+            )
+          } />
           <Route path="/onboarding" element={<OnboardingFlow />} />
           <Route path="/dashboard" element={
             <ProtectedRoute>

@@ -69,7 +69,7 @@ const trackSchema = new mongoose.Schema({
 });
 
 // Indexes
-trackSchema.index({ id: 1 });
+// trackSchema.index({ id: 1 }); // Removed - id field already has unique: true
 trackSchema.index({ isActive: 1, order: 1 });
 
 // Virtual for enrollment count

@@ -65,36 +65,3 @@ export const useTasks = (trackId?: string, filters?: any) => {
     refetch: fetchTasks
   };
 };
-
-export const useTask = (taskId: string) => {
-  const [task, setTask] = useState<Task | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (taskId) {
-      fetchTask();
-    }
-  }, [taskId]);
-
-  const fetchTask = async () => {
-    try {
-      setLoading(true);
-      const response = await apiService.getTask(taskId);
-      if (response.success) {
-        setTask(response.data.task);
-      }
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return {
-    task,
-    loading,
-    error,
-    refetch: fetchTask
-  };
-};

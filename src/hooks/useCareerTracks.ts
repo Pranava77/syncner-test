@@ -17,42 +17,6 @@ interface CareerTrack {
   completionRate?: number;
 }
 
-export const useCareerTracks = () => {
-  const [tracks, setTracks] = useState<CareerTrack[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetchTracks();
-  }, []);
-
-  const fetchTracks = async () => {
-    try {
-      setLoading(true);
-      const response = await apiService.getCareerTracks();
-      if (response.success) {
-        setTracks(response.data.tracks);
-      }
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getTrack = (trackId: string) => {
-    return tracks.find(track => track.id === trackId);
-  };
-
-  return {
-    tracks,
-    loading,
-    error,
-    getTrack,
-    refetch: fetchTracks
-  };
-};
-
 export const useCareerTrack = (trackId: string) => {
   const [track, setTrack] = useState<CareerTrack | null>(null);
   const [loading, setLoading] = useState(true);

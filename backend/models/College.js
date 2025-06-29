@@ -90,8 +90,8 @@ const collegeSchema = new mongoose.Schema({
 });
 
 // Indexes
-collegeSchema.index({ code: 1 });
-collegeSchema.index({ name: 1 });
+// collegeSchema.index({ code: 1 }); // Removed - code field already has unique: true
+// collegeSchema.index({ name: 1 }); // Removed - name field already has unique: true
 collegeSchema.index({ location: 1 });
 collegeSchema.index({ isActive: 1 });
 

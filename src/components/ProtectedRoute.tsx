@@ -1,5 +1,5 @@
-import React, { ReactNode, useEffect } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import React, { ReactNode } from 'react';
+import { Navigate } from 'react-router-dom';
 import { useAppSelector } from '../redux/store';
 import { canAccessRoute, getDefaultRoute } from '../utils/routing';
 
@@ -13,24 +13,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   requireAdmin = false 
 }) => {
   const { user, isLoading, isAuthenticated } = useAppSelector((state) => state.auth);
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (isLoading) {
-      return;
-    }
-
-    if (!isAuthenticated) {
-      navigate('/login', { replace: true });
-      return;
-    }
-
-    if (requireAdmin && user?.role !== 'admin') {
-      navigate('/dashboard', { replace: true });
-      return;
-    }
-  }, [isAuthenticated, isLoading, user, requireAdmin, navigate]);
-
+  // Show loading while checking authentication
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -39,8 +23,15 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     );
   }
 
+  // If not authenticated, redirect to login
   if (!isAuthenticated || !user) {
     return <Navigate to="/login" replace />;
+  }
+
+  // Check admin requirement
+  if (requireAdmin && user.role !== 'admin') {
+    const redirectPath = getDefaultRoute(user);
+    return <Navigate to={redirectPath} replace />;
   }
 
   // Check if user can access this route

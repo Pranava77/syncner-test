@@ -421,17 +421,6 @@ const RegisterPage: React.FC = () => {
             </p>
           </div>
         </div>
-
-        {/* Demo Info */}
-        <div className="mt-6 bg-white/5 backdrop-blur-sm rounded-lg p-4 border border-white/10">
-          <p className="text-sm font-medium text-white mb-3">💡 Need to test the platform?</p>
-          <div className="space-y-2">
-            <div className="text-xs text-blue-100">
-              <p><strong className="text-white">Platform Owner:</strong> owner@owner.com / 12345</p>
-              <p className="text-blue-200 text-xs mt-1">Full admin access to all features</p>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );

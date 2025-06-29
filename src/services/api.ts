@@ -2,11 +2,9 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
 
 class ApiService {
   private baseURL: string;
-  private token: string | null;
 
   constructor() {
     this.baseURL = API_BASE_URL;
-    this.token = localStorage.getItem('token');
   }
 
   private getHeaders(): HeadersInit {
@@ -14,19 +12,21 @@ class ApiService {
       'Content-Type': 'application/json',
     };
 
-    if (this.token) {
-      headers.Authorization = `Bearer ${this.token}`;
+    // Always get the latest token from localStorage
+    const currentToken = localStorage.getItem('token');
+    if (currentToken) {
+      headers.Authorization = `Bearer ${currentToken}`;
     }
 
     return headers;
   }
 
-  private async handleResponse(response: Response) {
+  private async handleResponse(response: Response, isAuthEndpoint: boolean = false) {
     const data = await response.json();
 
     if (!response.ok) {
-      if (response.status === 401) {
-        // Token expired or invalid
+      if (response.status === 401 && isAuthEndpoint) {
+        // Only redirect to login for auth endpoints (login, register, profile)
         this.clearToken();
         window.location.href = '/login';
       }
@@ -37,17 +37,15 @@ class ApiService {
   }
 
   setToken(token: string) {
-    this.token = token;
     localStorage.setItem('token', token);
   }
 
   clearToken() {
-    this.token = null;
     localStorage.removeItem('token');
   }
 
-  refreshToken() {
-    this.token = localStorage.getItem('token');
+  getToken(): string | null {
+    return localStorage.getItem('token');
   }
 
   // Auth endpoints
@@ -58,7 +56,7 @@ class ApiService {
       body: JSON.stringify({ email, password }),
     });
 
-    const data = await this.handleResponse(response);
+    const data = await this.handleResponse(response, true);
     if (data.success && data.data.token) {
       this.setToken(data.data.token);
     }
@@ -78,7 +76,7 @@ class ApiService {
       body: JSON.stringify(userData),
     });
 
-    const data = await this.handleResponse(response);
+    const data = await this.handleResponse(response, true);
     if (data.success && data.data.token) {
       this.setToken(data.data.token);
     }
@@ -90,7 +88,7 @@ class ApiService {
       headers: this.getHeaders(),
     });
 
-    return this.handleResponse(response);
+    return this.handleResponse(response, true);
   }
 
   async logout() {
@@ -119,7 +117,7 @@ class ApiService {
       body: JSON.stringify(profileData),
     });
 
-    const data = await this.handleResponse(response);
+    const data = await this.handleResponse(response, true);
     return data;
   }
 
@@ -128,7 +126,7 @@ class ApiService {
       headers: this.getHeaders(),
     });
 
-    return this.handleResponse(response);
+    return this.handleResponse(response, false);
   }
 
   // Career tracks endpoints
@@ -137,7 +135,7 @@ class ApiService {
       headers: this.getHeaders(),
     });
 
-    return this.handleResponse(response);
+    return this.handleResponse(response, false);
   }
 
   async getCareerTrack(trackId: string) {
@@ -145,7 +143,7 @@ class ApiService {
       headers: this.getHeaders(),
     });
 
-    return this.handleResponse(response);
+    return this.handleResponse(response, false);
   }
 
   // Training endpoints
@@ -158,7 +156,7 @@ class ApiService {
       headers: this.getHeaders(),
     });
 
-    return this.handleResponse(response);
+    return this.handleResponse(response, false);
   }
 
   async getModule(moduleId: string) {
@@ -166,7 +164,7 @@ class ApiService {
       headers: this.getHeaders(),
     });
 
-    return this.handleResponse(response);
+    return this.handleResponse(response, false);
   }
 
   async updateModuleProgress(moduleId: string, lessonId: string) {
@@ -176,7 +174,7 @@ class ApiService {
       body: JSON.stringify({ lessonId }),
     });
 
-    return this.handleResponse(response);
+    return this.handleResponse(response, false);
   }
 
   // Tasks endpoints
@@ -197,7 +195,7 @@ class ApiService {
       headers: this.getHeaders(),
     });
 
-    return this.handleResponse(response);
+    return this.handleResponse(response, false);
   }
 
   async getTask(taskId: string) {
@@ -205,7 +203,7 @@ class ApiService {
       headers: this.getHeaders(),
     });
 
-    return this.handleResponse(response);
+    return this.handleResponse(response, true);
   }
 
   async submitTask(taskId: string, submissionData: any) {
@@ -215,7 +213,7 @@ class ApiService {
       body: JSON.stringify(submissionData),
     });
 
-    return this.handleResponse(response);
+    return this.handleResponse(response, true);
   }
 
   async getSubmissions(taskId?: string) {
@@ -227,7 +225,7 @@ class ApiService {
       headers: this.getHeaders(),
     });
 
-    return this.handleResponse(response);
+    return this.handleResponse(response, true);
   }
 
   // Resume endpoints
@@ -236,7 +234,7 @@ class ApiService {
       headers: this.getHeaders(),
     });
 
-    return this.handleResponse(response);
+    return this.handleResponse(response, true);
   }
 
   async generateResume(resumeData: any) {
@@ -246,7 +244,7 @@ class ApiService {
       body: JSON.stringify(resumeData),
     });
 
-    return this.handleResponse(response);
+    return this.handleResponse(response, true);
   }
 
   async enhanceResume(resumeData: any) {
@@ -256,14 +254,14 @@ class ApiService {
       body: JSON.stringify(resumeData),
     });
 
-    return this.handleResponse(response);
+    return this.handleResponse(response, true);
   }
 
   async getResumeTemplate(track: string) {
     const response = await fetch(`${this.baseURL}/resume/templates?track=${encodeURIComponent(track)}`, {
       headers: this.getHeaders(),
     });
-    return this.handleResponse(response);
+    return this.handleResponse(response, true);
   }
 
   // Admin endpoints
@@ -283,7 +281,7 @@ class ApiService {
       headers: this.getHeaders(),
     });
 
-    return this.handleResponse(response);
+    return this.handleResponse(response, true);
   }
 
   async updateStudent(studentId: string, studentData: any) {
@@ -293,7 +291,7 @@ class ApiService {
       body: JSON.stringify(studentData),
     });
 
-    return this.handleResponse(response);
+    return this.handleResponse(response, true);
   }
 
   async deleteStudent(studentId: string) {
@@ -302,7 +300,7 @@ class ApiService {
       headers: this.getHeaders(),
     });
 
-    return this.handleResponse(response);
+    return this.handleResponse(response, true);
   }
 
   async getAnalytics(dateRange?: string) {
@@ -315,7 +313,7 @@ class ApiService {
       headers: this.getHeaders(),
     });
 
-    return this.handleResponse(response);
+    return this.handleResponse(response, true);
   }
 
   async reviewSubmission(submissionId: string, reviewData: any) {
@@ -325,7 +323,7 @@ class ApiService {
       body: JSON.stringify(reviewData),
     });
 
-    return this.handleResponse(response);
+    return this.handleResponse(response, true);
   }
 
   // AI/GPT endpoints
@@ -336,7 +334,7 @@ class ApiService {
       body: JSON.stringify({ message, context }),
     });
 
-    return this.handleResponse(response);
+    return this.handleResponse(response, true);
   }
 
   async generateFeedback(taskId: string, submission: string) {
@@ -346,7 +344,7 @@ class ApiService {
       body: JSON.stringify({ taskId, submission }),
     });
 
-    return this.handleResponse(response);
+    return this.handleResponse(response, true);
   }
 
   async generatePersonalizedContent(topic: string) {
@@ -356,7 +354,7 @@ class ApiService {
       body: JSON.stringify({ topic }),
     });
 
-    return this.handleResponse(response);
+    return this.handleResponse(response, true);
   }
 }
 

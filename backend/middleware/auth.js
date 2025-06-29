@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
-import { HTTP_STATUS } from '../utils/constants.js';
 
 const protect = async (req, res, next) => {
   let token;

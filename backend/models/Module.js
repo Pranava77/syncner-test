@@ -93,7 +93,7 @@ const moduleSchema = new mongoose.Schema({
 });
 
 // Indexes
-moduleSchema.index({ id: 1 });
+// moduleSchema.index({ id: 1 }); // Removed - id field already has unique: true
 moduleSchema.index({ careerTrack: 1, order: 1 });
 moduleSchema.index({ isActive: 1 });
 
