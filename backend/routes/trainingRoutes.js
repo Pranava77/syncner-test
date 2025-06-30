@@ -1,17 +1,17 @@
 import express from 'express';
-import { getAllModules, getModuleById } from '../controllers/trainingController.js';
+import { getAllModules, getModuleById, createModule, updateModule, deleteModule } from '../controllers/trainingController.js';
+import { protect } from '../middleware/auth.js';
+import { requireAdmin } from '../middleware/roleGuard.js';
 
 const router = express.Router();
 
-// Get all modules
+// Public routes
 router.get('/', getAllModules);
-
-// Get a specific module by ID
 router.get('/:id', getModuleById);
 
-// Placeholder route for training
-router.get('/', (req, res) => {
-  res.status(200).json({ message: 'Training route is working!' });
-});
+// Admin routes
+router.post('/', protect, requireAdmin, createModule);
+router.put('/:id', protect, requireAdmin, updateModule);
+router.delete('/:id', protect, requireAdmin, deleteModule);
 
 export default router; 

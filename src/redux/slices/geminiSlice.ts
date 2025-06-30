@@ -2,14 +2,12 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import apiService from '../../services/api';
 
 interface GeminiState {
-  isApiKeyValid: boolean;
   isLoading: boolean;
   error: string | null;
   lastResponse: string | null;
 }
 
 const initialState: GeminiState = {
-  isApiKeyValid: false,
   isLoading: false,
   error: null,
   lastResponse: null,
@@ -24,18 +22,6 @@ export const generateContent = createAsyncThunk(
       return response.data.content;
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to generate content');
-    }
-  }
-);
-
-export const generatePersonalizedContent = createAsyncThunk(
-  'gemini/generatePersonalizedContent',
-  async (topic: string, { rejectWithValue }) => {
-    try {
-      const response = await apiService.generatePersonalizedContent(topic);
-      return response.data.content;
-    } catch (error: any) {
-      return rejectWithValue(error.message || 'Failed to generate personalized content');
     }
   }
 );
@@ -80,9 +66,6 @@ const geminiSlice = createSlice({
   name: 'gemini',
   initialState,
   reducers: {
-    setApiKeyValid: (state, action: PayloadAction<boolean>) => {
-      state.isApiKeyValid = action.payload;
-    },
     clearError: (state) => {
       state.error = null;
     },
@@ -103,21 +86,6 @@ const geminiSlice = createSlice({
         state.error = null;
       })
       .addCase(generateContent.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload as string;
-      })
-      
-      // Generate personalized content
-      .addCase(generatePersonalizedContent.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(generatePersonalizedContent.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.lastResponse = action.payload;
-        state.error = null;
-      })
-      .addCase(generatePersonalizedContent.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
       })
@@ -169,5 +137,5 @@ const geminiSlice = createSlice({
   },
 });
 
-export const { setApiKeyValid, clearError, clearResponse } = geminiSlice.actions;
+export const { clearError, clearResponse } = geminiSlice.actions;
 export default geminiSlice.reducer; 

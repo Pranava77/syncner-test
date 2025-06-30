@@ -16,6 +16,9 @@ import taskRoutes from './routes/taskRoutes.js';
 import progressRoutes from './routes/progressRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import resumeRoutes from './routes/resumeRoutes.js';
+import submissionRoutes from './routes/submissionRoutes.js';
+import settingsRoutes from './routes/settingsRoutes.js';
+import aiRoutes from './routes/aiRoutes.js';
 
 // Import middleware
 import { errorHandler } from './middleware/errorHandler.js';
@@ -44,7 +47,10 @@ const limiter = rateLimit({
   max: 100, // limit each IP to 100 requests per windowMs
   message: 'Too many requests from this IP, please try again later.'
 });
-app.use('/api/', limiter);
+
+if (process.env.NODE_ENV === 'production') {
+  app.use('/api/', limiter);
+}
 
 // CORS - Simplified for development
 app.use(cors({
@@ -73,6 +79,9 @@ app.use('/api/tasks', taskRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/resume', resumeRoutes);
+app.use('/api/submissions', submissionRoutes);
+app.use('/api/admin/settings', settingsRoutes);
+app.use('/api/ai', aiRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

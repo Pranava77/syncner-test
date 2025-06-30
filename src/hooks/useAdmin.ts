@@ -102,13 +102,27 @@ export const useStudents = (filters?: any) => {
     }
   };
 
+  const addStudent = async (studentData: Partial<Student>) => {
+    try {
+      const response = await apiService.addStudent(studentData);
+      if (response.success) {
+        await fetchStudents(); // Refresh the list
+        return response.data;
+      }
+    } catch (err: any) {
+      setError(err.message);
+      throw err;
+    }
+  };
+
   return {
     students,
     loading,
     error,
     refetch: fetchStudents,
     updateStudent,
-    deleteStudent
+    deleteStudent,
+    addStudent
   };
 };
 
@@ -135,20 +149,24 @@ export const useSubmissions = (taskId?: string) => {
     }
   };
 
-  const reviewSubmission = async (submissionId: string, reviewData: {
-    score: number;
-    feedback: string;
-    status: string;
-  }) => {
+  const reviewSubmission = async (submissionId: string, reviewData: { score: number; feedback: string; status: string }) => {
+    setLoading(true);
+    setError(null);
     try {
       const response = await apiService.reviewSubmission(submissionId, reviewData);
       if (response.success) {
-        await fetchSubmissions(); // Refresh the list
-        return response.data;
+        setSubmissions(prev => prev.map(sub =>
+          sub._id === submissionId
+            ? { ...sub, ...reviewData, status: reviewData.status as Submission['status'] }
+            : sub
+        ));
+      } else {
+        setError(response.message || 'Failed to review submission');
       }
     } catch (err: any) {
-      setError(err.message);
-      throw err;
+      setError(err.message || 'Failed to review submission');
+    } finally {
+      setLoading(false);
     }
   };
 

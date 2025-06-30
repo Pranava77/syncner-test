@@ -3,6 +3,9 @@ import { useAppDispatch, useAppSelector } from '../redux/store';
 import { generateResumeContent } from '../redux/slices/geminiSlice';
 import { generateResumePDF, generateResumeFromHTML, ResumeData } from '../utils/pdfGenerator';
 import ResumePreview from '../components/ResumePreview';
+import { useProgress } from '../hooks/useProgress';
+import { useTasks } from '../hooks/useTasks';
+import { useModules } from '../hooks/useModules';
 import { 
   FileText, 
   Download, 
@@ -16,10 +19,13 @@ import {
   BarChart3,
   Brain,
   Mail,
-
   Calendar,
   Loader2,
-  Sparkles
+  Sparkles,
+  CheckCircle,
+  Star,
+  TrendingUp,
+  Clock
 } from 'lucide-react';
 import apiService from '../services/api';
 import logo from '../assets/syncner-logo.png';
@@ -28,6 +34,10 @@ const ResumeGenerator: React.FC = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   const { isApiKeyValid } = useAppSelector((state) => state.gemini);
+  const { progress, loading: progressLoading } = useProgress();
+  const { tasks, loading: tasksLoading } = useTasks(user?.careerTrack);
+  const { modules, loading: modulesLoading } = useModules(user?.careerTrack);
+  
   const [selectedTemplate, setSelectedTemplate] = useState('professional');
   const [showPreview, setShowPreview] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -58,52 +68,87 @@ const ResumeGenerator: React.FC = () => {
     }
   });
   const [resumeTemplate, setResumeTemplate] = useState<any>(null);
+  const [enhancedSummary, setEnhancedSummary] = useState('');
+  const [enhanceError, setEnhanceError] = useState('');
 
-  // Load user's actual data
+  // Load user's actual data from profile, tasks, and progress
   useEffect(() => {
     const loadUserData = async () => {
       if (!user) return;
       
       setIsLoading(true);
       try {
-        // Load user's completed tasks
-        const tasksResponse = await apiService.getTasks();
-        const completedTasks = tasksResponse.data.filter((task: any) => 
-          task.status === 'completed' || task.userProgress?.status === 'completed'
+        // Wait for all data to load
+        await Promise.all([
+          new Promise(resolve => {
+            if (!progressLoading && !tasksLoading && !modulesLoading) resolve(null);
+            const checkLoading = () => {
+              if (!progressLoading && !tasksLoading && !modulesLoading) resolve(null);
+              else setTimeout(checkLoading, 100);
+            };
+            checkLoading();
+          })
+        ]);
+
+        // Get completed tasks with scores from progress
+        const completedTasks = tasks.filter((task: any) => {
+          const taskProgress = progress?.taskProgress?.find((tp: any) => tp.task === task.id);
+          return taskProgress?.status === 'completed';
+        });
+
+        // Get completed modules
+        const completedModules = modules.filter((module: any) => {
+          const moduleProgress = progress?.moduleProgress?.find((mp: any) => mp.module === module.id);
+          return moduleProgress?.status === 'completed';
+        });
+
+        // Transform completed tasks into projects with actual scores
+        const projects = completedTasks.map((task: any) => {
+          const taskProgress = progress?.taskProgress?.find((tp: any) => tp.task === task.id);
+          return {
+            title: task.title,
+            description: task.description,
+            technologies: task.skills || [],
+            status: 'Completed',
+            score: taskProgress?.score || 0,
+            date: taskProgress?.completedAt ? new Date(taskProgress.completedAt).toLocaleDateString() : 'Recently',
+            category: task.category,
+            difficulty: task.difficulty,
+            points: task.points
+          };
+        });
+
+        // Extract skills from completed tasks and modules
+        const allSkills = [
+          ...completedTasks.flatMap((task: any) => task.skills || []),
+          ...completedModules.flatMap((module: any) => module.skills || [])
+        ];
+        const uniqueSkills = [...new Set(allSkills)] as string[];
+
+        // Categorize skills more comprehensively
+        const frontendSkills = uniqueSkills.filter(skill => 
+          ['React', 'Vue', 'Angular', 'JavaScript', 'TypeScript', 'HTML', 'CSS', 'Tailwind', 'Bootstrap', 'Sass', 'Less', 'Next.js', 'Gatsby'].includes(skill)
+        );
+        const backendSkills = uniqueSkills.filter(skill => 
+          ['Node.js', 'Express', 'Python', 'Django', 'Flask', 'Java', 'Spring', 'C#', '.NET', 'PHP', 'Laravel', 'Ruby', 'Rails'].includes(skill)
+        );
+        const databaseSkills = uniqueSkills.filter(skill => 
+          ['MongoDB', 'PostgreSQL', 'MySQL', 'Redis', 'SQLite', 'Firebase', 'Supabase', 'DynamoDB'].includes(skill)
+        );
+        const toolSkills = uniqueSkills.filter(skill => 
+          ['Git', 'Docker', 'AWS', 'Heroku', 'Figma', 'Jira', 'Jenkins', 'Kubernetes', 'Vercel', 'Netlify'].includes(skill)
         );
 
-        // Transform completed tasks into projects
-        const projects = completedTasks.map((task: any) => ({
-          title: task.title,
-          description: task.description,
-          technologies: task.technologies || [],
-          status: 'Completed',
-          score: task.userProgress?.score || 0,
-          date: task.userProgress?.completedAt || task.createdAt
+        // Generate comprehensive summary based on user's track, progress, and completed projects
+        const summary = generateSummary(user, projects, progress, completedModules);
+
+        // Create certifications from completed modules
+        const certifications = completedModules.map((module: any) => ({
+          name: `${module.title} Certification`,
+          issuer: 'Syncner Platform',
+          date: new Date().toLocaleDateString(),
+          skills: module.skills || []
         }));
-
-        // Extract skills from completed tasks
-        const allTechnologies = completedTasks.flatMap((task: any) => 
-          task.technologies || []
-        );
-        const uniqueTechnologies = [...new Set(allTechnologies)] as string[];
-
-        // Categorize skills
-        const frontendSkills = uniqueTechnologies.filter(tech => 
-          ['React', 'Vue', 'Angular', 'JavaScript', 'TypeScript', 'HTML', 'CSS', 'Tailwind', 'Bootstrap'].includes(tech)
-        );
-        const backendSkills = uniqueTechnologies.filter(tech => 
-          ['Node.js', 'Express', 'Python', 'Django', 'Flask', 'Java', 'Spring'].includes(tech)
-        );
-        const databaseSkills = uniqueTechnologies.filter(tech => 
-          ['MongoDB', 'PostgreSQL', 'MySQL', 'Redis', 'SQLite'].includes(tech)
-        );
-        const toolSkills = uniqueTechnologies.filter(tech => 
-          ['Git', 'Docker', 'AWS', 'Heroku', 'Figma', 'Jira'].includes(tech)
-        );
-
-        // Generate summary based on user's track and completed projects
-        const summary = generateSummary(user, projects);
 
         setResumeData({
           personalInfo: {
@@ -121,9 +166,9 @@ const ResumeGenerator: React.FC = () => {
             'Database': databaseSkills,
             'Tools': toolSkills
           },
-          certifications: [], // Will be populated from actual certifications
+          certifications,
           education: {
-            degree: 'Bachelor\'s Degree', // Default degree
+            degree: user.department ? `${user.department} Degree` : 'Bachelor\'s Degree',
             school: user.college,
             year: user.graduationYear || '',
             gpa: user.gpa || ''
@@ -137,7 +182,7 @@ const ResumeGenerator: React.FC = () => {
     };
 
     loadUserData();
-  }, [user]);
+  }, [user, progress, tasks, modules, progressLoading, tasksLoading, modulesLoading]);
 
   useEffect(() => {
     const fetchTemplate = async () => {
@@ -152,11 +197,14 @@ const ResumeGenerator: React.FC = () => {
     fetchTemplate();
   }, [user?.careerTrack]);
 
-  const generateSummary = (user: any, projects: any[]) => {
+  const generateSummary = (user: any, projects: any[], progress: any, completedModules: any[]) => {
     const track = user.careerTrack || 'Software Development';
     const projectCount = projects.length;
+    const moduleCount = completedModules.length;
+    const totalPoints = progress?.totalPoints || 0;
+    const overallProgress = progress?.overallProgress || 0;
     
-    return `Passionate ${track.toLowerCase()} with hands-on experience in modern web technologies. Completed ${projectCount} real-world projects through Syncner platform, demonstrating strong problem-solving skills and ability to deliver production-ready applications.`;
+    return `Passionate ${track.toLowerCase()} with hands-on experience in modern web technologies. Completed ${projectCount} real-world projects and ${moduleCount} training modules through Syncner platform, demonstrating strong problem-solving skills and ability to deliver production-ready applications. Achieved ${totalPoints} points with ${overallProgress}% overall progress, showcasing consistent learning and technical growth.`;
   };
 
   const templates = [
@@ -181,42 +229,13 @@ const ResumeGenerator: React.FC = () => {
   ];
 
   const enhanceWithAI = async () => {
-    if (!isApiKeyValid) {
-      alert('Please configure your Gemini API key to use AI enhancement.');
-      return;
-    }
-
     setIsEnhancing(true);
+    setEnhanceError('');
     try {
-      const result = await dispatch(generateResumeContent(resumeData)).unwrap();
-      
-      // Parse the AI response and update resume data
-      // This is a simplified implementation - in production, you'd want more robust parsing
-      const lines = result.split('\n');
-      let enhancedSummary = resumeData.summary;
-      
-      // Look for professional summary in AI response
-      const summaryIndex = lines.findIndex((line: string) => 
-        line.toLowerCase().includes('professional summary') || 
-        line.toLowerCase().includes('summary')
-      );
-      
-      if (summaryIndex !== -1 && summaryIndex + 1 < lines.length) {
-        const summaryLine = lines[summaryIndex + 1];
-        if (summaryLine && summaryLine.trim().length > 50) {
-          enhancedSummary = summaryLine.trim();
-        }
-      }
-
-      setResumeData(prev => ({
-        ...prev,
-        summary: enhancedSummary
-      }));
-
-      alert('Resume enhanced with AI! Check the updated content.');
+      const res = await apiService.generateResumeContent(resumeData);
+      setEnhancedSummary(res.data || 'No summary generated.');
     } catch (error: any) {
-      console.error('Error enhancing resume:', error);
-      alert(error.message || 'Failed to enhance resume with AI. Please try again.');
+      setEnhanceError('AI resume enhancement is currently unavailable.');
     } finally {
       setIsEnhancing(false);
     }
@@ -257,6 +276,15 @@ const ResumeGenerator: React.FC = () => {
     return <Briefcase className="h-5 w-5" />;
   };
 
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty) {
+      case 'Beginner': return 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400';
+      case 'Intermediate': return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-400';
+      case 'Advanced': return 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-400';
+      default: return 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-400';
+    }
+  };
+
   return (
     <div className="max-w-6xl mx-auto">
       {/* Header */}
@@ -267,7 +295,7 @@ const ResumeGenerator: React.FC = () => {
         </p>
       </div>
 
-      {isLoading ? (
+      {isLoading || progressLoading || tasksLoading || modulesLoading ? (
         <div className="flex items-center justify-center py-12">
           <div className="flex items-center space-x-3">
             <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
@@ -298,6 +326,18 @@ const ResumeGenerator: React.FC = () => {
                   <img src={logo} alt="Syncner Logo" className="h-6 w-6 object-contain" />
                   <span className="text-sm text-gray-900 dark:text-white">{resumeData.education.school}</span>
                 </div>
+                {progress && (
+                  <>
+                    <div className="flex items-center space-x-3">
+                      <TrendingUp className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                      <span className="text-sm text-gray-900 dark:text-white">{progress.overallProgress}% Overall Progress</span>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <Star className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                      <span className="text-sm text-gray-900 dark:text-white">{progress.totalPoints} Total Points</span>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
 
@@ -337,7 +377,7 @@ const ResumeGenerator: React.FC = () => {
               <div className="space-y-3">
                 <button
                   onClick={enhanceWithAI}
-                  disabled={isEnhancing || !isApiKeyValid}
+                  disabled={isEnhancing}
                   className="w-full flex items-center justify-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isEnhancing ? (
@@ -391,6 +431,9 @@ const ResumeGenerator: React.FC = () => {
                       <div className="flex items-center space-x-2">
                         <span className="bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 px-2 py-1 rounded text-xs font-medium">
                           Score: {project.score}%
+                        </span>
+                        <span className={`px-2 py-1 rounded text-xs font-medium ${getDifficultyColor(project.difficulty)}`}>
+                          {project.difficulty}
                         </span>
                         <div className="flex items-center text-gray-500 dark:text-gray-400 text-xs">
                           <Calendar className="h-3 w-3 mr-1" />

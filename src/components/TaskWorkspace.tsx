@@ -14,6 +14,7 @@ import {
   Eye,
   Loader2
 } from 'lucide-react';
+import apiService from '../services/api';
 
 interface Task {
   id: number;
@@ -37,7 +38,6 @@ interface TaskWorkspaceProps {
 
 const TaskWorkspace: React.FC<TaskWorkspaceProps> = ({ task, onClose, onSubmit }) => {
   const dispatch = useAppDispatch();
-  const { isApiKeyValid } = useAppSelector((state) => state.gemini);
   const [activeTab, setActiveTab] = useState('instructions');
   const [submission, setSubmission] = useState({
     description: '',
@@ -86,9 +86,7 @@ const TaskWorkspace: React.FC<TaskWorkspaceProps> = ({ task, onClose, onSubmit }
       onSubmit(submissionData);
       
       // Generate AI feedback if API key is available
-      if (isApiKeyValid) {
-        await generateAIFeedback();
-      }
+      await generateAIFeedback();
       
       alert('Task submitted successfully!');
     } catch (error) {
@@ -100,27 +98,13 @@ const TaskWorkspace: React.FC<TaskWorkspaceProps> = ({ task, onClose, onSubmit }
   };
 
   const generateAIFeedback = async () => {
-    if (!isApiKeyValid) {
-      alert('AI feedback requires Gemini API key configuration.');
-      return;
-    }
-
     setIsGeneratingFeedback(true);
+    setFeedback('');
     try {
-      const submissionText = `
-        Description: ${submission.description}
-        Live URL: ${submission.liveUrl || 'Not provided'}
-        GitHub URL: ${submission.githubUrl || 'Not provided'}
-        Notes: ${submission.notes || 'None'}
-        Files uploaded: ${submission.codeFiles.length} files
-      `;
-
-      const result = await dispatch(generateFeedback({ taskId: task.id.toString(), submission: submissionText })).unwrap();
-      setFeedback(result);
-      setActiveTab('feedback');
+      const res = await apiService.generateFeedback(task, submission.description);
+      setFeedback(res.data || 'No feedback generated.');
     } catch (error: any) {
-      console.error('Error generating feedback:', error);
-      alert(error.message || 'Failed to generate AI feedback. Please try again.');
+      setFeedback('AI feedback is currently unavailable.');
     } finally {
       setIsGeneratingFeedback(false);
     }
@@ -380,20 +364,18 @@ const TaskWorkspace: React.FC<TaskWorkspaceProps> = ({ task, onClose, onSubmit }
                   {isSubmitting ? 'Submitting...' : 'Submit Task'}
                 </button>
                 
-                {isApiKeyValid && (
-                  <button
-                    onClick={generateAIFeedback}
-                    disabled={isGeneratingFeedback || !submission.description.trim()}
-                    className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
-                  >
-                    {isGeneratingFeedback ? (
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    ) : (
-                      <Eye className="h-4 w-4 mr-2" />
-                    )}
-                    {isGeneratingFeedback ? 'Generating...' : 'Get AI Feedback'}
-                  </button>
-                )}
+                <button
+                  onClick={generateAIFeedback}
+                  disabled={isGeneratingFeedback || !submission.description.trim()}
+                  className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                >
+                  {isGeneratingFeedback ? (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  ) : (
+                    <Eye className="h-4 w-4 mr-2" />
+                  )}
+                  {isGeneratingFeedback ? 'Generating...' : 'Get AI Feedback'}
+                </button>
               </div>
             </div>
           )}
@@ -423,20 +405,18 @@ const TaskWorkspace: React.FC<TaskWorkspaceProps> = ({ task, onClose, onSubmit }
                   <p className="text-gray-600 dark:text-gray-400 mb-4">
                     Submit your solution or generate AI feedback to see detailed review here.
                   </p>
-                  {isApiKeyValid && (
-                    <button
-                      onClick={generateAIFeedback}
-                      disabled={isGeneratingFeedback || !submission.description.trim()}
-                      className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center mx-auto"
-                    >
-                      {isGeneratingFeedback ? (
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      ) : (
-                        <Eye className="h-4 w-4 mr-2" />
-                      )}
-                      {isGeneratingFeedback ? 'Generating Feedback...' : 'Generate AI Feedback'}
-                    </button>
-                  )}
+                  <button
+                    onClick={generateAIFeedback}
+                    disabled={isGeneratingFeedback || !submission.description.trim()}
+                    className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center mx-auto"
+                  >
+                    {isGeneratingFeedback ? (
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    ) : (
+                      <Eye className="h-4 w-4 mr-2" />
+                    )}
+                    {isGeneratingFeedback ? 'Generating Feedback...' : 'Generate AI Feedback'}
+                  </button>
                 </div>
               )}
             </div>

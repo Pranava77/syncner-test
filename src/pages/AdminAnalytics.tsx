@@ -13,12 +13,16 @@ import {
   AlertTriangle
 } from 'lucide-react';
 import { useAnalytics } from '../hooks/useAdmin';
+import {
+  PieChart, Pie, Cell, Tooltip as RechartsTooltip, Legend,
+  BarChart as ReBarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer
+} from 'recharts';
 
 const AdminAnalytics: React.FC = () => {
   const [dateRange, setDateRange] = useState('30');
   const [selectedMetric, setSelectedMetric] = useState('engagement');
 
-  // Use real API data instead of mock data
+  // Use real API data only
   const { analytics, loading, error, refetch } = useAnalytics(dateRange);
 
   const exportData = () => {
@@ -64,17 +68,36 @@ const AdminAnalytics: React.FC = () => {
     );
   }
 
-  // Default values if analytics is null
+  // If analytics is missing or incomplete, show empty state
+  if (!analytics || !analytics.trackDistribution || !analytics.submissionsByStatus || !analytics.attendanceData) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <AlertTriangle className="h-8 w-8 text-yellow-500 mx-auto mb-4" />
+          <p className="text-gray-600 dark:text-gray-300">No analytics data available.</p>
+          <button
+            onClick={refreshData}
+            className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Refresh
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   const performanceMetrics = {
-    averageTaskScore: analytics?.averageTaskScore || 0,
-    completionRate: analytics?.completionRate || 0,
-    averageTimePerModule: analytics?.averageTimePerModule || 0,
-    studentRetention: analytics?.studentRetention || 0
+    averageTaskScore: analytics.averageTaskScore || 0,
+    completionRate: analytics.completionRate || 0,
+    averageTimePerModule: analytics.averageTimePerModule || 0,
+    studentRetention: analytics.studentRetention || 0
   };
 
-  const engagementData = analytics?.engagementData || [];
-  const careerTrackData = analytics?.careerTrackData || [];
-  const modulePerformance = analytics?.modulePerformance || [];
+  const engagementData = analytics.engagementData || [];
+  const careerTrackData = analytics.careerTrackData || [];
+  const modulePerformance = analytics.modulePerformance || [];
+
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#A259F7', '#F95F62'];
 
   return (
     <div className="space-y-8">
@@ -176,6 +199,62 @@ const AdminAnalytics: React.FC = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Students by Track Pie Chart */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Students by Track</h2>
+          <ResponsiveContainer width="100%" height={250}>
+            <PieChart>
+              <Pie
+                data={analytics.trackDistribution || []}
+                dataKey="count"
+                nameKey="track"
+                cx="50%"
+                cy="50%"
+                outerRadius={80}
+                label
+              >
+                {(analytics.trackDistribution || []).map((_, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <RechartsTooltip />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+        {/* Submissions by Status Bar Chart */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Submissions by Status</h2>
+          <ResponsiveContainer width="100%" height={250}>
+            <ReBarChart data={analytics.submissionsByStatus || []}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="status" />
+              <YAxis allowDecimals={false} />
+              <RechartsTooltip />
+              <Legend />
+              <Bar dataKey="count" fill="#8884d8" />
+            </ReBarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* Weekly Attendance Bar Chart */}
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Weekly Attendance</h2>
+        <ResponsiveContainer width="100%" height={250}>
+          <ReBarChart data={analytics.attendanceData || []}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="day" />
+            <YAxis allowDecimals={false} />
+            <RechartsTooltip />
+            <Legend />
+            <Bar dataKey="students" fill="#82ca9d" />
+          </ReBarChart>
+        </ResponsiveContainer>
       </div>
 
       {/* Engagement Trends */}

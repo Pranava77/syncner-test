@@ -17,6 +17,9 @@ export interface ResumeData {
     status: string;
     score: number;
     date: string;
+    category?: string;
+    difficulty?: string;
+    points?: number;
   }>;
   skills: Record<string, string[]>;
   certifications: Array<{
@@ -119,7 +122,17 @@ export const generateResumePDF = async (resumeData: ResumeData, template: string
     pdf.setFontSize(9);
     pdf.setFont('helvetica', 'normal');
     pdf.setTextColor(108, 117, 125);
-    pdf.text(`Score: ${project.score}% | ${project.date}`, pageWidth - margin - 40, yPosition);
+    
+    // Enhanced project metadata
+    const metadata = [];
+    if (project.score) metadata.push(`Score: ${project.score}%`);
+    if (project.difficulty) metadata.push(project.difficulty);
+    if (project.category) metadata.push(project.category);
+    if (project.points) metadata.push(`${project.points} pts`);
+    metadata.push(project.date);
+    
+    const metadataText = metadata.join(' | ');
+    pdf.text(metadataText, pageWidth - margin - 60, yPosition);
     pdf.setTextColor(0, 0, 0);
     yPosition += 5;
 

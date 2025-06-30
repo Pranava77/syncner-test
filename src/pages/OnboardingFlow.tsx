@@ -97,8 +97,8 @@ const OnboardingFlow: React.FC = () => {
       // Fetch the updated user profile
       await dispatch(fetchCurrentUser()).unwrap();
 
-      // Now navigate to dashboard
-      navigate('/dashboard', { replace: true });
+      // Now navigate to training/current
+      navigate('/training/current', { replace: true });
     } catch (error) {
       alert('Failed to complete onboarding. Please try again.');
     }

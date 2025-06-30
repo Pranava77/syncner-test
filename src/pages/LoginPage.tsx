@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/store';
-import { loginUser, clearError } from '../redux/slices/authSlice';
+import { loginUser, clearError, fetchCurrentUser } from '../redux/slices/authSlice';
 import { toggleDarkMode } from '../redux/slices/themeSlice';
 import { getDefaultRoute } from '../utils/routing';
 import { Mail, Lock, AlertCircle, Moon, Sun } from 'lucide-react';
@@ -37,8 +37,16 @@ const LoginPage: React.FC = () => {
       password: password
     }));
 
-    if (loginUser.rejected.match(result)) {
-      // console.error('LoginPage: Login error:', error);
+    console.log('Login result:', result);
+
+    if (loginUser.fulfilled.match(result) && result.payload && result.payload.user) {
+      // Fetch the current user to update Redux state
+      await dispatch(fetchCurrentUser());
+      const { user: loggedInUser } = result.payload;
+      const redirectPath = getDefaultRoute(loggedInUser);
+      navigate(redirectPath, { replace: true });
+    } else if (loginUser.rejected.match(result)) {
+      // Optionally show an error message (already handled by Redux)
     }
   };
 

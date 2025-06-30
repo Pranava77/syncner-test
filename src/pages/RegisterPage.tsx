@@ -132,7 +132,8 @@ const RegisterPage: React.FC = () => {
     setIsSubmitting(false);
 
     if (registerUser.fulfilled.match(result)) {
-      const redirectPath = getDefaultRoute(user);
+      const { user: registeredUser } = result.payload;
+      const redirectPath = getDefaultRoute(registeredUser);
       navigate(redirectPath, { replace: true });
     }
   };

@@ -50,7 +50,7 @@ export const loginUser = createAsyncThunk(
   async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
     try {
       const response = await apiService.login(email, password);
-      return response.data;
+      return response.data.data;
     } catch (error: any) {
       return rejectWithValue(error.message || 'Login failed');
     }
@@ -147,12 +147,19 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
-        state.isAuthenticated = true;
         state.isRestoringSession = false;
-        state.error = null;
-        localStorage.setItem('token', action.payload.token);
+        if (action.payload && action.payload.user && action.payload.token) {
+          state.user = action.payload.user;
+          state.token = action.payload.token;
+          state.isAuthenticated = true;
+          state.error = null;
+          localStorage.setItem('token', action.payload.token);
+        } else {
+          state.user = null;
+          state.token = null;
+          state.isAuthenticated = false;
+          state.error = 'Login failed: Invalid response from server.';
+        }
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;

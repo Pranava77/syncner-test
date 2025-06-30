@@ -13,6 +13,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   requireAdmin = false 
 }) => {
   const { user, isLoading, isAuthenticated } = useAppSelector((state) => state.auth);
+  const currentPath = window.location.pathname;
 
   // Show loading while checking authentication
   if (isLoading) {
@@ -28,18 +29,41 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return <Navigate to="/login" replace />;
   }
 
-  // Check admin requirement
-  if (requireAdmin && user.role !== 'admin') {
-    const redirectPath = getDefaultRoute(user);
-    return <Navigate to={redirectPath} replace />;
+  // Admin access enforcement
+  if (requireAdmin) {
+    if (user.role !== 'admin') {
+      // Student/instructor trying to access admin route
+      return <Navigate to={getDefaultRoute(user)} replace />;
+    }
+    // Admin should not access onboarding
+    if (currentPath === '/onboarding') {
+      return <Navigate to="/admin" replace />;
+    }
+    return <>{children}</>;
   }
 
-  // Check if user can access this route
-  if (!canAccessRoute(user, window.location.pathname, requireAdmin)) {
-    const redirectPath = getDefaultRoute(user);
-    return <Navigate to={redirectPath} replace />;
+  // Student access enforcement
+  if (user.role === 'student') {
+    if (!user.profileComplete) {
+      // Only allow onboarding
+      if (currentPath !== '/onboarding') {
+        return <Navigate to="/onboarding" replace />;
+      }
+      return <>{children}</>;
+    } else {
+      // Profile complete: block onboarding
+      if (currentPath === '/onboarding') {
+        return <Navigate to="/dashboard" replace />;
+      }
+      // Block admin routes for students
+      if (currentPath.startsWith('/admin')) {
+        return <Navigate to="/dashboard" replace />;
+      }
+      return <>{children}</>;
+    }
   }
 
+  // Default: allow access
   return <>{children}</>;
 };
 

@@ -1,8 +1,11 @@
 import  { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+} from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './redux/store';
 import { fetchCurrentUser, restoreSession } from './redux/slices/authSlice';
-import { setApiKeyValid } from './redux/slices/geminiSlice';
 import { getDefaultRoute } from './utils/routing';
 import Layout from './components/Layout';
 import LandingPage from './pages/LandingPage';
@@ -17,18 +20,14 @@ import TaskPortal from './pages/TaskPortal';
 import ResumeGenerator from './pages/ResumeGenerator';
 import OnboardingFlow from './pages/OnboardingFlow';
 import ProtectedRoute from './components/ProtectedRoute';
-import AIChat from './components/AIChat';
-import ApiKeyModal from './components/ApiKeyModal';
+import UpcomingTasks from './pages/UpcomingTasks';
+import StudentSubmissions from './pages/StudentTasks';
 
 function App() {
   const dispatch = useAppDispatch();
   const { isAuthenticated, user, isLoading, isRestoringSession } = useAppSelector((state) => state.auth);
   const { isDarkMode } = useAppSelector((state) => state.theme);
   
-  const [geminiApiKey, setGeminiApiKey] = useState(
-    localStorage.getItem('geminiApiKey') || ''
-  );
-  const [showApiKeyModal, setShowApiKeyModal] = useState(!geminiApiKey);
   const [isInitializing, setIsInitializing] = useState(true);
 
   useEffect(() => {
@@ -65,18 +64,6 @@ function App() {
     }
   }, [isDarkMode]);
 
-  useEffect(() => {
-    // Set API key validity in Redux
-    dispatch(setApiKeyValid(!!geminiApiKey));
-  }, [geminiApiKey, dispatch]);
-
-  const handleApiKeySubmit = (apiKey: string) => {
-    setGeminiApiKey(apiKey);
-    localStorage.setItem('geminiApiKey', apiKey);
-    setShowApiKeyModal(false);
-    dispatch(setApiKeyValid(!!apiKey));
-  };
-
   // Show loading while initializing authentication or restoring session
   if (isInitializing || isLoading || isRestoringSession) {
     return (
@@ -86,90 +73,141 @@ function App() {
     );
   }
 
-  if (showApiKeyModal) {
-    return <ApiKeyModal onSubmit={handleApiKeySubmit} />;
-  }
+  const routes = [
+    {
+      path: '/',
+      element: <LandingPage />,
+    },
+    {
+      path: '/login',
+      element: isAuthenticated && user && !isLoading && !isRestoringSession ? (
+        <Navigate to={getDefaultRoute(user)} replace />
+      ) : (
+        <LoginPage />
+      ),
+    },
+    {
+      path: '/register',
+      element: isAuthenticated && user && !isLoading && !isRestoringSession ? (
+        <Navigate to={getDefaultRoute(user)} replace />
+      ) : (
+        <RegisterPage />
+      ),
+    },
+    {
+      path: '/onboarding',
+      element: (
+        <ProtectedRoute>
+          <OnboardingFlow />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/dashboard',
+      element: (
+        <ProtectedRoute>
+          <Layout>
+            <StudentDashboard />
+          </Layout>
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/admin',
+      element: (
+        <ProtectedRoute requireAdmin>
+          <Layout>
+            <AdminDashboard />
+          </Layout>
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/admin/analytics',
+      element: (
+        <ProtectedRoute requireAdmin>
+          <Layout>
+            <AdminAnalytics />
+          </Layout>
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/admin/settings',
+      element: (
+        <ProtectedRoute requireAdmin>
+          <Layout>
+            <AdminSettings />
+          </Layout>
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/training/:moduleId',
+      element: (
+        <ProtectedRoute>
+          <Layout>
+            <TrainingModule />
+          </Layout>
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/training/current',
+      element: (
+        <ProtectedRoute>
+          <Layout>
+            <TrainingModule />
+          </Layout>
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/tasks',
+      element: (
+        <ProtectedRoute>
+          <Layout>
+            <TaskPortal />
+          </Layout>
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/tasks/upcoming',
+      element: (
+        <ProtectedRoute>
+          <Layout>
+            <UpcomingTasks />
+          </Layout>
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/resume',
+      element: (
+        <ProtectedRoute>
+          <Layout>
+            <ResumeGenerator />
+          </Layout>
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/submissions',
+      element: (
+        <ProtectedRoute>
+          <Layout>
+            <StudentSubmissions />
+          </Layout>
+        </ProtectedRoute>
+      ),
+    },
+  ];
+
+  const router = createBrowserRouter(routes);
 
   return (
-    <Router>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={
-            isAuthenticated && user && !isLoading && !isRestoringSession ? (
-              <Navigate to={getDefaultRoute(user)} replace />
-            ) : (
-              <LoginPage />
-            )
-          } />
-          <Route path="/register" element={
-            isAuthenticated && user && !isLoading && !isRestoringSession ? (
-              <Navigate to={getDefaultRoute(user)} replace />
-            ) : (
-              <RegisterPage />
-            )
-          } />
-          <Route path="/onboarding" element={<OnboardingFlow />} />
-          <Route path="/dashboard" element={
-            <ProtectedRoute>
-              <Layout>
-                <StudentDashboard />
-              </Layout>
-            </ProtectedRoute>
-          } />
-          <Route path="/admin" element={
-            <ProtectedRoute requireAdmin>
-              <Layout>
-                <AdminDashboard />
-              </Layout>
-            </ProtectedRoute>
-          } />
-          <Route path="/admin/analytics" element={
-            <ProtectedRoute requireAdmin>
-              <Layout>
-                <AdminAnalytics />
-              </Layout>
-            </ProtectedRoute>
-          } />
-          <Route path="/admin/settings" element={
-            <ProtectedRoute requireAdmin>
-              <Layout>
-                <AdminSettings />
-              </Layout>
-            </ProtectedRoute>
-          } />
-          <Route path="/training/:moduleId" element={
-            <ProtectedRoute>
-              <Layout>
-                <TrainingModule />
-              </Layout>
-            </ProtectedRoute>
-          } />
-          <Route path="/training/current" element={
-            <ProtectedRoute>
-              <Layout>
-                <TrainingModule />
-              </Layout>
-            </ProtectedRoute>
-          } />
-          <Route path="/tasks" element={
-            <ProtectedRoute>
-              <Layout>
-                <TaskPortal />
-              </Layout>
-            </ProtectedRoute>
-          } />
-          <Route path="/resume" element={
-            <ProtectedRoute>
-              <Layout>
-                <ResumeGenerator />
-              </Layout>
-            </ProtectedRoute>
-          } />
-        </Routes>
-        <AIChat />
-      </div>
-    </Router>
+    <RouterProvider router={router} />
   );
 }
 

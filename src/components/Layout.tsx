@@ -15,7 +15,8 @@ import {
   Sun,
   BarChart3,
   Menu,
-  X
+  X,
+  List
 } from 'lucide-react';
 import logo from '../assets/syncner-logo.png';
 
@@ -56,6 +57,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { path: '/dashboard', icon: Home, label: 'Dashboard' },
     { path: '/training/current', icon: BookOpen, label: 'Training' },
     { path: '/tasks', icon: Briefcase, label: 'Tasks' },
+    { path: '/tasks/upcoming', icon: List, label: 'Upcoming Tasks' },
+    { path: '/submissions', icon: FileText, label: 'My Submissions' },
     { path: '/resume', icon: FileText, label: 'Resume' },
   ];
 

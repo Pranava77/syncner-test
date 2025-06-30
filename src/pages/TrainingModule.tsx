@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAppSelector } from '../redux/store';
 import { useCareerTrack } from '../hooks/useCareerTracks';
 import { useModules } from '../hooks/useModules';
@@ -18,8 +18,18 @@ import {
   Loader2
 } from 'lucide-react';
 
+// Add helper to extract YouTube video ID
+function extractYouTubeId(url: string): string | null {
+  if (!url) return null;
+  const regExp = /^.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  return match && match[1].length === 11 ? match[1] : null;
+}
+
 const TrainingModule: React.FC = () => {
   const { moduleId } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.auth);
   const [currentLesson, setCurrentLesson] = useState(0);
   const [showQuiz, setShowQuiz] = useState(false);
@@ -32,6 +42,22 @@ const TrainingModule: React.FC = () => {
   const { track, loading: trackLoading } = useCareerTrack(userTrack);
   const { modules, loading: modulesLoading } = useModules(userTrack);
   const module = modules.find(m => m.id === moduleId) || modules[0];
+
+  // Redirect logic
+  useEffect(() => {
+    if (!modulesLoading && !trackLoading) {
+      // If on /training/current, redirect to first module
+      if (location.pathname === '/training/current' && modules.length > 0) {
+        if (!moduleId || !modules.some(m => m.id === moduleId)) {
+          navigate(`/training/${modules[0].id}`, { replace: true });
+        }
+      }
+      // If on /training/:moduleId and module is not in user's track, redirect
+      if (moduleId && modules.length > 0 && !modules.some(m => m.id === moduleId)) {
+        navigate('/training/current', { replace: true });
+      }
+    }
+  }, [modulesLoading, trackLoading, modules, moduleId, location.pathname, navigate]);
 
   const quiz = {
     question: 'What is the primary purpose of React Hooks?',
@@ -264,34 +290,53 @@ const TrainingModule: React.FC = () => {
             {!showQuiz ? (
               /* Video/Reading Content */
               <div>
-                <div className="aspect-video bg-gray-900 rounded-t-xl relative">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <button
-                      onClick={() => setIsPlaying(!isPlaying)}
-                      className="bg-white/20 hover:bg-white/30 rounded-full p-4 transition-colors"
-                    >
-                      {isPlaying ? (
-                        <Pause className="h-8 w-8 text-white" />
-                      ) : (
-                        <Play className="h-8 w-8 text-white ml-1" />
-                      )}
-                    </button>
+                {/* Video player for video lessons */}
+                {currentContent.type === 'video' && currentContent.videoUrl ? (
+                  <div className="aspect-video bg-black rounded-t-xl flex items-center justify-center">
+                    {extractYouTubeId(currentContent.videoUrl) ? (
+                      <iframe
+                        width="100%"
+                        height="100%"
+                        src={`https://www.youtube.com/embed/${extractYouTubeId(currentContent.videoUrl)}`}
+                        title={currentContent.title}
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        className="w-full h-full rounded-t-xl"
+                      />
+                    ) : (
+                      <div className="text-white text-center p-8">Invalid or missing YouTube URL</div>
+                    )}
                   </div>
-                  <div className="absolute bottom-4 left-4 text-white">
-                    <p className="text-lg font-semibold">{currentContent.title}</p>
-                    <p className="text-sm text-white/80">{currentContent.duration}</p>
+                ) : (
+                  <div className="aspect-video bg-gray-900 rounded-t-xl relative">
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <button
+                        onClick={() => setIsPlaying(!isPlaying)}
+                        className="bg-white/20 hover:bg-white/30 rounded-full p-4 transition-colors"
+                      >
+                        {isPlaying ? (
+                          <Pause className="h-8 w-8 text-white" />
+                        ) : (
+                          <Play className="h-8 w-8 text-white ml-1" />
+                        )}
+                      </button>
+                    </div>
+                    <div className="absolute bottom-4 left-4 text-white">
+                      <p className="text-lg font-semibold">{currentContent.title}</p>
+                      <p className="text-sm text-white/80">{currentContent.duration}</p>
+                    </div>
+                    <div className="absolute top-4 right-4">
+                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                        currentContent.type === 'video' ? 'bg-blue-600 text-white' :
+                        currentContent.type === 'reading' ? 'bg-green-600 text-white' :
+                        'bg-purple-600 text-white'
+                      }`}>
+                        {currentContent.type.toUpperCase()}
+                      </span>
+                    </div>
                   </div>
-                  <div className="absolute top-4 right-4">
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${
-                      currentContent.type === 'video' ? 'bg-blue-600 text-white' :
-                      currentContent.type === 'reading' ? 'bg-green-600 text-white' :
-                      'bg-purple-600 text-white'
-                    }`}>
-                      {currentContent.type.toUpperCase()}
-                    </span>
-                  </div>
-                </div>
-                
+                )}
                 <div className="p-8">
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                     {currentContent.title}

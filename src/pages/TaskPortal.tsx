@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import TaskWorkspace from '../components/TaskWorkspace';
 import { useAppSelector } from '../redux/store';
 import { useCareerTrack } from '../hooks/useCareerTracks';
-import { useTasks } from '../hooks/useTasks';
+import { useTasks, useAllStudentTasks } from '../hooks/useTasks';
 import { useProgress } from '../hooks/useProgress';
 import { 
   Briefcase, 
@@ -26,6 +26,13 @@ import {
   Loader2
 } from 'lucide-react';
 
+const statusColors: Record<string, string> = {
+  'Not Started': 'bg-yellow-100 text-yellow-800',
+  'Submitted': 'bg-blue-100 text-blue-800',
+  'Completed': 'bg-green-100 text-green-800',
+  'Overdue': 'bg-red-100 text-red-800',
+};
+
 const TaskPortal: React.FC = () => {
   const { user } = useAppSelector((state) => state.auth);
   const [selectedFilter, setSelectedFilter] = useState('all');
@@ -37,17 +44,8 @@ const TaskPortal: React.FC = () => {
   const userTrack = user?.careerTrack || '';
   
   const { track, loading: trackLoading } = useCareerTrack(userTrack);
-  if (!user) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-600" />
-          <p className="text-gray-600 dark:text-gray-300">Loading tasks...</p>
-        </div>
-      </div>
-    );
-  }
-  const { tasks = [], loading: tasksLoading, submitTask } = useTasks(user.careerTrack);
+  const { tasks: allStudentTasks, loading: allStudentTasksLoading, error: allStudentTasksError } = useAllStudentTasks();
+  const { submitTask } = useTasks();
   const { loading: progressLoading } = useProgress();
 
   const getCategoryIcon = (category: string) => {
@@ -127,7 +125,7 @@ const TaskPortal: React.FC = () => {
     }
   };
 
-  const filteredTasks = tasks.filter(task => {
+  const filteredTasks = allStudentTasks.filter(task => {
     const matchesFilter = selectedFilter === 'all' || 
                          task.category === selectedFilter || 
                          task.status === selectedFilter ||
@@ -148,6 +146,10 @@ const TaskPortal: React.FC = () => {
       if (!selectedTask?.id) {
         throw new Error('Task ID is required');
       }
+      // Ensure files are File objects if present
+      if (submissionData.files && Array.isArray(submissionData.files)) {
+        submissionData.files = submissionData.files.filter((f: any) => f instanceof File);
+      }
       await submitTask(selectedTask.id, submissionData);
       setShowWorkspace(false);
       setSelectedTask(null);
@@ -162,9 +164,12 @@ const TaskPortal: React.FC = () => {
   };
 
   // Get unique categories for the current track
-  const trackCategories = [...new Set(tasks.map(task => task.category))];
+  const trackCategories = [...new Set(allStudentTasks.map(task => task.category))];
 
-  if (trackLoading || tasksLoading || progressLoading) {
+  // Overdue tasks
+  const overdueTasks = allStudentTasks.filter(t => t.status === 'Overdue');
+
+  if (trackLoading || allStudentTasksLoading || progressLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
@@ -175,8 +180,38 @@ const TaskPortal: React.FC = () => {
     );
   }
 
+  if (allStudentTasksError) {
+    return <div className="text-red-500">{allStudentTasksError}</div>;
+  }
+
   return (
     <div className="max-w-7xl mx-auto">
+      {/* Overdue Tasks Section */}
+      {overdueTasks.length > 0 && (
+        <div className="mb-8 p-4 bg-red-50 dark:bg-red-900/20 border-l-4 border-red-600 rounded-xl shadow-sm">
+          <h2 className="text-xl font-bold text-red-700 dark:text-red-400 mb-2 flex items-center gap-2">
+            <AlertTriangle className="h-5 w-5" /> Overdue Tasks
+          </h2>
+          <ul className="space-y-2">
+            {overdueTasks.map(task => (
+              <li key={task.id} className="flex flex-col md:flex-row md:items-center md:justify-between p-3 bg-white dark:bg-gray-800 rounded-lg border border-red-200 dark:border-red-700">
+                <div>
+                  <span className="font-semibold text-red-700 dark:text-red-400">{task.title}</span>
+                  <span className="ml-2 px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Overdue</span>
+                  <div className="text-gray-600 dark:text-gray-300 text-sm">Due: {task.dueDate ? new Date(task.dueDate).toLocaleString() : 'No due date'}</div>
+                </div>
+                <button
+                  className="mt-2 md:mt-0 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 font-medium"
+                  onClick={() => handleStartTask(task)}
+                >
+                  Submit Now
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {/* Header */}
       <div className="mb-6 lg:mb-8">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4">
@@ -201,13 +236,13 @@ const TaskPortal: React.FC = () => {
               <div className="flex items-center space-x-2 mb-1">
                 <Award className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
                 <span className="text-sm font-medium text-gray-900 dark:text-white">
-                  {tasks.filter(t => t.status === 'completed').length} / {tasks.length} completed
+                  {allStudentTasks.filter(t => t.status === 'completed').length} / {allStudentTasks.length} completed
                 </span>
               </div>
               <div className="w-32 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                 <div 
                   className="bg-gradient-to-r from-blue-600 to-purple-600 h-2 rounded-full transition-all"
-                  style={{ width: `${(tasks.filter(t => t.status === 'completed').length / tasks.length) * 100}%` }}
+                  style={{ width: `${(allStudentTasks.filter(t => t.status === 'completed').length / allStudentTasks.length) * 100}%` }}
                 ></div>
               </div>
             </div>
@@ -216,25 +251,25 @@ const TaskPortal: React.FC = () => {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-center">
             <div>
               <p className="text-lg lg:text-2xl font-bold text-green-600 dark:text-green-400">
-                {tasks.filter(t => t.status === 'completed').length}
+                {allStudentTasks.filter(t => t.status === 'completed').length}
               </p>
               <p className="text-xs lg:text-sm text-gray-600 dark:text-gray-400">Completed</p>
             </div>
             <div>
               <p className="text-lg lg:text-2xl font-bold text-blue-600 dark:text-blue-400">
-                {tasks.filter(t => t.status === 'in-progress').length}
+                {allStudentTasks.filter(t => t.status === 'in-progress').length}
               </p>
               <p className="text-xs lg:text-sm text-gray-600 dark:text-gray-400">In Progress</p>
             </div>
             <div>
               <p className="text-lg lg:text-2xl font-bold text-yellow-600 dark:text-yellow-400">
-                {tasks.filter(t => t.status === 'available').length}
+                {allStudentTasks.filter(t => t.status === 'available').length}
               </p>
               <p className="text-xs lg:text-sm text-gray-600 dark:text-gray-400">Available</p>
             </div>
             <div>
               <p className="text-lg lg:text-2xl font-bold text-purple-600 dark:text-purple-400">
-                {tasks.reduce((sum, task) => sum + task.points, 0)}
+                {allStudentTasks.reduce((sum, task) => sum + task.points, 0)}
               </p>
               <p className="text-xs lg:text-sm text-gray-600 dark:text-gray-400">Total Points</p>
             </div>
@@ -348,9 +383,8 @@ const TaskPortal: React.FC = () => {
                     <Star className="h-3 w-3 lg:h-4 lg:w-4 mr-1" />
                     {task.points}
                   </div>
-                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(task.status || 'available')}`}>
-                    {getStatusIcon(task.status || 'available')}
-                    <span className="ml-1 capitalize">{(task.status || 'available')?.replace('-', ' ')}</span>
+                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${statusColors[task.status || 'Not Started']}`}>
+                    {task.status || 'Not Started'}
                   </span>
                 </div>
               </div>

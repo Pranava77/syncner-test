@@ -33,11 +33,11 @@ interface Submission {
 }
 
 interface TaskReviewProps {
-  submissions: Submission[];
+  submissions?: Submission[];
   onReview: (submissionId: string, score: number, feedback: string, status: string) => void;
 }
 
-const TaskReview: React.FC<TaskReviewProps> = ({ submissions, onReview }) => {
+const TaskReview: React.FC<TaskReviewProps> = ({ submissions = [], onReview }) => {
   const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
   const [reviewForm, setReviewForm] = useState({
     score: 0,
@@ -46,7 +46,7 @@ const TaskReview: React.FC<TaskReviewProps> = ({ submissions, onReview }) => {
   });
   const [filter, setFilter] = useState('all');
 
-  const filteredSubmissions = submissions.filter(submission => {
+  const filteredSubmissions = (submissions || []).filter(submission => {
     if (filter === 'all') return true;
     return submission.status === filter;
   });

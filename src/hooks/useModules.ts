@@ -30,12 +30,17 @@ export const useModules = (trackId?: string) => {
   const fetchModules = async () => {
     try {
       setLoading(true);
+      setError(null);
       const response = await apiService.getModules(trackId);
       if (response.success) {
-        setModules(response.data.modules);
+        // Handle both array and object with data property
+        const modulesData = Array.isArray(response.data) ? response.data : response.data.modules || response.data;
+        setModules(modulesData || []);
+      } else {
+        setError(response.message || 'Failed to fetch modules');
       }
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || 'Failed to fetch modules');
     } finally {
       setLoading(false);
     }

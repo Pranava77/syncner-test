@@ -1,9 +1,32 @@
 import express from 'express';
 import { getResume, upsertResume } from '../controllers/resumeController.js';
-import { resumeTemplatesData } from '../data/seedData.js';
 import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
+
+// Resume templates data
+const resumeTemplatesData = [
+  {
+    careerTrack: 'fullstack',
+    sections: ['personalInfo', 'summary', 'skills', 'projects', 'certifications', 'education'],
+    template: 'professional'
+  },
+  {
+    careerTrack: 'ai-ml',
+    sections: ['personalInfo', 'summary', 'skills', 'projects', 'certifications', 'education'],
+    template: 'professional'
+  },
+  {
+    careerTrack: 'ui-ux',
+    sections: ['personalInfo', 'summary', 'skills', 'projects', 'certifications', 'education'],
+    template: 'creative'
+  },
+  {
+    careerTrack: 'data-science',
+    sections: ['personalInfo', 'summary', 'skills', 'projects', 'certifications', 'education'],
+    template: 'professional'
+  }
+];
 
 // Get the authenticated user's resume
 router.get('/', protect, getResume);

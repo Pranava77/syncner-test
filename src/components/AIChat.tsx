@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { MessageCircle, Send, X, Bot, User, Minimize2, Maximize2, AlertCircle } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { chatWithAI } from '../redux/slices/geminiSlice';
+import apiService from '../services/api';
 
 interface Message {
   id: string;
@@ -22,11 +23,10 @@ const AIChat: React.FC = () => {
       timestamp: new Date()
     }
   ]);
-  const [inputMessage, setInputMessage] = useState('');
+  const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { isApiKeyValid } = useAppSelector((state) => state.gemini);
   const { user } = useAppSelector((state) => state.auth);
 
   const scrollToBottom = () => {
@@ -38,55 +38,37 @@ const AIChat: React.FC = () => {
   }, [messages]);
 
   const handleSendMessage = async () => {
-    if (!inputMessage.trim() || isLoading) return;
-
-    if (!isApiKeyValid) {
-      setError('Gemini API key is not configured. Please check your API key.');
-      return;
-    }
-
+    if (!input.trim()) return;
     const userMessage: Message = {
       id: Date.now().toString(),
-      text: inputMessage,
+      text: input,
       sender: 'user',
-      timestamp: new Date()
+      timestamp: new Date(),
     };
-
-    setMessages(prev => [...prev, userMessage]);
-    setInputMessage('');
+    setMessages((prev) => [...prev, userMessage]);
+    setInput('');
     setIsLoading(true);
-    setError(null);
-
     try {
-      const context = `
-        User Profile:
-        - Name: ${user?.name || 'Student'}
-        - Career Track: ${user?.careerTrack || 'Not selected'}
-        - Role: ${user?.role || 'student'}
-        - College: ${user?.college || 'Not specified'}
-      `;
-
-      const result = await dispatch(chatWithAI({ message: inputMessage, context })).unwrap();
-      
-      const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        text: result,
-        sender: 'ai',
-        timestamp: new Date()
-      };
-
-      setMessages(prev => [...prev, aiMessage]);
+      const res = await apiService.chatWithAI(input);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now().toString() + '-ai',
+          text: res.data || 'No response from AI.',
+          sender: 'ai',
+          timestamp: new Date(),
+        } as Message,
+      ]);
     } catch (error: any) {
-      console.error('Chat error:', error);
-      
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        text: error.message || "I'm sorry, I encountered an error. Please try again later.",
-        sender: 'ai',
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, errorMessage]);
-      setError(error.message);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now().toString() + '-ai',
+          text: 'AI is currently unavailable. Please try again later.',
+          sender: 'ai',
+          timestamp: new Date(),
+        } as Message,
+      ]);
     } finally {
       setIsLoading(false);
     }
@@ -128,7 +110,7 @@ const AIChat: React.FC = () => {
           <div>
             <h3 className="font-semibold text-gray-900 dark:text-white text-sm lg:text-base">AI Career Mentor</h3>
             <p className="text-xs text-gray-500 dark:text-gray-400">
-              {isApiKeyValid ? 'Always here to help' : 'API key required'}
+              API key required
             </p>
           </div>
         </div>
@@ -219,17 +201,17 @@ const AIChat: React.FC = () => {
           <div className="p-3 lg:p-4 border-t border-gray-200 dark:border-gray-700">
             <div className="flex space-x-2">
               <textarea
-                value={inputMessage}
-                onChange={(e) => setInputMessage(e.target.value)}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder={isApiKeyValid ? "Ask me anything about your career..." : "API key required to chat"}
+                placeholder="API key required to chat"
                 className="flex-1 resize-none border border-gray-300 dark:border-gray-600 rounded-lg px-2 lg:px-3 py-1.5 lg:py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-xs lg:text-sm"
                 rows={1}
-                disabled={isLoading || !isApiKeyValid}
+                disabled={isLoading}
               />
               <button
                 onClick={handleSendMessage}
-                disabled={!inputMessage.trim() || isLoading || !isApiKeyValid}
+                disabled={!input.trim() || isLoading}
                 className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-1.5 lg:p-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Send className="h-3 w-3 lg:h-4 lg:w-4" />

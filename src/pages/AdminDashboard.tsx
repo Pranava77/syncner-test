@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import { useStudents, useSubmissions, useAnalytics } from '../hooks/useAdmin';
 import logo from '../assets/syncner-logo.png';
+import { useAppSelector } from '../redux/store';
 
 const AdminDashboard: React.FC = () => {
   const [selectedFilter, setSelectedFilter] = useState('all');
@@ -37,9 +38,10 @@ const AdminDashboard: React.FC = () => {
   const [editingStudent, setEditingStudent] = useState<any>(null);
 
   // Use real API data instead of mock data
-  const { students, loading: studentsLoading, updateStudent, deleteStudent } = useStudents();
-  const { submissions, loading: submissionsLoading, reviewSubmission } = useSubmissions();
+  const { students, loading: studentsLoading, updateStudent, deleteStudent, addStudent } = useStudents();
+  const { submissions, loading: submissionsLoading, error: submissionsError, reviewSubmission } = useSubmissions();
   const { analytics, loading: analyticsLoading } = useAnalytics();
+  const { user } = useAppSelector((state) => state.auth);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -66,12 +68,7 @@ const AdminDashboard: React.FC = () => {
   };
 
   const handleReviewSubmission = async (submissionId: string, score: number, feedback: string, status: string) => {
-    try {
-      await reviewSubmission(submissionId, { score, feedback, status });
-      alert('Review saved successfully!');
-    } catch (error) {
-      alert('Failed to save review. Please try again.');
-    }
+    await reviewSubmission(submissionId, { score, feedback, status });
   };
 
   const handleViewStudent = (student: any) => {
@@ -103,8 +100,9 @@ const AdminDashboard: React.FC = () => {
           await updateStudent(editingStudent._id, editingStudent);
           alert('Student updated successfully!');
         } else {
-          // Add new student - this would need a separate API call
-          alert('Add student functionality would be implemented here');
+          // Add new student
+          await addStudent(editingStudent);
+          alert('Student added successfully!');
         }
         setEditingStudent(null);
         setShowStudentModal(false);
@@ -115,7 +113,7 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
-  const filteredStudents = students.filter(student => {
+  const filteredStudents = (students ?? []).filter(student => {
     const matchesFilter = selectedFilter === 'all' || student.status === selectedFilter;
     const matchesSearch = student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          student.email.toLowerCase().includes(searchTerm.toLowerCase());
@@ -293,7 +291,7 @@ const AdminDashboard: React.FC = () => {
                     location: '',
                     department: '',
                     college: 'Tech University',
-                    track: 'Full Stack',
+                    careerTrack: 'fullstack',
                     gpa: '',
                     profileComplete: false
                   });
@@ -371,7 +369,17 @@ const AdminDashboard: React.FC = () => {
                       {student.department}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                      {student.careerTrack}
+                      <span className="text-sm text-gray-900 dark:text-white capitalize">
+                        {(() => {
+                          switch(student.careerTrack) {
+                            case 'fullstack': return 'Full Stack Development';
+                            case 'ai-ml': return 'AI/ML Engineering';
+                            case 'ui-ux': return 'UI/UX Design';
+                            case 'data-science': return 'Data Science';
+                            default: return student.careerTrack;
+                          }
+                        })()}
+                      </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
@@ -533,14 +541,14 @@ const AdminDashboard: React.FC = () => {
                         Career Track
                       </label>
                       <select
-                        value={editingStudent.track}
-                        onChange={(e) => setEditingStudent((prev: any) => ({ ...prev, track: e.target.value }))}
+                        value={editingStudent.careerTrack}
+                        onChange={(e) => setEditingStudent((prev: any) => ({ ...prev, careerTrack: e.target.value }))}
                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       >
-                        <option value="Full Stack">Full Stack Development</option>
-                        <option value="AI/ML">AI/ML Engineering</option>
-                        <option value="UI/UX">UI/UX Design</option>
-                        <option value="Data Science">Data Science</option>
+                        <option value="fullstack">Full Stack Development</option>
+                        <option value="ai-ml">AI/ML Engineering</option>
+                        <option value="ui-ux">UI/UX Design</option>
+                        <option value="data-science">Data Science</option>
                       </select>
                     </div>
 
@@ -659,7 +667,19 @@ const AdminDashboard: React.FC = () => {
                     <div className="grid md:grid-cols-2 gap-4 text-sm">
                       <div>
                         <p className="text-gray-600 dark:text-gray-400">Career Track</p>
-                        <p className="font-medium text-gray-900 dark:text-white">{selectedStudent?.track}</p>
+                        <p className="font-medium text-gray-900 dark:text-white">
+                          <span className="text-sm text-gray-900 dark:text-white capitalize">
+                            {(() => {
+                              switch(selectedStudent?.careerTrack) {
+                                case 'fullstack': return 'Full Stack Development';
+                                case 'ai-ml': return 'AI/ML Engineering';
+                                case 'ui-ux': return 'UI/UX Design';
+                                case 'data-science': return 'Data Science';
+                                default: return selectedStudent?.careerTrack;
+                              }
+                            })()}
+                          </span>
+                        </p>
                       </div>
                       <div>
                         <p className="text-gray-600 dark:text-gray-400">Join Date</p>
@@ -697,6 +717,19 @@ const AdminDashboard: React.FC = () => {
               )}
             </div>
           </div>
+        </div>
+      )}
+
+      {user?.role === 'admin' && (
+        <div className="mt-10">
+          <h2 className="text-xl font-bold mb-4">Review Student Submissions</h2>
+          {submissionsLoading ? (
+            <div>Loading submissions...</div>
+          ) : submissionsError ? (
+            <div className="text-red-500">{submissionsError}</div>
+          ) : (
+            <TaskReview submissions={submissions} onReview={handleReviewSubmission} />
+          )}
         </div>
       )}
     </div>
