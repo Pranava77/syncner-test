@@ -1,6 +1,8 @@
 import express from 'express';
-import { getUserProgress, updateUserProgress } from '../controllers/progressController.js';
+import { getUserProgress, updateUserProgress, getAllProgress } from '../controllers/progressController.js';
 import { protect } from '../middleware/auth.js';
+import { requireAdmin } from '../middleware/roleGuard.js';
+import Progress from '../models/Progress.js';
 
 const router = express.Router();
 
@@ -9,5 +11,17 @@ router.get('/', protect, getUserProgress);
 
 // Update user progress
 router.patch('/', protect, updateUserProgress);
+
+// Health check for progress module
+router.get('/health', async (req, res) => {
+  try {
+    await Progress.findOne();
+    res.status(200).json({ success: true, message: 'Progress module is healthy' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Progress module health check failed', error: error.message });
+  }
+});
+
+router.get('/', protect, requireAdmin, getAllProgress);
 
 export default router; 

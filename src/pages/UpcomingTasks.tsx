@@ -47,13 +47,6 @@ const UpcomingTasks: React.FC = () => {
 
   const tasksToShow = !loading && tasks.length === 0 ? dummyTasks : tasks;
 
-  const openModal = (task: any) => {
-    setSelectedTask(task);
-    setForm({ description: '', liveUrl: '', githubUrl: '', notes: '', files: [] });
-    setShowModal(true);
-    setSubmitError(null);
-  };
-
   const closeModal = () => {
     setShowModal(false);
     setSelectedTask(null);

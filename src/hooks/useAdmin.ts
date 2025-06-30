@@ -5,6 +5,7 @@ interface Student {
   _id: string;
   name: string;
   email: string;
+  role: string;
   phone?: string;
   location?: string;
   department?: string;
@@ -67,7 +68,7 @@ export const useStudents = (filters?: any) => {
       setLoading(true);
       const response = await apiService.getStudents(filters);
       if (response.success) {
-        setStudents(response.data.students);
+        setStudents(response.data);
       }
     } catch (err: any) {
       setError(err.message);
@@ -193,7 +194,7 @@ export const useAnalytics = (dateRange?: string) => {
       setLoading(true);
       const response = await apiService.getAnalytics(dateRange);
       if (response.success) {
-        setAnalytics(response.data.analytics);
+        setAnalytics(response.data);
       }
     } catch (err: any) {
       setError(err.message);

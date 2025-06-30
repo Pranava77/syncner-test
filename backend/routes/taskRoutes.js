@@ -4,6 +4,7 @@ import { protect } from '../middleware/auth.js';
 import { requireAdmin } from '../middleware/roleGuard.js';
 import { validationResult } from 'express-validator';
 import Submission from '../models/Submission.js';
+import Task from '../models/Task.js';
 
 const router = express.Router();
 
@@ -62,6 +63,16 @@ router.get('/submissions', protect, requireAdmin, async (req, res) => {
 // Move these two routes above /:id
 router.get('/upcoming', protect, getUpcomingTasks);
 router.get('/all', protect, getAllStudentTasks);
+
+// Health check for tasks module
+router.get('/health', async (req, res) => {
+  try {
+    await Task.findOne();
+    res.status(200).json({ success: true, message: 'Tasks module is healthy' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Tasks module health check failed', error: error.message });
+  }
+});
 
 router.get('/:id', getTaskById);
 

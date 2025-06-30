@@ -107,7 +107,28 @@ const AdminSettings: React.FC = () => {
     careerTrack: '',
     isActive: true
   });
+  const [userFormError, setUserFormError] = useState('');
   const { students: users, refetch, addStudent, updateStudent, deleteStudent, loading: usersLoading } = useStudents(userFilters);
+
+  // Gemini API Key management
+  const [showGeminiKey, setShowGeminiKey] = useState(false);
+  const [geminiKeyInput, setGeminiKeyInput] = useState('');
+  useEffect(() => {
+    if (settings?.integrations?.geminiApiKey !== undefined) {
+      setGeminiKeyInput(settings.integrations.geminiApiKey);
+    }
+  }, [settings]);
+
+  const handleGeminiKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setGeminiKeyInput(e.target.value);
+    setSettings((prev: any) => ({
+      ...prev,
+      integrations: {
+        ...prev.integrations,
+        geminiApiKey: e.target.value
+      }
+    }));
+  };
 
   useEffect(() => {
     fetchPlatformSettings();
@@ -116,7 +137,7 @@ const AdminSettings: React.FC = () => {
     if (activeTab === 'tasks') {
       refetch();
     }
-  }, [activeTab, refetch]);
+  }, [activeTab]);
 
   const fetchPlatformSettings = async () => {
     setSettingsLoading(true);
@@ -173,7 +194,7 @@ const AdminSettings: React.FC = () => {
     try {
       const response = await apiService.updatePlatformSettings(settings);
       if (response.success) {
-        setSaveMessage('Settings saved successfully!');
+      setSaveMessage('Settings saved successfully!');
       } else {
         setSaveMessage('Failed to save settings');
       }
@@ -237,6 +258,11 @@ const AdminSettings: React.FC = () => {
 
   // Task management functions
   const handleAddTask = async () => {
+    // Frontend validation for required fields
+    if (!taskForm.estimatedTime || !taskForm.skills || !taskForm.skills[0] || !taskForm.deliverables || !taskForm.deliverables[0]) {
+      alert('Please fill all required fields: Estimated Time, at least one Skill, and at least one Deliverable.');
+      return;
+    }
     try {
       const response = await apiService.createTask(taskForm);
       if (response.success) {
@@ -264,6 +290,11 @@ const AdminSettings: React.FC = () => {
 
   const handleEditTask = async () => {
     if (!editingTask) return;
+    // Frontend validation for required fields
+    if (!taskForm.estimatedTime || !taskForm.skills || !taskForm.skills[0] || !taskForm.deliverables || !taskForm.deliverables[0]) {
+      alert('Please fill all required fields: Estimated Time, at least one Skill, and at least one Deliverable.');
+      return;
+    }
     try {
       const response = await apiService.updateTask(editingTask.id, taskForm);
       if (response.success) {
@@ -451,6 +482,40 @@ const AdminSettings: React.FC = () => {
                 </label>
               </div>
             </div>
+            <div className="space-y-8">
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                  <Shield className="h-5 w-5" /> Gemini API Key
+                </h3>
+                <div className="flex items-center gap-3">
+                  <input
+                    type={showGeminiKey ? 'text' : 'password'}
+                    value={geminiKeyInput}
+                    onChange={handleGeminiKeyChange}
+                    className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white"
+                    placeholder="Enter Gemini API Key"
+                    autoComplete="off"
+                  />
+                  <button
+                    type="button"
+                    className="px-3 py-2 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
+                    onClick={() => setShowGeminiKey((v) => !v)}
+                    title={showGeminiKey ? 'Hide' : 'Show'}
+                  >
+                    {showGeminiKey ? 'Hide' : 'Show'}
+                  </button>
+                </div>
+                <p className="text-xs text-gray-500 mt-2">This key is used for all Gemini AI features. Only admins can view or update it.</p>
+                <button
+                  className="mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-all font-medium"
+                  onClick={handleSaveSettings}
+                  disabled={isSaving}
+                >
+                  {isSaving ? 'Saving...' : 'Save Gemini API Key'}
+                </button>
+                {saveMessage && <div className="mt-2 text-green-600">{saveMessage}</div>}
+              </div>
+            </div>
           </div>
         )}
 
@@ -518,7 +583,7 @@ const AdminSettings: React.FC = () => {
                 </div>
                 <div className="mt-6">
                   <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Lessons</h4>
-                  {moduleForm.lessons && moduleForm.lessons.length > 0 && (
+                  {moduleForm.lessons && (moduleForm.lessons.length > 0) && (
                     <div className="space-y-4 mb-4">
                       {moduleForm.lessons.map((lesson, idx) => (
                         <div key={lesson.id || idx} className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg flex flex-col md:flex-row md:items-end gap-2 md:gap-4">
@@ -624,7 +689,7 @@ const AdminSettings: React.FC = () => {
                           duration: '',
                           content: '',
                           videoUrl: '',
-                          order: (prev.lessons?.length || 0) + 1
+                          order: ((prev.lessons && prev.lessons.length) || 0) + 1
                         }
                       ]
                     }))}
@@ -1122,7 +1187,7 @@ const AdminSettings: React.FC = () => {
                   <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     {usersLoading ? (
                       <tr><td colSpan={6} className="text-center py-6">Loading...</td></tr>
-                    ) : users.length === 0 ? (
+                    ) : (Array.isArray(users) ? users.length : 0) === 0 ? (
                       <tr><td colSpan={6} className="text-center py-6">No users found.</td></tr>
                     ) : users.map((user: any) => (
                       <tr key={user._id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
@@ -1175,19 +1240,42 @@ const AdminSettings: React.FC = () => {
                     <button onClick={() => setShowUserForm(false)} className="px-4 py-2 border rounded-lg">Cancel</button>
                     <button
                       onClick={async () => {
-                        if (editingUser) {
-                          await updateStudent(editingUser._id, userForm);
-                        } else {
-                          await addStudent(userForm);
+                        setUserFormError('');
+                        // Frontend validation
+                        if (!userForm.name.trim()) {
+                          setUserFormError('Name is required.');
+                          return;
                         }
-                        setShowUserForm(false);
-                        refetch();
+                        if (!userForm.email.trim()) {
+                          setUserFormError('Email is required.');
+                          return;
+                        }
+                        if (!editingUser && !userForm.password) {
+                          setUserFormError('Password is required.');
+                          return;
+                        }
+                        if (!userForm.college.trim()) {
+                          setUserFormError('College is required.');
+                          return;
+                        }
+                        try {
+                          if (editingUser) {
+                            await updateStudent(editingUser._id, userForm);
+                          } else {
+                            await addStudent(userForm);
+                          }
+                          setShowUserForm(false);
+                          refetch();
+                        } catch (err: any) {
+                          setUserFormError(err.message || 'Failed to add/update user.');
+                        }
                       }}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg"
                     >
                       {editingUser ? 'Update' : 'Add'}
                     </button>
                   </div>
+                  {userFormError && <div className="mt-3 text-red-600 text-sm">{userFormError}</div>}
                 </div>
               </div>
             )}

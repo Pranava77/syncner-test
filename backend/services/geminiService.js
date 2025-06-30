@@ -1,13 +1,16 @@
 import fetch from 'node-fetch';
+import Settings from '../models/Settings.js';
 
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
-if (!GEMINI_API_KEY) {
-  console.warn('Gemini API key not configured');
+async function getGeminiApiKey() {
+  // Always fetch the latest Gemini API key from settings
+  const settings = await Settings.findOne();
+  return settings?.integrations?.geminiApiKey || process.env.GEMINI_API_KEY;
 }
 
 async function callGemini(messages) {
+  const GEMINI_API_KEY = await getGeminiApiKey();
   if (!GEMINI_API_KEY) {
     throw new Error('Gemini API key not configured');
   }

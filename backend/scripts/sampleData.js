@@ -5,6 +5,7 @@ import Module from '../models/Module.js';
 import Task from '../models/Task.js';
 import User from '../models/User.js';
 import Submission from '../models/Submission.js';
+import Progress from '../models/Progress.js';
 
 dotenv.config();
 
@@ -218,11 +219,43 @@ const seedData = async () => {
     await Submission.insertMany(allSubmissions);
     console.log('Created modules, tasks, students, and submissions for all tracks');
     console.log('Sample data seeded successfully!');
+
+    // Enhance demo data
+    await enhanceDemoData();
+
     process.exit(0);
   } catch (error) {
     console.error('Error seeding data:', error);
     process.exit(1);
   }
 };
+
+async function enhanceDemoData() {
+  // Get all students
+  const students = await User.find({ role: 'student' });
+  const now = new Date();
+  for (let i = 0; i < students.length; i++) {
+    // Set lastActive to today or recent days
+    students[i].lastActive = new Date(now.getTime() - (i * 24 * 60 * 60 * 1000));
+    await students[i].save();
+    // Update progress
+    const progress = await Progress.findOne({ user: students[i]._id });
+    if (progress) {
+      // Mark first module as completed with timeSpent
+      if (progress.moduleProgress && progress.moduleProgress.length > 0) {
+        progress.moduleProgress[0].status = 'COMPLETED';
+        progress.moduleProgress[0].timeSpent = 180 + i * 10; // 3+ hours
+      }
+      // Add a completed task with a score
+      if (progress.taskProgress && progress.taskProgress.length > 0) {
+        progress.taskProgress[0].status = 'COMPLETED';
+        progress.taskProgress[0].score = 80 + (i % 5) * 4; // 80-96
+      }
+      progress.overallProgress = 50 + i * 5;
+      await progress.save();
+    }
+  }
+  console.log('Enhanced demo data for analytics!');
+}
 
 seedData(); 

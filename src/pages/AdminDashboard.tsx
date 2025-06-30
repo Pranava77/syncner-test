@@ -19,7 +19,6 @@ import {
   Mail,
   Phone,
   MapPin,
-  User,
   Save,
   X,
   Loader2
@@ -38,7 +37,7 @@ const AdminDashboard: React.FC = () => {
   const [editingStudent, setEditingStudent] = useState<any>(null);
 
   // Use real API data instead of mock data
-  const { students, loading: studentsLoading, updateStudent, deleteStudent, addStudent } = useStudents();
+  const { students, loading: studentsLoading, updateStudent, deleteStudent, addStudent, refetch } = useStudents();
   const { submissions, loading: submissionsLoading, error: submissionsError, reviewSubmission } = useSubmissions();
   const { analytics, loading: analyticsLoading } = useAnalytics();
   const { user } = useAppSelector((state) => state.auth);
@@ -94,6 +93,16 @@ const AdminDashboard: React.FC = () => {
 
   const handleSaveStudent = async () => {
     if (editingStudent) {
+      const isNew = !editingStudent._id;
+      if (
+        !editingStudent.name ||
+        !editingStudent.email ||
+        !editingStudent.college ||
+        (isNew && (!editingStudent.password || editingStudent.password.length < 6))
+      ) {
+        alert('Please fill all required fields: Name, Email, College, and Password (min 6 chars for new students).');
+        return;
+      }
       try {
         if (editingStudent._id) {
           // Update existing student
@@ -102,6 +111,7 @@ const AdminDashboard: React.FC = () => {
         } else {
           // Add new student
           await addStudent(editingStudent);
+          await refetch();
           alert('Student added successfully!');
         }
         setEditingStudent(null);
@@ -113,12 +123,18 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
-  const filteredStudents = (students ?? []).filter(student => {
-    const matchesFilter = selectedFilter === 'all' || student.status === selectedFilter;
-    const matchesSearch = student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         student.email.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesFilter && matchesSearch;
-  });
+  const filteredStudents = (students ?? [])
+    .filter(student => student.role === 'student')
+    .filter(student => {
+      const matchesFilter = selectedFilter === 'all' || student.status === selectedFilter;
+      const matchesSearch = student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           student.email.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesFilter && matchesSearch;
+    });
+
+  // Debug: Log all students and filtered students
+  console.log('All students from backend:', students);
+  console.log('Filtered students:', filteredStudents);
 
   // Loading states
   if (studentsLoading && activeTab === 'students') {
@@ -346,9 +362,6 @@ const AdminDashboard: React.FC = () => {
                     Progress
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Tasks
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Status
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -391,9 +404,6 @@ const AdminDashboard: React.FC = () => {
                         </div>
                         <span className="text-sm text-gray-900 dark:text-white">{student.progress || 0}%</span>
                       </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                      {student.tasksCompleted || 0}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(student.status || 'active')}`}>
@@ -576,6 +586,20 @@ const AdminDashboard: React.FC = () => {
                         placeholder="e.g., 3.8"
                       />
                     </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Password {showAddStudent && <span className="text-red-500">*</span>}
+                      </label>
+                      <input
+                        type="password"
+                        value={editingStudent.password || ''}
+                        onChange={(e) => setEditingStudent((prev: any) => ({ ...prev, password: e.target.value }))}
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        placeholder={showAddStudent ? "Enter password (min 6 chars)" : "Leave blank to keep current password"}
+                        required={showAddStudent}
+                      />
+                    </div>
                   </div>
 
                   <div className="flex items-center">
@@ -720,18 +744,7 @@ const AdminDashboard: React.FC = () => {
         </div>
       )}
 
-      {user?.role === 'admin' && (
-        <div className="mt-10">
-          <h2 className="text-xl font-bold mb-4">Review Student Submissions</h2>
-          {submissionsLoading ? (
-            <div>Loading submissions...</div>
-          ) : submissionsError ? (
-            <div className="text-red-500">{submissionsError}</div>
-          ) : (
-            <TaskReview submissions={submissions} onReview={handleReviewSubmission} />
-          )}
-        </div>
-      )}
+
     </div>
   );
 };

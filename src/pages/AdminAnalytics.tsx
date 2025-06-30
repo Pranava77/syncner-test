@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   BarChart3,
   TrendingUp,
@@ -18,12 +18,22 @@ import {
   BarChart as ReBarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer
 } from 'recharts';
 
+const POLL_INTERVAL = 15000; // 15 seconds
+
 const AdminAnalytics: React.FC = () => {
   const [dateRange, setDateRange] = useState('30');
   const [selectedMetric, setSelectedMetric] = useState('engagement');
 
   // Use real API data only
   const { analytics, loading, error, refetch } = useAnalytics(dateRange);
+
+  useEffect(() => {
+    // Polling for real-time analytics
+    const interval = setInterval(() => {
+      refetch();
+    }, POLL_INTERVAL);
+    return () => clearInterval(interval);
+  }, [dateRange, refetch]);
 
   const exportData = () => {
     alert('Analytics data export functionality would be implemented here');
@@ -68,8 +78,13 @@ const AdminAnalytics: React.FC = () => {
     );
   }
 
-  // If analytics is missing or incomplete, show empty state
-  if (!analytics || !analytics.trackDistribution || !analytics.submissionsByStatus || !analytics.attendanceData) {
+  // If analytics is missing or all key arrays are empty, show empty state
+  const isAllEmpty = !analytics ? true :
+    (!analytics.trackDistribution || analytics.trackDistribution.length === 0) &&
+    (!analytics.submissionsByStatus || analytics.submissionsByStatus.length === 0) &&
+    (!analytics.attendanceData || analytics.attendanceData.length === 0);
+
+  if (!analytics || isAllEmpty) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">

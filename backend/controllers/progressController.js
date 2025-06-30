@@ -91,6 +91,15 @@ const updateUserProgress = async (req, res) => {
   }
 };
 
+export const getAllProgress = async (req, res) => {
+  try {
+    const progress = await Progress.find({});
+    res.status(200).json({ success: true, data: progress });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
 export {
   getUserProgress,
   updateUserProgress

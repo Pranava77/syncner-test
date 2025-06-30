@@ -33,6 +33,9 @@ import './models/Progress.js';
 import './models/Resume.js';
 import './models/College.js';
 
+// Import geminiService
+import geminiService from './services/geminiService.js';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -84,12 +87,38 @@ app.use('/api/admin/settings', settingsRoutes);
 app.use('/api/ai', aiRoutes);
 
 // Health check endpoint
-app.get('/api/health', (req, res) => {
+const serverStartTime = Date.now();
+
+app.get('/api/health', async (req, res) => {
+  // Calculate uptime
+  const uptimeMs = Date.now() - serverStartTime;
+  const uptimeSec = Math.floor(uptimeMs / 1000);
+  const hours = Math.floor(uptimeSec / 3600);
+  const minutes = Math.floor((uptimeSec % 3600) / 60);
+  const seconds = uptimeSec % 60;
+  const uptime = `${hours}h ${minutes}m ${seconds}s`;
+
+  // Memory usage
+  const memoryUsageMB = Math.round(process.memoryUsage().rss / 1024 / 1024);
+
+  // Gemini API connectivity check
+  let geminiStatus = 'Unknown';
+  try {
+    // Use a lightweight call (simulate a ping)
+    await geminiService.chatWithAI('ping', 'healthcheck');
+    geminiStatus = 'Connected';
+  } catch (err) {
+    geminiStatus = 'Disconnected';
+  }
+
   res.status(200).json({
     success: true,
     message: 'Server is running',
     timestamp: new Date().toISOString(),
-    database: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'
+    uptime,
+    database: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected',
+    gemini: geminiStatus,
+    memoryUsageMB
   });
 });
 

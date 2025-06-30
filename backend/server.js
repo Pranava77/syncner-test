@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import app from './app.js';
 import connectDB from './config/db.js';
+import progressRoutes from './routes/progressRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -23,3 +24,5 @@ process.on('unhandledRejection', (err, promise) => {
     process.exit(1);
   });
 });
+
+app.use('/api/progress', progressRoutes);

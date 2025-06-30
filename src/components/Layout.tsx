@@ -16,7 +16,8 @@ import {
   BarChart3,
   Menu,
   X,
-  List
+  List,
+  ShieldCheck
 } from 'lucide-react';
 import logo from '../assets/syncner-logo.png';
 
@@ -65,6 +66,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const adminNavItems = [
     { path: '/admin', icon: Users, label: 'Students' },
     { path: '/admin/analytics', icon: BarChart3, label: 'Analytics' },
+    { path: '/admin/diagnostics', icon: ShieldCheck, label: 'System Diagnostics' },
     { path: '/admin/settings', icon: Settings, label: 'Settings' },
   ];
 
@@ -204,7 +206,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 key={item.path}
                 to={item.path}
                 onClick={closeMobileMenu}
-                className={`flex items-center px-6 py-4 text-base font-medium transition-colors ${
+                className={`flex items-center px-6 py-3 text-sm font-medium transition-colors ${
                   isActive(item.path)
                     ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-r-2 border-blue-600 dark:border-blue-400'
                     : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'

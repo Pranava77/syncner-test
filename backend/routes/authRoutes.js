@@ -3,6 +3,7 @@ import { body } from 'express-validator';
 import { register, login, logout, getProfile, updateProfile, forgotPassword, resetPassword } from '../controllers/authController.js';
 import { protect } from '../middleware/auth.js';
 import { validateRequest } from '../middleware/errorHandler.js';
+import User from '../models/User.js';
 
 const router = express.Router();
 
@@ -45,5 +46,16 @@ router.get('/profile', protect, getProfile);
 router.put('/profile', protect, updateProfileValidation, updateProfile);
 router.post('/forgot-password', forgotPassword);
 router.post('/reset-password', resetPassword);
+
+// Health check for auth module
+router.get('/health', async (req, res) => {
+  try {
+    // Try a simple query
+    await User.findOne();
+    res.status(200).json({ success: true, message: 'Auth module is healthy' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Auth module health check failed', error: error.message });
+  }
+});
 
 export default router;

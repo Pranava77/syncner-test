@@ -22,6 +22,7 @@ import OnboardingFlow from './pages/OnboardingFlow';
 import ProtectedRoute from './components/ProtectedRoute';
 import UpcomingTasks from './pages/UpcomingTasks';
 import StudentSubmissions from './pages/StudentTasks';
+import AdminDiagnostics from './pages/AdminDiagnostics';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -56,11 +57,13 @@ function App() {
   }, []); // Only run once on mount
 
   useEffect(() => {
-    // Apply theme on mount
+    // Apply theme on mount and whenever isDarkMode changes
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
+      document.documentElement.style.backgroundColor = '#111827'; // Tailwind dark:bg-gray-900
     } else {
       document.documentElement.classList.remove('dark');
+      document.documentElement.style.backgroundColor = '#f9fafb'; // Tailwind bg-gray-50
     }
   }, [isDarkMode]);
 
@@ -138,6 +141,16 @@ function App() {
         <ProtectedRoute requireAdmin>
           <Layout>
             <AdminSettings />
+          </Layout>
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/admin/diagnostics',
+      element: (
+        <ProtectedRoute requireAdmin>
+          <Layout>
+            <AdminDiagnostics />
           </Layout>
         </ProtectedRoute>
       ),
