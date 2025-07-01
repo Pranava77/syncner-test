@@ -4,7 +4,6 @@ import { useAppDispatch, useAppSelector } from '../redux/store';
 import { toggleDarkMode } from '../redux/slices/themeSlice';
 import { getDefaultRoute } from '../utils/routing';
 import { 
-  GraduationCap, 
   Target, 
   Brain, 
   Users, 
@@ -62,6 +61,7 @@ const LandingPage: React.FC = () => {
               <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
                 <img src={logo} alt="Syncner Logo" className="h-8 w-8 lg:h-10 lg:w-10 object-contain" />
               </div>
+              <h1 className="text-2xl font-bold text-white font-satoshi">Syncner</h1>  
             </div>
             
             {/* Desktop Navigation */}
