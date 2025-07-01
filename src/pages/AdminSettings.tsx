@@ -4,13 +4,13 @@ import {
   Users, 
   BookOpen, 
   Briefcase, 
-  Bell, 
   Shield, 
   Database, 
   Save,
   Plus,
   Edit3,
   Trash2,
+  CheckCircle
 } from 'lucide-react';
 import apiService from '../services/api';
 import { useStudents } from '../hooks/useAdmin';
@@ -36,6 +36,9 @@ interface Task {
   points: number;
   careerTrack: string;
   requirements: string[];
+  deliverables: string[];
+  skills: string[];
+  estimatedTime: string;
   isActive: boolean;
   assignedTo?: string[];
 }
@@ -111,7 +114,6 @@ const AdminSettings: React.FC = () => {
   const { students: users, refetch, addStudent, updateStudent, deleteStudent, loading: usersLoading } = useStudents(userFilters);
 
   // Gemini API Key management
-  const [showGeminiKey, setShowGeminiKey] = useState(false);
   const [geminiKeyInput, setGeminiKeyInput] = useState('');
   useEffect(() => {
     if (settings?.integrations?.geminiApiKey !== undefined) {
@@ -179,13 +181,24 @@ const AdminSettings: React.FC = () => {
   };
 
   const handleSettingChange = (category: string, key: string, value: any) => {
-    setSettings((prev: any) => ({
-      ...prev,
-      [category]: {
-        ...prev[category],
-        [key]: value
+    setSettings((prev: any) => {
+      if (category === 'integrations') {
+        return {
+          ...prev,
+          integrations: {
+            ...prev.integrations,
+            [key]: value
+          }
+        };
       }
-    }));
+      return {
+        ...prev,
+        [category]: {
+          ...prev[category],
+          [key]: value
+        }
+      };
+    });
   };
 
   const handleSaveSettings = async () => {
@@ -324,8 +337,6 @@ const AdminSettings: React.FC = () => {
     { id: 'users', label: 'User Management', icon: Users },
     { id: 'modules', label: 'Training Modules', icon: BookOpen },
     { id: 'tasks', label: 'Tasks', icon: Briefcase },
-    { id: 'notifications', label: 'Notifications', icon: Bell },
-    { id: 'security', label: 'Security', icon: Shield },
     { id: 'integrations', label: 'Integrations', icon: Database }
   ];
 
@@ -459,62 +470,9 @@ const AdminSettings: React.FC = () => {
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Allow Registration
-                </label>
-                <input
-                  type="checkbox"
-                  checked={settings?.general?.allowRegistration ?? false}
-                  onChange={(e) => handleSettingChange('general', 'allowRegistration', e.target.checked)}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-              </div>
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={settings?.general?.maintenanceMode ?? false}
-                  onChange={(e) => handleSettingChange('general', 'maintenanceMode', e.target.checked)}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-                <label className="ml-2 text-sm text-gray-700 dark:text-gray-300">
-                  Maintenance Mode
-                </label>
-              </div>
             </div>
             <div className="space-y-8">
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
-                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                  <Shield className="h-5 w-5" /> Gemini API Key
-                </h3>
-                <div className="flex items-center gap-3">
-                  <input
-                    type={showGeminiKey ? 'text' : 'password'}
-                    value={geminiKeyInput}
-                    onChange={handleGeminiKeyChange}
-                    className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white"
-                    placeholder="Enter Gemini API Key"
-                    autoComplete="off"
-                  />
-                  <button
-                    type="button"
-                    className="px-3 py-2 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
-                    onClick={() => setShowGeminiKey((v) => !v)}
-                    title={showGeminiKey ? 'Hide' : 'Show'}
-                  >
-                    {showGeminiKey ? 'Hide' : 'Show'}
-                  </button>
-                </div>
-                <p className="text-xs text-gray-500 mt-2">This key is used for all Gemini AI features. Only admins can view or update it.</p>
-                <button
-                  className="mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-all font-medium"
-                  onClick={handleSaveSettings}
-                  disabled={isSaving}
-                >
-                  {isSaving ? 'Saving...' : 'Save Gemini API Key'}
-                </button>
-                {saveMessage && <div className="mt-2 text-green-600">{saveMessage}</div>}
-              </div>
+              {/* Gemini API Key section removed as it is now in Integrations */}
             </div>
           </div>
         )}
@@ -800,13 +758,15 @@ const AdminSettings: React.FC = () => {
                               });
                               setShowModuleForm(true);
                             }}
-                            className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mr-4"
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded transition-colors mr-2"
+                            title="Edit"
                           >
                             <Edit3 className="h-4 w-4" />
                           </button>
                           <button
                             onClick={() => handleDeleteModule(module.id)}
-                            className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300"
+                            className="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded transition-colors"
+                            title="Delete"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
@@ -1024,21 +984,23 @@ const AdminSettings: React.FC = () => {
                                 points: task.points,
                                 careerTrack: task.careerTrack,
                                 requirements: task.requirements,
-                                deliverables: [''],
-                                skills: [''],
-                                estimatedTime: '',
+                                deliverables: task.deliverables,
+                                skills: task.skills,
+                                estimatedTime: task.estimatedTime,
                                 isActive: task.isActive,
                                 assignedTo: task.assignedTo || []
                               });
                               setShowTaskForm(true);
                             }}
-                            className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mr-4"
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded transition-colors mr-2"
+                            title="Edit"
                           >
                             <Edit3 className="h-4 w-4" />
                           </button>
                           <button
                             onClick={() => handleDeleteTask(task.id)}
-                            className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300"
+                            className="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded transition-colors"
+                            title="Delete"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
@@ -1052,117 +1014,29 @@ const AdminSettings: React.FC = () => {
           </div>
         )}
 
-        {/* Notifications Settings */}
-        {activeTab === 'notifications' && (
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Notification Settings</h2>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-sm font-medium text-gray-900 dark:text-white">Email Notifications</h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Receive notifications via email</p>
-                </div>
-                <input
-                  type="checkbox"
-                  checked={settings?.notifications?.emailNotifications ?? false}
-                  onChange={(e) => handleSettingChange('notifications', 'emailNotifications', e.target.checked)}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-sm font-medium text-gray-900 dark:text-white">Push Notifications</h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Receive browser push notifications</p>
-                </div>
-                <input
-                  type="checkbox"
-                  checked={settings?.notifications?.pushNotifications ?? false}
-                  onChange={(e) => handleSettingChange('notifications', 'pushNotifications', e.target.checked)}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-sm font-medium text-gray-900 dark:text-white">Weekly Reports</h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Send weekly progress reports</p>
-                </div>
-                <input
-                  type="checkbox"
-                  checked={settings?.notifications?.weeklyReports ?? false}
-                  onChange={(e) => handleSettingChange('notifications', 'weeklyReports', e.target.checked)}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Security Settings */}
-        {activeTab === 'security' && (
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Security Settings</h2>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-sm font-medium text-gray-900 dark:text-white">Require Email Verification</h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Users must verify their email before accessing the platform</p>
-                </div>
-                <input
-                  type="checkbox"
-                  checked={settings?.security?.requireEmailVerification ?? false}
-                  onChange={(e) => handleSettingChange('security', 'requireEmailVerification', e.target.checked)}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Session Timeout (hours)
-                </label>
-                <input
-                  type="number"
-                  value={settings?.security?.sessionTimeout ?? 0}
-                  onChange={(e) => handleSettingChange('security', 'sessionTimeout', parseInt(e.target.value))}
-                  className="w-32 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Max Login Attempts
-                </label>
-                <input
-                  type="number"
-                  value={settings?.security?.maxLoginAttempts ?? 0}
-                  onChange={(e) => handleSettingChange('security', 'maxLoginAttempts', parseInt(e.target.value))}
-                  className="w-32 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                />
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* User Management Tab */}
         {activeTab === 'users' && (
           <div className="space-y-6">
-            <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">User Management</h2>
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 min-h-[3.5rem]">
+              <h2 className="text-xl font-semibold text-white">User Management</h2>
               <button
                 onClick={() => { setShowUserForm(true); setEditingUser(null); setUserForm({ name: '', email: '', password: '', role: 'student', college: '', department: '', careerTrack: '', isActive: true }); }}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 shadow mt-4"
               >
-                <Plus className="h-4 w-4 mr-2" />
-                Add User
+                <Plus className="h-4 w-4" />
+                <span>Add User</span>
               </button>
             </div>
             {/* Filters */}
             <div className="flex flex-wrap gap-3 mb-4">
-              <input type="text" placeholder="Name" value={userFilters.name} onChange={e => setUserFilters(f => ({ ...f, name: e.target.value }))} className="px-3 py-2 border rounded-lg" />
-              <input type="text" placeholder="Email" value={userFilters.email} onChange={e => setUserFilters(f => ({ ...f, email: e.target.value }))} className="px-3 py-2 border rounded-lg" />
-              <select value={userFilters.role} onChange={e => setUserFilters(f => ({ ...f, role: e.target.value }))} className="px-3 py-2 border rounded-lg">
+              <input type="text" placeholder="Name" value={userFilters.name} onChange={e => setUserFilters(f => ({ ...f, name: e.target.value }))} className="px-3 py-2 border border-gray-700 bg-gray-900 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" />
+              <input type="text" placeholder="Email" value={userFilters.email} onChange={e => setUserFilters(f => ({ ...f, email: e.target.value }))} className="px-3 py-2 border border-gray-700 bg-gray-900 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" />
+              <select value={userFilters.role} onChange={e => setUserFilters(f => ({ ...f, role: e.target.value }))} className="px-3 py-2 border border-gray-700 bg-gray-900 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                 <option value="">All Roles</option>
                 <option value="student">Student</option>
                 <option value="admin">Admin</option>
               </select>
-              <select value={userFilters.careerTrack} onChange={e => setUserFilters(f => ({ ...f, careerTrack: e.target.value }))} className="px-3 py-2 border rounded-lg">
+              <select value={userFilters.careerTrack} onChange={e => setUserFilters(f => ({ ...f, careerTrack: e.target.value }))} className="px-3 py-2 border border-gray-700 bg-gray-900 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                 <option value="">All Tracks</option>
                 <option value="fullstack">Full Stack</option>
                 <option value="ai-ml">AI/ML</option>
@@ -1171,37 +1045,55 @@ const AdminSettings: React.FC = () => {
               </select>
             </div>
             {/* Users Table */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
+            <div className="bg-gray-900 rounded-xl shadow-lg overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-gray-50 dark:bg-gray-700">
+                  <thead className="bg-gray-800">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Name</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Email</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Role</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Track</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                      <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Name</th>
+                      <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Email</th>
+                      <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Role</th>
+                      <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Track</th>
+                      <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Status</th>
+                      <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  <tbody className="divide-y divide-gray-800">
                     {usersLoading ? (
-                      <tr><td colSpan={6} className="text-center py-6">Loading...</td></tr>
+                      <tr><td colSpan={6} className="text-center py-6 text-white">Loading...</td></tr>
                     ) : (Array.isArray(users) ? users.length : 0) === 0 ? (
-                      <tr><td colSpan={6} className="text-center py-6">No users found.</td></tr>
+                      <tr><td colSpan={6} className="text-center py-6 text-white">No users found.</td></tr>
                     ) : users.map((user: any) => (
-                      <tr key={user._id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                        <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
-                        <td className="px-6 py-4 whitespace-nowrap capitalize">{user.role}</td>
-                        <td className="px-6 py-4 whitespace-nowrap capitalize">{user.careerTrack || '-'}</td>
+                      <tr key={user._id} className="hover:bg-gray-800 transition text-white">
+                        <td className="px-6 py-4 whitespace-nowrap text-white">{user.name}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-white">{user.email}</td>
+                        <td className="px-6 py-4 whitespace-nowrap capitalize text-white">{user.role}</td>
+                        <td className="px-6 py-4 whitespace-nowrap capitalize text-white">{user.careerTrack || '-'}</td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${user.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>{user.isActive ? 'Active' : 'Inactive'}</span>
+                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${user.isActive ? 'bg-green-600 text-white' : 'bg-red-600 text-white'}`}>{user.isActive ? 'Active' : 'Inactive'}</span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                          <button onClick={() => { setEditingUser(user); setUserForm({ ...user, password: '' }); setShowUserForm(true); }} className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300">Edit</button>
-                          <button onClick={() => deleteStudent(user._id)} className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300">Delete</button>
-                          <button onClick={() => updateStudent(user._id, { ...user, isActive: !user.isActive })} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">{user.isActive ? 'Deactivate' : 'Activate'}</button>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2 text-white">
+                          <button
+                            onClick={() => { setEditingUser(user); setUserForm({ ...user, password: '' }); setShowUserForm(true); }}
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded transition-colors"
+                            title="Edit"
+                          >
+                            <Edit3 className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => deleteStudent(user._id)}
+                            className="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded transition-colors"
+                            title="Delete"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => updateStudent(user._id, { ...user, isActive: !user.isActive })}
+                            className={`px-2 py-1 rounded transition-colors ${user.isActive ? 'bg-gray-600 hover:bg-gray-700 text-white' : 'bg-green-600 hover:bg-green-700 text-white'}`}
+                            title={user.isActive ? 'Deactivate' : 'Activate'}
+                          >
+                            {user.isActive ? <Shield className="h-4 w-4" /> : <CheckCircle className="h-4 w-4" />}
+                          </button>
                         </td>
                       </tr>
                     ))}
@@ -1211,20 +1103,20 @@ const AdminSettings: React.FC = () => {
             </div>
             {/* Add/Edit User Modal */}
             {showUserForm && (
-              <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 w-full max-w-md">
-                  <h3 className="text-lg font-semibold mb-4">{editingUser ? 'Edit User' : 'Add User'}</h3>
+              <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+                <div className="bg-gray-900 rounded-xl shadow-2xl p-8 w-full max-w-md border border-gray-700">
+                  <h3 className="text-lg font-semibold mb-4 text-white">{editingUser ? 'Edit User' : 'Add User'}</h3>
                   <div className="space-y-3">
-                    <input type="text" placeholder="Name" value={userForm.name} onChange={e => setUserForm(f => ({ ...f, name: e.target.value }))} className="w-full px-3 py-2 border rounded-lg" />
-                    <input type="email" placeholder="Email" value={userForm.email} onChange={e => setUserForm(f => ({ ...f, email: e.target.value }))} className="w-full px-3 py-2 border rounded-lg" />
-                    {!editingUser && <input type="password" placeholder="Password" value={userForm.password} onChange={e => setUserForm(f => ({ ...f, password: e.target.value }))} className="w-full px-3 py-2 border rounded-lg" />}
-                    <select value={userForm.role} onChange={e => setUserForm(f => ({ ...f, role: e.target.value }))} className="w-full px-3 py-2 border rounded-lg">
+                    <input type="text" placeholder="Name" value={userForm.name} onChange={e => setUserForm(f => ({ ...f, name: e.target.value }))} className="w-full px-3 py-2 border border-gray-700 bg-gray-800 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" />
+                    <input type="email" placeholder="Email" value={userForm.email} onChange={e => setUserForm(f => ({ ...f, email: e.target.value }))} className="w-full px-3 py-2 border border-gray-700 bg-gray-800 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" />
+                    {!editingUser && <input type="password" placeholder="Password" value={userForm.password} onChange={e => setUserForm(f => ({ ...f, password: e.target.value }))} className="w-full px-3 py-2 border border-gray-700 bg-gray-800 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" />}
+                    <select value={userForm.role} onChange={e => setUserForm(f => ({ ...f, role: e.target.value }))} className="w-full px-3 py-2 border border-gray-700 bg-gray-800 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                       <option value="student">Student</option>
                       <option value="admin">Admin</option>
                     </select>
-                    <input type="text" placeholder="College" value={userForm.college} onChange={e => setUserForm(f => ({ ...f, college: e.target.value }))} className="w-full px-3 py-2 border rounded-lg" />
-                    <input type="text" placeholder="Department" value={userForm.department} onChange={e => setUserForm(f => ({ ...f, department: e.target.value }))} className="w-full px-3 py-2 border rounded-lg" />
-                    <select value={userForm.careerTrack} onChange={e => setUserForm(f => ({ ...f, careerTrack: e.target.value }))} className="w-full px-3 py-2 border rounded-lg">
+                    <input type="text" placeholder="College" value={userForm.college} onChange={e => setUserForm(f => ({ ...f, college: e.target.value }))} className="w-full px-3 py-2 border border-gray-700 bg-gray-800 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" />
+                    <input type="text" placeholder="Department" value={userForm.department} onChange={e => setUserForm(f => ({ ...f, department: e.target.value }))} className="w-full px-3 py-2 border border-gray-700 bg-gray-800 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" />
+                    <select value={userForm.careerTrack} onChange={e => setUserForm(f => ({ ...f, careerTrack: e.target.value }))} className="w-full px-3 py-2 border border-gray-700 bg-gray-800 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                       <option value="">Select Track</option>
                       <option value="fullstack">Full Stack</option>
                       <option value="ai-ml">AI/ML</option>
@@ -1233,11 +1125,11 @@ const AdminSettings: React.FC = () => {
                     </select>
                     <div className="flex items-center space-x-2">
                       <input type="checkbox" checked={userForm.isActive} onChange={e => setUserForm(f => ({ ...f, isActive: e.target.checked }))} />
-                      <span>Active</span>
+                      <span className="text-white">Active</span>
                     </div>
                   </div>
                   <div className="flex justify-end space-x-3 mt-6">
-                    <button onClick={() => setShowUserForm(false)} className="px-4 py-2 border rounded-lg">Cancel</button>
+                    <button onClick={() => setShowUserForm(false)} className="px-4 py-2 border border-gray-700 text-white rounded-lg hover:bg-gray-800 transition">Cancel</button>
                     <button
                       onClick={async () => {
                         setUserFormError('');
@@ -1270,15 +1162,78 @@ const AdminSettings: React.FC = () => {
                           setUserFormError(err.message || 'Failed to add/update user.');
                         }
                       }}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg"
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
                     >
                       {editingUser ? 'Update' : 'Add'}
                     </button>
                   </div>
-                  {userFormError && <div className="mt-3 text-red-600 text-sm">{userFormError}</div>}
+                  {userFormError && <div className="mt-3 text-red-400 text-sm">{userFormError}</div>}
                 </div>
               </div>
             )}
+          </div>
+        )}
+
+        {/* Integrations Tab */}
+        {activeTab === 'integrations' && (
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 space-y-8">
+            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 text-white">
+              Integrations
+            </h3>
+            {/* Gemini API Key */}
+            <div>
+              <label className="block text-sm font-medium text-white mb-2">Gemini API Key</label>
+              <input
+                type="text"
+                value={geminiKeyInput}
+                onChange={handleGeminiKeyChange}
+                className="w-full px-4 py-2 border rounded-lg bg-gray-900 border-gray-700 text-white"
+                placeholder="Enter Gemini API Key"
+              />
+              <p className="text-xs text-gray-400 mt-2">Used for AI features (chat, feedback, resume).</p>
+            </div>
+            {/* Email Provider */}
+            <div>
+              <label className="block text-sm font-medium text-white mb-2">Email Provider</label>
+              <input
+                type="text"
+                value={settings?.integrations?.emailProvider ?? ''}
+                onChange={e => handleSettingChange('integrations', 'emailProvider', e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg bg-gray-900 border-gray-700 text-white"
+                placeholder="e.g. SendGrid, Gmail, Mailgun"
+              />
+              <p className="text-xs text-gray-400 mt-2">For reference. Not connected to any provider yet.</p>
+            </div>
+            {/* Analytics Enabled Toggle */}
+            <div className="flex items-center justify-between">
+              <span className="text-white font-medium">Analytics Enabled</span>
+              <button
+                type="button"
+                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${settings?.integrations?.analyticsEnabled ? 'bg-blue-600' : 'bg-gray-600'}`}
+                onClick={() => handleSettingChange('integrations', 'analyticsEnabled', !settings?.integrations?.analyticsEnabled)}
+              >
+                <span className={`h-4 w-4 bg-white rounded-full shadow transform transition-transform duration-300 ${settings?.integrations?.analyticsEnabled ? 'translate-x-6' : ''}`}></span>
+              </button>
+            </div>
+            {/* Backup Enabled Toggle */}
+            <div className="flex items-center justify-between">
+              <span className="text-white font-medium">Backup Enabled</span>
+              <button
+                type="button"
+                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${settings?.integrations?.backupEnabled ? 'bg-blue-600' : 'bg-gray-600'}`}
+                onClick={() => handleSettingChange('integrations', 'backupEnabled', !settings?.integrations?.backupEnabled)}
+              >
+                <span className={`h-4 w-4 bg-white rounded-full shadow transform transition-transform duration-300 ${settings?.integrations?.backupEnabled ? 'translate-x-6' : ''}`}></span>
+              </button>
+            </div>
+            <button
+              className="mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-all font-medium"
+              onClick={handleSaveSettings}
+              disabled={isSaving}
+            >
+              {isSaving ? 'Saving...' : 'Save Integrations'}
+            </button>
+            {saveMessage && <div className="mt-2 text-green-400">{saveMessage}</div>}
           </div>
         )}
       </div>

@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { loginUser, clearError, fetchCurrentUser } from '../redux/slices/authSlice';
-import { toggleDarkMode } from '../redux/slices/themeSlice';
 import { getDefaultRoute } from '../utils/routing';
-import { Mail, Lock, AlertCircle, Moon, Sun } from 'lucide-react';
+import { Mail, Lock, AlertCircle } from 'lucide-react';
 import logo from '../assets/syncner-logo.png';
 
 const LoginPage: React.FC = () => {
@@ -12,7 +11,6 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const dispatch = useAppDispatch();
   const { isLoading, error, isAuthenticated, user } = useAppSelector((state) => state.auth);
-  const { isDarkMode } = useAppSelector((state) => state.theme);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -50,23 +48,9 @@ const LoginPage: React.FC = () => {
     }
   };
 
-  const handleToggleDarkMode = () => {
-    dispatch(toggleDarkMode());
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 dark:from-gray-950 dark:via-blue-950 dark:to-purple-950 flex items-center justify-center px-4">
       <div className="max-w-md w-full">
-        {/* Theme Toggle */}
-        <div className="flex justify-end mb-4">
-          <button
-            onClick={handleToggleDarkMode}
-            className="text-white/80 hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors"
-          >
-            {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-          </button>
-        </div>
-
         {/* Header */}
         <div className="text-center mb-6 lg:mb-8">
           <div className="flex items-center justify-center space-x-3 mb-4">

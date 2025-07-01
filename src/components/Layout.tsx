@@ -2,7 +2,6 @@ import React, { ReactNode, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { logoutUser } from '../redux/slices/authSlice';
-import { toggleDarkMode } from '../redux/slices/themeSlice';
 import { 
   Home, 
   BookOpen, 
@@ -46,10 +45,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     } finally {
       setIsLoggingOut(false);
     }
-  };
-
-  const handleToggleDarkMode = () => {
-    dispatch(toggleDarkMode());
   };
 
   const isActive = (path: string) => location.pathname === path;
@@ -117,16 +112,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </div>
           </div>
           
-          <div className="flex items-center justify-between mb-3">
-            <button
-              onClick={handleToggleDarkMode}
-              className="flex items-center px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors"
-            >
-              {isDarkMode ? <Sun className="h-4 w-4 mr-2" /> : <Moon className="h-4 w-4 mr-2" />}
-              {isDarkMode ? 'Light' : 'Dark'}
-            </button>
-          </div>
-          
           <button
             onClick={handleLogout}
             disabled={isLoggingOut}
@@ -150,12 +135,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
           
           <div className="flex items-center space-x-2">
-            <button
-              onClick={handleToggleDarkMode}
-              className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-            >
-              {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </button>
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"

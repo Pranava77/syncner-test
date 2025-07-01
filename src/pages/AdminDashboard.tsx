@@ -421,13 +421,15 @@ const AdminDashboard: React.FC = () => {
                         </button>
                         <button
                           onClick={() => handleEditStudent(student)}
-                          className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300"
+                          className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded transition-colors"
+                          title="Edit"
                         >
                           <Edit3 className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => handleDeleteStudent(student._id)}
-                          className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300"
+                          className="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded transition-colors"
+                          title="Delete"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>

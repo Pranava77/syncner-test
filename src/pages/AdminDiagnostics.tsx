@@ -50,7 +50,7 @@ const AdminDiagnostics: React.FC = () => {
     <div className="max-w-3xl mx-auto py-10 px-4">
       <div className="flex items-center mb-6 gap-3">
         <ShieldCheck className="h-7 w-7 text-blue-600" />
-        <h1 className="text-2xl font-bold">System Diagnostics</h1>
+        <h1 className="text-2xl font-bold text-white">System Diagnostics</h1>
       </div>
       <div className="flex items-center justify-between mb-4">
         <div className="text-gray-600 text-sm">
@@ -76,13 +76,13 @@ const AdminDiagnostics: React.FC = () => {
         </div>
       )}
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white shadow rounded-lg">
+        <table className="min-w-full bg-gray-900 shadow rounded-lg">
           <thead>
             <tr>
-              <th className="px-4 py-2 text-left">Module</th>
-              <th className="px-4 py-2 text-left">Status</th>
-              <th className="px-4 py-2 text-left">Message</th>
-              <th className="px-4 py-2 text-left">Error</th>
+              <th className="px-4 py-2 text-left text-white bg-gray-800">Module</th>
+              <th className="px-4 py-2 text-left text-white bg-gray-800">Status</th>
+              <th className="px-4 py-2 text-left text-white bg-gray-800">Message</th>
+              <th className="px-4 py-2 text-left text-white bg-gray-800">Error</th>
             </tr>
           </thead>
           <tbody>
@@ -93,21 +93,21 @@ const AdminDiagnostics: React.FC = () => {
                 errorText = diag.message;
               }
               return (
-                <tr key={diag.module} className={diag.healthy ? 'bg-green-50' : 'bg-red-50'}>
-                  <td className="px-4 py-2 font-medium">{diag.module}</td>
+                <tr key={diag.module} className={`transition-colors ${diag.healthy ? 'bg-gray-800 hover:bg-gray-700' : 'bg-gray-700 hover:bg-gray-800'}`}>
+                  <td className="px-4 py-2 font-medium text-white">{diag.module}</td>
                   <td className="px-4 py-2">
                     {diag.healthy ? (
-                      <span className="flex items-center gap-1 text-green-700 font-semibold">
+                      <span className="flex items-center gap-1 text-green-400 font-semibold">
                         <CheckCircle className="h-4 w-4" /> Healthy
                       </span>
                     ) : (
-                      <span className="flex items-center gap-1 text-red-700 font-semibold">
+                      <span className="flex items-center gap-1 text-red-400 font-semibold">
                         <AlertTriangle className="h-4 w-4" /> Unhealthy
                       </span>
                     )}
                   </td>
-                  <td className="px-4 py-2 text-sm">{!errorText ? diag.message : ''}</td>
-                  <td className="px-4 py-2 text-xs text-red-600">{errorText || '—'}</td>
+                  <td className="px-4 py-2 text-sm text-white">{!errorText ? diag.message : ''}</td>
+                  <td className="px-4 py-2 text-xs text-red-400">{errorText || '—'}</td>
                 </tr>
               );
             })}

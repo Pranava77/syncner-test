@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/store';
-import { toggleDarkMode } from '../redux/slices/themeSlice';
 import { getDefaultRoute } from '../utils/routing';
 import { 
   Target, 
@@ -33,10 +32,6 @@ const LandingPage: React.FC = () => {
     }
   }, [isAuthenticated, user, isLoading, navigate]);
 
-  const handleToggleDarkMode = () => {
-    dispatch(toggleDarkMode());
-  };
-
   // Show loading while checking authentication
   if (isLoading) {
     return (
@@ -66,12 +61,6 @@ const LandingPage: React.FC = () => {
             
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-4">
-              <button
-                onClick={handleToggleDarkMode}
-                className="text-white/80 hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors"
-              >
-                {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-              </button>
               <Link
                 to="/login"
                 className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 lg:px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all font-medium"
@@ -82,12 +71,6 @@ const LandingPage: React.FC = () => {
 
             {/* Mobile Menu Button */}
             <div className="md:hidden flex items-center space-x-2">
-              <button
-                onClick={handleToggleDarkMode}
-                className="text-white/80 hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors"
-              >
-                {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-              </button>
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className="text-white/80 hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors"
