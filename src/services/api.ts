@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://syncner-test.onrender.com/api';
 
 class ApiService {
   private baseURL: string;
@@ -319,11 +319,11 @@ class ApiService {
   async getSubmissions(taskId?: string, userRole?: string) {
     let url;
     if (userRole === 'admin') {
-      url = '/api/submissions';
+      url = `${this.baseURL}/submissions`;
     } else if (taskId) {
-      url = `/api/tasks/${taskId}/submissions`;
+      url = `${this.baseURL}/tasks/${taskId}/submissions`;
     } else {
-      url = '/api/submissions/my';
+      url = `${this.baseURL}/submissions/my`;
     }
     const response = await fetch(url, {
       headers: this.getHeaders(),
