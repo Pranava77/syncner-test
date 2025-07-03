@@ -21,7 +21,7 @@ const AdminDiagnostics: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/admin/diagnostics', {
+      const res = await fetch('/admin/diagnostics', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
