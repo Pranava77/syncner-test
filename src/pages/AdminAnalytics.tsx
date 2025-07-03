@@ -18,7 +18,7 @@ import {
   BarChart as ReBarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer
 } from 'recharts';
 
-const POLL_INTERVAL = 15000; // 15 seconds
+const POLL_INTERVAL = 150000; // 150 seconds
 
 const AdminAnalytics: React.FC = () => {
   const [dateRange, setDateRange] = useState('30');

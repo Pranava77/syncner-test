@@ -16,12 +16,13 @@ const AdminDiagnostics: React.FC = () => {
   const [timestamp, setTimestamp] = useState<string>('');
   const { token } = useAppSelector((state) => state.auth);
 
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://syncner-test.onrender.com/api';
 
   const fetchDiagnostics = async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('/admin/diagnostics', {
+      const res = await fetch(`${API_BASE_URL}/admin/diagnostics`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
