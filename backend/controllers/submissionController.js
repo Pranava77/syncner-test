@@ -22,4 +22,36 @@ const reviewSubmission = async (req, res) => {
   }
 };
 
-export { reviewSubmission }; 
+// @desc    Get all submissions (admin)
+// @route   GET /api/submissions
+// @access  Private/Admin
+const getAllSubmissions = async (req, res) => {
+  try {
+    const submissions = await Submission.find()
+      .populate('task', 'title')
+      .populate('student', 'name email');
+    const mapped = submissions.map(sub => ({
+      id: sub._id,
+      taskTitle: sub.task?.title || '',
+      task: sub.task ? { title: sub.task.title } : undefined,
+      studentName: sub.student?.name || '',
+      studentEmail: sub.student?.email || '',
+      status: sub.status,
+      score: sub.score,
+      feedback: sub.feedback,
+      description: sub.description,
+      liveUrl: sub.liveUrl,
+      githubUrl: sub.githubUrl,
+      notes: sub.notes,
+      files: sub.files,
+      submittedAt: sub.submittedAt,
+      reviewedAt: sub.reviewedAt,
+      reviewedBy: sub.reviewedBy,
+    }));
+    res.status(200).json({ success: true, submissions: mapped });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+export { reviewSubmission, getAllSubmissions }; 

@@ -139,9 +139,10 @@ export const useSubmissions = (taskId?: string) => {
   const fetchSubmissions = async () => {
     try {
       setLoading(true);
-      const response = await apiService.getSubmissions(taskId);
+      const response = await apiService.getSubmissions(taskId, 'admin');
+      console.log('Admin submissions API response:', response);
       if (response.success) {
-        setSubmissions(response.data.submissions);
+        setSubmissions(response.submissions);
       }
     } catch (err: any) {
       setError(err.message);

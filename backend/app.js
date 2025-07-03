@@ -6,6 +6,7 @@ import rateLimit from 'express-rate-limit';
 import path from 'path';
 import mongoose from 'mongoose';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 
 // Import routes
 import authRoutes from './routes/authRoutes.js';
@@ -36,8 +37,13 @@ import './models/College.js';
 // Import geminiService
 import geminiService from './services/geminiService.js';
 
+// Ensure uploads directory exists
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
 
 const app = express();
 

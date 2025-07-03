@@ -1,7 +1,7 @@
 import express from 'express';
 import Submission from '../models/Submission.js';
 import { protect } from '../middleware/auth.js';
-import { reviewSubmission } from '../controllers/submissionController.js';
+import { reviewSubmission, getAllSubmissions } from '../controllers/submissionController.js';
 import { requireAdmin } from '../middleware/roleGuard.js';
 
 const router = express.Router();
@@ -18,9 +18,16 @@ router.get('/my', protect, async (req, res) => {
       status: sub.status,
       score: sub.score,
       feedback: sub.feedback,
+      description: sub.description,
+      liveUrl: sub.liveUrl,
+      githubUrl: sub.githubUrl,
+      notes: sub.notes,
+      files: sub.files,
+      reviewedAt: sub.reviewedAt,
+      reviewedBy: sub.reviewedBy,
       submittedAt: sub.submittedAt,
     }));
-    res.status(200).json({ success: true, data: mapped });
+    res.status(200).json({ success: true, submissions: mapped });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Server error' });
   }
@@ -28,6 +35,9 @@ router.get('/my', protect, async (req, res) => {
 
 // Review a submission (admin)
 router.patch('/:id/review', protect, requireAdmin, reviewSubmission);
+
+// Get all submissions for admin
+router.get('/', protect, requireAdmin, getAllSubmissions);
 
 // Health check for submissions module
 router.get('/health', async (req, res) => {

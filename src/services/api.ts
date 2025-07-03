@@ -319,11 +319,11 @@ class ApiService {
   async getSubmissions(taskId?: string, userRole?: string) {
     let url;
     if (userRole === 'admin') {
-      url = taskId 
-        ? `${this.baseURL}/tasks/${taskId}/submissions`
-        : `${this.baseURL}/tasks/submissions`;
+      url = '/api/submissions';
+    } else if (taskId) {
+      url = `/api/tasks/${taskId}/submissions`;
     } else {
-      url = `${this.baseURL}/submissions/my`;
+      url = '/api/submissions/my';
     }
     const response = await fetch(url, {
       headers: this.getHeaders(),

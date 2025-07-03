@@ -16,6 +16,7 @@ import {
 
 interface Submission {
   _id: string;
+  id?: string;
   taskId: string;
   studentName: string;
   studentEmail: string;
@@ -30,6 +31,8 @@ interface Submission {
   feedback?: string;
   reviewedAt?: string;
   reviewedBy?: string;
+  taskTitle?: string;
+  task?: { title: string };
 }
 
 interface TaskReviewProps {
@@ -45,10 +48,19 @@ const TaskReview: React.FC<TaskReviewProps> = ({ submissions = [], onReview }) =
     status: 'pending'
   });
   const [filter, setFilter] = useState('all');
+  const [search, setSearch] = useState('');
 
   const filteredSubmissions = (submissions || []).filter(submission => {
-    if (filter === 'all') return true;
-    return submission.status === filter;
+    if (filter !== 'all' && submission.status !== filter) return false;
+    if (search) {
+      const s = search.toLowerCase();
+      return (
+        (submission.studentName && submission.studentName.toLowerCase().includes(s)) ||
+        (submission.studentEmail && submission.studentEmail.toLowerCase().includes(s)) ||
+        (submission.taskTitle && submission.taskTitle.toLowerCase().includes(s))
+      );
+    }
+    return true;
   });
 
   const getStatusColor = (status: string) => {
@@ -84,7 +96,7 @@ const TaskReview: React.FC<TaskReviewProps> = ({ submissions = [], onReview }) =
       return;
     }
 
-    onReview(selectedSubmission._id, reviewForm.score, reviewForm.feedback, reviewForm.status);
+    onReview(selectedSubmission._id || selectedSubmission.id || '', reviewForm.score, reviewForm.feedback, reviewForm.status);
     setSelectedSubmission(null);
     setReviewForm({ score: 0, feedback: '', status: 'pending' });
   };
@@ -101,23 +113,31 @@ const TaskReview: React.FC<TaskReviewProps> = ({ submissions = [], onReview }) =
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Task Submissions</h2>
           <p className="text-gray-600 dark:text-gray-300">Review and grade student submissions</p>
         </div>
-        
-        <select
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-        >
-          <option value="all">All Submissions</option>
-          <option value="pending">Pending Review</option>
-          <option value="reviewed">Reviewed</option>
-          <option value="approved">Approved</option>
-          <option value="rejected">Rejected</option>
-        </select>
+        <div className="flex flex-col md:flex-row gap-2 md:gap-4 items-stretch md:items-center">
+          <input
+            type="text"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search by student, email, or task..."
+            className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+          />
+          <select
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+          >
+            <option value="all">All Submissions</option>
+            <option value="pending">Pending Review</option>
+            <option value="reviewed">Reviewed</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+          </select>
+        </div>
       </div>
 
       {/* Submissions List */}
@@ -126,6 +146,9 @@ const TaskReview: React.FC<TaskReviewProps> = ({ submissions = [], onReview }) =
           <table className="w-full">
             <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Task
+                </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                   Student
                 </th>
@@ -146,6 +169,9 @@ const TaskReview: React.FC<TaskReviewProps> = ({ submissions = [], onReview }) =
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
               {filteredSubmissions.map((submission) => (
                 <tr key={submission._id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm font-medium text-gray-900 dark:text-white">{submission.taskTitle || submission.task?.title || '—'}</div>
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="bg-blue-100 dark:bg-blue-900/20 p-2 rounded-full mr-3">
@@ -186,32 +212,37 @@ const TaskReview: React.FC<TaskReviewProps> = ({ submissions = [], onReview }) =
                     )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <button
-                      onClick={() => openSubmission(submission)}
-                      className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mr-4"
-                    >
-                      Review
-                    </button>
-                    {submission.liveUrl && (
-                      <a
-                        href={submission.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 mr-4"
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={() => openSubmission(submission)}
+                        className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded transition-colors"
+                        title="Review Submission"
                       >
-                        View Demo
-                      </a>
-                    )}
-                    {submission.githubUrl && (
-                      <a
-                        href={submission.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300"
-                      >
-                        View Code
-                      </a>
-                    )}
+                        <Eye className="h-4 w-4" />
+                      </button>
+                      {submission.liveUrl && (
+                        <a
+                          href={submission.liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="bg-green-600 hover:bg-green-700 text-white p-2 rounded transition-colors"
+                          title="View Live Demo"
+                        >
+                          <Link className="h-4 w-4" />
+                        </a>
+                      )}
+                      {submission.githubUrl && (
+                        <a
+                          href={submission.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="bg-purple-600 hover:bg-purple-700 text-white p-2 rounded transition-colors"
+                          title="View GitHub Code"
+                        >
+                          <Code className="h-4 w-4" />
+                        </a>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -241,6 +272,9 @@ const TaskReview: React.FC<TaskReviewProps> = ({ submissions = [], onReview }) =
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Review Submission</h2>
                   <p className="text-gray-600 dark:text-gray-300">
                     {selectedSubmission.studentName} • Submitted {new Date(selectedSubmission.submittedAt).toLocaleDateString()}
+                  </p>
+                  <p className="text-gray-500 dark:text-gray-400 mt-1">
+                    <span className="font-semibold">Task:</span> {selectedSubmission.taskTitle || selectedSubmission.task?.title || '—'}
                   </p>
                 </div>
                 <button
@@ -312,17 +346,37 @@ const TaskReview: React.FC<TaskReviewProps> = ({ submissions = [], onReview }) =
                     <div>
                       <h3 className="font-semibold text-gray-900 dark:text-white mb-3">Uploaded Files</h3>
                       <div className="space-y-2">
-                        {selectedSubmission.files.map((file, index) => (
-                          <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                            <div className="flex items-center">
-                              <FileText className="h-4 w-4 text-gray-500 mr-2" />
-                              <span className="text-sm text-gray-900 dark:text-white">{file}</span>
+                        {selectedSubmission.files.map((file: any, index: number) => {
+                          // file can be a string (old data) or object (new data)
+                          let fileName: string;
+                          let fileUrl: string;
+                          if (typeof file === 'string') {
+                            fileName = file;
+                            fileUrl = `/uploads/${file}`;
+                          } else if (file && typeof file === 'object' && ('filename' in file)) {
+                            fileName = file.originalName || file.filename;
+                            fileUrl = `/uploads/${file.filename}`;
+                          } else {
+                            fileName = 'Unknown';
+                            fileUrl = '#';
+                          }
+                          return (
+                            <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                              <div className="flex items-center">
+                                <FileText className="h-4 w-4 text-gray-500 mr-2" />
+                                <span className="text-sm text-gray-900 dark:text-white">{fileName}</span>
+                              </div>
+                              <a
+                                href={fileUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm flex items-center"
+                              >
+                                <Download className="h-4 w-4 mr-1" /> Download
+                              </a>
                             </div>
-                            <button className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm">
-                              <Download className="h-4 w-4" />
-                            </button>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     </div>
                   )}
