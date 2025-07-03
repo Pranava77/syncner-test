@@ -10,8 +10,7 @@ import {
   Users, 
   Settings, 
   LogOut,
-  Moon,
-  Sun,
+
   BarChart3,
   Menu,
   X,

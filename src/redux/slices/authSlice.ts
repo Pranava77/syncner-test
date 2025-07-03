@@ -47,10 +47,23 @@ const initialState: AuthState = {
 // Async thunks
 export const loginUser = createAsyncThunk(
   'auth/login',
-  async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
+  async (
+    { email, password }: { email: string; password: string },
+    { dispatch, rejectWithValue }
+  ) => {
     try {
       const response = await apiService.login(email, password);
-      return response.data.data;
+      if (response.success && response.data.token) {
+        // Fetch the full user profile using the new token
+        const profileResponse = await apiService.getMe();
+        if (profileResponse.success && profileResponse.data.user) {
+          return { user: profileResponse.data.user, token: response.data.token };
+        } else {
+          return rejectWithValue('Failed to fetch user profile after login');
+        }
+      } else {
+        return rejectWithValue(response.message || 'Login failed');
+      }
     } catch (error: any) {
       return rejectWithValue(error.message || 'Login failed');
     }

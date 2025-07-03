@@ -63,7 +63,14 @@ if (process.env.NODE_ENV === 'production') {
 
 // CORS - Simplified for development
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:3000'],
+  origin: [
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+    'http://localhost:3000',
+    'https://9619-49-205-145-104.ngrok-free.app', // frontend ngrok
+    // Add your backend ngrok URL here if you use one, e.g.:
+    // 'https://your-backend-ngrok-url.ngrok-free.app'
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
