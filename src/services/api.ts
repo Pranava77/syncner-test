@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL ;
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 class ApiService {
   private baseURL: string;
@@ -421,7 +421,7 @@ class ApiService {
 
   // AI Chat Mentor
   async chatWithAI(message: string, context?: string) {
-    const response = await fetch(`${this.baseURL}/api/ai/chat`, {
+    const response = await fetch(`${this.baseURL}/ai/chat`, {
       method: 'POST',
       headers: this.getHeaders(),
       body: JSON.stringify({ message, context })
@@ -431,7 +431,7 @@ class ApiService {
 
   // AI Task Feedback
   async generateFeedback(task: any, submission: string) {
-    const response = await fetch(`${this.baseURL}/api/ai/feedback`, {
+    const response = await fetch(`${this.baseURL}/ai/feedback`, {
       method: 'POST',
       headers: this.getHeaders(),
       body: JSON.stringify({ task, submission })
@@ -441,7 +441,7 @@ class ApiService {
 
   // AI Resume Generation
   async generateResumeContent(userData: any) {
-    const response = await fetch(`${this.baseURL}/api/ai/resume`, {
+    const response = await fetch(`${this.baseURL}/ai/resume`, {
       method: 'POST',
       headers: this.getHeaders(),
       body: JSON.stringify({ userData })
