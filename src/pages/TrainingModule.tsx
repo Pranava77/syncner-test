@@ -64,15 +64,14 @@ const TrainingModule: React.FC = () => {
   // Redirect logic
   useEffect(() => {
     if (!modulesLoading && !trackLoading) {
-      // If on /training/current, redirect to first module
-      if (location.pathname === '/training/current' && modules.length > 0) {
-        if (!moduleId || !modules.some(m => m.id === moduleId)) {
-          navigate(`/training/${modules[0].id}`, { replace: true });
-        }
+      // If on /student/training/current, redirect to first module
+      if (location.pathname === '/student/training/current' && modules.length > 0) {
+        const firstModule = modules[0];
+        navigate(`/student/training/${firstModule.id}`, { replace: true });
       }
-      // If on /training/:moduleId and module is not in user's track, redirect
+      // If on /student/training/:moduleId and module is not in user's track, redirect
       if (moduleId && modules.length > 0 && !modules.some(m => m.id === moduleId)) {
-        navigate('/training/current', { replace: true });
+        navigate('/student/training/current', { replace: true });
       }
     }
   }, [modulesLoading, trackLoading, modules, moduleId, location.pathname, navigate]);
@@ -146,7 +145,7 @@ const TrainingModule: React.FC = () => {
           <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Module Not Found</h3>
           <p className="text-gray-600 dark:text-gray-400">The requested module could not be found.</p>
           <Link
-            to="/dashboard"
+            to="/student/dashboard"
             className="mt-4 inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
           >
             <ChevronLeft className="h-4 w-4 mr-1" />
@@ -162,7 +161,7 @@ const TrainingModule: React.FC = () => {
       {/* Header */}
       <div className="mb-8">
         <Link
-          to="/dashboard"
+          to="/student/dashboard"
           className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium flex items-center mb-4"
         >
           <ChevronLeft className="h-4 w-4 mr-1" />

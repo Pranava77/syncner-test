@@ -53,11 +53,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     } else {
       // Profile complete: block onboarding
       if (currentPath === '/onboarding') {
-        return <Navigate to="/dashboard" replace />;
+        return <Navigate to="/student/dashboard" replace />;
       }
       // Block admin routes for students
       if (currentPath.startsWith('/admin')) {
-        return <Navigate to="/dashboard" replace />;
+        return <Navigate to="/student/dashboard" replace />;
       }
       return <>{children}</>;
     }

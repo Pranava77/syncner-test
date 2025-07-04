@@ -192,7 +192,7 @@ const StudentDashboard: React.FC = () => {
                     {currentModule.duration}
                   </div>
                   <Link
-                    to={`/training/${currentModule.id}`}
+                    to={`/student/training/${currentModule.id}`}
                     className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center w-full sm:w-auto"
                   >
                     <Play className="h-4 w-4 mr-2" />
@@ -209,7 +209,7 @@ const StudentDashboard: React.FC = () => {
               <div className="flex items-center justify-between mb-4 lg:mb-6">
                 <h2 className="text-lg lg:text-xl font-semibold text-gray-900 dark:text-white">Your Career Track</h2>
                 <Link 
-                  to="/training/current"
+                  to="/student/training/current"
                   className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium flex items-center text-sm lg:text-base"
                 >
                   View All Modules
@@ -254,7 +254,7 @@ const StudentDashboard: React.FC = () => {
             <div className="flex items-center justify-between mb-4 lg:mb-6">
               <h2 className="text-lg lg:text-xl font-semibold text-gray-900 dark:text-white">Upcoming Tasks</h2>
               <Link 
-                to="/tasks"
+                to="/student/tasks"
                 className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium flex items-center text-sm lg:text-base"
               >
                 View All
@@ -366,21 +366,21 @@ const StudentDashboard: React.FC = () => {
             <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h3>
             <div className="space-y-3">
               <Link
-                to="/training/current"
+                to="/student/training/current"
                 className="flex items-center space-x-3 p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
                 <BookOpen className="h-4 w-4 lg:h-5 lg:w-5 text-blue-600 dark:text-blue-400" />
                 <span className="font-medium text-gray-900 dark:text-white text-sm lg:text-base">Continue Learning</span>
               </Link>
               <Link
-                to="/tasks"
+                to="/student/tasks"
                 className="flex items-center space-x-3 p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
                 <Briefcase className="h-4 w-4 lg:h-5 lg:w-5 text-emerald-600 dark:text-emerald-400" />
                 <span className="font-medium text-gray-900 dark:text-white text-sm lg:text-base">View Tasks</span>
               </Link>
               <Link
-                to="/resume"
+                to="/student/resume"
                 className="flex items-center space-x-3 p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
                 <Trophy className="h-4 w-4 lg:h-5 lg:w-5 text-purple-600 dark:text-purple-400" />

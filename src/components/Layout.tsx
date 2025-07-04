@@ -49,12 +49,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const isActive = (path: string) => location.pathname === path;
 
   const studentNavItems = [
-    { path: '/dashboard', icon: Home, label: 'Dashboard' },
-    { path: '/training/current', icon: BookOpen, label: 'Training' },
-    { path: '/tasks', icon: Briefcase, label: 'Tasks' },
-    { path: '/tasks/upcoming', icon: List, label: 'Upcoming Tasks' },
-    { path: '/submissions', icon: FileText, label: 'My Submissions' },
-    { path: '/resume', icon: FileText, label: 'Resume' },
+    { path: '/student/dashboard', icon: Home, label: 'Dashboard' },
+    { path: '/student/training/current', icon: BookOpen, label: 'Training' },
+    { path: '/student/tasks', icon: Briefcase, label: 'Tasks' },
+    { path: '/student/tasks/upcoming', icon: List, label: 'Upcoming Tasks' },
+    { path: '/student/submissions', icon: FileText, label: 'My Submissions' },
+    { path: '/student/resume', icon: FileText, label: 'Resume' },
   ];
 
   const adminNavItems = [

@@ -58,7 +58,7 @@ const OnboardingFlow: React.FC = () => {
   // Redirect if user has already completed onboarding
   React.useEffect(() => {
     if (user?.profileComplete) {
-      navigate('/dashboard');
+      navigate('/student/dashboard');
     }
   }, [user, navigate]);
 
@@ -98,7 +98,7 @@ const OnboardingFlow: React.FC = () => {
       await dispatch(fetchCurrentUser()).unwrap();
 
       // Now navigate to training/current
-      navigate('/training/current', { replace: true });
+      navigate('/student/training/current', { replace: true });
     } catch (error) {
       alert('Failed to complete onboarding. Please try again.');
     }
