@@ -18,6 +18,7 @@
     "lucide-react": "^0.344.0",
     "node-fetch": "^3.3.2",
     "react": "^18.3.1",
+    "react-activation": "^0.13.4",
     "react-dom": "^18.3.1",
     "react-redux": "^9.2.0",
     "react-router-dom": "^6.26.1",
