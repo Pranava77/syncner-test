@@ -1,9 +1,22 @@
-import React from 'react';
-import { useStudentSubmissions } from '../hooks/useTasks';
+import React, { useEffect } from 'react';
+import { useAppSelector, useAppDispatch } from '../redux/store';
+import { fetchSubmissions } from '../redux/slices/submissionsSlice';
 import { FileText, CheckCircle, Clock, Star, Eye, AlertCircle } from 'lucide-react';
 
 const StudentSubmissions: React.FC = () => {
-  const { submissions, loading, error } = useStudentSubmissions();
+  const dispatch = useAppDispatch();
+  const submissionsState = useAppSelector((state) => state.submissions);
+
+  useEffect(() => {
+    if ((!submissionsState.data || submissionsState.data.length === 0) || submissionsState.lastFetched === null) {
+      dispatch(fetchSubmissions());
+    }
+  }, [dispatch]);
+
+  const submissions = submissionsState.data || [];
+  const loading = submissionsState.loading;
+  const error = submissionsState.error;
+
   const [selectedSubmission, setSelectedSubmission] = React.useState<any>(null);
 
   // Use only backend data:

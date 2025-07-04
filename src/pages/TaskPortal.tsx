@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TaskWorkspace from '../components/TaskWorkspace';
-import { useAppSelector } from '../redux/store';
+import { useAppSelector, useAppDispatch } from '../redux/store';
 import { useCareerTrack } from '../hooks/useCareerTracks';
 import { useTasks, useAllStudentTasks } from '../hooks/useTasks';
 import { useProgress } from '../hooks/useProgress';
@@ -25,6 +25,8 @@ import {
 
   Loader2
 } from 'lucide-react';
+import { fetchTasks } from '../redux/slices/tasksSlice';
+import { fetchProgress } from '../redux/slices/progressSlice';
 
 const statusColors: Record<string, string> = {
   'Not Started': 'bg-yellow-100 text-yellow-800',
@@ -34,7 +36,10 @@ const statusColors: Record<string, string> = {
 };
 
 const TaskPortal: React.FC = () => {
+  const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
+  const tasksState = useAppSelector((state) => state.tasks);
+  const progressState = useAppSelector((state) => state.progress);
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [selectedTask, setSelectedTask] = useState<any>(null);
   const [showWorkspace, setShowWorkspace] = useState(false);
@@ -45,8 +50,20 @@ const TaskPortal: React.FC = () => {
   
   const { track, loading: trackLoading } = useCareerTrack(userTrack);
   const { tasks: allStudentTasks, loading: allStudentTasksLoading, error: allStudentTasksError } = useAllStudentTasks();
-  const { submitTask } = useTasks();
-  const { loading: progressLoading } = useProgress();
+
+  useEffect(() => {
+    if ((!tasksState.data || tasksState.data.length === 0) || tasksState.lastFetched === null) {
+      dispatch(fetchTasks({ trackId: user?.careerTrack }));
+    }
+    if (!progressState.data || progressState.lastFetched === null) {
+      dispatch(fetchProgress());
+    }
+  }, [dispatch, user?.careerTrack]);
+
+  const tasks = tasksState.data || [];
+  const progress = progressState.data;
+  const tasksLoading = tasksState.loading;
+  const progressLoading = progressState.loading;
 
   const getCategoryIcon = (category: string) => {
     switch (category) {

@@ -29,14 +29,16 @@ import {
 } from 'lucide-react';
 import apiService from '../services/api';
 import logo from '../assets/syncner-logo.png';
+import { fetchProgress } from '../redux/slices/progressSlice';
+import { fetchModules } from '../redux/slices/modulesSlice';
+import { fetchTasks } from '../redux/slices/tasksSlice';
 
 const ResumeGenerator: React.FC = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
-  const { isApiKeyValid } = useAppSelector((state) => state.gemini);
-  const { progress, loading: progressLoading } = useProgress();
-  const { tasks, loading: tasksLoading } = useTasks(user?.careerTrack);
-  const { modules, loading: modulesLoading } = useModules(user?.careerTrack);
+  const progressState = useAppSelector((state) => state.progress);
+  const modulesState = useAppSelector((state) => state.modules);
+  const tasksState = useAppSelector((state) => state.tasks);
   
   const [selectedTemplate, setSelectedTemplate] = useState('professional');
   const [showPreview, setShowPreview] = useState(false);
@@ -70,6 +72,25 @@ const ResumeGenerator: React.FC = () => {
   const [resumeTemplate, setResumeTemplate] = useState<any>(null);
   const [enhancedSummary, setEnhancedSummary] = useState('');
   const [enhanceError, setEnhanceError] = useState('');
+
+  useEffect(() => {
+    if (!progressState.data || progressState.lastFetched === null) {
+      dispatch(fetchProgress());
+    }
+    if ((!modulesState.data || modulesState.data.length === 0) || modulesState.lastFetched === null) {
+      dispatch(fetchModules(user?.careerTrack || ''));
+    }
+    if ((!tasksState.data || tasksState.data.length === 0) || tasksState.lastFetched === null) {
+      dispatch(fetchTasks({ trackId: user?.careerTrack || '' }));
+    }
+  }, [dispatch, user?.careerTrack]);
+
+  const progress = progressState.data;
+  const modules = modulesState.data || [];
+  const tasks = tasksState.data || [];
+  const progressLoading = progressState.loading;
+  const modulesLoading = modulesState.loading;
+  const tasksLoading = tasksState.loading;
 
   // Load user's actual data from profile, tasks, and progress
   useEffect(() => {
@@ -188,7 +209,7 @@ const ResumeGenerator: React.FC = () => {
     const fetchTemplate = async () => {
       if (!user?.careerTrack) return;
       try {
-        const response = await apiService.getResumeTemplate(user.careerTrack);
+        const response = await apiService.getResumeTemplate(user.careerTrack || '');
         setResumeTemplate(response.data);
       } catch (error) {
         setResumeTemplate(null);

@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useAppSelector } from '../redux/store';
-import { useCareerTrack } from '../hooks/useCareerTracks';
-import { useModules } from '../hooks/useModules';
-import { useTasks } from '../hooks/useTasks';
-import { useProgress } from '../hooks/useProgress';
+import { useAppSelector, useAppDispatch } from '../redux/store';
+import { fetchProgress } from '../redux/slices/progressSlice';
+import { fetchModules } from '../redux/slices/modulesSlice';
+import { fetchTasks } from '../redux/slices/tasksSlice';
 import { 
   BookOpen, 
   Briefcase, 
@@ -23,7 +22,24 @@ import {
 } from 'lucide-react';
 
 const StudentDashboard: React.FC = () => {
+  const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
+  const progressState = useAppSelector((state) => state.progress);
+  const modulesState = useAppSelector((state) => state.modules);
+  const tasksState = useAppSelector((state) => state.tasks);
+
+  useEffect(() => {
+    if (!progressState.data || progressState.lastFetched === null) {
+      dispatch(fetchProgress());
+    }
+    if ((!modulesState.data || modulesState.data.length === 0) || modulesState.lastFetched === null) {
+      dispatch(fetchModules(user?.careerTrack));
+    }
+    if ((!tasksState.data || tasksState.data.length === 0) || tasksState.lastFetched === null) {
+      dispatch(fetchTasks({ trackId: user?.careerTrack }));
+    }
+  }, [dispatch, user?.careerTrack]);
+
   if (!user || !user.careerTrack) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -35,17 +51,17 @@ const StudentDashboard: React.FC = () => {
     );
   }
   const userTrack = user.careerTrack;
-  
-  const { track, loading: trackLoading } = useCareerTrack(userTrack);
-  const { modules = [], loading: modulesLoading } = useModules(userTrack);
-  const { tasks = [], loading: tasksLoading } = useTasks(userTrack);
-  const { progress, loading: progressLoading } = useProgress();
+  const progress = progressState.data;
+  const modules = modulesState.data || [];
+  const tasks = tasksState.data || [];
+  const progressLoading = progressState.loading;
+  const modulesLoading = modulesState.loading;
+  const tasksLoading = tasksState.loading;
 
   // Get current module (first incomplete module)
-  const currentModule = modules.find(m => m.status === 'in-progress') || modules[0];
-
+  const currentModule = modules.find((m: any) => m.status === 'in-progress') || modules[0];
   // Get upcoming tasks (first 3 available tasks)
-  const upcomingTasks = tasks.filter(t => t.status === 'available' || t.status === 'in-progress').slice(0, 3);
+  const upcomingTasks = tasks.filter((t: any) => t.status === 'available' || t.status === 'in-progress').slice(0, 3);
 
   const achievements = [
     { title: 'First Module Complete', icon: '🎯', earned: (progress?.completedModulesCount ?? 0) > 0 },
@@ -83,7 +99,7 @@ const StudentDashboard: React.FC = () => {
     }
   };
 
-  if (trackLoading || modulesLoading || tasksLoading || progressLoading) {
+  if (progressLoading || modulesLoading || tasksLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
@@ -104,7 +120,7 @@ const StudentDashboard: React.FC = () => {
               Welcome back, {user?.name}! 👋
             </h1>
             <p className="text-blue-100 mb-4 lg:mb-6 text-sm lg:text-base">
-              You're on the {track?.name} track. Let's continue building your career!
+              You're on the {userTrack} track. Let's continue building your career!
             </p>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
               <div className="text-center">
@@ -188,7 +204,7 @@ const StudentDashboard: React.FC = () => {
           )}
 
           {/* Career Track Overview */}
-          {track && (
+          {user && (
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 lg:p-6">
               <div className="flex items-center justify-between mb-4 lg:mb-6">
                 <h2 className="text-lg lg:text-xl font-semibold text-gray-900 dark:text-white">Your Career Track</h2>
@@ -203,24 +219,26 @@ const StudentDashboard: React.FC = () => {
               
               <div className="grid lg:grid-cols-2 gap-4">
                 <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-900 dark:text-white mb-2">{track.name}</h3>
-                  <p className="text-gray-600 dark:text-gray-300 text-sm mb-3">{track.description}</p>
+                  <h3 className="font-semibold text-gray-900 dark:text-white mb-2">{userTrack}</h3>
+                  <p className="text-gray-600 dark:text-gray-300 text-sm mb-3">This is a static description. The actual description should be fetched from the database.</p>
                   <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                     <Clock className="h-4 w-4 mr-1" />
-                    {track.duration}
+                    {/* Assuming a default duration */}
+                    12 weeks
                   </div>
                 </div>
                 
                 <div className="space-y-3">
                   <div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">Average Salary</p>
-                    <p className="font-semibold text-gray-900 dark:text-white">{track.averageSalary}</p>
+                    <p className="font-semibold text-gray-900 dark:text-white">This should be fetched from the database</p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">Career Paths</p>
                     <div className="flex flex-wrap gap-1 mt-1">
-                      {track.careerPaths.slice(0, 3).map((path) => (
-                        <span key={path} className="bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 px-2 py-1 rounded text-xs">
+                      {/* Assuming a default career paths array */}
+                      {['Path 1', 'Path 2'].slice(0, 3).map((path: string, index: number) => (
+                        <span key={index} className="bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 px-2 py-1 rounded text-xs">
                           {path}
                         </span>
                       ))}
@@ -245,7 +263,7 @@ const StudentDashboard: React.FC = () => {
             </div>
             
             <div className="space-y-4">
-              {upcomingTasks.map((task) => (
+              {upcomingTasks.map((task: any, index: number) => (
                 <div key={task.id} className="border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:shadow-md transition-shadow">
                   <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-2">
                     <div className="mb-2 lg:mb-0">

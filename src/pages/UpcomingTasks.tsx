@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
-import { useUpcomingTasks, useTasks } from '../hooks/useTasks';
+import React, { useEffect, useState } from 'react';
+import { useAppSelector, useAppDispatch } from '../redux/store';
+import upcomingTasksReducer, { fetchUpcomingTasks } from '../redux/slices/upcomingTasksSlice';
+import { useTasks } from '../hooks/useTasks';
 import { Calendar, Clock, Star, Send, FileText, Code, AlertTriangle } from 'lucide-react';
 
 const UpcomingTasks: React.FC = () => {
-  const { tasks, loading, error, refetch } = useUpcomingTasks();
+  const dispatch = useAppDispatch();
+  const upcomingTasksState = useAppSelector((state) => state.upcomingTasks);
   const { submitTask } = useTasks();
   const [showModal, setShowModal] = useState(false);
   const [selectedTask, setSelectedTask] = useState<any>(null);
@@ -17,7 +20,15 @@ const UpcomingTasks: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const tasksToShow = tasks;
+  useEffect(() => {
+    if ((!upcomingTasksState.data || upcomingTasksState.data.length === 0) || upcomingTasksState.lastFetched === null) {
+      dispatch(fetchUpcomingTasks());
+    }
+  }, [dispatch]);
+
+  const tasks = upcomingTasksState.data || [];
+  const loading = upcomingTasksState.loading;
+  const error = upcomingTasksState.error;
 
   const closeModal = () => {
     setShowModal(false);
@@ -47,7 +58,7 @@ const UpcomingTasks: React.FC = () => {
       await submitTask(selectedTask.id, form);
       closeModal();
       setForm({ description: '', liveUrl: '', githubUrl: '', notes: '', files: [] });
-      await refetch();
+      dispatch(fetchUpcomingTasks());
     } catch (err: any) {
       setSubmitError(err.message || 'Failed to submit task');
     } finally {
@@ -67,11 +78,11 @@ const UpcomingTasks: React.FC = () => {
         </div>
       ) : error ? (
         <div className="text-red-500 text-center py-8">{error}</div>
-      ) : tasksToShow.length === 0 ? (
+      ) : tasks.length === 0 ? (
         <div className="text-center py-12 text-gray-500">No upcoming tasks!</div>
       ) : (
         <div className="grid gap-6 md:grid-cols-2">
-          {tasksToShow.map(task => {
+          {tasks.map((task: any) => {
             const due = task.dueDate ? new Date(task.dueDate) : null;
             const isOverdue = due && due < new Date();
             const isDueSoon = due && due > new Date() && (due.getTime() - Date.now()) < 3 * 24 * 60 * 60 * 1000;

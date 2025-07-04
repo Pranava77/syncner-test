@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
-import { useAppSelector } from '../redux/store';
+import { useAppSelector, useAppDispatch } from '../redux/store';
 import { useCareerTrack } from '../hooks/useCareerTracks';
-import { useModules } from '../hooks/useModules';
+import { fetchModules } from '../redux/slices/modulesSlice';
+import { fetchProgress } from '../redux/slices/progressSlice';
 import { 
   Play, 
   Pause, 
@@ -27,10 +28,13 @@ function extractYouTubeId(url: string): string | null {
 }
 
 const TrainingModule: React.FC = () => {
+  const dispatch = useAppDispatch();
   const { moduleId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.auth);
+  const modulesState = useAppSelector((state) => state.modules);
+  const progressState = useAppSelector((state) => state.progress);
   const [currentLesson, setCurrentLesson] = useState(0);
   const [showQuiz, setShowQuiz] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState('');
@@ -40,7 +44,21 @@ const TrainingModule: React.FC = () => {
   // Get the career track and module data from API
   const userTrack = user?.careerTrack || '';
   const { track, loading: trackLoading } = useCareerTrack(userTrack);
-  const { modules, loading: modulesLoading } = useModules(userTrack);
+
+  useEffect(() => {
+    if ((!modulesState.data || modulesState.data.length === 0) || modulesState.lastFetched === null) {
+      dispatch(fetchModules(user?.careerTrack));
+    }
+    if (!progressState.data || progressState.lastFetched === null) {
+      dispatch(fetchProgress());
+    }
+  }, [dispatch, user?.careerTrack]);
+
+  const modules = modulesState.data || [];
+  const progress = progressState.data;
+  const modulesLoading = modulesState.loading;
+  const progressLoading = progressState.loading;
+
   const module = modules.find(m => m.id === moduleId) || modules[0];
 
   // Redirect logic
@@ -71,7 +89,6 @@ const TrainingModule: React.FC = () => {
   };
 
   const currentContent = module?.lessons?.[currentLesson];
-  const progress = module?.lessons ? Math.round((completedLessons.size / module.lessons.length) * 100) : 0;
 
   const handleNext = () => {
     if (module?.lessons && currentLesson < module.lessons.length - 1) {
