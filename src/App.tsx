@@ -24,6 +24,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import UpcomingTasks from './pages/UpcomingTasks';
 import StudentSubmissions from './pages/StudentTasks';
 import AdminDiagnostics from './pages/AdminDiagnostics';
+import StudentLayout from './components/StudentLayout';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -108,11 +109,7 @@ function App() {
     },
     {
       path: '/student',
-      element: (
-        <ProtectedRoute>
-          <Layout />
-        </ProtectedRoute>
-      ),
+      element: <StudentLayout />,
       children: [
         { path: 'dashboard', element: <StudentDashboard /> },
         { path: 'training/:moduleId', element: <TrainingModule /> },
