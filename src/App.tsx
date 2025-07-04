@@ -3,6 +3,7 @@ import {
   createBrowserRouter,
   RouterProvider,
   Navigate,
+  Outlet,
 } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './redux/store';
 import { fetchCurrentUser, restoreSession } from './redux/slices/authSlice';
@@ -119,41 +120,15 @@ function App() {
       path: '/admin',
       element: (
         <ProtectedRoute requireAdmin>
-          <Layout>
-            <AdminDashboard />
-          </Layout>
+          <Layout />
         </ProtectedRoute>
       ),
-    },
-    {
-      path: '/admin/analytics',
-      element: (
-        <ProtectedRoute requireAdmin>
-          <Layout>
-            <AdminAnalytics />
-          </Layout>
-        </ProtectedRoute>
-      ),
-    },
-    {
-      path: '/admin/settings',
-      element: (
-        <ProtectedRoute requireAdmin>
-          <Layout>
-            <AdminSettings />
-          </Layout>
-        </ProtectedRoute>
-      ),
-    },
-    {
-      path: '/admin/diagnostics',
-      element: (
-        <ProtectedRoute requireAdmin>
-          <Layout>
-            <AdminDiagnostics />
-          </Layout>
-        </ProtectedRoute>
-      ),
+      children: [
+        { path: '', element: <AdminDashboard /> },
+        { path: 'analytics', element: <AdminAnalytics /> },
+        { path: 'diagnostics', element: <AdminDiagnostics /> },
+        { path: 'settings', element: <AdminSettings /> },
+      ],
     },
     {
       path: '/training/:moduleId',

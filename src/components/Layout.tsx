@@ -1,5 +1,5 @@
 import React, { ReactNode, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { logoutUser } from '../redux/slices/authSlice';
 import { 
@@ -20,7 +20,7 @@ import {
 import logo from '../assets/syncner-logo.png';
 
 interface LayoutProps {
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
@@ -219,7 +219,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       {/* Main Content */}
       <div className="flex-1 overflow-hidden">
         <main className="h-full overflow-y-auto p-4 lg:p-8 bg-gray-50 dark:bg-gray-900 pt-20 lg:pt-8">
-          {children}
+          {children ? children : <Outlet />}
         </main>
       </div>
     </div>
