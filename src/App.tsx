@@ -107,7 +107,7 @@ function App() {
       ),
     },
     {
-      path: '/',
+      path: '/student',
       element: (
         <ProtectedRoute>
           <Layout />

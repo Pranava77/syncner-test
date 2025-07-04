@@ -15,7 +15,7 @@ export const getDefaultRoute = (user: User | null): string => {
     case 'student':
     case 'instructor':
     default:
-      return '/dashboard';
+      return '/student/dashboard';
   }
 };
 
