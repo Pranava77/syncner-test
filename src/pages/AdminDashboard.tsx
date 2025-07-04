@@ -23,9 +23,10 @@ import {
   X,
   Loader2
 } from 'lucide-react';
-import { useStudents, useSubmissions, useAnalytics } from '../hooks/useAdmin';
+import { useStudents, useSubmissions } from '../hooks/useAdmin';
 import logo from '../assets/syncner-logo.png';
 import { useAppSelector } from '../redux/store';
+import { useSelector } from 'react-redux';
 
 const AdminDashboard: React.FC = () => {
   const [selectedFilter, setSelectedFilter] = useState('all');
@@ -39,7 +40,16 @@ const AdminDashboard: React.FC = () => {
   // Use real API data instead of mock data
   const { students, loading: studentsLoading, updateStudent, deleteStudent, addStudent, refetch } = useStudents();
   const { submissions, loading: submissionsLoading, error: submissionsError, reviewSubmission } = useSubmissions();
-  const { analytics, loading: analyticsLoading } = useAnalytics();
+  const analyticsState = useSelector((state: any) => state.analytics);
+  const analytics = analyticsState.data;
+  const analyticsLoading = analyticsState.loading;
+  const analyticsError = analyticsState.error;
+
+  const settingsState = useSelector((state: any) => state.settings);
+  const settings = settingsState.data;
+  const settingsLoading = settingsState.loading;
+  const settingsError = settingsState.error;
+
   const { user } = useAppSelector((state) => state.auth);
 
   const getStatusColor = (status: string) => {
@@ -272,7 +282,7 @@ const AdminDashboard: React.FC = () => {
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Weekly Attendance</h2>
             <div className="flex items-end space-x-4 h-40">
-              {analytics?.attendanceData?.map((data, index) => (
+              {analytics?.attendanceData?.map((data: any, index: number) => (
                 <div key={index} className="flex-1 flex flex-col items-center">
                   <div
                     className="bg-gradient-to-t from-blue-600 to-blue-400 rounded-t w-full"

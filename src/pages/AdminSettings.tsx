@@ -14,6 +14,9 @@ import {
 } from 'lucide-react';
 import apiService from '../services/api';
 import { useStudents } from '../hooks/useAdmin';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchSettings } from '../redux/slices/settingsSlice';
+import { useAppDispatch } from '../redux/store';
 
 interface Module {
   id: string;
@@ -57,10 +60,19 @@ const AdminSettings: React.FC = () => {
   const [activeTab, setActiveTab] = useState('general');
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');
-  const [settings, setSettings] = useState<any | null>(null);
-  const [settingsLoading, setSettingsLoading] = useState(true);
-  const [settingsError, setSettingsError] = useState<string | null>(null);
-  
+
+  const dispatch = useAppDispatch();
+  const settingsState = useSelector((state: any) => state.settings);
+  const settings = settingsState.data;
+  const settingsLoading = settingsState.loading;
+  const settingsError = settingsState.error;
+
+  useEffect(() => {
+    if (!settings || settingsState.lastFetched === null) {
+      dispatch(fetchSettings());
+    }
+  }, [settings, settingsState.lastFetched, dispatch]);
+
   // Module management
   const [modules, setModules] = useState<Module[]>([]);
   const [showModuleForm, setShowModuleForm] = useState(false);
@@ -115,6 +127,14 @@ const AdminSettings: React.FC = () => {
 
   // Gemini API Key management
   const [geminiKeyInput, setGeminiKeyInput] = useState('');
+  const [settingsDraft, setSettingsDraft] = useState<any | null>(null);
+
+  useEffect(() => {
+    if (settings) {
+      setSettingsDraft(settings);
+    }
+  }, [settings]);
+
   useEffect(() => {
     if (settings?.integrations?.geminiApiKey !== undefined) {
       setGeminiKeyInput(settings.integrations.geminiApiKey);
@@ -123,7 +143,7 @@ const AdminSettings: React.FC = () => {
 
   const handleGeminiKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setGeminiKeyInput(e.target.value);
-    setSettings((prev: any) => ({
+    setSettingsDraft((prev: any) => ({
       ...prev,
       integrations: {
         ...prev.integrations,
@@ -132,56 +152,8 @@ const AdminSettings: React.FC = () => {
     }));
   };
 
-  useEffect(() => {
-    fetchPlatformSettings();
-    fetchModules();
-    fetchTasks();
-    if (activeTab === 'tasks') {
-      refetch();
-    }
-  }, [activeTab]);
-
-  const fetchPlatformSettings = async () => {
-    setSettingsLoading(true);
-    setSettingsError(null);
-    try {
-      const response = await apiService.getPlatformSettings();
-      if (response.success) {
-        setSettings(response.data);
-      } else {
-        setSettingsError(response.message || 'Failed to fetch settings');
-      }
-    } catch (error: any) {
-      setSettingsError(error.message || 'Failed to fetch settings');
-    } finally {
-      setSettingsLoading(false);
-    }
-  };
-
-  const fetchModules = async () => {
-    try {
-      const response = await apiService.getModules();
-      if (response.success) {
-        setModules(response.data || []);
-      }
-    } catch (error) {
-      console.error('Failed to fetch modules:', error);
-    }
-  };
-
-  const fetchTasks = async () => {
-    try {
-      const response = await apiService.getTasks();
-      if (response.success) {
-        setTasks(response.data || []);
-      }
-    } catch (error) {
-      console.error('Failed to fetch tasks:', error);
-    }
-  };
-
   const handleSettingChange = (category: string, key: string, value: any) => {
-    setSettings((prev: any) => {
+    setSettingsDraft((prev: any) => {
       if (category === 'integrations') {
         return {
           ...prev,
@@ -205,9 +177,10 @@ const AdminSettings: React.FC = () => {
     setIsSaving(true);
     setSaveMessage('');
     try {
-      const response = await apiService.updatePlatformSettings(settings);
+      const response = await apiService.updatePlatformSettings(settingsDraft);
       if (response.success) {
-      setSaveMessage('Settings saved successfully!');
+        setSaveMessage('Settings saved successfully!');
+        dispatch(fetchSettings());
       } else {
         setSaveMessage('Failed to save settings');
       }
@@ -216,6 +189,36 @@ const AdminSettings: React.FC = () => {
     } finally {
       setIsSaving(false);
       setTimeout(() => setSaveMessage(''), 3000);
+    }
+  };
+
+  useEffect(() => {
+    fetchModules();
+    fetchTasks();
+    if (activeTab === 'tasks') {
+      refetch();
+    }
+  }, [activeTab]);
+
+  const fetchModules = async () => {
+    try {
+      const response = await apiService.getModules();
+      if (response.success) {
+        setModules(response.data || []);
+      }
+    } catch (error) {
+      console.error('Failed to fetch modules:', error);
+    }
+  };
+
+  const fetchTasks = async () => {
+    try {
+      const response = await apiService.getTasks();
+      if (response.success) {
+        setTasks(response.data || []);
+      }
+    } catch (error) {
+      console.error('Failed to fetch tasks:', error);
     }
   };
 
@@ -357,7 +360,7 @@ const AdminSettings: React.FC = () => {
         <div className="text-center">
           <p className="text-red-500 mb-4">{settingsError}</p>
           <button
-            onClick={fetchPlatformSettings}
+            onClick={() => dispatch(fetchSettings())}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
           >
             Retry
@@ -410,7 +413,7 @@ const AdminSettings: React.FC = () => {
                 </label>
                 <input
                   type="text"
-                  value={settings?.general?.platformName ?? ''}
+                  value={settingsDraft?.general?.platformName ?? ''}
                   onChange={(e) => handleSettingChange('general', 'platformName', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 />
@@ -421,7 +424,7 @@ const AdminSettings: React.FC = () => {
                 </label>
                 <input
                   type="email"
-                  value={settings?.general?.supportEmail ?? ''}
+                  value={settingsDraft?.general?.supportEmail ?? ''}
                   onChange={(e) => handleSettingChange('general', 'supportEmail', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 />
@@ -432,7 +435,7 @@ const AdminSettings: React.FC = () => {
                 </label>
                 <input
                   type="number"
-                  value={settings?.general?.maxStudentsPerAdmin ?? 0}
+                  value={settingsDraft?.general?.maxStudentsPerAdmin ?? 0}
                   onChange={(e) => handleSettingChange('general', 'maxStudentsPerAdmin', parseInt(e.target.value))}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 />
@@ -443,7 +446,7 @@ const AdminSettings: React.FC = () => {
                 </label>
                 <input
                   type="number"
-                  value={settings?.general?.sessionTimeout ?? 0}
+                  value={settingsDraft?.general?.sessionTimeout ?? 0}
                   onChange={(e) => handleSettingChange('general', 'sessionTimeout', parseInt(e.target.value))}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 />
@@ -454,7 +457,7 @@ const AdminSettings: React.FC = () => {
                 </label>
                 <input
                   type="text"
-                  value={settings?.general?.siteName ?? ''}
+                  value={settingsDraft?.general?.siteName ?? ''}
                   onChange={(e) => handleSettingChange('general', 'siteName', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 />
@@ -465,7 +468,7 @@ const AdminSettings: React.FC = () => {
                 </label>
                 <input
                   type="text"
-                  value={settings?.general?.siteDescription ?? ''}
+                  value={settingsDraft?.general?.siteDescription ?? ''}
                   onChange={(e) => handleSettingChange('general', 'siteDescription', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 />
@@ -1197,7 +1200,7 @@ const AdminSettings: React.FC = () => {
               <label className="block text-sm font-medium text-white mb-2">Email Provider</label>
               <input
                 type="text"
-                value={settings?.integrations?.emailProvider ?? ''}
+                value={settingsDraft?.integrations?.emailProvider ?? ''}
                 onChange={e => handleSettingChange('integrations', 'emailProvider', e.target.value)}
                 className="w-full px-4 py-2 border rounded-lg bg-gray-900 border-gray-700 text-white"
                 placeholder="e.g. SendGrid, Gmail, Mailgun"
@@ -1209,10 +1212,10 @@ const AdminSettings: React.FC = () => {
               <span className="text-white font-medium">Analytics Enabled</span>
               <button
                 type="button"
-                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${settings?.integrations?.analyticsEnabled ? 'bg-blue-600' : 'bg-gray-600'}`}
-                onClick={() => handleSettingChange('integrations', 'analyticsEnabled', !settings?.integrations?.analyticsEnabled)}
+                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${settingsDraft?.integrations?.analyticsEnabled ? 'bg-blue-600' : 'bg-gray-600'}`}
+                onClick={() => handleSettingChange('integrations', 'analyticsEnabled', !settingsDraft?.integrations?.analyticsEnabled)}
               >
-                <span className={`h-4 w-4 bg-white rounded-full shadow transform transition-transform duration-300 ${settings?.integrations?.analyticsEnabled ? 'translate-x-6' : ''}`}></span>
+                <span className={`h-4 w-4 bg-white rounded-full shadow transform transition-transform duration-300 ${settingsDraft?.integrations?.analyticsEnabled ? 'translate-x-6' : ''}`}></span>
               </button>
             </div>
             {/* Backup Enabled Toggle */}
@@ -1220,10 +1223,10 @@ const AdminSettings: React.FC = () => {
               <span className="text-white font-medium">Backup Enabled</span>
               <button
                 type="button"
-                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${settings?.integrations?.backupEnabled ? 'bg-blue-600' : 'bg-gray-600'}`}
-                onClick={() => handleSettingChange('integrations', 'backupEnabled', !settings?.integrations?.backupEnabled)}
+                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${settingsDraft?.integrations?.backupEnabled ? 'bg-blue-600' : 'bg-gray-600'}`}
+                onClick={() => handleSettingChange('integrations', 'backupEnabled', !settingsDraft?.integrations?.backupEnabled)}
               >
-                <span className={`h-4 w-4 bg-white rounded-full shadow transform transition-transform duration-300 ${settings?.integrations?.backupEnabled ? 'translate-x-6' : ''}`}></span>
+                <span className={`h-4 w-4 bg-white rounded-full shadow transform transition-transform duration-300 ${settingsDraft?.integrations?.backupEnabled ? 'translate-x-6' : ''}`}></span>
               </button>
             </div>
             <button
