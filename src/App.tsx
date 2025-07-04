@@ -25,6 +25,7 @@ import UpcomingTasks from './pages/UpcomingTasks';
 import StudentSubmissions from './pages/StudentTasks';
 import AdminDiagnostics from './pages/AdminDiagnostics';
 import StudentLayout from './components/StudentLayout';
+import { KeepAlive } from 'react-activation';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -111,13 +112,13 @@ function App() {
       path: '/student',
       element: <StudentLayout />,
       children: [
-        { path: 'dashboard', element: <StudentDashboard /> },
-        { path: 'training/:moduleId', element: <TrainingModule /> },
-        { path: 'training/current', element: <TrainingModule /> },
-        { path: 'tasks', element: <TaskPortal /> },
-        { path: 'tasks/upcoming', element: <UpcomingTasks /> },
-        { path: 'resume', element: <ResumeGenerator /> },
-        { path: 'submissions', element: <StudentSubmissions /> },
+        { path: 'dashboard', element: <KeepAlive id="student-dashboard"><StudentDashboard /></KeepAlive> },
+        { path: 'training/:moduleId', element: <KeepAlive id="training-module"><TrainingModule /></KeepAlive> },
+        { path: 'training/current', element: <KeepAlive id="training-current"><TrainingModule /></KeepAlive> },
+        { path: 'tasks', element: <KeepAlive id="task-portal"><TaskPortal /></KeepAlive> },
+        { path: 'tasks/upcoming', element: <KeepAlive id="upcoming-tasks"><UpcomingTasks /></KeepAlive> },
+        { path: 'resume', element: <KeepAlive id="resume-generator"><ResumeGenerator /></KeepAlive> },
+        { path: 'submissions', element: <KeepAlive id="student-submissions"><StudentSubmissions /></KeepAlive> },
         { index: true, element: <Navigate to="dashboard" replace /> },
       ],
     },
