@@ -107,14 +107,22 @@ function App() {
       ),
     },
     {
-      path: '/dashboard',
+      path: '/app',
       element: (
         <ProtectedRoute>
-          <Layout>
-            <StudentDashboard />
-          </Layout>
+          <Layout />
         </ProtectedRoute>
       ),
+      children: [
+        { path: 'dashboard', element: <StudentDashboard /> },
+        { path: 'training/:moduleId', element: <TrainingModule /> },
+        { path: 'training/current', element: <TrainingModule /> },
+        { path: 'tasks', element: <TaskPortal /> },
+        { path: 'tasks/upcoming', element: <UpcomingTasks /> },
+        { path: 'resume', element: <ResumeGenerator /> },
+        { path: 'submissions', element: <StudentSubmissions /> },
+        { index: true, element: <Navigate to="dashboard" replace /> },
+      ],
     },
     {
       path: '/admin',
@@ -129,66 +137,6 @@ function App() {
         { path: 'diagnostics', element: <AdminDiagnostics /> },
         { path: 'settings', element: <AdminSettings /> },
       ],
-    },
-    {
-      path: '/training/:moduleId',
-      element: (
-        <ProtectedRoute>
-          <Layout>
-            <TrainingModule />
-          </Layout>
-        </ProtectedRoute>
-      ),
-    },
-    {
-      path: '/training/current',
-      element: (
-        <ProtectedRoute>
-          <Layout>
-            <TrainingModule />
-          </Layout>
-        </ProtectedRoute>
-      ),
-    },
-    {
-      path: '/tasks',
-      element: (
-        <ProtectedRoute>
-          <Layout>
-            <TaskPortal />
-          </Layout>
-        </ProtectedRoute>
-      ),
-    },
-    {
-      path: '/tasks/upcoming',
-      element: (
-        <ProtectedRoute>
-          <Layout>
-            <UpcomingTasks />
-          </Layout>
-        </ProtectedRoute>
-      ),
-    },
-    {
-      path: '/resume',
-      element: (
-        <ProtectedRoute>
-          <Layout>
-            <ResumeGenerator />
-          </Layout>
-        </ProtectedRoute>
-      ),
-    },
-    {
-      path: '/submissions',
-      element: (
-        <ProtectedRoute>
-          <Layout>
-            <StudentSubmissions />
-          </Layout>
-        </ProtectedRoute>
-      ),
     },
   ];
 
