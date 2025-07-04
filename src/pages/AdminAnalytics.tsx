@@ -17,6 +17,9 @@ import {
   PieChart, Pie, Cell, Tooltip as RechartsTooltip, Legend,
   BarChart as ReBarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer
 } from 'recharts';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAnalytics } from '../redux/slices/analyticsSlice';
+import { useAppDispatch } from '../redux/store';
 
 const POLL_INTERVAL = 150000; // 150 seconds
 
@@ -24,16 +27,18 @@ const AdminAnalytics: React.FC = () => {
   const [dateRange, setDateRange] = useState('30');
   const [selectedMetric, setSelectedMetric] = useState('engagement');
 
-  // Use real API data only
-  const { analytics, loading, error, refetch } = useAnalytics(dateRange);
+  const dispatch = useAppDispatch();
+  const analyticsState = useSelector((state: any) => state.analytics);
+  const analytics = analyticsState.data;
+  const loading = analyticsState.loading;
+  const error = analyticsState.error;
 
   useEffect(() => {
-    // Polling for real-time analytics
-    const interval = setInterval(() => {
-      refetch();
-    }, POLL_INTERVAL);
-    return () => clearInterval(interval);
-  }, [dateRange, refetch]);
+    // Only fetch if not present or if dateRange changes
+    if (!analytics || analyticsState.lastFetched === null) {
+      dispatch(fetchAnalytics(dateRange));
+    }
+  }, [dateRange, analytics, analyticsState.lastFetched, dispatch]);
 
   const exportData = () => {
     alert('Analytics data export functionality would be implemented here');
@@ -41,7 +46,7 @@ const AdminAnalytics: React.FC = () => {
 
   const refreshData = async () => {
     try {
-      await refetch();
+      await dispatch(fetchAnalytics(dateRange)).unwrap();
       alert('Data refreshed successfully!');
     } catch (error) {
       alert('Failed to refresh data. Please try again.');
@@ -232,7 +237,7 @@ const AdminAnalytics: React.FC = () => {
                 outerRadius={80}
                 label
               >
-                {(analytics.trackDistribution || []).map((_, index) => (
+                {(analytics.trackDistribution || []).map((_: any, index: number) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
