@@ -121,6 +121,7 @@ function App() {
         { path: 'tasks/upcoming', element: <UpcomingTasks /> },
         { path: 'resume', element: <ResumeGenerator /> },
         { path: 'submissions', element: <StudentSubmissions /> },
+        { index: true, element: <Navigate to="dashboard" replace /> },
       ],
     },
     {
