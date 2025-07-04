@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useAppSelector } from '../redux/store';
 import { ShieldCheck, RefreshCw, AlertTriangle, CheckCircle } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchDiagnostics } from '../redux/slices/diagnosticsSlice';
+import { useAppDispatch } from '../redux/store';
 
 interface Diagnostic {
   module: string;
@@ -10,41 +13,30 @@ interface Diagnostic {
 }
 
 const AdminDiagnostics: React.FC = () => {
-  const [diagnostics, setDiagnostics] = useState<Diagnostic[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [timestamp, setTimestamp] = useState<string>('');
-  const { token } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
+  const diagnosticsState = useSelector((state: any) => state.diagnostics);
+  const diagnosticsData = diagnosticsState.data;
+  const loading = diagnosticsState.loading;
+  const error = diagnosticsState.error;
 
-  const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://syncner-test.onrender.com/api';
+  useEffect(() => {
+    if (!diagnosticsData || diagnosticsState.lastFetched === null) {
+      dispatch(fetchDiagnostics());
+    }
+  }, [diagnosticsData, diagnosticsState.lastFetched, dispatch]);
 
-  const fetchDiagnostics = async () => {
-    setLoading(true);
-    setError(null);
+  const refreshDiagnostics = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/admin/diagnostics`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      if (!res.ok) throw new Error('Failed to fetch diagnostics');
-      const data = await res.json();
-      setDiagnostics(data.diagnostics);
-      setTimestamp(data.timestamp);
-    } catch (err: any) {
-      setError(err.message || 'Failed to fetch diagnostics');
-    } finally {
-      setLoading(false);
+      await dispatch(fetchDiagnostics()).unwrap();
+    } catch (err) {
+      // error handled in Redux state
     }
   };
 
-  useEffect(() => {
-    fetchDiagnostics();
-    // eslint-disable-next-line
-  }, []);
+  const diagnostics = diagnosticsData?.diagnostics || [];
+  const timestamp = diagnosticsData?.timestamp || '';
 
-  const healthyCount = diagnostics.filter(d => d.healthy).length;
+  const healthyCount = diagnostics.filter((d: any) => d.healthy).length;
   const totalCount = diagnostics.length;
 
   return (
@@ -58,7 +50,7 @@ const AdminDiagnostics: React.FC = () => {
           Last checked: {timestamp ? new Date(timestamp).toLocaleString() : '—'}
         </div>
         <button
-          onClick={fetchDiagnostics}
+          onClick={refreshDiagnostics}
           className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
           disabled={loading}
         >
@@ -87,7 +79,7 @@ const AdminDiagnostics: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {diagnostics.map((diag) => {
+            {diagnostics.map((diag: any) => {
               // Determine what to show in the error column
               let errorText = diag.error;
               if (!errorText && diag.message && /error|not found|failed|unhealthy/i.test(diag.message)) {
