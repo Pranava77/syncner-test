@@ -5,6 +5,7 @@ import { loginUser, clearError, fetchCurrentUser } from '../redux/slices/authSli
 import { getDefaultRoute } from '../utils/routing';
 import { Mail, Lock, AlertCircle } from 'lucide-react';
 import logo from '../assets/syncner-logo.png';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -113,7 +114,7 @@ const LoginPage: React.FC = () => {
             >
               {isLoading ? (
                 <div className="flex items-center justify-center space-x-2">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  <LoadingSpinner size="sm" color="white" />
                   <span>Signing In...</span>
                 </div>
               ) : (

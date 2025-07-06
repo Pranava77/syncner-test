@@ -20,6 +20,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAnalytics } from '../redux/slices/analyticsSlice';
 import { useAppDispatch } from '../redux/store';
+import LoadingScreen from '../components/LoadingScreen';
 
 const POLL_INTERVAL = 150000; // 150 seconds
 
@@ -56,12 +57,11 @@ const AdminAnalytics: React.FC = () => {
   // Loading state
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-600" />
-          <p className="text-gray-600 dark:text-gray-300">Loading analytics...</p>
-        </div>
-      </div>
+      <LoadingScreen 
+        message="Loading analytics..."
+        showProgress={true}
+        progressDuration={1600}
+      />
     );
   }
 

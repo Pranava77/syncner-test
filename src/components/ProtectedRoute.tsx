@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAppSelector } from '../redux/store';
 import { canAccessRoute, getDefaultRoute } from '../utils/routing';
+import LoadingScreen from './LoadingScreen';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -18,9 +19,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   // Show loading while checking authentication
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
+      <LoadingScreen 
+        message="Verifying access..."
+        showProgress={true}
+        progressDuration={1200}
+      />
     );
   }
 

@@ -11,6 +11,7 @@ import {
   CheckCircle 
 } from 'lucide-react';
 import logo from '../assets/syncner-logo.png';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const careerTracks = [
   {
@@ -287,7 +288,7 @@ const OnboardingFlow: React.FC = () => {
               >
                 {isLoading ? (
                   <div className="flex items-center justify-center space-x-2">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    <LoadingSpinner size="sm" color="white" />
                     <span>Setting up your profile...</span>
                   </div>
                 ) : (

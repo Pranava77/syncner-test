@@ -25,6 +25,7 @@ import UpcomingTasks from './pages/UpcomingTasks';
 import StudentSubmissions from './pages/StudentTasks';
 import AdminDiagnostics from './pages/AdminDiagnostics';
 import StudentLayout from './components/StudentLayout';
+import LoadingScreen from './components/LoadingScreen';
 import { KeepAlive } from 'react-activation';
 
 function App() {
@@ -73,9 +74,11 @@ function App() {
   // Show loading while initializing authentication or restoring session
   if (isInitializing || isLoading || isRestoringSession) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
+      <LoadingScreen 
+        message={isInitializing ? "Initializing..." : isRestoringSession ? "Restoring session..." : "Loading..."}
+        showProgress={true}
+        progressDuration={2500}
+      />
     );
   }
 

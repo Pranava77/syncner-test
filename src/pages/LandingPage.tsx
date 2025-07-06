@@ -16,6 +16,7 @@ import {
   X
 } from 'lucide-react';
 import logo from '../assets/syncner-logo.png';
+import LoadingScreen from '../components/LoadingScreen';
 
 const LandingPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -35,9 +36,11 @@ const LandingPage: React.FC = () => {
   // Show loading while checking authentication
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 dark:from-gray-950 dark:via-blue-950 dark:to-purple-950 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-      </div>
+      <LoadingScreen 
+        message="Checking authentication..."
+        showProgress={true}
+        progressDuration={1500}
+      />
     );
   }
 

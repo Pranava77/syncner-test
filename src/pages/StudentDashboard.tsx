@@ -20,6 +20,7 @@ import {
   BarChart3,
   Loader2
 } from 'lucide-react';
+import LoadingScreen from '../components/LoadingScreen';
 
 const StudentDashboard: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -42,12 +43,11 @@ const StudentDashboard: React.FC = () => {
 
   if (!user || !user.careerTrack) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-600" />
-          <p className="text-gray-600 dark:text-gray-300">Loading your dashboard...</p>
-        </div>
-      </div>
+      <LoadingScreen 
+        message="Loading your dashboard..."
+        showProgress={true}
+        progressDuration={1800}
+      />
     );
   }
   const userTrack = user.careerTrack;
@@ -101,12 +101,11 @@ const StudentDashboard: React.FC = () => {
 
   if (progressLoading || modulesLoading || tasksLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-600" />
-          <p className="text-gray-600 dark:text-gray-300">Loading your dashboard...</p>
-        </div>
-      </div>
+      <LoadingScreen 
+        message="Loading your dashboard..."
+        showProgress={true}
+        progressDuration={1800}
+      />
     );
   }
 

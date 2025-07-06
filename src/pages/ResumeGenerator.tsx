@@ -32,6 +32,8 @@ import logo from '../assets/syncner-logo.png';
 import { fetchProgress } from '../redux/slices/progressSlice';
 import { fetchModules } from '../redux/slices/modulesSlice';
 import { fetchTasks } from '../redux/slices/tasksSlice';
+import LoadingScreen from '../components/LoadingScreen';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const ResumeGenerator: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -317,12 +319,11 @@ const ResumeGenerator: React.FC = () => {
       </div>
 
       {isLoading || progressLoading || tasksLoading || modulesLoading ? (
-        <div className="flex items-center justify-center py-12">
-          <div className="flex items-center space-x-3">
-            <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
-            <span className="text-gray-600 dark:text-gray-300">Loading your resume data...</span>
-          </div>
-        </div>
+        <LoadingScreen 
+          message="Loading your resume data..."
+          showProgress={true}
+          progressDuration={2000}
+        />
       ) : (
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Configuration Panel */}
@@ -402,7 +403,7 @@ const ResumeGenerator: React.FC = () => {
                   className="w-full flex items-center justify-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isEnhancing ? (
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    <LoadingSpinner size="sm" color="white" className="mr-2" />
                   ) : (
                     <Sparkles className="h-4 w-4 mr-2" />
                   )}
@@ -423,7 +424,7 @@ const ResumeGenerator: React.FC = () => {
                   className="w-full flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isGenerating ? (
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    <LoadingSpinner size="sm" color="white" className="mr-2" />
                   ) : (
                     <Download className="h-4 w-4 mr-2" />
                   )}

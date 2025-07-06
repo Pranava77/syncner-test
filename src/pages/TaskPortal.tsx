@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { fetchTasks } from '../redux/slices/tasksSlice';
 import { fetchProgress } from '../redux/slices/progressSlice';
+import LoadingScreen from '../components/LoadingScreen';
 
 const statusColors: Record<string, string> = {
   'Not Started': 'bg-yellow-100 text-yellow-800',
@@ -188,12 +189,11 @@ const TaskPortal: React.FC = () => {
 
   if (trackLoading || allStudentTasksLoading || progressLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-600" />
-          <p className="text-gray-600 dark:text-gray-300">Loading tasks...</p>
-        </div>
-      </div>
+      <LoadingScreen 
+        message="Loading tasks..."
+        showProgress={true}
+        progressDuration={1600}
+      />
     );
   }
 

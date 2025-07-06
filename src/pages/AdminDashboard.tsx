@@ -27,6 +27,7 @@ import { useStudents, useSubmissions } from '../hooks/useAdmin';
 import logo from '../assets/syncner-logo.png';
 import { useAppSelector } from '../redux/store';
 import { useSelector } from 'react-redux';
+import LoadingScreen from '../components/LoadingScreen';
 
 const AdminDashboard: React.FC = () => {
   const [selectedFilter, setSelectedFilter] = useState('all');
@@ -149,34 +150,31 @@ const AdminDashboard: React.FC = () => {
   // Loading states
   if (studentsLoading && activeTab === 'students') {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-600" />
-          <p className="text-gray-600 dark:text-gray-300">Loading students...</p>
-        </div>
-      </div>
+      <LoadingScreen 
+        message="Loading students..."
+        showProgress={true}
+        progressDuration={1600}
+      />
     );
   }
 
   if (analyticsLoading && activeTab === 'overview') {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-600" />
-          <p className="text-gray-600 dark:text-gray-300">Loading analytics...</p>
-        </div>
-      </div>
+      <LoadingScreen 
+        message="Loading analytics..."
+        showProgress={true}
+        progressDuration={1600}
+      />
     );
   }
 
   if (submissionsLoading && activeTab === 'submissions') {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-600" />
-          <p className="text-gray-600 dark:text-gray-300">Loading submissions...</p>
-        </div>
-      </div>
+      <LoadingScreen 
+        message="Loading submissions..."
+        showProgress={true}
+        progressDuration={1600}
+      />
     );
   }
 
