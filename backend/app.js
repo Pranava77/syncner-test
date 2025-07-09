@@ -8,6 +8,19 @@ import mongoose from 'mongoose';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
 
+// --- Manual CORS middleware for Render reliability ---
+// Place this at the very top, before any other middleware or routes
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://syncner-test.netlify.app");
+  res.header("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, Accept");
+  res.header("Access-Control-Allow-Credentials", "true");
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+  next();
+});
+
 // Import routes
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
@@ -62,14 +75,14 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // CORS - Simplified for development
-app.use(cors({
-  origin: [
-    'https://syncner-test.netlify.app',
-  ],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
-}));
+// app.use(cors({
+//   origin: [
+//     'https://syncner-test.netlify.app',
+//   ],
+//   credentials: true,
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+//   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
+// }));
 
 // Compression
 app.use(compression());
