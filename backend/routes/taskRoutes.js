@@ -1,7 +1,7 @@
 import express from 'express';
 import { getAllTasks, getTaskById, submitTask, createTask, updateTask, deleteTask, getUpcomingTasks, getAllStudentTasks } from '../controllers/taskController.js';
 import { protect } from '../middleware/auth.js';
-import { requireAdmin } from '../middleware/roleGuard.js';
+import { authorize } from '../middleware/auth.js';
 import { validationResult } from 'express-validator';
 import Submission from '../models/Submission.js';
 import Task from '../models/Task.js';
@@ -21,7 +21,7 @@ const handleValidation = (req, res, next) => {
 router.get('/', getAllTasks);
 
 // Get all submissions (for admin) - must come before /:id route
-router.get('/submissions', protect, requireAdmin, async (req, res) => {
+router.get('/submissions', protect, authorize('admin'), async (req, res) => {
   try {
     const submissions = await Submission.find()
       .populate('student', 'name email')
@@ -77,9 +77,9 @@ router.get('/health', async (req, res) => {
 router.get('/:id', getTaskById);
 
 // Admin routes
-router.post('/', protect, requireAdmin, createTask);
-router.put('/:id', protect, requireAdmin, updateTask);
-router.delete('/:id', protect, requireAdmin, deleteTask);
+router.post('/', protect, authorize('admin'), createTask);
+router.put('/:id', protect, authorize('admin'), updateTask);
+router.delete('/:id', protect, authorize('admin'), deleteTask);
 
 // Submit a task solution
 router.post('/:id/submit', protect, submitTask);

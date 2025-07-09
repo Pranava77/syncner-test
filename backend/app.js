@@ -8,18 +8,17 @@ import mongoose from 'mongoose';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
 
-// --- Manual CORS middleware for Render reliability ---
-// Place this at the very top, before any other middleware or routes
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://syncner-test.netlify.app");
-  res.header("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, Accept");
-  res.header("Access-Control-Allow-Credentials", "true");
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(204);
-  }
-  next();
-});
+const app = express();
+
+// CORS
+app.use(cors({
+  origin: [
+    'https://syncner-test.netlify.app',
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
+}));
 
 // Import routes
 import authRoutes from './routes/authRoutes.js';
@@ -57,8 +56,6 @@ const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
-
-const app = express();
 
 // Security middleware
 app.use(helmet());

@@ -1,13 +1,13 @@
 import express from 'express';
 import { getSettings, updateSettings } from '../controllers/settingsController.js';
 import { protect } from '../middleware/auth.js';
-import { requireAdmin } from '../middleware/roleGuard.js';
+import { authorize } from '../middleware/auth.js';
 import Settings from '../models/Settings.js';
 
 const router = express.Router();
 
-router.get('/', protect, requireAdmin, getSettings);
-router.put('/', protect, requireAdmin, updateSettings);
+router.get('/', protect, authorize('admin'), getSettings);
+router.put('/', protect, authorize('admin'), updateSettings);
 
 // Health check for settings module
 router.get('/health', async (req, res) => {

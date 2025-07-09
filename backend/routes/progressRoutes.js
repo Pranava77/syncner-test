@@ -1,7 +1,7 @@
 import express from 'express';
 import { getUserProgress, updateUserProgress, getAllProgress } from '../controllers/progressController.js';
 import { protect } from '../middleware/auth.js';
-import { requireAdmin } from '../middleware/roleGuard.js';
+import { authorize } from '../middleware/auth.js';
 import Progress from '../models/Progress.js';
 
 const router = express.Router();
@@ -22,6 +22,6 @@ router.get('/health', async (req, res) => {
   }
 });
 
-router.get('/', protect, requireAdmin, getAllProgress);
+router.get('/', protect, authorize('admin'), getAllProgress);
 
 export default router; 

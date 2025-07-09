@@ -2,7 +2,7 @@ import express from 'express';
 import Submission from '../models/Submission.js';
 import { protect } from '../middleware/auth.js';
 import { reviewSubmission, getAllSubmissions } from '../controllers/submissionController.js';
-import { requireAdmin } from '../middleware/roleGuard.js';
+import { authorize } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -34,10 +34,10 @@ router.get('/my', protect, async (req, res) => {
 });
 
 // Review a submission (admin)
-router.patch('/:id/review', protect, requireAdmin, reviewSubmission);
+router.patch('/:id/review', protect, authorize('admin'), reviewSubmission);
 
 // Get all submissions for admin
-router.get('/', protect, requireAdmin, getAllSubmissions);
+router.get('/', protect, authorize('admin'), getAllSubmissions);
 
 // Health check for submissions module
 router.get('/health', async (req, res) => {

@@ -1,7 +1,7 @@
 import express from 'express';
 import { getAllUsers, getAnalytics, createUser, updateUser, deleteUser } from '../controllers/adminController.js';
 import { protect } from '../middleware/auth.js';
-import { requireAdmin } from '../middleware/roleGuard.js';
+import { authorize } from '../middleware/auth.js';
 import { body } from 'express-validator';
 import User from '../models/User.js';
 import fetch from 'node-fetch';
@@ -9,13 +9,13 @@ import fetch from 'node-fetch';
 const router = express.Router();
 
 // Get all users (admin only)
-router.get('/users', protect, requireAdmin, getAllUsers);
+router.get('/users', protect, authorize('admin'), getAllUsers);
 
 // Create user (admin only)
 router.post(
   '/users',
   protect,
-  requireAdmin,
+  authorize('admin'),
   [
     body('name').trim().isLength({ min: 2, max: 50 }).withMessage('Name must be 2-50 chars'),
     body('email').isEmail().withMessage('Valid email required'),
@@ -27,13 +27,13 @@ router.post(
 );
 
 // Update user (admin only)
-router.put('/users/:id', protect, requireAdmin, updateUser);
+router.put('/users/:id', protect, authorize('admin'), updateUser);
 
 // Delete user (admin only)
-router.delete('/users/:id', protect, requireAdmin, deleteUser);
+router.delete('/users/:id', protect, authorize('admin'), deleteUser);
 
 // Get analytics (admin only)
-router.get('/analytics', protect, requireAdmin, getAnalytics);
+router.get('/analytics', protect, authorize('admin'), getAnalytics);
 
 // Health check for admin module
 router.get('/health', async (req, res) => {
@@ -46,7 +46,7 @@ router.get('/health', async (req, res) => {
 });
 
 // Diagnostics endpoint: aggregate all module health checks
-router.get('/diagnostics', protect, requireAdmin, async (req, res) => {
+router.get('/diagnostics', protect, authorize('admin'), async (req, res) => {
   // List of health endpoints to check
   const endpoints = [
     { name: 'auth', url: '/api/auth/health' },

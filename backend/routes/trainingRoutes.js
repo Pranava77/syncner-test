@@ -1,7 +1,7 @@
 import express from 'express';
 import { getAllModules, getModuleById, createModule, updateModule, deleteModule } from '../controllers/trainingController.js';
 import { protect } from '../middleware/auth.js';
-import { requireAdmin } from '../middleware/roleGuard.js';
+import { authorize } from '../middleware/auth.js';
 import Module from '../models/Module.js';
 
 const router = express.Router();
@@ -22,8 +22,8 @@ router.get('/health', async (req, res) => {
 router.get('/:id', getModuleById);
 
 // Admin routes
-router.post('/', protect, requireAdmin, createModule);
-router.put('/:id', protect, requireAdmin, updateModule);
-router.delete('/:id', protect, requireAdmin, deleteModule);
+router.post('/', protect, authorize('admin'), createModule);
+router.put('/:id', protect, authorize('admin'), updateModule);
+router.delete('/:id', protect, authorize('admin'), deleteModule);
 
 export default router; 
