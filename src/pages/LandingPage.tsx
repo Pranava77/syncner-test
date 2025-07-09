@@ -10,8 +10,7 @@ import {
   BookOpen,
   Award,
   Briefcase,
-  Moon,
-  Sun,
+
   Menu,
   X
 } from 'lucide-react';
