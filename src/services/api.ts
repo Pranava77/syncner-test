@@ -54,6 +54,7 @@ class ApiService {
       method: 'POST',
       headers: this.getHeaders(),
       body: JSON.stringify({ email, password }),
+      credentials: 'include',
     });
 
     const data = await this.handleResponse(response, true);
@@ -74,6 +75,7 @@ class ApiService {
       method: 'POST',
       headers: this.getHeaders(),
       body: JSON.stringify(userData),
+      credentials: 'include',
     });
 
     const data = await this.handleResponse(response, true);
@@ -86,6 +88,7 @@ class ApiService {
   async getMe() {
     const response = await fetch(`${this.baseURL}/auth/profile`, {
       headers: this.getHeaders(),
+      credentials: 'include',
     });
 
     return this.handleResponse(response, true);
@@ -96,6 +99,7 @@ class ApiService {
       const response = await fetch(`${this.baseURL}/auth/logout`, {
         method: 'POST',
         headers: this.getHeaders(),
+        credentials: 'include',
       });
       
       if (!response.ok) {
@@ -115,6 +119,7 @@ class ApiService {
       method: 'PUT',
       headers: this.getHeaders(),
       body: JSON.stringify(profileData),
+      credentials: 'include',
     });
 
     const data = await this.handleResponse(response, true);
@@ -124,6 +129,7 @@ class ApiService {
   async getUserProgress() {
     const response = await fetch(`${this.baseURL}/progress`, {
       headers: this.getHeaders(),
+      credentials: 'include',
     });
 
     return this.handleResponse(response, false);
@@ -133,6 +139,7 @@ class ApiService {
   async getCareerTracks() {
     const response = await fetch(`${this.baseURL}/tracks`, {
       headers: this.getHeaders(),
+      credentials: 'include',
     });
 
     return this.handleResponse(response, false);
@@ -141,6 +148,7 @@ class ApiService {
   async getCareerTrack(trackId: string) {
     const response = await fetch(`${this.baseURL}/tracks/${trackId}`, {
       headers: this.getHeaders(),
+      credentials: 'include',
     });
 
     return this.handleResponse(response, false);
@@ -154,6 +162,7 @@ class ApiService {
     
     const response = await fetch(url, {
       headers: this.getHeaders(),
+      credentials: 'include',
     });
 
     return this.handleResponse(response, false);
@@ -162,6 +171,7 @@ class ApiService {
   async getModule(moduleId: string) {
     const response = await fetch(`${this.baseURL}/training/${moduleId}`, {
       headers: this.getHeaders(),
+      credentials: 'include',
     });
 
     return this.handleResponse(response, false);
@@ -172,6 +182,7 @@ class ApiService {
       method: 'POST',
       headers: this.getHeaders(),
       body: JSON.stringify(moduleData),
+      credentials: 'include',
     });
 
     return this.handleResponse(response, false);
@@ -182,6 +193,7 @@ class ApiService {
       method: 'PUT',
       headers: this.getHeaders(),
       body: JSON.stringify(moduleData),
+      credentials: 'include',
     });
 
     return this.handleResponse(response, false);
@@ -191,6 +203,7 @@ class ApiService {
     const response = await fetch(`${this.baseURL}/training/${moduleId}`, {
       method: 'DELETE',
       headers: this.getHeaders(),
+      credentials: 'include',
     });
 
     return this.handleResponse(response, false);
