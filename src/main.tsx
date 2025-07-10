@@ -5,12 +5,15 @@ import { store } from './redux/store';
 import App from './App.tsx';
 import './index.css';
 import { AliveScope } from 'react-activation';
+import { BrowserRouter } from 'react-router-dom';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AliveScope>
       <Provider store={store}>
-        <App />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
       </Provider>
     </AliveScope>
   </StrictMode>
