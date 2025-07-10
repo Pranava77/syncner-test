@@ -96,29 +96,28 @@ const Layout: React.FC = () => {
         </nav>
 
         <div className="p-6 border-t border-gray-200 dark:border-gray-700">
-          <div className="flex items-center space-x-3 mb-4">
-            <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 rounded-full">
-              <span className="text-white text-sm font-bold">
+          {/* Unified Profile Section - clickable */}
+          <Link
+            to={user?.role === 'admin' ? '/admin/profile' : '/profile'}
+            className="flex items-center gap-3 w-full px-3 py-3 mb-2 rounded-lg transition-colors bg-gradient-to-r from-blue-50/80 to-purple-50/80 dark:from-blue-900/30 dark:to-purple-900/30 hover:bg-blue-100 dark:hover:bg-blue-800/60 focus:outline-none focus:ring-2 focus:ring-blue-400 group"
+            tabIndex={0}
+            aria-label="View profile"
+          >
+            <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 rounded-full flex items-center justify-center">
+              <span className="text-white text-base font-bold">
                 {user?.name?.charAt(0) || 'U'}
               </span>
             </div>
-            <div>
-              <p className="text-sm font-medium text-gray-900 dark:text-white">{user?.name}</p>
-              <p className="text-xs text-gray-600 dark:text-gray-400 capitalize">{user?.role}</p>
+            <div className="flex flex-col flex-1 min-w-0">
+              <span className="text-sm font-semibold text-gray-900 dark:text-white truncate">{user?.name}</span>
+              <span className="text-xs text-gray-600 dark:text-gray-400 capitalize truncate">{user?.role}</span>
             </div>
-          </div>
-          {/* Profile Link */}
-          <Link
-            to={user?.role === 'admin' ? '/admin/profile' : '/profile'}
-            className={`flex items-center w-full px-3 py-2 mb-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors`}
-          >
-            <UserIcon className="h-4 w-4 mr-2" />
-            Profile
+            <UserIcon className="h-5 w-5 text-blue-500 dark:text-blue-400 opacity-80 group-hover:scale-110 transition-transform" />
           </Link>
           <button
             onClick={handleLogout}
             disabled={isLoggingOut}
-            className="flex items-center w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-1"
           >
             {isLoggingOut ? (
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600 mr-2" />
@@ -202,14 +201,24 @@ const Layout: React.FC = () => {
         </nav>
 
         <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-gray-200 dark:border-gray-700">
-          {/* Profile Link */}
+          {/* Unified Profile Section - clickable */}
           <Link
             to={user?.role === 'admin' ? '/admin/profile' : '/profile'}
             onClick={closeMobileMenu}
-            className={`flex items-center w-full px-3 py-3 mb-2 text-base text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors`}
+            className="flex items-center gap-3 w-full px-3 py-3 mb-2 rounded-lg transition-colors bg-gradient-to-r from-blue-50/80 to-purple-50/80 dark:from-blue-900/30 dark:to-purple-900/30 hover:bg-blue-100 dark:hover:bg-blue-800/60 focus:outline-none focus:ring-2 focus:ring-blue-400 group"
+            tabIndex={0}
+            aria-label="View profile"
           >
-            <UserIcon className="h-5 w-5 mr-3" />
-            Profile
+            <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 rounded-full flex items-center justify-center">
+              <span className="text-white text-base font-bold">
+                {user?.name?.charAt(0) || 'U'}
+              </span>
+            </div>
+            <div className="flex flex-col flex-1 min-w-0">
+              <span className="text-sm font-semibold text-gray-900 dark:text-white truncate">{user?.name}</span>
+              <span className="text-xs text-gray-600 dark:text-gray-400 capitalize truncate">{user?.role}</span>
+            </div>
+            <UserIcon className="h-5 w-5 text-blue-500 dark:text-blue-400 opacity-80 group-hover:scale-110 transition-transform" />
           </Link>
           <button
             onClick={() => {
@@ -217,7 +226,7 @@ const Layout: React.FC = () => {
               closeMobileMenu();
             }}
             disabled={isLoggingOut}
-            className="flex items-center w-full px-3 py-3 text-base text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center w-full px-3 py-3 text-base text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-1"
           >
             {isLoggingOut ? (
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-600 mr-3" />
