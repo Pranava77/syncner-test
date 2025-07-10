@@ -1,11 +1,10 @@
 import  { useState, useEffect } from 'react';
 import {
-  createBrowserRouter,
-  RouterProvider,
-  Navigate,
-  Outlet,
+  BrowserRouter,
   Routes,
   Route,
+  Navigate,
+  useLocation,
 } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './redux/store';
 import { fetchCurrentUser, restoreSession } from './redux/slices/authSlice';
@@ -32,7 +31,6 @@ import { KeepAlive } from 'react-activation';
 import StudentProfile from './pages/StudentProfile';
 import AdminProfile from './pages/AdminProfile';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useLocation } from 'react-router-dom';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -89,122 +87,77 @@ function App() {
     );
   }
 
-  const routes = [
-    {
-      path: '/',
-      element: <LandingPage />,
-    },
-    {
-      path: '/login',
-      element: isAuthenticated && user && !isLoading && !isRestoringSession ? (
-        <Navigate to={getDefaultRoute(user)} replace />
-      ) : (
-        <LoginPage />
-      ),
-    },
-    {
-      path: '/register',
-      element: isAuthenticated && user && !isLoading && !isRestoringSession ? (
-        <Navigate to={getDefaultRoute(user)} replace />
-      ) : (
-        <RegisterPage />
-      ),
-    },
-    {
-      path: '/onboarding',
-      element: (
-        <ProtectedRoute>
-          <OnboardingFlow />
-        </ProtectedRoute>
-      ),
-    },
-    {
-      path: '/student',
-      element: <StudentLayout />,
-      children: [
-        { path: 'dashboard', element: <KeepAlive id="student-dashboard"><StudentDashboard /></KeepAlive> },
-        { path: 'training/:moduleId', element: <KeepAlive id="training-module"><TrainingModule /></KeepAlive> },
-        { path: 'training/current', element: <KeepAlive id="training-current"><TrainingModule /></KeepAlive> },
-        { path: 'tasks', element: <KeepAlive id="task-portal"><TaskPortal /></KeepAlive> },
-        { path: 'tasks/upcoming', element: <KeepAlive id="upcoming-tasks"><UpcomingTasks /></KeepAlive> },
-        { path: 'resume', element: <KeepAlive id="resume-generator"><ResumeGenerator /></KeepAlive> },
-        { path: 'submissions', element: <KeepAlive id="student-submissions"><StudentSubmissions /></KeepAlive> },
-        { index: true, element: <Navigate to="dashboard" replace /> },
-      ],
-    },
-    {
-      path: '/profile',
-      element: (
-        <ProtectedRoute>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Layout>
-              <StudentProfile />
-            </Layout>
-          </motion.div>
-        </ProtectedRoute>
-      ),
-    },
-    {
-      path: '/admin/profile',
-      element: (
-        <ProtectedRoute requireAdmin>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Layout>
-              <AdminProfile />
-            </Layout>
-          </motion.div>
-        </ProtectedRoute>
-      ),
-    },
-    {
-      path: '/admin',
-      element: (
-        <ProtectedRoute requireAdmin>
-          <Layout />
-        </ProtectedRoute>
-      ),
-      children: [
-        { path: '', element: <AdminDashboard /> },
-        { path: 'analytics', element: <AdminAnalytics /> },
-        { path: 'diagnostics', element: <AdminDiagnostics /> },
-        { path: 'settings', element: <AdminSettings /> },
-      ],
-    },
-  ];
-
-  const router = createBrowserRouter(routes);
-
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        {routes.map((route) => (
-          <Route
-            key={route.path}
-            path={route.path}
-            element={
-              <ProtectedRoute>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {route.element}
-                </motion.div>
-              </ProtectedRoute>
-            }
-          />
-        ))}
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={
+          isAuthenticated && user && !isLoading && !isRestoringSession ? (
+            <Navigate to={getDefaultRoute(user)} replace />
+          ) : (
+            <LoginPage />
+          )
+        } />
+        <Route path="/register" element={
+          isAuthenticated && user && !isLoading && !isRestoringSession ? (
+            <Navigate to={getDefaultRoute(user)} replace />
+          ) : (
+            <RegisterPage />
+          )
+        } />
+        <Route path="/onboarding" element={
+          <ProtectedRoute>
+            <OnboardingFlow />
+          </ProtectedRoute>
+        } />
+        <Route path="/student/*" element={<StudentLayout />}>
+          <Route path="dashboard" element={<KeepAlive id="student-dashboard"><StudentDashboard /></KeepAlive>} />
+          <Route path="training/:moduleId" element={<KeepAlive id="training-module"><TrainingModule /></KeepAlive>} />
+          <Route path="training/current" element={<KeepAlive id="training-current"><TrainingModule /></KeepAlive>} />
+          <Route path="tasks" element={<KeepAlive id="task-portal"><TaskPortal /></KeepAlive>} />
+          <Route path="tasks/upcoming" element={<KeepAlive id="upcoming-tasks"><UpcomingTasks /></KeepAlive>} />
+          <Route path="resume" element={<KeepAlive id="resume-generator"><ResumeGenerator /></KeepAlive>} />
+          <Route path="submissions" element={<KeepAlive id="student-submissions"><StudentSubmissions /></KeepAlive>} />
+          <Route index element={<Navigate to="dashboard" replace />} />
+        </Route>
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Layout>
+                <StudentProfile />
+              </Layout>
+            </motion.div>
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/profile" element={
+          <ProtectedRoute requireAdmin>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Layout>
+                <AdminProfile />
+              </Layout>
+            </motion.div>
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/*" element={
+          <ProtectedRoute requireAdmin>
+            <Layout />
+          </ProtectedRoute>
+        }>
+          <Route index element={<AdminDashboard />} />
+          <Route path="analytics" element={<AdminAnalytics />} />
+          <Route path="diagnostics" element={<AdminDiagnostics />} />
+          <Route path="settings" element={<AdminSettings />} />
+        </Route>
       </Routes>
     </AnimatePresence>
   );
