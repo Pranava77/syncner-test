@@ -81,14 +81,44 @@ const AdminDashboard: React.FC = () => {
     await reviewSubmission(submissionId, { score, feedback, status });
   };
 
+  // Modal state management helpers
   const handleViewStudent = (student: any) => {
     setSelectedStudent(student);
+    setEditingStudent(null);
     setShowStudentModal(true);
+    setShowAddStudent(false);
   };
 
   const handleEditStudent = (student: any) => {
     setEditingStudent({ ...student });
+    setSelectedStudent(null);
     setShowStudentModal(true);
+    setShowAddStudent(false);
+  };
+
+  const handleAddStudent = () => {
+    setEditingStudent({
+      name: '',
+      email: '',
+      phone: '',
+      location: '',
+      department: '',
+      college: 'Tech University',
+      careerTrack: 'fullstack',
+      gpa: '',
+      profileComplete: false,
+      password: ''
+    });
+    setSelectedStudent(null);
+    setShowAddStudent(true);
+    setShowStudentModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowStudentModal(false);
+    setSelectedStudent(null);
+    setEditingStudent(null);
+    setShowAddStudent(false);
   };
 
   const handleDeleteStudent = async (studentId: string) => {
@@ -307,21 +337,7 @@ const AdminDashboard: React.FC = () => {
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Student Management</h2>
               <button
-                onClick={() => {
-                  setEditingStudent({
-                    name: '',
-                    email: '',
-                    phone: '',
-                    location: '',
-                    department: '',
-                    college: 'Tech University',
-                    careerTrack: 'fullstack',
-                    gpa: '',
-                    profileComplete: false
-                  });
-                  setShowAddStudent(true);
-                  setShowStudentModal(true);
-                }}
+                onClick={handleAddStudent}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center"
               >
                 <Plus className="h-4 w-4 mr-2" />
@@ -475,12 +491,7 @@ const AdminDashboard: React.FC = () => {
                   {editingStudent ? (showAddStudent ? 'Add New Student' : 'Edit Student') : 'Student Details'}
                 </h2>
                 <button
-                  onClick={() => {
-                    setShowStudentModal(false);
-                    setSelectedStudent(null);
-                    setEditingStudent(null);
-                    setShowAddStudent(false);
-                  }}
+                  onClick={handleCloseModal}
                   className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl"
                 >
                   ×
@@ -634,11 +645,7 @@ const AdminDashboard: React.FC = () => {
                       {showAddStudent ? 'Add Student' : 'Save Changes'}
                     </button>
                     <button
-                      onClick={() => {
-                        setEditingStudent(null);
-                        setShowStudentModal(false);
-                        setShowAddStudent(false);
-                      }}
+                      onClick={handleCloseModal}
                       className="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium flex items-center"
                     >
                       <X className="h-4 w-4 mr-2" />
@@ -741,7 +748,7 @@ const AdminDashboard: React.FC = () => {
                       Edit Student
                     </button>
                     <button
-                      onClick={() => setShowStudentModal(false)}
+                      onClick={handleCloseModal}
                       className="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium"
                     >
                       Close
