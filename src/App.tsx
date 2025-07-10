@@ -4,6 +4,8 @@ import {
   RouterProvider,
   Navigate,
   Outlet,
+  Routes,
+  Route,
 } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './redux/store';
 import { fetchCurrentUser, restoreSession } from './redux/slices/authSlice';
@@ -29,6 +31,8 @@ import LoadingScreen from './components/LoadingScreen';
 import { KeepAlive } from 'react-activation';
 import StudentProfile from './pages/StudentProfile';
 import AdminProfile from './pages/AdminProfile';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -36,6 +40,7 @@ function App() {
   const { isDarkMode } = useAppSelector((state) => state.theme);
   
   const [isInitializing, setIsInitializing] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
     const initializeAuth = async () => {
@@ -131,9 +136,16 @@ function App() {
       path: '/profile',
       element: (
         <ProtectedRoute>
-          <Layout>
-            <StudentProfile />
-          </Layout>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Layout>
+              <StudentProfile />
+            </Layout>
+          </motion.div>
         </ProtectedRoute>
       ),
     },
@@ -141,9 +153,16 @@ function App() {
       path: '/admin/profile',
       element: (
         <ProtectedRoute requireAdmin>
-          <Layout>
-            <AdminProfile />
-          </Layout>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Layout>
+              <AdminProfile />
+            </Layout>
+          </motion.div>
         </ProtectedRoute>
       ),
     },
@@ -166,7 +185,28 @@ function App() {
   const router = createBrowserRouter(routes);
 
   return (
-    <RouterProvider router={router} />
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        {routes.map((route) => (
+          <Route
+            key={route.path}
+            path={route.path}
+            element={
+              <ProtectedRoute>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {route.element}
+                </motion.div>
+              </ProtectedRoute>
+            }
+          />
+        ))}
+      </Routes>
+    </AnimatePresence>
   );
 }
 
