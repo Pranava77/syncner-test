@@ -20,7 +20,11 @@ import {
 } from 'lucide-react';
 import logo from '../assets/syncner-logo.png';
 
-const Layout: React.FC = () => {
+interface LayoutProps {
+  children?: React.ReactNode;
+}
+
+const Layout: React.FC<LayoutProps> = ({ children }) => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   const { isDarkMode } = useAppSelector((state) => state.theme);
@@ -241,7 +245,7 @@ const Layout: React.FC = () => {
       {/* Main Content */}
       <div className="flex-1 overflow-hidden">
         <main className="h-full overflow-y-auto p-4 lg:p-8 bg-gray-50 dark:bg-gray-900 pt-20 lg:pt-8">
-          <Outlet />
+          {children ? children : <Outlet />}
         </main>
       </div>
     </div>

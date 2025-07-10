@@ -131,7 +131,9 @@ function App() {
       path: '/profile',
       element: (
         <ProtectedRoute>
-          <StudentProfile />
+          <Layout>
+            <StudentProfile />
+          </Layout>
         </ProtectedRoute>
       ),
     },
@@ -139,7 +141,9 @@ function App() {
       path: '/admin/profile',
       element: (
         <ProtectedRoute requireAdmin>
-          <AdminProfile />
+          <Layout>
+            <AdminProfile />
+          </Layout>
         </ProtectedRoute>
       ),
     },
