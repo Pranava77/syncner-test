@@ -432,7 +432,7 @@ const AdminDashboard: React.FC = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(student.status || 'active')}`}>
                         {getStatusIcon(student.status || 'active')}
-                        <span className="ml-1 capitalize">{(student.status || 'active').replace('-', ' ')}</span>
+                        <span className="ml-1 capitalize">{(student.status || 'active') ? (student.status || 'active').replace('-', ' ') : 'Active'}</span>
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -681,9 +681,9 @@ const AdminDashboard: React.FC = () => {
                         </div>
                       </div>
                     </div>
-                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(selectedStudent?.status)}`}>
-                      {getStatusIcon(selectedStudent?.status)}
-                      <span className="ml-1 capitalize">{selectedStudent?.status.replace('-', ' ')}</span>
+                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(selectedStudent?.status || 'active')}`}>
+                      {getStatusIcon(selectedStudent?.status || 'active')}
+                      <span className="ml-1 capitalize">{(selectedStudent?.status || 'active') ? (selectedStudent?.status || 'active').replace('-', ' ') : 'Active'}</span>
                     </span>
                   </div>
 
