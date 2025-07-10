@@ -26,26 +26,26 @@ const StudentSubmissions: React.FC = () => {
   if (error) return <div className="text-red-500">{error}</div>;
 
   return (
-    <div className="max-w-3xl mx-auto p-4 bg-[var(--brand-bg)] min-h-[80vh] rounded-xl shadow-xl transition-colors">
-      <h2 className="text-3xl font-bold mb-6 text-[var(--brand-text)]">My Submissions</h2>
+    <div className="max-w-3xl mx-auto p-4">
+      <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">My Submissions</h2>
       {loading ? (
         <div className="flex items-center justify-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--brand-primary)]"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
         </div>
       ) : error ? (
-        <div className="text-[var(--brand-danger)] text-center py-8">{error}</div>
+        <div className="text-red-500 text-center py-8">{error}</div>
       ) : submissionsToShow.length === 0 ? (
-        <div className="text-center py-12 text-[var(--brand-primary)]">No submissions yet!</div>
+        <div className="text-center py-12 text-gray-500">No submissions yet!</div>
       ) : (
         <div className="grid gap-6 md:grid-cols-2">
           {submissionsToShow.map(sub => {
             const statusColor = sub.status === 'Reviewed' || sub.status === 'reviewed'
-              ? 'bg-[var(--brand-info-bg)] text-[var(--brand-info)]'
+              ? 'bg-blue-100 text-blue-700'
               : sub.status === 'Submitted' || sub.status === 'submitted'
-                ? 'bg-[var(--brand-warning-bg)] text-[var(--brand-warning)]'
+                ? 'bg-yellow-100 text-yellow-700'
                 : sub.status === 'Rejected' || sub.status === 'rejected'
-                  ? 'bg-[var(--brand-danger-bg)] text-[var(--brand-danger)]'
-                  : 'bg-[var(--brand-success-bg)] text-[var(--brand-success)]';
+                  ? 'bg-red-100 text-red-700'
+                  : 'bg-green-100 text-green-700';
             const statusIcon = sub.status === 'Reviewed' || sub.status === 'reviewed'
               ? <Eye className="h-4 w-4" />
               : sub.status === 'Submitted' || sub.status === 'submitted'
@@ -54,19 +54,19 @@ const StudentSubmissions: React.FC = () => {
                   ? <AlertCircle className="h-4 w-4" />
                   : <CheckCircle className="h-4 w-4" />;
             return (
-              <div key={sub.id} className="bg-[var(--brand-bg-alt)] rounded-xl shadow p-6 flex flex-col gap-3 border border-[var(--brand-bg)] transition-colors">
+              <div key={sub.id} className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 flex flex-col gap-3 border border-gray-200 dark:border-gray-700">
                 <div className="flex items-center gap-3 mb-2">
-                  <FileText className="h-5 w-5 text-[var(--brand-accent)]" />
-                  <div className="font-semibold text-lg text-[var(--brand-text)]">{sub.taskTitle}</div>
+                  <FileText className="h-5 w-5 text-purple-500" />
+                  <div className="font-semibold text-lg text-gray-900 dark:text-white">{sub.taskTitle}</div>
                   <span className={`ml-auto px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1 ${statusColor}`}>{statusIcon}<span>{sub.status}</span></span>
                 </div>
-                <div className="flex flex-wrap gap-3 text-sm text-[var(--brand-primary)]">
+                <div className="flex flex-wrap gap-3 text-sm text-gray-600 dark:text-gray-400">
                   <span className="flex items-center gap-1"><Clock className="h-4 w-4" /> {sub.submittedAt ? new Date(sub.submittedAt).toLocaleString() : '—'}</span>
                   <span className="flex items-center gap-1"><Star className="h-4 w-4 text-yellow-500" /> {sub.score !== undefined ? sub.score + '/100' : 'Not graded'}</span>
                 </div>
-                <div className="truncate text-[var(--brand-text)]">Feedback: {sub.feedback || 'No feedback yet'}</div>
+                <div className="truncate text-gray-700 dark:text-gray-300">Feedback: {sub.feedback || 'No feedback yet'}</div>
                 <button
-                  className="mt-2 bg-[var(--brand-primary)] text-white py-2 rounded-lg hover:bg-[var(--brand-accent)] transition-colors font-medium flex items-center justify-center"
+                  className="mt-2 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center"
                   onClick={() => setSelectedSubmission(sub)}
                 >
                   <Eye className="h-4 w-4 mr-2" /> View Details
@@ -80,49 +80,49 @@ const StudentSubmissions: React.FC = () => {
       {/* Details Modal */}
       {selectedSubmission && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-[var(--brand-bg-alt)] p-8 rounded-xl shadow-xl w-full max-w-lg relative border border-[var(--brand-bg)] transition-colors">
+          <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-xl w-full max-w-lg relative border border-gray-200 dark:border-gray-700">
             <button
-              className="absolute top-3 right-3 text-[var(--brand-text)] hover:text-[var(--brand-primary)] text-2xl"
+              className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 text-2xl"
               onClick={() => setSelectedSubmission(null)}
             >
               ×
             </button>
-            <h3 className="text-2xl font-semibold mb-4 text-[var(--brand-text)]">Submission Details</h3>
+            <h3 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">Submission Details</h3>
             <div className="mb-4">
-              <div className="font-semibold text-lg text-[var(--brand-text)] mb-1">{selectedSubmission.taskTitle}</div>
-              <div className="flex flex-wrap gap-3 text-sm text-[var(--brand-primary)] mb-2">
+              <div className="font-semibold text-lg text-gray-900 dark:text-white mb-1">{selectedSubmission.taskTitle}</div>
+              <div className="flex flex-wrap gap-3 text-sm text-gray-600 dark:text-gray-400 mb-2">
                 <span className="flex items-center gap-1"><Clock className="h-4 w-4" /> {selectedSubmission.submittedAt ? new Date(selectedSubmission.submittedAt).toLocaleString() : '—'}</span>
                 <span className="flex items-center gap-1"><Star className="h-4 w-4 text-yellow-500" /> {selectedSubmission.score !== undefined ? selectedSubmission.score + '/100' : 'Not graded'}</span>
-                <span className="flex items-center gap-1"><FileText className="h-4 w-4 text-[var(--brand-accent)]" /> Status: {selectedSubmission.status}</span>
+                <span className="flex items-center gap-1"><FileText className="h-4 w-4 text-purple-500" /> Status: {selectedSubmission.status}</span>
                 {selectedSubmission.reviewedAt && (
-                  <span className="flex items-center gap-1"><Eye className="h-4 w-4 text-[var(--brand-info)]" /> Reviewed: {new Date(selectedSubmission.reviewedAt).toLocaleString()}</span>
+                  <span className="flex items-center gap-1"><Eye className="h-4 w-4 text-blue-500" /> Reviewed: {new Date(selectedSubmission.reviewedAt).toLocaleString()}</span>
                 )}
               </div>
               <div className="mb-2">
-                <span className="font-semibold text-[var(--brand-text)]">Description:</span>
-                <div className="text-[var(--brand-text)] whitespace-pre-wrap">{selectedSubmission.description}</div>
+                <span className="font-semibold text-gray-900 dark:text-white">Description:</span>
+                <div className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{selectedSubmission.description}</div>
               </div>
               {selectedSubmission.notes && (
                 <div className="mb-2">
-                  <span className="font-semibold text-[var(--brand-text)]">Notes:</span>
-                  <div className="text-[var(--brand-text)] whitespace-pre-wrap">{selectedSubmission.notes}</div>
+                  <span className="font-semibold text-gray-900 dark:text-white">Notes:</span>
+                  <div className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{selectedSubmission.notes}</div>
                 </div>
               )}
               {selectedSubmission.liveUrl && (
                 <div className="mb-2">
-                  <span className="font-semibold text-[var(--brand-text)]">Live Demo:</span>
-                  <a href={selectedSubmission.liveUrl} target="_blank" rel="noopener noreferrer" className="text-[var(--brand-primary)] underline ml-2">{selectedSubmission.liveUrl}</a>
+                  <span className="font-semibold text-gray-900 dark:text-white">Live Demo:</span>
+                  <a href={selectedSubmission.liveUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 underline ml-2">{selectedSubmission.liveUrl}</a>
                 </div>
               )}
               {selectedSubmission.githubUrl && (
                 <div className="mb-2">
-                  <span className="font-semibold text-[var(--brand-text)]">GitHub:</span>
-                  <a href={selectedSubmission.githubUrl} target="_blank" rel="noopener noreferrer" className="text-[var(--brand-accent)] underline ml-2">{selectedSubmission.githubUrl}</a>
+                  <span className="font-semibold text-gray-900 dark:text-white">GitHub:</span>
+                  <a href={selectedSubmission.githubUrl} target="_blank" rel="noopener noreferrer" className="text-purple-600 dark:text-purple-400 underline ml-2">{selectedSubmission.githubUrl}</a>
                 </div>
               )}
               {selectedSubmission.files && selectedSubmission.files.length > 0 && (
                 <div className="mb-2">
-                  <span className="font-semibold text-[var(--brand-text)]">Files:</span>
+                  <span className="font-semibold text-gray-900 dark:text-white">Files:</span>
                   <ul className="mt-1 space-y-1">
                     {selectedSubmission.files.map((file: any, idx: number) => {
                       let fileName: string;
@@ -139,7 +139,7 @@ const StudentSubmissions: React.FC = () => {
                       }
                       return (
                         <li key={idx}>
-                          <a href={fileUrl} target="_blank" rel="noopener noreferrer" className="text-[var(--brand-primary)] underline flex items-center gap-1">
+                          <a href={fileUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 underline flex items-center gap-1">
                             <FileText className="h-4 w-4" /> {fileName}
                           </a>
                         </li>
@@ -148,10 +148,10 @@ const StudentSubmissions: React.FC = () => {
                   </ul>
                 </div>
               )}
-              <div className="text-[var(--brand-text)] mb-2"><span className="font-semibold text-[var(--brand-text)]">Feedback:</span> {selectedSubmission.feedback || 'No feedback yet'}</div>
+              <div className="text-gray-700 dark:text-gray-300 mb-2"><span className="font-semibold text-gray-900 dark:text-white">Feedback:</span> {selectedSubmission.feedback || 'No feedback yet'}</div>
             </div>
             <button
-              className="w-full bg-[var(--brand-primary)] text-white py-2 rounded-lg hover:bg-[var(--brand-accent)] transition-colors font-medium"
+              className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
               onClick={() => setSelectedSubmission(null)}
             >
               Close

@@ -151,22 +151,22 @@ const RegisterPage: React.FC = () => {
   const passwordStrength = getPasswordStrength(formData.password);
 
   return (
-    <div className="min-h-screen bg-[var(--brand-bg)] flex items-center justify-center p-4 transition-colors">
+    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4">
       {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-20 pointer-events-none select-none" style={{ background: "url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http://www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.05%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')" }}></div>
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.05%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
 
-      <div className="w-full max-w-md relative z-10">
+      <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
             <img src={logo} alt="Syncner Logo" className="h-8 w-8 lg:h-10 lg:w-10 object-contain" />
           </div>
-          <h1 className="text-3xl font-bold text-[var(--brand-text)] mb-2">Create Account</h1>
-          <p className="text-[var(--brand-primary)]">Join Syncner and start your learning journey</p>
+          <h1 className="text-3xl font-bold text-white mb-2">Create Account</h1>
+          <p className="text-blue-100">Join Syncner and start your learning journey</p>
         </div>
 
         {/* Form */}
-        <div className="bg-[var(--brand-bg-alt)]/80 backdrop-blur-md rounded-xl shadow-2xl p-6 border border-[var(--brand-bg-alt)]">
+        <div className="bg-white/10 dark:bg-black/20 backdrop-blur-md rounded-xl shadow-2xl p-6 border border-white/10">
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
               <div className="bg-red-500/20 border border-red-500/30 rounded-lg p-4 flex items-center space-x-3">
@@ -177,19 +177,19 @@ const RegisterPage: React.FC = () => {
 
             {/* Name Field */}
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-[var(--brand-text)] mb-2">
+              <label htmlFor="name" className="block text-sm font-medium text-white mb-2">
                 Full Name
               </label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-[var(--brand-primary)]" />
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
                   id="name"
                   name="name"
                   type="text"
                   value={formData.name}
                   onChange={handleInputChange}
-                  className={`w-full pl-10 pr-4 py-3 bg-[var(--brand-bg)] border rounded-lg focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-transparent transition-colors text-[var(--brand-text)] placeholder-[var(--brand-primary)] ${
-                    errors.name ? 'border-red-500' : 'border-[var(--brand-bg-alt)]'
+                  className={`w-full pl-10 pr-4 py-3 bg-white/10 dark:bg-black/20 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-white placeholder-gray-300 ${
+                    errors.name ? 'border-red-500' : 'border-white/20'
                   }`}
                   placeholder="Enter your full name"
                 />
@@ -204,19 +204,19 @@ const RegisterPage: React.FC = () => {
 
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-[var(--brand-text)] mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-[var(--brand-primary)]" />
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
                   id="email"
                   name="email"
                   type="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className={`w-full pl-10 pr-4 py-3 bg-[var(--brand-bg)] border rounded-lg focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-transparent transition-colors text-[var(--brand-text)] placeholder-[var(--brand-primary)] ${
-                    errors.email ? 'border-red-500' : 'border-[var(--brand-bg-alt)]'
+                  className={`w-full pl-10 pr-4 py-3 bg-white/10 dark:bg-black/20 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-white placeholder-gray-300 ${
+                    errors.email ? 'border-red-500' : 'border-white/20'
                   }`}
                   placeholder="Enter your email address"
                 />
@@ -231,26 +231,26 @@ const RegisterPage: React.FC = () => {
 
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-[var(--brand-text)] mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-white mb-2">
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-[var(--brand-primary)]" />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
                   id="password"
                   name="password"
                   type={showPassword ? 'text' : 'password'}
                   value={formData.password}
                   onChange={handleInputChange}
-                  className={`w-full pl-10 pr-12 py-3 bg-[var(--brand-bg)] border rounded-lg focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-transparent transition-colors text-[var(--brand-text)] placeholder-[var(--brand-primary)] ${
-                    errors.password ? 'border-red-500' : 'border-[var(--brand-bg-alt)]'
+                  className={`w-full pl-10 pr-12 py-3 bg-white/10 dark:bg-black/20 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-white placeholder-gray-300 ${
+                    errors.password ? 'border-red-500' : 'border-white/20'
                   }`}
                   placeholder="Create a password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[var(--brand-primary)] hover:text-[var(--brand-text)]"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
@@ -258,7 +258,7 @@ const RegisterPage: React.FC = () => {
               {formData.password && (
                 <div className="mt-2">
                   <div className="flex items-center space-x-2 mb-1">
-                    <div className="flex-1 bg-[var(--brand-bg-alt)] rounded-full h-2">
+                    <div className="flex-1 bg-gray-600 rounded-full h-2">
                       <div
                         className={`h-2 rounded-full transition-all ${
                           passwordStrength.color === 'red' ? 'bg-red-500' :
@@ -289,26 +289,26 @@ const RegisterPage: React.FC = () => {
 
             {/* Confirm Password Field */}
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-[var(--brand-text)] mb-2">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-white mb-2">
                 Confirm Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-[var(--brand-primary)]" />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
                   id="confirmPassword"
                   name="confirmPassword"
                   type={showConfirmPassword ? 'text' : 'password'}
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
-                  className={`w-full pl-10 pr-12 py-3 bg-[var(--brand-bg)] border rounded-lg focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-transparent transition-colors text-[var(--brand-text)] placeholder-[var(--brand-primary)] ${
-                    errors.confirmPassword ? 'border-red-500' : 'border-[var(--brand-bg-alt)]'
+                  className={`w-full pl-10 pr-12 py-3 bg-white/10 dark:bg-black/20 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-white placeholder-gray-300 ${
+                    errors.confirmPassword ? 'border-red-500' : 'border-white/20'
                   }`}
                   placeholder="Confirm your password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[var(--brand-primary)] hover:text-[var(--brand-text)]"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
                 >
                   {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
@@ -323,19 +323,19 @@ const RegisterPage: React.FC = () => {
 
             {/* College Field */}
             <div>
-              <label htmlFor="college" className="block text-sm font-medium text-[var(--brand-text)] mb-2">
+              <label htmlFor="college" className="block text-sm font-medium text-white mb-2">
                 College/University
               </label>
               <div className="relative">
-                <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-[var(--brand-primary)]" />
+                <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
                   id="college"
                   name="college"
                   type="text"
                   value={formData.college}
                   onChange={handleInputChange}
-                  className={`w-full pl-10 pr-4 py-3 bg-[var(--brand-bg)] border rounded-lg focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-transparent transition-colors text-[var(--brand-text)] placeholder-[var(--brand-primary)] ${
-                    errors.college ? 'border-red-500' : 'border-[var(--brand-bg-alt)]'
+                  className={`w-full pl-10 pr-4 py-3 bg-white/10 dark:bg-black/20 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-white placeholder-gray-300 ${
+                    errors.college ? 'border-red-500' : 'border-white/20'
                   }`}
                   placeholder="Enter your college/university"
                 />
@@ -350,7 +350,7 @@ const RegisterPage: React.FC = () => {
 
             {/* Role Selection */}
             <div>
-              <label htmlFor="role" className="block text-sm font-medium text-[var(--brand-text)] mb-2">
+              <label htmlFor="role" className="block text-sm font-medium text-white mb-2">
                 I am a
               </label>
               <div className="relative">
@@ -359,13 +359,13 @@ const RegisterPage: React.FC = () => {
                   name="role"
                   value={formData.role}
                   onChange={handleInputChange}
-                  className="w-full pl-10 pr-4 py-3 bg-[var(--brand-bg)] border border-[var(--brand-bg-alt)] rounded-lg focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-transparent transition-colors text-[var(--brand-text)] appearance-none"
+                  className="w-full pl-10 pr-4 py-3 bg-white/10 dark:bg-black/20 border border-white/20 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-white appearance-none"
                 >
-                  <option value="student" className="bg-[var(--brand-bg-alt)] text-[var(--brand-text)]">Student</option>
-                  <option value="admin" className="bg-[var(--brand-bg-alt)] text-[var(--brand-text)]">Administrator</option>
+                  <option value="student" className="bg-gray-800 text-white">Student</option>
+                  <option value="admin" className="bg-gray-800 text-white">Administrator</option>
                 </select>
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                  <svg className="h-5 w-5 text-[var(--brand-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
@@ -376,11 +376,11 @@ const RegisterPage: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading || isSubmitting}
-              className="w-full bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-secondary)] text-[var(--brand-text)] py-3 rounded-lg hover:from-[var(--brand-secondary)] hover:to-[var(--brand-primary)] transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed mt-6"
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed mt-6"
             >
               {isLoading || isSubmitting ? (
                 <div className="flex items-center justify-center space-x-2">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[var(--brand-text)]"></div>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                   <span>Creating Account...</span>
                 </div>
               ) : (
@@ -391,9 +391,9 @@ const RegisterPage: React.FC = () => {
 
           {/* Login Link */}
           <div className="mt-6 text-center">
-            <p className="text-[var(--brand-primary)] text-sm">
+            <p className="text-blue-100 text-sm">
               Already have an account?{' '}
-              <Link to="/login" className="text-[var(--brand-secondary)] hover:text-[var(--brand-primary)] font-medium transition-colors">
+              <Link to="/login" className="text-blue-400 hover:text-blue-300 font-medium transition-colors">
                 Sign In
               </Link>
             </p>

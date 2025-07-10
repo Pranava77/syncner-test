@@ -71,8 +71,8 @@ const UpcomingTasks: React.FC = () => {
   if (error) return <div className="text-red-500">{error}</div>;
 
   return (
-    <div className="max-w-4xl mx-auto p-4 bg-[var(--brand-bg)] min-h-[80vh] rounded-xl shadow-xl transition-colors">
-      <h2 className="text-3xl font-bold mb-6 text-[var(--brand-text)]">Upcoming Tasks</h2>
+    <div className="max-w-4xl mx-auto p-4">
+      <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Upcoming Tasks</h2>
       {loading ? (
         <div className="flex items-center justify-center py-12">
           <LoadingScreen message="Loading upcoming tasks..." showProgress={true} progressDuration={1600} />
@@ -80,41 +80,40 @@ const UpcomingTasks: React.FC = () => {
       ) : error ? (
         <div className="text-red-500 text-center py-8">{error}</div>
       ) : tasks.length === 0 ? (
-        <div className="text-center py-12 text-[var(--brand-text)]">No upcoming tasks!</div>
+        <div className="text-center py-12 text-gray-500">No upcoming tasks!</div>
       ) : (
         <div className="grid gap-6 md:grid-cols-2">
           {tasks.map((task: any) => {
             const due = task.dueDate ? new Date(task.dueDate) : null;
             const isOverdue = due && due < new Date();
             const isDueSoon = due && due > new Date() && (due.getTime() - Date.now()) < 3 * 24 * 60 * 60 * 1000;
-            // Update statusColor logic to use CSS variables
             const statusColor = isOverdue
-              ? 'bg-[var(--brand-danger-bg)] text-[var(--brand-danger)]'
+              ? 'bg-red-100 text-red-700'
               : isDueSoon
-                ? 'bg-[var(--brand-warning-bg)] text-[var(--brand-warning)]'
-                : 'bg-[var(--brand-success-bg)] text-[var(--brand-success)]';
+                ? 'bg-yellow-100 text-yellow-700'
+                : 'bg-green-100 text-green-700';
             const categoryIcon = task.category === 'frontend' ? <Code className="h-5 w-5 text-blue-500" /> : <FileText className="h-5 w-5 text-purple-500" />;
             return (
-              <div key={task.id} className="bg-[var(--brand-bg-alt)] rounded-xl shadow p-6 flex flex-col gap-3 border border-[var(--brand-bg)] transition-colors">
+              <div key={task.id} className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 flex flex-col gap-3 border border-gray-200 dark:border-gray-700">
                 <div className="flex items-center gap-3 mb-2">
                   {categoryIcon}
-                  <div className="font-semibold text-lg text-[var(--brand-text)]">{task.title}</div>
+                  <div className="font-semibold text-lg text-gray-900 dark:text-white">{task.title}</div>
                   <span className={`ml-auto px-2 py-1 rounded-full text-xs font-medium ${statusColor}`}>{task.status || (isOverdue ? 'Overdue' : isDueSoon ? 'Due Soon' : 'Not Started')}</span>
                 </div>
-                <div className="text-[var(--brand-text)] mb-2">{task.description}</div>
-                <div className="flex flex-wrap gap-3 text-sm text-[var(--brand-primary)]">
+                <div className="text-gray-700 dark:text-gray-300 mb-2">{task.description}</div>
+                <div className="flex flex-wrap gap-3 text-sm text-gray-600 dark:text-gray-400">
                   <span className="flex items-center gap-1"><Calendar className="h-4 w-4" /> Due: {due ? due.toLocaleDateString() : '—'}</span>
                   <span className="flex items-center gap-1"><Clock className="h-4 w-4" /> {task.estimatedTime}</span>
                   <span className="flex items-center gap-1"><Star className="h-4 w-4 text-yellow-500" /> {task.points} pts</span>
-                  <span className="flex items-center gap-1"><AlertTriangle className="h-4 w-4 text-[var(--brand-warning)]" /> {task.difficulty}</span>
+                  <span className="flex items-center gap-1"><AlertTriangle className="h-4 w-4 text-orange-500" /> {task.difficulty}</span>
                 </div>
                 <div className="flex flex-wrap gap-2 mt-2">
                   {task.skills && task.skills.map((skill: string) => (
-                    <span key={skill} className="bg-[var(--brand-bg)] text-[var(--brand-text)] px-2 py-1 rounded text-xs">{skill}</span>
+                    <span key={skill} className="bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 px-2 py-1 rounded text-xs">{skill}</span>
                   ))}
                 </div>
                 <button
-                  className="mt-4 bg-[var(--brand-primary)] text-white py-2 rounded-lg hover:bg-[var(--brand-accent)] transition-colors font-medium flex items-center justify-center"
+                  className="mt-4 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center"
                   onClick={() => { setSelectedTask(task); setShowModal(true); }}
                 >
                   <Send className="h-4 w-4 mr-2" /> Submit
@@ -128,90 +127,94 @@ const UpcomingTasks: React.FC = () => {
       {/* Modal for submission */}
       {showModal && selectedTask && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-          <div className="bg-[var(--brand-bg-alt)] p-8 rounded-2xl shadow-2xl w-full max-w-lg relative border border-[var(--brand-bg)] transition-all">
+          <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-2xl w-full max-w-lg relative border border-gray-200 dark:border-gray-700 transition-all">
             <button
-              className="absolute top-3 right-3 text-[var(--brand-text)] hover:text-[var(--brand-primary)] text-2xl"
+              className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl"
               onClick={closeModal}
               aria-label="Close modal"
             >
               ×
             </button>
-            <h3 className="text-2xl font-bold mb-4 text-[var(--brand-text)]">Submit Task: <span className="text-[var(--brand-primary)]">{selectedTask.title}</span></h3>
+            <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Submit Task: <span className="text-blue-600 dark:text-blue-400">{selectedTask.title}</span></h3>
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
-                <label className="block text-sm font-semibold mb-1 text-[var(--brand-text)]">Description <span className="text-[var(--brand-danger)]">*</span></label>
+                <label className="block text-sm font-semibold mb-1 text-gray-800 dark:text-gray-200">Description <span className="text-red-500">*</span></label>
                 <textarea
                   name="description"
                   value={form.description}
                   onChange={handleChange}
                   required
-                  className="w-full px-3 py-2 border border-[var(--brand-bg-alt)] rounded-lg bg-[var(--brand-bg)] text-[var(--brand-text)] focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-[var(--brand-primary)] transition"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                   rows={3}
                   placeholder="Describe your solution, approach, and any challenges you faced..."
                 />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold mb-1 text-[var(--brand-text)]">Live URL</label>
+                  <label className="block text-sm font-semibold mb-1 text-gray-800 dark:text-gray-200">Live URL</label>
                   <input
                     name="liveUrl"
                     value={form.liveUrl}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-[var(--brand-bg-alt)] rounded-lg bg-[var(--brand-bg)] text-[var(--brand-text)] focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-[var(--brand-primary)] transition"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                     type="url"
                     placeholder="https://your-demo.com"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold mb-1 text-[var(--brand-text)]">GitHub URL</label>
+                  <label className="block text-sm font-semibold mb-1 text-gray-800 dark:text-gray-200">GitHub URL</label>
                   <input
                     name="githubUrl"
                     value={form.githubUrl}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-[var(--brand-bg-alt)] rounded-lg bg-[var(--brand-bg)] text-[var(--brand-text)] focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-[var(--brand-primary)] transition"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                     type="url"
                     placeholder="https://github.com/username/repo"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-semibold mb-1 text-[var(--brand-text)]">Notes</label>
+                <label className="block text-sm font-semibold mb-1 text-gray-800 dark:text-gray-200">Notes</label>
                 <textarea
                   name="notes"
                   value={form.notes}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-[var(--brand-bg-alt)] rounded-lg bg-[var(--brand-bg)] text-[var(--brand-text)] focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-[var(--brand-primary)] transition"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                   rows={2}
                   placeholder="Any additional information, challenges faced, or future improvements..."
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold mb-1 text-[var(--brand-text)]">Upload Files</label>
+                <label className="block text-sm font-semibold mb-1 text-gray-800 dark:text-gray-200">Upload Files</label>
                 <input
                   type="file"
                   multiple
                   onChange={handleFileChange}
-                  className="block w-full text-sm text-[var(--brand-text)] border border-[var(--brand-bg-alt)] rounded-lg cursor-pointer bg-[var(--brand-bg)] focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-[var(--brand-primary)] transition"
+                  className="block w-full text-sm text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                 />
                 {form.files.length > 0 && (
                   <ul className="mt-2 space-y-1">
                     {form.files.map((file, idx) => (
-                      <li key={idx} className="flex items-center justify-between bg-[var(--brand-bg)] p-2 rounded">
-                        <span className="text-xs text-[var(--brand-text)]">{file.name} ({(file.size / 1024).toFixed(1)} KB)</span>
-                        <button type="button" className="text-[var(--brand-danger)] ml-2" onClick={() => handleRemoveFile(idx)}>Remove</button>
+                      <li key={idx} className="flex items-center justify-between bg-gray-100 dark:bg-gray-700 p-2 rounded">
+                        <span className="text-xs text-gray-700 dark:text-gray-200">{file.name} ({(file.size / 1024).toFixed(1)} KB)</span>
+                        <button type="button" className="text-red-500 ml-2" onClick={() => handleRemoveFile(idx)}>Remove</button>
                       </li>
                     ))}
                   </ul>
                 )}
               </div>
+              {submitError && <div className="text-red-500 text-sm">{submitError}</div>}
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-[var(--brand-primary)] text-white py-2 rounded-lg hover:bg-[var(--brand-accent)] transition-colors font-medium flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 font-semibold flex items-center justify-center mt-2 transition"
               >
-                {isSubmitting ? 'Submitting...' : 'Submit Task'}
+                {isSubmitting ? (
+                  <LoadingScreen message="Submitting your task..." showProgress={true} progressDuration={1200} />
+                ) : (
+                  <span className="flex items-center"><Send className="h-4 w-4 mr-2" />Submit Task</span>
+                )}
               </button>
-              {submitError && <div className="text-[var(--brand-danger)] text-sm mt-2">{submitError}</div>}
             </form>
           </div>
         </div>

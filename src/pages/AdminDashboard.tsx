@@ -54,11 +54,11 @@ const AdminDashboard: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'excellent': return 'bg-[var(--brand-success-bg)] text-[var(--brand-success)] dark:bg-[var(--brand-success-dark-bg)] dark:text-[var(--brand-success-dark)]';
-      case 'active': return 'bg-[var(--brand-info-bg)] text-[var(--brand-info)] dark:bg-[var(--brand-info-dark-bg)] dark:text-[var(--brand-info-dark)]';
-      case 'at-risk': return 'bg-[var(--brand-warning-bg)] text-[var(--brand-warning)] dark:bg-[var(--brand-warning-dark-bg)] dark:text-[var(--brand-warning-dark)]';
-      case 'inactive': return 'bg-[var(--brand-danger-bg)] text-[var(--brand-danger)] dark:bg-[var(--brand-danger-dark-bg)] dark:text-[var(--brand-danger-dark)]';
-      default: return 'bg-[var(--brand-bg-alt)] text-[var(--brand-text)] dark:bg-[var(--brand-bg-alt)] dark:text-[var(--brand-text)]';
+      case 'excellent': return 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400';
+      case 'active': return 'bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400';
+      case 'at-risk': return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-400';
+      case 'inactive': return 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-400';
+      default: return 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-400';
     }
   };
 
@@ -212,12 +212,12 @@ const AdminDashboard: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-[var(--brand-text)]">Admin Dashboard</h1>
-          <p className="text-[var(--brand-primary)] mt-1">Monitor student progress and performance</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Admin Dashboard</h1>
+          <p className="text-gray-600 dark:text-gray-300 mt-1">Monitor student progress and performance</p>
         </div>
         <button
           onClick={exportData}
-          className="bg-[var(--brand-primary)] text-white px-4 py-2 rounded-lg hover:bg-[var(--brand-accent)] transition-colors font-medium flex items-center"
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center"
         >
           <Download className="h-4 w-4 mr-2" />
           Export CSV
@@ -225,7 +225,7 @@ const AdminDashboard: React.FC = () => {
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-[var(--brand-bg-alt)]">
+      <div className="border-b border-gray-200 dark:border-gray-700">
         <nav className="flex space-x-8">
           {[
             { id: 'overview', label: 'Overview', icon: BarChart3 },
@@ -237,10 +237,10 @@ const AdminDashboard: React.FC = () => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center rounded-t-md ${
+                className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center ${
                   activeTab === tab.id
-                    ? 'border-[var(--brand-primary)] text-[var(--brand-primary)] bg-[var(--brand-bg-alt)]'
-                    : 'border-transparent text-[var(--brand-text)] hover:text-[var(--brand-primary)] hover:bg-[var(--brand-bg-alt)]'
+                    ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                    : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
                 }`}
               >
                 <Icon className="h-4 w-4 mr-2" />
@@ -256,72 +256,72 @@ const AdminDashboard: React.FC = () => {
         <div className="space-y-8">
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-[var(--brand-bg-alt)] rounded-xl shadow-sm p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-[var(--brand-primary)] text-sm">Total Students</p>
-                  <p className="text-3xl font-bold text-[var(--brand-text)]">{analytics?.totalStudents || 0}</p>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm">Total Students</p>
+                  <p className="text-3xl font-bold text-gray-900 dark:text-white">{analytics?.totalStudents || 0}</p>
                 </div>
-                <div className="bg-[var(--brand-primary)]/20 p-3 rounded-lg">
-                  <Users className="h-6 w-6 text-[var(--brand-primary)]" />
+                <div className="bg-blue-100 dark:bg-blue-900/20 p-3 rounded-lg">
+                  <Users className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                 </div>
               </div>
             </div>
 
-            <div className="bg-[var(--brand-bg-alt)] rounded-xl shadow-sm p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-[var(--brand-primary)] text-sm">Active Students</p>
-                  <p className="text-3xl font-bold text-[var(--brand-text)]">{analytics?.activeStudents || 0}</p>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm">Active Students</p>
+                  <p className="text-3xl font-bold text-gray-900 dark:text-white">{analytics?.activeStudents || 0}</p>
                 </div>
-                <div className="bg-[var(--brand-secondary)]/20 p-3 rounded-lg">
-                  <TrendingUp className="h-6 w-6 text-[var(--brand-secondary)]" />
+                <div className="bg-green-100 dark:bg-green-900/20 p-3 rounded-lg">
+                  <TrendingUp className="h-6 w-6 text-green-600 dark:text-green-400" />
                 </div>
               </div>
             </div>
 
-            <div className="bg-[var(--brand-bg-alt)] rounded-xl shadow-sm p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-[var(--brand-primary)] text-sm">Completion Rate</p>
-                  <p className="text-3xl font-bold text-[var(--brand-text)]">{analytics?.completionRate || 0}%</p>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm">Completion Rate</p>
+                  <p className="text-3xl font-bold text-gray-900 dark:text-white">{analytics?.completionRate || 0}%</p>
                 </div>
-                <div className="bg-[var(--brand-accent)]/20 p-3 rounded-lg">
-                  <BookOpen className="h-6 w-6 text-[var(--brand-accent)]" />
+                <div className="bg-purple-100 dark:bg-purple-900/20 p-3 rounded-lg">
+                  <BookOpen className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                 </div>
               </div>
             </div>
 
-            <div className="bg-[var(--brand-bg-alt)] rounded-xl shadow-sm p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-[var(--brand-primary)] text-sm">Avg Progress</p>
-                  <p className="text-3xl font-bold text-[var(--brand-text)]">{analytics?.avgProgress || 0}%</p>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm">Avg Progress</p>
+                  <p className="text-3xl font-bold text-gray-900 dark:text-white">{analytics?.avgProgress || 0}%</p>
                 </div>
-                <div className="bg-[var(--brand-primary)]/20 p-3 rounded-lg">
-                  <AlertTriangle className="h-6 w-6 text-[var(--brand-primary)]" />
+                <div className="bg-orange-100 dark:bg-orange-900/20 p-3 rounded-lg">
+                  <AlertTriangle className="h-6 w-6 text-orange-600 dark:text-orange-400" />
                 </div>
               </div>
             </div>
           </div>
 
           {/* Attendance Chart */}
-          <div className="bg-[var(--brand-bg-alt)] rounded-xl shadow-sm p-6">
-            <h2 className="text-xl font-semibold text-[var(--brand-text)] mb-6">Weekly Attendance</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Weekly Attendance</h2>
             <div className="flex items-end space-x-4 h-40">
               {analytics?.attendanceData?.map((data: any, index: number) => (
                 <div key={index} className="flex-1 flex flex-col items-center">
                   <div
-                    className="bg-gradient-to-t from-[var(--brand-primary)] to-[var(--brand-secondary)] rounded-t w-full"
+                    className="bg-gradient-to-t from-blue-600 to-blue-400 rounded-t w-full"
                     style={{ height: `${(data.students / 350) * 100}%` }}
                   ></div>
                   <div className="mt-2 text-center">
-                    <p className="text-sm font-medium text-[var(--brand-text)]">{data.students}</p>
-                    <p className="text-xs text-[var(--brand-primary)]">{data.day}</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">{data.students}</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{data.day}</p>
                   </div>
                 </div>
               )) || (
-                <div className="flex-1 flex items-center justify-center text-[var(--brand-primary)]">
+                <div className="flex-1 flex items-center justify-center text-gray-500">
                   No attendance data available
                 </div>
               )}
@@ -331,13 +331,13 @@ const AdminDashboard: React.FC = () => {
       )}
 
       {activeTab === 'students' && (
-        <div className="bg-[var(--brand-bg-alt)] rounded-xl shadow-sm">
-          <div className="p-6 border-b border-[var(--brand-bg-alt)]">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+          <div className="p-6 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-[var(--brand-text)]">Student Management</h2>
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Student Management</h2>
               <button
                 onClick={handleAddStudent}
-                className="bg-[var(--brand-primary)] text-white px-4 py-2 rounded-lg hover:bg-[var(--brand-accent)] transition-colors font-medium flex items-center"
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Add Student
@@ -345,19 +345,19 @@ const AdminDashboard: React.FC = () => {
             </div>
             <div className="flex items-center space-x-4">
               <div className="relative flex-1">
-                <Search className="h-5 w-5 text-[var(--brand-primary)] absolute left-3 top-1/2 transform -translate-y-1/2" />
+                <Search className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
                 <input
                   type="text"
                   placeholder="Search students..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-4 py-2 w-full border border-[var(--brand-primary)] rounded-lg focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-transparent bg-[var(--brand-bg)] text-[var(--brand-text)]"
+                  className="pl-10 pr-4 py-2 w-full border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 />
               </div>
               <select
                 value={selectedFilter}
                 onChange={(e) => setSelectedFilter(e.target.value)}
-                className="border border-[var(--brand-primary)] rounded-lg px-3 py-2 focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-transparent bg-[var(--brand-bg)] text-[var(--brand-text)]"
+                className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               >
                 <option value="all">All Students</option>
                 <option value="active">Active</option>
@@ -370,42 +370,42 @@ const AdminDashboard: React.FC = () => {
 
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-[var(--brand-bg)]">
+              <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-[var(--brand-primary)] uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Student
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-[var(--brand-primary)] uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Department
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-[var(--brand-primary)] uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Track
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-[var(--brand-primary)] uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Progress
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-[var(--brand-primary)] uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-[var(--brand-primary)] uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-[var(--brand-bg-alt)] divide-y divide-[var(--brand-bg-alt)]">
+              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 {filteredStudents.map((student) => (
-                  <tr key={student._id} className="hover:bg-[var(--brand-bg)]">
+                  <tr key={student._id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div>
-                        <div className="text-sm font-medium text-[var(--brand-text)]">{student.name}</div>
-                        <div className="text-sm text-[var(--brand-primary)]">{student.email}</div>
+                        <div className="text-sm font-medium text-gray-900 dark:text-white">{student.name}</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">{student.email}</div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-[var(--brand-text)]">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                       {student.department}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-[var(--brand-text)]">
-                      <span className="text-sm text-[var(--brand-text)] capitalize">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                      <span className="text-sm text-gray-900 dark:text-white capitalize">
                         {(() => {
                           switch(student.careerTrack) {
                             case 'fullstack': return 'Full Stack Development';
@@ -419,17 +419,17 @@ const AdminDashboard: React.FC = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
-                        <div className="w-16 bg-[var(--brand-bg)] rounded-full h-2 mr-2">
+                        <div className="w-16 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
                           <div
-                            className="bg-[var(--brand-primary)] h-2 rounded-full"
+                            className="bg-blue-600 h-2 rounded-full"
                             style={{ width: `${student.progress || 0}%` }}
                           ></div>
                         </div>
-                        <span className="text-sm text-[var(--brand-text)]">{student.progress || 0}%</span>
+                        <span className="text-sm text-gray-900 dark:text-white">{student.progress || 0}%</span>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(student.status || 'active')}`}> 
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(student.status || 'active')}`}>
                         {getStatusIcon(student.status || 'active')}
                         <span className="ml-1 capitalize">{(student.status || 'active') ? (student.status || 'active').replace('-', ' ') : 'Active'}</span>
                       </span>
@@ -438,13 +438,13 @@ const AdminDashboard: React.FC = () => {
                       <div className="flex items-center space-x-2">
                         <button
                           onClick={() => handleViewStudent(student)}
-                          className="text-[var(--brand-primary)] hover:text-[var(--brand-accent)]"
+                          className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
                         >
                           <Eye className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => handleEditStudent(student)}
-                          className="bg-[var(--brand-primary)] hover:bg-[var(--brand-accent)] text-white px-2 py-1 rounded transition-colors"
+                          className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded transition-colors"
                           title="Edit"
                         >
                           <Edit3 className="h-4 w-4" />
@@ -466,9 +466,9 @@ const AdminDashboard: React.FC = () => {
 
           {filteredStudents.length === 0 && (
             <div className="text-center py-12">
-              <Users className="h-12 w-12 text-[var(--brand-primary)] mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-[var(--brand-text)] mb-2">No Students Found</h3>
-              <p className="text-[var(--brand-primary)]">
+              <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No Students Found</h3>
+              <p className="text-gray-600 dark:text-gray-400">
                 {searchTerm ? 'No students match your search criteria.' : 'No students have been added yet.'}
               </p>
             </div>
@@ -483,15 +483,15 @@ const AdminDashboard: React.FC = () => {
       {/* Student Detail/Edit Modal */}
       {showStudentModal && (selectedStudent || editingStudent) && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-[var(--brand-bg-alt)] rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-gray-800 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-[var(--brand-text)]">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                   {editingStudent ? (showAddStudent ? 'Add New Student' : 'Edit Student') : 'Student Details'}
                 </h2>
                 <button
                   onClick={handleCloseModal}
-                  className="text-[var(--brand-text)] hover:text-[var(--brand-primary)] dark:hover:text-[var(--brand-accent)] text-2xl"
+                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl"
                 >
                   ×
                 </button>
@@ -501,61 +501,61 @@ const AdminDashboard: React.FC = () => {
                 <div className="space-y-4">
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-[var(--brand-text)] dark:text-[var(--brand-primary)] mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Full Name
                       </label>
                       <input
                         type="text"
                         value={editingStudent.name}
                         onChange={(e) => setEditingStudent((prev: any) => ({ ...prev, name: e.target.value }))}
-                        className="w-full px-3 py-2 border border-[var(--brand-primary)] rounded-lg focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-transparent bg-[var(--brand-bg)] text-[var(--brand-text)] dark:bg-[var(--brand-bg-dark)] dark:text-[var(--brand-text-dark)]"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-[var(--brand-text)] dark:text-[var(--brand-primary)] mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Email Address
                       </label>
                       <input
                         type="email"
                         value={editingStudent.email}
                         onChange={(e) => setEditingStudent((prev: any) => ({ ...prev, email: e.target.value }))}
-                        className="w-full px-3 py-2 border border-[var(--brand-primary)] rounded-lg focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-transparent bg-[var(--brand-bg)] text-[var(--brand-text)] dark:bg-[var(--brand-bg-dark)] dark:text-[var(--brand-text-dark)]"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-[var(--brand-text)] dark:text-[var(--brand-primary)] mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Phone Number
                       </label>
                       <input
                         type="tel"
                         value={editingStudent.phone}
                         onChange={(e) => setEditingStudent((prev: any) => ({ ...prev, phone: e.target.value }))}
-                        className="w-full px-3 py-2 border border-[var(--brand-primary)] rounded-lg focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-transparent bg-[var(--brand-bg)] text-[var(--brand-text)] dark:bg-[var(--brand-bg-dark)] dark:text-[var(--brand-text-dark)]"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-[var(--brand-text)] dark:text-[var(--brand-primary)] mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Location
                       </label>
                       <input
                         type="text"
                         value={editingStudent.location}
                         onChange={(e) => setEditingStudent((prev: any) => ({ ...prev, location: e.target.value }))}
-                        className="w-full px-3 py-2 border border-[var(--brand-primary)] rounded-lg focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-transparent bg-[var(--brand-bg)] text-[var(--brand-text)] dark:bg-[var(--brand-bg-dark)] dark:text-[var(--brand-text-dark)]"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-[var(--brand-text)] dark:text-[var(--brand-primary)] mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Department
                       </label>
                       <select
                         value={editingStudent.department}
                         onChange={(e) => setEditingStudent((prev: any) => ({ ...prev, department: e.target.value }))}
-                        className="w-full px-3 py-2 border border-[var(--brand-primary)] rounded-lg focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-transparent bg-[var(--brand-bg)] text-[var(--brand-text)] dark:bg-[var(--brand-bg-dark)] dark:text-[var(--brand-text-dark)]"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       >
                         <option value="">Select Department</option>
                         <option value="Computer Science">Computer Science</option>
@@ -567,13 +567,13 @@ const AdminDashboard: React.FC = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-[var(--brand-text)] dark:text-[var(--brand-primary)] mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Career Track
                       </label>
                       <select
                         value={editingStudent.careerTrack}
                         onChange={(e) => setEditingStudent((prev: any) => ({ ...prev, careerTrack: e.target.value }))}
-                        className="w-full px-3 py-2 border border-[var(--brand-primary)] rounded-lg focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-transparent bg-[var(--brand-bg)] text-[var(--brand-text)] dark:bg-[var(--brand-bg-dark)] dark:text-[var(--brand-text-dark)]"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       >
                         <option value="fullstack">Full Stack Development</option>
                         <option value="ai-ml">AI/ML Engineering</option>
@@ -583,39 +583,39 @@ const AdminDashboard: React.FC = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-[var(--brand-text)] dark:text-[var(--brand-primary)] mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         College
                       </label>
                       <input
                         type="text"
                         value={editingStudent.college}
                         onChange={(e) => setEditingStudent((prev: any) => ({ ...prev, college: e.target.value }))}
-                        className="w-full px-3 py-2 border border-[var(--brand-primary)] rounded-lg focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-transparent bg-[var(--brand-bg)] text-[var(--brand-text)] dark:bg-[var(--brand-bg-dark)] dark:text-[var(--brand-text-dark)]"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-[var(--brand-text)] dark:text-[var(--brand-primary)] mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         GPA
                       </label>
                       <input
                         type="text"
                         value={editingStudent.gpa}
                         onChange={(e) => setEditingStudent((prev: any) => ({ ...prev, gpa: e.target.value }))}
-                        className="w-full px-3 py-2 border border-[var(--brand-primary)] rounded-lg focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-transparent bg-[var(--brand-bg)] text-[var(--brand-text)] dark:bg-[var(--brand-bg-dark)] dark:text-[var(--brand-text-dark)]"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                         placeholder="e.g., 3.8"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-[var(--brand-text)] dark:text-[var(--brand-primary)] mb-2">
-                        Password {showAddStudent && <span className="text-[var(--brand-danger)]">*</span>}
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Password {showAddStudent && <span className="text-red-500">*</span>}
                       </label>
                       <input
                         type="password"
                         value={editingStudent.password || ''}
                         onChange={(e) => setEditingStudent((prev: any) => ({ ...prev, password: e.target.value }))}
-                        className="w-full px-3 py-2 border border-[var(--brand-primary)] rounded-lg focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-transparent bg-[var(--brand-bg)] text-[var(--brand-text)] dark:bg-[var(--brand-bg-dark)] dark:text-[var(--brand-text-dark)]"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                         placeholder={showAddStudent ? "Enter password (min 6 chars)" : "Leave blank to keep current password"}
                         required={showAddStudent}
                       />
@@ -628,9 +628,9 @@ const AdminDashboard: React.FC = () => {
                       id="profileComplete"
                       checked={editingStudent.profileComplete}
                       onChange={(e) => setEditingStudent((prev: any) => ({ ...prev, profileComplete: e.target.checked }))}
-                      className="h-4 w-4 text-[var(--brand-primary)] focus:ring-[var(--brand-primary)] border-[var(--brand-primary)] rounded"
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     />
-                    <label htmlFor="profileComplete" className="ml-2 block text-sm text-[var(--brand-text)] dark:text-[var(--brand-text-dark)]">
+                    <label htmlFor="profileComplete" className="ml-2 block text-sm text-gray-900 dark:text-white">
                       Profile Complete
                     </label>
                   </div>
@@ -638,14 +638,14 @@ const AdminDashboard: React.FC = () => {
                   <div className="flex gap-3 pt-4">
                     <button
                       onClick={handleSaveStudent}
-                      className="flex-1 bg-[var(--brand-primary)] text-white py-3 rounded-lg hover:bg-[var(--brand-accent)] transition-colors font-medium flex items-center justify-center"
+                      className="flex-1 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center"
                     >
                       <Save className="h-4 w-4 mr-2" />
                       {showAddStudent ? 'Add Student' : 'Save Changes'}
                     </button>
                     <button
                       onClick={handleCloseModal}
-                      className="px-6 py-3 border border-[var(--brand-primary)] rounded-lg hover:bg-[var(--brand-bg)] transition-colors font-medium flex items-center"
+                      className="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium flex items-center"
                     >
                       <X className="h-4 w-4 mr-2" />
                       Cancel
@@ -656,25 +656,25 @@ const AdminDashboard: React.FC = () => {
                 <div className="space-y-6">
                   {/* Student Info */}
                   <div className="flex items-start space-x-4">
-                    <div className="bg-[var(--brand-primary)]/20 p-3 rounded-full">
+                    <div className="bg-blue-100 dark:bg-blue-900/20 p-3 rounded-full">
                       <img src={logo} alt="Syncner Logo" className="h-6 w-6 object-contain" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-xl font-semibold text-[var(--brand-text)] dark:text-[var(--brand-text-dark)]">{selectedStudent?.name}</h3>
+                      <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{selectedStudent?.name}</h3>
                       <div className="mt-2 space-y-2">
-                        <div className="flex items-center text-[var(--brand-primary)] dark:text-[var(--brand-primary)]">
+                        <div className="flex items-center text-gray-600 dark:text-gray-300">
                           <Mail className="h-4 w-4 mr-2" />
                           {selectedStudent?.email}
                         </div>
-                        <div className="flex items-center text-[var(--brand-primary)] dark:text-[var(--brand-primary)]">
+                        <div className="flex items-center text-gray-600 dark:text-gray-300">
                           <Phone className="h-4 w-4 mr-2" />
                           {selectedStudent?.phone}
                         </div>
-                        <div className="flex items-center text-[var(--brand-primary)] dark:text-[var(--brand-primary)]">
+                        <div className="flex items-center text-gray-600 dark:text-gray-300">
                           <MapPin className="h-4 w-4 mr-2" />
                           {selectedStudent?.location}
                         </div>
-                        <div className="flex items-center text-[var(--brand-primary)] dark:text-[var(--brand-primary)]">
+                        <div className="flex items-center text-gray-600 dark:text-gray-300">
                           <img src={logo} alt="Syncner Logo" className="h-6 w-6 object-contain" />
                           {selectedStudent?.department} • {selectedStudent?.college}
                         </div>
@@ -688,27 +688,27 @@ const AdminDashboard: React.FC = () => {
 
                   {/* Progress Stats */}
                   <div className="grid grid-cols-3 gap-4">
-                    <div className="bg-[var(--brand-bg)] rounded-lg p-4 text-center">
-                      <p className="text-2xl font-bold text-[var(--brand-text)] dark:text-[var(--brand-text-dark)]">{selectedStudent?.progress}%</p>
-                      <p className="text-sm text-[var(--brand-primary)] dark:text-[var(--brand-primary)]">Progress</p>
+                    <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 text-center">
+                      <p className="text-2xl font-bold text-gray-900 dark:text-white">{selectedStudent?.progress}%</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Progress</p>
                     </div>
-                    <div className="bg-[var(--brand-bg)] rounded-lg p-4 text-center">
-                      <p className="text-2xl font-bold text-[var(--brand-text)] dark:text-[var(--brand-text-dark)]">{selectedStudent?.tasksCompleted}</p>
-                      <p className="text-sm text-[var(--brand-primary)] dark:text-[var(--brand-primary)]">Tasks Done</p>
+                    <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 text-center">
+                      <p className="text-2xl font-bold text-gray-900 dark:text-white">{selectedStudent?.tasksCompleted}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Tasks Done</p>
                     </div>
-                    <div className="bg-[var(--brand-bg)] rounded-lg p-4 text-center">
-                      <p className="text-2xl font-bold text-[var(--brand-text)] dark:text-[var(--brand-text-dark)]">{selectedStudent?.gpa}</p>
-                      <p className="text-sm text-[var(--brand-primary)] dark:text-[var(--brand-primary)]">GPA</p>
+                    <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 text-center">
+                      <p className="text-2xl font-bold text-gray-900 dark:text-white">{selectedStudent?.gpa}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">GPA</p>
                     </div>
                   </div>
 
                   {/* Additional Info */}
-                  <div className="border-t border-[var(--brand-primary)]/20 pt-4">
+                  <div className="border-t border-gray-200 dark:border-gray-600 pt-4">
                     <div className="grid md:grid-cols-2 gap-4 text-sm">
                       <div>
-                        <p className="text-[var(--brand-primary)] dark:text-[var(--brand-primary)]">Career Track</p>
-                        <p className="font-medium text-[var(--brand-text)] dark:text-[var(--brand-text-dark)]">
-                          <span className="text-sm text-[var(--brand-text)] dark:text-[var(--brand-text-dark)] capitalize">
+                        <p className="text-gray-600 dark:text-gray-400">Career Track</p>
+                        <p className="font-medium text-gray-900 dark:text-white">
+                          <span className="text-sm text-gray-900 dark:text-white capitalize">
                             {(() => {
                               switch(selectedStudent?.careerTrack) {
                                 case 'fullstack': return 'Full Stack Development';
@@ -722,16 +722,16 @@ const AdminDashboard: React.FC = () => {
                         </p>
                       </div>
                       <div>
-                        <p className="text-[var(--brand-primary)] dark:text-[var(--brand-primary)]">Join Date</p>
-                        <p className="font-medium text-[var(--brand-text)] dark:text-[var(--brand-text-dark)]">{selectedStudent?.joinDate}</p>
+                        <p className="text-gray-600 dark:text-gray-400">Join Date</p>
+                        <p className="font-medium text-gray-900 dark:text-white">{selectedStudent?.joinDate}</p>
                       </div>
                       <div>
-                        <p className="text-[var(--brand-primary)] dark:text-[var(--brand-primary)]">Last Active</p>
-                        <p className="font-medium text-[var(--brand-text)] dark:text-[var(--brand-text-dark)]">{selectedStudent?.lastActive}</p>
+                        <p className="text-gray-600 dark:text-gray-400">Last Active</p>
+                        <p className="font-medium text-gray-900 dark:text-white">{selectedStudent?.lastActive}</p>
                       </div>
                       <div>
-                        <p className="text-[var(--brand-primary)] dark:text-[var(--brand-primary)]">Profile Status</p>
-                        <p className="font-medium text-[var(--brand-text)] dark:text-[var(--brand-text-dark)]">
+                        <p className="text-gray-600 dark:text-gray-400">Profile Status</p>
+                        <p className="font-medium text-gray-900 dark:text-white">
                           {selectedStudent?.profileComplete ? 'Complete' : 'Incomplete'}
                         </p>
                       </div>
@@ -741,14 +741,14 @@ const AdminDashboard: React.FC = () => {
                   <div className="flex gap-3">
                     <button
                       onClick={() => handleEditStudent(selectedStudent)}
-                      className="flex-1 bg-[var(--brand-primary)] text-white py-3 rounded-lg hover:bg-[var(--brand-accent)] transition-colors font-medium flex items-center justify-center"
+                      className="flex-1 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center"
                     >
                       <Edit3 className="h-4 w-4 mr-2" />
                       Edit Student
                     </button>
                     <button
                       onClick={handleCloseModal}
-                      className="px-6 py-3 border border-[var(--brand-primary)] rounded-lg hover:bg-[var(--brand-bg)] transition-colors font-medium"
+                      className="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium"
                     >
                       Close
                     </button>

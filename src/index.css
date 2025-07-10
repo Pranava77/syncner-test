@@ -1,26 +1,3 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-:root {
-  --brand-bg: #F1F0E8;
-  --brand-bg-alt: #E5E1DA;
-  --brand-primary: #89A8B2;
-  --brand-secondary: #B3C8CF;
-  --brand-accent: #B3C8CF;
-  --brand-text: #181C14;
-}
-
-.dark {
-  --brand-bg: #181C14;
-  --brand-bg-alt: #3C3D37;
-  --brand-primary: #697565;
-  --brand-secondary: #ECDFCC;
-  --brand-accent: #697565;
-  --brand-text: #ECDFCC;
-}
-
-body {
-  background-color: var(--brand-bg);
-  color: var(--brand-text);
-}

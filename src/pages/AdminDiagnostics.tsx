@@ -40,18 +40,18 @@ const AdminDiagnostics: React.FC = () => {
   const totalCount = diagnostics.length;
 
   return (
-    <div className="max-w-3xl mx-auto py-10 px-4 bg-[var(--brand-bg)] min-h-[80vh] rounded-xl shadow-xl transition-colors">
+    <div className="max-w-3xl mx-auto py-10 px-4">
       <div className="flex items-center mb-6 gap-3">
-        <ShieldCheck className="h-7 w-7 text-[var(--brand-primary)]" />
-        <h1 className="text-2xl font-bold text-[var(--brand-text)]">System Diagnostics</h1>
+        <ShieldCheck className="h-7 w-7 text-blue-600" />
+        <h1 className="text-2xl font-bold text-white">System Diagnostics</h1>
       </div>
       <div className="flex items-center justify-between mb-4">
-        <div className="text-[var(--brand-text-alt)] text-sm">
+        <div className="text-gray-600 text-sm">
           Last checked: {timestamp ? new Date(timestamp).toLocaleString() : '—'}
         </div>
         <button
           onClick={refreshDiagnostics}
-          className="flex items-center gap-2 px-3 py-1.5 bg-[var(--brand-primary)] text-white rounded hover:bg-[var(--brand-accent)] transition"
+          className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
           disabled={loading}
         >
           <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
@@ -59,23 +59,23 @@ const AdminDiagnostics: React.FC = () => {
         </button>
       </div>
       <div className="mb-4">
-        <span className={`font-semibold ${healthyCount === totalCount ? 'text-[var(--brand-success)]' : 'text-[var(--brand-danger)]'}`}>{healthyCount}/{totalCount}</span>
+        <span className={`font-semibold ${healthyCount === totalCount ? 'text-green-600' : 'text-red-600'}`}>{healthyCount}/{totalCount}</span>
         {' '}modules healthy
       </div>
       {error && (
-        <div className="bg-[var(--brand-danger-bg)] text-[var(--brand-danger)] px-4 py-2 rounded mb-4 flex items-center gap-2">
+        <div className="bg-red-100 text-red-700 px-4 py-2 rounded mb-4 flex items-center gap-2">
           <AlertTriangle className="h-4 w-4" />
           {error}
         </div>
       )}
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-[var(--brand-bg-alt)] shadow rounded-lg">
+        <table className="min-w-full bg-gray-900 shadow rounded-lg">
           <thead>
             <tr>
-              <th className="px-4 py-2 text-left text-[var(--brand-text)] bg-[var(--brand-bg)]">Module</th>
-              <th className="px-4 py-2 text-left text-[var(--brand-text)] bg-[var(--brand-bg)]">Status</th>
-              <th className="px-4 py-2 text-left text-[var(--brand-text)] bg-[var(--brand-bg)]">Message</th>
-              <th className="px-4 py-2 text-left text-[var(--brand-text)] bg-[var(--brand-bg)]">Error</th>
+              <th className="px-4 py-2 text-left text-white bg-gray-800">Module</th>
+              <th className="px-4 py-2 text-left text-white bg-gray-800">Status</th>
+              <th className="px-4 py-2 text-left text-white bg-gray-800">Message</th>
+              <th className="px-4 py-2 text-left text-white bg-gray-800">Error</th>
             </tr>
           </thead>
           <tbody>
@@ -86,21 +86,21 @@ const AdminDiagnostics: React.FC = () => {
                 errorText = diag.message;
               }
               return (
-                <tr key={diag.module} className={`transition-colors ${diag.healthy ? 'bg-[var(--brand-bg-alt)] hover:bg-[var(--brand-bg)]' : 'bg-[var(--brand-bg)] hover:bg-[var(--brand-bg-alt)]'}`}>
-                  <td className="px-4 py-2 font-medium text-[var(--brand-text)]">{diag.module}</td>
+                <tr key={diag.module} className={`transition-colors ${diag.healthy ? 'bg-gray-800 hover:bg-gray-700' : 'bg-gray-700 hover:bg-gray-800'}`}>
+                  <td className="px-4 py-2 font-medium text-white">{diag.module}</td>
                   <td className="px-4 py-2">
                     {diag.healthy ? (
-                      <span className="flex items-center gap-1 text-[var(--brand-success)] font-semibold">
+                      <span className="flex items-center gap-1 text-green-400 font-semibold">
                         <CheckCircle className="h-4 w-4" /> Healthy
                       </span>
                     ) : (
-                      <span className="flex items-center gap-1 text-[var(--brand-danger)] font-semibold">
+                      <span className="flex items-center gap-1 text-red-400 font-semibold">
                         <AlertTriangle className="h-4 w-4" /> Unhealthy
                       </span>
                     )}
                   </td>
-                  <td className="px-4 py-2 text-sm text-[var(--brand-text)]">{!errorText ? diag.message : ''}</td>
-                  <td className="px-4 py-2 text-xs text-[var(--brand-danger)]">{errorText || '—'}</td>
+                  <td className="px-4 py-2 text-sm text-white">{!errorText ? diag.message : ''}</td>
+                  <td className="px-4 py-2 text-xs text-red-400">{errorText || '—'}</td>
                 </tr>
               );
             })}
