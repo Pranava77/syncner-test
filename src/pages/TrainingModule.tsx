@@ -119,10 +119,10 @@ const TrainingModule: React.FC = () => {
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'Beginner': return 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400';
-      case 'Intermediate': return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-400';
-      case 'Advanced': return 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-400';
-      default: return 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-400';
+      case 'Beginner': return 'bg-[var(--brand-success-bg)] text-[var(--brand-success)]';
+      case 'Intermediate': return 'bg-[var(--brand-warning-bg)] text-[var(--brand-warning)]';
+      case 'Advanced': return 'bg-[var(--brand-danger-bg)] text-[var(--brand-danger)]';
+      default: return 'bg-[var(--brand-bg-alt)] text-[var(--brand-text)]';
     }
   };
 
@@ -212,7 +212,7 @@ const TrainingModule: React.FC = () => {
           <div>
             <h3 className="font-semibold text-gray-900 dark:text-white mb-3">Skills You'll Learn</h3>
             <div className="flex flex-wrap gap-2">
-              {module.skills.map((skill) => (
+              {module.skills.map((skill: string) => (
                 <span key={skill} className="bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 px-3 py-1 rounded-full text-sm">
                   {skill}
                 </span>
@@ -228,7 +228,7 @@ const TrainingModule: React.FC = () => {
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 sticky top-8">
             <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Lessons</h3>
             <div className="space-y-2">
-              {module.lessons.map((lesson, index) => (
+              {module.lessons.map((lesson: any, index: number) => (
                 <button
                   key={lesson.id}
                   onClick={() => {
@@ -288,7 +288,7 @@ const TrainingModule: React.FC = () => {
               <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-600">
                 <h4 className="font-medium text-gray-900 dark:text-white mb-3">Prerequisites</h4>
                 <div className="space-y-2">
-                  {module.prerequisites.map((prereq) => (
+                  {module.prerequisites.map((prereq: string) => (
                     <div key={prereq} className="flex items-center text-sm text-gray-600 dark:text-gray-300">
                       <Lock className="h-3 w-3 mr-2" />
                       {prereq.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
@@ -416,7 +416,7 @@ const TrainingModule: React.FC = () => {
                       {quiz.question}
                     </h3>
                     <div className="space-y-3">
-                      {quiz.options.map((option, index) => (
+                      {quiz.options.map((option: string, index: number) => (
                         <label
                           key={index}
                           className="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-white dark:hover:bg-gray-600 transition-colors"

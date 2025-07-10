@@ -82,10 +82,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+    <div className="flex h-screen bg-[var(--brand-bg)] transition-colors">
       {/* Desktop Sidebar */}
-      <div className="hidden lg:flex w-64 bg-white dark:bg-gray-800 shadow-lg border-r border-gray-200 dark:border-gray-700 flex-col">
-        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+      <div className="hidden lg:flex w-64 bg-[var(--brand-bg)] shadow-lg border-r border-[var(--brand-bg-alt)] flex-col">
+        <div className="p-6 border-b border-[var(--brand-bg-alt)]">
           <div className="flex items-center space-x-3">
             <img src={logo} alt="Syncner Logo" className="h-10 w-10 object-contain" />
           </div>
@@ -98,10 +98,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center px-6 py-3 text-sm font-medium transition-colors ${
+                className={`flex items-center px-6 py-3 text-sm font-medium transition-colors rounded-lg ${
                   isActive(item.path)
-                    ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-r-2 border-blue-600 dark:border-blue-400'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
+                    ? 'bg-[var(--brand-bg-alt)] text-[var(--brand-primary)] border-r-2 border-[var(--brand-primary)]'
+                    : 'text-[var(--brand-text)] hover:bg-[var(--brand-bg-alt)] hover:text-[var(--brand-primary)]'
                 }`}
               >
                 <Icon className="h-5 w-5 mr-3" />
@@ -111,11 +111,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           })}
         </nav>
 
-        <div className="p-6 border-t border-gray-200 dark:border-gray-700">
+        <div className="p-6 border-t border-[var(--brand-bg-alt)]">
           {/* Unified Profile Section - clickable */}
           <Link
             to={user?.role === 'admin' ? '/admin/profile' : '/profile'}
-            className="flex items-center gap-3 w-full px-3 py-3 mb-2 rounded-lg transition-colors bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-secondary)] dark:from-[var(--brand-primary)] dark:to-[var(--brand-secondary)] hover:bg-[var(--brand-accent)] dark:hover:bg-[var(--brand-accent)] focus:outline-none focus:ring-2 focus:ring-blue-400 group"
+            className="flex items-center gap-3 w-full px-3 py-3 mb-2 rounded-lg transition-colors bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-secondary)] hover:bg-[var(--brand-accent)] focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] group"
             tabIndex={0}
             aria-label="View profile"
           >
@@ -126,14 +126,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </div>
             <div className="flex flex-col flex-1 min-w-0">
               <span className="text-sm font-semibold text-[var(--brand-text)] truncate">{user?.name}</span>
-              <span className="text-xs text-gray-600 dark:text-gray-400 capitalize truncate">{user?.role}</span>
+              <span className="text-xs text-[var(--brand-primary)] capitalize truncate">{user?.role}</span>
             </div>
             <UserIcon className="h-5 w-5 text-[var(--brand-primary)] opacity-80 group-hover:scale-110 transition-transform" />
           </Link>
           {/* Theme Toggle Button */}
           <button
             onClick={handleThemeToggle}
-            className="flex items-center w-full px-3 py-2 text-sm text-[var(--brand-text)] hover:bg-[var(--brand-bg-alt)] dark:hover:bg-[var(--brand-bg-alt)] rounded-lg transition-colors mb-2"
+            className="flex items-center w-full px-3 py-2 text-sm text-[var(--brand-text)] hover:bg-[var(--brand-bg-alt)] rounded-lg transition-colors mb-2"
             aria-label="Toggle theme"
           >
             {isDarkMode ? <Sun className="h-4 w-4 mr-2" /> : <Moon className="h-4 w-4 mr-2" />}
@@ -142,10 +142,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <button
             onClick={handleLogout}
             disabled={isLoggingOut}
-            className="flex items-center w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-1"
+            className="flex items-center w-full px-3 py-2 text-sm text-[var(--brand-text)] hover:bg-[var(--brand-bg-alt)] rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-1"
           >
             {isLoggingOut ? (
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600 mr-2" />
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[var(--brand-primary)] mr-2" />
             ) : (
               <LogOut className="h-4 w-4 mr-2" />
             )}
@@ -155,16 +155,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       </div>
 
       {/* Mobile Header */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3">
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-[var(--brand-bg)] border-b border-[var(--brand-bg-alt)] px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <img src={logo} alt="Syncner Logo" className="h-8 w-8 object-contain" />
           </div>
-          
           <div className="flex items-center space-x-2">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+              className="p-2 text-[var(--brand-text)] hover:text-[var(--brand-primary)] transition-colors"
             >
               {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -178,30 +177,30 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       )}
 
       {/* Mobile Sidebar */}
-      <div className={`lg:hidden fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white dark:bg-gray-800 shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${
+      <div className={`lg:hidden fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-[var(--brand-bg)] shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${
         isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
       }`}>
-        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+        <div className="p-6 border-b border-[var(--brand-bg-alt)]">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-3">
-              <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 rounded-full">
+              <div className="bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-secondary)] p-2 rounded-full">
                 <span className="text-white text-sm font-bold">
                   {user?.name?.charAt(0) || 'U'}
                 </span>
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-900 dark:text-white">{user?.name}</p>
-                <p className="text-xs text-gray-600 dark:text-gray-400 capitalize">{user?.role}</p>
+                <p className="text-sm font-medium text-[var(--brand-text)]">{user?.name}</p>
+                <p className="text-xs text-[var(--brand-primary)] capitalize">{user?.role}</p>
               </div>
             </div>
             <button
               onClick={closeMobileMenu}
-              className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              className="p-2 text-[var(--brand-primary)] hover:text-[var(--brand-accent)]"
             >
               <X className="h-5 w-5" />
             </button>
           </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">{user?.college}</p>
+          <p className="text-sm text-[var(--brand-primary)]">{user?.college}</p>
         </div>
 
         <nav className="py-4">
@@ -212,10 +211,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 key={item.path}
                 to={item.path}
                 onClick={closeMobileMenu}
-                className={`flex items-center px-6 py-3 text-sm font-medium transition-colors ${
+                className={`flex items-center px-6 py-3 text-sm font-medium transition-colors rounded-lg ${
                   isActive(item.path)
-                    ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-r-2 border-blue-600 dark:border-blue-400'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
+                    ? 'bg-[var(--brand-bg-alt)] text-[var(--brand-primary)] border-r-2 border-[var(--brand-primary)]'
+                    : 'text-[var(--brand-text)] hover:bg-[var(--brand-bg-alt)] hover:text-[var(--brand-primary)]'
                 }`}
               >
                 <Icon className="h-5 w-5 mr-3" />
@@ -225,12 +224,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           })}
         </nav>
 
-        <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-gray-200 dark:border-gray-700">
+        <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-[var(--brand-bg-alt)]">
           {/* Unified Profile Section - clickable */}
           <Link
             to={user?.role === 'admin' ? '/admin/profile' : '/profile'}
             onClick={closeMobileMenu}
-            className="flex items-center gap-3 w-full px-3 py-3 mb-2 rounded-lg transition-colors bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-secondary)] dark:from-[var(--brand-primary)] dark:to-[var(--brand-secondary)] hover:bg-[var(--brand-accent)] dark:hover:bg-[var(--brand-accent)] focus:outline-none focus:ring-2 focus:ring-blue-400 group"
+            className="flex items-center gap-3 w-full px-3 py-3 mb-2 rounded-lg transition-colors bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-secondary)] hover:bg-[var(--brand-accent)] focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] group"
             tabIndex={0}
             aria-label="View profile"
           >
@@ -241,14 +240,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </div>
             <div className="flex flex-col flex-1 min-w-0">
               <span className="text-sm font-semibold text-[var(--brand-text)] truncate">{user?.name}</span>
-              <span className="text-xs text-gray-600 dark:text-gray-400 capitalize truncate">{user?.role}</span>
+              <span className="text-xs text-[var(--brand-primary)] capitalize truncate">{user?.role}</span>
             </div>
             <UserIcon className="h-5 w-5 text-[var(--brand-primary)] opacity-80 group-hover:scale-110 transition-transform" />
           </Link>
           {/* Theme Toggle Button (Mobile) */}
           <button
             onClick={() => { handleThemeToggle(); closeMobileMenu(); }}
-            className="flex items-center w-full px-3 py-2 text-sm text-[var(--brand-text)] hover:bg-[var(--brand-bg-alt)] dark:hover:bg-[var(--brand-bg-alt)] rounded-lg transition-colors mb-2"
+            className="flex items-center w-full px-3 py-2 text-sm text-[var(--brand-text)] hover:bg-[var(--brand-bg-alt)] rounded-lg transition-colors mb-2"
             aria-label="Toggle theme"
           >
             {isDarkMode ? <Sun className="h-4 w-4 mr-2" /> : <Moon className="h-4 w-4 mr-2" />}
@@ -260,10 +259,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               closeMobileMenu();
             }}
             disabled={isLoggingOut}
-            className="flex items-center w-full px-3 py-3 text-base text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-1"
+            className="flex items-center w-full px-3 py-3 text-base text-[var(--brand-text)] hover:bg-[var(--brand-bg-alt)] rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-1"
           >
             {isLoggingOut ? (
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-600 mr-3" />
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-[var(--brand-primary)] mr-3" />
             ) : (
               <LogOut className="h-5 w-5 mr-3" />
             )}
@@ -274,7 +273,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       {/* Main Content */}
       <div className="flex-1 overflow-hidden">
-        <main className="h-full overflow-y-auto p-4 lg:p-8 bg-gray-50 dark:bg-gray-900 pt-20 lg:pt-8">
+        <main className="h-full overflow-y-auto p-4 lg:p-8 bg-[var(--brand-bg)] pt-20 lg:pt-8">
           {children ? children : <Outlet />}
         </main>
       </div>
