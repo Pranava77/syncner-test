@@ -299,7 +299,7 @@ const ResumeGenerator: React.FC = () => {
     return <Briefcase className="h-5 w-5" />;
   };
 
-  const getDifficultyColor = (difficulty: string) => {
+  const getDifficultyColor = (difficulty?: string) => {
     switch (difficulty) {
       case 'Beginner': return 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400';
       case 'Intermediate': return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-400';
@@ -307,6 +307,8 @@ const ResumeGenerator: React.FC = () => {
       default: return 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-400';
     }
   };
+
+  if (isLoading) return <LoadingScreen message="Loading resume data..." showProgress={true} progressDuration={1600} />;
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -318,240 +320,230 @@ const ResumeGenerator: React.FC = () => {
         </p>
       </div>
 
-      {isLoading || progressLoading || tasksLoading || modulesLoading ? (
-        <LoadingScreen 
-          message="Loading your resume data..."
-          showProgress={true}
-          progressDuration={2000}
-        />
-      ) : (
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Configuration Panel */}
-          <div className="lg:col-span-1 space-y-6">
-            {/* Profile Summary */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-              <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Profile Summary</h3>
-              <div className="space-y-3">
-                <div className="flex items-center space-x-3">
-                  <User className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                  <span className="text-sm text-gray-900 dark:text-white">{resumeData.personalInfo.name}</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Mail className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                  <span className="text-sm text-gray-900 dark:text-white">{resumeData.personalInfo.email}</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  {getTrackIcon(resumeData.personalInfo.careerTrack)}
-                  <span className="text-sm text-gray-900 dark:text-white">{resumeData.personalInfo.careerTrack}</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <img src={logo} alt="Syncner Logo" className="h-6 w-6 object-contain" />
-                  <span className="text-sm text-gray-900 dark:text-white">{resumeData.education.school}</span>
-                </div>
-                {progress && (
-                  <>
-                    <div className="flex items-center space-x-3">
-                      <TrendingUp className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                      <span className="text-sm text-gray-900 dark:text-white">{progress.overallProgress}% Overall Progress</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <Star className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                      <span className="text-sm text-gray-900 dark:text-white">{progress.totalPoints} Total Points</span>
-                    </div>
-                  </>
-                )}
-              </div>
+      {/* Configuration Panel */}
+      <div className="lg:col-span-1 space-y-6">
+        {/* Profile Summary */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+          <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Profile Summary</h3>
+          <div className="space-y-3">
+            <div className="flex items-center space-x-3">
+              <User className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+              <span className="text-sm text-gray-900 dark:text-white">{resumeData.personalInfo.name}</span>
             </div>
-
-            {/* Template Selection */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-              <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Choose Template</h3>
-              <div className="space-y-3">
-                {templates.map((template) => (
-                  <label
-                    key={template.id}
-                    className="block cursor-pointer"
-                  >
-                    <input
-                      type="radio"
-                      name="template"
-                      value={template.id}
-                      checked={selectedTemplate === template.id}
-                      onChange={(e) => setSelectedTemplate(e.target.value)}
-                      className="sr-only"
-                    />
-                    <div className={`border-2 rounded-lg p-4 transition-colors ${
-                      selectedTemplate === template.id
-                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                        : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
-                    }`}>
-                      <div className={`h-16 rounded ${template.preview} mb-3`}></div>
-                      <h4 className="font-medium text-gray-900 dark:text-white">{template.name}</h4>
-                      <p className="text-sm text-gray-600 dark:text-gray-300">{template.description}</p>
-                    </div>
-                  </label>
-                ))}
-              </div>
+            <div className="flex items-center space-x-3">
+              <Mail className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+              <span className="text-sm text-gray-900 dark:text-white">{resumeData.personalInfo.email}</span>
             </div>
-
-            {/* Actions */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-              <div className="space-y-3">
-                <button
-                  onClick={enhanceWithAI}
-                  disabled={isEnhancing}
-                  className="w-full flex items-center justify-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isEnhancing ? (
-                    <LoadingSpinner size="sm" color="white" className="mr-2" />
-                  ) : (
-                    <Sparkles className="h-4 w-4 mr-2" />
-                  )}
-                  {isEnhancing ? 'Enhancing...' : 'Enhance with AI'}
-                </button>
-                
-                <button
-                  onClick={() => setShowPreview(!showPreview)}
-                  className="w-full flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium"
-                >
-                  <Eye className="h-4 w-4 mr-2" />
-                  {showPreview ? 'Hide Preview' : 'Preview Resume'}
-                </button>
-                
-                <button
-                  onClick={generatePDF}
-                  disabled={isGenerating}
-                  className="w-full flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isGenerating ? (
-                    <LoadingSpinner size="sm" color="white" className="mr-2" />
-                  ) : (
-                    <Download className="h-4 w-4 mr-2" />
-                  )}
-                  {isGenerating ? 'Generating...' : 'Generate & Download'}
-                </button>
-              </div>
+            <div className="flex items-center space-x-3">
+              {getTrackIcon(resumeData.personalInfo.careerTrack)}
+              <span className="text-sm text-gray-900 dark:text-white">{resumeData.personalInfo.careerTrack}</span>
             </div>
+            <div className="flex items-center space-x-3">
+              <img src={logo} alt="Syncner Logo" className="h-6 w-6 object-contain" />
+              <span className="text-sm text-gray-900 dark:text-white">{resumeData.education.school}</span>
+            </div>
+            {progress && (
+              <>
+                <div className="flex items-center space-x-3">
+                  <TrendingUp className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                  <span className="text-sm text-gray-900 dark:text-white">{progress.overallProgress}% Overall Progress</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Star className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                  <span className="text-sm text-gray-900 dark:text-white">{progress.totalPoints} Total Points</span>
+                </div>
+              </>
+            )}
           </div>
+        </div>
 
-          {/* Content Overview */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Projects */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Completed Projects</h3>
-                <span className="bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-3 py-1 rounded-full text-sm font-medium">
-                  {resumeData.completedProjects.length} Projects
-                </span>
-              </div>
-              
-              <div className="space-y-4">
-                {resumeData.completedProjects.map((project, index) => (
-                  <div key={index} className="border border-gray-200 dark:border-gray-600 rounded-lg p-4">
-                    <div className="flex items-start justify-between mb-2">
-                      <h4 className="font-semibold text-gray-900 dark:text-white">{project.title}</h4>
-                      <div className="flex items-center space-x-2">
-                        <span className="bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 px-2 py-1 rounded text-xs font-medium">
-                          Score: {project.score}%
-                        </span>
-                        <span className={`px-2 py-1 rounded text-xs font-medium ${getDifficultyColor(project.difficulty)}`}>
-                          {project.difficulty}
-                        </span>
-                        <div className="flex items-center text-gray-500 dark:text-gray-400 text-xs">
-                          <Calendar className="h-3 w-3 mr-1" />
-                          {project.date}
-                        </div>
-                      </div>
-                    </div>
-                    <p className="text-gray-600 dark:text-gray-300 text-sm mb-3">{project.description}</p>
-                    <div className="flex flex-wrap gap-1">
-                      {project.technologies.map((tech) => (
-                        <span key={tech} className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded text-xs">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Skills */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">Technical Skills</h3>
-              <div className="grid md:grid-cols-2 gap-6">
-                {Object.entries(resumeData.skills).map(([category, skills]) => (
-                  <div key={category}>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-3">{category}</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {skills.map((skill) => (
-                        <span key={skill} className="bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 px-3 py-1 rounded-full text-sm">
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Certifications */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">Certifications</h3>
-              <div className="space-y-4">
-                {resumeData.certifications.map((cert, index) => (
-                  <div key={index} className="flex items-start space-x-4">
-                    <div className="bg-purple-100 dark:bg-purple-900/20 p-2 rounded-lg">
-                      <Award className="h-5 w-5 text-purple-600 dark:text-purple-400" />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-medium text-gray-900 dark:text-white">{cert.name}</h4>
-                      <p className="text-sm text-gray-600 dark:text-gray-300">{cert.issuer} • {cert.date}</p>
-                      <div className="flex flex-wrap gap-1 mt-2">
-                        {cert.skills.map((skill) => (
-                          <span key={skill} className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded text-xs">
-                            {skill}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* AI Enhancement */}
-            <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-6">
-              <div className="flex items-start space-x-4">
-                <div className="bg-purple-100 dark:bg-purple-900/20 p-2 rounded-lg">
-                  <Brain className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+        {/* Template Selection */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+          <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Choose Template</h3>
+          <div className="space-y-3">
+            {templates.map((template) => (
+              <label
+                key={template.id}
+                className="block cursor-pointer"
+              >
+                <input
+                  type="radio"
+                  name="template"
+                  value={template.id}
+                  checked={selectedTemplate === template.id}
+                  onChange={(e) => setSelectedTemplate(e.target.value)}
+                  className="sr-only"
+                />
+                <div className={`border-2 rounded-lg p-4 transition-colors ${
+                  selectedTemplate === template.id
+                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
+                    : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
+                }`}>
+                  <div className={`h-16 rounded ${template.preview} mb-3`}></div>
+                  <h4 className="font-medium text-gray-900 dark:text-white">{template.name}</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">{template.description}</p>
                 </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white mb-2">AI-Enhanced Resume</h3>
-                  <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">
-                    Our AI analyzes your completed projects and skills to create compelling 
-                    descriptions that highlight your achievements and technical expertise.
-                  </p>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex items-center text-green-700 dark:text-green-400">
-                      <Award className="h-4 w-4 mr-2" />
-                      Automatically highlights key achievements
-                    </div>
-                    <div className="flex items-center text-green-700 dark:text-green-400">
-                      <Edit3 className="h-4 w-4 mr-2" />
-                      Optimizes content for ATS systems
-                    </div>
-                    <div className="flex items-center text-green-700 dark:text-green-400">
-                      <FileText className="h-4 w-4 mr-2" />
-                      Tailored for your career track
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+          <div className="space-y-3">
+            <button
+              onClick={enhanceWithAI}
+              disabled={isEnhancing}
+              className="w-full flex items-center justify-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isEnhancing ? (
+                <LoadingSpinner size="sm" color="white" className="mr-2" />
+              ) : (
+                <Sparkles className="h-4 w-4 mr-2" />
+              )}
+              {isEnhancing ? 'Enhancing...' : 'Enhance with AI'}
+            </button>
+            
+            <button
+              onClick={() => setShowPreview(!showPreview)}
+              className="w-full flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium"
+            >
+              <Eye className="h-4 w-4 mr-2" />
+              {showPreview ? 'Hide Preview' : 'Preview Resume'}
+            </button>
+            
+            <button
+              onClick={generatePDF}
+              disabled={isGenerating}
+              className="w-full flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isGenerating ? (
+                <LoadingSpinner size="sm" color="white" className="mr-2" />
+              ) : (
+                <Download className="h-4 w-4 mr-2" />
+              )}
+              {isGenerating ? 'Generating...' : 'Generate & Download'}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Content Overview */}
+      <div className="lg:col-span-2 space-y-6">
+        {/* Projects */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Completed Projects</h3>
+            <span className="bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-3 py-1 rounded-full text-sm font-medium">
+              {resumeData.completedProjects.length} Projects
+            </span>
+          </div>
+          
+          <div className="space-y-4">
+            {resumeData.completedProjects.map((project, index) => (
+              <div key={index} className="border border-gray-200 dark:border-gray-600 rounded-lg p-4">
+                <div className="flex items-start justify-between mb-2">
+                  <h4 className="font-semibold text-gray-900 dark:text-white">{project.title}</h4>
+                  <div className="flex items-center space-x-2">
+                    <span className="bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 px-2 py-1 rounded text-xs font-medium">
+                      Score: {project.score}%
+                    </span>
+                    <span className={`px-2 py-1 rounded text-xs font-medium ${getDifficultyColor(project.difficulty)}`}>
+                      {project.difficulty}
+                    </span>
+                    <div className="flex items-center text-gray-500 dark:text-gray-400 text-xs">
+                      <Calendar className="h-3 w-3 mr-1" />
+                      {project.date}
                     </div>
                   </div>
+                </div>
+                <p className="text-gray-600 dark:text-gray-300 text-sm mb-3">{project.description}</p>
+                <div className="flex flex-wrap gap-1">
+                  {project.technologies.map((tech) => (
+                    <span key={tech} className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded text-xs">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Skills */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">Technical Skills</h3>
+          <div className="grid md:grid-cols-2 gap-6">
+            {Object.entries(resumeData.skills).map(([category, skills]) => (
+              <div key={category}>
+                <h4 className="font-medium text-gray-900 dark:text-white mb-3">{category}</h4>
+                <div className="flex flex-wrap gap-2">
+                  {skills.map((skill) => (
+                    <span key={skill} className="bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 px-3 py-1 rounded-full text-sm">
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Certifications */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">Certifications</h3>
+          <div className="space-y-4">
+            {resumeData.certifications.map((cert, index) => (
+              <div key={index} className="flex items-start space-x-4">
+                <div className="bg-purple-100 dark:bg-purple-900/20 p-2 rounded-lg">
+                  <Award className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-medium text-gray-900 dark:text-white">{cert.name}</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">{cert.issuer} • {cert.date}</p>
+                  <div className="flex flex-wrap gap-1 mt-2">
+                    {cert.skills.map((skill) => (
+                      <span key={skill} className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded text-xs">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* AI Enhancement */}
+        <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-6">
+          <div className="flex items-start space-x-4">
+            <div className="bg-purple-100 dark:bg-purple-900/20 p-2 rounded-lg">
+              <Brain className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">AI-Enhanced Resume</h3>
+              <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">
+                Our AI analyzes your completed projects and skills to create compelling 
+                descriptions that highlight your achievements and technical expertise.
+              </p>
+              <div className="space-y-2 text-sm">
+                <div className="flex items-center text-green-700 dark:text-green-400">
+                  <Award className="h-4 w-4 mr-2" />
+                  Automatically highlights key achievements
+                </div>
+                <div className="flex items-center text-green-700 dark:text-green-400">
+                  <Edit3 className="h-4 w-4 mr-2" />
+                  Optimizes content for ATS systems
+                </div>
+                <div className="flex items-center text-green-700 dark:text-green-400">
+                  <FileText className="h-4 w-4 mr-2" />
+                  Tailored for your career track
                 </div>
               </div>
             </div>
           </div>
         </div>
-      )}
+      </div>
 
       {/* Preview Modal */}
       {showPreview && (

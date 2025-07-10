@@ -16,7 +16,9 @@ import {
   X,
   List,
   ShieldCheck,
-  User as UserIcon
+  User as UserIcon,
+  Sun,
+  Moon
 } from 'lucide-react';
 import logo from '../assets/syncner-logo.png';
 
@@ -45,6 +47,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     } finally {
       setIsLoggingOut(false);
     }
+  };
+
+  // Theme toggle handler
+  const handleThemeToggle = () => {
+    if (isDarkMode) {
+      document.documentElement.classList.remove('dark');
+    } else {
+      document.documentElement.classList.add('dark');
+    }
+    dispatch({ type: 'theme/toggle' });
   };
 
   const isActive = (path: string) => location.pathname === path;
@@ -103,21 +115,30 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           {/* Unified Profile Section - clickable */}
           <Link
             to={user?.role === 'admin' ? '/admin/profile' : '/profile'}
-            className="flex items-center gap-3 w-full px-3 py-3 mb-2 rounded-lg transition-colors bg-gradient-to-r from-blue-50/80 to-purple-50/80 dark:from-blue-900/30 dark:to-purple-900/30 hover:bg-blue-100 dark:hover:bg-blue-800/60 focus:outline-none focus:ring-2 focus:ring-blue-400 group"
+            className="flex items-center gap-3 w-full px-3 py-3 mb-2 rounded-lg transition-colors bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-secondary)] dark:from-[var(--brand-primary)] dark:to-[var(--brand-secondary)] hover:bg-[var(--brand-accent)] dark:hover:bg-[var(--brand-accent)] focus:outline-none focus:ring-2 focus:ring-blue-400 group"
             tabIndex={0}
             aria-label="View profile"
           >
-            <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 rounded-full flex items-center justify-center">
+            <div className="bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-secondary)] p-2 rounded-full flex items-center justify-center">
               <span className="text-white text-base font-bold">
                 {user?.name?.charAt(0) || 'U'}
               </span>
             </div>
             <div className="flex flex-col flex-1 min-w-0">
-              <span className="text-sm font-semibold text-gray-900 dark:text-white truncate">{user?.name}</span>
+              <span className="text-sm font-semibold text-[var(--brand-text)] truncate">{user?.name}</span>
               <span className="text-xs text-gray-600 dark:text-gray-400 capitalize truncate">{user?.role}</span>
             </div>
-            <UserIcon className="h-5 w-5 text-blue-500 dark:text-blue-400 opacity-80 group-hover:scale-110 transition-transform" />
+            <UserIcon className="h-5 w-5 text-[var(--brand-primary)] opacity-80 group-hover:scale-110 transition-transform" />
           </Link>
+          {/* Theme Toggle Button */}
+          <button
+            onClick={handleThemeToggle}
+            className="flex items-center w-full px-3 py-2 text-sm text-[var(--brand-text)] hover:bg-[var(--brand-bg-alt)] dark:hover:bg-[var(--brand-bg-alt)] rounded-lg transition-colors mb-2"
+            aria-label="Toggle theme"
+          >
+            {isDarkMode ? <Sun className="h-4 w-4 mr-2" /> : <Moon className="h-4 w-4 mr-2" />}
+            {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+          </button>
           <button
             onClick={handleLogout}
             disabled={isLoggingOut}
@@ -209,21 +230,30 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <Link
             to={user?.role === 'admin' ? '/admin/profile' : '/profile'}
             onClick={closeMobileMenu}
-            className="flex items-center gap-3 w-full px-3 py-3 mb-2 rounded-lg transition-colors bg-gradient-to-r from-blue-50/80 to-purple-50/80 dark:from-blue-900/30 dark:to-purple-900/30 hover:bg-blue-100 dark:hover:bg-blue-800/60 focus:outline-none focus:ring-2 focus:ring-blue-400 group"
+            className="flex items-center gap-3 w-full px-3 py-3 mb-2 rounded-lg transition-colors bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-secondary)] dark:from-[var(--brand-primary)] dark:to-[var(--brand-secondary)] hover:bg-[var(--brand-accent)] dark:hover:bg-[var(--brand-accent)] focus:outline-none focus:ring-2 focus:ring-blue-400 group"
             tabIndex={0}
             aria-label="View profile"
           >
-            <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 rounded-full flex items-center justify-center">
+            <div className="bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-secondary)] p-2 rounded-full flex items-center justify-center">
               <span className="text-white text-base font-bold">
                 {user?.name?.charAt(0) || 'U'}
               </span>
             </div>
             <div className="flex flex-col flex-1 min-w-0">
-              <span className="text-sm font-semibold text-gray-900 dark:text-white truncate">{user?.name}</span>
+              <span className="text-sm font-semibold text-[var(--brand-text)] truncate">{user?.name}</span>
               <span className="text-xs text-gray-600 dark:text-gray-400 capitalize truncate">{user?.role}</span>
             </div>
-            <UserIcon className="h-5 w-5 text-blue-500 dark:text-blue-400 opacity-80 group-hover:scale-110 transition-transform" />
+            <UserIcon className="h-5 w-5 text-[var(--brand-primary)] opacity-80 group-hover:scale-110 transition-transform" />
           </Link>
+          {/* Theme Toggle Button (Mobile) */}
+          <button
+            onClick={() => { handleThemeToggle(); closeMobileMenu(); }}
+            className="flex items-center w-full px-3 py-2 text-sm text-[var(--brand-text)] hover:bg-[var(--brand-bg-alt)] dark:hover:bg-[var(--brand-bg-alt)] rounded-lg transition-colors mb-2"
+            aria-label="Toggle theme"
+          >
+            {isDarkMode ? <Sun className="h-4 w-4 mr-2" /> : <Moon className="h-4 w-4 mr-2" />}
+            {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+          </button>
           <button
             onClick={() => {
               handleLogout();

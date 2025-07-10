@@ -19,8 +19,8 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
 
   const colorClasses = {
     white: 'border-white',
-    blue: 'border-blue-600',
-    gray: 'border-gray-600'
+    blue: 'border-[var(--brand-primary)]',
+    gray: 'border-[var(--brand-text)]',
   };
 
   return (

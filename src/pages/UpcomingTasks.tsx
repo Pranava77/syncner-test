@@ -3,7 +3,7 @@ import { useAppSelector, useAppDispatch } from '../redux/store';
 import upcomingTasksReducer, { fetchUpcomingTasks } from '../redux/slices/upcomingTasksSlice';
 import { useTasks } from '../hooks/useTasks';
 import { Calendar, Clock, Star, Send, FileText, Code, AlertTriangle } from 'lucide-react';
-import LoadingSpinner from '../components/LoadingSpinner';
+import LoadingScreen from '../components/LoadingScreen';
 
 const UpcomingTasks: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -67,7 +67,7 @@ const UpcomingTasks: React.FC = () => {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <LoadingScreen message="Loading upcoming tasks..." showProgress={true} progressDuration={1600} />;
   if (error) return <div className="text-red-500">{error}</div>;
 
   return (
@@ -75,7 +75,7 @@ const UpcomingTasks: React.FC = () => {
       <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Upcoming Tasks</h2>
       {loading ? (
         <div className="flex items-center justify-center py-12">
-          <LoadingSpinner size="lg" color="blue" />
+          <LoadingScreen message="Loading upcoming tasks..." showProgress={true} progressDuration={1600} />
         </div>
       ) : error ? (
         <div className="text-red-500 text-center py-8">{error}</div>
@@ -210,7 +210,7 @@ const UpcomingTasks: React.FC = () => {
                 className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 font-semibold flex items-center justify-center mt-2 transition"
               >
                 {isSubmitting ? (
-                  <span className="flex items-center"><LoadingSpinner size="sm" color="white" className="mr-2" />Submitting...</span>
+                  <LoadingScreen message="Submitting your task..." showProgress={true} progressDuration={1200} />
                 ) : (
                   <span className="flex items-center"><Send className="h-4 w-4 mr-2" />Submit Task</span>
                 )}
