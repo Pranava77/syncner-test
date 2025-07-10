@@ -15,7 +15,8 @@ import {
   Menu,
   X,
   List,
-  ShieldCheck
+  ShieldCheck,
+  User as UserIcon
 } from 'lucide-react';
 import logo from '../assets/syncner-logo.png';
 
@@ -106,7 +107,14 @@ const Layout: React.FC = () => {
               <p className="text-xs text-gray-600 dark:text-gray-400 capitalize">{user?.role}</p>
             </div>
           </div>
-          
+          {/* Profile Link */}
+          <Link
+            to={user?.role === 'admin' ? '/admin/profile' : '/profile'}
+            className={`flex items-center w-full px-3 py-2 mb-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors`}
+          >
+            <UserIcon className="h-4 w-4 mr-2" />
+            Profile
+          </Link>
           <button
             onClick={handleLogout}
             disabled={isLoggingOut}
@@ -194,6 +202,15 @@ const Layout: React.FC = () => {
         </nav>
 
         <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-gray-200 dark:border-gray-700">
+          {/* Profile Link */}
+          <Link
+            to={user?.role === 'admin' ? '/admin/profile' : '/profile'}
+            onClick={closeMobileMenu}
+            className={`flex items-center w-full px-3 py-3 mb-2 text-base text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors`}
+          >
+            <UserIcon className="h-5 w-5 mr-3" />
+            Profile
+          </Link>
           <button
             onClick={() => {
               handleLogout();

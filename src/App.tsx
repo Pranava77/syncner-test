@@ -27,6 +27,8 @@ import AdminDiagnostics from './pages/AdminDiagnostics';
 import StudentLayout from './components/StudentLayout';
 import LoadingScreen from './components/LoadingScreen';
 import { KeepAlive } from 'react-activation';
+import StudentProfile from './pages/StudentProfile';
+import AdminProfile from './pages/AdminProfile';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -124,6 +126,22 @@ function App() {
         { path: 'submissions', element: <KeepAlive id="student-submissions"><StudentSubmissions /></KeepAlive> },
         { index: true, element: <Navigate to="dashboard" replace /> },
       ],
+    },
+    {
+      path: '/profile',
+      element: (
+        <ProtectedRoute>
+          <StudentProfile />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/admin/profile',
+      element: (
+        <ProtectedRoute requireAdmin>
+          <AdminProfile />
+        </ProtectedRoute>
+      ),
     },
     {
       path: '/admin',
