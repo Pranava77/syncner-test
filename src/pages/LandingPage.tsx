@@ -18,14 +18,6 @@ const LandingPage: React.FC = () => {
   const { isAuthenticated, user, isLoading } = useAppSelector((state) => state.auth);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
-  // Redirect authenticated users to their appropriate dashboard
-  React.useEffect(() => {
-    if (!isLoading && isAuthenticated && user) {
-      const redirectPath = getDefaultRoute(user);
-      navigate(redirectPath, { replace: true });
-    }
-  }, [isAuthenticated, user, isLoading, navigate]);
-
   // Show loading while checking authentication
   if (isLoading) {
     return (
@@ -35,11 +27,6 @@ const LandingPage: React.FC = () => {
         progressDuration={1500}
       />
     );
-  }
-
-  // Don't render landing page if user is authenticated (they will be redirected)
-  if (isAuthenticated && user) {
-    return null;
   }
 
   return (
