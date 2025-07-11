@@ -33,10 +33,10 @@ const AdminAnalytics: React.FC = () => {
 
   useEffect(() => {
     // Only fetch if not present or if dateRange changes
-    if (!analytics || analyticsState.lastFetched === null) {
+    if (analyticsState.lastFetched === null) {
       dispatch(fetchAnalytics(dateRange));
     }
-  }, [dateRange, analytics, analyticsState.lastFetched, dispatch]);
+  }, [dateRange, analyticsState.lastFetched, dispatch]);
 
   const exportData = () => {
     alert('Analytics data export functionality would be implemented here');

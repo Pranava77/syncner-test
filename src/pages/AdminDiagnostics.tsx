@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useAppSelector } from '../redux/store';
-import { ShieldIcon, ReloadIcon, ExclamationTriangleIcon, CheckCircledIcon } from '@radix-ui/react-icons';
+import { ReloadIcon, ExclamationTriangleIcon, CheckCircledIcon } from '@radix-ui/react-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchDiagnostics } from '../redux/slices/diagnosticsSlice';
 import { useAppDispatch } from '../redux/store';
@@ -19,7 +19,7 @@ const AdminDiagnostics: React.FC = () => {
     if (!diagnosticsData || diagnosticsState.lastFetched === null) {
       dispatch(fetchDiagnostics());
     }
-  }, [diagnosticsData, diagnosticsState.lastFetched, dispatch]);
+  }, [dispatch]);
 
   const refreshDiagnostics = async () => {
     try {
@@ -42,7 +42,7 @@ const AdminDiagnostics: React.FC = () => {
   return (
     <div className="max-w-3xl mx-auto py-10 px-4">
       <div className="flex items-center mb-6 gap-3">
-        <ShieldCheck className="h-7 w-7 text-blue-600" />
+        <CheckCircledIcon className="h-7 w-7 text-blue-600" />
         <h1 className="text-2xl font-bold text-white">System Diagnostics</h1>
       </div>
       <div className="flex items-center justify-between mb-4">
@@ -54,7 +54,7 @@ const AdminDiagnostics: React.FC = () => {
           className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
           disabled={loading}
         >
-          <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+          <ReloadIcon className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Refresh
         </button>
       </div>
@@ -64,7 +64,7 @@ const AdminDiagnostics: React.FC = () => {
       </div>
       {error && (
         <div className="bg-red-100 text-red-700 px-4 py-2 rounded mb-4 flex items-center gap-2">
-          <AlertTriangle className="h-4 w-4" />
+          <ExclamationTriangleIcon className="h-4 w-4" />
           {error}
         </div>
       )}
