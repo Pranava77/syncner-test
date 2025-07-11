@@ -13,7 +13,9 @@ import {
   HamburgerMenuIcon,
   Cross1Icon,
   ListBulletIcon,
-  PersonIcon
+  PersonIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon
 } from '@radix-ui/react-icons';
 import logo from '../assets/syncner-logo.png';
 import LoadingScreen from './LoadingScreen';
@@ -26,6 +28,7 @@ const Layout: React.FC = () => {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const handleLogout = async () => {
     if (isLoggingOut) return; // Prevent multiple clicks
@@ -69,14 +72,20 @@ const Layout: React.FC = () => {
   return (
     <div className="flex h-screen bg-black transition-colors">
       {/* Desktop Sidebar */}
-      <div className="hidden lg:flex w-64 bg-offblack shadow-lg border-r border-gray-200 dark:border-gray-700 flex-col">
-        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+      <div className={`hidden lg:flex ${isSidebarCollapsed ? 'w-20' : 'w-64'} bg-offblack shadow-lg border-r border-gray-200 dark:border-gray-700 flex-col transition-all duration-300`}>
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <img src={logo} alt="Syncner Logo" className="h-10 w-10 object-contain" />
-            <span className="text-paperwhite font-bold text-lg">Syncner</span>
+            {!isSidebarCollapsed && <span className="text-paperwhite font-bold text-lg">Syncner</span>}
           </div>
+          <button
+            className="ml-2 p-1 rounded hover:bg-paperwhite/10 transition"
+            onClick={() => setIsSidebarCollapsed((prev) => !prev)}
+            aria-label={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          >
+            {isSidebarCollapsed ? <ChevronRightIcon className="h-5 w-5 text-paperwhite" /> : <ChevronLeftIcon className="h-5 w-5 text-paperwhite" />}
+          </button>
         </div>
-
         <nav className="mt-6 flex-1">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -84,47 +93,48 @@ const Layout: React.FC = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center px-6 py-3 text-sm font-medium transition-colors ${
+                className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : ''} px-3 py-3 text-sm font-medium transition-colors ${
                   isActive(item.path)
                     ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise'
                     : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'
                 }`}
               >
-                <Icon className="h-5 w-5 mr-3" />
-                {item.label}
+                <Icon className="h-5 w-5" />
+                {!isSidebarCollapsed && <span className="ml-3">{item.label}</span>}
               </Link>
             );
           })}
         </nav>
-
-        <div className="p-6 border-t border-trueturquoise">
-          {/* Unified Profile Section - clickable */}
-          <Link
-            to={user?.role === 'admin' ? '/admin/profile' : '/profile'}
-            className="flex items-center gap-3 w-full px-3 py-3 mb-2 rounded-lg transition-colors bg-paperwhite/10 hover:bg-trueturquoise/10 focus:outline-none focus:ring-2 focus:ring-trueturquoise group"
-            tabIndex={0}
-            aria-label="View profile"
-          >
-            <div className="bg-trueturquoise p-2 rounded-lg flex items-center justify-center">
-              <span className="text-offblack text-base font-bold">
-                {user?.name?.charAt(0) || 'U'}
-              </span>
-            </div>
-            <div className="flex flex-col flex-1 min-w-0">
-              <span className="text-sm font-semibold text-paperwhite truncate">{user?.name}</span>
-              <span className="text-xs text-teallight capitalize truncate">{user?.role}</span>
-            </div>
-            <PersonIcon className="h-5 w-5 text-trueturquoise opacity-80 group-hover:scale-110 transition-transform" />
-          </Link>
-          <button
-            onClick={handleLogout}
-            disabled={isLoggingOut}
-            className="flex items-center w-full px-3 py-2 text-sm text-paperwhite hover:bg-trueturquoise/10 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-1"
-          >
-            <ExitIcon className="h-4 w-4 mr-2 text-trueturquoise" />
-            Sign Out
-          </button>
-        </div>
+        {!isSidebarCollapsed && (
+          <div className="p-6 border-t border-trueturquoise">
+            {/* Unified Profile Section - clickable */}
+            <Link
+              to={user?.role === 'admin' ? '/admin/profile' : '/profile'}
+              className="flex items-center gap-3 w-full px-3 py-3 mb-2 rounded-lg transition-colors bg-paperwhite/10 hover:bg-trueturquoise/10 focus:outline-none focus:ring-2 focus:ring-trueturquoise group"
+              tabIndex={0}
+              aria-label="View profile"
+            >
+              <div className="bg-trueturquoise p-2 rounded-lg flex items-center justify-center">
+                <span className="text-offblack text-base font-bold">
+                  {user?.name?.charAt(0) || 'U'}
+                </span>
+              </div>
+              <div className="flex flex-col flex-1 min-w-0">
+                <span className="text-sm font-semibold text-paperwhite truncate">{user?.name}</span>
+                <span className="text-xs text-teallight capitalize truncate">{user?.role}</span>
+              </div>
+              <PersonIcon className="h-5 w-5 text-trueturquoise opacity-80 group-hover:scale-110 transition-transform" />
+            </Link>
+            <button
+              onClick={handleLogout}
+              disabled={isLoggingOut}
+              className="flex items-center w-full px-3 py-2 text-sm text-paperwhite hover:bg-trueturquoise/10 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-1"
+            >
+              <ExitIcon className="h-4 w-4 mr-2 text-trueturquoise" />
+              Sign Out
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Mobile Header */}
