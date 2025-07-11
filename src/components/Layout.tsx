@@ -74,7 +74,7 @@ const Layout: React.FC = () => {
       {/* Desktop Sidebar */}
       <div className={`hidden lg:flex ${isSidebarCollapsed ? 'w-20' : 'w-64'} bg-offblack shadow-lg border-r border-gray-200 dark:border-gray-700 flex-col transition-all duration-300`}>
         <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 justify-center w-full">
             <img src={logo} alt="Syncner Logo" className="h-10 w-10 object-contain" />
             {!isSidebarCollapsed && <span className="text-paperwhite font-bold text-lg">Syncner</span>}
           </div>
@@ -105,7 +105,29 @@ const Layout: React.FC = () => {
             );
           })}
         </nav>
-        {!isSidebarCollapsed && (
+        {isSidebarCollapsed ? (
+          <div className="flex flex-col items-center gap-4 pb-6">
+            <Link
+              to={user?.role === 'admin' ? '/admin/profile' : '/profile'}
+              className="flex items-center justify-center w-10 h-10 rounded-full bg-trueturquoise mb-2"
+              title="Profile"
+              aria-label="View profile"
+            >
+              <span className="text-offblack text-base font-bold">
+                {user?.name?.charAt(0) || 'U'}
+              </span>
+            </Link>
+            <button
+              onClick={handleLogout}
+              disabled={isLoggingOut}
+              className="flex items-center justify-center w-10 h-10 rounded-full bg-paperwhite/10 hover:bg-trueturquoise/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              title="Sign Out"
+              aria-label="Sign Out"
+            >
+              <ExitIcon className="h-5 w-5 text-trueturquoise" />
+            </button>
+          </div>
+        ) : (
           <div className="p-6 border-t border-trueturquoise">
             {/* Unified Profile Section - clickable */}
             <Link
