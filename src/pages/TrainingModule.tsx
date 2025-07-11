@@ -4,18 +4,17 @@ import { useAppSelector, useAppDispatch } from '../redux/store';
 import { useCareerTrack } from '../hooks/useCareerTracks';
 import { fetchModules } from '../redux/slices/modulesSlice';
 import { fetchProgress } from '../redux/slices/progressSlice';
-import { 
-  PlayIcon, 
-  PauseIcon, 
-  ChevronLeftIcon, 
-  ChevronRightIcon, 
-  CheckCircledIcon, 
+import {
+  PlayIcon,
+  PauseIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  CheckCircledIcon,
   ReaderIcon,
   ClockIcon,
   TargetIcon,
-  AwardIcon,
-  LockClosedIcon,
   StarFilledIcon,
+  LockClosedIcon,
 } from '@radix-ui/react-icons';
 import LoadingScreen from '../components/LoadingScreen';
 
@@ -80,7 +79,7 @@ const TrainingModule: React.FC = () => {
     question: 'What is the primary purpose of React Hooks?',
     options: [
       'To style React components',
-      'To manage state and lifecycle in functional components',  
+      'To manage state and lifecycle in functional components',
       'To handle routing in React apps',
       'To optimize React performance'
     ],
@@ -134,14 +133,14 @@ const TrainingModule: React.FC = () => {
     return (
       <div className="max-w-6xl mx-auto">
         <div className="text-center py-12">
-          <BookOpen className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+          <ReaderIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Module Not Found</h3>
           <p className="text-gray-600 dark:text-gray-400">The requested module could not be found.</p>
           <Link
             to="/student/dashboard"
             className="mt-4 inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
           >
-            <ChevronLeft className="h-4 w-4 mr-1" />
+            <ChevronLeftIcon className="h-4 w-4 mr-1" />
             Back to Dashboard
           </Link>
         </div>
@@ -157,10 +156,10 @@ const TrainingModule: React.FC = () => {
           to="/student/dashboard"
           className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium flex items-center mb-4"
         >
-          <ChevronLeft className="h-4 w-4 mr-1" />
+          <ChevronLeftIcon className="h-4 w-4 mr-1" />
           Back to Dashboard
         </Link>
-        
+
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8">
           <div className="flex items-start justify-between mb-6">
             <div>
@@ -175,15 +174,15 @@ const TrainingModule: React.FC = () => {
               <p className="text-gray-600 dark:text-gray-300 mb-4">{module.description}</p>
               <div className="flex items-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
                 <div className="flex items-center">
-                  <Clock className="h-4 w-4 mr-1" />
+                  <ClockIcon className="h-4 w-4 mr-1" />
                   {module.duration}
                 </div>
                 <div className="flex items-center">
-                  <Target className="h-4 w-4 mr-1" />
+                  <TargetIcon className="h-4 w-4 mr-1" />
                   {module.difficulty}
                 </div>
                 <div className="flex items-center">
-                  <BookOpen className="h-4 w-4 mr-1" />
+                  <ReaderIcon className="h-4 w-4 mr-1" />
                   {completedLessons.size}/{module.lessons.length} completed
                 </div>
               </div>
@@ -193,7 +192,7 @@ const TrainingModule: React.FC = () => {
                 {progress}% Complete
               </div>
               <div className="w-32 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                <div 
+                <div
                   className="bg-blue-600 h-2 rounded-full transition-all"
                   style={{ width: `${progress}%` }}
                 ></div>
@@ -237,19 +236,19 @@ const TrainingModule: React.FC = () => {
                   <div className="flex items-start space-x-3">
                     <div className={`mt-1 ${
                       completedLessons.has(lesson.id)
-                        ? 'text-green-500' 
-                        : index === currentLesson 
-                        ? 'text-blue-500' 
+                        ? 'text-green-500'
+                        : index === currentLesson
+                        ? 'text-blue-500'
                         : 'text-gray-400'
                     }`}>
                       {completedLessons.has(lesson.id) ? (
-                        <CheckCircle className="h-4 w-4" />
+                        <CheckCircledIcon className="h-4 w-4" />
                       ) : lesson.type === 'quiz' ? (
-                        <Award className="h-4 w-4" />
+                        <StarFilledIcon className="h-4 w-4" />
                       ) : lesson.type === 'project' ? (
-                        <Target className="h-4 w-4" />
+                        <TargetIcon className="h-4 w-4" />
                       ) : (
-                        <Play className="h-4 w-4" />
+                        <PlayIcon className="h-4 w-4" />
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -283,7 +282,7 @@ const TrainingModule: React.FC = () => {
                 <div className="space-y-2">
                   {module.prerequisites.map((prereq) => (
                     <div key={prereq} className="flex items-center text-sm text-gray-600 dark:text-gray-300">
-                      <Lock className="h-3 w-3 mr-2" />
+                      <LockClosedIcon className="h-3 w-3 mr-2" />
                       {prereq.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
                     </div>
                   ))}
@@ -325,9 +324,9 @@ const TrainingModule: React.FC = () => {
                         className="bg-white/20 hover:bg-white/30 rounded-full p-4 transition-colors"
                       >
                         {isPlaying ? (
-                          <Pause className="h-8 w-8 text-white" />
+                          <PauseIcon className="h-8 w-8 text-white" />
                         ) : (
-                          <Play className="h-8 w-8 text-white ml-1" />
+                          <PlayIcon className="h-8 w-8 text-white ml-1" />
                         )}
                       </button>
                     </div>
@@ -353,7 +352,7 @@ const TrainingModule: React.FC = () => {
                   <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
                     {currentContent.content}
                   </p>
-                  
+
                   <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 mb-6">
                     <h3 className="font-semibold text-blue-900 dark:text-blue-300 mb-2">Key Learning Points:</h3>
                     <ul className="space-y-1 text-blue-800 dark:text-blue-400 text-sm">
@@ -385,7 +384,7 @@ const TrainingModule: React.FC = () => {
                         onClick={handleLessonComplete}
                         className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors font-medium flex items-center"
                       >
-                        <CheckCircle className="h-4 w-4 mr-2" />
+                        <CheckCircledIcon className="h-4 w-4 mr-2" />
                         Mark as Complete
                       </button>
                     </div>
@@ -397,7 +396,7 @@ const TrainingModule: React.FC = () => {
               <div className="p-8">
                 <div className="text-center mb-8">
                   <div className="bg-purple-100 dark:bg-purple-900/20 p-3 rounded-full w-fit mx-auto mb-4">
-                    <Award className="h-8 w-8 text-purple-600 dark:text-purple-400" />
+                    <StarFilledIcon className="h-8 w-8 text-purple-600 dark:text-purple-400" />
                   </div>
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Knowledge Check</h2>
                   <p className="text-gray-600 dark:text-gray-300">Test your understanding of the concepts covered</p>
@@ -455,7 +454,7 @@ const TrainingModule: React.FC = () => {
                 disabled={currentLesson === 0}
                 className="flex items-center px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                <ChevronLeft className="h-4 w-4 mr-1" />
+                <ChevronLeftIcon className="h-4 w-4 mr-1" />
                 Previous
               </button>
 
@@ -464,7 +463,7 @@ const TrainingModule: React.FC = () => {
                   {currentLesson + 1} of {module.lessons.length}
                 </div>
                 <div className="flex items-center text-yellow-600 dark:text-yellow-400">
-                  <Star className="h-4 w-4 mr-1" />
+                  <StarFilledIcon className="h-4 w-4 mr-1" />
                   <span className="text-sm font-medium">
                     {Math.round((completedLessons.size / module.lessons.length) * 100)} XP
                   </span>

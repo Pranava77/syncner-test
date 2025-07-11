@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import apiService from '../services/api';
+import type { Module } from './useModules';
+import type { Task } from './useTasks';
 
 interface CareerTrack {
   id: string;
@@ -22,12 +24,6 @@ export const useCareerTrack = (trackId: string) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (trackId) {
-      fetchTrack();
-    }
-  }, [trackId, fetchTrack]);
-
   const fetchTrack = useCallback(async () => {
     try {
       setLoading(true);
@@ -40,7 +36,13 @@ export const useCareerTrack = (trackId: string) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [trackId]);
+
+  useEffect(() => {
+    if (trackId) {
+      fetchTrack();
+    }
+  }, [trackId, fetchTrack]);
 
   return {
     track,

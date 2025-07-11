@@ -3,18 +3,22 @@ import {
   BarChartIcon,
   ReloadIcon,
   ReaderIcon,
-  ExclamationTriangleIcon
+  ExclamationTriangleIcon,
+  StarFilledIcon as Award,
+  TargetIcon as Target,
+  ClockIcon as Clock,
+  GroupIcon as Users,
+  ArrowTopRightIcon as TrendingUp
 } from '@radix-ui/react-icons';
 
 import {
   PieChart, Pie, Cell, Tooltip as RechartsTooltip, Legend,
   BarChart as ReBarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer
 } from 'recharts';
-import { useDispatch } from 'react-redux';
 import { fetchAnalytics } from '../redux/slices/analyticsSlice';
 import { useAppDispatch } from '../redux/store';
 import LoadingScreen from '../components/LoadingScreen';
-
+import { useSelector } from 'react-redux';
 
 
 const AdminAnalytics: React.FC = () => {
@@ -63,7 +67,7 @@ const AdminAnalytics: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <AlertTriangle className="h-8 w-8 text-red-600 mx-auto mb-4" />
+          <ExclamationTriangleIcon className="h-8 w-8 text-red-600 mx-auto mb-4" />
           <p className="text-gray-600 dark:text-gray-300">Failed to load analytics: {error}</p>
           <button
             onClick={refreshData}
@@ -86,7 +90,7 @@ const AdminAnalytics: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <AlertTriangle className="h-8 w-8 text-yellow-500 mx-auto mb-4" />
+          <ExclamationTriangleIcon className="h-8 w-8 text-yellow-500 mx-auto mb-4" />
           <p className="text-gray-600 dark:text-gray-300">No analytics data available.</p>
           <button
             onClick={refreshData}
@@ -135,13 +139,13 @@ const AdminAnalytics: React.FC = () => {
             onClick={refreshData}
             className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           >
-            <RefreshCw className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+            <ReloadIcon className="h-4 w-4 text-gray-600 dark:text-gray-400" />
           </button>
           <button
             onClick={exportData}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center"
           >
-            <Download className="h-4 w-4 mr-2" />
+            <ReaderIcon className="h-4 w-4 mr-2" />
             Export
           </button>
         </div>

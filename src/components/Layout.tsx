@@ -5,7 +5,6 @@ import { logoutUser } from '../redux/slices/authSlice';
 import { 
   HomeIcon, 
   ReaderIcon, 
-  BriefcaseIcon, 
   FileTextIcon, 
   GroupIcon, 
   GearIcon, 
@@ -14,7 +13,6 @@ import {
   HamburgerMenuIcon,
   Cross1Icon,
   ListBulletIcon,
-  ShieldIcon,
   PersonIcon
 } from '@radix-ui/react-icons';
 import logo from '../assets/syncner-logo.png';
@@ -52,7 +50,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const studentNavItems = [
     { path: '/student/dashboard', icon: HomeIcon, label: 'Dashboard' },
     { path: '/student/training/current', icon: ReaderIcon, label: 'Training' },
-    { path: '/student/tasks', icon: BriefcaseIcon, label: 'Tasks' },
+    { path: '/student/tasks', icon: FileTextIcon, label: 'Tasks' },
     { path: '/student/tasks/upcoming', icon: ListBulletIcon, label: 'Upcoming Tasks' },
     { path: '/student/submissions', icon: FileTextIcon, label: 'My Submissions' },
     { path: '/student/resume', icon: FileTextIcon, label: 'Resume' },
@@ -61,7 +59,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const adminNavItems = [
     { path: '/admin', icon: GroupIcon, label: 'Students' },
     { path: '/admin/analytics', icon: BarChartIcon, label: 'Analytics' },
-    { path: '/admin/diagnostics', icon: ShieldIcon, label: 'System Diagnostics' },
+    { path: '/admin/diagnostics', icon: PersonIcon, label: 'System Diagnostics' },
     { path: '/admin/settings', icon: GearIcon, label: 'Settings' },
   ];
 

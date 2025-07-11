@@ -90,6 +90,8 @@ const UpcomingTasks: React.FC = () => {
                 ? 'bg-yellow-100 text-yellow-700'
                 : 'bg-green-100 text-green-700';
             const categoryIcon = task.category === 'frontend' ? <CodeIcon className="h-5 w-5 text-blue-500" /> : <FileTextIcon className="h-5 w-5 text-purple-500" />;
+            return (
+              <div key={task.id} className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 transition-all">
                 <div className="flex items-center gap-3 mb-2">
                   {categoryIcon}
                   <div className="font-semibold text-lg text-gray-900 dark:text-white">{task.title}</div>
@@ -97,10 +99,10 @@ const UpcomingTasks: React.FC = () => {
                 </div>
                 <div className="text-gray-700 dark:text-gray-300 mb-2">{task.description}</div>
                 <div className="flex flex-wrap gap-3 text-sm text-gray-600 dark:text-gray-400">
-                  <span className="flex items-center gap-1"><Calendar className="h-4 w-4" /> Due: {due ? due.toLocaleDateString() : '—'}</span>
-                  <span className="flex items-center gap-1"><Clock className="h-4 w-4" /> {task.estimatedTime}</span>
-                  <span className="flex items-center gap-1"><Star className="h-4 w-4 text-yellow-500" /> {task.points} pts</span>
-                  <span className="flex items-center gap-1"><AlertTriangle className="h-4 w-4 text-orange-500" /> {task.difficulty}</span>
+                  <span className="flex items-center gap-1"><CalendarIcon className="h-4 w-4" /> Due: {due ? due.toLocaleDateString() : '—'}</span>
+                  <span className="flex items-center gap-1"><ClockIcon className="h-4 w-4" /> {task.estimatedTime}</span>
+                  <span className="flex items-center gap-1"><StarFilledIcon className="h-4 w-4 text-yellow-500" /> {task.points} pts</span>
+                  <span className="flex items-center gap-1"><ExclamationTriangleIcon className="h-4 w-4 text-orange-500" /> {task.difficulty}</span>
                 </div>
                 <div className="flex flex-wrap gap-2 mt-2">
                   {task.skills && task.skills.map((skill: string) => (
@@ -111,7 +113,7 @@ const UpcomingTasks: React.FC = () => {
                   className="mt-4 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center"
                   onClick={() => { setSelectedTask(task); setShowModal(true); }}
                 >
-                  <Send className="h-4 w-4 mr-2" /> Submit
+                  <PaperPlaneIcon className="h-4 w-4 mr-2" /> Submit
                 </button>
               </div>
             );

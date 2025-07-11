@@ -6,13 +6,13 @@ import ResumePreview from '../components/ResumePreview';
 import { useProgress } from '../hooks/useProgress';
 import { useTasks } from '../hooks/useTasks';
 import { useModules } from '../hooks/useModules';
-import { 
-  FileTextIcon as FileText, 
-  DownloadIcon as Download, 
-  EyeOpenIcon as Eye, 
-  Pencil1Icon as Edit3, 
-  PersonIcon as User, 
-  BriefcaseIcon as Briefcase, 
+import {
+  FileTextIcon as FileText,
+  DownloadIcon as Download,
+  EyeOpenIcon as Eye,
+  Pencil1Icon as Edit3,
+  PersonIcon as User,
+  FileTextIcon as Briefcase,
   StarFilledIcon as Star,
   CodeIcon as Code,
   ColorWheelIcon as Palette,
@@ -20,7 +20,6 @@ import {
   LightningBoltIcon as Brain,
   EnvelopeClosedIcon as Mail,
   CalendarIcon as Calendar,
-  MagicStickIcon as Sparkles,
   CheckCircledIcon as CheckCircle,
   ArrowTopRightIcon as TrendingUp,
   ClockIcon as Clock
@@ -487,7 +486,7 @@ const ResumeGenerator: React.FC = () => {
             {resumeData.certifications.map((cert, index) => (
               <div key={index} className="flex items-start space-x-4">
                 <div className="bg-purple-100 dark:bg-purple-900/20 p-2 rounded-lg">
-                  <Award className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                  <StarFilledIcon className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                 </div>
                 <div className="flex-1">
                   <h4 className="font-medium text-gray-900 dark:text-white">{cert.name}</h4>
@@ -519,7 +518,7 @@ const ResumeGenerator: React.FC = () => {
               </p>
               <div className="space-y-2 text-sm">
                 <div className="flex items-center text-green-700 dark:text-green-400">
-                  <Award className="h-4 w-4 mr-2" />
+                  <StarFilledIcon className="h-4 w-4 mr-2" />
                   Automatically highlights key achievements
                 </div>
                 <div className="flex items-center text-green-700 dark:text-green-400">

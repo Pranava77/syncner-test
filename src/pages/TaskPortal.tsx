@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import TaskWorkspace from '../components/TaskWorkspace';
 import { useAppSelector, useAppDispatch } from '../redux/store';
 import { useCareerTrack } from '../hooks/useCareerTracks';
-import { useTasks, useAllStudentTasks } from '../hooks/useTasks';
-import { useProgress } from '../hooks/useProgress';
+import { useAllStudentTasks } from '../hooks/useTasks';
 import {
-  BriefcaseIcon as Briefcase,
+  FileTextIcon as Briefcase,
   ClockIcon as Clock,
   StarFilledIcon as Star,
   MixerHorizontalIcon as Filter,
@@ -17,10 +16,10 @@ import {
   CheckCircledIcon as CheckCircle,
   ExclamationTriangleIcon as AlertTriangle,
   PlayIcon as Play,
-  EyeOpenIcon as Eye,
+  EyeOpenIcon,
   UploadIcon as Upload,
   TargetIcon as Target,
-  AwardIcon as Award,
+  StarFilledIcon as Award,
   ReaderIcon as Reader,
 } from '@radix-ui/react-icons';
 import { fetchTasks } from '../redux/slices/tasksSlice';
@@ -59,9 +58,7 @@ const TaskPortal: React.FC = () => {
     }
   }, [dispatch, user?.careerTrack]);
 
-  const tasks = tasksState.data || [];
-  const progress = progressState.data;
-  const tasksLoading = tasksState.loading;
+
   const progressLoading = progressState.loading;
 
   const getCategoryIcon = (category: string) => {
@@ -83,7 +80,7 @@ const TaskPortal: React.FC = () => {
       case 'deep-learning':
       case 'nlp':
       case 'computer-vision': return <LightningBoltIcon className="h-4 w-4 lg:h-5 lg:w-5" />;
-      default: return <BriefcaseIcon className="h-4 w-4 lg:h-5 lg:w-5" />;
+      default: return <Briefcase className="h-4 w-4 lg:h-5 lg:w-5" />;
     }
   };
 
@@ -110,27 +107,7 @@ const TaskPortal: React.FC = () => {
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'available': return 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400';
-      case 'in-progress': return 'bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400';
-      case 'submitted': return 'bg-purple-100 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400';
-      case 'completed': return 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400';
-      case 'locked': return 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-400';
-      default: return 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-400';
-    }
-  };
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'available': return <PlayIcon className="h-3 w-3 lg:h-4 lg:w-4" />;
-      case 'in-progress': return <ClockIcon className="h-3 w-3 lg:h-4 lg:w-4" />;
-      case 'submitted': return <UploadIcon className="h-3 w-3 lg:h-4 lg:w-4" />;
-      case 'completed': return <CheckCircledIcon className="h-3 w-3 lg:h-4 lg:w-4" />;
-      case 'locked': return <ExclamationTriangleIcon className="h-3 w-3 lg:h-4 lg:w-4" />;
-      default: return <ClockIcon className="h-3 w-3 lg:h-4 lg:w-4" />;
-    }
-  };
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
@@ -471,7 +448,7 @@ const TaskPortal: React.FC = () => {
                     </>
                   ) : task.status === 'submitted' ? (
                     <>
-                      <Eye className="h-3 w-3 lg:h-4 lg:w-4 mr-2" />
+                      <EyeOpenIcon className="h-3 w-3 lg:h-4 lg:w-4 mr-2" />
                       Review Feedback
                     </>
                   ) : task.status === 'in-progress' ? (
@@ -583,7 +560,7 @@ const TaskPortal: React.FC = () => {
                     <ul className="space-y-2">
                       {selectedTask.resources.map((resource: string, index: number) => (
                         <li key={index} className="flex items-start">
-                          <ReaderIcon className="h-4 w-4 text-purple-500 mr-2 mt-0.5 flex-shrink-0" />
+                          <Reader className="h-4 w-4 text-purple-500 mr-2 mt-0.5 flex-shrink-0" />
                           <span className="text-gray-700 dark:text-gray-300 text-sm">{resource}</span>
                         </li>
                       ))}

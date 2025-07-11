@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import apiService from '../services/api';
 
-interface Module {
+export interface Module {
   id: string;
   title: string;
   description: string;
@@ -23,10 +23,6 @@ export const useModules = (trackId?: string) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchModules();
-  }, [trackId, fetchModules]);
-
   const fetchModules = useCallback(async () => {
     try {
       setLoading(true);
@@ -45,6 +41,10 @@ export const useModules = (trackId?: string) => {
       setLoading(false);
     }
   }, [trackId]);
+
+  useEffect(() => {
+    fetchModules();
+  }, [trackId, fetchModules]);
 
   return {
     modules,

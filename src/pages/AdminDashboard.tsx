@@ -11,10 +11,14 @@ import {
   TrashIcon as Trash2,
   EnvelopeClosedIcon as Mail,
   MobileIcon as Phone,
-  PinIcon as Pin,
-  SaveIcon as Save,
   Cross1Icon as X,
-  EyeOpenIcon as Eye
+  EyeOpenIcon as Eye,
+  CheckCircledIcon,
+  ExclamationTriangleIcon,
+  CrossCircledIcon,
+  ClockIcon,
+  DownloadIcon,
+  PlusIcon
 } from '@radix-ui/react-icons';
 import { useStudents, useSubmissions } from '../hooks/useAdmin';
 import logo from '../assets/syncner-logo.png';
@@ -206,7 +210,7 @@ const AdminDashboard: React.FC = () => {
           onClick={exportData}
           className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center"
         >
-          <Download className="h-4 w-4 mr-2" />
+          <DownloadIcon className="h-4 w-4 mr-2" />
           Export CSV
         </button>
       </div>
@@ -286,7 +290,7 @@ const AdminDashboard: React.FC = () => {
                   <p className="text-3xl font-bold text-gray-900 dark:text-white">{analytics?.avgProgress || 0}%</p>
                 </div>
                 <div className="bg-orange-100 dark:bg-orange-900/20 p-3 rounded-lg">
-                  <AlertTriangle className="h-6 w-6 text-orange-600 dark:text-orange-400" />
+                  <ExclamationTriangleIcon className="h-6 w-6 text-orange-600 dark:text-orange-400" />
                 </div>
               </div>
             </div>
@@ -326,7 +330,7 @@ const AdminDashboard: React.FC = () => {
                 onClick={handleAddStudent}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center"
               >
-                <Plus className="h-4 w-4 mr-2" />
+                <PlusIcon className="h-4 w-4 mr-2" />
                 Add Student
               </button>
             </div>
@@ -627,7 +631,7 @@ const AdminDashboard: React.FC = () => {
                       onClick={handleSaveStudent}
                       className="flex-1 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center"
                     >
-                      <Save className="h-4 w-4 mr-2" />
+                      <FileText className="h-4 w-4 mr-2" />
                       {showAddStudent ? 'Add Student' : 'Save Changes'}
                     </button>
                     <button
@@ -658,7 +662,7 @@ const AdminDashboard: React.FC = () => {
                           {selectedStudent?.phone}
                         </div>
                         <div className="flex items-center text-gray-600 dark:text-gray-300">
-                          <PinIcon className="h-4 w-4 mr-2" />
+                          <FileText className="h-4 w-4 mr-2" />
                           {selectedStudent?.location}
                         </div>
                         <div className="flex items-center text-gray-600 dark:text-gray-300">
@@ -730,7 +734,7 @@ const AdminDashboard: React.FC = () => {
                       onClick={() => handleEditStudent(selectedStudent)}
                       className="flex-1 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center"
                     >
-                      <Pencil1Icon className="h-4 w-4 mr-2" />
+                      <Edit3 className="h-4 w-4 mr-2" />
                       Edit Student
                     </button>
                     <button

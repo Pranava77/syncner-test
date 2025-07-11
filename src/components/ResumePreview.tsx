@@ -1,6 +1,6 @@
 import React from 'react';
 import { ResumeData } from '../utils/pdfGenerator';
-import { EnvelopeClosedIcon, MobileIcon, PinIcon } from '@radix-ui/react-icons';
+import { EnvelopeClosedIcon, MobileIcon, GlobeIcon } from '@radix-ui/react-icons';
 
 interface ResumePreviewProps {
   resumeData: ResumeData;
@@ -140,7 +140,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ resumeData, template, sec
             {resumeData.personalInfo.phone}
           </div>
           <div className="flex items-center">
-            <PinIcon className="h-4 w-4 mr-2" />
+            <GlobeIcon className="h-4 w-4 mr-2" />
             {resumeData.personalInfo.location}
           </div>
         </div>

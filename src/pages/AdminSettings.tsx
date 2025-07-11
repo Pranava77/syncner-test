@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import {
   GearIcon as Settings,
   GroupIcon as Users,
   ReaderIcon as BookOpen,
-  BriefcaseIcon as Briefcase,
-  DatabaseIcon as Database,
-  SaveIcon,
+  FileTextIcon as Briefcase,
+  FileTextIcon as Database,
+  FileTextIcon as Save,
   PlusIcon as Plus,
   Pencil1Icon as Edit3,
   TrashIcon,
@@ -1080,7 +1081,7 @@ const AdminSettings: React.FC = () => {
                             className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded transition-colors"
                             title="Edit"
                           >
-                            <Pencil1Icon className="h-4 w-4" />
+                            <Edit3 className="h-4 w-4" />
                           </button>
                           <button
                             onClick={() => deleteStudent(user._id)}
@@ -1094,7 +1095,7 @@ const AdminSettings: React.FC = () => {
                             className={`px-2 py-1 rounded transition-colors ${user.isActive ? 'bg-gray-600 hover:bg-gray-700 text-white' : 'bg-green-600 hover:bg-green-700 text-white'}`}
                             title={user.isActive ? 'Deactivate' : 'Activate'}
                           >
-                            {user.isActive ? <ShieldIcon className="h-4 w-4" /> : <CheckCircledIcon className="h-4 w-4" />}
+                            {user.isActive ? <Users className="h-4 w-4" /> : <CheckCircledIcon className="h-4 w-4" />}
                           </button>
                         </td>
                       </tr>
@@ -1255,7 +1256,7 @@ const AdminSettings: React.FC = () => {
               </>
             ) : (
               <>
-                <SaveIcon className="h-4 w-4 mr-2" />
+                <Save className="h-4 w-4 mr-2" />
                 Save Settings
               </>
             )}
