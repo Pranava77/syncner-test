@@ -1081,21 +1081,21 @@ const AdminSettings: React.FC = () => {
                             className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded transition-colors"
                             title="Edit"
                           >
-                            <Edit3 className="h-4 w-4" />
+                            <Pencil1Icon className="h-4 w-4" />
                           </button>
                           <button
                             onClick={() => deleteStudent(user._id)}
                             className="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded transition-colors"
                             title="Delete"
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <TrashIcon className="h-4 w-4" />
                           </button>
                           <button
                             onClick={() => updateStudent(user._id, { ...user, isActive: !user.isActive })}
                             className={`px-2 py-1 rounded transition-colors ${user.isActive ? 'bg-gray-600 hover:bg-gray-700 text-white' : 'bg-green-600 hover:bg-green-700 text-white'}`}
                             title={user.isActive ? 'Deactivate' : 'Activate'}
                           >
-                            {user.isActive ? <Shield className="h-4 w-4" /> : <CheckCircle className="h-4 w-4" />}
+                            {user.isActive ? <ShieldCheckIcon className="h-4 w-4" /> : <CheckCircledIcon className="h-4 w-4" />}
                           </button>
                         </td>
                       </tr>

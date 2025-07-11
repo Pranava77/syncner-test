@@ -96,11 +96,11 @@ const AdminDiagnostics: React.FC = () => {
                   <td className="px-4 py-2">
                     {diag.healthy ? (
                       <span className="flex items-center gap-1 text-green-400 font-semibold">
-                        <CheckCircle className="h-4 w-4" /> Healthy
+                        <CheckCircledIcon className="h-4 w-4" /> Healthy
                       </span>
                     ) : (
                       <span className="flex items-center gap-1 text-red-400 font-semibold">
-                        <AlertTriangle className="h-4 w-4" /> Unhealthy
+                        <ExclamationTriangleIcon className="h-4 w-4" /> Unhealthy
                       </span>
                     )}
                   </td>

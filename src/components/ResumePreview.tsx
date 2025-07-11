@@ -140,7 +140,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ resumeData, template, sec
             {resumeData.personalInfo.phone}
           </div>
           <div className="flex items-center">
-            <MapPin className="h-4 w-4 mr-2" />
+            <PinIcon className="h-4 w-4 mr-2" />
             {resumeData.personalInfo.location}
           </div>
         </div>

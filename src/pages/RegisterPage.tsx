@@ -342,7 +342,7 @@ const RegisterPage: React.FC = () => {
                 />
                 {errors.college && (
                   <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                    <XCircle className="h-5 w-5 text-red-400" />
+                    <CrossCircledIcon className="h-5 w-5 text-red-400" />
                   </div>
                 )}
               </div>

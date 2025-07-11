@@ -406,7 +406,7 @@ const TaskWorkspace: React.FC<TaskWorkspaceProps> = ({ task, onClose, onSubmit }
                     disabled={isGeneratingFeedback || !submission.description.trim()}
                     className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center mx-auto"
                   >
-                    <Eye className="h-4 w-4 mr-2" />
+                    <EyeOpenIcon className="h-4 w-4 mr-2" />
                     Generate AI Feedback
                   </button>
                 </div>

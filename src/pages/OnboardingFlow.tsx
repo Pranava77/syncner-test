@@ -277,7 +277,7 @@ const OnboardingFlow: React.FC = () => {
                         : 'border-gray-300 dark:border-gray-600'
                     }`}>
                       {goals.includes(goal) && (
-                        <CheckCircle className="h-3 w-3 text-white" />
+                        <CheckCircledIcon className="h-3 w-3 text-white" />
                       )}
                     </div>
                     <span className="text-gray-900 dark:text-white font-medium">{goal}</span>

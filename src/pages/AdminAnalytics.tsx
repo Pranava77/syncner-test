@@ -395,7 +395,7 @@ const AdminAnalytics: React.FC = () => {
       <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl p-6">
         <div className="flex items-start space-x-4">
           <div className="bg-blue-100 dark:bg-blue-900/20 p-3 rounded-lg">
-            <BarChart3 className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+            <BarChartIcon className="h-6 w-6 text-blue-600 dark:text-blue-400" />
           </div>
           <div className="flex-1">
             <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Advanced Analytics</h3>

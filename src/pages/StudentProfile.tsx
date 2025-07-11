@@ -61,8 +61,8 @@ const StudentProfile: React.FC = () => {
         <div className="flex-1 bg-white dark:bg-gray-900 rounded-lg shadow p-6 mb-6 md:mb-0">
           <div className="flex items-center gap-4 mb-6">
             <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-3 rounded-full flex items-center justify-center">
-              <UserIcon className="h-8 w-8 text-white" />
-            </div>
+            <PersonIcon className="h-8 w-8 text-white" />
+          </div>
             <div>
               <h2 className="text-xl font-bold text-gray-900 dark:text-white">{profile.name}</h2>
               <p className="text-sm text-gray-500 dark:text-gray-400">{profile.email}</p>

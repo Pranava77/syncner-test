@@ -135,7 +135,7 @@ const StudentSubmissions: React.FC = () => {
                       return (
                         <li key={idx}>
                           <a href={fileUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 underline flex items-center gap-1">
-                            <FileText className="h-4 w-4" /> {fileName}
+                            <FileTextIcon className="h-4 w-4" /> {fileName}
                           </a>
                         </li>
                       );

@@ -455,7 +455,7 @@ const TrainingModule: React.FC = () => {
                 disabled={currentLesson === 0}
                 className="flex items-center px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                <ChevronLeft className="h-4 w-4 mr-1" />
+                <ChevronLeftIcon className="h-4 w-4 mr-1" />
                 Previous
               </button>
 
@@ -464,7 +464,7 @@ const TrainingModule: React.FC = () => {
                   {currentLesson + 1} of {module.lessons.length}
                 </div>
                 <div className="flex items-center text-yellow-600 dark:text-yellow-400">
-                  <Star className="h-4 w-4 mr-1" />
+                  <StarFilledIcon className="h-4 w-4 mr-1" />
                   <span className="text-sm font-medium">
                     {Math.round((completedLessons.size / module.lessons.length) * 100)} XP
                   </span>
@@ -477,7 +477,7 @@ const TrainingModule: React.FC = () => {
                 className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 Next
-                <ChevronRight className="h-4 w-4 ml-1" />
+                <ChevronRightIcon className="h-4 w-4 ml-1" />
               </button>
             </div>
           </div>

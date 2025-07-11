@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, Send, X, Bot, User, Minimize2, Maximize2, AlertCircle } from 'lucide-react';
+import { ChatBubbleIcon, PaperPlaneIcon, Cross1Icon, RobotIcon, PersonIcon, SizeIcon, ResetIcon, ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { chatWithAI } from '../redux/slices/geminiSlice';
 import apiService from '../services/api';
@@ -87,7 +87,7 @@ const AIChat: React.FC = () => {
         onClick={() => setIsOpen(true)}
         className="fixed bottom-4 right-4 lg:bottom-6 lg:right-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white p-3 lg:p-4 rounded-full shadow-lg hover:shadow-xl transition-all z-50 group"
       >
-        <MessageCircle className="h-5 w-5 lg:h-6 lg:w-6" />
+        <ChatBubbleIcon className="h-5 w-5 lg:h-6 lg:w-6" />
         <div className="absolute -top-1 -left-1 lg:-top-2 lg:-left-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 lg:h-5 lg:w-5 flex items-center justify-center animate-pulse">
           AI
         </div>
@@ -105,7 +105,7 @@ const AIChat: React.FC = () => {
       <div className="flex items-center justify-between p-3 lg:p-4 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center space-x-2 lg:space-x-3">
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-1.5 lg:p-2 rounded-full">
-            <Bot className="h-3 w-3 lg:h-4 lg:w-4 text-white" />
+            <RobotIcon className="h-3 w-3 lg:h-4 lg:w-4 text-white" />
           </div>
           <div>
             <h3 className="font-semibold text-gray-900 dark:text-white text-sm lg:text-base">AI Career Mentor</h3>
@@ -119,13 +119,13 @@ const AIChat: React.FC = () => {
             onClick={() => setIsMinimized(!isMinimized)}
             className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1"
           >
-            {isMinimized ? <Maximize2 className="h-3 w-3 lg:h-4 lg:w-4" /> : <Minimize2 className="h-3 w-3 lg:h-4 lg:w-4" />}
+            {isMinimized ? <SizeIcon className="h-3 w-3 lg:h-4 lg:w-4" /> : <ResetIcon className="h-3 w-3 lg:h-4 lg:w-4" />}
           </button>
           <button
             onClick={() => setIsOpen(false)}
             className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1"
           >
-            <X className="h-3 w-3 lg:h-4 lg:w-4" />
+            <Cross1Icon className="h-3 w-3 lg:h-4 lg:w-4" />
           </button>
         </div>
       </div>
@@ -136,7 +136,7 @@ const AIChat: React.FC = () => {
           {error && (
             <div className="bg-red-50 dark:bg-red-900/20 border-b border-red-200 dark:border-red-800 p-2 lg:p-3">
               <div className="flex items-center space-x-2">
-                <AlertCircle className="h-3 w-3 lg:h-4 lg:w-4 text-red-500 flex-shrink-0" />
+                <ExclamationTriangleIcon className="h-3 w-3 lg:h-4 lg:w-4 text-red-500 flex-shrink-0" />
                 <p className="text-xs lg:text-sm text-red-700 dark:text-red-400">{error}</p>
               </div>
             </div>
@@ -158,9 +158,9 @@ const AIChat: React.FC = () => {
                       : 'bg-gradient-to-r from-purple-600 to-pink-600'
                   }`}>
                     {message.sender === 'user' ? (
-                      <User className="h-2.5 w-2.5 lg:h-3 lg:w-3 text-white" />
+                      <PersonIcon className="h-2.5 w-2.5 lg:h-3 lg:w-3 text-white" />
                     ) : (
-                      <Bot className="h-2.5 w-2.5 lg:h-3 lg:w-3 text-white" />
+                      <RobotIcon className="h-2.5 w-2.5 lg:h-3 lg:w-3 text-white" />
                     )}
                   </div>
                   <div className={`p-2 lg:p-3 rounded-lg ${
@@ -182,7 +182,7 @@ const AIChat: React.FC = () => {
               <div className="flex justify-start">
                 <div className="flex items-center space-x-2">
                   <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-1.5 lg:p-2 rounded-full">
-                    <Bot className="h-2.5 w-2.5 lg:h-3 lg:w-3 text-white" />
+                    <RobotIcon className="h-2.5 w-2.5 lg:h-3 lg:w-3 text-white" />
                   </div>
                   <div className="bg-gray-100 dark:bg-gray-700 p-2 lg:p-3 rounded-lg">
                     <div className="flex space-x-1">
@@ -214,7 +214,7 @@ const AIChat: React.FC = () => {
                 disabled={!input.trim() || isLoading}
                 className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-1.5 lg:p-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <Send className="h-3 w-3 lg:h-4 lg:w-4" />
+                <PaperPlaneIcon className="h-3 w-3 lg:h-4 lg:w-4" />
               </button>
             </div>
           </div>

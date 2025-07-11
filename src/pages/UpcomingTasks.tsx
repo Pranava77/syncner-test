@@ -206,7 +206,7 @@ const UpcomingTasks: React.FC = () => {
                 disabled={isSubmitting}
                 className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 font-semibold flex items-center justify-center mt-2 transition"
               >
-                <span className="flex items-center"><Send className="h-4 w-4 mr-2" />Submit Task</span>
+                <span className="flex items-center"><PaperPlaneIcon className="h-4 w-4 mr-2" />Submit Task</span>
               </button>
             </form>
           </div>

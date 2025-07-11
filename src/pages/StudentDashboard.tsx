@@ -368,21 +368,21 @@ const StudentDashboard: React.FC = () => {
                 to="/student/training/current"
                 className="flex items-center space-x-3 p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
-                <BookOpen className="h-4 w-4 lg:h-5 lg:w-5 text-blue-600 dark:text-blue-400" />
+                <BookOpenIcon className="h-4 w-4 lg:h-5 lg:w-5 text-blue-600 dark:text-blue-400" />
                 <span className="font-medium text-gray-900 dark:text-white text-sm lg:text-base">Continue Learning</span>
               </Link>
               <Link
                 to="/student/tasks"
                 className="flex items-center space-x-3 p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
-                <Briefcase className="h-4 w-4 lg:h-5 lg:w-5 text-emerald-600 dark:text-emerald-400" />
+                <BackpackIcon className="h-4 w-4 lg:h-5 lg:w-5 text-emerald-600 dark:text-emerald-400" />
                 <span className="font-medium text-gray-900 dark:text-white text-sm lg:text-base">View Tasks</span>
               </Link>
               <Link
                 to="/student/resume"
                 className="flex items-center space-x-3 p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
-                <Trophy className="h-4 w-4 lg:h-5 lg:w-5 text-purple-600 dark:text-purple-400" />
+                <StarIcon className="h-4 w-4 lg:h-5 lg:w-5 text-purple-600 dark:text-purple-400" />
                 <span className="font-medium text-gray-900 dark:text-white text-sm lg:text-base">Generate Resume</span>
               </Link>
             </div>

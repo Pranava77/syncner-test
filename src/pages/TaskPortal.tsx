@@ -583,7 +583,7 @@ const TaskPortal: React.FC = () => {
                     <ul className="space-y-2">
                       {selectedTask.resources.map((resource: string, index: number) => (
                         <li key={index} className="flex items-start">
-                          <BookOpen className="h-4 w-4 text-purple-500 mr-2 mt-0.5 flex-shrink-0" />
+                          <BookOpenIcon className="h-4 w-4 text-purple-500 mr-2 mt-0.5 flex-shrink-0" />
                           <span className="text-gray-700 dark:text-gray-300 text-sm">{resource}</span>
                         </li>
                       ))}

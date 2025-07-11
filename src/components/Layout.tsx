@@ -233,7 +233,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             disabled={isLoggingOut}
             className="flex items-center w-full px-3 py-3 text-base text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-1"
           >
-            <LogOut className="h-5 w-5 mr-3" />
+            <ExitIcon className="h-5 w-5 mr-3" />
             Sign Out
           </button>
         </div>

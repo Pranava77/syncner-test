@@ -372,7 +372,7 @@ const TaskReview: React.FC<TaskReviewProps> = ({ submissions = [], onReview }) =
                                 rel="noopener noreferrer"
                                 className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm flex items-center"
                               >
-                                <Download className="h-4 w-4 mr-1" /> Download
+                                <DownloadIcon className="h-4 w-4 mr-1" /> Download
                               </a>
                             </div>
                           );
