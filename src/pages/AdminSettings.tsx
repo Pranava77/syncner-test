@@ -388,7 +388,7 @@ const AdminSettings: React.FC = () => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 transition-colors duration-200
                   ${activeTab === tab.id
-                    ? 'border-true-turquoise text-true-turquoise bg-paperwhite/10 rounded-t'
+                    ? 'border-true-turquoise text-paperwhite bg-paperwhite/10 rounded-t'
                     : 'border-transparent text-teallight hover:text-paperwhite hover:border-teallight'}`}
               >
                 <Icon className="h-4 w-4" />
