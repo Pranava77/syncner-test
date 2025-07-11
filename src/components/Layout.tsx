@@ -73,6 +73,7 @@ const Layout: React.FC = () => {
         <div className="p-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center space-x-3">
             <img src={logo} alt="Syncner Logo" className="h-10 w-10 object-contain" />
+            <span className="text-paperwhite font-bold text-lg">Syncner</span>
           </div>
         </div>
 
@@ -104,7 +105,7 @@ const Layout: React.FC = () => {
             tabIndex={0}
             aria-label="View profile"
           >
-            <div className="bg-trueturquoise p-2 rounded-full flex items-center justify-center">
+            <div className="bg-trueturquoise p-2 rounded-lg flex items-center justify-center">
               <span className="text-offblack text-base font-bold">
                 {user?.name?.charAt(0) || 'U'}
               </span>
