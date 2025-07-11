@@ -47,19 +47,24 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   // Student access enforcement
   if (user.role === 'student') {
+    console.log('ProtectedRoute: User is student.');
     if (!user.profileComplete) {
+      console.log('ProtectedRoute: Student profile incomplete. Redirecting to onboarding if not already there.');
       // Only allow onboarding
       if (currentPath !== '/onboarding') {
         return <Navigate to="/onboarding" replace />;
       }
       return <>{children}</>;
     } else {
+      console.log('ProtectedRoute: Student profile complete.');
       // Profile complete: block onboarding
       if (currentPath === '/onboarding') {
+        console.log('ProtectedRoute: Student trying to access onboarding. Redirecting to student dashboard.');
         return <Navigate to="/student/dashboard" replace />;
       }
       // Block admin routes for students
       if (currentPath.startsWith('/admin')) {
+        console.log('ProtectedRoute: Student trying to access admin route. Redirecting to student dashboard.');
         return <Navigate to="/student/dashboard" replace />;
       }
       return <>{children}</>;

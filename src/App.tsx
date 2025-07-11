@@ -50,6 +50,17 @@ function App() {
   }, [dispatch]); // Only run once on mount
 
   useEffect(() => {
+    console.log('App.tsx Auth State:', {
+      isAuthenticated,
+      user,
+      isLoading,
+      isRestoringSession,
+      userRole: user?.role,
+      profileComplete: user?.profileComplete
+    });
+  }, [isAuthenticated, user, isLoading, isRestoringSession]);
+
+  useEffect(() => {
     // Apply theme on mount and whenever isDarkMode changes
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
