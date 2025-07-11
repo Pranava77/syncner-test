@@ -178,7 +178,7 @@ const TaskPortal: React.FC = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="space-y-6 lg:space-y-8 p-4 lg:p-8 bg-black">
       {/* Overdue Tasks Section */}
       {overdueTasks.length > 0 && (
         <div className="mb-8 p-4 bg-rust/10 border-l-4 border-rust rounded-xl shadow-sm">
