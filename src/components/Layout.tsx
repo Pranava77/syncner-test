@@ -96,31 +96,31 @@ const Layout: React.FC = () => {
           })}
         </nav>
 
-        <div className="p-6 border-t border-gray-200 dark:border-gray-700">
+        <div className="p-6 border-t border-trueturquoise">
           {/* Unified Profile Section - clickable */}
           <Link
             to={user?.role === 'admin' ? '/admin/profile' : '/profile'}
-            className="flex items-center gap-3 w-full px-3 py-3 mb-2 rounded-lg transition-colors bg-gradient-to-r from-blue-50/80 to-purple-50/80 dark:from-blue-900/30 dark:to-purple-900/30 hover:bg-blue-100 dark:hover:bg-blue-800/60 focus:outline-none focus:ring-2 focus:ring-blue-400 group"
+            className="flex items-center gap-3 w-full px-3 py-3 mb-2 rounded-lg transition-colors bg-paperwhite/10 hover:bg-trueturquoise/10 focus:outline-none focus:ring-2 focus:ring-trueturquoise group"
             tabIndex={0}
             aria-label="View profile"
           >
-            <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 rounded-full flex items-center justify-center">
-              <span className="text-white text-base font-bold">
+            <div className="bg-trueturquoise p-2 rounded-full flex items-center justify-center">
+              <span className="text-offblack text-base font-bold">
                 {user?.name?.charAt(0) || 'U'}
               </span>
             </div>
             <div className="flex flex-col flex-1 min-w-0">
-              <span className="text-sm font-semibold text-gray-900 dark:text-white truncate">{user?.name}</span>
-              <span className="text-xs text-gray-600 dark:text-gray-400 capitalize truncate">{user?.role}</span>
+              <span className="text-sm font-semibold text-paperwhite truncate">{user?.name}</span>
+              <span className="text-xs text-teallight capitalize truncate">{user?.role}</span>
             </div>
-            <PersonIcon className="h-5 w-5 text-blue-500 dark:text-blue-400 opacity-80 group-hover:scale-110 transition-transform" />
+            <PersonIcon className="h-5 w-5 text-trueturquoise opacity-80 group-hover:scale-110 transition-transform" />
           </Link>
           <button
             onClick={handleLogout}
             disabled={isLoggingOut}
-            className="flex items-center w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-1"
+            className="flex items-center w-full px-3 py-2 text-sm text-paperwhite hover:bg-trueturquoise/10 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-1"
           >
-            <ExitIcon className="h-4 w-4 mr-2" />
+            <ExitIcon className="h-4 w-4 mr-2 text-trueturquoise" />
             Sign Out
           </button>
         </div>

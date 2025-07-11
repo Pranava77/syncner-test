@@ -107,37 +107,37 @@ const StudentDashboard: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6 lg:space-y-8">
+    <div className="space-y-6 lg:space-y-8 p-4 lg:p-8 bg-offblack">
       {/* Welcome Section */}
-      <div className={`bg-gradient-to-r ${getTrackColor()} rounded-xl p-6 lg:p-8 text-white`}>
+      <div className={`bg-trueturquoise/10 rounded-xl p-6 lg:p-8 text-paperwhite`}>
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
           <div className="flex-1 mb-6 lg:mb-0">
-            <h1 className="text-2xl lg:text-3xl font-bold mb-2">
+            <h1 className="text-2xl lg:text-3xl font-bold mb-2 text-paperwhite">
               Welcome back, {user?.name}! 👋
             </h1>
-            <p className="text-blue-100 mb-4 lg:mb-6 text-sm lg:text-base">
+            <p className="text-teallight mb-4 lg:mb-6 text-sm lg:text-base">
               You're on the {userTrack} track. Let's continue building your career!
             </p>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
               <div className="text-center">
-                <div className="text-xl lg:text-2xl font-bold">{progress?.completedModulesCount || 0}</div>
-                <div className="text-blue-100 text-xs lg:text-sm">Modules Complete</div>
+                <div className="text-xl lg:text-2xl font-bold text-paperwhite">{progress?.completedModulesCount || 0}</div>
+                <div className="text-teallight text-xs lg:text-sm">Modules Complete</div>
               </div>
               <div className="text-center">
-                <div className="text-xl lg:text-2xl font-bold">{progress?.completedTasksCount || 0}</div>
-                <div className="text-blue-100 text-xs lg:text-sm">Tasks Done</div>
+                <div className="text-xl lg:text-2xl font-bold text-paperwhite">{progress?.completedTasksCount || 0}</div>
+                <div className="text-teallight text-xs lg:text-sm">Tasks Done</div>
               </div>
               <div className="text-center">
-                <div className="text-xl lg:text-2xl font-bold">{progress?.streakDays || 0}</div>
-                <div className="text-blue-100 text-xs lg:text-sm">Day Streak</div>
+                <div className="text-xl lg:text-2xl font-bold text-paperwhite">{progress?.streakDays || 0}</div>
+                <div className="text-teallight text-xs lg:text-sm">Day Streak</div>
               </div>
               <div className="text-center">
-                <div className="text-xl lg:text-2xl font-bold">{progress?.totalPoints || 0}</div>
-                <div className="text-blue-100 text-xs lg:text-sm">Total Points</div>
+                <div className="text-xl lg:text-2xl font-bold text-paperwhite">{progress?.totalPoints || 0}</div>
+                <div className="text-teallight text-xs lg:text-sm">Total Points</div>
               </div>
             </div>
           </div>
-          <div className="bg-white/20 p-3 lg:p-4 rounded-lg w-fit mx-auto lg:mx-0">
+          <div className="bg-paperwhite/10 p-3 lg:p-4 rounded-lg w-fit mx-auto lg:mx-0">
             {getTrackIcon()}
           </div>
         </div>
@@ -148,50 +148,50 @@ const StudentDashboard: React.FC = () => {
         <div className="lg:col-span-2 space-y-6">
           {/* Current Learning */}
           {currentModule && (
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 lg:p-6">
+            <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg lg:text-xl font-semibold text-gray-900 dark:text-white">Continue Learning</h2>
-                <span className="bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-2 lg:px-3 py-1 rounded-full text-xs lg:text-sm font-medium">
+                <h2 className="text-lg lg:text-xl font-semibold text-paperwhite">Continue Learning</h2>
+                <span className="bg-trueturquoise/20 text-trueturquoise px-2 lg:px-3 py-1 rounded-full text-xs lg:text-sm font-medium">
                   {currentModule.status === 'in-progress' ? 'In Progress' : 'Available'}
                 </span>
               </div>
               
-              <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg p-4 lg:p-6">
+              <div className="bg-paperwhite/10 rounded-lg p-4 lg:p-6">
                 <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-4">
                   <div className="mb-4 lg:mb-0">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                    <h3 className="text-lg font-semibold text-paperwhite mb-1">
                       {currentModule.title}
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-300 text-sm lg:text-base">{currentModule.description}</p>
+                    <p className="text-teallight text-sm lg:text-base">{currentModule.description}</p>
                   </div>
-                  <div className="bg-white dark:bg-gray-700 p-2 rounded-lg w-fit">
-                    <BookOpen className="h-5 w-5 lg:h-6 lg:w-6 text-blue-600 dark:text-blue-400" />
+                  <div className="bg-trueturquoise/10 p-2 rounded-lg w-fit">
+                    <BookOpen className="h-5 w-5 lg:h-6 lg:w-6 text-trueturquoise" />
                   </div>
                 </div>
                 
                 <div className="mb-4">
-                  <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-1">
+                  <div className="flex justify-between text-sm text-teallight mb-1">
                     <span>Progress</span>
                     <span>{currentModule.progress || 0}%</span>
                   </div>
-                  <div className="w-full bg-white dark:bg-gray-600 rounded-full h-2">
+                  <div className="w-full bg-paperwhite/20 rounded-full h-2">
                     <div 
-                      className="bg-gradient-to-r from-blue-600 to-purple-600 h-2 rounded-full transition-all"
+                      className="bg-trueturquoise h-2 rounded-full transition-all"
                       style={{ width: `${currentModule.progress || 0}%` }}
                     ></div>
                   </div>
                 </div>
                 
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                  <div className="flex items-center text-gray-600 dark:text-gray-400 text-sm">
-                    <Clock className="h-4 w-4 mr-1" />
+                  <div className="flex items-center text-teallight text-sm">
+                    <Clock className="h-4 w-4 mr-1 text-trueturquoise" />
                     {currentModule.duration}
                   </div>
                   <Link
                     to={`/student/training/${currentModule.id}`}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center w-full sm:w-auto"
+                    className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-teallight transition-colors font-medium flex items-center justify-center w-full sm:w-auto"
                   >
-                    <Play className="h-4 w-4 mr-2" />
+                    <Play className="h-4 w-4 mr-2 text-offblack" />
                     Continue
                   </Link>
                 </div>
@@ -201,12 +201,12 @@ const StudentDashboard: React.FC = () => {
 
           {/* Career Track Overview */}
           {user && (
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 lg:p-6">
+            <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
               <div className="flex items-center justify-between mb-4 lg:mb-6">
-                <h2 className="text-lg lg:text-xl font-semibold text-gray-900 dark:text-white">Your Career Track</h2>
+                <h2 className="text-lg lg:text-xl font-semibold text-paperwhite">Your Career Track</h2>
                 <Link 
                   to="/student/training/current"
-                  className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium flex items-center text-sm lg:text-base"
+                  className="text-trueturquoise dark:text-trueturquoise/50 hover:text-teallight dark:hover:text-trueturquoise transition-colors font-medium flex items-center text-sm lg:text-base"
                 >
                   View All Modules
                   <ArrowRight className="h-3 w-3 lg:h-4 lg:w-4 ml-1" />
@@ -214,10 +214,10 @@ const StudentDashboard: React.FC = () => {
               </div>
               
               <div className="grid lg:grid-cols-2 gap-4">
-                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-900 dark:text-white mb-2">{userTrack}</h3>
-                  <p className="text-gray-600 dark:text-gray-300 text-sm mb-3">This is a static description. The actual description should be fetched from the database.</p>
-                  <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                <div className="bg-paperwhite/10 dark:bg-offblack rounded-lg p-4">
+                  <h3 className="font-semibold text-paperwhite mb-2">{userTrack}</h3>
+                  <p className="text-teallight text-sm mb-3">This is a static description. The actual description should be fetched from the database.</p>
+                  <div className="flex items-center text-sm text-teallight">
                     <Clock className="h-4 w-4 mr-1" />
                     {/* Assuming a default duration */}
                     12 weeks
@@ -226,15 +226,15 @@ const StudentDashboard: React.FC = () => {
                 
                 <div className="space-y-3">
                   <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Average Salary</p>
-                    <p className="font-semibold text-gray-900 dark:text-white">This should be fetched from the database</p>
+                    <p className="text-sm text-teallight">Average Salary</p>
+                    <p className="font-semibold text-paperwhite">This should be fetched from the database</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Career Paths</p>
+                    <p className="text-sm text-teallight">Career Paths</p>
                     <div className="flex flex-wrap gap-1 mt-1">
                       {/* Assuming a default career paths array */}
                       {['Path 1', 'Path 2'].slice(0, 3).map((path: string, index: number) => (
-                        <span key={index} className="bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 px-2 py-1 rounded text-xs">
+                        <span key={index} className="bg-trueturquoise/10 dark:bg-trueturquoise/90 text-trueturquoise dark:text-trueturquoise/50 px-2 py-1 rounded text-xs">
                           {path}
                         </span>
                       ))}
@@ -246,12 +246,12 @@ const StudentDashboard: React.FC = () => {
           )}
 
           {/* Upcoming Tasks */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 lg:p-6">
+          <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
             <div className="flex items-center justify-between mb-4 lg:mb-6">
-              <h2 className="text-lg lg:text-xl font-semibold text-gray-900 dark:text-white">Upcoming Tasks</h2>
+              <h2 className="text-lg lg:text-xl font-semibold text-paperwhite">Upcoming Tasks</h2>
               <Link 
                 to="/student/tasks"
-                className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium flex items-center text-sm lg:text-base"
+                className="text-trueturquoise dark:text-trueturquoise/50 hover:text-teallight dark:hover:text-trueturquoise transition-colors font-medium flex items-center text-sm lg:text-base"
               >
                 View All
                 <ArrowRight className="h-3 w-3 lg:h-4 lg:w-4 ml-1" />
@@ -260,21 +260,21 @@ const StudentDashboard: React.FC = () => {
             
             <div className="space-y-4">
               {upcomingTasks.map((task: any, index: number) => (
-                <div key={task.id} className="border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:shadow-md transition-shadow">
+                <div key={task.id} className="border border-paperwhite/20 dark:border-offblack rounded-lg p-4 hover:shadow-md transition-shadow">
                   <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-2">
                     <div className="mb-2 lg:mb-0">
-                      <h3 className="font-semibold text-gray-900 dark:text-white">{task.title}</h3>
+                      <h3 className="font-semibold text-paperwhite">{task.title}</h3>
                       <div className="flex flex-wrap items-center gap-2 lg:gap-4 mt-1">
                         <span className={`px-2 py-1 rounded text-xs font-medium ${getDifficultyColor(task.difficulty)}`}>
                           {task.difficulty}
                         </span>
                         {task.dueDate && (
-                          <span className="text-gray-500 dark:text-gray-400 text-sm">Due {new Date(task.dueDate).toLocaleDateString()}</span>
+                          <span className="text-teallight text-sm">Due {new Date(task.dueDate).toLocaleDateString()}</span>
                         )}
                       </div>
                     </div>
                     <div className="text-left lg:text-right">
-                      <div className="flex items-center text-purple-600 dark:text-purple-400 font-medium">
+                      <div className="flex items-center text-trueturquoise font-medium">
                         <Star className="h-4 w-4 mr-1" />
                         {task.points}
                       </div>
@@ -289,16 +289,16 @@ const StudentDashboard: React.FC = () => {
         {/* Sidebar */}
         <div className="space-y-6">
           {/* AI Helper */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 lg:p-6">
+          <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
             <div className="text-center">
-              <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-3 rounded-full w-fit mx-auto mb-4">
-                <Brain className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
+              <div className="bg-trueturquoise/10 p-3 rounded-full w-fit mx-auto mb-4">
+                <Brain className="h-5 w-5 lg:h-6 lg:w-6 text-paperwhite" />
               </div>
-              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Need Help?</h3>
-              <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">
+              <h3 className="font-semibold text-paperwhite mb-2">Need Help?</h3>
+              <p className="text-teallight text-sm mb-4">
                 Ask our AI assistant for personalized guidance
               </p>
-              <button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all font-medium flex items-center justify-center">
+              <button className="w-full bg-trueturquoise text-offblack py-2 rounded-lg hover:bg-teallight transition-all font-medium flex items-center justify-center">
                 <MessageCircle className="h-4 w-4 mr-2" />
                 Chat with AI
               </button>
@@ -306,45 +306,45 @@ const StudentDashboard: React.FC = () => {
           </div>
 
           {/* Progress Stats */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 lg:p-6">
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Your Progress</h3>
+          <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
+            <h3 className="font-semibold text-paperwhite mb-4">Your Progress</h3>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-gray-600 dark:text-gray-300 text-sm lg:text-base">Overall Progress</span>
-                <span className="font-semibold text-gray-900 dark:text-white">{progress?.overallProgress || 0}%</span>
+                <span className="text-teallight text-sm lg:text-base">Overall Progress</span>
+                <span className="font-semibold text-paperwhite">{progress?.overallProgress || 0}%</span>
               </div>
-              <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+              <div className="w-full bg-paperwhite/20 rounded-full h-2">
                 <div 
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 h-2 rounded-full transition-all"
+                  className="bg-trueturquoise h-2 rounded-full transition-all"
                   style={{ width: `${progress?.overallProgress || 0}%` }}
                 ></div>
               </div>
               
               <div className="grid grid-cols-2 gap-4 pt-4">
                 <div className="text-center">
-                  <div className="text-lg font-bold text-blue-600 dark:text-blue-400">{modules.length}</div>
-                  <div className="text-xs text-gray-600 dark:text-gray-400">Total Modules</div>
+                  <div className="text-lg font-bold text-trueturquoise">{modules.length}</div>
+                  <div className="text-xs text-teallight">Total Modules</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-lg font-bold text-green-600 dark:text-green-400">{progress?.completedModulesCount || 0}</div>
-                  <div className="text-xs text-gray-600 dark:text-gray-400">Completed</div>
+                  <div className="text-lg font-bold text-trueturquoise">{progress?.completedModulesCount || 0}</div>
+                  <div className="text-xs text-teallight">Completed</div>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Achievements */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 lg:p-6">
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Achievements</h3>
+          <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
+            <h3 className="font-semibold text-paperwhite mb-4">Achievements</h3>
             <div className="space-y-3">
               {achievements.map((achievement, index) => (
                 <div key={index} className={`flex items-center space-x-3 p-3 rounded-lg ${
-                  achievement.earned ? 'bg-green-50 dark:bg-green-900/20' : 'bg-gray-50 dark:bg-gray-700'
+                  achievement.earned ? 'bg-green-50 dark:bg-green-900/20' : 'bg-paperwhite/10 dark:bg-offblack'
                 }`}>
                   <span className="text-xl lg:text-2xl">{achievement.icon}</span>
                   <div className="flex-1">
                     <p className={`font-medium text-sm lg:text-base ${
-                      achievement.earned ? 'text-green-900 dark:text-green-300' : 'text-gray-500 dark:text-gray-400'
+                      achievement.earned ? 'text-green-900 dark:text-green-300' : 'text-teallight dark:text-trueturquoise/50'
                     }`}>
                       {achievement.title}
                     </p>
@@ -358,22 +358,22 @@ const StudentDashboard: React.FC = () => {
           </div>
 
           {/* Quick Actions */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 lg:p-6">
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h3>
+          <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
+            <h3 className="font-semibold text-paperwhite mb-4">Quick Actions</h3>
             <div className="space-y-3">
               <Link
                 to="/student/training/current"
-                className="flex items-center space-x-3 p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                className="flex items-center space-x-3 p-3 border border-paperwhite/20 dark:border-offblack rounded-lg hover:bg-paperwhite/20 dark:hover:bg-offblack transition-colors"
               >
-                <BookOpen className="h-4 w-4 lg:h-5 lg:w-5 text-blue-600 dark:text-blue-400" />
-                <span className="font-medium text-gray-900 dark:text-white text-sm lg:text-base">Continue Learning</span>
+                <BookOpen className="h-4 w-4 lg:h-5 lg:w-5 text-trueturquoise" />
+                <span className="font-medium text-paperwhite text-sm lg:text-base">Continue Learning</span>
               </Link>
               <Link
                 to="/student/tasks"
-                className="flex items-center space-x-3 p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                className="flex items-center space-x-3 p-3 border border-paperwhite/20 dark:border-offblack rounded-lg hover:bg-paperwhite/20 dark:hover:bg-offblack transition-colors"
               >
-                <Code className="h-4 w-4 lg:h-5 lg:w-5 text-emerald-600 dark:text-emerald-400" />
-                <span className="font-medium text-gray-900 dark:text-white text-sm lg:text-base">View Tasks</span>
+                <Code className="h-4 w-4 lg:h-5 lg:w-5 text-trueturquoise" />
+                <span className="font-medium text-paperwhite text-sm lg:text-base">View Tasks</span>
               </Link>
             </div>
           </div>

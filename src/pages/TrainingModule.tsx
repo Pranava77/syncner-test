@@ -131,7 +131,7 @@ const TrainingModule: React.FC = () => {
 
   if (!module) {
     return (
-      <div className="max-w-6xl mx-auto">
+      <div className="space-y-6 lg:space-y-8 p-4 lg:p-8 bg-offblack">
         <div className="text-center py-12">
           <ReaderIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Module Not Found</h3>
@@ -149,7 +149,7 @@ const TrainingModule: React.FC = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto bg-offblack min-h-screen">
       {/* Header */}
       <div className="mb-8">
         <Link
@@ -160,19 +160,17 @@ const TrainingModule: React.FC = () => {
           Back to Dashboard
         </Link>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8">
+        <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-8">
           <div className="flex items-start justify-between mb-6">
             <div>
               <div className="flex items-center space-x-3 mb-3">
-                <span className={`px-3 py-1 rounded-full text-sm font-medium ${getDifficultyColor(module.difficulty)}`}>
-                  {module.difficulty}
-                </span>
-                <span className="text-gray-500 dark:text-gray-400">•</span>
-                <span className="text-gray-600 dark:text-gray-300">{track?.name}</span>
+                <span className="px-3 py-1 rounded-full text-sm font-medium bg-trueturquoise/20 text-trueturquoise">{module.difficulty}</span>
+                <span className="text-teallight">•</span>
+                <span className="text-teallight">{track?.name}</span>
               </div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">{module.title}</h1>
-              <p className="text-gray-600 dark:text-gray-300 mb-4">{module.description}</p>
-              <div className="flex items-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
+              <h1 className="text-3xl font-bold text-paperwhite mb-2">{module.title}</h1>
+              <p className="text-teallight mb-4">{module.description}</p>
+              <div className="flex items-center space-x-6 text-sm text-teallight">
                 <div className="flex items-center">
                   <ClockIcon className="h-4 w-4 mr-1" />
                   {module.duration}
@@ -188,12 +186,12 @@ const TrainingModule: React.FC = () => {
               </div>
             </div>
             <div className="text-right">
-              <div className="bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 px-3 py-1 rounded-full text-sm font-medium mb-2">
+              <div className="bg-trueturquoise/10 text-trueturquoise px-3 py-1 rounded-full text-sm font-medium mb-2">
                 {progress}% Complete
               </div>
-              <div className="w-32 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+              <div className="w-32 bg-paperwhite/20 rounded-full h-2">
                 <div
-                  className="bg-blue-600 h-2 rounded-full transition-all"
+                  className="bg-trueturquoise h-2 rounded-full transition-all"
                   style={{ width: `${progress}%` }}
                 ></div>
               </div>
@@ -202,10 +200,10 @@ const TrainingModule: React.FC = () => {
 
           {/* Skills */}
           <div>
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-3">Skills You'll Learn</h3>
+            <h3 className="font-semibold text-paperwhite mb-3">Skills You'll Learn</h3>
             <div className="flex flex-wrap gap-2">
-              {module.skills.map((skill) => (
-                <span key={skill} className="bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 px-3 py-1 rounded-full text-sm">
+              {module.skills.map((skill: string) => (
+                <span key={skill} className="bg-trueturquoise/10 text-trueturquoise px-3 py-1 rounded-full text-sm">
                   {skill}
                 </span>
               ))}
@@ -217,10 +215,10 @@ const TrainingModule: React.FC = () => {
       <div className="grid lg:grid-cols-4 gap-8">
         {/* Lesson List */}
         <div className="lg:col-span-1">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 sticky top-8">
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Lessons</h3>
+          <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-6 sticky top-8">
+            <h3 className="font-semibold text-paperwhite mb-4">Lessons</h3>
             <div className="space-y-2">
-              {module.lessons.map((lesson, index) => (
+              {module.lessons.map((lesson: any, index: number) => (
                 <button
                   key={lesson.id}
                   onClick={() => {
@@ -229,17 +227,17 @@ const TrainingModule: React.FC = () => {
                   }}
                   className={`w-full text-left p-3 rounded-lg transition-colors ${
                     index === currentLesson
-                      ? 'bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800'
-                      : 'hover:bg-gray-50 dark:hover:bg-gray-700'
+                      ? 'bg-trueturquoise/10 border border-trueturquoise'
+                      : 'hover:bg-paperwhite/10'
                   }`}
                 >
                   <div className="flex items-start space-x-3">
                     <div className={`mt-1 ${
                       completedLessons.has(lesson.id)
-                        ? 'text-green-500'
+                        ? 'text-trueturquoise'
                         : index === currentLesson
-                        ? 'text-blue-500'
-                        : 'text-gray-400'
+                        ? 'text-trueturquoise'
+                        : 'text-teallight'
                     }`}>
                       {completedLessons.has(lesson.id) ? (
                         <CheckCircledIcon className="h-4 w-4" />
@@ -253,18 +251,18 @@ const TrainingModule: React.FC = () => {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className={`text-sm font-medium ${
-                        index === currentLesson ? 'text-blue-900 dark:text-blue-300' : 'text-gray-900 dark:text-white'
+                        index === currentLesson ? 'text-trueturquoise' : 'text-paperwhite'
                       }`}>
                         {lesson.title}
                       </p>
                       <div className="flex items-center space-x-2 mt-1">
-                        <p className="text-xs text-gray-500 dark:text-gray-400">{lesson.duration}</p>
-                        <span className="text-xs text-gray-400">•</span>
+                        <p className="text-xs text-teallight">{lesson.duration}</p>
+                        <span className="text-xs text-teallight">•</span>
                         <span className={`text-xs px-2 py-0.5 rounded ${
-                          lesson.type === 'video' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400' :
-                          lesson.type === 'quiz' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400' :
-                          lesson.type === 'project' ? 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400' :
-                          'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-400'
+                          lesson.type === 'video' ? 'bg-trueturquoise/10 text-trueturquoise' :
+                          lesson.type === 'quiz' ? 'bg-rust/10 text-rust' :
+                          lesson.type === 'project' ? 'bg-teallight/10 text-teallight' :
+                          'bg-paperwhite/10 text-paperwhite'
                         }`}>
                           {lesson.type}
                         </span>
@@ -277,13 +275,13 @@ const TrainingModule: React.FC = () => {
 
             {/* Prerequisites */}
             {module.prerequisites && module.prerequisites.length > 0 && (
-              <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-600">
-                <h4 className="font-medium text-gray-900 dark:text-white mb-3">Prerequisites</h4>
+              <div className="mt-6 pt-6 border-t border-trueturquoise">
+                <h4 className="font-medium text-paperwhite mb-3">Prerequisites</h4>
                 <div className="space-y-2">
-                  {module.prerequisites.map((prereq) => (
-                    <div key={prereq} className="flex items-center text-sm text-gray-600 dark:text-gray-300">
+                  {module.prerequisites.map((prereq: string) => (
+                    <div key={prereq} className="flex items-center text-sm text-teallight">
                       <LockClosedIcon className="h-3 w-3 mr-2" />
-                      {prereq.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                      {prereq.replace('-', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
                     </div>
                   ))}
                 </div>
@@ -408,7 +406,7 @@ const TrainingModule: React.FC = () => {
                       {quiz.question}
                     </h3>
                     <div className="space-y-3">
-                      {quiz.options.map((option, index) => (
+                      {quiz.options.map((option: string, index: number) => (
                         <label
                           key={index}
                           className="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-white dark:hover:bg-gray-600 transition-colors"
