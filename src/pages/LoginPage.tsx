@@ -19,13 +19,6 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isAuthenticated && user) {
-      const redirectPath = getDefaultRoute(user);
-      navigate(redirectPath, { replace: true });
-    }
-  }, [isAuthenticated, user, navigate]);
-
-  useEffect(() => {
     // Clear any previous errors when component mounts
     dispatch(clearError());
   }, [dispatch]);
@@ -40,15 +33,7 @@ const LoginPage: React.FC = () => {
       password: password
     }));
 
-    console.log('Login result:', result);
-
-    if (loginUser.fulfilled.match(result) && result.payload && result.payload.user) {
-      const { user: loggedInUser } = result.payload;
-      const redirectPath = getDefaultRoute(loggedInUser);
-      navigate(redirectPath, { replace: true });
-    } else if (loginUser.rejected.match(result)) {
-      // Optionally show an error message (already handled by Redux)
-    }
+    // No redirect here; App.tsx will handle it
   };
 
   if (isLoading) {
