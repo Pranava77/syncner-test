@@ -225,6 +225,12 @@ const AdminDashboard: React.FC = () => {
       <div style={{ background: '#ff0', color: '#000', padding: '8px', textAlign: 'center', fontWeight: 'bold', zIndex: 9999 }}>
         DEBUG: AdminDashboard is rendering
       </div>
+      {/* DEBUG DATA INFO */}
+      <div style={{ background: '#eee', color: '#222', padding: '8px', fontSize: '14px', marginBottom: '8px', border: '1px solid #ccc', borderRadius: '4px' }}>
+        <div>students: {Array.isArray(students) ? students.length : 'null'}</div>
+        <div>submissions: {Array.isArray(submissions) ? submissions.length : 'null'}</div>
+        <div>analytics: {analytics ? Object.keys(analytics).join(', ') : 'null'}</div>
+      </div>
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
