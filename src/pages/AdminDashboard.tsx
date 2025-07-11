@@ -28,6 +28,7 @@ import LoadingScreen from '../components/LoadingScreen';
 import { fetchAnalytics } from '../redux/slices/analyticsSlice';
 
 const AdminDashboard: React.FC = () => {
+  console.log('AdminDashboard rendered');
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('overview');
@@ -220,6 +221,10 @@ const AdminDashboard: React.FC = () => {
 
   return (
     <div className="space-y-8">
+      {/* DEBUG BANNER */}
+      <div style={{ background: '#ff0', color: '#000', padding: '8px', textAlign: 'center', fontWeight: 'bold', zIndex: 9999 }}>
+        DEBUG: AdminDashboard is rendering
+      </div>
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
