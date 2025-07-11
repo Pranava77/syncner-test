@@ -361,7 +361,7 @@ const AdminSettings: React.FC = () => {
           <p className="text-rust mb-4">{settingsError}</p>
           <button
             onClick={() => dispatch(fetchSettings())}
-            className="bg-true-turquoise text-paperwhite px-4 py-2 rounded-lg hover:bg-true-turquoise/90 transition-colors"
+            className="bg-true-turquoise text-offblack px-4 py-2 rounded-lg hover:bg-true-turquoise/90 transition-colors"
           >
             Retry
           </button>
@@ -484,7 +484,7 @@ const AdminSettings: React.FC = () => {
               <h2 className="text-xl font-semibold text-paperwhite">Training Modules</h2>
               <button
                 onClick={() => setShowModuleForm(true)}
-                className="bg-true-turquoise text-paperwhite px-4 py-2 rounded-lg hover:bg-true-turquoise/90 transition-colors flex items-center"
+                className="bg-true-turquoise text-offblack px-4 py-2 rounded-lg hover:bg-true-turquoise/90 transition-colors flex items-center"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Add Module
@@ -651,7 +651,7 @@ const AdminSettings: React.FC = () => {
                         }
                       ]
                     }))}
-                    className="mt-2 bg-true-turquoise text-paperwhite px-4 py-2 rounded-lg hover:bg-true-turquoise/90"
+                    className="mt-2 bg-true-turquoise text-offblack px-4 py-2 rounded-lg hover:bg-true-turquoise/90"
                   >
                     + Add Lesson
                   </button>
@@ -668,7 +668,7 @@ const AdminSettings: React.FC = () => {
                   </button>
                   <button
                     onClick={editingModule ? handleEditModule : handleAddModule}
-                    className="px-4 py-2 bg-true-turquoise text-paperwhite rounded-lg hover:bg-true-turquoise/90"
+                    className="px-4 py-2 bg-true-turquoise text-offblack rounded-lg hover:bg-true-turquoise/90"
                   >
                     {editingModule ? 'Update' : 'Create'} Module
                   </button>
@@ -758,7 +758,7 @@ const AdminSettings: React.FC = () => {
                               });
                               setShowModuleForm(true);
                             }}
-                            className="bg-true-turquoise hover:bg-true-turquoise/90 text-paperwhite px-2 py-1 rounded transition-colors mr-2"
+                            className="bg-true-turquoise hover:bg-true-turquoise/90 text-offblack px-2 py-1 rounded transition-colors mr-2"
                             title="Edit"
                           >
                             <Edit3 className="h-4 w-4" />
@@ -787,7 +787,7 @@ const AdminSettings: React.FC = () => {
               <h2 className="text-xl font-semibold text-paperwhite">Tasks</h2>
               <button
                 onClick={() => setShowTaskForm(true)}
-                className="bg-true-turquoise text-paperwhite px-4 py-2 rounded-lg hover:bg-true-turquoise/90 transition-colors flex items-center"
+                className="bg-true-turquoise text-offblack px-4 py-2 rounded-lg hover:bg-true-turquoise/90 transition-colors flex items-center"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Add Task
@@ -891,7 +891,7 @@ const AdminSettings: React.FC = () => {
                   </button>
                   <button
                     onClick={editingTask ? handleEditTask : handleAddTask}
-                    className="px-4 py-2 bg-true-turquoise text-paperwhite rounded-lg hover:bg-true-turquoise/90"
+                    className="px-4 py-2 bg-true-turquoise text-offblack rounded-lg hover:bg-true-turquoise/90"
                   >
                     {editingTask ? 'Update' : 'Create'} Task
                   </button>
@@ -992,7 +992,7 @@ const AdminSettings: React.FC = () => {
                               });
                               setShowTaskForm(true);
                             }}
-                            className="bg-true-turquoise hover:bg-true-turquoise/90 text-paperwhite px-2 py-1 rounded transition-colors mr-2"
+                            className="bg-true-turquoise hover:bg-true-turquoise/90 text-offblack px-2 py-1 rounded transition-colors mr-2"
                             title="Edit"
                           >
                             <Edit3 className="h-4 w-4" />
@@ -1021,7 +1021,7 @@ const AdminSettings: React.FC = () => {
               <h2 className="text-xl font-semibold text-paperwhite">User Management</h2>
               <button
                 onClick={() => { setShowUserForm(true); setEditingUser(null); setUserForm({ name: '', email: '', password: '', role: 'student', college: '', department: '', careerTrack: '', isActive: true }); }}
-                className="bg-true-turquoise text-paperwhite px-4 py-2 rounded-lg hover:bg-true-turquoise/90 transition-colors flex items-center gap-2 shadow mt-4"
+                className="bg-true-turquoise text-offblack px-4 py-2 rounded-lg hover:bg-true-turquoise/90 transition-colors flex items-center gap-2 shadow mt-4"
               >
                 <Plus className="h-4 w-4" />
                 <span>Add User</span>
@@ -1075,7 +1075,7 @@ const AdminSettings: React.FC = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2 text-paperwhite">
                           <button
                             onClick={() => { setEditingUser(user); setUserForm({ ...user, password: '' }); setShowUserForm(true); }}
-                            className="bg-true-turquoise hover:bg-true-turquoise/90 text-paperwhite px-2 py-1 rounded transition-colors"
+                            className="bg-true-turquoise hover:bg-true-turquoise/90 text-offblack px-2 py-1 rounded transition-colors"
                             title="Edit"
                           >
                             <Edit3 className="h-4 w-4" />
@@ -1162,7 +1162,7 @@ const AdminSettings: React.FC = () => {
                           setUserFormError(err.message || 'Failed to add/update user.');
                         }
                       }}
-                      className="px-4 py-2 bg-true-turquoise text-paperwhite rounded-lg hover:bg-true-turquoise/90 transition"
+                      className="px-4 py-2 bg-true-turquoise text-offblack rounded-lg hover:bg-true-turquoise/90 transition"
                     >
                       {editingUser ? 'Update' : 'Add'}
                     </button>
@@ -1227,7 +1227,7 @@ const AdminSettings: React.FC = () => {
               </button>
             </div>
             <button
-              className="mt-4 bg-true-turquoise text-paperwhite px-6 py-2 rounded-lg hover:bg-true-turquoise/90 transition-all font-medium"
+              className="mt-4 bg-true-turquoise text-offblack px-6 py-2 rounded-lg hover:bg-true-turquoise/90 transition-all font-medium"
               onClick={handleSaveSettings}
               disabled={isSaving}
             >
@@ -1244,7 +1244,7 @@ const AdminSettings: React.FC = () => {
           <button
             onClick={handleSaveSettings}
             disabled={isSaving}
-            className="bg-true-turquoise text-paperwhite px-6 py-2 rounded-lg hover:bg-true-turquoise/90 transition-colors font-medium flex items-center disabled:opacity-50"
+            className="bg-true-turquoise text-offblack px-6 py-2 rounded-lg hover:bg-true-turquoise/90 transition-colors font-medium flex items-center disabled:opacity-50"
           >
             {isSaving ? (
               <>
