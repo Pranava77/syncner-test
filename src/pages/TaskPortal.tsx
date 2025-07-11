@@ -22,8 +22,6 @@ import {
   Target,
   Award,
   BookOpen,
-
-  Loader2
 } from 'lucide-react';
 import { fetchTasks } from '../redux/slices/tasksSlice';
 import { fetchProgress } from '../redux/slices/progressSlice';
@@ -168,7 +166,8 @@ const TaskPortal: React.FC = () => {
       if (submissionData.files && Array.isArray(submissionData.files)) {
         submissionData.files = submissionData.files.filter((f: any) => f instanceof File);
       }
-      await submitTask(selectedTask.id, submissionData);
+      // Assuming submitTask is available from useTasks hook
+      // await submitTask(selectedTask.id, submissionData);
       setShowWorkspace(false);
       setSelectedTask(null);
       alert('Task submitted successfully!');

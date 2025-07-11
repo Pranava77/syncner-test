@@ -16,8 +16,8 @@ import {
   Award,
   Lock,
   Star,
-  Loader2
 } from 'lucide-react';
+import LoadingScreen from '../components/LoadingScreen';
 
 // Add helper to extract YouTube video ID
 function extractYouTubeId(url: string): string | null {
@@ -127,14 +127,7 @@ const TrainingModule: React.FC = () => {
   };
 
   if (trackLoading || modulesLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-600" />
-          <p className="text-gray-600 dark:text-gray-300">Loading module...</p>
-        </div>
-      </div>
-    );
+    return <LoadingScreen message="Loading module..." />;
   }
 
   if (!module) {

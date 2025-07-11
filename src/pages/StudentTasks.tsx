@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../redux/store';
 import { fetchSubmissions } from '../redux/slices/submissionsSlice';
 import { FileText, CheckCircle, Clock, Star, Eye, AlertCircle } from 'lucide-react';
+import LoadingScreen from '../components/LoadingScreen';
 
 const StudentSubmissions: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -22,19 +23,13 @@ const StudentSubmissions: React.FC = () => {
   // Use only backend data:
   const submissionsToShow = submissions;
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <LoadingScreen message="Loading submissions..." />;
   if (error) return <div className="text-red-500">{error}</div>;
 
   return (
     <div className="max-w-3xl mx-auto p-4">
       <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">My Submissions</h2>
-      {loading ? (
-        <div className="flex items-center justify-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-        </div>
-      ) : error ? (
-        <div className="text-red-500 text-center py-8">{error}</div>
-      ) : submissionsToShow.length === 0 ? (
+      {submissionsToShow.length === 0 ? (
         <div className="text-center py-12 text-gray-500">No submissions yet!</div>
       ) : (
         <div className="grid gap-6 md:grid-cols-2">
@@ -163,4 +158,4 @@ const StudentSubmissions: React.FC = () => {
   );
 };
 
-export default StudentSubmissions; 
+export default StudentSubmissions;

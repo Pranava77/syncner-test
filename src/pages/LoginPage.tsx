@@ -5,7 +5,7 @@ import { loginUser, clearError, fetchCurrentUser } from '../redux/slices/authSli
 import { getDefaultRoute } from '../utils/routing';
 import { Mail, Lock, AlertCircle } from 'lucide-react';
 import logo from '../assets/syncner-logo.png';
-import LoadingSpinner from '../components/LoadingSpinner';
+import LoadingScreen from '../components/LoadingScreen';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -48,6 +48,10 @@ const LoginPage: React.FC = () => {
       // Optionally show an error message (already handled by Redux)
     }
   };
+
+  if (isLoading) {
+    return <LoadingScreen message="Signing In..." />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 dark:from-gray-950 dark:via-blue-950 dark:to-purple-950 flex items-center justify-center px-4">
@@ -112,14 +116,7 @@ const LoginPage: React.FC = () => {
               disabled={isLoading}
               className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2.5 lg:py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed text-sm lg:text-base"
             >
-              {isLoading ? (
-                <div className="flex items-center justify-center space-x-2">
-                  <LoadingSpinner size="sm" color="white" />
-                  <span>Signing In...</span>
-                </div>
-              ) : (
-                'Sign In'
-              )}
+              Sign In
             </button>
           </form>
 

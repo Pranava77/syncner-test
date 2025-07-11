@@ -20,7 +20,6 @@ import {
   Brain,
   Mail,
   Calendar,
-  Loader2,
   Sparkles,
   CheckCircle,
   Star,
@@ -33,7 +32,6 @@ import { fetchProgress } from '../redux/slices/progressSlice';
 import { fetchModules } from '../redux/slices/modulesSlice';
 import { fetchTasks } from '../redux/slices/tasksSlice';
 import LoadingScreen from '../components/LoadingScreen';
-import LoadingSpinner from '../components/LoadingSpinner';
 
 const ResumeGenerator: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -308,7 +306,9 @@ const ResumeGenerator: React.FC = () => {
     }
   };
 
-  if (isLoading) return <LoadingScreen message="Loading resume data..." showProgress={true} progressDuration={1600} />;
+  if (isLoading || isGenerating || isEnhancing) {
+    return <LoadingScreen message={isGenerating ? "Generating PDF..." : isEnhancing ? "Enhancing with AI..." : "Loading resume data..."} />;
+  }
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -396,12 +396,8 @@ const ResumeGenerator: React.FC = () => {
               disabled={isEnhancing}
               className="w-full flex items-center justify-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isEnhancing ? (
-                <LoadingSpinner size="sm" color="white" className="mr-2" />
-              ) : (
-                <Sparkles className="h-4 w-4 mr-2" />
-              )}
-              {isEnhancing ? 'Enhancing...' : 'Enhance with AI'}
+              <Sparkles className="h-4 w-4 mr-2" />
+              Enhance with AI
             </button>
             
             <button
@@ -417,12 +413,8 @@ const ResumeGenerator: React.FC = () => {
               disabled={isGenerating}
               className="w-full flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isGenerating ? (
-                <LoadingSpinner size="sm" color="white" className="mr-2" />
-              ) : (
-                <Download className="h-4 w-4 mr-2" />
-              )}
-              {isGenerating ? 'Generating...' : 'Generate & Download'}
+              <Download className="h-4 w-4 mr-2" />
+              Generate & Download
             </button>
           </div>
         </div>
@@ -571,12 +563,8 @@ const ResumeGenerator: React.FC = () => {
                   disabled={isGenerating}
                   className="flex-1 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isGenerating ? (
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  ) : (
-                    <Download className="h-4 w-4 mr-2" />
-                  )}
-                  {isGenerating ? 'Generating...' : 'Download PDF'}
+                  <Download className="h-4 w-4 mr-2" />
+                  Download PDF
                 </button>
                 <button
                   onClick={() => setShowPreview(false)}

@@ -11,7 +11,7 @@ import {
   CheckCircle 
 } from 'lucide-react';
 import logo from '../assets/syncner-logo.png';
-import LoadingSpinner from '../components/LoadingSpinner';
+import LoadingScreen from '../components/LoadingScreen';
 
 const careerTracks = [
   {
@@ -113,6 +113,10 @@ const OnboardingFlow: React.FC = () => {
     'Build a portfolio',
     'Network with professionals'
   ];
+
+  if (isLoading) {
+    return <LoadingScreen message="Setting up your profile..." />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900 py-12 px-4 transition-colors">
@@ -286,14 +290,7 @@ const OnboardingFlow: React.FC = () => {
                 disabled={goals.length === 0 || isLoading}
                 className="w-full mt-8 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoading ? (
-                  <div className="flex items-center justify-center space-x-2">
-                    <LoadingSpinner size="sm" color="white" />
-                    <span>Setting up your profile...</span>
-                  </div>
-                ) : (
-                  'Complete Setup'
-                )}
+                Complete Setup
               </button>
             </div>
           </div>

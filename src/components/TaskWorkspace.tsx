@@ -12,9 +12,9 @@ import {
   Clock,
   Star,
   Eye,
-  Loader2
 } from 'lucide-react';
 import apiService from '../services/api';
+import LoadingScreen from './LoadingScreen';
 
 interface Task {
   id: number;
@@ -126,6 +126,10 @@ const TaskWorkspace: React.FC<TaskWorkspaceProps> = ({ task, onClose, onSubmit }
       default: return <FileText className="h-5 w-5" />;
     }
   };
+
+  if (isSubmitting || isGeneratingFeedback) {
+    return <LoadingScreen message={isSubmitting ? "Submitting..." : "Generating Feedback..."} />;
+  }
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
@@ -356,12 +360,8 @@ const TaskWorkspace: React.FC<TaskWorkspaceProps> = ({ task, onClose, onSubmit }
                   disabled={isSubmitting || !submission.description.trim()}
                   className="flex-1 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                 >
-                  {isSubmitting ? (
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  ) : (
-                    <Send className="h-4 w-4 mr-2" />
-                  )}
-                  {isSubmitting ? 'Submitting...' : 'Submit Task'}
+                  <Send className="h-4 w-4 mr-2" />
+                  Submit Task
                 </button>
                 
                 <button
@@ -369,12 +369,8 @@ const TaskWorkspace: React.FC<TaskWorkspaceProps> = ({ task, onClose, onSubmit }
                   disabled={isGeneratingFeedback || !submission.description.trim()}
                   className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
                 >
-                  {isGeneratingFeedback ? (
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  ) : (
-                    <Eye className="h-4 w-4 mr-2" />
-                  )}
-                  {isGeneratingFeedback ? 'Generating...' : 'Get AI Feedback'}
+                  <Eye className="h-4 w-4 mr-2" />
+                  Get AI Feedback
                 </button>
               </div>
             </div>
@@ -410,12 +406,8 @@ const TaskWorkspace: React.FC<TaskWorkspaceProps> = ({ task, onClose, onSubmit }
                     disabled={isGeneratingFeedback || !submission.description.trim()}
                     className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center mx-auto"
                   >
-                    {isGeneratingFeedback ? (
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    ) : (
-                      <Eye className="h-4 w-4 mr-2" />
-                    )}
-                    {isGeneratingFeedback ? 'Generating Feedback...' : 'Generate AI Feedback'}
+                    <Eye className="h-4 w-4 mr-2" />
+                    Generate AI Feedback
                   </button>
                 </div>
               )}

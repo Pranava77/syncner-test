@@ -19,6 +19,7 @@ import {
   User as UserIcon
 } from 'lucide-react';
 import logo from '../assets/syncner-logo.png';
+import LoadingScreen from './LoadingScreen';
 
 interface LayoutProps {
   children?: React.ReactNode;
@@ -68,6 +69,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const navItems = user?.role === 'admin' ? adminNavItems : studentNavItems;
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
+
+  if (isLoggingOut) {
+    return <LoadingScreen message="Signing Out..." />;
+  }
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
@@ -123,12 +128,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             disabled={isLoggingOut}
             className="flex items-center w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-1"
           >
-            {isLoggingOut ? (
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600 mr-2" />
-            ) : (
-              <LogOut className="h-4 w-4 mr-2" />
-            )}
-            {isLoggingOut ? 'Signing Out...' : 'Sign Out'}
+            <LogOut className="h-4 w-4 mr-2" />
+            Sign Out
           </button>
         </div>
       </div>
@@ -232,12 +233,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             disabled={isLoggingOut}
             className="flex items-center w-full px-3 py-3 text-base text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-1"
           >
-            {isLoggingOut ? (
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-600 mr-3" />
-            ) : (
-              <LogOut className="h-5 w-5 mr-3" />
-            )}
-            {isLoggingOut ? 'Signing Out...' : 'Sign Out'}
+            <LogOut className="h-5 w-5 mr-3" />
+            Sign Out
           </button>
         </div>
       </div>

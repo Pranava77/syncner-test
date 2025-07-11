@@ -4,6 +4,7 @@ import { ShieldCheck, RefreshCw, AlertTriangle, CheckCircle } from 'lucide-react
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchDiagnostics } from '../redux/slices/diagnosticsSlice';
 import { useAppDispatch } from '../redux/store';
+import LoadingScreen from '../components/LoadingScreen';
 
 interface Diagnostic {
   module: string;
@@ -38,6 +39,10 @@ const AdminDiagnostics: React.FC = () => {
 
   const healthyCount = diagnostics.filter((d: any) => d.healthy).length;
   const totalCount = diagnostics.length;
+
+  if (loading) {
+    return <LoadingScreen message="Loading diagnostics..." />;
+  }
 
   return (
     <div className="max-w-3xl mx-auto py-10 px-4">
@@ -111,4 +116,4 @@ const AdminDiagnostics: React.FC = () => {
   );
 };
 
-export default AdminDiagnostics; 
+export default AdminDiagnostics;
