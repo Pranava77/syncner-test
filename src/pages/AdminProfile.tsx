@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ApiService from '../services/api';
 import LoadingScreen from '../components/LoadingScreen';
 import { Link } from 'react-router-dom';
-import { User as UserIcon } from 'lucide-react';
+import { PersonIcon } from '@radix-ui/react-icons';
 
 const AdminProfile: React.FC = () => {
   const [profile, setProfile] = useState<any>(null);

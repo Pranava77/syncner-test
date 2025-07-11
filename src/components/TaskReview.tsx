@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { 
-  CheckCircle, 
-  XCircle, 
-  Clock, 
-  Star, 
-  Download, 
-  Eye, 
-  MessageSquare,
-  Calendar,
-  User,
-  Code,
-  Link,
-  FileText
-} from 'lucide-react';
+  CheckCircledIcon, 
+  CrossCircledIcon, 
+  ClockIcon, 
+  StarFilledIcon, 
+  DownloadIcon, 
+  EyeOpenIcon, 
+  ChatBubbleIcon,
+  CalendarIcon,
+  PersonIcon,
+  CodeIcon,
+  Link2Icon,
+  FileTextIcon
+} from '@radix-ui/react-icons';
 
 interface Submission {
   _id: string;
@@ -75,11 +75,11 @@ const TaskReview: React.FC<TaskReviewProps> = ({ submissions = [], onReview }) =
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'approved': return <CheckCircle className="h-4 w-4" />;
-      case 'rejected': return <XCircle className="h-4 w-4" />;
-      case 'reviewed': return <Eye className="h-4 w-4" />;
-      case 'pending': return <Clock className="h-4 w-4" />;
-      default: return <Clock className="h-4 w-4" />;
+      case 'approved': return <CheckCircledIcon className="h-4 w-4" />;
+      case 'rejected': return <CrossCircledIcon className="h-4 w-4" />;
+      case 'reviewed': return <EyeOpenIcon className="h-4 w-4" />;
+      case 'pending': return <ClockIcon className="h-4 w-4" />;
+      default: return <ClockIcon className="h-4 w-4" />;
     }
   };
 
@@ -175,7 +175,7 @@ const TaskReview: React.FC<TaskReviewProps> = ({ submissions = [], onReview }) =
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="bg-blue-100 dark:bg-blue-900/20 p-2 rounded-full mr-3">
-                        <User className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                        <PersonIcon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                       </div>
                       <div>
                         <div className="text-sm font-medium text-gray-900 dark:text-white">
@@ -189,7 +189,7 @@ const TaskReview: React.FC<TaskReviewProps> = ({ submissions = [], onReview }) =
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                      <Calendar className="h-4 w-4 mr-1" />
+                      <CalendarIcon className="h-4 w-4 mr-1" />
                       {new Date(submission.submittedAt).toLocaleDateString()}
                     </div>
                   </td>
@@ -202,7 +202,7 @@ const TaskReview: React.FC<TaskReviewProps> = ({ submissions = [], onReview }) =
                   <td className="px-6 py-4 whitespace-nowrap">
                     {submission.score ? (
                       <div className="flex items-center">
-                        <Star className="h-4 w-4 text-yellow-500 mr-1" />
+                        <StarFilledIcon className="h-4 w-4 text-yellow-500 mr-1" />
                         <span className="text-sm font-medium text-gray-900 dark:text-white">
                           {submission.score}/100
                         </span>
@@ -218,7 +218,7 @@ const TaskReview: React.FC<TaskReviewProps> = ({ submissions = [], onReview }) =
                         className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded transition-colors"
                         title="Review Submission"
                       >
-                        <Eye className="h-4 w-4" />
+                        <EyeOpenIcon className="h-4 w-4" />
                       </button>
                       {submission.liveUrl && (
                         <a
@@ -228,7 +228,7 @@ const TaskReview: React.FC<TaskReviewProps> = ({ submissions = [], onReview }) =
                           className="bg-green-600 hover:bg-green-700 text-white p-2 rounded transition-colors"
                           title="View Live Demo"
                         >
-                          <Link className="h-4 w-4" />
+                          <Link2Icon className="h-4 w-4" />
                         </a>
                       )}
                       {submission.githubUrl && (
@@ -239,7 +239,7 @@ const TaskReview: React.FC<TaskReviewProps> = ({ submissions = [], onReview }) =
                           className="bg-purple-600 hover:bg-purple-700 text-white p-2 rounded transition-colors"
                           title="View GitHub Code"
                         >
-                          <Code className="h-4 w-4" />
+                          <CodeIcon className="h-4 w-4" />
                         </a>
                       )}
                     </div>
@@ -252,7 +252,7 @@ const TaskReview: React.FC<TaskReviewProps> = ({ submissions = [], onReview }) =
 
         {filteredSubmissions.length === 0 && (
           <div className="text-center py-12">
-            <MessageSquare className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <ChatBubbleIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No Submissions Found</h3>
             <p className="text-gray-600 dark:text-gray-400">
               {filter === 'all' ? 'No submissions have been made yet.' : `No ${filter} submissions found.`}
@@ -317,7 +317,7 @@ const TaskReview: React.FC<TaskReviewProps> = ({ submissions = [], onReview }) =
                         rel="noopener noreferrer"
                         className="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                       >
-                        <Link className="h-5 w-5 text-green-600 dark:text-green-400 mr-3" />
+                        <Link2Icon className="h-5 w-5 text-green-600 dark:text-green-400 mr-3" />
                         <div>
                           <p className="font-medium text-gray-900 dark:text-white">Live Demo</p>
                           <p className="text-sm text-gray-600 dark:text-gray-400">{selectedSubmission.liveUrl}</p>
@@ -332,7 +332,7 @@ const TaskReview: React.FC<TaskReviewProps> = ({ submissions = [], onReview }) =
                         rel="noopener noreferrer"
                         className="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                       >
-                        <Code className="h-5 w-5 text-purple-600 dark:text-purple-400 mr-3" />
+                        <CodeIcon className="h-5 w-5 text-purple-600 dark:text-purple-400 mr-3" />
                         <div>
                           <p className="font-medium text-gray-900 dark:text-white">GitHub Repository</p>
                           <p className="text-sm text-gray-600 dark:text-gray-400">{selectedSubmission.githubUrl}</p>
@@ -363,7 +363,7 @@ const TaskReview: React.FC<TaskReviewProps> = ({ submissions = [], onReview }) =
                           return (
                             <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                               <div className="flex items-center">
-                                <FileText className="h-4 w-4 text-gray-500 mr-2" />
+                                <FileTextIcon className="h-4 w-4 text-gray-500 mr-2" />
                                 <span className="text-sm text-gray-900 dark:text-white">{fileName}</span>
                               </div>
                               <a

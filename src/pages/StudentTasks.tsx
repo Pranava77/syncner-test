@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../redux/store';
 import { fetchSubmissions } from '../redux/slices/submissionsSlice';
-import { FileText, CheckCircle, Clock, Star, Eye, AlertCircle } from 'lucide-react';
+import { FileTextIcon, CheckCircledIcon, ClockIcon, StarFilledIcon, EyeOpenIcon, ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import LoadingScreen from '../components/LoadingScreen';
 
 const StudentSubmissions: React.FC = () => {
@@ -42,16 +42,16 @@ const StudentSubmissions: React.FC = () => {
                   ? 'bg-red-100 text-red-700'
                   : 'bg-green-100 text-green-700';
             const statusIcon = sub.status === 'Reviewed' || sub.status === 'reviewed'
-              ? <Eye className="h-4 w-4" />
+              ? <EyeOpenIcon className="h-4 w-4" />
               : sub.status === 'Submitted' || sub.status === 'submitted'
-                ? <Clock className="h-4 w-4" />
+                ? <ClockIcon className="h-4 w-4" />
                 : sub.status === 'Rejected' || sub.status === 'rejected'
-                  ? <AlertCircle className="h-4 w-4" />
-                  : <CheckCircle className="h-4 w-4" />;
+                  ? <ExclamationTriangleIcon className="h-4 w-4" />
+                  : <CheckCircledIcon className="h-4 w-4" />;
             return (
               <div key={sub.id} className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 flex flex-col gap-3 border border-gray-200 dark:border-gray-700">
                 <div className="flex items-center gap-3 mb-2">
-                  <FileText className="h-5 w-5 text-purple-500" />
+                  <FileTextIcon className="h-5 w-5 text-purple-500" />
                   <div className="font-semibold text-lg text-gray-900 dark:text-white">{sub.taskTitle}</div>
                   <span className={`ml-auto px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1 ${statusColor}`}>{statusIcon}<span>{sub.status}</span></span>
                 </div>

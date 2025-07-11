@@ -7,25 +7,24 @@ import { useProgress } from '../hooks/useProgress';
 import { useTasks } from '../hooks/useTasks';
 import { useModules } from '../hooks/useModules';
 import { 
-  FileText, 
-  Download, 
-  Eye, 
-  Edit3, 
-  User, 
-  Briefcase, 
-  Award,
-  Code,
-  Palette,
-  BarChart3,
-  Brain,
-  Mail,
-  Calendar,
-  Sparkles,
-  CheckCircle,
-  Star,
-  TrendingUp,
-  Clock
-} from 'lucide-react';
+  FileTextIcon, 
+  DownloadIcon, 
+  EyeOpenIcon, 
+  Pencil1Icon, 
+  PersonIcon, 
+  BriefcaseIcon, 
+  StarFilledIcon,
+  CodeIcon,
+  ColorWheelIcon,
+  BarChartIcon,
+  LightningBoltIcon,
+  EnvelopeClosedIcon,
+  CalendarIcon,
+  MagicStickIcon,
+  CheckCircledIcon,
+  ArrowTopRightIcon,
+  ClockIcon
+} from '@radix-ui/react-icons';
 import apiService from '../services/api';
 import logo from '../assets/syncner-logo.png';
 import { fetchProgress } from '../redux/slices/progressSlice';
@@ -290,11 +289,11 @@ const ResumeGenerator: React.FC = () => {
   };
 
   const getTrackIcon = (track: string) => {
-    if (track?.includes('Full Stack')) return <Code className="h-5 w-5" />;
-    if (track?.includes('UI/UX')) return <Palette className="h-5 w-5" />;
-    if (track?.includes('Data')) return <BarChart3 className="h-5 w-5" />;
-    if (track?.includes('AI/ML')) return <Brain className="h-5 w-5" />;
-    return <Briefcase className="h-5 w-5" />;
+    if (track?.includes('Full Stack')) return <CodeIcon className="h-5 w-5" />;
+    if (track?.includes('UI/UX')) return <ColorWheelIcon className="h-5 w-5" />;
+    if (track?.includes('Data')) return <BarChartIcon className="h-5 w-5" />;
+    if (track?.includes('AI/ML')) return <LightningBoltIcon className="h-5 w-5" />;
+    return <BriefcaseIcon className="h-5 w-5" />;
   };
 
   const getDifficultyColor = (difficulty?: string) => {

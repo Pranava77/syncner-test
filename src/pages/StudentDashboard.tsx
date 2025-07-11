@@ -5,21 +5,20 @@ import { fetchProgress } from '../redux/slices/progressSlice';
 import { fetchModules } from '../redux/slices/modulesSlice';
 import { fetchTasks } from '../redux/slices/tasksSlice';
 import { 
-  BookOpen, 
-  Briefcase, 
-  Trophy, 
-  Brain, 
-  MessageCircle,
-  ArrowRight,
-  Play,
-  CheckCircle,
-  Clock,
-  Star,
-  Code,
-  Palette,
-  BarChart3,
-  Loader2
-} from 'lucide-react';
+  ReaderIcon, 
+  BriefcaseIcon, 
+  TrophyIcon, 
+  LightningBoltIcon, 
+  ChatBubbleIcon,
+  ArrowRightIcon,
+  PlayIcon,
+  CheckCircledIcon,
+  ClockIcon,
+  StarFilledIcon,
+  CodeIcon,
+  ColorWheelIcon,
+  BarChartIcon
+} from '@radix-ui/react-icons';
 import LoadingScreen from '../components/LoadingScreen';
 
 const StudentDashboard: React.FC = () => {
@@ -72,11 +71,11 @@ const StudentDashboard: React.FC = () => {
 
   const getTrackIcon = () => {
     switch (userTrack) {
-      case 'fullstack': return <Code className="h-5 w-5 lg:h-6 lg:w-6" />;
-      case 'ui-ux': return <Palette className="h-5 w-5 lg:h-6 lg:w-6" />;
-      case 'data-science': return <BarChart3 className="h-5 w-5 lg:h-6 lg:w-6" />;
-      case 'ai-ml': return <Brain className="h-5 w-5 lg:h-6 lg:w-6" />;
-      default: return <Briefcase className="h-5 w-5 lg:h-6 lg:w-6" />;
+      case 'fullstack': return <CodeIcon className="h-5 w-5 lg:h-6 lg:w-6" />;
+      case 'ui-ux': return <ColorWheelIcon className="h-5 w-5 lg:h-6 lg:w-6" />;
+      case 'data-science': return <BarChartIcon className="h-5 w-5 lg:h-6 lg:w-6" />;
+      case 'ai-ml': return <LightningBoltIcon className="h-5 w-5 lg:h-6 lg:w-6" />;
+      default: return <BriefcaseIcon className="h-5 w-5 lg:h-6 lg:w-6" />;
     }
   };
 
@@ -382,7 +381,7 @@ const StudentDashboard: React.FC = () => {
                 to="/student/resume"
                 className="flex items-center space-x-3 p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
-                <StarIcon className="h-4 w-4 lg:h-5 lg:w-5 text-purple-600 dark:text-purple-400" />
+                <StarFilledIcon className="h-4 w-4 lg:h-5 lg:w-5 text-purple-600 dark:text-purple-400" />
                 <span className="font-medium text-gray-900 dark:text-white text-sm lg:text-base">Generate Resume</span>
               </Link>
             </div>

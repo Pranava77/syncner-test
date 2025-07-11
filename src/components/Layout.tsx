@@ -3,21 +3,20 @@ import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { logoutUser } from '../redux/slices/authSlice';
 import { 
-  Home, 
-  BookOpen, 
-  Briefcase, 
-  FileText, 
-  Users, 
-  Settings, 
-  LogOut,
-
-  BarChart3,
-  Menu,
-  X,
-  List,
-  ShieldCheck,
-  User as UserIcon
-} from 'lucide-react';
+  HomeIcon, 
+  ReaderIcon, 
+  BriefcaseIcon, 
+  FileTextIcon, 
+  GroupIcon, 
+  GearIcon, 
+  ExitIcon,
+  BarChartIcon,
+  HamburgerMenuIcon,
+  Cross1Icon,
+  ListBulletIcon,
+  ShieldIcon,
+  PersonIcon
+} from '@radix-ui/react-icons';
 import logo from '../assets/syncner-logo.png';
 import LoadingScreen from './LoadingScreen';
 
@@ -51,19 +50,19 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const isActive = (path: string) => location.pathname === path;
 
   const studentNavItems = [
-    { path: '/student/dashboard', icon: Home, label: 'Dashboard' },
-    { path: '/student/training/current', icon: BookOpen, label: 'Training' },
-    { path: '/student/tasks', icon: Briefcase, label: 'Tasks' },
-    { path: '/student/tasks/upcoming', icon: List, label: 'Upcoming Tasks' },
-    { path: '/student/submissions', icon: FileText, label: 'My Submissions' },
-    { path: '/student/resume', icon: FileText, label: 'Resume' },
+    { path: '/student/dashboard', icon: HomeIcon, label: 'Dashboard' },
+    { path: '/student/training/current', icon: ReaderIcon, label: 'Training' },
+    { path: '/student/tasks', icon: BriefcaseIcon, label: 'Tasks' },
+    { path: '/student/tasks/upcoming', icon: ListBulletIcon, label: 'Upcoming Tasks' },
+    { path: '/student/submissions', icon: FileTextIcon, label: 'My Submissions' },
+    { path: '/student/resume', icon: FileTextIcon, label: 'Resume' },
   ];
 
   const adminNavItems = [
-    { path: '/admin', icon: Users, label: 'Students' },
-    { path: '/admin/analytics', icon: BarChart3, label: 'Analytics' },
-    { path: '/admin/diagnostics', icon: ShieldCheck, label: 'System Diagnostics' },
-    { path: '/admin/settings', icon: Settings, label: 'Settings' },
+    { path: '/admin', icon: GroupIcon, label: 'Students' },
+    { path: '/admin/analytics', icon: BarChartIcon, label: 'Analytics' },
+    { path: '/admin/diagnostics', icon: ShieldIcon, label: 'System Diagnostics' },
+    { path: '/admin/settings', icon: GearIcon, label: 'Settings' },
   ];
 
   const navItems = user?.role === 'admin' ? adminNavItems : studentNavItems;
@@ -121,14 +120,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               <span className="text-sm font-semibold text-gray-900 dark:text-white truncate">{user?.name}</span>
               <span className="text-xs text-gray-600 dark:text-gray-400 capitalize truncate">{user?.role}</span>
             </div>
-            <UserIcon className="h-5 w-5 text-blue-500 dark:text-blue-400 opacity-80 group-hover:scale-110 transition-transform" />
+            <PersonIcon className="h-5 w-5 text-blue-500 dark:text-blue-400 opacity-80 group-hover:scale-110 transition-transform" />
           </Link>
           <button
             onClick={handleLogout}
             disabled={isLoggingOut}
             className="flex items-center w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-1"
           >
-            <LogOut className="h-4 w-4 mr-2" />
+            <ExitIcon className="h-4 w-4 mr-2" />
             Sign Out
           </button>
         </div>
@@ -146,7 +145,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
             >
-              {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {isMobileMenuOpen ? <Cross1Icon className="h-6 w-6" /> : <HamburgerMenuIcon className="h-6 w-6" />}
             </button>
           </div>
         </div>
@@ -178,7 +177,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               onClick={closeMobileMenu}
               className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
             >
-              <X className="h-5 w-5" />
+              <Cross1Icon className="h-5 w-5" />
             </button>
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-400">{user?.college}</p>
@@ -223,7 +222,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               <span className="text-sm font-semibold text-gray-900 dark:text-white truncate">{user?.name}</span>
               <span className="text-xs text-gray-600 dark:text-gray-400 capitalize truncate">{user?.role}</span>
             </div>
-            <UserIcon className="h-5 w-5 text-blue-500 dark:text-blue-400 opacity-80 group-hover:scale-110 transition-transform" />
+            <PersonIcon className="h-5 w-5 text-blue-500 dark:text-blue-400 opacity-80 group-hover:scale-110 transition-transform" />
           </Link>
           <button
             onClick={() => {

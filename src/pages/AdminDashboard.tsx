@@ -1,27 +1,27 @@
 import React, { useState } from 'react';
 import TaskReview from '../components/TaskReview';
-import { 
-  Users, 
-  TrendingUp, 
-  BookOpen, 
-  AlertTriangle,
-  Download,
-  Search,
-  CheckCircle,
-  XCircle,
-  Clock,
-  FileText,
-  BarChart3,
-  Edit3,
-  Eye,
-  Trash2,
-  Plus,
-  Mail,
-  Phone,
-  MapPin,
-  Save,
-  X,
-} from 'lucide-react';
+import {
+  GroupIcon,
+  ArrowTopRightIcon,
+  ReaderIcon,
+  ExclamationTriangleIcon,
+  DownloadIcon,
+  MagnifyingGlassIcon,
+  CheckCircledIcon,
+  CrossCircledIcon,
+  ClockIcon,
+  FileTextIcon,
+  BarChartIcon,
+  Pencil1Icon,
+  EyeOpenIcon,
+  TrashIcon,
+  PlusIcon,
+  EnvelopeClosedIcon,
+  MobileIcon,
+  PinIcon,
+  SaveIcon,
+  Cross1Icon,
+} from '@radix-ui/react-icons';
 import { useStudents, useSubmissions } from '../hooks/useAdmin';
 import logo from '../assets/syncner-logo.png';
 import { useAppSelector } from '../redux/store';
@@ -64,11 +64,11 @@ const AdminDashboard: React.FC = () => {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'excellent': return <CheckCircle className="h-4 w-4" />;
-      case 'active': return <CheckCircle className="h-4 w-4" />;
-      case 'at-risk': return <AlertTriangle className="h-4 w-4" />;
-      case 'inactive': return <XCircle className="h-4 w-4" />;
-      default: return <Clock className="h-4 w-4" />;
+      case 'excellent': return <CheckCircledIcon className="h-4 w-4" />;
+      case 'active': return <CheckCircledIcon className="h-4 w-4" />;
+      case 'at-risk': return <ExclamationTriangleIcon className="h-4 w-4" />;
+      case 'inactive': return <CrossCircledIcon className="h-4 w-4" />;
+      default: return <ClockIcon className="h-4 w-4" />;
     }
   };
 
@@ -671,7 +671,7 @@ const AdminDashboard: React.FC = () => {
                           {selectedStudent?.phone}
                         </div>
                         <div className="flex items-center text-gray-600 dark:text-gray-300">
-                          <MapPin className="h-4 w-4 mr-2" />
+                          <PinIcon className="h-4 w-4 mr-2" />
                           {selectedStudent?.location}
                         </div>
                         <div className="flex items-center text-gray-600 dark:text-gray-300">

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAppSelector } from '../redux/store';
-import { ShieldCheck, RefreshCw, AlertTriangle, CheckCircle } from 'lucide-react';
+import { ShieldIcon, ReloadIcon, ExclamationTriangleIcon, CheckCircledIcon } from '@radix-ui/react-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchDiagnostics } from '../redux/slices/diagnosticsSlice';
 import { useAppDispatch } from '../redux/store';

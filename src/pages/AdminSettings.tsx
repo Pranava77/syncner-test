@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Settings, 
-  Users, 
-  BookOpen, 
-  Briefcase, 
-  Shield, 
-  Database, 
-  Save,
-  Plus,
-  Edit3,
-  Trash2,
-  CheckCircle
-} from 'lucide-react';
+  GearIcon, 
+  GroupIcon, 
+  ReaderIcon, 
+  BriefcaseIcon, 
+  ShieldIcon, 
+  DatabaseIcon, 
+  SaveIcon,
+  PlusIcon,
+  Pencil1Icon,
+  TrashIcon,
+  CheckCircledIcon
+} from '@radix-ui/react-icons';
 import apiService from '../services/api';
 import { useStudents } from '../hooks/useAdmin';
 import { useDispatch, useSelector } from 'react-redux';
@@ -771,7 +771,7 @@ const AdminSettings: React.FC = () => {
                             className="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded transition-colors"
                             title="Delete"
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <TrashIcon className="h-4 w-4" />
                           </button>
                         </td>
                       </tr>
@@ -1005,7 +1005,7 @@ const AdminSettings: React.FC = () => {
                             className="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded transition-colors"
                             title="Delete"
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <TrashIcon className="h-4 w-4" />
                           </button>
                         </td>
                       </tr>
@@ -1095,7 +1095,7 @@ const AdminSettings: React.FC = () => {
                             className={`px-2 py-1 rounded transition-colors ${user.isActive ? 'bg-gray-600 hover:bg-gray-700 text-white' : 'bg-green-600 hover:bg-green-700 text-white'}`}
                             title={user.isActive ? 'Deactivate' : 'Activate'}
                           >
-                            {user.isActive ? <ShieldCheckIcon className="h-4 w-4" /> : <CheckCircledIcon className="h-4 w-4" />}
+                            {user.isActive ? <ShieldIcon className="h-4 w-4" /> : <CheckCircledIcon className="h-4 w-4" />}
                           </button>
                         </td>
                       </tr>
@@ -1256,7 +1256,7 @@ const AdminSettings: React.FC = () => {
               </>
             ) : (
               <>
-                <Save className="h-4 w-4 mr-2" />
+                <SaveIcon className="h-4 w-4 mr-2" />
                 Save Settings
               </>
             )}

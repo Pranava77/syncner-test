@@ -5,24 +5,24 @@ import { useCareerTrack } from '../hooks/useCareerTracks';
 import { useTasks, useAllStudentTasks } from '../hooks/useTasks';
 import { useProgress } from '../hooks/useProgress';
 import { 
-  Briefcase, 
-  Clock, 
-  Star, 
-  Filter, 
-  Search,
-  Code,
-  Palette,
-  BarChart3,
-  Brain,
-  CheckCircle,
-  AlertTriangle,
-  Play,
-  Eye,
-  Upload,
-  Target,
-  Award,
-  BookOpen,
-} from 'lucide-react';
+  BriefcaseIcon, 
+  ClockIcon, 
+  StarFilledIcon, 
+  MixerHorizontalIcon, 
+  MagnifyingGlassIcon,
+  CodeIcon,
+  ColorWheelIcon,
+  BarChartIcon,
+  LightningBoltIcon,
+  CheckCircledIcon,
+  ExclamationTriangleIcon,
+  PlayIcon,
+  EyeOpenIcon,
+  UploadIcon,
+  TargetIcon,
+  AwardIcon,
+  ReaderIcon,
+} from '@radix-ui/react-icons';
 import { fetchTasks } from '../redux/slices/tasksSlice';
 import { fetchProgress } from '../redux/slices/progressSlice';
 import LoadingScreen from '../components/LoadingScreen';
@@ -69,21 +69,21 @@ const TaskPortal: React.FC = () => {
       case 'frontend':
       case 'coding':
       case 'fullstack':
-      case 'backend': return <Code className="h-4 w-4 lg:h-5 lg:w-5" />;
+      case 'backend': return <CodeIcon className="h-4 w-4 lg:h-5 lg:w-5" />;
       case 'ui-design':
       case 'ux-design':
       case 'design-systems':
       case 'user-research':
-      case 'accessibility': return <Palette className="h-4 w-4 lg:h-5 lg:w-5" />;
+      case 'accessibility': return <ColorWheelIcon className="h-4 w-4 lg:h-5 lg:w-5" />;
       case 'data-analysis':
       case 'forecasting':
       case 'business-intelligence':
       case 'experimentation':
-      case 'machine-learning': return <BarChart3 className="h-4 w-4 lg:h-5 lg:w-5" />;
+      case 'machine-learning': return <BarChartIcon className="h-4 w-4 lg:h-5 lg:w-5" />;
       case 'deep-learning':
       case 'nlp':
-      case 'computer-vision': return <Brain className="h-4 w-4 lg:h-5 lg:w-5" />;
-      default: return <Briefcase className="h-4 w-4 lg:h-5 lg:w-5" />;
+      case 'computer-vision': return <LightningBoltIcon className="h-4 w-4 lg:h-5 lg:w-5" />;
+      default: return <BriefcaseIcon className="h-4 w-4 lg:h-5 lg:w-5" />;
     }
   };
 
@@ -123,12 +123,12 @@ const TaskPortal: React.FC = () => {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'available': return <Play className="h-3 w-3 lg:h-4 lg:w-4" />;
-      case 'in-progress': return <Clock className="h-3 w-3 lg:h-4 lg:w-4" />;
-      case 'submitted': return <Upload className="h-3 w-3 lg:h-4 lg:w-4" />;
-      case 'completed': return <CheckCircle className="h-3 w-3 lg:h-4 lg:w-4" />;
-      case 'locked': return <AlertTriangle className="h-3 w-3 lg:h-4 lg:w-4" />;
-      default: return <Clock className="h-3 w-3 lg:h-4 lg:w-4" />;
+      case 'available': return <PlayIcon className="h-3 w-3 lg:h-4 lg:w-4" />;
+      case 'in-progress': return <ClockIcon className="h-3 w-3 lg:h-4 lg:w-4" />;
+      case 'submitted': return <UploadIcon className="h-3 w-3 lg:h-4 lg:w-4" />;
+      case 'completed': return <CheckCircledIcon className="h-3 w-3 lg:h-4 lg:w-4" />;
+      case 'locked': return <ExclamationTriangleIcon className="h-3 w-3 lg:h-4 lg:w-4" />;
+      default: return <ClockIcon className="h-3 w-3 lg:h-4 lg:w-4" />;
     }
   };
 
@@ -440,7 +440,7 @@ const TaskPortal: React.FC = () => {
                   onClick={() => handleViewDetails(task)}
                   className="flex-1 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium flex items-center justify-center"
                 >
-                  <Eye className="h-3 w-3 lg:h-4 lg:w-4 mr-2" />
+                  <EyeOpenIcon className="h-3 w-3 lg:h-4 lg:w-4 mr-2" />
                   Details
                 </button>
                 
@@ -583,7 +583,7 @@ const TaskPortal: React.FC = () => {
                     <ul className="space-y-2">
                       {selectedTask.resources.map((resource: string, index: number) => (
                         <li key={index} className="flex items-start">
-                          <BookOpenIcon className="h-4 w-4 text-purple-500 mr-2 mt-0.5 flex-shrink-0" />
+                          <ReaderIcon className="h-4 w-4 text-purple-500 mr-2 mt-0.5 flex-shrink-0" />
                           <span className="text-gray-700 dark:text-gray-300 text-sm">{resource}</span>
                         </li>
                       ))}

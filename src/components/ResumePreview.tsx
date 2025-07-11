@@ -1,6 +1,6 @@
 import React from 'react';
 import { ResumeData } from '../utils/pdfGenerator';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { EnvelopeClosedIcon, MobileIcon, PinIcon } from '@radix-ui/react-icons';
 
 interface ResumePreviewProps {
   resumeData: ResumeData;
@@ -132,11 +132,11 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ resumeData, template, sec
         <h1 className="text-4xl font-bold mb-2">{resumeData.personalInfo.name}</h1>
         <div className="flex flex-wrap items-center gap-6 text-sm opacity-90">
           <div className="flex items-center">
-            <Mail className="h-4 w-4 mr-2" />
+            <EnvelopeClosedIcon className="h-4 w-4 mr-2" />
             {resumeData.personalInfo.email}
           </div>
           <div className="flex items-center">
-            <Phone className="h-4 w-4 mr-2" />
+            <MobileIcon className="h-4 w-4 mr-2" />
             {resumeData.personalInfo.phone}
           </div>
           <div className="flex items-center">

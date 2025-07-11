@@ -2,17 +2,17 @@ import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { generateFeedback } from '../redux/slices/geminiSlice';
 import { 
-  Upload, 
-  Send, 
-  Code, 
-  FileText, 
-  Link, 
-  CheckCircle, 
-  AlertTriangle,
-  Clock,
-  Star,
-  Eye,
-} from 'lucide-react';
+  UploadIcon, 
+  PaperPlaneIcon, 
+  CodeIcon, 
+  FileTextIcon, 
+  Link2Icon, 
+  CheckCircledIcon, 
+  ExclamationTriangleIcon,
+  ClockIcon,
+  StarFilledIcon,
+  EyeOpenIcon,
+} from '@radix-ui/react-icons';
 import apiService from '../services/api';
 import LoadingScreen from './LoadingScreen';
 
@@ -121,9 +121,9 @@ const TaskWorkspace: React.FC<TaskWorkspaceProps> = ({ task, onClose, onSubmit }
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'coding': return <Code className="h-5 w-5" />;
-      case 'design': return <FileText className="h-5 w-5" />;
-      default: return <FileText className="h-5 w-5" />;
+      case 'coding': return <CodeIcon className="h-5 w-5" />;
+      case 'design': return <FileTextIcon className="h-5 w-5" />;
+      default: return <FileTextIcon className="h-5 w-5" />;
     }
   };
 
@@ -149,11 +149,11 @@ const TaskWorkspace: React.FC<TaskWorkspaceProps> = ({ task, onClose, onSubmit }
                       {task.difficulty}
                     </span>
                     <div className="flex items-center text-purple-600 dark:text-purple-400">
-                      <Star className="h-4 w-4 mr-1" />
+                      <StarFilledIcon className="h-4 w-4 mr-1" />
                       {task.points} points
                     </div>
                     <div className="flex items-center text-gray-500 dark:text-gray-400 text-sm">
-                      <Clock className="h-4 w-4 mr-1" />
+                      <ClockIcon className="h-4 w-4 mr-1" />
                       {task.estimatedTime}
                     </div>
                   </div>
@@ -395,7 +395,7 @@ const TaskWorkspace: React.FC<TaskWorkspaceProps> = ({ task, onClose, onSubmit }
               ) : (
                 <div className="text-center py-12">
                   <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-full w-fit mx-auto mb-4">
-                    <Eye className="h-8 w-8 text-gray-400" />
+                    <EyeOpenIcon className="h-8 w-8 text-gray-400" />
                   </div>
                   <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No Feedback Yet</h3>
                   <p className="text-gray-600 dark:text-gray-400 mb-4">

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAppSelector, useAppDispatch } from '../redux/store';
 import { fetchUpcomingTasks } from '../redux/slices/upcomingTasksSlice';
 import { useTasks } from '../hooks/useTasks';
-import { Calendar, Clock, Star, Send, FileText, Code, AlertTriangle } from 'lucide-react';
+import { CalendarIcon, ClockIcon, StarFilledIcon, PaperPlaneIcon, FileTextIcon, CodeIcon, ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import LoadingScreen from '../components/LoadingScreen';
 
 const UpcomingTasks: React.FC = () => {
@@ -89,9 +89,7 @@ const UpcomingTasks: React.FC = () => {
               : isDueSoon
                 ? 'bg-yellow-100 text-yellow-700'
                 : 'bg-green-100 text-green-700';
-            const categoryIcon = task.category === 'frontend' ? <Code className="h-5 w-5 text-blue-500" /> : <FileText className="h-5 w-5 text-purple-500" />;
-            return (
-              <div key={task.id} className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 flex flex-col gap-3 border border-gray-200 dark:border-gray-700">
+            const categoryIcon = task.category === 'frontend' ? <CodeIcon className="h-5 w-5 text-blue-500" /> : <FileTextIcon className="h-5 w-5 text-purple-500" />;
                 <div className="flex items-center gap-3 mb-2">
                   {categoryIcon}
                   <div className="font-semibold text-lg text-gray-900 dark:text-white">{task.title}</div>

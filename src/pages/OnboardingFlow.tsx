@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { updateUserProfile, fetchCurrentUser } from '../redux/slices/authSlice';
 import { 
-  Brain, 
-  Code, 
-  Palette, 
-  BarChart3, 
-  ArrowRight, 
-  CheckCircle 
-} from 'lucide-react';
+  LightningBoltIcon, 
+  CodeIcon, 
+  ColorWheelIcon, 
+  BarChartIcon, 
+  ArrowRightIcon, 
+  CheckCircledIcon 
+} from '@radix-ui/react-icons';
 import logo from '../assets/syncner-logo.png';
 import LoadingScreen from '../components/LoadingScreen';
 
@@ -168,7 +168,7 @@ const OnboardingFlow: React.FC = () => {
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <CheckCircle className="h-6 w-6 text-green-500 mt-1 flex-shrink-0" />
+                  <CheckCircledIcon className="h-6 w-6 text-green-500 mt-1 flex-shrink-0" />
                   <div>
                     <h3 className="font-medium text-gray-900 dark:text-white">Career Guidance</h3>
                     <p className="text-gray-600 dark:text-gray-300">AI-powered mentoring and career advice</p>

@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import {
-  BarChart3,
-  TrendingUp,
-  Users,
-  Clock,
-  Target,
-  Download,
-  RefreshCw,
-  Award,
-  BookOpen,
-  Loader2,
-  AlertTriangle
-} from 'lucide-react';
+  BarChartIcon,
+  ArrowTopRightIcon,
+  GroupIcon,
+  ClockIcon,
+  TargetIcon,
+  DownloadIcon,
+  ReloadIcon,
+  StarFilledIcon,
+  ReaderIcon,
+  ExclamationTriangleIcon
+} from '@radix-ui/react-icons';
 import { useAnalytics } from '../hooks/useAdmin';
 import {
   PieChart, Pie, Cell, Tooltip as RechartsTooltip, Legend,
@@ -373,7 +372,7 @@ const AdminAnalytics: React.FC = () => {
               <div key={index} className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-600 rounded-lg">
                 <div className="flex items-center space-x-3">
                   <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 rounded-lg">
-                    <BookOpen className="h-4 w-4 text-white" />
+                    <ReaderIcon className="h-4 w-4 text-white" />
                   </div>
                   <div>
                     <h3 className="font-medium text-gray-900 dark:text-white">{module.module}</h3>

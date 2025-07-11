@@ -5,18 +5,18 @@ import { useCareerTrack } from '../hooks/useCareerTracks';
 import { fetchModules } from '../redux/slices/modulesSlice';
 import { fetchProgress } from '../redux/slices/progressSlice';
 import { 
-  Play, 
-  Pause, 
-  ChevronLeft, 
-  ChevronRight, 
-  CheckCircle, 
-  BookOpen,
-  Clock,
-  Target,
-  Award,
-  Lock,
-  Star,
-} from 'lucide-react';
+  PlayIcon, 
+  PauseIcon, 
+  ChevronLeftIcon, 
+  ChevronRightIcon, 
+  CheckCircledIcon, 
+  ReaderIcon,
+  ClockIcon,
+  TargetIcon,
+  AwardIcon,
+  LockClosedIcon,
+  StarFilledIcon,
+} from '@radix-ui/react-icons';
 import LoadingScreen from '../components/LoadingScreen';
 
 // Add helper to extract YouTube video ID
@@ -455,7 +455,7 @@ const TrainingModule: React.FC = () => {
                 disabled={currentLesson === 0}
                 className="flex items-center px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                <ChevronLeftIcon className="h-4 w-4 mr-1" />
+                <ChevronLeft className="h-4 w-4 mr-1" />
                 Previous
               </button>
 
@@ -464,7 +464,7 @@ const TrainingModule: React.FC = () => {
                   {currentLesson + 1} of {module.lessons.length}
                 </div>
                 <div className="flex items-center text-yellow-600 dark:text-yellow-400">
-                  <StarFilledIcon className="h-4 w-4 mr-1" />
+                  <Star className="h-4 w-4 mr-1" />
                   <span className="text-sm font-medium">
                     {Math.round((completedLessons.size / module.lessons.length) * 100)} XP
                   </span>

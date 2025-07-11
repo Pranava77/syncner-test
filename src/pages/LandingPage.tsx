@@ -3,17 +3,16 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { getDefaultRoute } from '../utils/routing';
 import { 
-  Target, 
-  Brain, 
-  Users, 
-  ArrowRight,
-  BookOpen,
-  Award,
-  Briefcase,
-
-  Menu,
-  X
-} from 'lucide-react';
+  TargetIcon, 
+  LightningBoltIcon, 
+  GroupIcon, 
+  ArrowRightIcon,
+  ReaderIcon,
+  StarFilledIcon,
+  BriefcaseIcon,
+  HamburgerMenuIcon,
+  Cross1Icon
+} from '@radix-ui/react-icons';
 import logo from '../assets/syncner-logo.png';
 import LoadingScreen from '../components/LoadingScreen';
 
@@ -225,7 +224,7 @@ const LandingPage: React.FC = () => {
             className="bg-white text-blue-600 px-6 lg:px-8 py-3 lg:py-4 rounded-lg hover:bg-gray-100 transition-colors font-medium inline-flex items-center"
           >
             Get Started Today
-            <ArrowRight className="ml-2 h-4 w-4 lg:h-5 lg:w-5" />
+            <ArrowRightIcon className="ml-2 h-4 w-4 lg:h-5 lg:w-5" />
           </Link>
         </div>
       </section>

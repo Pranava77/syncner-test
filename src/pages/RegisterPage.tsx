@@ -4,18 +4,16 @@ import { useAppDispatch, useAppSelector } from '../redux/store';
 import { registerUser, clearError } from '../redux/slices/authSlice';
 import { getDefaultRoute } from '../utils/routing';
 import { 
-  User, 
-  Mail, 
-  Lock, 
-  Building, 
-  AlertCircle, 
-  Moon, 
-  Sun, 
-  Eye, 
-  EyeOff,
-  CheckCircle,
-  XCircle
-} from 'lucide-react';
+  PersonIcon, 
+  EnvelopeClosedIcon, 
+  LockClosedIcon, 
+  BuildingIcon, 
+  ExclamationTriangleIcon, 
+  EyeNoneIcon, 
+  EyeOpenIcon,
+  CheckCircledIcon,
+  CrossCircledIcon
+} from '@radix-ui/react-icons';
 import logo from '../assets/syncner-logo.png';
 
 const RegisterPage: React.FC = () => {
@@ -294,7 +292,7 @@ const RegisterPage: React.FC = () => {
                 Confirm Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <LockClosedIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
                   id="confirmPassword"
                   name="confirmPassword"
@@ -328,7 +326,7 @@ const RegisterPage: React.FC = () => {
                 College/University
               </label>
               <div className="relative">
-                <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <BuildingIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
                   id="college"
                   name="college"
