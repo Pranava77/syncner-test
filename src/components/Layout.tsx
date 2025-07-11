@@ -78,9 +78,9 @@ const Layout: React.FC = () => {
           <img src={logo} alt="Syncner Logo" className="h-10 w-10 object-contain" />
           {!isSidebarCollapsed && <span className="ml-3 text-paperwhite font-bold text-lg">Syncner</span>}
         </div>
-        {/* Arrow toggle at top right edge, overlapping border */}
+        {/* Arrow toggle at vertical center right edge, overlapping border */}
         <button
-          className="absolute top-6 -right-4 z-20 bg-offblack border border-paperwhite/20 shadow-lg p-1 rounded-full hover:bg-paperwhite/10 transition"
+          className="absolute top-1/2 -translate-y-1/2 -right-4 z-20 bg-offblack border border-paperwhite/20 shadow-lg p-1 rounded-xl hover:bg-paperwhite/10 transition"
           onClick={() => setIsSidebarCollapsed((prev) => !prev)}
           aria-label={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           style={{ boxShadow: '0 2px 8px 0 rgba(0,0,0,0.10)' }}
