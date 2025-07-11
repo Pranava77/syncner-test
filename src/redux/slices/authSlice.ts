@@ -148,6 +148,10 @@ const authSlice = createSlice({
         state.token = token;
         state.isAuthenticated = true;
         state.isRestoringSession = true;
+      } else {
+        state.token = null;
+        state.isAuthenticated = false;
+        state.isRestoringSession = false;
       }
     },
   },
