@@ -209,6 +209,25 @@ const AdminDashboard: React.FC = () => {
     );
   }
 
+  // Error fallback for missing data
+  if (!students || !analyticsState || !submissions) {
+    console.error('AdminDashboard: Missing data', { students, analyticsState, submissions });
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-red-600 mb-4">Failed to load admin dashboard data.</h2>
+          <p className="text-gray-600 dark:text-gray-300 mb-4">Please check your network connection or try reloading the page.</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Reload
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
       {/* Header */}

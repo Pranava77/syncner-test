@@ -18,11 +18,7 @@ import {
 import logo from '../assets/syncner-logo.png';
 import LoadingScreen from './LoadingScreen';
 
-interface LayoutProps {
-  children?: React.ReactNode;
-}
-
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   
