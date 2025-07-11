@@ -404,7 +404,7 @@ const AdminSettings: React.FC = () => {
       <div className="space-y-8">
         {/* General Settings */}
         {activeTab === 'general' && (
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+          <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-8 transition-shadow duration-200">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">General Settings</h2>
             <div className="grid md:grid-cols-2 gap-6">
               <div>
@@ -496,7 +496,7 @@ const AdminSettings: React.FC = () => {
 
             {/* Module Form */}
             {showModuleForm && (
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+              <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-8 transition-shadow duration-200">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                   {editingModule ? 'Edit Module' : 'Add New Module'}
                 </h3>
@@ -799,7 +799,7 @@ const AdminSettings: React.FC = () => {
 
             {/* Task Form */}
             {showTaskForm && (
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+              <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-8 transition-shadow duration-200">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                   {editingTask ? 'Edit Task' : 'Add New Task'}
                 </h3>
@@ -1179,7 +1179,7 @@ const AdminSettings: React.FC = () => {
 
         {/* Integrations Tab */}
         {activeTab === 'integrations' && (
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 space-y-8">
+          <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow p-6 space-y-8">
             <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 text-white">
               Integrations
             </h3>

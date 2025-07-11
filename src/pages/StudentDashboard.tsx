@@ -107,9 +107,9 @@ const StudentDashboard: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6 lg:space-y-8">
+    <div className="space-y-8 bg-offblack min-h-screen p-4 lg:p-8">
       {/* Welcome Section */}
-      <div className={`bg-gradient-to-r ${getTrackColor()} rounded-xl p-6 lg:p-8 text-white`}>
+      <div className={`bg-gradient-to-r ${getTrackColor()} rounded-xl p-8 text-paperwhite shadow-lg`}>
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
           <div className="flex-1 mb-6 lg:mb-0">
             <h1 className="text-2xl lg:text-3xl font-bold mb-2">
@@ -148,7 +148,7 @@ const StudentDashboard: React.FC = () => {
         <div className="lg:col-span-2 space-y-6">
           {/* Current Learning */}
           {currentModule && (
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 lg:p-6">
+            <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-8 transition-shadow duration-200">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg lg:text-xl font-semibold text-gray-900 dark:text-white">Continue Learning</h2>
                 <span className="bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-2 lg:px-3 py-1 rounded-full text-xs lg:text-sm font-medium">
@@ -201,7 +201,7 @@ const StudentDashboard: React.FC = () => {
 
           {/* Career Track Overview */}
           {user && (
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 lg:p-6">
+            <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-8 transition-shadow duration-200">
               <div className="flex items-center justify-between mb-4 lg:mb-6">
                 <h2 className="text-lg lg:text-xl font-semibold text-gray-900 dark:text-white">Your Career Track</h2>
                 <Link 
@@ -246,7 +246,7 @@ const StudentDashboard: React.FC = () => {
           )}
 
           {/* Upcoming Tasks */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 lg:p-6">
+          <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-8 transition-shadow duration-200">
             <div className="flex items-center justify-between mb-4 lg:mb-6">
               <h2 className="text-lg lg:text-xl font-semibold text-gray-900 dark:text-white">Upcoming Tasks</h2>
               <Link 
@@ -289,7 +289,7 @@ const StudentDashboard: React.FC = () => {
         {/* Sidebar */}
         <div className="space-y-6">
           {/* AI Helper */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 lg:p-6">
+          <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-8 transition-shadow duration-200">
             <div className="text-center">
               <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-3 rounded-full w-fit mx-auto mb-4">
                 <Brain className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
@@ -306,7 +306,7 @@ const StudentDashboard: React.FC = () => {
           </div>
 
           {/* Progress Stats */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 lg:p-6">
+          <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-8 transition-shadow duration-200">
             <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Your Progress</h3>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
@@ -334,7 +334,7 @@ const StudentDashboard: React.FC = () => {
           </div>
 
           {/* Achievements */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 lg:p-6">
+          <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-8 transition-shadow duration-200">
             <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Achievements</h3>
             <div className="space-y-3">
               {achievements.map((achievement, index) => (
@@ -358,7 +358,7 @@ const StudentDashboard: React.FC = () => {
           </div>
 
           {/* Quick Actions */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 lg:p-6">
+          <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-8 transition-shadow duration-200">
             <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h3>
             <div className="space-y-3">
               <Link
