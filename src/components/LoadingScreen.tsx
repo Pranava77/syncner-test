@@ -31,27 +31,27 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
   }, [showProgress, progressDuration]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 dark:from-gray-950 dark:via-blue-950 dark:to-purple-950">
+    <div className="min-h-screen flex items-center justify-center bg-offblack">
       <div className="text-center">
         {/* Logo */}
         <div className="mb-8">
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 rounded-2xl inline-block mb-4">
+          <div className="bg-trueturquoise p-4 rounded-2xl inline-block mb-4">
             <img src={logo} alt="Syncner Logo" className="h-16 w-16 object-contain" />
           </div>
-          <h1 className="text-2xl font-bold text-white mb-2">Syncner</h1>
-          <p className="text-blue-200 text-sm">Loading your experience...</p>
+          <h1 className="text-2xl font-bold text-paperwhite mb-2">Syncner</h1>
+          <p className="text-teallight text-sm">Loading your experience...</p>
         </div>
 
         {/* Progress Bar */}
         {showProgress && (
           <div className="w-64 mx-auto">
-            <div className="flex justify-between text-xs text-blue-200 mb-2">
+            <div className="flex justify-between text-xs text-teallight mb-2">
               <span>Loading</span>
               <span>{Math.round(progress)}%</span>
             </div>
-            <div className="w-full bg-gray-700 rounded-full h-2">
+            <div className="w-full bg-paperwhite/20 rounded-full h-2">
               <div 
-                className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-300 ease-out"
+                className="bg-trueturquoise h-2 rounded-full transition-all duration-300 ease-out"
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
@@ -59,7 +59,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
         )}
 
         {/* Loading Message */}
-        <p className="text-blue-200 text-sm mt-4">{message}</p>
+        <p className="text-teallight text-sm mt-4">{message}</p>
       </div>
     </div>
   );
