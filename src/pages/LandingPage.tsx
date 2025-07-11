@@ -35,7 +35,7 @@ const LandingPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-3">
-              <div className="bg-trueturquoise p-2 rounded-lg">
+              <div>
                 <img src={logo} alt="Syncner Logo" className="h-8 w-8 lg:h-10 lg:w-10 object-contain" />
               </div>
               <h1 className="text-2xl font-bold text-paperwhite font-satoshi">Syncner</h1>  
