@@ -113,9 +113,7 @@ function App() {
           <Route path="tasks" element={<KeepAlive id="task-portal"><TaskPortal /></KeepAlive>} />
           <Route path="tasks/upcoming" element={<KeepAlive id="upcoming-tasks"><UpcomingTasks /></KeepAlive>} />
           <Route path="submissions" element={<KeepAlive id="student-submissions"><StudentSubmissions /></KeepAlive>} />
-          <Route index element={<Navigate to="dashboard" replace />} />
-        </Route>
-        <Route path="profile" element={
+          <Route path="profile" element={
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -125,6 +123,8 @@ function App() {
               <StudentProfile />
             </motion.div>
           } />
+          <Route index element={<Navigate to="dashboard" replace />} />
+        </Route>
         <Route path="/admin/*" element={<AdminWrapper />}>
           <Route index element={<AdminDashboard />} />
           <Route path="analytics" element={<AdminAnalytics />} />
