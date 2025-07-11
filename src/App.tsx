@@ -31,7 +31,8 @@ function App() {
   const { isAuthenticated, user, isLoading, isRestoringSession } = useAppSelector((state) => state.auth);
   const { isDarkMode } = useAppSelector((state) => state.theme);
   
-  const [isInitializing] = useState(true);
+  // Remove isInitializing state
+  // const [isInitializing] = useState(true);
   const location = useLocation();
 
   useEffect(() => {
@@ -53,18 +54,11 @@ function App() {
   }, [isDarkMode]);
 
   // Show loading while initializing authentication or restoring session
-  console.log('App State:', {
-    isInitializing,
-    isLoading,
-    isRestoringSession,
-    isAuthenticated,
-    user,
-  });
-
-  if (isInitializing || isLoading || isRestoringSession) {
+  // Remove isInitializing from the loading check
+  if (isLoading || isRestoringSession) {
     return (
       <LoadingScreen 
-        message={isInitializing ? "Initializing..." : isRestoringSession ? "Restoring session..." : "Loading..."}
+        message={isRestoringSession ? "Restoring session..." : "Loading..."}
         showProgress={true}
         progressDuration={2500}
       />
