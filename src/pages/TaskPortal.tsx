@@ -281,7 +281,7 @@ const TaskPortal: React.FC = () => {
                 placeholder="Search tasks..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-9 lg:pl-10 pr-4 py-2 lg:py-3 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise focus:border-transparent bg-paperwhite text-paperwhite text-sm lg:text-base placeholder-teallight"
+                className="w-full pl-9 lg:pl-10 pr-4 py-2 lg:py-3 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise focus:border-transparent bg-offblack text-paperwhite text-sm lg:text-base placeholder-teallight"
               />
             </div>
           </div>
