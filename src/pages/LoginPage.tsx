@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { loginUser, clearError } from '../redux/slices/authSlice';
+import { loginUser, clearError, logoutUser } from '../redux/slices/authSlice';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import LoadingScreen from '../components/LoadingScreen';
 import logo from '../assets/syncner-logo.png';
@@ -37,6 +37,22 @@ const LoginPage: React.FC = () => {
 
   if (isLoading) {
     return <LoadingScreen message="Signing In..." />;
+  }
+
+  if (isAuthenticated && user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
+        <div className="bg-white/10 p-8 rounded-xl shadow-xl text-center">
+          <h2 className="text-2xl font-bold text-white mb-4">You are already signed in as {user.name} ({user.role})</h2>
+          <button
+            onClick={() => dispatch(logoutUser())}
+            className="mt-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all font-medium"
+          >
+            Sign Out & Switch Account
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
