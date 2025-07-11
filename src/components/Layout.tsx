@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, ReactNode } from 'react';
 import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { logoutUser } from '../redux/slices/authSlice';
@@ -20,7 +20,11 @@ import {
 import logo from '../assets/syncner-logo.png';
 import LoadingScreen from './LoadingScreen';
 
-const Layout: React.FC = () => {
+interface LayoutProps {
+  children?: ReactNode;
+}
+
+const Layout: React.FC<LayoutProps> = ({ children }) => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   
@@ -268,7 +272,7 @@ const Layout: React.FC = () => {
       {/* Main Content */}
       <div className="flex-1 overflow-hidden">
         <main className="h-full overflow-y-auto bg-black">
-          <Outlet />
+          {children}
         </main>
       </div>
     </div>
