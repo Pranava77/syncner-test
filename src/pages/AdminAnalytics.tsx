@@ -117,12 +117,16 @@ const AdminAnalytics: React.FC = () => {
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#A259F7', '#F95F62'];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 min-h-screen bg-gradient-to-br from-blue-50/60 via-purple-50/60 to-white dark:from-gray-900 dark:via-blue-950 dark:to-purple-950 py-8 px-2 md:px-8 relative overflow-x-hidden">
+      {/* Glassmorphism & Animated Gradient Overlay */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="w-full h-full bg-gradient-to-tr from-blue-400/10 via-purple-400/10 to-pink-400/10 animate-gradient-move" />
+      </div>
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between relative z-10 animate-fadein">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Analytics Dashboard</h1>
-          <p className="text-gray-600 dark:text-gray-300 mt-1">Comprehensive insights into platform performance</p>
+          <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 drop-shadow-lg animate-slidein">Analytics Dashboard</h1>
+          <p className="text-purple-700 dark:text-purple-200 mt-2 text-lg font-medium animate-fadein-slow">Empowering you with data-driven insights 🚀</p>
         </div>
         <div className="flex items-center space-x-3">
           <select
@@ -139,11 +143,11 @@ const AdminAnalytics: React.FC = () => {
             onClick={refreshData}
             className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           >
-            <ReloadIcon className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+            <ReloadIcon className="h-4 w-4 text-gray-600 dark:text-gray-400 animate-spin-on-hover" />
           </button>
           <button
             onClick={exportData}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center"
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center shadow-md hover:scale-105 active:scale-95 duration-150"
           >
             <ReaderIcon className="h-4 w-4 mr-2" />
             Export
@@ -152,76 +156,76 @@ const AdminAnalytics: React.FC = () => {
       </div>
 
       {/* Key Performance Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10 animate-fadein-slow">
+        <div className="bg-white/80 dark:bg-gray-800/80 rounded-2xl shadow-xl p-6 border border-blue-100 dark:border-blue-900/40 backdrop-blur-xl hover:shadow-2xl transition-shadow duration-300 group animate-slidein">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">Avg Task Score</p>
               <p className="text-3xl font-bold text-gray-900 dark:text-white">{performanceMetrics.averageTaskScore}%</p>
               <p className="text-green-600 dark:text-green-400 text-sm flex items-center mt-1">
-                <TrendingUp className="h-3 w-3 mr-1" />
+                <TrendingUp className="h-3 w-3 mr-1 animate-bounce-on-hover" />
                 +2.3% from last month
               </p>
             </div>
-            <div className="bg-blue-100 dark:bg-blue-900/20 p-3 rounded-lg">
-              <Award className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+            <div className="bg-blue-100 dark:bg-blue-900/20 p-3 rounded-xl shadow group-hover:scale-110 transition-transform">
+              <Award className="h-7 w-7 text-blue-600 dark:text-blue-400 animate-pop-on-hover" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div className="bg-white/80 dark:bg-gray-800/80 rounded-2xl shadow-xl p-6 border border-green-100 dark:border-green-900/40 backdrop-blur-xl hover:shadow-2xl transition-shadow duration-300 group animate-slidein">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">Completion Rate</p>
               <p className="text-3xl font-bold text-gray-900 dark:text-white">{performanceMetrics.completionRate}%</p>
               <p className="text-green-600 dark:text-green-400 text-sm flex items-center mt-1">
-                <TrendingUp className="h-3 w-3 mr-1" />
+                <TrendingUp className="h-3 w-3 mr-1 animate-bounce-on-hover" />
                 +5.1% from last month
               </p>
             </div>
-            <div className="bg-green-100 dark:bg-green-900/20 p-3 rounded-lg">
-              <Target className="h-6 w-6 text-green-600 dark:text-green-400" />
+            <div className="bg-green-100 dark:bg-green-900/20 p-3 rounded-xl shadow group-hover:scale-110 transition-transform">
+              <Target className="h-7 w-7 text-green-600 dark:text-green-400 animate-pop-on-hover" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div className="bg-white/80 dark:bg-gray-800/80 rounded-2xl shadow-xl p-6 border border-purple-100 dark:border-purple-900/40 backdrop-blur-xl hover:shadow-2xl transition-shadow duration-300 group animate-slidein">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">Avg Time/Module</p>
               <p className="text-3xl font-bold text-gray-900 dark:text-white">{performanceMetrics.averageTimePerModule}h</p>
               <p className="text-red-600 dark:text-red-400 text-sm flex items-center mt-1">
-                <TrendingUp className="h-3 w-3 mr-1 rotate-180" />
+                <TrendingUp className="h-3 w-3 mr-1 rotate-180 animate-bounce-on-hover" />
                 -0.8h from last month
               </p>
             </div>
-            <div className="bg-purple-100 dark:bg-purple-900/20 p-3 rounded-lg">
-              <Clock className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+            <div className="bg-purple-100 dark:bg-purple-900/20 p-3 rounded-xl shadow group-hover:scale-110 transition-transform">
+              <Clock className="h-7 w-7 text-purple-600 dark:text-purple-400 animate-pop-on-hover" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div className="bg-white/80 dark:bg-gray-800/80 rounded-2xl shadow-xl p-6 border border-orange-100 dark:border-orange-900/40 backdrop-blur-xl hover:shadow-2xl transition-shadow duration-300 group animate-slidein">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-600 dark:text-gray-400 text-sm">Student Retention</p>
               <p className="text-3xl font-bold text-gray-900 dark:text-white">{performanceMetrics.studentRetention}%</p>
               <p className="text-green-600 dark:text-green-400 text-sm flex items-center mt-1">
-                <TrendingUp className="h-3 w-3 mr-1" />
+                <TrendingUp className="h-3 w-3 mr-1 animate-bounce-on-hover" />
                 +1.2% from last month
               </p>
             </div>
-            <div className="bg-orange-100 dark:bg-orange-900/20 p-3 rounded-lg">
-              <Users className="h-6 w-6 text-orange-600 dark:text-orange-400" />
+            <div className="bg-orange-100 dark:bg-orange-900/20 p-3 rounded-xl shadow group-hover:scale-110 transition-transform">
+              <Users className="h-7 w-7 text-orange-600 dark:text-orange-400 animate-pop-on-hover" />
             </div>
           </div>
         </div>
       </div>
 
       {/* Charts Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10 animate-fadein-slow">
         {/* Students by Track Pie Chart */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div className="bg-white/80 dark:bg-gray-800/80 rounded-2xl shadow-xl p-6 border border-blue-100 dark:border-blue-900/40 backdrop-blur-xl animate-slidein">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Students by Track</h2>
           <ResponsiveContainer width="100%" height={250}>
             <PieChart>
@@ -244,7 +248,7 @@ const AdminAnalytics: React.FC = () => {
           </ResponsiveContainer>
         </div>
         {/* Submissions by Status Bar Chart */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div className="bg-white/80 dark:bg-gray-800/80 rounded-2xl shadow-xl p-6 border border-purple-100 dark:border-purple-900/40 backdrop-blur-xl animate-slidein">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Submissions by Status</h2>
           <ResponsiveContainer width="100%" height={250}>
             <ReBarChart data={analytics.submissionsByStatus || []}>
@@ -413,6 +417,20 @@ const AdminAnalytics: React.FC = () => {
           </div>
         </div>
       </div>
+      {/* Animations */}
+      <style>{`
+        @keyframes gradient-move { 0%{background-position:0% 50%;} 100%{background-position:100% 50%;} }
+        .animate-gradient-move { background-size: 200% 200%; animation: gradient-move 12s ease-in-out infinite; }
+        .animate-fadein { animation: fadein 1s ease; }
+        .animate-fadein-slow { animation: fadein 2s ease; }
+        .animate-slidein { animation: slidein 1.2s cubic-bezier(.4,0,.2,1); }
+        .animate-pop-on-hover:hover { transform: scale(1.15); transition: transform 0.2s; }
+        .animate-bounce-on-hover:hover { animation: bounce 0.7s; }
+        @keyframes fadein { from { opacity: 0; transform: translateY(20px);} to { opacity: 1; transform: none;} }
+        @keyframes slidein { from { opacity: 0; transform: translateX(-40px);} to { opacity: 1; transform: none;} }
+        @keyframes bounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-8px);} }
+        .animate-spin-on-hover:hover { animation: spin 1.2s linear infinite; }
+      `}</style>
     </div>
   );
 };

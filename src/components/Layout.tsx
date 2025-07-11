@@ -100,20 +100,25 @@ const Layout: React.FC = () => {
           {/* Unified Profile Section - clickable */}
           <Link
             to={user?.role === 'admin' ? '/admin/profile' : '/profile'}
-            className="flex items-center gap-3 w-full px-3 py-3 mb-2 rounded-lg transition-colors bg-gradient-to-r from-blue-50/80 to-purple-50/80 dark:from-blue-900/30 dark:to-purple-900/30 hover:bg-blue-100 dark:hover:bg-blue-800/60 focus:outline-none focus:ring-2 focus:ring-blue-400 group"
+            className="flex items-center gap-3 w-full px-3 py-4 mb-2 rounded-xl transition-colors bg-gradient-to-r from-blue-100/80 to-purple-100/80 dark:from-blue-900/40 dark:to-purple-900/40 hover:bg-blue-200/80 dark:hover:bg-blue-800/60 focus:outline-none focus:ring-2 focus:ring-blue-400 group shadow-lg border border-blue-100 dark:border-blue-900"
             tabIndex={0}
             aria-label="View profile"
           >
-            <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 rounded-full flex items-center justify-center">
-              <span className="text-white text-base font-bold">
+            <div className="bg-gradient-to-tr from-blue-400 to-purple-500 h-14 w-14 rounded-xl flex items-center justify-center overflow-hidden shadow-md border-2 border-blue-200 dark:border-blue-800">
+              {/* Use a placeholder image or user image if available */}
+              {/* <img src={user?.image || '/default-avatar.png'} alt="Profile" className="object-cover h-full w-full" /> */}
+              <span className="text-white text-2xl font-bold select-none">
                 {user?.name?.charAt(0) || 'U'}
               </span>
             </div>
             <div className="flex flex-col flex-1 min-w-0">
-              <span className="text-sm font-semibold text-gray-900 dark:text-white truncate">{user?.name}</span>
+              <span className="text-base font-bold text-gray-900 dark:text-white truncate">{user?.name}</span>
               <span className="text-xs text-gray-600 dark:text-gray-400 capitalize truncate">{user?.role}</span>
+              {user?.college && (
+                <span className="text-xs text-blue-500 dark:text-blue-300 mt-1 truncate">{user.college}</span>
+              )}
             </div>
-            <PersonIcon className="h-5 w-5 text-blue-500 dark:text-blue-400 opacity-80 group-hover:scale-110 transition-transform" />
+            <PersonIcon className="h-6 w-6 text-blue-500 dark:text-blue-400 opacity-80 group-hover:scale-110 transition-transform" />
           </Link>
           <button
             onClick={handleLogout}
@@ -198,24 +203,29 @@ const Layout: React.FC = () => {
         </nav>
 
         <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-gray-200 dark:border-gray-700">
-          {/* Unified Profile Section - clickable */}
+          {/* Unified Profile Section - clickable (Mobile) */}
           <Link
             to={user?.role === 'admin' ? '/admin/profile' : '/profile'}
             onClick={closeMobileMenu}
-            className="flex items-center gap-3 w-full px-3 py-3 mb-2 rounded-lg transition-colors bg-gradient-to-r from-blue-50/80 to-purple-50/80 dark:from-blue-900/30 dark:to-purple-900/30 hover:bg-blue-100 dark:hover:bg-blue-800/60 focus:outline-none focus:ring-2 focus:ring-blue-400 group"
+            className="flex items-center gap-3 w-full px-3 py-4 mb-2 rounded-xl transition-colors bg-gradient-to-r from-blue-100/80 to-purple-100/80 dark:from-blue-900/40 dark:to-purple-900/40 hover:bg-blue-200/80 dark:hover:bg-blue-800/60 focus:outline-none focus:ring-2 focus:ring-blue-400 group shadow-lg border border-blue-100 dark:border-blue-900"
             tabIndex={0}
             aria-label="View profile"
           >
-            <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 rounded-full flex items-center justify-center">
-              <span className="text-white text-base font-bold">
+            <div className="bg-gradient-to-tr from-blue-400 to-purple-500 h-14 w-14 rounded-xl flex items-center justify-center overflow-hidden shadow-md border-2 border-blue-200 dark:border-blue-800">
+              {/* Use a placeholder image or user image if available */}
+              {/* <img src={user?.image || '/default-avatar.png'} alt="Profile" className="object-cover h-full w-full" /> */}
+              <span className="text-white text-2xl font-bold select-none">
                 {user?.name?.charAt(0) || 'U'}
               </span>
             </div>
             <div className="flex flex-col flex-1 min-w-0">
-              <span className="text-sm font-semibold text-gray-900 dark:text-white truncate">{user?.name}</span>
+              <span className="text-base font-bold text-gray-900 dark:text-white truncate">{user?.name}</span>
               <span className="text-xs text-gray-600 dark:text-gray-400 capitalize truncate">{user?.role}</span>
+              {user?.college && (
+                <span className="text-xs text-blue-500 dark:text-blue-300 mt-1 truncate">{user.college}</span>
+              )}
             </div>
-            <PersonIcon className="h-5 w-5 text-blue-500 dark:text-blue-400 opacity-80 group-hover:scale-110 transition-transform" />
+            <PersonIcon className="h-6 w-6 text-blue-500 dark:text-blue-400 opacity-80 group-hover:scale-110 transition-transform" />
           </Link>
           <button
             onClick={() => {
