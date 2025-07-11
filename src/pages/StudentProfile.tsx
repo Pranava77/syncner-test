@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ApiService from '../services/api';
 import LoadingScreen from '../components/LoadingScreen';
 import { PersonIcon } from '@radix-ui/react-icons';
+import Layout from '../components/Layout';
 
 interface StudentProfileData {
   name: string;
@@ -42,8 +43,8 @@ const StudentProfile: React.FC = () => {
         const progressRes = await ApiService.getUserProgress();
         setProgress(progressRes.data);
         setError(null);
-      } catch (err: Error) {
-        setError(err.message || 'Failed to load profile');
+      } catch (err) {
+        setError((err as any)?.message || 'Failed to load profile');
       } finally {
         setLoading(false);
       }
@@ -64,8 +65,8 @@ const StudentProfile: React.FC = () => {
       setEditMode(false);
       setProfile({ ...profile, ...form });
       setError(null);
-    } catch (err: Error) {
-      setError(err.message || 'Failed to update profile');
+    } catch (err) {
+      setError((err as any)?.message || 'Failed to update profile');
     } finally {
       setLoading(false);
     }
@@ -75,17 +76,17 @@ const StudentProfile: React.FC = () => {
   if (error) return <div className="text-red-500 p-4">{error}</div>;
 
   return (
-    <div className="max-w-3xl mx-auto p-4 md:p-8 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 min-h-[80vh] rounded-xl shadow-xl">
+    <div className="p-4 md:p-8">
       <div className="flex flex-col md:flex-row gap-8 items-start">
         {/* Profile Card */}
         <div className="flex-1 bg-white dark:bg-gray-900 rounded-lg shadow p-6 mb-6 md:mb-0">
           <div className="flex items-center gap-4 mb-6">
             <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-3 rounded-full flex items-center justify-center">
-            <PersonIcon className="h-8 w-8 text-white" />
-          </div>
+              <PersonIcon className="h-8 w-8 text-white" />
+            </div>
             <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">{profile.name}</h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{profile.email}</p>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">{profile ? profile.name : ''}</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{profile ? profile.email : ''}</p>
             </div>
           </div>
           <h3 className="font-semibold text-lg mb-2 text-blue-700 dark:text-blue-300">Personal Information</h3>
