@@ -109,7 +109,7 @@ const Layout: React.FC = () => {
         {isSidebarCollapsed ? (
           <div className="flex flex-col items-center gap-4 pb-6">
             <Link
-              to={user?.role === 'admin' ? '/admin/profile' : '/profile'}
+              to={user?.role === 'admin' ? '/admin/profile' : '/student/profile'}
               className="flex items-center justify-center w-10 h-10 rounded-full bg-trueturquoise mb-2"
               title="Profile"
               aria-label="View profile"
@@ -132,7 +132,7 @@ const Layout: React.FC = () => {
           <div className="p-6 border-t border-trueturquoise">
             {/* Unified Profile Section - clickable */}
             <Link
-              to={user?.role === 'admin' ? '/admin/profile' : '/profile'}
+              to={user?.role === 'admin' ? '/admin/profile' : '/student/profile'}
               className="flex items-center gap-3 w-full px-3 py-3 mb-2 rounded-lg transition-colors bg-paperwhite/10 hover:bg-trueturquoise/10 focus:outline-none focus:ring-2 focus:ring-trueturquoise group"
               tabIndex={0}
               aria-label="View profile"
@@ -234,7 +234,7 @@ const Layout: React.FC = () => {
         <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-gray-200 dark:border-gray-700">
           {/* Unified Profile Section - clickable */}
           <Link
-            to={user?.role === 'admin' ? '/admin/profile' : '/profile'}
+            to={user?.role === 'admin' ? '/admin/profile' : '/student/profile'}
             onClick={closeMobileMenu}
             className="flex items-center gap-3 w-full px-3 py-3 mb-2 rounded-lg transition-colors bg-gradient-to-r from-blue-50/80 to-purple-50/80 dark:from-blue-900/30 dark:to-purple-900/30 hover:bg-blue-100 dark:hover:bg-blue-800/60 focus:outline-none focus:ring-2 focus:ring-blue-400 group"
             tabIndex={0}
