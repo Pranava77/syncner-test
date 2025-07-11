@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginUser, clearError } from '../redux/slices/authSlice';
 import { useAppDispatch, useAppSelector } from '../redux/store';
-import { getDefaultRoute } from '../utils/routing';
 import LoadingScreen from '../components/LoadingScreen';
 import logo from '../assets/syncner-logo.png';
 import {
