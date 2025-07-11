@@ -169,53 +169,43 @@ const AdminDashboard: React.FC = () => {
   console.log('All students from backend:', students);
   console.log('Filtered students:', filteredStudents);
 
-  // Only fetch analytics if lastFetched is null
   React.useEffect(() => {
-    if (analyticsState.lastFetched === null) {
-      // You may want to add a dateRange if you support it
-      // dispatch(fetchAnalytics(dateRange));
-      dispatch({ type: 'analytics/fetchAnalytics' });
+    // Always fetch analytics when the component mounts or activeTab changes to 'overview'
+    if (activeTab === 'overview') {
+      dispatch(fetchAnalytics());
     }
-  }, [analyticsState.lastFetched, dispatch]);
+  }, [dispatch, activeTab]);
 
-  // Loading states
-  if (studentsLoading && activeTab === 'students') {
+  // Determine overall loading state
+  const overallLoading = (
+    (activeTab === 'students' && studentsLoading) ||
+    (activeTab === 'overview' && analyticsLoading) ||
+    (activeTab === 'submissions' && submissionsLoading)
+  );
+
+  if (overallLoading) {
     return (
       <LoadingScreen 
-        message="Loading students..."
+        message={`Loading ${activeTab} data...`}
         showProgress={true}
         progressDuration={1600}
       />
     );
   }
 
-  if (analyticsLoading && activeTab === 'overview') {
-    return (
-      <LoadingScreen 
-        message="Loading analytics..."
-        showProgress={true}
-        progressDuration={1600}
-      />
-    );
-  }
+  // Error fallback for missing data after loading completes
+  const hasError = (
+    (activeTab === 'students' && !students) ||
+    (activeTab === 'overview' && !analytics) ||
+    (activeTab === 'submissions' && !submissions)
+  );
 
-  if (submissionsLoading && activeTab === 'submissions') {
-    return (
-      <LoadingScreen 
-        message="Loading submissions..."
-        showProgress={true}
-        progressDuration={1600}
-      />
-    );
-  }
-
-  // Error fallback for missing data
-  if (!students || !analyticsState || !submissions) {
-    console.error('AdminDashboard: Missing data', { students, analyticsState, submissions });
+  if (hasError) {
+    console.error('AdminDashboard: Missing data for active tab', { activeTab, students, analytics, submissions });
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">Failed to load admin dashboard data.</h2>
+          <h2 className="text-2xl font-bold text-red-600 mb-4">Failed to load {activeTab} data.</h2>
           <p className="text-gray-600 dark:text-gray-300 mb-4">Please check your network connection or try reloading the page.</p>
           <button
             onClick={() => window.location.reload()}

@@ -49,7 +49,7 @@ export const loginUser = createAsyncThunk(
   'auth/login',
   async (
     { email, password }: { email: string; password: string },
-    { dispatch, rejectWithValue }
+    { rejectWithValue }
   ) => {
     try {
       const response = await apiService.login(email, password);
