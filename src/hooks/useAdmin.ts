@@ -59,10 +59,6 @@ export const useStudents = (filters?: Record<string, any>) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchStudents();
-  }, [filters, fetchStudents]);
-
   const fetchStudents = useCallback(async () => {
     try {
       setLoading(true);
@@ -70,12 +66,16 @@ export const useStudents = (filters?: Record<string, any>) => {
       if (response.success) {
         setStudents(response.data);
       }
-    } catch (err: Error) {
+    } catch (err: any) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
   }, [filters]);
+
+  useEffect(() => {
+    fetchStudents();
+  }, [filters, fetchStudents]);
 
   const updateStudent = async (studentId: string, studentData: Partial<Student>) => {
     try {
@@ -84,7 +84,7 @@ export const useStudents = (filters?: Record<string, any>) => {
         await fetchStudents(); // Refresh the list
         return response.data;
       }
-    } catch (err: Error) {
+    } catch (err: any) {
       setError(err.message);
       throw err;
     }
@@ -97,7 +97,7 @@ export const useStudents = (filters?: Record<string, any>) => {
         await fetchStudents(); // Refresh the list
         return response.data;
       }
-    } catch (err: Error) {
+    } catch (err: any) {
       setError(err.message);
       throw err;
     }
@@ -110,7 +110,7 @@ export const useStudents = (filters?: Record<string, any>) => {
         await fetchStudents(); // Refresh the list
         return response.data;
       }
-    } catch (err: Error) {
+    } catch (err: any) {
       setError(err.message);
       throw err;
     }
@@ -132,10 +132,6 @@ export const useSubmissions = (taskId?: string) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchSubmissions();
-  }, [taskId, fetchSubmissions]);
-
   const fetchSubmissions = useCallback(async () => {
     try {
       setLoading(true);
@@ -144,12 +140,16 @@ export const useSubmissions = (taskId?: string) => {
       if (response.success) {
         setSubmissions(response.submissions);
       }
-    } catch (err: Error) {
+    } catch (err: any) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
   }, [taskId]);
+
+  useEffect(() => {
+    fetchSubmissions();
+  }, [taskId, fetchSubmissions]);
 
   const reviewSubmission = async (submissionId: string, reviewData: { score: number; feedback: string; status: string }) => {
     setLoading(true);
@@ -186,10 +186,6 @@ export const useAnalytics = (dateRange?: string) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchAnalytics();
-  }, [dateRange, fetchAnalytics]);
-
   const fetchAnalytics = async () => {
     try {
       setLoading(true);
@@ -197,12 +193,16 @@ export const useAnalytics = (dateRange?: string) => {
       if (response.success) {
         setAnalytics(response.data);
       }
-    } catch (err: Error) {
+    } catch (err: any) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchAnalytics();
+  }, [dateRange, fetchAnalytics]);
 
   return {
     analytics,
