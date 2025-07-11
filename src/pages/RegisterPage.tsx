@@ -3,16 +3,16 @@ import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { registerUser, clearError } from '../redux/slices/authSlice';
 import { getDefaultRoute } from '../utils/routing';
-import { 
-  PersonIcon, 
-  EnvelopeClosedIcon, 
-  LockClosedIcon, 
-  BuildingIcon, 
-  ExclamationTriangleIcon, 
-  EyeNoneIcon, 
-  EyeOpenIcon,
-  CheckCircledIcon,
-  CrossCircledIcon
+import {
+  PersonIcon as User,
+  EnvelopeClosedIcon as Mail,
+  LockClosedIcon as Lock,
+  BuildingIcon as Building,
+  ExclamationTriangleIcon as AlertCircle,
+  EyeNoneIcon as EyeOff,
+  EyeOpenIcon as Eye,
+  CheckCircledIcon as CheckCircle,
+  CrossCircledIcon as XCircle
 } from '@radix-ui/react-icons';
 import logo from '../assets/syncner-logo.png';
 
@@ -326,7 +326,7 @@ const RegisterPage: React.FC = () => {
                 College/University
               </label>
               <div className="relative">
-                <BuildingIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
                   id="college"
                   name="college"

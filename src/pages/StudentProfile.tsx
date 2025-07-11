@@ -3,11 +3,31 @@ import ApiService from '../services/api';
 import LoadingScreen from '../components/LoadingScreen';
 import { PersonIcon } from '@radix-ui/react-icons';
 
+interface StudentProfileData {
+  name: string;
+  email: string;
+  phone?: string;
+  location?: string;
+  college?: string;
+  department?: string;
+  careerTrack?: string;
+  gpa?: string;
+  graduationYear?: string;
+}
+
+interface StudentProgressData {
+  overallProgress: number;
+  streakDays: number;
+  totalPoints: number;
+  completedModulesCount: number;
+  completedTasksCount: number;
+}
+
 const StudentProfile: React.FC = () => {
-  const [profile, setProfile] = useState<any>(null);
-  const [progress, setProgress] = useState<any>(null);
+  const [profile, setProfile] = useState<StudentProfileData | null>(null);
+  const [progress, setProgress] = useState<StudentProgressData | null>(null);
   const [editMode, setEditMode] = useState(false);
-  const [form, setForm] = useState<any>({});
+  const [form, setForm] = useState<StudentProfileData>({ name: '', email: '' });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -22,7 +42,7 @@ const StudentProfile: React.FC = () => {
         const progressRes = await ApiService.getUserProgress();
         setProgress(progressRes.data);
         setError(null);
-      } catch (err: any) {
+      } catch (err: Error) {
         setError(err.message || 'Failed to load profile');
       } finally {
         setLoading(false);
@@ -44,7 +64,7 @@ const StudentProfile: React.FC = () => {
       setEditMode(false);
       setProfile({ ...profile, ...form });
       setError(null);
-    } catch (err: any) {
+    } catch (err: Error) {
       setError(err.message || 'Failed to update profile');
     } finally {
       setLoading(false);

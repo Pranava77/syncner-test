@@ -1,13 +1,7 @@
-import  { useState, useEffect } from 'react';
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate,
-  useLocation,
-} from 'react-router-dom';
+import { useEffect } from 'react';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './redux/store';
-import { fetchCurrentUser, restoreSession } from './redux/slices/authSlice';
+import { setAuth } from './redux/slices/authSlice';
 import { getDefaultRoute } from './utils/routing';
 import Layout from './components/Layout';
 import LandingPage from './pages/LandingPage';
@@ -35,60 +29,23 @@ import { AnimatePresence, motion } from 'framer-motion';
 function App() {
   const dispatch = useAppDispatch();
   const { isAuthenticated, user, isLoading, isRestoringSession } = useAppSelector((state) => state.auth);
-  const { isDarkMode } = useAppSelector((state) => state.theme);
-  
-  const [isInitializing, setIsInitializing] = useState(true);
+  const location = useLocation();
+
   const location = useLocation();
 
   useEffect(() => {
-    const initializeAuth = async () => {
-      // Restore session from localStorage
-      dispatch(restoreSession());
-      
-      const token = localStorage.getItem('token');
-      
-      if (token && !user) {
-        try {
-          // Fetch current user data
-          await dispatch(fetchCurrentUser()).unwrap();
-        } catch (error) {
-          console.error('App: Failed to fetch current user:', error);
-          // Clear invalid token
-          localStorage.removeItem('token');
-          dispatch(restoreSession()); // Update state after clearing
-        }
-      }
-      
-      setIsInitializing(false);
-    };
-
-    initializeAuth();
-  }, []); // Only run once on mount
-
-  useEffect(() => {
-    // Apply theme on mount and whenever isDarkMode changes
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-      document.documentElement.style.backgroundColor = '#111827'; // Tailwind dark:bg-gray-900
-    } else {
-      document.documentElement.classList.remove('dark');
-      document.documentElement.style.backgroundColor = '#f9fafb'; // Tailwind bg-gray-50
+    const token = localStorage.getItem('token');
+    if (token) {
+      dispatch(setAuth({ isAuthenticated: true, user: JSON.parse(localStorage.getItem('user') || '{}') }));
     }
-  }, [isDarkMode]);
+  }, [dispatch, user]);
 
-  // Show loading while initializing authentication or restoring session
-  console.log('App State:', {
-    isInitializing,
-    isLoading,
-    isRestoringSession,
-    isAuthenticated,
-    user,
-  });
+  if (isLoading || isRestoringSession) {
 
-  if (isInitializing || isLoading || isRestoringSession) {
+  if (isLoading || isRestoringSession) {
     return (
       <LoadingScreen 
-        message={isInitializing ? "Initializing..." : isRestoringSession ? "Restoring session..." : "Loading..."}
+        message={isRestoringSession ? "Restoring session..." : "Loading..."}
         showProgress={true}
         progressDuration={2500}
       />

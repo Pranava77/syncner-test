@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useAppSelector } from '../redux/store';
 import { ShieldIcon, ReloadIcon, ExclamationTriangleIcon, CheckCircledIcon } from '@radix-ui/react-icons';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,12 +6,7 @@ import { fetchDiagnostics } from '../redux/slices/diagnosticsSlice';
 import { useAppDispatch } from '../redux/store';
 import LoadingScreen from '../components/LoadingScreen';
 
-interface Diagnostic {
-  module: string;
-  healthy: boolean;
-  message: string;
-  error: string | null;
-}
+
 
 const AdminDiagnostics: React.FC = () => {
   const dispatch = useAppDispatch();

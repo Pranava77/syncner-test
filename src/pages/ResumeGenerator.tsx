@@ -7,23 +7,23 @@ import { useProgress } from '../hooks/useProgress';
 import { useTasks } from '../hooks/useTasks';
 import { useModules } from '../hooks/useModules';
 import { 
-  FileTextIcon, 
-  DownloadIcon, 
-  EyeOpenIcon, 
-  Pencil1Icon, 
-  PersonIcon, 
-  BriefcaseIcon, 
-  StarFilledIcon,
-  CodeIcon,
-  ColorWheelIcon,
-  BarChartIcon,
-  LightningBoltIcon,
-  EnvelopeClosedIcon,
-  CalendarIcon,
-  MagicStickIcon,
-  CheckCircledIcon,
-  ArrowTopRightIcon,
-  ClockIcon
+  FileTextIcon as FileText, 
+  DownloadIcon as Download, 
+  EyeOpenIcon as Eye, 
+  Pencil1Icon as Edit3, 
+  PersonIcon as User, 
+  BriefcaseIcon as Briefcase, 
+  StarFilledIcon as Star,
+  CodeIcon as Code,
+  ColorWheelIcon as Palette,
+  BarChartIcon as BarChart3,
+  LightningBoltIcon as Brain,
+  EnvelopeClosedIcon as Mail,
+  CalendarIcon as Calendar,
+  MagicStickIcon as Sparkles,
+  CheckCircledIcon as CheckCircle,
+  ArrowTopRightIcon as TrendingUp,
+  ClockIcon as Clock
 } from '@radix-ui/react-icons';
 import apiService from '../services/api';
 import logo from '../assets/syncner-logo.png';

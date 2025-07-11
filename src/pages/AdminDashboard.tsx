@@ -1,26 +1,20 @@
 import React, { useState } from 'react';
 import TaskReview from '../components/TaskReview';
 import {
-  GroupIcon,
-  ArrowTopRightIcon,
-  ReaderIcon,
-  ExclamationTriangleIcon,
-  DownloadIcon,
-  MagnifyingGlassIcon,
-  CheckCircledIcon,
-  CrossCircledIcon,
-  ClockIcon,
-  FileTextIcon,
-  BarChartIcon,
-  Pencil1Icon,
-  EyeOpenIcon,
-  TrashIcon,
-  PlusIcon,
-  EnvelopeClosedIcon,
-  MobileIcon,
-  PinIcon,
-  SaveIcon,
-  Cross1Icon,
+  BarChartIcon as BarChart3,
+  GroupIcon as Users,
+  FileTextIcon as FileText,
+  ArrowTopRightIcon as TrendingUp,
+  ReaderIcon as BookOpen,
+  MagnifyingGlassIcon as Search,
+  Pencil1Icon as Edit3,
+  TrashIcon as Trash2,
+  EnvelopeClosedIcon as Mail,
+  MobileIcon as Phone,
+  PinIcon as Pin,
+  SaveIcon as Save,
+  Cross1Icon as X,
+  EyeOpenIcon as Eye
 } from '@radix-ui/react-icons';
 import { useStudents, useSubmissions } from '../hooks/useAdmin';
 import logo from '../assets/syncner-logo.png';
@@ -39,18 +33,11 @@ const AdminDashboard: React.FC = () => {
 
   // Use real API data instead of mock data
   const { students, loading: studentsLoading, updateStudent, deleteStudent, addStudent, refetch } = useStudents();
-  const { submissions, loading: submissionsLoading, error: submissionsError, reviewSubmission } = useSubmissions();
-  const analyticsState = useSelector((state: any) => state.analytics);
+  const { submissions, loading: submissionsLoading, reviewSubmission } = useSubmissions();
+  const analyticsState = useSelector((state: { analytics: any }) => state.analytics);
   const analytics = analyticsState.data;
   const analyticsLoading = analyticsState.loading;
-  const analyticsError = analyticsState.error;
-
-  const settingsState = useSelector((state: any) => state.settings);
-  const settings = settingsState.data;
-  const settingsLoading = settingsState.loading;
-  const settingsError = settingsState.error;
-
-  const { user } = useAppSelector((state) => state.auth);
+  
 
   const getStatusColor = (status: string) => {
     switch (status) {

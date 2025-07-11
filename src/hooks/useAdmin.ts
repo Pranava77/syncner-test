@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import apiService from '../services/api';
 
 interface Student {
@@ -54,28 +54,28 @@ interface Analytics {
   modulePerformance: Array<{ module: string; completions: number; avgScore: number; avgTime: number }>;
 }
 
-export const useStudents = (filters?: any) => {
+export const useStudents = (filters?: Record<string, any>) => {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchStudents();
-  }, [filters]);
+  }, [filters, fetchStudents]);
 
-  const fetchStudents = async () => {
+  const fetchStudents = useCallback(async () => {
     try {
       setLoading(true);
       const response = await apiService.getStudents(filters);
       if (response.success) {
         setStudents(response.data);
       }
-    } catch (err: any) {
+    } catch (err: Error) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters]);
 
   const updateStudent = async (studentId: string, studentData: Partial<Student>) => {
     try {
@@ -84,7 +84,7 @@ export const useStudents = (filters?: any) => {
         await fetchStudents(); // Refresh the list
         return response.data;
       }
-    } catch (err: any) {
+    } catch (err: Error) {
       setError(err.message);
       throw err;
     }
@@ -97,7 +97,7 @@ export const useStudents = (filters?: any) => {
         await fetchStudents(); // Refresh the list
         return response.data;
       }
-    } catch (err: any) {
+    } catch (err: Error) {
       setError(err.message);
       throw err;
     }
@@ -110,7 +110,7 @@ export const useStudents = (filters?: any) => {
         await fetchStudents(); // Refresh the list
         return response.data;
       }
-    } catch (err: any) {
+    } catch (err: Error) {
       setError(err.message);
       throw err;
     }
@@ -134,9 +134,9 @@ export const useSubmissions = (taskId?: string) => {
 
   useEffect(() => {
     fetchSubmissions();
-  }, [taskId]);
+  }, [taskId, fetchSubmissions]);
 
-  const fetchSubmissions = async () => {
+  const fetchSubmissions = useCallback(async () => {
     try {
       setLoading(true);
       const response = await apiService.getSubmissions(taskId, 'admin');
@@ -144,12 +144,12 @@ export const useSubmissions = (taskId?: string) => {
       if (response.success) {
         setSubmissions(response.submissions);
       }
-    } catch (err: any) {
+    } catch (err: Error) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
-  };
+  }, [taskId]);
 
   const reviewSubmission = async (submissionId: string, reviewData: { score: number; feedback: string; status: string }) => {
     setLoading(true);
@@ -188,7 +188,7 @@ export const useAnalytics = (dateRange?: string) => {
 
   useEffect(() => {
     fetchAnalytics();
-  }, [dateRange]);
+  }, [dateRange, fetchAnalytics]);
 
   const fetchAnalytics = async () => {
     try {
@@ -197,7 +197,7 @@ export const useAnalytics = (dateRange?: string) => {
       if (response.success) {
         setAnalytics(response.data);
       }
-    } catch (err: any) {
+    } catch (err: Error) {
       setError(err.message);
     } finally {
       setLoading(false);

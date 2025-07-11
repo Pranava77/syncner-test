@@ -346,7 +346,7 @@ const TaskReview: React.FC<TaskReviewProps> = ({ submissions = [], onReview }) =
                     <div>
                       <h3 className="font-semibold text-gray-900 dark:text-white mb-3">Uploaded Files</h3>
                       <div className="space-y-2">
-                        {selectedSubmission.files.map((file: any, index: number) => {
+                        {selectedSubmission.files.map((file: string | { filename: string; originalName?: string }, index: number) => {
                           // file can be a string (old data) or object (new data)
                           let fileName: string;
                           let fileUrl: string;

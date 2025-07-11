@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAppSelector } from '../redux/store';
-import { canAccessRoute, getDefaultRoute } from '../utils/routing';
+import { getDefaultRoute } from '../utils/routing';
 import LoadingScreen from './LoadingScreen';
 
 interface ProtectedRouteProps {

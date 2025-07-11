@@ -1,7 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ChatBubbleIcon, PaperPlaneIcon, Cross1Icon, RobotIcon, PersonIcon, SizeIcon, ResetIcon, ExclamationTriangleIcon } from '@radix-ui/react-icons';
-import { useAppDispatch, useAppSelector } from '../redux/store';
-import { chatWithAI } from '../redux/slices/geminiSlice';
+import { PaperPlaneIcon, Cross1Icon, RobotIcon, PersonIcon, SizeIcon, ResetIcon, ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import apiService from '../services/api';
 
 interface Message {
@@ -12,7 +10,7 @@ interface Message {
 }
 
 const AIChat: React.FC = () => {
-  const dispatch = useAppDispatch();
+  
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -25,9 +23,9 @@ const AIChat: React.FC = () => {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { user } = useAppSelector((state) => state.auth);
+  
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -87,7 +85,7 @@ const AIChat: React.FC = () => {
         onClick={() => setIsOpen(true)}
         className="fixed bottom-4 right-4 lg:bottom-6 lg:right-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white p-3 lg:p-4 rounded-full shadow-lg hover:shadow-xl transition-all z-50 group"
       >
-        <ChatBubbleIcon className="h-5 w-5 lg:h-6 lg:w-6" />
+        
         <div className="absolute -top-1 -left-1 lg:-top-2 lg:-left-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 lg:h-5 lg:w-5 flex items-center justify-center animate-pulse">
           AI
         </div>
@@ -133,14 +131,7 @@ const AIChat: React.FC = () => {
       {!isMinimized && (
         <>
           {/* Error Banner */}
-          {error && (
-            <div className="bg-red-50 dark:bg-red-900/20 border-b border-red-200 dark:border-red-800 p-2 lg:p-3">
-              <div className="flex items-center space-x-2">
-                <ExclamationTriangleIcon className="h-3 w-3 lg:h-4 lg:w-4 text-red-500 flex-shrink-0" />
-                <p className="text-xs lg:text-sm text-red-700 dark:text-red-400">{error}</p>
-              </div>
-            </div>
-          )}
+          
 
           {/* Messages */}
           <div className="flex-1 overflow-y-auto p-3 lg:p-4 space-y-3 lg:space-y-4" style={{ height: 'calc(100% - 120px)' }}>

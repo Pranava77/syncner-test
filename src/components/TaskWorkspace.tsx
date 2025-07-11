@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../redux/store';
-import { generateFeedback } from '../redux/slices/geminiSlice';
 import { 
-  UploadIcon, 
-  PaperPlaneIcon, 
   CodeIcon, 
   FileTextIcon, 
-  Link2Icon, 
-  CheckCircledIcon, 
-  ExclamationTriangleIcon,
   ClockIcon,
   StarFilledIcon,
   EyeOpenIcon,
+  UploadIcon as Upload, 
+  PaperPlaneIcon as Send, 
+  Link2Icon as Link, 
+  CheckCircledIcon as CheckCircle, 
+  ExclamationTriangleIcon as AlertTriangle,
+  EyeOpenIcon as Eye,
 } from '@radix-ui/react-icons';
 import apiService from '../services/api';
 import LoadingScreen from './LoadingScreen';
@@ -37,7 +36,6 @@ interface TaskWorkspaceProps {
 }
 
 const TaskWorkspace: React.FC<TaskWorkspaceProps> = ({ task, onClose, onSubmit }) => {
-  const dispatch = useAppDispatch();
   const [activeTab, setActiveTab] = useState('instructions');
   const [submission, setSubmission] = useState({
     description: '',

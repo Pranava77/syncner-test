@@ -4,10 +4,18 @@ import LoadingScreen from '../components/LoadingScreen';
 import { Link } from 'react-router-dom';
 import { PersonIcon } from '@radix-ui/react-icons';
 
+interface AdminProfileData {
+  name: string;
+  email: string;
+  role: string;
+  phone?: string;
+  location?: string;
+}
+
 const AdminProfile: React.FC = () => {
-  const [profile, setProfile] = useState<any>(null);
+  const [profile, setProfile] = useState<AdminProfileData | null>(null);
   const [editMode, setEditMode] = useState(false);
-  const [form, setForm] = useState<any>({});
+  const [form, setForm] = useState<AdminProfileData>({ name: '', email: '', role: '' });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -20,7 +28,7 @@ const AdminProfile: React.FC = () => {
         setProfile(profileRes.data.user);
         setForm(profileRes.data.user);
         setError(null);
-      } catch (err: any) {
+      } catch (err: Error) {
         setError(err.message || 'Failed to load profile');
       } finally {
         setLoading(false);
@@ -42,7 +50,7 @@ const AdminProfile: React.FC = () => {
       setEditMode(false);
       setProfile({ ...profile, ...form });
       setError(null);
-    } catch (err: any) {
+    } catch (err: Error) {
       setError(err.message || 'Failed to update profile');
     } finally {
       setLoading(false);

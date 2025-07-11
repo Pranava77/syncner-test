@@ -5,19 +5,22 @@ import { fetchProgress } from '../redux/slices/progressSlice';
 import { fetchModules } from '../redux/slices/modulesSlice';
 import { fetchTasks } from '../redux/slices/tasksSlice';
 import { 
-  ReaderIcon, 
-  BriefcaseIcon, 
-  TrophyIcon, 
-  LightningBoltIcon, 
-  ChatBubbleIcon,
-  ArrowRightIcon,
-  PlayIcon,
-  CheckCircledIcon,
-  ClockIcon,
-  StarFilledIcon,
-  CodeIcon,
-  ColorWheelIcon,
-  BarChartIcon
+  import {
+  BriefcaseIcon as Briefcase,
+  CodeIcon as Code,
+  ColorWheelIcon as Palette,
+  BarChartIcon as BarChart3,
+  LightningBoltIcon as Brain,
+  ReaderIcon as BookOpen,
+  ArrowRightIcon as ArrowRight,
+  PlayIcon as Play,
+  CheckCircledIcon as CheckCircle,
+  ClockIcon as Clock,
+  StarFilledIcon as Star,
+  ChatBubbleIcon as MessageCircle,
+  TrophyIcon as Trophy,
+  BriefcaseIcon as BackpackIcon,
+} from '@radix-ui/react-icons';
 } from '@radix-ui/react-icons';
 import LoadingScreen from '../components/LoadingScreen';
 
@@ -38,7 +41,7 @@ const StudentDashboard: React.FC = () => {
     if ((!tasksState.data || tasksState.data.length === 0) || tasksState.lastFetched === null) {
       dispatch(fetchTasks({ trackId: user?.careerTrack }));
     }
-  }, [dispatch, user?.careerTrack]);
+  }, [dispatch, user?.careerTrack, modulesState.data, modulesState.lastFetched, progressState.data, progressState.lastFetched, tasksState.data, tasksState.lastFetched]);
 
   if (!user || !user.careerTrack) {
     return (

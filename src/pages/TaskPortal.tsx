@@ -4,24 +4,24 @@ import { useAppSelector, useAppDispatch } from '../redux/store';
 import { useCareerTrack } from '../hooks/useCareerTracks';
 import { useTasks, useAllStudentTasks } from '../hooks/useTasks';
 import { useProgress } from '../hooks/useProgress';
-import { 
-  BriefcaseIcon, 
-  ClockIcon, 
-  StarFilledIcon, 
-  MixerHorizontalIcon, 
-  MagnifyingGlassIcon,
+import {
+  BriefcaseIcon as Briefcase,
+  ClockIcon as Clock,
+  StarFilledIcon as Star,
+  MixerHorizontalIcon as Filter,
+  MagnifyingGlassIcon as Search,
   CodeIcon,
   ColorWheelIcon,
   BarChartIcon,
   LightningBoltIcon,
-  CheckCircledIcon,
-  ExclamationTriangleIcon,
-  PlayIcon,
-  EyeOpenIcon,
-  UploadIcon,
-  TargetIcon,
-  AwardIcon,
-  ReaderIcon,
+  CheckCircledIcon as CheckCircle,
+  ExclamationTriangleIcon as AlertTriangle,
+  PlayIcon as Play,
+  EyeOpenIcon as Eye,
+  UploadIcon as Upload,
+  TargetIcon as Target,
+  AwardIcon as Award,
+  ReaderIcon as Reader,
 } from '@radix-ui/react-icons';
 import { fetchTasks } from '../redux/slices/tasksSlice';
 import { fetchProgress } from '../redux/slices/progressSlice';

@@ -1,12 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { loginUser } from '../redux/slices/authSlice';
-import { AppDispatch, RootState } from '../redux/store';
+import { loginUser, clearError } from '../redux/slices/authSlice';
+import { useAppDispatch, useAppSelector } from '../redux/store';
+import { getDefaultRoute } from '../utils/routing';
+import LoadingScreen from '../components/LoadingScreen';
+import logo from '../assets/syncner-logo.png';
+import {
+  ExclamationTriangleIcon as AlertCircle,
+  MailIcon as Mail,
+  LockClosedIcon as LockClosedIcon
+} from '@radix-ui/react-icons';
 
-
-import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
-import { LockClosedIcon } from '@heroicons/react/solid';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');

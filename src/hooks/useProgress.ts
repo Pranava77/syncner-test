@@ -8,9 +8,9 @@ interface Progress {
   totalPoints: number;
   streakDays: number;
   lastActiveDate: string;
-  moduleProgress: any[];
-  taskProgress: any[];
-  achievements: any[];
+  moduleProgress: Array<{ moduleId: string; progress: number; status: string }>;
+  taskProgress: Array<{ taskId: string; progress: number; status: string }>;
+  achievements: Array<{ achievementId: string; dateAchieved: string }>;
   weeklyGoal: {
     target: number;
     current: number;

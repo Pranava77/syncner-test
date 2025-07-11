@@ -22,7 +22,7 @@ import LoadingScreen from '../components/LoadingScreen';
 // Add helper to extract YouTube video ID
 function extractYouTubeId(url: string): string | null {
   if (!url) return null;
-  const regExp = /^.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const regExp = /^.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
   const match = url.match(regExp);
   return match && match[1].length === 11 ? match[1] : null;
 }

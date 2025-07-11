@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import apiService from '../services/api';
 
 interface Module {
@@ -25,9 +25,9 @@ export const useModules = (trackId?: string) => {
 
   useEffect(() => {
     fetchModules();
-  }, [trackId]);
+  }, [trackId, fetchModules]);
 
-  const fetchModules = async () => {
+  const fetchModules = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -44,7 +44,7 @@ export const useModules = (trackId?: string) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [trackId]);
 
   return {
     modules,

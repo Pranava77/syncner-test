@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../redux/store';
 import { fetchSubmissions } from '../redux/slices/submissionsSlice';
-import { FileTextIcon, CheckCircledIcon, ClockIcon, StarFilledIcon, EyeOpenIcon, ExclamationTriangleIcon } from '@radix-ui/react-icons';
+import { FileTextIcon, CheckCircledIcon, ClockIcon, EyeOpenIcon, ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import LoadingScreen from '../components/LoadingScreen';
 
 const StudentSubmissions: React.FC = () => {

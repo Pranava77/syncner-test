@@ -1,27 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import {
   BarChartIcon,
-  ArrowTopRightIcon,
-  GroupIcon,
-  ClockIcon,
-  TargetIcon,
-  DownloadIcon,
   ReloadIcon,
-  StarFilledIcon,
   ReaderIcon,
   ExclamationTriangleIcon
 } from '@radix-ui/react-icons';
-import { useAnalytics } from '../hooks/useAdmin';
+
 import {
   PieChart, Pie, Cell, Tooltip as RechartsTooltip, Legend,
   BarChart as ReBarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer
 } from 'recharts';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { fetchAnalytics } from '../redux/slices/analyticsSlice';
 import { useAppDispatch } from '../redux/store';
 import LoadingScreen from '../components/LoadingScreen';
 
-const POLL_INTERVAL = 150000; // 150 seconds
+
 
 const AdminAnalytics: React.FC = () => {
   const [dateRange, setDateRange] = useState('30');

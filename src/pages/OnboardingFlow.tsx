@@ -18,7 +18,7 @@ const careerTracks = [
     id: 'ai-ml',
     title: 'AI/ML Engineering',
     description: 'Machine Learning, Deep Learning, Data Science',
-    icon: Brain,
+    icon: LightningBoltIcon,
     color: 'from-purple-500 to-pink-500',
     skills: ['Python', 'TensorFlow', 'PyTorch', 'Data Analysis']
   },
@@ -26,7 +26,7 @@ const careerTracks = [
     id: 'fullstack',
     title: 'Full Stack Development',
     description: 'Frontend & Backend Development, APIs, Databases',
-    icon: Code,
+    icon: CodeIcon,
     color: 'from-blue-500 to-cyan-500',
     skills: ['React', 'Node.js', 'Databases', 'API Design']
   },
@@ -34,7 +34,7 @@ const careerTracks = [
     id: 'ui-ux',
     title: 'UI/UX Design',
     description: 'User Interface Design, User Experience, Prototyping',
-    icon: Palette,
+    icon: ColorWheelIcon,
     color: 'from-green-500 to-emerald-500',
     skills: ['Figma', 'Design Systems', 'Prototyping', 'User Research']
   },
@@ -42,7 +42,7 @@ const careerTracks = [
     id: 'data-science',
     title: 'Data Science',
     description: 'Data Analysis, Visualization, Business Intelligence',
-    icon: BarChart3,
+    icon: BarChartIcon,
     color: 'from-orange-500 to-red-500',
     skills: ['SQL', 'Python', 'Tableau', 'Statistics']
   }

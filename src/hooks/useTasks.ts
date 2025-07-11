@@ -21,7 +21,7 @@ interface Task {
   status?: string;
 }
 
-export const useTasks = (trackId?: string, filters?: any) => {
+export const useTasks = (trackId?: string, filters?: Record<string, any>) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

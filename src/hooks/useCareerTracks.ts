@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import apiService from '../services/api';
 
 interface CareerTrack {
@@ -11,8 +11,8 @@ interface CareerTrack {
   careerPaths: string[];
   skills: string[];
   prerequisites: string[];
-  modules: any[];
-  tasks: any[];
+  modules: Module[];
+  tasks: Task[];
   enrollmentCount?: number;
   completionRate?: number;
 }
@@ -26,9 +26,9 @@ export const useCareerTrack = (trackId: string) => {
     if (trackId) {
       fetchTrack();
     }
-  }, [trackId]);
+  }, [trackId, fetchTrack]);
 
-  const fetchTrack = async () => {
+  const fetchTrack = useCallback(async () => {
     try {
       setLoading(true);
       const response = await apiService.getCareerTrack(trackId);

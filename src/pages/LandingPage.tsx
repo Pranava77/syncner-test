@@ -2,16 +2,16 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { getDefaultRoute } from '../utils/routing';
-import { 
-  TargetIcon, 
-  LightningBoltIcon, 
-  GroupIcon, 
-  ArrowRightIcon,
-  ReaderIcon,
-  StarFilledIcon,
-  BriefcaseIcon,
-  HamburgerMenuIcon,
-  Cross1Icon
+import {
+  ArrowRightIcon as ArrowRight,
+  HamburgerMenuIcon as Menu,
+  Cross1Icon as X,
+  LightningBoltIcon as Brain,
+  BriefcaseIcon as Briefcase,
+  TargetIcon as Target,
+  ReaderIcon as BookOpen,
+  StarFilledIcon as Award,
+  GroupIcon as Users
 } from '@radix-ui/react-icons';
 import logo from '../assets/syncner-logo.png';
 import LoadingScreen from '../components/LoadingScreen';
@@ -19,7 +19,6 @@ import LoadingScreen from '../components/LoadingScreen';
 const LandingPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { isDarkMode } = useAppSelector((state) => state.theme);
   const { isAuthenticated, user, isLoading } = useAppSelector((state) => state.auth);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
@@ -224,7 +223,7 @@ const LandingPage: React.FC = () => {
             className="bg-white text-blue-600 px-6 lg:px-8 py-3 lg:py-4 rounded-lg hover:bg-gray-100 transition-colors font-medium inline-flex items-center"
           >
             Get Started Today
-            <ArrowRightIcon className="ml-2 h-4 w-4 lg:h-5 lg:w-5" />
+            <ArrowRight className="ml-2 h-4 w-4 lg:h-5 lg:w-5" />
           </Link>
         </div>
       </section>

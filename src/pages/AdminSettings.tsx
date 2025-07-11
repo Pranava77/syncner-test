@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  GearIcon, 
-  GroupIcon, 
-  ReaderIcon, 
-  BriefcaseIcon, 
-  ShieldIcon, 
-  DatabaseIcon, 
+import {
+  GearIcon as Settings,
+  GroupIcon as Users,
+  ReaderIcon as BookOpen,
+  BriefcaseIcon as Briefcase,
+  DatabaseIcon as Database,
   SaveIcon,
-  PlusIcon,
-  Pencil1Icon,
+  PlusIcon as Plus,
+  Pencil1Icon as Edit3,
   TrashIcon,
   CheckCircledIcon
 } from '@radix-ui/react-icons';
 import apiService from '../services/api';
 import { useStudents } from '../hooks/useAdmin';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { fetchSettings } from '../redux/slices/settingsSlice';
 import { useAppDispatch } from '../redux/store';
 
