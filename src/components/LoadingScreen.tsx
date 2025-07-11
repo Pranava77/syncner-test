@@ -39,16 +39,12 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
             <img src={logo} alt="Syncner Logo" className="h-16 w-16 object-contain" />
           </div>
           <h1 className="text-2xl font-bold text-paperwhite mb-2">Syncner</h1>
-          <p className="text-teallight text-sm">Loading your experience...</p>
+          <p className="text-teallight text-sm">Syncing your success...</p>
         </div>
 
         {/* Progress Bar */}
         {showProgress && (
           <div className="w-64 mx-auto">
-            <div className="flex justify-between text-xs text-teallight mb-2">
-              <span>Loading</span>
-              <span>{Math.round(progress)}%</span>
-            </div>
             <div className="w-full bg-paperwhite/20 rounded-full h-2">
               <div 
                 className="bg-trueturquoise h-2 rounded-full transition-all duration-300 ease-out"
@@ -59,7 +55,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
         )}
 
         {/* Loading Message */}
-        <p className="text-teallight text-sm mt-4">{message}</p>
+        {/* Only show the main message above, not a separate one here */}
       </div>
     </div>
   );
