@@ -25,6 +25,14 @@ import AdminProfile from './pages/AdminProfile';
 import { AnimatePresence, motion } from 'framer-motion';
 import { fetchCurrentUser } from './redux/slices/authSlice';
 
+function AdminWrapper() {
+  return (
+    <ProtectedRoute requireAdmin>
+      <Layout />
+    </ProtectedRoute>
+  );
+}
+
 function App() {
   const dispatch = useAppDispatch();
   const { isAuthenticated, user, isLoading, isRestoringSession } = useAppSelector((state) => state.auth);
@@ -106,11 +114,7 @@ function App() {
               <StudentProfile />
             </motion.div>
           } />
-        <Route path="/admin/*" element={
-          <ProtectedRoute requireAdmin>
-            <Layout />
-          </ProtectedRoute>
-        }>
+        <Route path="/admin/*" element={<AdminWrapper />}>
           <Route index element={<AdminDashboard />} />
           <Route path="analytics" element={<AdminAnalytics />} />
           <Route path="diagnostics" element={<AdminDiagnostics />} />
