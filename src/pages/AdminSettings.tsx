@@ -1204,28 +1204,7 @@ const AdminSettings: React.FC = () => {
               />
               <p className="text-xs text-teallight">For reference. Not connected to any provider yet.</p>
             </div>
-            {/* Analytics Enabled Toggle */}
-            <div className="flex items-center justify-between">
-              <span className="text-paperwhite font-medium">Analytics Enabled</span>
-              <button
-                type="button"
-                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${settingsDraft?.integrations?.analyticsEnabled ? 'bg-true-turquoise' : 'bg-teallight/30'}`}
-                onClick={() => handleSettingChange('integrations', 'analyticsEnabled', !settingsDraft?.integrations?.analyticsEnabled)}
-              >
-                <span className={`h-4 w-4 bg-paperwhite rounded-full shadow transform transition-transform duration-300 ${settingsDraft?.integrations?.analyticsEnabled ? 'translate-x-6' : ''}`}></span>
-              </button>
-            </div>
-            {/* Backup Enabled Toggle */}
-            <div className="flex items-center justify-between">
-              <span className="text-paperwhite font-medium">Backup Enabled</span>
-              <button
-                type="button"
-                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${settingsDraft?.integrations?.backupEnabled ? 'bg-true-turquoise' : 'bg-teallight/30'}`}
-                onClick={() => handleSettingChange('integrations', 'backupEnabled', !settingsDraft?.integrations?.backupEnabled)}
-              >
-                <span className={`h-4 w-4 bg-paperwhite rounded-full shadow transform transition-transform duration-300 ${settingsDraft?.integrations?.backupEnabled ? 'translate-x-6' : ''}`}></span>
-              </button>
-            </div>
+     
             <button
               className="mt-4 bg-true-turquoise text-offblack px-6 py-2 rounded-lg hover:bg-true-turquoise/90 transition-all font-medium"
               onClick={handleSaveSettings}
