@@ -187,9 +187,9 @@ const TaskPortal: React.FC = () => {
           </h2>
           <ul className="space-y-2">
             {overdueTasks.map(task => (
-              <li key={task.id} className="flex flex-col md:flex-row md:items-center md:justify-between p-3 bg-paperwhite rounded-lg border border-rust/30">
+              <li key={task.id} className="flex flex-col md:flex-row md:items-center md:justify-between p-3 bg-paperwhite/10 rounded-lg border border-rust/30">
                 <div>
-                  <span className="font-semibold text-rust">{task.title}</span>
+                  <span className="font-semibold text-rust text-paperwhite">{task.title}</span>
                   <span className="ml-2 px-2 py-0.5 rounded-full text-xs font-medium bg-rust/10 text-rust">Overdue</span>
                   <div className="text-teallight text-sm">Due: {task.dueDate ? new Date(task.dueDate).toLocaleString() : 'No due date'}</div>
                 </div>
@@ -271,7 +271,7 @@ const TaskPortal: React.FC = () => {
       </div>
 
       {/* Filters */}
-      <div className="bg-paperwhite rounded-xl shadow-sm p-4 lg:p-6 mb-6 lg:mb-8">
+      <div className="bg-paperwhite/10 rounded-xl shadow-sm p-4 lg:p-6 mb-6 lg:mb-8">
         <div className="flex flex-col lg:flex-row gap-4">
           <div className="flex-1">
             <div className="relative">
@@ -281,7 +281,7 @@ const TaskPortal: React.FC = () => {
                 placeholder="Search tasks..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-9 lg:pl-10 pr-4 py-2 lg:py-3 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise focus:border-transparent bg-paperwhite text-offblack text-sm lg:text-base"
+                className="w-full pl-9 lg:pl-10 pr-4 py-2 lg:py-3 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise focus:border-transparent bg-paperwhite/10 text-paperwhite text-sm lg:text-base placeholder-teallight"
               />
             </div>
           </div>
@@ -291,7 +291,7 @@ const TaskPortal: React.FC = () => {
             <select
               value={selectedFilter}
               onChange={(e) => setSelectedFilter(e.target.value)}
-              className="border border-paperwhite/20 rounded-lg px-3 py-2 focus:ring-2 focus:ring-trueturquoise focus:border-transparent bg-paperwhite text-offblack"
+              className="border border-paperwhite/20 rounded-lg px-3 py-2 focus:ring-2 focus:ring-trueturquoise focus:border-transparent bg-paperwhite text-paperwhite"
             >
               <option value="all">All Tasks</option>
               <optgroup label="By Status">
@@ -333,7 +333,7 @@ const TaskPortal: React.FC = () => {
             <select
               value={selectedFilter}
               onChange={(e) => setSelectedFilter(e.target.value)}
-              className="w-full border border-paperwhite/20 rounded-lg px-3 py-2 focus:ring-2 focus:ring-trueturquoise focus:border-transparent bg-paperwhite text-offblack"
+              className="w-full border border-paperwhite/20 rounded-lg px-3 py-2 focus:ring-2 focus:ring-trueturquoise focus:border-transparent bg-paperwhite text-paperwhite"
             >
               <option value="all">All Tasks</option>
               <optgroup label="By Status">
@@ -362,7 +362,7 @@ const TaskPortal: React.FC = () => {
       {/* Task Grid */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
         {filteredTasks.map((task) => (
-          <div key={task.id} className="bg-paperwhite rounded-xl shadow-sm hover:shadow-md transition-shadow">
+          <div key={task.id} className="bg-paperwhite/10 rounded-xl shadow-sm hover:shadow-md transition-shadow">
             <div className="p-4 lg:p-6">
               {/* Header */}
               <div className="flex items-start justify-between mb-4">
@@ -383,7 +383,7 @@ const TaskPortal: React.FC = () => {
               </div>
 
               {/* Content */}
-              <h3 className="text-lg font-semibold text-offblack mb-2 line-clamp-2">{task.title}</h3>
+              <h3 className="text-lg font-semibold text-paperwhite mb-2 line-clamp-2">{task.title}</h3>
               <p className="text-teallight text-sm mb-4 line-clamp-2">{task.description}</p>
 
               {/* Metadata */}
@@ -400,12 +400,12 @@ const TaskPortal: React.FC = () => {
               {/* Skills */}
               <div className="flex flex-wrap gap-1 mb-4">
                 {task.skills.slice(0, 3).map((skill) => (
-                  <span key={skill} className="bg-paperwhite/10 text-offblack px-2 py-1 rounded text-xs">
+                  <span key={skill} className="bg-paperwhite/10 text-paperwhite px-2 py-1 rounded text-xs">
                     {skill}
                   </span>
                 ))}
                 {task.skills.length > 3 && (
-                  <span className="bg-paperwhite/10 text-offblack px-2 py-1 rounded text-xs">
+                  <span className="bg-paperwhite/10 text-paperwhite px-2 py-1 rounded text-xs">
                     +{task.skills.length - 3}
                   </span>
                 )}
@@ -415,7 +415,7 @@ const TaskPortal: React.FC = () => {
               <div className="flex flex-col lg:flex-row gap-2">
                 <button
                   onClick={() => handleViewDetails(task)}
-                  className="flex-1 py-2 border border-paperwhite/20 text-offblack rounded-lg hover:bg-paperwhite/10 transition-colors font-medium flex items-center justify-center"
+                  className="flex-1 py-2 border border-paperwhite/20 text-paperwhite rounded-lg hover:bg-paperwhite/10 transition-colors font-medium flex items-center justify-center"
                 >
                   <EyeOpenIcon className="h-3 w-3 lg:h-4 lg:w-4 mr-2 text-teallight" />
                   Details
@@ -482,7 +482,7 @@ const TaskPortal: React.FC = () => {
       {/* Task Detail Modal */}
       {selectedTask && !showWorkspace && (
         <div className="fixed inset-0 bg-offblack/80 flex items-center justify-center p-4 z-50">
-          <div className="bg-paperwhite rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-paperwhite/10 rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-4 lg:p-6">
               <div className="flex items-start justify-between mb-4 lg:mb-6">
                 <div className="flex-1 pr-4">
@@ -501,7 +501,7 @@ const TaskPortal: React.FC = () => {
                       </span>
                     </div>
                   </div>
-                  <h2 className="text-xl lg:text-2xl font-bold text-offblack mb-2">{selectedTask.title}</h2>
+                  <h2 className="text-xl lg:text-2xl font-bold text-paperwhite mb-2">{selectedTask.title}</h2>
                   <p className="text-teallight mb-4">{selectedTask.description}</p>
                   <div className="flex items-center text-sm text-teallight">
                     <Clock className="h-4 w-4 mr-1" />
@@ -519,19 +519,19 @@ const TaskPortal: React.FC = () => {
               <div className="grid lg:grid-cols-2 gap-6 lg:gap-8">
                 <div className="space-y-6">
                   <div>
-                    <h3 className="font-semibold text-offblack mb-3">Requirements:</h3>
+                    <h3 className="font-semibold text-paperwhite mb-3">Requirements:</h3>
                     <ul className="space-y-2">
                       {selectedTask.requirements.map((req: string, index: number) => (
                         <li key={index} className="flex items-start">
                           <CheckCircle className="h-4 w-4 text-trueturquoise mr-2 mt-0.5 flex-shrink-0" />
-                          <span className="text-offblack text-sm">{req}</span>
+                          <span className="text-paperwhite text-sm">{req}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
                   
                   <div>
-                    <h3 className="font-semibold text-offblack mb-3">Skills You'll Use:</h3>
+                    <h3 className="font-semibold text-paperwhite mb-3">Skills You'll Use:</h3>
                     <div className="flex flex-wrap gap-2">
                       {selectedTask.skills.map((skill: string) => (
                         <span key={skill} className="bg-trueturquoise/10 text-trueturquoise px-3 py-1 rounded-full text-sm">
@@ -544,24 +544,24 @@ const TaskPortal: React.FC = () => {
 
                 <div className="space-y-6">
                   <div>
-                    <h3 className="font-semibold text-offblack mb-3">Deliverables:</h3>
+                    <h3 className="font-semibold text-paperwhite mb-3">Deliverables:</h3>
                     <ul className="space-y-2">
                       {selectedTask.deliverables.map((deliverable: string, index: number) => (
                         <li key={index} className="flex items-start">
                           <Target className="h-4 w-4 text-trueturquoise mr-2 mt-0.5 flex-shrink-0" />
-                          <span className="text-offblack text-sm">{deliverable}</span>
+                          <span className="text-paperwhite text-sm">{deliverable}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
 
                   <div>
-                    <h3 className="font-semibold text-offblack mb-3">Resources:</h3>
+                    <h3 className="font-semibold text-paperwhite mb-3">Resources:</h3>
                     <ul className="space-y-2">
                       {selectedTask.resources.map((resource: string, index: number) => (
                         <li key={index} className="flex items-start">
                           <Reader className="h-4 w-4 text-teallight mr-2 mt-0.5 flex-shrink-0" />
-                          <span className="text-offblack text-sm">{resource}</span>
+                          <span className="text-paperwhite text-sm">{resource}</span>
                         </li>
                       ))}
                     </ul>
@@ -579,7 +579,7 @@ const TaskPortal: React.FC = () => {
                 </button>
                 <button
                   onClick={() => setSelectedTask(null)}
-                  className="lg:px-6 py-3 border border-paperwhite/20 text-offblack rounded-lg hover:bg-paperwhite/10 transition-colors font-medium"
+                  className="lg:px-6 py-3 border border-paperwhite/20 text-paperwhite rounded-lg hover:bg-paperwhite/10 transition-colors font-medium"
                 >
                   Cancel
                 </button>
