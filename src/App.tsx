@@ -66,7 +66,7 @@ function App() {
 
   return (
     <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
+      <Routes location={location} key={location.pathname + (isAuthenticated ? '-auth' : '-guest') + (user ? '-' + user.role : '')}>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={
           isAuthenticated && user && !isLoading && !isRestoringSession ? (
