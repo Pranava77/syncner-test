@@ -133,12 +133,12 @@ const TrainingModule: React.FC = () => {
     return (
       <div className="space-y-6 lg:space-y-8 p-4 lg:p-8 bg-offblack">
         <div className="text-center py-12">
-          <ReaderIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Module Not Found</h3>
-          <p className="text-gray-600 dark:text-gray-400">The requested module could not be found.</p>
+          <ReaderIcon className="h-12 w-12 text-teallight mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-paperwhite mb-2">Module Not Found</h3>
+          <p className="text-teallight">The requested module could not be found.</p>
           <Link
             to="/student/dashboard"
-            className="mt-4 inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
+            className="mt-4 inline-flex items-center text-trueturquoise hover:text-teallight"
           >
             <ChevronLeftIcon className="h-4 w-4 mr-1" />
             Back to Dashboard
@@ -149,18 +149,18 @@ const TrainingModule: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6 lg:space-y-8 p-4 lg:p-8 bg-black">
+    <div className="space-y-6 lg:space-y-8 p-4 lg:p-8 bg-offblack min-h-screen">
       {/* Header */}
       <div className="mb-8">
         <Link
           to="/student/dashboard"
-          className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium flex items-center mb-4"
+          className="text-trueturquoise hover:text-teallight font-medium flex items-center mb-4"
         >
           <ChevronLeftIcon className="h-4 w-4 mr-1" />
           Back to Dashboard
         </Link>
 
-        <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-8">
+        <div className="bg-paperwhite/10 rounded-xl shadow-lg p-8">
           <div className="flex items-start justify-between mb-6">
             <div>
               <div className="flex items-center space-x-3 mb-3">
@@ -215,7 +215,7 @@ const TrainingModule: React.FC = () => {
       <div className="grid lg:grid-cols-4 gap-8">
         {/* Lesson List */}
         <div className="lg:col-span-1">
-          <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-6 sticky top-8">
+          <div className="bg-paperwhite/10 rounded-xl shadow-lg p-6 sticky top-8">
             <h3 className="font-semibold text-paperwhite mb-4">Lessons</h3>
             <div className="space-y-2">
               {module.lessons.map((lesson: any, index: number) => (
@@ -242,9 +242,9 @@ const TrainingModule: React.FC = () => {
                       {completedLessons.has(lesson.id) ? (
                         <CheckCircledIcon className="h-4 w-4" />
                       ) : lesson.type === 'quiz' ? (
-                        <StarFilledIcon className="h-4 w-4" />
+                        <StarFilledIcon className="h-4 w-4 text-rust" />
                       ) : lesson.type === 'project' ? (
-                        <TargetIcon className="h-4 w-4" />
+                        <TargetIcon className="h-4 w-4 text-teallight" />
                       ) : (
                         <PlayIcon className="h-4 w-4" />
                       )}
@@ -292,13 +292,13 @@ const TrainingModule: React.FC = () => {
 
         {/* Content Area */}
         <div className="lg:col-span-3">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+          <div className="bg-paperwhite/5 rounded-xl shadow-sm">
             {!showQuiz ? (
               /* Video/Reading Content */
               <div>
                 {/* Video player for video lessons */}
                 {currentContent.type === 'video' && currentContent.videoUrl ? (
-                  <div className="aspect-video bg-black rounded-t-xl flex items-center justify-center">
+                  <div className="aspect-video bg-offblack rounded-t-xl flex items-center justify-center">
                     {extractYouTubeId(currentContent.videoUrl) ? (
                       <iframe
                         width="100%"
@@ -311,32 +311,32 @@ const TrainingModule: React.FC = () => {
                         className="w-full h-full rounded-t-xl"
                       />
                     ) : (
-                      <div className="text-white text-center p-8">Invalid or missing YouTube URL</div>
+                      <div className="text-paperwhite text-center p-8">Invalid or missing YouTube URL</div>
                     )}
                   </div>
                 ) : (
-                  <div className="aspect-video bg-gray-900 rounded-t-xl relative">
+                  <div className="aspect-video bg-offblack rounded-t-xl relative">
                     <div className="absolute inset-0 flex items-center justify-center">
                       <button
                         onClick={() => setIsPlaying(!isPlaying)}
-                        className="bg-white/20 hover:bg-white/30 rounded-full p-4 transition-colors"
+                        className="bg-paperwhite/20 hover:bg-paperwhite/30 rounded-full p-4 transition-colors"
                       >
                         {isPlaying ? (
-                          <PauseIcon className="h-8 w-8 text-white" />
+                          <PauseIcon className="h-8 w-8 text-paperwhite" />
                         ) : (
-                          <PlayIcon className="h-8 w-8 text-white ml-1" />
+                          <PlayIcon className="h-8 w-8 text-paperwhite ml-1" />
                         )}
                       </button>
                     </div>
-                    <div className="absolute bottom-4 left-4 text-white">
+                    <div className="absolute bottom-4 left-4 text-paperwhite">
                       <p className="text-lg font-semibold">{currentContent.title}</p>
-                      <p className="text-sm text-white/80">{currentContent.duration}</p>
+                      <p className="text-sm text-teallight">{currentContent.duration}</p>
                     </div>
                     <div className="absolute top-4 right-4">
                       <span className={`px-2 py-1 rounded text-xs font-medium ${
-                        currentContent.type === 'video' ? 'bg-blue-600 text-white' :
-                        currentContent.type === 'reading' ? 'bg-green-600 text-white' :
-                        'bg-purple-600 text-white'
+                        currentContent.type === 'video' ? 'bg-trueturquoise text-paperwhite' :
+                        currentContent.type === 'reading' ? 'bg-teallight text-offblack' :
+                        'bg-rust text-paperwhite'
                       }`}>
                         {currentContent.type.toUpperCase()}
                       </span>
@@ -344,16 +344,16 @@ const TrainingModule: React.FC = () => {
                   </div>
                 )}
                 <div className="p-8">
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                  <h2 className="text-2xl font-bold text-paperwhite mb-4">
                     {currentContent.title}
                   </h2>
-                  <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+                  <p className="text-teallight mb-6 leading-relaxed">
                     {currentContent.content}
                   </p>
 
-                  <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 mb-6">
-                    <h3 className="font-semibold text-blue-900 dark:text-blue-300 mb-2">Key Learning Points:</h3>
-                    <ul className="space-y-1 text-blue-800 dark:text-blue-400 text-sm">
+                  <div className="bg-trueturquoise/10 rounded-lg p-4 mb-6">
+                    <h3 className="font-semibold text-trueturquoise mb-2">Key Learning Points:</h3>
+                    <ul className="space-y-1 text-trueturquoise text-sm">
                       <li>• Understand core concepts and terminology</li>
                       <li>• Learn practical implementation techniques</li>
                       <li>• Master best practices and common patterns</li>
@@ -363,11 +363,11 @@ const TrainingModule: React.FC = () => {
 
                   {/* Resources */}
                   {currentContent.resources && (
-                    <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                      <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Additional Resources:</h3>
+                    <div className="bg-paperwhite/10 rounded-lg p-4">
+                      <h3 className="font-semibold text-paperwhite mb-2">Additional Resources:</h3>
                       <ul className="space-y-1">
                         {currentContent.resources.map((resource: string, index: number) => (
-                          <li key={index} className="text-sm text-gray-600 dark:text-gray-300">
+                          <li key={index} className="text-sm text-teallight">
                             • {resource}
                           </li>
                         ))}
@@ -380,7 +380,7 @@ const TrainingModule: React.FC = () => {
                     <div className="mt-6">
                       <button
                         onClick={handleLessonComplete}
-                        className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors font-medium flex items-center"
+                        className="bg-trueturquoise text-paperwhite px-6 py-2 rounded-lg hover:bg-teallight hover:text-offblack transition-colors font-medium flex items-center"
                       >
                         <CheckCircledIcon className="h-4 w-4 mr-2" />
                         Mark as Complete
@@ -393,23 +393,23 @@ const TrainingModule: React.FC = () => {
               /* Quiz Content */
               <div className="p-8">
                 <div className="text-center mb-8">
-                  <div className="bg-purple-100 dark:bg-purple-900/20 p-3 rounded-full w-fit mx-auto mb-4">
-                    <StarFilledIcon className="h-8 w-8 text-purple-600 dark:text-purple-400" />
+                  <div className="bg-rust/10 p-3 rounded-full w-fit mx-auto mb-4">
+                    <StarFilledIcon className="h-8 w-8 text-rust" />
                   </div>
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Knowledge Check</h2>
-                  <p className="text-gray-600 dark:text-gray-300">Test your understanding of the concepts covered</p>
+                  <h2 className="text-2xl font-bold text-paperwhite mb-2">Knowledge Check</h2>
+                  <p className="text-teallight">Test your understanding of the concepts covered</p>
                 </div>
 
                 <div className="max-w-2xl mx-auto">
-                  <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 mb-6">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                  <div className="bg-paperwhite/10 rounded-lg p-6 mb-6">
+                    <h3 className="text-lg font-semibold text-paperwhite mb-4">
                       {quiz.question}
                     </h3>
                     <div className="space-y-3">
                       {quiz.options.map((option: string, index: number) => (
                         <label
                           key={index}
-                          className="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-white dark:hover:bg-gray-600 transition-colors"
+                          className="flex items-center p-3 border border-paperwhite/20 rounded-lg cursor-pointer hover:bg-paperwhite/5 transition-colors"
                         >
                           <input
                             type="radio"
@@ -421,14 +421,14 @@ const TrainingModule: React.FC = () => {
                           />
                           <div className={`w-4 h-4 rounded-full border-2 mr-3 flex items-center justify-center ${
                             selectedAnswer === option
-                              ? 'border-blue-600 bg-blue-600'
-                              : 'border-gray-300 dark:border-gray-500'
+                              ? 'border-rust bg-rust'
+                              : 'border-paperwhite/30'
                           }`}>
                             {selectedAnswer === option && (
-                              <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                              <div className="w-1.5 h-1.5 bg-paperwhite rounded-full"></div>
                             )}
                           </div>
-                          <span className="text-gray-900 dark:text-white">{option}</span>
+                          <span className="text-paperwhite">{option}</span>
                         </label>
                       ))}
                     </div>
@@ -437,7 +437,7 @@ const TrainingModule: React.FC = () => {
                   <button
                     onClick={handleQuizSubmit}
                     disabled={!selectedAnswer}
-                    className="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full bg-rust text-paperwhite py-3 rounded-lg hover:bg-trueturquoise hover:text-offblack transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Submit Answer
                   </button>
@@ -446,21 +446,21 @@ const TrainingModule: React.FC = () => {
             )}
 
             {/* Navigation */}
-            <div className="flex items-center justify-between p-6 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between p-6 border-t border-paperwhite/10">
               <button
                 onClick={handlePrevious}
                 disabled={currentLesson === 0}
-                className="flex items-center px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="flex items-center px-4 py-2 text-teallight hover:text-trueturquoise disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 <ChevronLeftIcon className="h-4 w-4 mr-1" />
                 Previous
               </button>
 
               <div className="flex items-center space-x-4">
-                <div className="text-sm text-gray-500 dark:text-gray-400">
+                <div className="text-sm text-teallight">
                   {currentLesson + 1} of {module.lessons.length}
                 </div>
-                <div className="flex items-center text-yellow-600 dark:text-yellow-400">
+                <div className="flex items-center text-trueturquoise">
                   <StarFilledIcon className="h-4 w-4 mr-1" />
                   <span className="text-sm font-medium">
                     {Math.round((completedLessons.size / module.lessons.length) * 100)} XP
@@ -471,7 +471,7 @@ const TrainingModule: React.FC = () => {
               <button
                 onClick={handleNext}
                 disabled={currentLesson === module.lessons.length - 1}
-                className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="flex items-center px-4 py-2 bg-trueturquoise text-paperwhite rounded-lg hover:bg-teallight hover:text-offblack disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 Next
                 <ChevronRightIcon className="h-4 w-4 ml-1" />
