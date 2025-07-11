@@ -281,7 +281,7 @@ const TaskPortal: React.FC = () => {
                 placeholder="Search tasks..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-9 lg:pl-10 pr-4 py-2 lg:py-3 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise focus:border-transparent bg-paperwhite/10 text-paperwhite text-sm lg:text-base placeholder-teallight"
+                className="w-full pl-9 lg:pl-10 pr-4 py-2 lg:py-3 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise focus:border-transparent bg-paperwhite text-paperwhite text-sm lg:text-base placeholder-teallight"
               />
             </div>
           </div>
@@ -291,7 +291,7 @@ const TaskPortal: React.FC = () => {
             <select
               value={selectedFilter}
               onChange={(e) => setSelectedFilter(e.target.value)}
-              className="border border-paperwhite/20 rounded-lg px-3 py-2 focus:ring-2 focus:ring-trueturquoise focus:border-transparent bg-paperwhite text-paperwhite"
+              className="border border-paperwhite/20 rounded-lg px-3 py-2 focus:ring-2 focus:ring-trueturquoise focus:border-transparent bg-offblack text-paperwhite placeholder-teallight"
             >
               <option value="all">All Tasks</option>
               <optgroup label="By Status">
@@ -307,7 +307,7 @@ const TaskPortal: React.FC = () => {
               </optgroup>
               <optgroup label="By Category">
                 {trackCategories.map(category => (
-                  <option key={category} value={category}>
+                  <option key={category} value={category} className="bg-offblack text-paperwhite">
                     {category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
                   </option>
                 ))}
@@ -333,7 +333,7 @@ const TaskPortal: React.FC = () => {
             <select
               value={selectedFilter}
               onChange={(e) => setSelectedFilter(e.target.value)}
-              className="w-full border border-paperwhite/20 rounded-lg px-3 py-2 focus:ring-2 focus:ring-trueturquoise focus:border-transparent bg-paperwhite text-paperwhite"
+              className="w-full border border-paperwhite/20 rounded-lg px-3 py-2 focus:ring-2 focus:ring-trueturquoise focus:border-transparent bg-offblack text-paperwhite placeholder-teallight"
             >
               <option value="all">All Tasks</option>
               <optgroup label="By Status">
@@ -349,7 +349,7 @@ const TaskPortal: React.FC = () => {
               </optgroup>
               <optgroup label="By Category">
                 {trackCategories.map(category => (
-                  <option key={category} value={category}>
+                  <option key={category} value={category} className="bg-offblack text-paperwhite">
                     {category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
                   </option>
                 ))}
