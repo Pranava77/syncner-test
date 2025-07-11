@@ -74,10 +74,10 @@ const UpcomingTasks: React.FC = () => {
   if (error) return <div className="text-red-500">{error}</div>;
 
   return (
-    <div className="max-w-4xl mx-auto p-4 bg-paper-white dark:bg-offblack min-h-screen transition-colors">
-      <h2 className="text-3xl font-bold mb-6 text-offblack dark:text-paper-white">Upcoming Tasks</h2>
+    <div className="max-w-4xl mx-auto p-4">
+      <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Upcoming Tasks</h2>
       {tasks.length === 0 ? (
-        <div className="text-center py-12 text-teal-light">No upcoming tasks!</div>
+        <div className="text-center py-12 text-gray-500">No upcoming tasks!</div>
       ) : (
         <div className="grid gap-6 md:grid-cols-2">
           {tasks.map((task: any) => {
@@ -85,32 +85,32 @@ const UpcomingTasks: React.FC = () => {
             const isOverdue = due && due < new Date();
             const isDueSoon = due && due > new Date() && (due.getTime() - Date.now()) < 3 * 24 * 60 * 60 * 1000;
             const statusColor = isOverdue
-              ? 'bg-rust/10 text-rust border border-rust/40'
+              ? 'bg-red-100 text-red-700'
               : isDueSoon
-                ? 'bg-teal-light/20 text-teal-light border border-teal-light/40'
-                : 'bg-true-turquoise/10 text-true-turquoise border border-true-turquoise/40';
-            const categoryIcon = task.category === 'frontend' ? <CodeIcon className="h-5 w-5 text-true-turquoise" /> : <FileTextIcon className="h-5 w-5 text-teal-light" />;
+                ? 'bg-yellow-100 text-yellow-700'
+                : 'bg-green-100 text-green-700';
+            const categoryIcon = task.category === 'frontend' ? <CodeIcon className="h-5 w-5 text-blue-500" /> : <FileTextIcon className="h-5 w-5 text-purple-500" />;
             return (
-              <div key={task.id} className={`bg-paper-white dark:bg-offblack p-6 rounded-2xl shadow-xl border transition-all ${statusColor} hover:shadow-2xl hover:scale-[1.02]`}>
+              <div key={task.id} className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 transition-all">
                 <div className="flex items-center gap-3 mb-2">
                   {categoryIcon}
-                  <div className="font-semibold text-lg text-offblack dark:text-paper-white">{task.title}</div>
-                  <span className={`ml-auto px-2 py-1 rounded-full text-xs font-medium ${statusColor} transition-colors`}>{task.status || (isOverdue ? 'Overdue' : isDueSoon ? 'Due Soon' : 'Not Started')}</span>
+                  <div className="font-semibold text-lg text-gray-900 dark:text-white">{task.title}</div>
+                  <span className={`ml-auto px-2 py-1 rounded-full text-xs font-medium ${statusColor}`}>{task.status || (isOverdue ? 'Overdue' : isDueSoon ? 'Due Soon' : 'Not Started')}</span>
                 </div>
-                <div className="text-offblack/80 dark:text-paper-white/80 mb-2">{task.description}</div>
-                <div className="flex flex-wrap gap-3 text-sm text-offblack/70 dark:text-paper-white/70">
-                  <span className="flex items-center gap-1"><CalendarIcon className="h-4 w-4" /> Due: {due ? due.toLocaleDateString() : '\u2014'}</span>
+                <div className="text-gray-700 dark:text-gray-300 mb-2">{task.description}</div>
+                <div className="flex flex-wrap gap-3 text-sm text-gray-600 dark:text-gray-400">
+                  <span className="flex items-center gap-1"><CalendarIcon className="h-4 w-4" /> Due: {due ? due.toLocaleDateString() : '—'}</span>
                   <span className="flex items-center gap-1"><ClockIcon className="h-4 w-4" /> {task.estimatedTime}</span>
                   <span className="flex items-center gap-1"><StarFilledIcon className="h-4 w-4 text-yellow-500" /> {task.points} pts</span>
-                  <span className="flex items-center gap-1"><ExclamationTriangleIcon className="h-4 w-4 text-rust" /> {task.difficulty}</span>
+                  <span className="flex items-center gap-1"><ExclamationTriangleIcon className="h-4 w-4 text-orange-500" /> {task.difficulty}</span>
                 </div>
                 <div className="flex flex-wrap gap-2 mt-2">
                   {task.skills && task.skills.map((skill: string) => (
-                    <span key={skill} className="bg-true-turquoise/10 text-true-turquoise px-2 py-1 rounded text-xs">{skill}</span>
+                    <span key={skill} className="bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 px-2 py-1 rounded text-xs">{skill}</span>
                   ))}
                 </div>
                 <button
-                  className="mt-4 bg-true-turquoise text-paper-white py-2 rounded-lg hover:bg-teal-light hover:text-offblack transition-colors font-medium flex items-center justify-center shadow-sm"
+                  className="mt-4 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center"
                   onClick={() => { setSelectedTask(task); setShowModal(true); }}
                 >
                   <PaperPlaneIcon className="h-4 w-4 mr-2" /> Submit
@@ -123,88 +123,88 @@ const UpcomingTasks: React.FC = () => {
 
       {/* Modal for submission */}
       {showModal && selectedTask && (
-        <div className="fixed inset-0 bg-offblack/60 flex items-center justify-center z-50">
-          <div className="bg-paper-white dark:bg-offblack p-8 rounded-2xl shadow-2xl w-full max-w-lg relative border border-true-turquoise transition-all">
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-2xl w-full max-w-lg relative border border-gray-200 dark:border-gray-700 transition-all">
             <button
-              className="absolute top-3 right-3 text-offblack/40 hover:text-true-turquoise text-2xl transition-colors"
+              className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl"
               onClick={closeModal}
               aria-label="Close modal"
             >
-              \u00d7
+              ×
             </button>
-            <h3 className="text-2xl font-bold mb-4 text-offblack dark:text-paper-white">Submit Task: <span className="text-true-turquoise">{selectedTask.title}</span></h3>
+            <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Submit Task: <span className="text-blue-600 dark:text-blue-400">{selectedTask.title}</span></h3>
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
-                <label className="block text-sm font-semibold mb-1 text-offblack dark:text-paper-white">Description <span className="text-rust">*</span></label>
+                <label className="block text-sm font-semibold mb-1 text-gray-800 dark:text-gray-200">Description <span className="text-red-500">*</span></label>
                 <textarea
                   name="description"
                   value={form.description}
                   onChange={handleChange}
                   required
-                  className="w-full px-3 py-2 border border-true-turquoise/30 rounded-lg bg-paper-white dark:bg-offblack text-offblack dark:text-paper-white focus:ring-2 focus:ring-true-turquoise focus:border-true-turquoise transition"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                   rows={3}
                   placeholder="Describe your solution, approach, and any challenges you faced..."
                 />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold mb-1 text-offblack dark:text-paper-white">Live URL</label>
+                  <label className="block text-sm font-semibold mb-1 text-gray-800 dark:text-gray-200">Live URL</label>
                   <input
                     name="liveUrl"
                     value={form.liveUrl}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-true-turquoise/30 rounded-lg bg-paper-white dark:bg-offblack text-offblack dark:text-paper-white focus:ring-2 focus:ring-true-turquoise focus:border-true-turquoise transition"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                     type="url"
                     placeholder="https://your-demo.com"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold mb-1 text-offblack dark:text-paper-white">GitHub URL</label>
+                  <label className="block text-sm font-semibold mb-1 text-gray-800 dark:text-gray-200">GitHub URL</label>
                   <input
                     name="githubUrl"
                     value={form.githubUrl}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-true-turquoise/30 rounded-lg bg-paper-white dark:bg-offblack text-offblack dark:text-paper-white focus:ring-2 focus:ring-true-turquoise focus:border-true-turquoise transition"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                     type="url"
                     placeholder="https://github.com/username/repo"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-semibold mb-1 text-offblack dark:text-paper-white">Notes</label>
+                <label className="block text-sm font-semibold mb-1 text-gray-800 dark:text-gray-200">Notes</label>
                 <textarea
                   name="notes"
                   value={form.notes}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-true-turquoise/30 rounded-lg bg-paper-white dark:bg-offblack text-offblack dark:text-paper-white focus:ring-2 focus:ring-true-turquoise focus:border-true-turquoise transition"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                   rows={2}
                   placeholder="Any additional information, challenges faced, or future improvements..."
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold mb-1 text-offblack dark:text-paper-white">Upload Files</label>
+                <label className="block text-sm font-semibold mb-1 text-gray-800 dark:text-gray-200">Upload Files</label>
                 <input
                   type="file"
                   multiple
                   onChange={handleFileChange}
-                  className="block w-full text-sm text-offblack dark:text-paper-white border border-true-turquoise/30 rounded-lg cursor-pointer bg-paper-white dark:bg-offblack focus:ring-2 focus:ring-true-turquoise focus:border-true-turquoise transition"
+                  className="block w-full text-sm text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                 />
                 {form.files.length > 0 && (
                   <ul className="mt-2 space-y-1">
                     {form.files.map((file, idx) => (
-                      <li key={idx} className="flex items-center justify-between bg-teal-light/10 p-2 rounded">
-                        <span className="text-xs text-offblack dark:text-paper-white">{file.name} ({(file.size / 1024).toFixed(1)} KB)</span>
-                        <button type="button" className="text-rust ml-2" onClick={() => handleRemoveFile(idx)}>Remove</button>
+                      <li key={idx} className="flex items-center justify-between bg-gray-100 dark:bg-gray-700 p-2 rounded">
+                        <span className="text-xs text-gray-700 dark:text-gray-200">{file.name} ({(file.size / 1024).toFixed(1)} KB)</span>
+                        <button type="button" className="text-red-500 ml-2" onClick={() => handleRemoveFile(idx)}>Remove</button>
                       </li>
                     ))}
                   </ul>
                 )}
               </div>
-              {submitError && <div className="text-rust text-sm">{submitError}</div>}
+              {submitError && <div className="text-red-500 text-sm">{submitError}</div>}
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-true-turquoise text-paper-white py-2 rounded-lg hover:bg-teal-light hover:text-offblack disabled:opacity-50 font-semibold flex items-center justify-center mt-2 transition shadow-sm"
+                className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 font-semibold flex items-center justify-center mt-2 transition"
               >
                 <span className="flex items-center"><PaperPlaneIcon className="h-4 w-4 mr-2" />Submit Task</span>
               </button>
