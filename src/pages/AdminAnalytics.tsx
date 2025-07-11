@@ -121,14 +121,14 @@ const AdminAnalytics: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-offblack dark:text-paperwhite">Analytics Dashboard</h1>
-          <p className="text-teallight dark:text-teallight mt-1">Comprehensive insights into platform performance</p>
+          <h1 className="text-3xl font-bold text-paperwhite">Analytics Dashboard</h1>
+          <p className="text-teallight mt-1">Comprehensive insights into platform performance</p>
         </div>
         <div className="flex items-center space-x-3">
           <select
             value={dateRange}
             onChange={(e) => setDateRange(e.target.value)}
-            className="border border-teallight dark:border-teallight rounded-lg px-3 py-2 focus:ring-2 focus:ring-trueturquoise focus:border-transparent bg-paperwhite dark:bg-offblack text-offblack dark:text-paperwhite"
+            className="border border-teallight rounded-lg px-3 py-2 focus:ring-2 focus:ring-trueturquoise focus:border-transparent bg-offblack text-paperwhite placeholder-teallight"
           >
             <option value="7">Last 7 days</option>
             <option value="30">Last 30 days</option>
@@ -137,13 +137,13 @@ const AdminAnalytics: React.FC = () => {
           </select>
           <button
             onClick={refreshData}
-            className="p-2 border border-teallight dark:border-teallight rounded-lg hover:bg-teallight/40 dark:hover:bg-teallight/10 transition-colors"
+            className="p-2 border border-teallight rounded-lg hover:bg-teallight/20 transition-colors"
           >
-            <ReloadIcon className="h-4 w-4 text-offblack dark:text-paperwhite" />
+            <ReloadIcon className="h-4 w-4 text-teallight" />
           </button>
           <button
             onClick={exportData}
-            className="bg-trueturquoise text-paperwhite px-4 py-2 rounded-lg hover:bg-teallight transition-colors font-medium flex items-center"
+            className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-teallight hover:text-offblack transition-colors font-medium flex items-center"
           >
             <ReaderIcon className="h-4 w-4 mr-2" />
             Export
@@ -153,66 +153,66 @@ const AdminAnalytics: React.FC = () => {
 
       {/* Key Performance Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-paperwhite dark:bg-offblack rounded-xl shadow-sm p-6">
+        <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-teallight dark:text-teallight text-sm">Avg Task Score</p>
-              <p className="text-3xl font-bold text-offblack dark:text-paperwhite">{performanceMetrics.averageTaskScore}%</p>
-              <p className="text-trueturquoise dark:text-trueturquoise text-sm flex items-center mt-1">
+              <p className="text-teallight text-sm">Avg Task Score</p>
+              <p className="text-3xl font-bold text-paperwhite">{performanceMetrics.averageTaskScore}%</p>
+              <p className="text-trueturquoise text-sm flex items-center mt-1">
                 <TrendingUp className="h-3 w-3 mr-1" />
                 +2.3% from last month
               </p>
             </div>
-            <div className="bg-teallight dark:bg-teallight/20 p-3 rounded-lg">
-              <Award className="h-6 w-6 text-trueturquoise dark:text-trueturquoise" />
+            <div className="bg-teallight/10 p-3 rounded-lg">
+              <Award className="h-6 w-6 text-trueturquoise" />
             </div>
           </div>
         </div>
 
-        <div className="bg-paperwhite dark:bg-offblack rounded-xl shadow-sm p-6">
+        <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-teallight dark:text-teallight text-sm">Completion Rate</p>
-              <p className="text-3xl font-bold text-offblack dark:text-paperwhite">{performanceMetrics.completionRate}%</p>
-              <p className="text-trueturquoise dark:text-trueturquoise text-sm flex items-center mt-1">
+              <p className="text-teallight text-sm">Completion Rate</p>
+              <p className="text-3xl font-bold text-paperwhite">{performanceMetrics.completionRate}%</p>
+              <p className="text-trueturquoise text-sm flex items-center mt-1">
                 <TrendingUp className="h-3 w-3 mr-1" />
                 +5.1% from last month
               </p>
             </div>
-            <div className="bg-teallight dark:bg-teallight/20 p-3 rounded-lg">
-              <Target className="h-6 w-6 text-trueturquoise dark:text-trueturquoise" />
+            <div className="bg-teallight/10 p-3 rounded-lg">
+              <Target className="h-6 w-6 text-trueturquoise" />
             </div>
           </div>
         </div>
 
-        <div className="bg-paperwhite dark:bg-offblack rounded-xl shadow-sm p-6">
+        <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-teallight dark:text-teallight text-sm">Avg Time/Module</p>
-              <p className="text-3xl font-bold text-offblack dark:text-paperwhite">{performanceMetrics.averageTimePerModule}h</p>
-              <p className="text-rust dark:text-rust text-sm flex items-center mt-1">
+              <p className="text-teallight text-sm">Avg Time/Module</p>
+              <p className="text-3xl font-bold text-paperwhite">{performanceMetrics.averageTimePerModule}h</p>
+              <p className="text-rust text-sm flex items-center mt-1">
                 <TrendingUp className="h-3 w-3 mr-1 rotate-180" />
                 -0.8h from last month
               </p>
             </div>
-            <div className="bg-teallight dark:bg-teallight/20 p-3 rounded-lg">
-              <Clock className="h-6 w-6 text-trueturquoise dark:text-trueturquoise" />
+            <div className="bg-teallight/10 p-3 rounded-lg">
+              <Clock className="h-6 w-6 text-trueturquoise" />
             </div>
           </div>
         </div>
 
-        <div className="bg-paperwhite dark:bg-offblack rounded-xl shadow-sm p-6">
+        <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-teallight dark:text-teallight text-sm">Student Retention</p>
-              <p className="text-3xl font-bold text-offblack dark:text-paperwhite">{performanceMetrics.studentRetention}%</p>
-              <p className="text-trueturquoise dark:text-trueturquoise text-sm flex items-center mt-1">
+              <p className="text-teallight text-sm">Student Retention</p>
+              <p className="text-3xl font-bold text-paperwhite">{performanceMetrics.studentRetention}%</p>
+              <p className="text-trueturquoise text-sm flex items-center mt-1">
                 <TrendingUp className="h-3 w-3 mr-1" />
                 +1.2% from last month
               </p>
             </div>
-            <div className="bg-rust/10 dark:bg-rust/20 p-3 rounded-lg">
-              <Users className="h-6 w-6 text-rust dark:text-rust" />
+            <div className="bg-rust/10 p-3 rounded-lg">
+              <Users className="h-6 w-6 text-rust" />
             </div>
           </div>
         </div>
@@ -221,8 +221,8 @@ const AdminAnalytics: React.FC = () => {
       {/* Charts Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Students by Track Pie Chart */}
-        <div className="bg-paperwhite dark:bg-offblack rounded-xl shadow-sm p-6">
-          <h2 className="text-lg font-semibold text-offblack dark:text-paperwhite mb-4">Students by Track</h2>
+        <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6">
+          <h2 className="text-lg font-semibold text-paperwhite mb-4">Students by Track</h2>
           <ResponsiveContainer width="100%" height={250}>
             <PieChart>
               <Pie
@@ -244,8 +244,8 @@ const AdminAnalytics: React.FC = () => {
           </ResponsiveContainer>
         </div>
         {/* Submissions by Status Bar Chart */}
-        <div className="bg-paperwhite dark:bg-offblack rounded-xl shadow-sm p-6">
-          <h2 className="text-lg font-semibold text-offblack dark:text-paperwhite mb-4">Submissions by Status</h2>
+        <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6">
+          <h2 className="text-lg font-semibold text-paperwhite mb-4">Submissions by Status</h2>
           <ResponsiveContainer width="100%" height={250}>
             <ReBarChart data={analytics.submissionsByStatus || []}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -260,8 +260,8 @@ const AdminAnalytics: React.FC = () => {
       </div>
 
       {/* Weekly Attendance Bar Chart */}
-      <div className="bg-paperwhite dark:bg-offblack rounded-xl shadow-sm p-6">
-        <h2 className="text-lg font-semibold text-offblack dark:text-paperwhite mb-4">Weekly Attendance</h2>
+      <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6">
+        <h2 className="text-lg font-semibold text-paperwhite mb-4">Weekly Attendance</h2>
         <ResponsiveContainer width="100%" height={250}>
           <ReBarChart data={analytics.attendanceData || []}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -275,13 +275,13 @@ const AdminAnalytics: React.FC = () => {
       </div>
 
       {/* Engagement Trends */}
-      <div className="bg-paperwhite dark:bg-offblack rounded-xl shadow-sm p-6">
+      <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-offblack dark:text-paperwhite">Engagement Trends</h2>
+          <h2 className="text-xl font-semibold text-paperwhite">Engagement Trends</h2>
           <select
             value={selectedMetric}
             onChange={(e) => setSelectedMetric(e.target.value)}
-            className="border border-teallight dark:border-teallight rounded-lg px-3 py-2 focus:ring-2 focus:ring-trueturquoise focus:border-transparent bg-paperwhite dark:bg-offblack text-offblack dark:text-paperwhite"
+            className="border border-teallight rounded-lg px-3 py-2 focus:ring-2 focus:ring-trueturquoise focus:border-transparent bg-offblack text-paperwhite placeholder-teallight"
           >
             <option value="engagement">Daily Active Users</option>
             <option value="sessions">Total Sessions</option>
@@ -305,8 +305,8 @@ const AdminAnalytics: React.FC = () => {
                   title={`${new Date(data.date).toLocaleDateString()}: ${value}`}
                 ></div>
                 <div className="mt-2 text-center">
-                  <p className="text-sm font-medium text-offblack dark:text-paperwhite">{value}</p>
-                  <p className="text-xs text-teallight dark:text-teallight">
+                  <p className="text-sm font-medium text-paperwhite">{value}</p>
+                  <p className="text-xs text-teallight">
                     {new Date(data.date).toLocaleDateString('en-US', { weekday: 'short' })}
                   </p>
                 </div>
@@ -318,42 +318,42 @@ const AdminAnalytics: React.FC = () => {
 
       <div className="grid lg:grid-cols-2 gap-8">
         {/* Career Track Performance */}
-        <div className="bg-paperwhite dark:bg-offblack rounded-xl shadow-sm p-6">
-          <h2 className="text-xl font-semibold text-offblack dark:text-paperwhite mb-6">Career Track Performance</h2>
+        <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6">
+          <h2 className="text-xl font-semibold text-paperwhite mb-6">Career Track Performance</h2>
           <div className="space-y-4">
             {careerTrackData.map((track: any, index: number) => (
-              <div key={index} className="border border-teallight dark:border-teallight rounded-lg p-4">
+              <div key={index} className="border border-teallight rounded-lg p-4">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-semibold text-offblack dark:text-paperwhite">{track.track}</h3>
-                  <span className="bg-trueturquoise/10 dark:bg-trueturquoise/20 text-trueturquoise dark:text-trueturquoise px-2 py-1 rounded text-sm">
+                  <h3 className="font-semibold text-paperwhite">{track.track}</h3>
+                  <span className="bg-trueturquoise/10 text-trueturquoise px-2 py-1 rounded text-sm">
                     {track.students} students
                   </span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <p className="text-teallight dark:text-teallight">Avg Progress</p>
+                    <p className="text-teallight">Avg Progress</p>
                     <div className="flex items-center mt-1">
-                      <div className="w-16 bg-teallight dark:bg-teallight rounded-full h-2 mr-2">
+                      <div className="w-16 bg-teallight rounded-full h-2 mr-2">
                         <div
                           className="bg-trueturquoise h-2 rounded-full"
                           style={{ width: `${track.avgProgress}%` }}
                         ></div>
                       </div>
-                      <span className="text-offblack dark:text-paperwhite font-medium">{track.avgProgress}%</span>
+                      <span className="text-paperwhite font-medium">{track.avgProgress}%</span>
                     </div>
                   </div>
 
                   <div>
-                    <p className="text-teallight dark:text-teallight">Completion Rate</p>
+                    <p className="text-teallight">Completion Rate</p>
                     <div className="flex items-center mt-1">
-                      <div className="w-16 bg-teallight dark:bg-teallight rounded-full h-2 mr-2">
+                      <div className="w-16 bg-teallight rounded-full h-2 mr-2">
                         <div
                           className="bg-trueturquoise h-2 rounded-full"
                           style={{ width: `${track.completionRate}%` }}
                         ></div>
                       </div>
-                      <span className="text-offblack dark:text-paperwhite font-medium">{track.completionRate}%</span>
+                      <span className="text-paperwhite font-medium">{track.completionRate}%</span>
                     </div>
                   </div>
                 </div>
@@ -363,24 +363,24 @@ const AdminAnalytics: React.FC = () => {
         </div>
 
         {/* Module Performance */}
-        <div className="bg-paperwhite dark:bg-offblack rounded-xl shadow-sm p-6">
-          <h2 className="text-xl font-semibold text-offblack dark:text-paperwhite mb-6">Top Performing Modules</h2>
+        <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6">
+          <h2 className="text-xl font-semibold text-paperwhite mb-6">Top Performing Modules</h2>
           <div className="space-y-4">
             {modulePerformance.map((module: any, index: number) => (
-              <div key={index} className="flex items-center justify-between p-3 border border-teallight dark:border-teallight rounded-lg">
+              <div key={index} className="flex items-center justify-between p-3 border border-teallight rounded-lg">
                 <div className="flex items-center space-x-3">
                   <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 rounded-lg">
                     <ReaderIcon className="h-4 w-4 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-medium text-offblack dark:text-paperwhite">{module.module}</h3>
-                    <p className="text-sm text-teallight dark:text-teallight">{module.completions} completions</p>
+                    <h3 className="font-medium text-paperwhite">{module.module}</h3>
+                    <p className="text-sm text-teallight">{module.completions} completions</p>
                   </div>
                 </div>
 
                 <div className="text-right">
-                  <p className="text-sm font-medium text-offblack dark:text-paperwhite">Score: {module.avgScore}%</p>
-                  <p className="text-xs text-teallight dark:text-teallight">Time: {module.avgTime}h</p>
+                  <p className="text-sm font-medium text-paperwhite">Score: {module.avgScore}%</p>
+                  <p className="text-xs text-teallight">Time: {module.avgTime}h</p>
                 </div>
               </div>
             ))}
@@ -389,24 +389,24 @@ const AdminAnalytics: React.FC = () => {
       </div>
 
       {/* Detailed Reports Section */}
-      <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl p-6">
+      <div className="bg-paperwhite/10 rounded-xl p-6">
         <div className="flex items-start space-x-4">
-          <div className="bg-trueturquoise/10 dark:bg-trueturquoise/20 p-3 rounded-lg">
-            <BarChartIcon className="h-6 w-6 text-trueturquoise dark:text-trueturquoise" />
+          <div className="bg-trueturquoise/10 p-3 rounded-lg">
+            <BarChartIcon className="h-6 w-6 text-trueturquoise" />
           </div>
           <div className="flex-1">
-            <h3 className="font-semibold text-offblack dark:text-paperwhite mb-2">Advanced Analytics</h3>
-            <p className="text-teallight dark:text-teallight text-sm mb-4">
+            <h3 className="font-semibold text-paperwhite mb-2">Advanced Analytics</h3>
+            <p className="text-teallight text-sm mb-4">
               Access detailed reports, custom date ranges, and advanced filtering options for deeper insights into platform performance.
             </p>
             <div className="flex flex-wrap gap-3">
-              <button className="bg-trueturquoise text-paperwhite px-4 py-2 rounded-lg hover:bg-teallight transition-colors text-sm font-medium">
+              <button className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-teallight hover:text-offblack transition-colors text-sm font-medium">
                 Generate Custom Report
               </button>
-              <button className="border border-trueturquoise text-trueturquoise dark:text-trueturquoise px-4 py-2 rounded-lg hover:bg-trueturquoise/10 dark:hover:bg-trueturquoise/20 transition-colors text-sm font-medium">
+              <button className="border border-trueturquoise text-trueturquoise px-4 py-2 rounded-lg hover:bg-trueturquoise/10 transition-colors text-sm font-medium">
                 Schedule Reports
               </button>
-              <button className="border border-teallight dark:border-teallight text-offblack dark:text-paperwhite px-4 py-2 rounded-lg hover:bg-teallight/5 dark:hover:bg-teallight/10 transition-colors text-sm font-medium">
+              <button className="border border-teallight text-paperwhite px-4 py-2 rounded-lg hover:bg-teallight/10 transition-colors text-sm font-medium">
                 Export All Data
               </button>
             </div>
