@@ -106,7 +106,6 @@ function App() {
               <StudentProfile />
             </motion.div>
           } />
-        </Route>
         <Route path="/admin/*" element={
           <ProtectedRoute requireAdmin>
             <Layout>
