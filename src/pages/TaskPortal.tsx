@@ -178,7 +178,7 @@ const TaskPortal: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6 lg:space-y-8 p-4 lg:p-8 bg-black">
+    <div className="space-y-6 lg:space-y-8 p-4 lg:p-8 bg-offblack">
       {/* Overdue Tasks Section */}
       {overdueTasks.length > 0 && (
         <div className="mb-8 p-4 bg-rust/10 border-l-4 border-rust rounded-xl shadow-sm">
@@ -209,32 +209,32 @@ const TaskPortal: React.FC = () => {
       <div className="mb-6 lg:mb-8">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4">
           <div className="mb-4 lg:mb-0">
-            <h1 className="text-2xl lg:text-3xl font-bold text-offblack">Task Portal</h1>
+            <h1 className="text-2xl lg:text-3xl font-bold text-paperwhite">Task Portal</h1>
             <p className="text-teallight text-sm lg:text-base">Complete real-world projects to build your portfolio</p>
           </div>
           <div className="text-left lg:text-right">
             <p className="text-sm text-teallight">Career Track</p>
-            <p className="text-lg font-semibold text-offblack">{track?.name}</p>
+            <p className="text-lg font-semibold text-paperwhite">{track?.name}</p>
           </div>
         </div>
 
         {/* Track Progress */}
-        <div className="bg-gradient-to-r from-paperwhite/10 to-trueturquoise/10 rounded-xl p-4 lg:p-6">
+        <div className="bg-paperwhite/10 rounded-xl p-4 lg:p-6">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4">
             <div className="mb-4 lg:mb-0">
-              <h3 className="font-semibold text-offblack">Track Progress</h3>
+              <h3 className="font-semibold text-paperwhite">Track Progress</h3>
               <p className="text-teallight text-sm">Complete tasks to advance in your career track</p>
             </div>
             <div className="text-left lg:text-right">
               <div className="flex items-center space-x-2 mb-1">
                 <Award className="h-4 w-4 text-trueturquoise" />
-                <span className="text-sm font-medium text-offblack">
+                <span className="text-sm font-medium text-paperwhite">
                   {allStudentTasks.filter(t => t.status === 'completed').length} / {allStudentTasks.length} completed
                 </span>
               </div>
               <div className="w-32 bg-paperwhite/20 rounded-full h-2">
                 <div 
-                  className="bg-gradient-to-r from-trueturquoise to-teallight h-2 rounded-full transition-all"
+                  className="bg-trueturquoise h-2 rounded-full transition-all"
                   style={{ width: `${(allStudentTasks.filter(t => t.status === 'completed').length / allStudentTasks.length) * 100}%` }}
                 ></div>
               </div>
@@ -472,7 +472,7 @@ const TaskPortal: React.FC = () => {
       {filteredTasks.length === 0 && (
         <div className="text-center py-12">
           <Target className="h-12 w-12 text-teallight mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-offblack mb-2">No Tasks Found</h3>
+          <h3 className="text-lg font-medium text-paperwhite mb-2">No Tasks Found</h3>
           <p className="text-teallight">
             {searchTerm ? 'No tasks match your search criteria.' : 'No tasks available for the selected filter.'}
           </p>
