@@ -233,7 +233,7 @@ const Layout: React.FC = () => {
 
       {/* Main Content */}
       <div className="flex-1 overflow-hidden">
-        <main className="h-full overflow-y-auto p-4 lg:p-8 bg-black pt-20 lg:pt-8">
+        <main className="h-full overflow-y-auto bg-black">
           <Outlet />
         </main>
       </div>
