@@ -77,6 +77,14 @@ function App() {
   }, [isDarkMode]);
 
   // Show loading while initializing authentication or restoring session
+  console.log('App State:', {
+    isInitializing,
+    isLoading,
+    isRestoringSession,
+    isAuthenticated,
+    user,
+  });
+
   if (isInitializing || isLoading || isRestoringSession) {
     return (
       <LoadingScreen 
