@@ -41,9 +41,9 @@ const AdminDiagnostics: React.FC = () => {
 
   return (
     <div className="max-w-3xl mx-auto py-10 px-4">
-      <div className="flex items-center mb-6 gap-3">
-        <CheckCircledIcon className="h-7 w-7 text-blue-600" />
-        <h1 className="text-2xl font-bold text-white">System Diagnostics</h1>
+      <div className="flex items-center mb-8 gap-3">
+        <CheckCircledIcon className="h-7 w-7 text-trueturquoise" />
+        <h1 className="text-2xl font-bold text-paperwhite">System Diagnostics</h1>
       </div>
       <div className="flex items-center justify-between mb-4">
         <div className="text-gray-600 text-sm">

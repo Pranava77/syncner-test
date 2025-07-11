@@ -62,18 +62,20 @@ const AdminProfile: React.FC = () => {
 
   return (
     <div className="max-w-2xl mx-auto p-4 md:p-8 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 min-h-[80vh] rounded-xl shadow-xl">
-      <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-6 mb-6">
-        <div className="flex items-center gap-4 mb-6">
-          <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-3 rounded-full flex items-center justify-center">
-            <PersonIcon className="h-8 w-8 text-white" />
+      <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-8 mb-8 transition-shadow duration-200">
+        <div className="flex items-center gap-4 mb-8">
+          <div className="bg-trueturquoise p-3 rounded-full flex items-center justify-center shadow-md">
+            <PersonIcon className="h-8 w-8 text-paperwhite" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">{profile?.name || ''}</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400">{profile?.email || ''}</p>
+            <h2 className="text-xl font-bold text-paperwhite">{profile?.name || ''}</h2>
+            <p className="text-sm text-teallight">{profile?.email || ''}</p>
           </div>
         </div>
-        <h3 className="font-semibold text-lg mb-2 text-blue-700 dark:text-blue-300">Admin Information</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <h3 className="font-semibold text-lg mb-4 text-trueturquoise flex items-center gap-2">
+          <PersonIcon className="w-5 h-5" /> Admin Information
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-xs text-gray-500 mb-1">Name</label>
             <input name="name" value={form.name || ''} onChange={handleChange} disabled={!editMode} className={`w-full px-3 py-2 rounded border ${editMode ? 'border-blue-400 bg-white dark:bg-gray-800' : 'border-gray-200 bg-gray-100 dark:bg-gray-800'} focus:outline-none focus:ring-2 focus:ring-blue-400`} />
@@ -91,25 +93,24 @@ const AdminProfile: React.FC = () => {
             <input name="location" value={form.location || ''} onChange={handleChange} disabled={!editMode} className={`w-full px-3 py-2 rounded border ${editMode ? 'border-blue-400 bg-white dark:bg-gray-800' : 'border-gray-200 bg-gray-100 dark:bg-gray-800'} focus:outline-none focus:ring-2 focus:ring-blue-400`} />
           </div>
         </div>
-        <div className="mt-6 flex gap-3">
+        <div className="mt-8 flex gap-4">
           {editMode ? (
             <>
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded shadow transition" onClick={handleSave}>Save</button>
-              <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-5 py-2 rounded shadow transition" onClick={() => setEditMode(false)}>Cancel</button>
+              <button className="bg-trueturquoise hover:bg-teallight text-offblack px-6 py-2 rounded-lg shadow transition-all font-semibold" onClick={handleSave}>Save</button>
+              <button className="bg-paperwhite/10 hover:bg-paperwhite/20 text-paperwhite px-6 py-2 rounded-lg shadow transition-all font-semibold" onClick={() => setEditMode(false)}>Cancel</button>
             </>
           ) : (
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded shadow transition" onClick={() => setEditMode(true)}>Edit Profile</button>
+            <button className="bg-trueturquoise hover:bg-teallight text-offblack px-6 py-2 rounded-lg shadow transition-all font-semibold" onClick={() => setEditMode(true)}>Edit Profile</button>
           )}
         </div>
-        {success && <div className="text-green-600 mt-3">{success}</div>}
+        {success && <div className="text-trueturquoise mt-4">{success}</div>}
       </div>
-      <div className="border-t border-gray-200 dark:border-gray-700 my-6" />
-      <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-6">
-        <h3 className="font-semibold text-lg mb-4 text-purple-700 dark:text-purple-300 flex items-center gap-2">
-          <svg className="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m4 4h1a2 2 0 002-2v-5a2 2 0 00-2-2h-1.5a1.5 1.5 0 01-3 0H7a2 2 0 00-2 2v5a2 2 0 002 2h1" /></svg>
-          Admin Quick Links
+      <div className="border-t border-trueturquoise my-8" />
+      <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-8 transition-shadow duration-200">
+        <h3 className="font-semibold text-lg mb-4 text-trueturquoise flex items-center gap-2">
+          <PersonIcon className="w-5 h-5" /> Admin Quick Links
         </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <Link to="/admin/dashboard" className="group bg-gradient-to-tr from-blue-100 to-purple-100 dark:from-gray-800 dark:to-gray-900 rounded-xl p-5 flex items-center gap-4 shadow hover:scale-105 hover:shadow-lg transition-transform duration-200">
             <span className="bg-blue-500 text-white rounded-full p-2"><svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6m-6 0v6m0 0H7m6 0h6" /></svg></span>
             <span className="font-semibold text-gray-800 dark:text-gray-100 group-hover:text-blue-700">Dashboard</span>

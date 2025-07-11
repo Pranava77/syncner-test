@@ -85,8 +85,8 @@ const Layout: React.FC = () => {
                 to={item.path}
                 className={`flex items-center px-6 py-3 text-sm font-medium transition-colors ${
                   isActive(item.path)
-                    ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-r-2 border-blue-600 dark:border-blue-400'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
+                    ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise'
+                    : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'
                 }`}
               >
                 <Icon className="h-5 w-5 mr-3" />
@@ -186,8 +186,8 @@ const Layout: React.FC = () => {
                 onClick={closeMobileMenu}
                 className={`flex items-center px-6 py-3 text-sm font-medium transition-colors ${
                   isActive(item.path)
-                    ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-r-2 border-blue-600 dark:border-blue-400'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
+                    ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise'
+                    : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'
                 }`}
               >
                 <Icon className="h-5 w-5 mr-3" />
