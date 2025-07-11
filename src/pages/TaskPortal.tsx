@@ -178,23 +178,23 @@ const TaskPortal: React.FC = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto bg-paper-white dark:bg-offblack min-h-screen transition-colors">
+    <div className="max-w-7xl mx-auto">
       {/* Overdue Tasks Section */}
       {overdueTasks.length > 0 && (
-        <div className="mb-8 p-4 bg-rust/10 border-l-4 border-rust rounded-xl shadow-sm">
-          <h2 className="text-xl font-bold text-rust mb-2 flex items-center gap-2">
+        <div className="mb-8 p-4 bg-red-50 dark:bg-red-900/20 border-l-4 border-red-600 rounded-xl shadow-sm">
+          <h2 className="text-xl font-bold text-red-700 dark:text-red-400 mb-2 flex items-center gap-2">
             <AlertTriangle className="h-5 w-5" /> Overdue Tasks
           </h2>
           <ul className="space-y-2">
             {overdueTasks.map(task => (
-              <li key={task.id} className="flex flex-col md:flex-row md:items-center md:justify-between p-3 bg-paper-white dark:bg-offblack rounded-lg border border-rust/40">
+              <li key={task.id} className="flex flex-col md:flex-row md:items-center md:justify-between p-3 bg-white dark:bg-gray-800 rounded-lg border border-red-200 dark:border-red-700">
                 <div>
-                  <span className="font-semibold text-rust">{task.title}</span>
-                  <span className="ml-2 px-2 py-0.5 rounded-full text-xs font-medium bg-rust/10 text-rust">Overdue</span>
-                  <div className="text-offblack/70 dark:text-paper-white/70 text-sm">Due: {task.dueDate ? new Date(task.dueDate).toLocaleString() : 'No due date'}</div>
+                  <span className="font-semibold text-red-700 dark:text-red-400">{task.title}</span>
+                  <span className="ml-2 px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Overdue</span>
+                  <div className="text-gray-600 dark:text-gray-300 text-sm">Due: {task.dueDate ? new Date(task.dueDate).toLocaleString() : 'No due date'}</div>
                 </div>
                 <button
-                  className="mt-2 md:mt-0 px-4 py-2 bg-rust text-paper-white rounded hover:bg-offblack hover:text-rust font-medium transition-colors"
+                  className="mt-2 md:mt-0 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 font-medium"
                   onClick={() => handleStartTask(task)}
                 >
                   Submit Now
@@ -209,32 +209,32 @@ const TaskPortal: React.FC = () => {
       <div className="mb-6 lg:mb-8">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4">
           <div className="mb-4 lg:mb-0">
-            <h1 className="text-2xl lg:text-3xl font-bold text-offblack dark:text-paper-white">Task Portal</h1>
-            <p className="text-offblack/70 dark:text-paper-white/70 text-sm lg:text-base">Complete real-world projects to build your portfolio</p>
+            <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">Task Portal</h1>
+            <p className="text-gray-600 dark:text-gray-300 text-sm lg:text-base">Complete real-world projects to build your portfolio</p>
           </div>
           <div className="text-left lg:text-right">
-            <p className="text-sm text-offblack/60 dark:text-paper-white/60">Career Track</p>
-            <p className="text-lg font-semibold text-offblack dark:text-paper-white">{track?.name}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Career Track</p>
+            <p className="text-lg font-semibold text-gray-900 dark:text-white">{track?.name}</p>
           </div>
         </div>
 
         {/* Track Progress */}
-        <div className="bg-gradient-to-r from-teal-light/20 to-true-turquoise/10 rounded-xl p-4 lg:p-6">
+        <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl p-4 lg:p-6">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4">
             <div className="mb-4 lg:mb-0">
-              <h3 className="font-semibold text-offblack dark:text-paper-white">Track Progress</h3>
-              <p className="text-offblack/70 dark:text-paper-white/70 text-sm">Complete tasks to advance in your career track</p>
+              <h3 className="font-semibold text-gray-900 dark:text-white">Track Progress</h3>
+              <p className="text-gray-600 dark:text-gray-300 text-sm">Complete tasks to advance in your career track</p>
             </div>
             <div className="text-left lg:text-right">
               <div className="flex items-center space-x-2 mb-1">
-                <Award className="h-4 w-4 text-teal-light" />
-                <span className="text-sm font-medium text-offblack dark:text-paper-white">
+                <Award className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
+                <span className="text-sm font-medium text-gray-900 dark:text-white">
                   {allStudentTasks.filter(t => t.status === 'completed').length} / {allStudentTasks.length} completed
                 </span>
               </div>
-              <div className="w-32 bg-paper-white dark:bg-offblack rounded-full h-2 border border-true-turquoise/30">
+              <div className="w-32 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                 <div 
-                  className="bg-gradient-to-r from-true-turquoise to-teal-light h-2 rounded-full transition-all"
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 h-2 rounded-full transition-all"
                   style={{ width: `${(allStudentTasks.filter(t => t.status === 'completed').length / allStudentTasks.length) * 100}%` }}
                 ></div>
               </div>
@@ -243,10 +243,10 @@ const TaskPortal: React.FC = () => {
           
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-center">
             <div>
-              <p className="text-lg lg:text-2xl font-bold text-teal-light">
+              <p className="text-lg lg:text-2xl font-bold text-green-600 dark:text-green-400">
                 {allStudentTasks.filter(t => t.status === 'completed').length}
               </p>
-              <p className="text-xs lg:text-sm text-offblack/70 dark:text-paper-white/70">Completed</p>
+              <p className="text-xs lg:text-sm text-gray-600 dark:text-gray-400">Completed</p>
             </div>
             <div>
               <p className="text-lg lg:text-2xl font-bold text-blue-600 dark:text-blue-400">
