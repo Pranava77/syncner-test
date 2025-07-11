@@ -22,6 +22,6 @@ router.get('/health', async (req, res) => {
   }
 });
 
-router.get('/', protect, authorize('admin'), getAllProgress);
+
 
 export default router; 

@@ -72,14 +72,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // CORS - Simplified for development
-// app.use(cors({
-//   origin: [
-//     'https://syncner-test.netlify.app',
-//   ],
-//   credentials: true,
-//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-//   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
-// }));
+
 
 // Compression
 app.use(compression());
