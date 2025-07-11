@@ -31,7 +31,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
   }, [showProgress, progressDuration]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-offblack p-0 m-0">
+    <div className="min-h-screen flex items-center justify-center bg-offblack p-4">
       <div className="text-center">
         {/* Logo */}
         <div className="mb-8">
