@@ -1209,7 +1209,7 @@ const AdminSettings: React.FC = () => {
               <span className="text-paperwhite font-medium">Analytics Enabled</span>
               <button
                 type="button"
-                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${settingsDraft?.integrations?.analyticsEnabled ? 'bg-true-turquoise' : 'bg-offblack'}`}
+                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${settingsDraft?.integrations?.analyticsEnabled ? 'bg-true-turquoise' : 'bg-teallight/30'}`}
                 onClick={() => handleSettingChange('integrations', 'analyticsEnabled', !settingsDraft?.integrations?.analyticsEnabled)}
               >
                 <span className={`h-4 w-4 bg-paperwhite rounded-full shadow transform transition-transform duration-300 ${settingsDraft?.integrations?.analyticsEnabled ? 'translate-x-6' : ''}`}></span>
@@ -1220,7 +1220,7 @@ const AdminSettings: React.FC = () => {
               <span className="text-paperwhite font-medium">Backup Enabled</span>
               <button
                 type="button"
-                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${settingsDraft?.integrations?.backupEnabled ? 'bg-true-turquoise' : 'bg-offblack'}`}
+                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${settingsDraft?.integrations?.backupEnabled ? 'bg-true-turquoise' : 'bg-teallight/30'}`}
                 onClick={() => handleSettingChange('integrations', 'backupEnabled', !settingsDraft?.integrations?.backupEnabled)}
               >
                 <span className={`h-4 w-4 bg-paperwhite rounded-full shadow transform transition-transform duration-300 ${settingsDraft?.integrations?.backupEnabled ? 'translate-x-6' : ''}`}></span>
