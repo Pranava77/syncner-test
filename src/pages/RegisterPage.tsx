@@ -124,6 +124,7 @@ const RegisterPage: React.FC = () => {
     if (registerUser.fulfilled.match(result)) {
       const { user: registeredUser } = result.payload;
       const redirectPath = getDefaultRoute(registeredUser);
+      window.location.href = redirectPath;
     }
   };
 

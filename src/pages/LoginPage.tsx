@@ -39,8 +39,6 @@ const LoginPage: React.FC = () => {
     console.log('Login result:', result);
 
     if (loginUser.fulfilled.match(result) && result.payload && result.payload.user) {
-      // Fetch the current user to update Redux state
-      await dispatch(fetchCurrentUser());
       const { user: loggedInUser } = result.payload;
       const redirectPath = getDefaultRoute(loggedInUser);
       navigate(redirectPath, { replace: true });
