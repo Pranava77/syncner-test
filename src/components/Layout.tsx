@@ -67,7 +67,7 @@ const Layout: React.FC = () => {
   }
 
   return (
-    <div className="flex h-screen bg-offblack transition-colors">
+    <div className="flex h-screen bg-black transition-colors">
       {/* Desktop Sidebar */}
       <div className="hidden lg:flex w-64 bg-offblack shadow-lg border-r border-gray-200 dark:border-gray-700 flex-col">
         <div className="p-6 border-b border-gray-200 dark:border-gray-700">
@@ -233,7 +233,7 @@ const Layout: React.FC = () => {
 
       {/* Main Content */}
       <div className="flex-1 overflow-hidden">
-        <main className="h-full overflow-y-auto p-4 lg:p-8 bg-offblack pt-20 lg:pt-8">
+        <main className="h-full overflow-y-auto p-4 lg:p-8 bg-black pt-20 lg:pt-8">
           <Outlet />
         </main>
       </div>
