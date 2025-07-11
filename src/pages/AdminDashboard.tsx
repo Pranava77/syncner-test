@@ -22,9 +22,10 @@ import {
 } from '@radix-ui/react-icons';
 import { useStudents, useSubmissions } from '../hooks/useAdmin';
 import logo from '../assets/syncner-logo.png';
-import { useAppSelector } from '../redux/store';
+import { useAppSelector, useAppDispatch } from '../redux/store';
 import { useSelector } from 'react-redux';
 import LoadingScreen from '../components/LoadingScreen';
+import { fetchAnalytics } from '../redux/slices/analyticsSlice';
 
 const AdminDashboard: React.FC = () => {
   const [selectedFilter, setSelectedFilter] = useState('all');
@@ -41,6 +42,7 @@ const AdminDashboard: React.FC = () => {
   const analyticsState = useSelector((state: { analytics: any }) => state.analytics);
   const analytics = analyticsState.data;
   const analyticsLoading = analyticsState.loading;
+  const dispatch = useAppDispatch();
   
 
   const getStatusColor = (status: string) => {
@@ -166,6 +168,15 @@ const AdminDashboard: React.FC = () => {
   // Debug: Log all students and filtered students
   console.log('All students from backend:', students);
   console.log('Filtered students:', filteredStudents);
+
+  // Only fetch analytics if lastFetched is null
+  React.useEffect(() => {
+    if (analyticsState.lastFetched === null) {
+      // You may want to add a dateRange if you support it
+      // dispatch(fetchAnalytics(dateRange));
+      dispatch({ type: 'analytics/fetchAnalytics' });
+    }
+  }, [analyticsState.lastFetched, dispatch]);
 
   // Loading states
   if (studentsLoading && activeTab === 'students') {
