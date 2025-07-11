@@ -117,7 +117,7 @@ const AdminAnalytics: React.FC = () => {
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#A259F7', '#F95F62'];
 
   return (
-    <div className="space-y-8 bg-offblack min-h-screen">
+    <div className="space-y-8 bg-offblack min-h-screen p-4 lg:p-8">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
