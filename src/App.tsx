@@ -96,44 +96,39 @@ function App() {
           <Route path="submissions" element={<KeepAlive id="student-submissions"><StudentSubmissions /></KeepAlive>} />
           <Route index element={<Navigate to="dashboard" replace />} />
         </Route>
-        <Route path="/profile" element={
-          <ProtectedRoute>
+        <Route path="profile" element={
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
             >
-              <Layout>
-                <StudentProfile />
-              </Layout>
+              <StudentProfile />
             </motion.div>
-          </ProtectedRoute>
-        } />
-        <Route path="/admin/profile" element={
-          <ProtectedRoute requireAdmin>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Layout>
-                <AdminProfile />
-              </Layout>
-            </motion.div>
-          </ProtectedRoute>
-        } />
+          } />
+        </Route>
         <Route path="/admin/*" element={
           <ProtectedRoute requireAdmin>
-            <Layout />
+            <Layout>
+              <Routes>
+                <Route index element={<AdminDashboard />} />
+                <Route path="analytics" element={<AdminAnalytics />} />
+                <Route path="diagnostics" element={<AdminDiagnostics />} />
+                <Route path="settings" element={<AdminSettings />} />
+                <Route path="profile" element={
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <AdminProfile />
+                  </motion.div>
+                } />
+              </Routes>
+            </Layout>
           </ProtectedRoute>
-        }>
-          <Route index element={<AdminDashboard />} />
-          <Route path="analytics" element={<AdminAnalytics />} />
-          <Route path="diagnostics" element={<AdminDiagnostics />} />
-          <Route path="settings" element={<AdminSettings />} />
-        </Route>
+        } />
       </Routes>
     </AnimatePresence>
   );
