@@ -36,7 +36,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
         {/* Logo */}
         <div className="mb-8">
           <div className="inline-block mb-4">
-            <img src={logo} alt="Syncner Logo" className="h-16 w-16 object-contain" />
+            <img src={logo} alt="Syncner Logo" className="h-20 w-20 object-contain" />
           </div>
           <h1 className="text-2xl font-bold text-paperwhite mb-2">Syncner</h1>
           <p className="text-teallight text-sm">Syncing your success...</p>
