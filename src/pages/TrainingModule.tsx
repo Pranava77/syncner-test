@@ -149,7 +149,7 @@ const TrainingModule: React.FC = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto bg-offblack min-h-screen">
+    <div className="space-y-6 lg:space-y-8 p-4 lg:p-8 bg-black">
       {/* Header */}
       <div className="mb-8">
         <Link
