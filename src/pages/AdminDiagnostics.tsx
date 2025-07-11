@@ -40,18 +40,18 @@ const AdminDiagnostics: React.FC = () => {
   }
 
   return (
-    <div className="max-w-3xl mx-auto py-10 px-4">
+    <div className="space-y-6 lg:space-y-8 p-4 lg:p-8 bg-black">
       <div className="flex items-center mb-8 gap-3">
         <CheckCircledIcon className="h-7 w-7 text-trueturquoise" />
         <h1 className="text-2xl font-bold text-paperwhite">System Diagnostics</h1>
       </div>
       <div className="flex items-center justify-between mb-4">
-        <div className="text-gray-600 text-sm">
+        <div className="text-teallight text-sm">
           Last checked: {timestamp ? new Date(timestamp).toLocaleString() : '—'}
         </div>
         <button
           onClick={refreshDiagnostics}
-          className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+          className="flex items-center gap-2 px-3 py-1.5 bg-trueturquoise text-offblack rounded hover:bg-teallight hover:text-offblack transition font-semibold"
           disabled={loading}
         >
           <ReloadIcon className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
@@ -59,23 +59,23 @@ const AdminDiagnostics: React.FC = () => {
         </button>
       </div>
       <div className="mb-4">
-        <span className={`font-semibold ${healthyCount === totalCount ? 'text-green-600' : 'text-red-600'}`}>{healthyCount}/{totalCount}</span>
-        {' '}modules healthy
+        <span className={`font-semibold ${healthyCount === totalCount ? 'text-trueturquoise' : 'text-rust'}`}>{healthyCount}/{totalCount}</span>
+        {' '}<span className="text-teallight">modules healthy</span>
       </div>
       {error && (
-        <div className="bg-red-100 text-red-700 px-4 py-2 rounded mb-4 flex items-center gap-2">
+        <div className="bg-rust/10 text-rust px-4 py-2 rounded mb-4 flex items-center gap-2">
           <ExclamationTriangleIcon className="h-4 w-4" />
           {error}
         </div>
       )}
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-gray-900 shadow rounded-lg">
+        <table className="min-w-full bg-offblack shadow rounded-lg">
           <thead>
             <tr>
-              <th className="px-4 py-2 text-left text-white bg-gray-800">Module</th>
-              <th className="px-4 py-2 text-left text-white bg-gray-800">Status</th>
-              <th className="px-4 py-2 text-left text-white bg-gray-800">Message</th>
-              <th className="px-4 py-2 text-left text-white bg-gray-800">Error</th>
+              <th className="px-4 py-2 text-left text-paperwhite bg-paperwhite/10">Module</th>
+              <th className="px-4 py-2 text-left text-paperwhite bg-paperwhite/10">Status</th>
+              <th className="px-4 py-2 text-left text-paperwhite bg-paperwhite/10">Message</th>
+              <th className="px-4 py-2 text-left text-paperwhite bg-paperwhite/10">Error</th>
             </tr>
           </thead>
           <tbody>
@@ -86,21 +86,21 @@ const AdminDiagnostics: React.FC = () => {
                 errorText = diag.message;
               }
               return (
-                <tr key={diag.module} className={`transition-colors ${diag.healthy ? 'bg-gray-800 hover:bg-gray-700' : 'bg-gray-700 hover:bg-gray-800'}`}>
-                  <td className="px-4 py-2 font-medium text-white">{diag.module}</td>
+                <tr key={diag.module} className={`transition-colors ${diag.healthy ? 'bg-paperwhite/10 hover:bg-paperwhite/20' : 'bg-rust/10 hover:bg-rust/20'}`}>
+                  <td className="px-4 py-2 font-medium text-paperwhite">{diag.module}</td>
                   <td className="px-4 py-2">
                     {diag.healthy ? (
-                      <span className="flex items-center gap-1 text-green-400 font-semibold">
+                      <span className="flex items-center gap-1 text-trueturquoise font-semibold">
                         <CheckCircledIcon className="h-4 w-4" /> Healthy
                       </span>
                     ) : (
-                      <span className="flex items-center gap-1 text-red-400 font-semibold">
+                      <span className="flex items-center gap-1 text-rust font-semibold">
                         <ExclamationTriangleIcon className="h-4 w-4" /> Unhealthy
                       </span>
                     )}
                   </td>
-                  <td className="px-4 py-2 text-sm text-white">{!errorText ? diag.message : ''}</td>
-                  <td className="px-4 py-2 text-xs text-red-400">{errorText || '—'}</td>
+                  <td className="px-4 py-2 text-sm text-paperwhite">{!errorText ? diag.message : ''}</td>
+                  <td className="px-4 py-2 text-xs text-rust">{errorText || '—'}</td>
                 </tr>
               );
             })}
