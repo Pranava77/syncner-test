@@ -167,7 +167,7 @@ const authSlice = createSlice({
         if (action.payload && action.payload.user && action.payload.token) {
           state.user = action.payload.user;
           state.token = action.payload.token;
-          state.isAuthenticated = true;
+          state.isAuthenticated = true; // <-- always boolean
           state.error = null;
           localStorage.setItem('token', action.payload.token);
         } else {
@@ -191,12 +191,20 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
-        state.isAuthenticated = true;
-        state.isRestoringSession = false;
-        state.error = null;
-        localStorage.setItem('token', action.payload.token);
+        if (action.payload && action.payload.user && action.payload.token) {
+          state.user = action.payload.user;
+          state.token = action.payload.token;
+          state.isAuthenticated = true; // <-- always boolean
+          state.isRestoringSession = false;
+          state.error = null;
+          localStorage.setItem('token', action.payload.token);
+        } else {
+          state.user = null;
+          state.token = null;
+          state.isAuthenticated = false;
+          state.isRestoringSession = false;
+          state.error = 'Registration failed: Invalid response from server.';
+        }
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -211,10 +219,17 @@ const authSlice = createSlice({
       })
       .addCase(fetchCurrentUser.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.user = action.payload.user;
-        state.isAuthenticated = true;
-        state.isRestoringSession = false;
-        state.error = null;
+        if (action.payload && action.payload.user) {
+          state.user = action.payload.user;
+          state.isAuthenticated = true; // <-- always boolean
+          state.isRestoringSession = false;
+          state.error = null;
+        } else {
+          state.user = null;
+          state.isAuthenticated = false;
+          state.isRestoringSession = false;
+          state.error = 'Failed to fetch user: Invalid response from server.';
+        }
       })
       .addCase(fetchCurrentUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -233,11 +248,12 @@ const authSlice = createSlice({
       })
       .addCase(updateUserProfile.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.user = { ...state.user, ...action.payload.user };
-        state.error = null;
-        
-        // Ensure the updated user data is properly set
-        if (action.payload.user.profileComplete) {
+        if (action.payload && action.payload.user) {
+          state.user = { ...state.user, ...action.payload.user };
+          state.isAuthenticated = true; // <-- always boolean
+          state.error = null;
+        } else {
+          state.error = 'Profile update failed: Invalid response from server.';
         }
       })
       .addCase(updateUserProfile.rejected, (state, action) => {
