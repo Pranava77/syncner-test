@@ -107,7 +107,7 @@ const StudentDashboard: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6 lg:space-y-8 p-4 lg:p-8 bg-offblack">
+    <div className="space-y-6 lg:space-y-8 p-4 lg:p-8 bg-black">
       {/* Welcome Section */}
       <div className={`bg-trueturquoise/10 rounded-xl p-6 lg:p-8 text-paperwhite`}>
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
