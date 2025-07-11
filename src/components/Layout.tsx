@@ -52,7 +52,7 @@ const Layout: React.FC = () => {
   ];
 
   const adminNavItems = [
-    { path: '/admin', icon: GroupIcon, label: 'Students' },
+    { path: '/admin', icon: GroupIcon, label: 'Admin Dashboard' },
     { path: '/admin/analytics', icon: BarChartIcon, label: 'Analytics' },
     { path: '/admin/diagnostics', icon: PersonIcon, label: 'System Diagnostics' },
     { path: '/admin/settings', icon: GearIcon, label: 'Settings' },

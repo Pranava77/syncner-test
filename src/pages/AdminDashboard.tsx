@@ -220,7 +220,7 @@ const AdminDashboard: React.FC = () => {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="min-h-screen bg-offblack p-4 lg:p-8">
 
       {/* Header */}
       <div className="flex items-center justify-between">
