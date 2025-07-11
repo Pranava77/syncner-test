@@ -117,22 +117,18 @@ const AdminAnalytics: React.FC = () => {
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#A259F7', '#F95F62'];
 
   return (
-    <div className="space-y-8 min-h-screen bg-gradient-to-br from-blue-50/60 via-purple-50/60 to-white dark:from-gray-900 dark:via-blue-950 dark:to-purple-950 py-8 px-2 md:px-8 relative overflow-x-hidden">
-      {/* Glassmorphism & Animated Gradient Overlay */}
-      <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="w-full h-full bg-gradient-to-tr from-blue-400/10 via-purple-400/10 to-pink-400/10 animate-gradient-move" />
-      </div>
+    <div className="space-y-8">
       {/* Header */}
-      <div className="flex items-center justify-between relative z-10 animate-fadein">
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 drop-shadow-lg animate-slidein">Analytics Dashboard</h1>
-          <p className="text-purple-700 dark:text-purple-200 mt-2 text-lg font-medium animate-fadein-slow">Empowering you with data-driven insights 🚀</p>
+          <h1 className="text-3xl font-bold text-offblack dark:text-paperwhite">Analytics Dashboard</h1>
+          <p className="text-teallight dark:text-teallight mt-1">Comprehensive insights into platform performance</p>
         </div>
         <div className="flex items-center space-x-3">
           <select
             value={dateRange}
             onChange={(e) => setDateRange(e.target.value)}
-            className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            className="border border-teallight dark:border-teallight rounded-lg px-3 py-2 focus:ring-2 focus:ring-trueturquoise focus:border-transparent bg-paperwhite dark:bg-offblack text-offblack dark:text-paperwhite"
           >
             <option value="7">Last 7 days</option>
             <option value="30">Last 30 days</option>
@@ -141,13 +137,13 @@ const AdminAnalytics: React.FC = () => {
           </select>
           <button
             onClick={refreshData}
-            className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            className="p-2 border border-teallight dark:border-teallight rounded-lg hover:bg-teallight/40 dark:hover:bg-teallight/10 transition-colors"
           >
-            <ReloadIcon className="h-4 w-4 text-gray-600 dark:text-gray-400 animate-spin-on-hover" />
+            <ReloadIcon className="h-4 w-4 text-offblack dark:text-paperwhite" />
           </button>
           <button
             onClick={exportData}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center shadow-md hover:scale-105 active:scale-95 duration-150"
+            className="bg-trueturquoise text-paperwhite px-4 py-2 rounded-lg hover:bg-teallight transition-colors font-medium flex items-center"
           >
             <ReaderIcon className="h-4 w-4 mr-2" />
             Export
@@ -156,77 +152,77 @@ const AdminAnalytics: React.FC = () => {
       </div>
 
       {/* Key Performance Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10 animate-fadein-slow">
-        <div className="bg-white/80 dark:bg-gray-800/80 rounded-2xl shadow-xl p-6 border border-blue-100 dark:border-blue-900/40 backdrop-blur-xl hover:shadow-2xl transition-shadow duration-300 group animate-slidein">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="bg-paperwhite dark:bg-offblack rounded-xl shadow-sm p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">Avg Task Score</p>
-              <p className="text-3xl font-bold text-gray-900 dark:text-white">{performanceMetrics.averageTaskScore}%</p>
-              <p className="text-green-600 dark:text-green-400 text-sm flex items-center mt-1">
-                <TrendingUp className="h-3 w-3 mr-1 animate-bounce-on-hover" />
+              <p className="text-teallight dark:text-teallight text-sm">Avg Task Score</p>
+              <p className="text-3xl font-bold text-offblack dark:text-paperwhite">{performanceMetrics.averageTaskScore}%</p>
+              <p className="text-trueturquoise dark:text-trueturquoise text-sm flex items-center mt-1">
+                <TrendingUp className="h-3 w-3 mr-1" />
                 +2.3% from last month
               </p>
             </div>
-            <div className="bg-blue-100 dark:bg-blue-900/20 p-3 rounded-xl shadow group-hover:scale-110 transition-transform">
-              <Award className="h-7 w-7 text-blue-600 dark:text-blue-400 animate-pop-on-hover" />
+            <div className="bg-teallight dark:bg-teallight/20 p-3 rounded-lg">
+              <Award className="h-6 w-6 text-trueturquoise dark:text-trueturquoise" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white/80 dark:bg-gray-800/80 rounded-2xl shadow-xl p-6 border border-green-100 dark:border-green-900/40 backdrop-blur-xl hover:shadow-2xl transition-shadow duration-300 group animate-slidein">
+        <div className="bg-paperwhite dark:bg-offblack rounded-xl shadow-sm p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">Completion Rate</p>
-              <p className="text-3xl font-bold text-gray-900 dark:text-white">{performanceMetrics.completionRate}%</p>
-              <p className="text-green-600 dark:text-green-400 text-sm flex items-center mt-1">
-                <TrendingUp className="h-3 w-3 mr-1 animate-bounce-on-hover" />
+              <p className="text-teallight dark:text-teallight text-sm">Completion Rate</p>
+              <p className="text-3xl font-bold text-offblack dark:text-paperwhite">{performanceMetrics.completionRate}%</p>
+              <p className="text-trueturquoise dark:text-trueturquoise text-sm flex items-center mt-1">
+                <TrendingUp className="h-3 w-3 mr-1" />
                 +5.1% from last month
               </p>
             </div>
-            <div className="bg-green-100 dark:bg-green-900/20 p-3 rounded-xl shadow group-hover:scale-110 transition-transform">
-              <Target className="h-7 w-7 text-green-600 dark:text-green-400 animate-pop-on-hover" />
+            <div className="bg-teallight dark:bg-teallight/20 p-3 rounded-lg">
+              <Target className="h-6 w-6 text-trueturquoise dark:text-trueturquoise" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white/80 dark:bg-gray-800/80 rounded-2xl shadow-xl p-6 border border-purple-100 dark:border-purple-900/40 backdrop-blur-xl hover:shadow-2xl transition-shadow duration-300 group animate-slidein">
+        <div className="bg-paperwhite dark:bg-offblack rounded-xl shadow-sm p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">Avg Time/Module</p>
-              <p className="text-3xl font-bold text-gray-900 dark:text-white">{performanceMetrics.averageTimePerModule}h</p>
-              <p className="text-red-600 dark:text-red-400 text-sm flex items-center mt-1">
-                <TrendingUp className="h-3 w-3 mr-1 rotate-180 animate-bounce-on-hover" />
+              <p className="text-teallight dark:text-teallight text-sm">Avg Time/Module</p>
+              <p className="text-3xl font-bold text-offblack dark:text-paperwhite">{performanceMetrics.averageTimePerModule}h</p>
+              <p className="text-rust dark:text-rust text-sm flex items-center mt-1">
+                <TrendingUp className="h-3 w-3 mr-1 rotate-180" />
                 -0.8h from last month
               </p>
             </div>
-            <div className="bg-purple-100 dark:bg-purple-900/20 p-3 rounded-xl shadow group-hover:scale-110 transition-transform">
-              <Clock className="h-7 w-7 text-purple-600 dark:text-purple-400 animate-pop-on-hover" />
+            <div className="bg-teallight dark:bg-teallight/20 p-3 rounded-lg">
+              <Clock className="h-6 w-6 text-trueturquoise dark:text-trueturquoise" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white/80 dark:bg-gray-800/80 rounded-2xl shadow-xl p-6 border border-orange-100 dark:border-orange-900/40 backdrop-blur-xl hover:shadow-2xl transition-shadow duration-300 group animate-slidein">
+        <div className="bg-paperwhite dark:bg-offblack rounded-xl shadow-sm p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">Student Retention</p>
-              <p className="text-3xl font-bold text-gray-900 dark:text-white">{performanceMetrics.studentRetention}%</p>
-              <p className="text-green-600 dark:text-green-400 text-sm flex items-center mt-1">
-                <TrendingUp className="h-3 w-3 mr-1 animate-bounce-on-hover" />
+              <p className="text-teallight dark:text-teallight text-sm">Student Retention</p>
+              <p className="text-3xl font-bold text-offblack dark:text-paperwhite">{performanceMetrics.studentRetention}%</p>
+              <p className="text-trueturquoise dark:text-trueturquoise text-sm flex items-center mt-1">
+                <TrendingUp className="h-3 w-3 mr-1" />
                 +1.2% from last month
               </p>
             </div>
-            <div className="bg-orange-100 dark:bg-orange-900/20 p-3 rounded-xl shadow group-hover:scale-110 transition-transform">
-              <Users className="h-7 w-7 text-orange-600 dark:text-orange-400 animate-pop-on-hover" />
+            <div className="bg-rust/10 dark:bg-rust/20 p-3 rounded-lg">
+              <Users className="h-6 w-6 text-rust dark:text-rust" />
             </div>
           </div>
         </div>
       </div>
 
       {/* Charts Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10 animate-fadein-slow">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Students by Track Pie Chart */}
-        <div className="bg-white/80 dark:bg-gray-800/80 rounded-2xl shadow-xl p-6 border border-blue-100 dark:border-blue-900/40 backdrop-blur-xl animate-slidein">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Students by Track</h2>
+        <div className="bg-paperwhite dark:bg-offblack rounded-xl shadow-sm p-6">
+          <h2 className="text-lg font-semibold text-offblack dark:text-paperwhite mb-4">Students by Track</h2>
           <ResponsiveContainer width="100%" height={250}>
             <PieChart>
               <Pie
@@ -248,8 +244,8 @@ const AdminAnalytics: React.FC = () => {
           </ResponsiveContainer>
         </div>
         {/* Submissions by Status Bar Chart */}
-        <div className="bg-white/80 dark:bg-gray-800/80 rounded-2xl shadow-xl p-6 border border-purple-100 dark:border-purple-900/40 backdrop-blur-xl animate-slidein">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Submissions by Status</h2>
+        <div className="bg-paperwhite dark:bg-offblack rounded-xl shadow-sm p-6">
+          <h2 className="text-lg font-semibold text-offblack dark:text-paperwhite mb-4">Submissions by Status</h2>
           <ResponsiveContainer width="100%" height={250}>
             <ReBarChart data={analytics.submissionsByStatus || []}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -264,8 +260,8 @@ const AdminAnalytics: React.FC = () => {
       </div>
 
       {/* Weekly Attendance Bar Chart */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Weekly Attendance</h2>
+      <div className="bg-paperwhite dark:bg-offblack rounded-xl shadow-sm p-6">
+        <h2 className="text-lg font-semibold text-offblack dark:text-paperwhite mb-4">Weekly Attendance</h2>
         <ResponsiveContainer width="100%" height={250}>
           <ReBarChart data={analytics.attendanceData || []}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -279,13 +275,13 @@ const AdminAnalytics: React.FC = () => {
       </div>
 
       {/* Engagement Trends */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+      <div className="bg-paperwhite dark:bg-offblack rounded-xl shadow-sm p-6">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Engagement Trends</h2>
+          <h2 className="text-xl font-semibold text-offblack dark:text-paperwhite">Engagement Trends</h2>
           <select
             value={selectedMetric}
             onChange={(e) => setSelectedMetric(e.target.value)}
-            className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            className="border border-teallight dark:border-teallight rounded-lg px-3 py-2 focus:ring-2 focus:ring-trueturquoise focus:border-transparent bg-paperwhite dark:bg-offblack text-offblack dark:text-paperwhite"
           >
             <option value="engagement">Daily Active Users</option>
             <option value="sessions">Total Sessions</option>
@@ -309,8 +305,8 @@ const AdminAnalytics: React.FC = () => {
                   title={`${new Date(data.date).toLocaleDateString()}: ${value}`}
                 ></div>
                 <div className="mt-2 text-center">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">{value}</p>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">
+                  <p className="text-sm font-medium text-offblack dark:text-paperwhite">{value}</p>
+                  <p className="text-xs text-teallight dark:text-teallight">
                     {new Date(data.date).toLocaleDateString('en-US', { weekday: 'short' })}
                   </p>
                 </div>
@@ -322,42 +318,42 @@ const AdminAnalytics: React.FC = () => {
 
       <div className="grid lg:grid-cols-2 gap-8">
         {/* Career Track Performance */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Career Track Performance</h2>
+        <div className="bg-paperwhite dark:bg-offblack rounded-xl shadow-sm p-6">
+          <h2 className="text-xl font-semibold text-offblack dark:text-paperwhite mb-6">Career Track Performance</h2>
           <div className="space-y-4">
             {careerTrackData.map((track: any, index: number) => (
-              <div key={index} className="border border-gray-200 dark:border-gray-600 rounded-lg p-4">
+              <div key={index} className="border border-teallight dark:border-teallight rounded-lg p-4">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-semibold text-gray-900 dark:text-white">{track.track}</h3>
-                  <span className="bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 px-2 py-1 rounded text-sm">
+                  <h3 className="font-semibold text-offblack dark:text-paperwhite">{track.track}</h3>
+                  <span className="bg-trueturquoise/10 dark:bg-trueturquoise/20 text-trueturquoise dark:text-trueturquoise px-2 py-1 rounded text-sm">
                     {track.students} students
                   </span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <p className="text-gray-600 dark:text-gray-400">Avg Progress</p>
+                    <p className="text-teallight dark:text-teallight">Avg Progress</p>
                     <div className="flex items-center mt-1">
-                      <div className="w-16 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
+                      <div className="w-16 bg-teallight dark:bg-teallight rounded-full h-2 mr-2">
                         <div
-                          className="bg-green-600 h-2 rounded-full"
+                          className="bg-trueturquoise h-2 rounded-full"
                           style={{ width: `${track.avgProgress}%` }}
                         ></div>
                       </div>
-                      <span className="text-gray-900 dark:text-white font-medium">{track.avgProgress}%</span>
+                      <span className="text-offblack dark:text-paperwhite font-medium">{track.avgProgress}%</span>
                     </div>
                   </div>
 
                   <div>
-                    <p className="text-gray-600 dark:text-gray-400">Completion Rate</p>
+                    <p className="text-teallight dark:text-teallight">Completion Rate</p>
                     <div className="flex items-center mt-1">
-                      <div className="w-16 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
+                      <div className="w-16 bg-teallight dark:bg-teallight rounded-full h-2 mr-2">
                         <div
-                          className="bg-purple-600 h-2 rounded-full"
+                          className="bg-trueturquoise h-2 rounded-full"
                           style={{ width: `${track.completionRate}%` }}
                         ></div>
                       </div>
-                      <span className="text-gray-900 dark:text-white font-medium">{track.completionRate}%</span>
+                      <span className="text-offblack dark:text-paperwhite font-medium">{track.completionRate}%</span>
                     </div>
                   </div>
                 </div>
@@ -367,24 +363,24 @@ const AdminAnalytics: React.FC = () => {
         </div>
 
         {/* Module Performance */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Top Performing Modules</h2>
+        <div className="bg-paperwhite dark:bg-offblack rounded-xl shadow-sm p-6">
+          <h2 className="text-xl font-semibold text-offblack dark:text-paperwhite mb-6">Top Performing Modules</h2>
           <div className="space-y-4">
             {modulePerformance.map((module: any, index: number) => (
-              <div key={index} className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-600 rounded-lg">
+              <div key={index} className="flex items-center justify-between p-3 border border-teallight dark:border-teallight rounded-lg">
                 <div className="flex items-center space-x-3">
                   <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 rounded-lg">
                     <ReaderIcon className="h-4 w-4 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-medium text-gray-900 dark:text-white">{module.module}</h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">{module.completions} completions</p>
+                    <h3 className="font-medium text-offblack dark:text-paperwhite">{module.module}</h3>
+                    <p className="text-sm text-teallight dark:text-teallight">{module.completions} completions</p>
                   </div>
                 </div>
 
                 <div className="text-right">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">Score: {module.avgScore}%</p>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">Time: {module.avgTime}h</p>
+                  <p className="text-sm font-medium text-offblack dark:text-paperwhite">Score: {module.avgScore}%</p>
+                  <p className="text-xs text-teallight dark:text-teallight">Time: {module.avgTime}h</p>
                 </div>
               </div>
             ))}
@@ -395,42 +391,28 @@ const AdminAnalytics: React.FC = () => {
       {/* Detailed Reports Section */}
       <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl p-6">
         <div className="flex items-start space-x-4">
-          <div className="bg-blue-100 dark:bg-blue-900/20 p-3 rounded-lg">
-            <BarChartIcon className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+          <div className="bg-trueturquoise/10 dark:bg-trueturquoise/20 p-3 rounded-lg">
+            <BarChartIcon className="h-6 w-6 text-trueturquoise dark:text-trueturquoise" />
           </div>
           <div className="flex-1">
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Advanced Analytics</h3>
-            <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">
+            <h3 className="font-semibold text-offblack dark:text-paperwhite mb-2">Advanced Analytics</h3>
+            <p className="text-teallight dark:text-teallight text-sm mb-4">
               Access detailed reports, custom date ranges, and advanced filtering options for deeper insights into platform performance.
             </p>
             <div className="flex flex-wrap gap-3">
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
+              <button className="bg-trueturquoise text-paperwhite px-4 py-2 rounded-lg hover:bg-teallight transition-colors text-sm font-medium">
                 Generate Custom Report
               </button>
-              <button className="border border-blue-600 text-blue-600 dark:text-blue-400 px-4 py-2 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors text-sm font-medium">
+              <button className="border border-trueturquoise text-trueturquoise dark:text-trueturquoise px-4 py-2 rounded-lg hover:bg-trueturquoise/10 dark:hover:bg-trueturquoise/20 transition-colors text-sm font-medium">
                 Schedule Reports
               </button>
-              <button className="border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm font-medium">
+              <button className="border border-teallight dark:border-teallight text-offblack dark:text-paperwhite px-4 py-2 rounded-lg hover:bg-teallight/5 dark:hover:bg-teallight/10 transition-colors text-sm font-medium">
                 Export All Data
               </button>
             </div>
           </div>
         </div>
       </div>
-      {/* Animations */}
-      <style>{`
-        @keyframes gradient-move { 0%{background-position:0% 50%;} 100%{background-position:100% 50%;} }
-        .animate-gradient-move { background-size: 200% 200%; animation: gradient-move 12s ease-in-out infinite; }
-        .animate-fadein { animation: fadein 1s ease; }
-        .animate-fadein-slow { animation: fadein 2s ease; }
-        .animate-slidein { animation: slidein 1.2s cubic-bezier(.4,0,.2,1); }
-        .animate-pop-on-hover:hover { transform: scale(1.15); transition: transform 0.2s; }
-        .animate-bounce-on-hover:hover { animation: bounce 0.7s; }
-        @keyframes fadein { from { opacity: 0; transform: translateY(20px);} to { opacity: 1; transform: none;} }
-        @keyframes slidein { from { opacity: 0; transform: translateX(-40px);} to { opacity: 1; transform: none;} }
-        @keyframes bounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-8px);} }
-        .animate-spin-on-hover:hover { animation: spin 1.2s linear infinite; }
-      `}</style>
     </div>
   );
 };
