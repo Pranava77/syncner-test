@@ -53,7 +53,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { path: '/student/tasks', icon: FileTextIcon, label: 'Tasks' },
     { path: '/student/tasks/upcoming', icon: ListBulletIcon, label: 'Upcoming Tasks' },
     { path: '/student/submissions', icon: FileTextIcon, label: 'My Submissions' },
-    { path: '/student/resume', icon: FileTextIcon, label: 'Resume' },
   ];
 
   const adminNavItems = [

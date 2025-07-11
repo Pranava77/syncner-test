@@ -12,7 +12,6 @@ import AdminAnalytics from './pages/AdminAnalytics';
 import AdminSettings from './pages/AdminSettings';
 import TrainingModule from './pages/TrainingModule';
 import TaskPortal from './pages/TaskPortal';
-import ResumeGenerator from './pages/ResumeGenerator';
 import OnboardingFlow from './pages/OnboardingFlow';
 import ProtectedRoute from './components/ProtectedRoute';
 import UpcomingTasks from './pages/UpcomingTasks';
@@ -94,7 +93,6 @@ function App() {
           <Route path="training/current" element={<KeepAlive id="training-current"><TrainingModule /></KeepAlive>} />
           <Route path="tasks" element={<KeepAlive id="task-portal"><TaskPortal /></KeepAlive>} />
           <Route path="tasks/upcoming" element={<KeepAlive id="upcoming-tasks"><UpcomingTasks /></KeepAlive>} />
-          <Route path="resume" element={<KeepAlive id="resume-generator"><ResumeGenerator /></KeepAlive>} />
           <Route path="submissions" element={<KeepAlive id="student-submissions"><StudentSubmissions /></KeepAlive>} />
           <Route index element={<Navigate to="dashboard" replace />} />
         </Route>
