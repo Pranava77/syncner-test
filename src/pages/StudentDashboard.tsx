@@ -30,13 +30,13 @@ const StudentDashboard: React.FC = () => {
     if (!progressState.data || progressState.lastFetched === null) {
       dispatch(fetchProgress());
     }
-    if ((!modulesState.data || modulesState.data.length === 0) || modulesState.lastFetched === null) {
+    if (modulesState.lastFetched === null) {
       dispatch(fetchModules(user?.careerTrack));
     }
-    if ((!tasksState.data || tasksState.data.length === 0) || tasksState.lastFetched === null) {
+    if (tasksState.lastFetched === null) {
       dispatch(fetchTasks({ trackId: user?.careerTrack }));
     }
-  }, [dispatch, user?.careerTrack, modulesState.data, modulesState.lastFetched, progressState.data, progressState.lastFetched, tasksState.data, tasksState.lastFetched]);
+  }, [dispatch, user?.careerTrack]);
 
   if (!user || !user.careerTrack) {
     return (
