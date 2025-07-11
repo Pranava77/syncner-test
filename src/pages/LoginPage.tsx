@@ -3,8 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../redux/slices/authSlice';
 import { AppDispatch, RootState } from '../redux/store';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+
+
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { LockClosedIcon } from '@heroicons/react/solid';
 
