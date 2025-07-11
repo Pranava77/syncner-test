@@ -1,23 +1,19 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../redux/store';
+import { useAppSelector } from '../redux/store';
 import { getDefaultRoute } from '../utils/routing';
-import {
-  ArrowRightIcon as ArrowRight,
-  HamburgerMenuIcon as Menu,
-  Cross1Icon as X,
-  LightningBoltIcon as Brain,
-  BriefcaseIcon as Briefcase,
-  TargetIcon as Target,
-  ReaderIcon as BookOpen,
-  StarFilledIcon as Award,
-  GroupIcon as Users
+import { 
+  ArrowRightIcon,
+  BarChartIcon,
+  TargetIcon,
+  EnvelopeClosedIcon,
+  PersonIcon,
+  CheckCircledIcon
 } from '@radix-ui/react-icons';
 import logo from '../assets/syncner-logo.png';
 import LoadingScreen from '../components/LoadingScreen';
 
 const LandingPage: React.FC = () => {
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { isAuthenticated, user, isLoading } = useAppSelector((state) => state.auth);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
@@ -75,7 +71,15 @@ const LandingPage: React.FC = () => {
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className="text-white/80 hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors"
               >
-                {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                {isMobileMenuOpen ? (
+                  <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                )}
               </button>
             </div>
           </div>
@@ -115,7 +119,7 @@ const LandingPage: React.FC = () => {
               className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 lg:px-8 py-3 lg:py-4 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all font-medium flex items-center justify-center group"
             >
               Sign In
-              <ArrowRight className="ml-2 h-4 w-4 lg:h-5 lg:w-5 group-hover:translate-x-1 transition-transform" />
+              <ArrowRightIcon className="ml-2 h-4 w-4 lg:h-5 lg:w-5 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
               to="/register"
@@ -142,7 +146,7 @@ const LandingPage: React.FC = () => {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             <div className="bg-white/10 dark:bg-black/20 backdrop-blur-sm p-6 lg:p-8 rounded-xl hover:bg-white/15 dark:hover:bg-black/30 transition-all border border-white/10">
               <div className="bg-gradient-to-r from-blue-600 to-blue-500 p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
-                <Brain className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
+                <BarChartIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
               </div>
               <h3 className="text-lg lg:text-xl font-semibold text-white mb-2 lg:mb-3">AI-Personalized Learning</h3>
               <p className="text-blue-100 text-sm lg:text-base">
@@ -153,7 +157,7 @@ const LandingPage: React.FC = () => {
 
             <div className="bg-white/10 dark:bg-black/20 backdrop-blur-sm p-6 lg:p-8 rounded-xl hover:bg-white/15 dark:hover:bg-black/30 transition-all border border-white/10">
               <div className="bg-gradient-to-r from-emerald-600 to-emerald-500 p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
-                <Briefcase className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
+                <PersonIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
               </div>
               <h3 className="text-lg lg:text-xl font-semibold text-white mb-2 lg:mb-3">Real-World Tasks</h3>
               <p className="text-blue-100 text-sm lg:text-base">
@@ -164,7 +168,7 @@ const LandingPage: React.FC = () => {
 
             <div className="bg-white/10 dark:bg-black/20 backdrop-blur-sm p-6 lg:p-8 rounded-xl hover:bg-white/15 dark:hover:bg-black/30 transition-all border border-white/10">
               <div className="bg-gradient-to-r from-purple-600 to-purple-500 p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
-                <Target className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
+                <TargetIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
               </div>
               <h3 className="text-lg lg:text-xl font-semibold text-white mb-2 lg:mb-3">Career Tracks</h3>
               <p className="text-blue-100 text-sm lg:text-base">
@@ -175,7 +179,7 @@ const LandingPage: React.FC = () => {
 
             <div className="bg-white/10 dark:bg-black/20 backdrop-blur-sm p-6 lg:p-8 rounded-xl hover:bg-white/15 dark:hover:bg-black/30 transition-all border border-white/10">
               <div className="bg-gradient-to-r from-orange-600 to-orange-500 p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
-                <BookOpen className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
+                <EnvelopeClosedIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
               </div>
               <h3 className="text-lg lg:text-xl font-semibold text-white mb-2 lg:mb-3">Interactive Content</h3>
               <p className="text-blue-100 text-sm lg:text-base">
@@ -186,7 +190,7 @@ const LandingPage: React.FC = () => {
 
             <div className="bg-white/10 dark:bg-black/20 backdrop-blur-sm p-6 lg:p-8 rounded-xl hover:bg-white/15 dark:hover:bg-black/30 transition-all border border-white/10">
               <div className="bg-gradient-to-r from-pink-600 to-pink-500 p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
-                <Award className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
+                <CheckCircledIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
               </div>
               <h3 className="text-lg lg:text-xl font-semibold text-white mb-2 lg:mb-3">AI Resume Builder</h3>
               <p className="text-blue-100 text-sm lg:text-base">
@@ -197,7 +201,7 @@ const LandingPage: React.FC = () => {
 
             <div className="bg-white/10 dark:bg-black/20 backdrop-blur-sm p-6 lg:p-8 rounded-xl hover:bg-white/15 dark:hover:bg-black/30 transition-all border border-white/10">
               <div className="bg-gradient-to-r from-teal-600 to-teal-500 p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
-                <Users className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
+                <PersonIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
               </div>
               <h3 className="text-lg lg:text-xl font-semibold text-white mb-2 lg:mb-3">Admin Analytics</h3>
               <p className="text-blue-100 text-sm lg:text-base">
@@ -223,7 +227,7 @@ const LandingPage: React.FC = () => {
             className="bg-white text-blue-600 px-6 lg:px-8 py-3 lg:py-4 rounded-lg hover:bg-gray-100 transition-colors font-medium inline-flex items-center"
           >
             Get Started Today
-            <ArrowRight className="ml-2 h-4 w-4 lg:h-5 lg:w-5" />
+            <ArrowRightIcon className="ml-2 h-4 w-4 lg:h-5 lg:w-5" />
           </Link>
         </div>
       </section>

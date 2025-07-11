@@ -6,11 +6,10 @@ import { getDefaultRoute } from '../utils/routing';
 import LoadingScreen from '../components/LoadingScreen';
 import logo from '../assets/syncner-logo.png';
 import {
-  ExclamationTriangleIcon as AlertCircle,
-  MailIcon as Mail,
-  LockClosedIcon as LockClosedIcon
+  ExclamationTriangleIcon,
+  EnvelopeClosedIcon,
+  LockClosedIcon
 } from '@radix-ui/react-icons';
-
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -72,7 +71,7 @@ const LoginPage: React.FC = () => {
         <div className="bg-white/5 dark:bg-black/10 backdrop-blur-sm rounded-xl p-6 lg:p-8 border border-white/10">
           {error && (
             <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center space-x-2">
-              <AlertCircle className="h-4 w-4 text-red-400 flex-shrink-0" />
+              <ExclamationTriangleIcon className="h-4 w-4 text-red-400 flex-shrink-0" />
               <span className="text-red-400 text-sm">{error}</span>
             </div>
           )}
@@ -83,7 +82,7 @@ const LoginPage: React.FC = () => {
                 Email
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 lg:h-5 lg:w-5 text-gray-400" />
+                <EnvelopeClosedIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 lg:h-5 lg:w-5 text-gray-400" />
                 <input
                   id="email"
                   type="email"

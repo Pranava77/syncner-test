@@ -3,16 +3,12 @@ import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { registerUser, clearError } from '../redux/slices/authSlice';
 import { getDefaultRoute } from '../utils/routing';
-import {
-  PersonIcon as User,
-  EnvelopeClosedIcon as Mail,
-  LockClosedIcon as Lock,
-  BuildingIcon as Building,
-  ExclamationTriangleIcon as AlertCircle,
-  EyeNoneIcon as EyeOff,
-  EyeOpenIcon as Eye,
-  CheckCircledIcon as CheckCircle,
-  CrossCircledIcon as XCircle
+import { 
+  EnvelopeClosedIcon,
+  LockClosedIcon, 
+  PersonIcon, 
+  CrossCircledIcon,
+  CheckCircledIcon
 } from '@radix-ui/react-icons';
 import logo from '../assets/syncner-logo.png';
 
@@ -32,7 +28,7 @@ const RegisterPage: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const dispatch = useAppDispatch();
-  const { isLoading, error, isAuthenticated, user } = useAppSelector((state) => state.auth);
+  const { isLoading, error} = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(clearError());
@@ -169,7 +165,7 @@ const RegisterPage: React.FC = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
               <div className="bg-red-500/20 border border-red-500/30 rounded-lg p-4 flex items-center space-x-3">
-                <AlertCircle className="h-5 w-5 text-red-400 flex-shrink-0" />
+                <CrossCircledIcon className="h-5 w-5 text-red-400 flex-shrink-0" />
                 <span className="text-red-200 text-sm">{error}</span>
               </div>
             )}
@@ -180,7 +176,7 @@ const RegisterPage: React.FC = () => {
                 Full Name
               </label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <PersonIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
                   id="name"
                   name="name"
@@ -194,7 +190,7 @@ const RegisterPage: React.FC = () => {
                 />
                 {errors.name && (
                   <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                    <XCircle className="h-5 w-5 text-red-400" />
+                    <CrossCircledIcon className="h-5 w-5 text-red-400" />
                   </div>
                 )}
               </div>
@@ -207,7 +203,7 @@ const RegisterPage: React.FC = () => {
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <EnvelopeClosedIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
                   id="email"
                   name="email"
@@ -221,7 +217,7 @@ const RegisterPage: React.FC = () => {
                 />
                 {errors.email && (
                   <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                    <XCircle className="h-5 w-5 text-red-400" />
+                    <CrossCircledIcon className="h-5 w-5 text-red-400" />
                   </div>
                 )}
               </div>
@@ -234,7 +230,7 @@ const RegisterPage: React.FC = () => {
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <LockClosedIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
                   id="password"
                   name="password"
@@ -251,7 +247,7 @@ const RegisterPage: React.FC = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
                 >
-                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  {showPassword ? '🙈' : '👁️'}
                 </button>
               </div>
               {formData.password && (
@@ -309,11 +305,11 @@ const RegisterPage: React.FC = () => {
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
                 >
-                  {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  {showConfirmPassword ? '🙈' : '👁️'}
                 </button>
                 {formData.confirmPassword && formData.password === formData.confirmPassword && (
                   <div className="absolute right-12 top-1/2 transform -translate-y-1/2">
-                    <CheckCircle className="h-5 w-5 text-green-400" />
+                    <CheckCircledIcon className="h-5 w-5 text-green-400" />
                   </div>
                 )}
               </div>
@@ -326,7 +322,7 @@ const RegisterPage: React.FC = () => {
                 College/University
               </label>
               <div className="relative">
-                <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <PersonIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
                   id="college"
                   name="college"

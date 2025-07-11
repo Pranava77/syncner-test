@@ -1,7 +1,6 @@
-import { useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './redux/store';
-import { setAuth } from './redux/slices/authSlice';
 import { getDefaultRoute } from './utils/routing';
 import Layout from './components/Layout';
 import LandingPage from './pages/LandingPage';
@@ -25,27 +24,47 @@ import { KeepAlive } from 'react-activation';
 import StudentProfile from './pages/StudentProfile';
 import AdminProfile from './pages/AdminProfile';
 import { AnimatePresence, motion } from 'framer-motion';
+import { fetchCurrentUser } from './redux/slices/authSlice';
 
 function App() {
   const dispatch = useAppDispatch();
   const { isAuthenticated, user, isLoading, isRestoringSession } = useAppSelector((state) => state.auth);
-  const location = useLocation();
-
+  const { isDarkMode } = useAppSelector((state) => state.theme);
+  
+  const [isInitializing] = useState(true);
   const location = useLocation();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      dispatch(setAuth({ isAuthenticated: true, user: JSON.parse(localStorage.getItem('user') || '{}') }));
+      dispatch(fetchCurrentUser());
     }
-  }, [dispatch, user]);
+  }, [dispatch]); // Only run once on mount
 
-  if (isLoading || isRestoringSession) {
+  useEffect(() => {
+    // Apply theme on mount and whenever isDarkMode changes
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+      document.documentElement.style.backgroundColor = '#111827'; // Tailwind dark:bg-gray-900
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.style.backgroundColor = '#f9fafb'; // Tailwind bg-gray-50
+    }
+  }, [isDarkMode]);
 
-  if (isLoading || isRestoringSession) {
+  // Show loading while initializing authentication or restoring session
+  console.log('App State:', {
+    isInitializing,
+    isLoading,
+    isRestoringSession,
+    isAuthenticated,
+    user,
+  });
+
+  if (isInitializing || isLoading || isRestoringSession) {
     return (
       <LoadingScreen 
-        message={isRestoringSession ? "Restoring session..." : "Loading..."}
+        message={isInitializing ? "Initializing..." : isRestoringSession ? "Restoring session..." : "Loading..."}
         showProgress={true}
         progressDuration={2500}
       />
