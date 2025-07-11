@@ -73,20 +73,22 @@ const Layout: React.FC = () => {
     <div className="flex h-screen bg-black transition-colors">
       {/* Desktop Sidebar */}
       <div className={`hidden lg:flex ${isSidebarCollapsed ? 'w-20' : 'w-64'} bg-offblack shadow-lg border-r border-gray-200 dark:border-gray-700 flex-col transition-all duration-300`}>
-        <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-          <div className="flex items-center space-x-3 justify-center w-full">
-            <img src={logo} alt="Syncner Logo" className="h-10 w-10 object-contain" />
-            {!isSidebarCollapsed && <span className="text-paperwhite font-bold text-lg">Syncner</span>}
-          </div>
+        {/* Always show logo at the very top, centered */}
+        <div className="flex items-center justify-center py-6 border-b border-gray-200 dark:border-gray-700">
+          <img src={logo} alt="Syncner Logo" className="h-10 w-10 object-contain" />
+          {!isSidebarCollapsed && <span className="ml-3 text-paperwhite font-bold text-lg">Syncner</span>}
+        </div>
+        {/* Arrow toggle below logo */}
+        <div className="flex items-center justify-center pb-2">
           <button
-            className="ml-2 p-1 rounded hover:bg-paperwhite/10 transition"
+            className="p-1 rounded hover:bg-paperwhite/10 transition"
             onClick={() => setIsSidebarCollapsed((prev) => !prev)}
             aria-label={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             {isSidebarCollapsed ? <ChevronRightIcon className="h-5 w-5 text-paperwhite" /> : <ChevronLeftIcon className="h-5 w-5 text-paperwhite" />}
           </button>
         </div>
-        <nav className="mt-6 flex-1">
+        <nav className="mt-2 flex-1">
           {navItems.map((item) => {
             const Icon = item.icon;
             return (
