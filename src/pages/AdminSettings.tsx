@@ -667,88 +667,90 @@ const AdminSettings: React.FC = () => {
         {/* User Management Tab */}
         {activeTab === 'users' && (
           <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 min-h-[3.5rem]">
+            <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold text-offblack">User Management</h2>
               <button
                 onClick={() => { setShowUserForm(true); setEditingUser(null); setUserForm({ name: '', email: '', password: '', role: 'student', college: '', department: '', careerTrack: '', isActive: true }); }}
-                className="bg-true-turquoise text-paperwhite px-4 py-2 rounded-lg hover:bg-teal-light hover:text-offblack transition-colors flex items-center gap-2 shadow mt-4"
+                className="bg-true-turquoise text-paperwhite px-4 py-2 rounded-lg hover:bg-teal-light hover:text-offblack transition-colors flex items-center"
               >
-                <Plus className="h-4 w-4" />
-                <span>Add User</span>
+                <Plus className="h-4 w-4 mr-2" />
+                Add User
               </button>
             </div>
-            {/* Filters */}
-            <div className="flex flex-wrap gap-3 mb-4">
-              <input type="text" placeholder="Name" value={userFilters.name} onChange={e => setUserFilters(f => ({ ...f, name: e.target.value }))} className="px-3 py-2 border border-offblack/10 bg-paperwhite text-offblack rounded-lg focus:ring-2 focus:ring-true-turquoise/40 focus:border-true-turquoise transition" />
-              <input type="text" placeholder="Email" value={userFilters.email} onChange={e => setUserFilters(f => ({ ...f, email: e.target.value }))} className="px-3 py-2 border border-offblack/10 bg-paperwhite text-offblack rounded-lg focus:ring-2 focus:ring-true-turquoise/40 focus:border-true-turquoise transition" />
-              <select value={userFilters.role} onChange={e => setUserFilters(f => ({ ...f, role: e.target.value }))} className="px-3 py-2 border border-offblack/10 bg-paperwhite text-offblack rounded-lg focus:ring-2 focus:ring-true-turquoise/40 focus:border-true-turquoise transition">
-                <option value="">All Roles</option>
-                <option value="student">Student</option>
-                <option value="admin">Admin</option>
-              </select>
-              <select value={userFilters.careerTrack} onChange={e => setUserFilters(f => ({ ...f, careerTrack: e.target.value }))} className="px-3 py-2 border border-offblack/10 bg-paperwhite text-offblack rounded-lg focus:ring-2 focus:ring-true-turquoise/40 focus:border-true-turquoise transition">
-                <option value="">All Tracks</option>
-                <option value="fullstack">Full Stack</option>
-                <option value="ai-ml">AI/ML</option>
-                <option value="ui-ux">UI/UX</option>
-                <option value="data-science">Data Science</option>
-              </select>
-            </div>
-            {/* Users Table */}
-            <div className="bg-paperwhite rounded-xl shadow-lg overflow-hidden border border-offblack/10">
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-paperwhite/80">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-bold text-offblack uppercase tracking-wider">Name</th>
-                      <th className="px-6 py-3 text-left text-xs font-bold text-offblack uppercase tracking-wider">Email</th>
-                      <th className="px-6 py-3 text-left text-xs font-bold text-offblack uppercase tracking-wider">Role</th>
-                      <th className="px-6 py-3 text-left text-xs font-bold text-offblack uppercase tracking-wider">Track</th>
-                      <th className="px-6 py-3 text-left text-xs font-bold text-offblack uppercase tracking-wider">Status</th>
-                      <th className="px-6 py-3 text-left text-xs font-bold text-offblack uppercase tracking-wider">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-offblack/10">
-                    {usersLoading ? (
-                      <tr><td colSpan={6} className="text-center py-6 text-offblack/60">Loading...</td></tr>
-                    ) : (Array.isArray(users) ? users.length : 0) === 0 ? (
-                      <tr><td colSpan={6} className="text-center py-6 text-offblack/60">No users found.</td></tr>
-                    ) : users.map((user: any) => (
-                      <tr key={user._id} className="hover:bg-teal-light/10 transition text-offblack">
-                        <td className="px-6 py-4 whitespace-nowrap text-offblack">{user.name}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-offblack">{user.email}</td>
-                        <td className="px-6 py-4 whitespace-nowrap capitalize text-offblack">{user.role}</td>
-                        <td className="px-6 py-4 whitespace-nowrap capitalize text-offblack">{user.careerTrack || '-'}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${user.isActive ? 'bg-true-turquoise/20 text-true-turquoise' : 'bg-rust/20 text-rust'}`}>{user.isActive ? 'Active' : 'Inactive'}</span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2 text-offblack">
-                          <button
-                            onClick={() => { setEditingUser(user); setUserForm({ ...user, password: '' }); setShowUserForm(true); }}
-                            className="bg-true-turquoise hover:bg-teal-light text-paperwhite hover:text-offblack px-2 py-1 rounded transition-colors"
-                            title="Edit"
-                          >
-                            <Edit3 className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => deleteStudent(user._id)}
-                            className="bg-rust hover:bg-rust/90 text-paperwhite px-2 py-1 rounded transition-colors"
-                            title="Delete"
-                          >
-                            <TrashIcon className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => updateStudent(user._id, { ...user, isActive: !user.isActive })}
-                            className={`px-2 py-1 rounded transition-colors ${user.isActive ? 'bg-offblack hover:bg-offblack/20 text-paperwhite' : 'bg-true-turquoise hover:bg-teal-light text-offblack'}`}
-                            title={user.isActive ? 'Deactivate' : 'Activate'}
-                          >
-                            {user.isActive ? <Users className="h-4 w-4" /> : <CheckCircledIcon className="h-4 w-4" />}
-                          </button>
-                        </td>
+            <div className="bg-paperwhite/10 rounded-xl shadow-lg p-6">
+              {/* Filters */}
+              <div className="flex flex-wrap gap-3 mb-6">
+                <input type="text" placeholder="Name" value={userFilters.name} onChange={e => setUserFilters(f => ({ ...f, name: e.target.value }))} className="px-3 py-2 border border-offblack/10 bg-paperwhite text-offblack rounded-lg focus:ring-2 focus:ring-true-turquoise/40 focus:border-true-turquoise transition" />
+                <input type="text" placeholder="Email" value={userFilters.email} onChange={e => setUserFilters(f => ({ ...f, email: e.target.value }))} className="px-3 py-2 border border-offblack/10 bg-paperwhite text-offblack rounded-lg focus:ring-2 focus:ring-true-turquoise/40 focus:border-true-turquoise transition" />
+                <select value={userFilters.role} onChange={e => setUserFilters(f => ({ ...f, role: e.target.value }))} className="px-3 py-2 border border-offblack/10 bg-paperwhite text-offblack rounded-lg focus:ring-2 focus:ring-true-turquoise/40 focus:border-true-turquoise transition">
+                  <option value="">All Roles</option>
+                  <option value="student">Student</option>
+                  <option value="admin">Admin</option>
+                </select>
+                <select value={userFilters.careerTrack} onChange={e => setUserFilters(f => ({ ...f, careerTrack: e.target.value }))} className="px-3 py-2 border border-offblack/10 bg-paperwhite text-offblack rounded-lg focus:ring-2 focus:ring-true-turquoise/40 focus:border-true-turquoise transition">
+                  <option value="">All Tracks</option>
+                  <option value="fullstack">Full Stack</option>
+                  <option value="ai-ml">AI/ML</option>
+                  <option value="ui-ux">UI/UX</option>
+                  <option value="data-science">Data Science</option>
+                </select>
+              </div>
+              {/* Users Table */}
+              <div className="bg-paperwhite rounded-xl shadow-sm overflow-hidden border border-offblack/10">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-paperwhite/80">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-bold text-offblack uppercase tracking-wider">Name</th>
+                        <th className="px-6 py-3 text-left text-xs font-bold text-offblack uppercase tracking-wider">Email</th>
+                        <th className="px-6 py-3 text-left text-xs font-bold text-offblack uppercase tracking-wider">Role</th>
+                        <th className="px-6 py-3 text-left text-xs font-bold text-offblack uppercase tracking-wider">Track</th>
+                        <th className="px-6 py-3 text-left text-xs font-bold text-offblack uppercase tracking-wider">Status</th>
+                        <th className="px-6 py-3 text-left text-xs font-bold text-offblack uppercase tracking-wider">Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-offblack/10">
+                      {usersLoading ? (
+                        <tr><td colSpan={6} className="text-center py-6 text-offblack/60">Loading...</td></tr>
+                      ) : (Array.isArray(users) ? users.length : 0) === 0 ? (
+                        <tr><td colSpan={6} className="text-center py-6 text-offblack/60">No users found.</td></tr>
+                      ) : users.map((user: any) => (
+                        <tr key={user._id} className="hover:bg-teal-light/10 transition text-offblack">
+                          <td className="px-6 py-4 whitespace-nowrap text-offblack">{user.name}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-offblack">{user.email}</td>
+                          <td className="px-6 py-4 whitespace-nowrap capitalize text-offblack">{user.role}</td>
+                          <td className="px-6 py-4 whitespace-nowrap capitalize text-offblack">{user.careerTrack || '-'}</td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${user.isActive ? 'bg-true-turquoise/20 text-true-turquoise' : 'bg-rust/20 text-rust'}`}>{user.isActive ? 'Active' : 'Inactive'}</span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2 text-offblack">
+                            <button
+                              onClick={() => { setEditingUser(user); setUserForm({ ...user, password: '' }); setShowUserForm(true); }}
+                              className="bg-true-turquoise hover:bg-teal-light text-paperwhite hover:text-offblack px-2 py-1 rounded transition-colors"
+                              title="Edit"
+                            >
+                              <Edit3 className="h-4 w-4" />
+                            </button>
+                            <button
+                              onClick={() => deleteStudent(user._id)}
+                              className="bg-rust hover:bg-rust/90 text-paperwhite px-2 py-1 rounded transition-colors"
+                              title="Delete"
+                            >
+                              <TrashIcon className="h-4 w-4" />
+                            </button>
+                            <button
+                              onClick={() => updateStudent(user._id, { ...user, isActive: !user.isActive })}
+                              className={`px-2 py-1 rounded transition-colors ${user.isActive ? 'bg-offblack hover:bg-offblack/20 text-paperwhite' : 'bg-true-turquoise hover:bg-teal-light text-offblack'}`}
+                              title={user.isActive ? 'Deactivate' : 'Activate'}
+                            >
+                              {user.isActive ? <Users className="h-4 w-4" /> : <CheckCircledIcon className="h-4 w-4" />}
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
             {/* Add/Edit User Modal */}
