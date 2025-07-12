@@ -29,7 +29,7 @@ import {
 } from '@radix-ui/react-icons';
 import logo from '../assets/syncner-logo.png';
 import LoadingScreen from './LoadingScreen';
-import { motion, useAnimation, useMotionValue, useTransform, AnimatePresence } from 'framer-motion';
+import { motion, useAnimation, useMotionValue, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 
 const Layout: React.FC = () => {
@@ -41,7 +41,6 @@ const Layout: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [showShine, setShowShine] = useState(false);
   const [isLogoAnimating, setIsLogoAnimating] = useState(false);
 
   const controls = useAnimation();
@@ -86,14 +85,11 @@ const Layout: React.FC = () => {
         zIndex: 50,
         transition: { duration: 1.2, type: 'spring', bounce: 0.4 }
       });
-      // Show shine effect
-      setShowShine(true);
-      // Pause briefly with shine
+      // Pause briefly at center
       await controls.start({
         scale: 4,
         transition: { duration: 0.5 }
       });
-      setShowShine(false);
       // Return to original position and size
       await controls.start({
         scale: 1,
@@ -190,29 +186,6 @@ const Layout: React.FC = () => {
             ref={logoRef}
             style={{ zIndex: 10 }}
           />
-          <AnimatePresence>
-            {showShine && (
-              <motion.div
-                key={`shine-${Date.now()}`}
-                initial={{ left: '-80%', opacity: 0.7 }}
-                animate={{ left: '120%', opacity: 0.7 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.7, ease: 'easeInOut' }}
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: 0,
-                  width: '160px', // wider for large scale
-                  height: '80px', // taller for large scale
-                  transform: 'translateY(-50%)',
-                  pointerEvents: 'none',
-                  zIndex: 100,
-                  background: 'linear-gradient(120deg, rgba(255,255,255,0.0) 0%, rgba(160,216,239,0.8) 50%, rgba(255,255,255,0.0) 100%)',
-                  filter: 'blur(4px)'
-                }}
-              />
-            )}
-          </AnimatePresence>
           {!isSidebarCollapsed && <span className="ml-3 text-paperwhite font-bold text-lg">Syncner</span>}
         </div>
         {/* Arrow toggle at vertical center right edge, overlapping border */}
@@ -247,7 +220,7 @@ const Layout: React.FC = () => {
           <div className="flex flex-col items-center gap-4 pb-6">
           <Link
               to={user?.role === 'admin' ? '/admin/profile' : '/student/profile'}
-              className="flex items-center justify-center w-10 h-10 rounded-full bg-trueturquoise mb-2"
+              className="flex items-center justify-center w-10 h-10 rounded-md bg-trueturquoise mb-2"
               title="Profile"
             aria-label="View profile"
           >
@@ -274,7 +247,7 @@ const Layout: React.FC = () => {
               tabIndex={0}
               aria-label="View profile"
             >
-              <div className="bg-trueturquoise p-2 rounded-lg flex items-center justify-center">
+              <div className="bg-trueturquoise p-2 rounded-md flex items-center justify-center">
                 <span className="text-offblack text-base font-bold">
                 {user?.name?.charAt(0) || 'U'}
               </span>
