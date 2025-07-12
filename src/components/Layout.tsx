@@ -19,7 +19,7 @@ import {
 } from '@radix-ui/react-icons';
 import logo from '../assets/syncner-logo.png';
 import LoadingScreen from './LoadingScreen';
-import { motion, useAnimation, useMotionValue, useTransform } from 'framer-motion';
+import { motion, useAnimation, useMotionValue, useTransform, AnimatePresence } from 'framer-motion';
 import { useRef } from 'react';
 
 const Layout: React.FC = () => {
@@ -151,26 +151,29 @@ const Layout: React.FC = () => {
             ref={logoRef}
             style={{ zIndex: 10 }}
           />
-          {showShine && (
-            <motion.div
-              initial={{ left: '-60%', opacity: 0.7 }}
-              animate={{ left: '120%', opacity: 0.7 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.6, ease: 'easeInOut' }}
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: 0,
-                width: '60px',
-                height: '40px',
-                transform: 'translateY(-50%)',
-                pointerEvents: 'none',
-                zIndex: 100,
-                background: 'linear-gradient(120deg, rgba(255,255,255,0.0) 0%, rgba(160,216,239,0.7) 50%, rgba(255,255,255,0.0) 100%)',
-                filter: 'blur(2px)'
-              }}
-            />
-          )}
+          <AnimatePresence>
+            {showShine && (
+              <motion.div
+                key={`shine-${Date.now()}`}
+                initial={{ left: '-80%', opacity: 0.7 }}
+                animate={{ left: '120%', opacity: 0.7 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.7, ease: 'easeInOut' }}
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: 0,
+                  width: '160px', // wider for large scale
+                  height: '80px', // taller for large scale
+                  transform: 'translateY(-50%)',
+                  pointerEvents: 'none',
+                  zIndex: 100,
+                  background: 'linear-gradient(120deg, rgba(255,255,255,0.0) 0%, rgba(160,216,239,0.8) 50%, rgba(255,255,255,0.0) 100%)',
+                  filter: 'blur(4px)'
+                }}
+              />
+            )}
+          </AnimatePresence>
           {!isSidebarCollapsed && <span className="ml-3 text-paperwhite font-bold text-lg">Syncner</span>}
         </div>
         {/* Arrow toggle at vertical center right edge, overlapping border */}
