@@ -58,15 +58,6 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  completedModules: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Module'
-  }],
-  taskProgress: {
-    type: Map,
-    of: mongoose.Schema.Types.Mixed,
-    default: new Map()
-  },
   streakDays: {
     type: Number,
     default: 0

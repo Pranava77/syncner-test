@@ -26,8 +26,7 @@ const getAllTracks = async (req, res) => {
 const getTrackById = async (req, res) => {
   try {
     const track = await Track.findOne({ id: req.params.id })
-      .populate('modules')
-      .populate('tasks');
+      .populate('modules');
     
     if (!track) {
       return res.status(404).json({

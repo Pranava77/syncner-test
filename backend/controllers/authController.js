@@ -38,13 +38,7 @@ const register = async (req, res) => {
       role
     });
 
-    // Create initial progress record for students
-    if (role === 'student') {
-      await Progress.create({
-        user: user._id,
-        careerTrack: 'fullstack' // Default track
-      });
-    }
+    // Remove logic that creates a Progress record for students on registration.
 
     // Generate token
     const token = generateToken(user._id);

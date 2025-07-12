@@ -35,22 +35,6 @@ class GeminiService {
     return await callGemini(messages);
   }
 
-  async generateTaskFeedback(task, submission) {
-    const prompt = `Evaluate this student submission for the task: "${task.title}"
-Task Requirements: ${task.requirements?.join('\n') || 'No specific requirements listed'}
-Student Submission: ${submission}
-Please provide:
-1. Overall assessment (score out of 100)
-2. What was done well
-3. Areas for improvement
-4. Specific suggestions for next steps
-Be constructive and encouraging while being honest about areas that need work.`;
-    const messages = [
-      { role: 'user', parts: [{ text: prompt }] }
-    ];
-    return await callGemini(messages);
-  }
-
   async generateResumeContent(userData) {
     const prompt = `Generate professional resume content for:
 Name: ${userData.name}

@@ -13,7 +13,6 @@ const settingsSchema = new mongoose.Schema({
   },
   notifications: {
     emailNotifications: Boolean,
-    taskReminders: Boolean,
     progressUpdates: Boolean,
     systemAlerts: Boolean,
     weeklyReports: Boolean,

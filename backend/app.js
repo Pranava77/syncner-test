@@ -25,11 +25,8 @@ import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import trackRoutes from './routes/trackRoutes.js';
 import trainingRoutes from './routes/trainingRoutes.js';
-import taskRoutes from './routes/taskRoutes.js';
-import progressRoutes from './routes/progressRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import resumeRoutes from './routes/resumeRoutes.js';
-import submissionRoutes from './routes/submissionRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
 
@@ -40,9 +37,6 @@ import { errorHandler } from './middleware/errorHandler.js';
 import './models/User.js';
 import './models/Track.js';
 import './models/Module.js';
-import './models/Task.js';
-import './models/Submission.js';
-import './models/Progress.js';
 import './models/Resume.js';
 import './models/College.js';
 
@@ -89,11 +83,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/tracks', trackRoutes);
 app.use('/api/training', trainingRoutes);
-app.use('/api/tasks', taskRoutes);
-app.use('/api/progress', progressRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/resume', resumeRoutes);
-app.use('/api/submissions', submissionRoutes);
 app.use('/api/admin/settings', settingsRoutes);
 app.use('/api/ai', aiRoutes);
 

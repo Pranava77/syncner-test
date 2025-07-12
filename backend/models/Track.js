@@ -46,10 +46,6 @@ const trackSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Module'
   }],
-  tasks: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Task'
-  }],
   enrolledStudents: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'

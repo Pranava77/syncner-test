@@ -11,21 +11,6 @@ const CAREER_TRACKS = {
   DATA_SCIENCE: 'data-science'
 };
 
-const TASK_STATUS = {
-  AVAILABLE: 'available',
-  IN_PROGRESS: 'in-progress',
-  SUBMITTED: 'submitted',
-  COMPLETED: 'completed',
-  LOCKED: 'locked'
-};
-
-const SUBMISSION_STATUS = {
-  PENDING: 'pending',
-  REVIEWED: 'reviewed',
-  APPROVED: 'approved',
-  REJECTED: 'rejected'
-};
-
 const MODULE_STATUS = {
   LOCKED: 'locked',
   AVAILABLE: 'available',
@@ -49,8 +34,6 @@ const LESSON_TYPES = {
 export {
   USER_ROLES,
   CAREER_TRACKS,
-  TASK_STATUS,
-  SUBMISSION_STATUS,
   MODULE_STATUS,
   DIFFICULTY_LEVELS,
   LESSON_TYPES

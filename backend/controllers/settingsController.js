@@ -13,7 +13,6 @@ const defaultSettings = {
   },
   notifications: {
     emailNotifications: true,
-    taskReminders: true,
     progressUpdates: true,
     systemAlerts: true,
     weeklyReports: false,
