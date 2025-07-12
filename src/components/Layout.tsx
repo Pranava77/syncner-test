@@ -59,7 +59,7 @@ const Layout: React.FC = () => {
           });
         });
       }
-    }, 10000);
+    }, 2000);
     return () => clearInterval(interval);
   }, [controls, isLogoAnimating]);
 
