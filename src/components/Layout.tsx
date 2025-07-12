@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { logoutUser } from '../redux/slices/authSlice';
@@ -32,12 +32,39 @@ const Layout: React.FC = () => {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [showShine, setShowShine] = useState(false);
+  const [isLogoAnimating, setIsLogoAnimating] = useState(false);
 
   const controls = useAnimation();
   const logoRef = useRef<HTMLImageElement>(null);
   const hoverTimeout = useRef<number | null>(null);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!isLogoAnimating) {
+        // Random shake: direction and intensity
+        const dx = (Math.random() - 0.5) * 24; // -12 to +12 px
+        const dy = (Math.random() - 0.5) * 16; // -8 to +8 px
+        const rot = (Math.random() - 0.5) * 24; // -12 to +12 deg
+        controls.start({
+          x: dx,
+          y: dy,
+          rotate: rot,
+          transition: { duration: 0.18, type: 'spring', bounce: 0.6 }
+        }).then(() => {
+          controls.start({
+            x: 0,
+            y: 0,
+            rotate: 0,
+            transition: { duration: 0.18, type: 'spring', bounce: 0.6 }
+          });
+        });
+      }
+    }, 10000);
+    return () => clearInterval(interval);
+  }, [controls, isLogoAnimating]);
+
   const handleLogoHover = () => {
+    setIsLogoAnimating(true);
     hoverTimeout.current = setTimeout(async () => {
       // Move to center of the viewport using transform only
       await controls.start({
@@ -67,6 +94,7 @@ const Layout: React.FC = () => {
         zIndex: 10,
         transition: { duration: 1.2, type: 'spring', bounce: 0.4 }
       });
+      setIsLogoAnimating(false);
     }, 3000);
 
     // Start shaking after 1 second
@@ -93,6 +121,7 @@ const Layout: React.FC = () => {
       hoverTimeout.current = null;
     }
     controls.start({ scale: 1, y: 0, x: 0, rotate: 0, opacity: 1, transition: { duration: 0.4 } });
+    setIsLogoAnimating(false);
   };
 
   const handleLogout = async () => {
