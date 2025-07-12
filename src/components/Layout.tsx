@@ -38,26 +38,37 @@ const Layout: React.FC = () => {
 
   const handleLogoHover = () => {
     hoverTimeout.current = setTimeout(async () => {
+      // Move to center of the screen and grow
       await controls.start({
-        scale: 2.2,
-        y: -120,
-        x: 200,
-        rotate: 30,
-        opacity: 0.7,
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+        x: '-50%',
+        y: '-50%',
+        scale: 4,
+        rotate: 0,
+        opacity: 1,
+        zIndex: 50,
         transition: { duration: 1.2, type: 'spring', bounce: 0.4 }
       });
+      // Pause briefly
       await controls.start({
-        scale: 0.5,
-        y: -300,
-        x: 600,
-        rotate: 60,
-        opacity: 0,
-        transition: { duration: 1.1, type: 'spring', bounce: 0.2 }
+        scale: 4,
+        transition: { duration: 0.5 }
       });
-      // Reset after animation
-      setTimeout(() => {
-        controls.set({ scale: 1, y: 0, x: 0, rotate: 0, opacity: 1 });
-      }, 800);
+      // Return to original position and size
+      await controls.start({
+        position: 'static',
+        top: 'auto',
+        left: 'auto',
+        x: 0,
+        y: 0,
+        scale: 1,
+        rotate: 0,
+        opacity: 1,
+        zIndex: 10,
+        transition: { duration: 1.2, type: 'spring', bounce: 0.4 }
+      });
     }, 5000);
   };
 
@@ -118,7 +129,7 @@ const Layout: React.FC = () => {
             src={logo}
             alt="Syncner Logo"
             className="h-10 w-10 object-contain cursor-pointer"
-            initial={{ scale: 1, y: 0, x: 0, rotate: 0, opacity: 1 }}
+            initial={{ scale: 1, y: 0, x: 0, rotate: 0, opacity: 1, position: 'static', top: 'auto', left: 'auto', zIndex: 10 }}
             animate={controls}
             onMouseEnter={handleLogoHover}
             onMouseLeave={handleLogoLeave}
