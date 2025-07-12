@@ -33,19 +33,16 @@ const Layout: React.FC = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const controls = useAnimation();
-  const logoRef = useRef(null);
+  const logoRef = useRef<HTMLImageElement>(null);
   const hoverTimeout = useRef<number | null>(null);
 
   const handleLogoHover = () => {
     hoverTimeout.current = setTimeout(async () => {
-      // Move to center of the screen and grow
+      // Move to center of the viewport using transform only
       await controls.start({
-        position: 'fixed',
-        top: '50%',
-        left: '50%',
-        x: '-50%',
-        y: '-50%',
         scale: 4,
+        x: window.innerWidth / 2 - (logoRef.current?.getBoundingClientRect().left || 0) - 20, // 20 = half logo size
+        y: window.innerHeight / 2 - (logoRef.current?.getBoundingClientRect().top || 0) - 20,
         rotate: 0,
         opacity: 1,
         zIndex: 50,
@@ -58,12 +55,9 @@ const Layout: React.FC = () => {
       });
       // Return to original position and size
       await controls.start({
-        position: 'static',
-        top: 'auto',
-        left: 'auto',
+        scale: 1,
         x: 0,
         y: 0,
-        scale: 1,
         rotate: 0,
         opacity: 1,
         zIndex: 10,
@@ -129,7 +123,7 @@ const Layout: React.FC = () => {
             src={logo}
             alt="Syncner Logo"
             className="h-10 w-10 object-contain cursor-pointer"
-            initial={{ scale: 1, y: 0, x: 0, rotate: 0, opacity: 1, position: 'static', top: 'auto', left: 'auto', zIndex: 10 }}
+            initial={{ scale: 1, y: 0, x: 0, rotate: 0, opacity: 1, zIndex: 10 }}
             animate={controls}
             onMouseEnter={handleLogoHover}
             onMouseLeave={handleLogoLeave}
