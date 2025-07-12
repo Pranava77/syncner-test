@@ -1209,4 +1209,70 @@ const AdminSettings: React.FC = () => {
               <span className="text-paperwhite font-medium">Analytics Enabled</span>
               <button
                 type="button"
-                className={`
+                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${settingsDraft?.integrations?.analyticsEnabled ? 'bg-trueturquoise' : 'bg-offblack'}`}
+                onClick={() => handleSettingChange('integrations', 'analyticsEnabled', !settingsDraft?.integrations?.analyticsEnabled)}
+              >
+                <span className={`h-4 w-4 bg-paperwhite rounded-full shadow transform transition-transform duration-300 ${settingsDraft?.integrations?.analyticsEnabled ? 'translate-x-6' : ''}`}></span>
+              </button>
+            </div>
+            {/* Backup Enabled Toggle */}
+            <div className="flex items-center justify-between">
+              <span className="text-paperwhite font-medium">Backup Enabled</span>
+              <button
+                type="button"
+                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${settingsDraft?.integrations?.backupEnabled ? 'bg-trueturquoise' : 'bg-offblack'}`}
+                onClick={() => handleSettingChange('integrations', 'backupEnabled', !settingsDraft?.integrations?.backupEnabled)}
+              >
+                <span className={`h-4 w-4 bg-paperwhite rounded-full shadow transform transition-transform duration-300 ${settingsDraft?.integrations?.backupEnabled ? 'translate-x-6' : ''}`}></span>
+              </button>
+            </div>
+            <button
+              className="mt-4 bg-trueturquoise text-paperwhite px-6 py-2 rounded-lg hover:bg-trueturquoise/90 transition-all font-medium"
+              onClick={handleSaveSettings}
+              disabled={isSaving}
+            >
+              {isSaving ? 'Saving...' : 'Save Integrations'}
+            </button>
+            {saveMessage && <div className="mt-2 text-teallight">{saveMessage}</div>}
+          </div>
+        )}
+      </div>
+
+      {/* Save Button */}
+      {activeTab === 'general' && (
+        <div className="mt-8 flex justify-end">
+          <button
+            onClick={handleSaveSettings}
+            disabled={isSaving}
+            className="bg-trueturquoise text-paperwhite px-6 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium flex items-center disabled:opacity-50"
+          >
+            {isSaving ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-paperwhite mr-2"></div>
+                Saving...
+              </>
+            ) : (
+              <>
+                <Save className="h-4 w-4 mr-2" />
+                Save Settings
+              </>
+            )}
+          </button>
+        </div>
+      )}
+
+      {/* Save Message */}
+      {saveMessage && (
+        <div className={`fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg ${
+          saveMessage.includes('successfully') 
+            ? 'bg-teallight text-offblack' 
+            : 'bg-rust text-paperwhite'
+        }`}>
+          {saveMessage}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default AdminSettings;
