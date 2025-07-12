@@ -31,6 +31,7 @@ const Layout: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [showShine, setShowShine] = useState(false);
 
   const controls = useAnimation();
   const logoRef = useRef<HTMLImageElement>(null);
@@ -48,11 +49,14 @@ const Layout: React.FC = () => {
         zIndex: 50,
         transition: { duration: 1.2, type: 'spring', bounce: 0.4 }
       });
-      // Pause briefly
+      // Show shine effect
+      setShowShine(true);
+      // Pause briefly with shine
       await controls.start({
         scale: 4,
         transition: { duration: 0.5 }
       });
+      setShowShine(false);
       // Return to original position and size
       await controls.start({
         scale: 1,
@@ -135,7 +139,7 @@ const Layout: React.FC = () => {
       {/* Desktop Sidebar */}
       <div className={`hidden lg:flex ${isSidebarCollapsed ? 'w-20' : 'w-64'} bg-offblack shadow-lg border-r border-gray-200 dark:border-gray-700 flex-col transition-all duration-300 relative`}>
         {/* Always show logo at the very top, centered */}
-        <div className="flex items-center justify-center py-6 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-center py-6 border-b border-gray-200 dark:border-gray-700" style={{ position: 'relative' }}>
           <motion.img
             src={logo}
             alt="Syncner Logo"
@@ -147,6 +151,26 @@ const Layout: React.FC = () => {
             ref={logoRef}
             style={{ zIndex: 10 }}
           />
+          {showShine && (
+            <motion.div
+              initial={{ left: '-60%', opacity: 0.7 }}
+              animate={{ left: '120%', opacity: 0.7 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.6, ease: 'easeInOut' }}
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: 0,
+                width: '60px',
+                height: '40px',
+                transform: 'translateY(-50%)',
+                pointerEvents: 'none',
+                zIndex: 100,
+                background: 'linear-gradient(120deg, rgba(255,255,255,0.0) 0%, rgba(160,216,239,0.7) 50%, rgba(255,255,255,0.0) 100%)',
+                filter: 'blur(2px)'
+              }}
+            />
+          )}
           {!isSidebarCollapsed && <span className="ml-3 text-paperwhite font-bold text-lg">Syncner</span>}
         </div>
         {/* Arrow toggle at vertical center right edge, overlapping border */}
