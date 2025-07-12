@@ -15,7 +15,17 @@ import {
   ListBulletIcon,
   PersonIcon,
   ChevronLeftIcon,
-  ChevronRightIcon
+  ChevronRightIcon,
+  CalendarIcon,
+  ClipboardIcon,
+  EnvelopeClosedIcon,
+  StarIcon,
+  LightningBoltIcon,
+  TargetIcon,
+  CheckCircledIcon,
+  GlobeIcon,
+  RocketIcon,
+  LockClosedIcon
 } from '@radix-ui/react-icons';
 import logo from '../assets/syncner-logo.png';
 import LoadingScreen from './LoadingScreen';
@@ -142,16 +152,16 @@ const Layout: React.FC = () => {
 
   const studentNavItems = [
     { path: '/student/dashboard', icon: HomeIcon, label: 'Dashboard' },
-    { path: '/student/training/current', icon: ReaderIcon, label: 'Training' },
-    { path: '/student/tasks', icon: FileTextIcon, label: 'Tasks' },
-    { path: '/student/tasks/upcoming', icon: ListBulletIcon, label: 'Upcoming Tasks' },
-    { path: '/student/submissions', icon: FileTextIcon, label: 'My Submissions' },
+    { path: '/student/training/current', icon: LightningBoltIcon, label: 'Training' },
+    { path: '/student/tasks', icon: ClipboardIcon, label: 'Tasks' },
+    { path: '/student/tasks/upcoming', icon: CalendarIcon, label: 'Upcoming Tasks' },
+    { path: '/student/submissions', icon: CheckCircledIcon, label: 'My Submissions' },
   ];
 
   const adminNavItems = [
-    { path: '/admin', icon: GroupIcon, label: 'Admin Dashboard' },
-    { path: '/admin/analytics', icon: BarChartIcon, label: 'Analytics' },
-    { path: '/admin/diagnostics', icon: PersonIcon, label: 'System Diagnostics' },
+    { path: '/admin', icon: BarChartIcon, label: 'Admin Dashboard' },
+    { path: '/admin/analytics', icon: RocketIcon, label: 'Analytics' },
+    { path: '/admin/diagnostics', icon: GlobeIcon, label: 'System Diagnostics' },
     { path: '/admin/settings', icon: GearIcon, label: 'Settings' },
   ];
 
