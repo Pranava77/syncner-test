@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { loginUser, clearError, logoutUser } from '../redux/slices/authSlice';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import LoadingScreen from '../components/LoadingScreen';
@@ -15,7 +15,6 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const dispatch = useAppDispatch();
   const { isLoading, error, isAuthenticated, user } = useAppSelector((state) => state.auth);
-  const navigate = useNavigate();
 
   useEffect(() => {
     // Clear any previous errors when component mounts
@@ -27,7 +26,7 @@ const LoginPage: React.FC = () => {
     
     dispatch(clearError());
 
-    const result = await dispatch(loginUser({
+     dispatch(loginUser({
       email: email.trim(),
       password: password
     }));

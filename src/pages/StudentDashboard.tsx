@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../redux/store';
 import { fetchProgress } from '../redux/slices/progressSlice';
 import { fetchModules } from '../redux/slices/modulesSlice';
-import { fetchTasks } from '../redux/slices/tasksSlice';
 import {
   CodeIcon as Code,
   ColorWheelIcon as Palette,
@@ -24,7 +23,6 @@ const StudentDashboard: React.FC = () => {
   const { user } = useAppSelector((state) => state.auth);
   const progressState = useAppSelector((state) => state.progress);
   const modulesState = useAppSelector((state) => state.modules);
-  const tasksState = useAppSelector((state) => state.tasks);
 
   useEffect(() => {
     if (!progressState.data || progressState.lastFetched === null) {
@@ -32,9 +30,6 @@ const StudentDashboard: React.FC = () => {
     }
     if (modulesState.lastFetched === null) {
       dispatch(fetchModules(user?.careerTrack));
-    }
-    if (tasksState.lastFetched === null) {
-      dispatch(fetchTasks({ trackId: user?.careerTrack }));
     }
   }, [dispatch, user?.careerTrack]);
 
@@ -50,21 +45,15 @@ const StudentDashboard: React.FC = () => {
   const userTrack = user.careerTrack;
   const progress = progressState.data;
   const modules = modulesState.data || [];
-  const tasks = tasksState.data || [];
   const progressLoading = progressState.loading;
   const modulesLoading = modulesState.loading;
-  const tasksLoading = tasksState.loading;
 
   // Get current module (first incomplete module)
   const currentModule = modules.find((m: any) => m.status === 'in-progress') || modules[0];
-  // Get upcoming tasks (first 3 available tasks)
-  const upcomingTasks = tasks.filter((t: any) => t.status === 'available' || t.status === 'in-progress').slice(0, 3);
 
   const achievements = [
     { title: 'First Module Complete', icon: '🎯', earned: (progress?.completedModulesCount ?? 0) > 0 },
     { title: 'Week Streak', icon: '🔥', earned: (progress?.streakDays ?? 0) >= 7 },
-    { title: 'Code Master', icon: '💻', earned: (progress?.completedTasksCount ?? 0) >= 5 },
-    { title: 'Design Pro', icon: '🎨', earned: false }
   ];
 
   const getTrackIcon = () => {
@@ -96,7 +85,7 @@ const StudentDashboard: React.FC = () => {
     }
   };
 
-  if (progressLoading || modulesLoading || tasksLoading) {
+  if (progressLoading || modulesLoading) {
     return (
       <LoadingScreen 
         message="Loading your dashboard..."
@@ -246,6 +235,7 @@ const StudentDashboard: React.FC = () => {
           )}
 
           {/* Upcoming Tasks */}
+          {/* The following block was removed as per the edit hint:
           <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
             <div className="flex items-center justify-between mb-4 lg:mb-6">
               <h2 className="text-lg lg:text-xl font-semibold text-paperwhite">Upcoming Tasks</h2>
@@ -261,7 +251,7 @@ const StudentDashboard: React.FC = () => {
             <div className="space-y-4">
               {upcomingTasks.map((task: any, index: number) => (
                 <div key={task.id} className="border border-paperwhite/20 dark:border-offblack rounded-lg p-4 hover:shadow-md transition-shadow">
-                  <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-2">
+                  
                     <div className="mb-2 lg:mb-0">
                       <h3 className="font-semibold text-paperwhite">{task.title}</h3>
                       <div className="flex flex-wrap items-center gap-2 lg:gap-4 mt-1">
@@ -284,6 +274,7 @@ const StudentDashboard: React.FC = () => {
               ))}
             </div>
           </div>
+          */}
         </div>
 
         {/* Sidebar */}
@@ -367,13 +358,6 @@ const StudentDashboard: React.FC = () => {
               >
                 <BookOpen className="h-4 w-4 lg:h-5 lg:w-5 text-trueturquoise" />
                 <span className="font-medium text-paperwhite text-sm lg:text-base">Continue Learning</span>
-              </Link>
-              <Link
-                to="/student/tasks"
-                className="flex items-center space-x-3 p-3 border border-paperwhite/20 dark:border-offblack rounded-lg hover:bg-paperwhite/20 dark:hover:bg-offblack transition-colors"
-              >
-                <Code className="h-4 w-4 lg:h-5 lg:w-5 text-trueturquoise" />
-                <span className="font-medium text-paperwhite text-sm lg:text-base">View Tasks</span>
               </Link>
             </div>
           </div>

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import TaskReview from '../components/TaskReview';
 import {
   BarChartIcon as BarChart3,
   GroupIcon as Users,
@@ -20,7 +19,7 @@ import {
   DownloadIcon,
   PlusIcon
 } from '@radix-ui/react-icons';
-import { useStudents, useSubmissions } from '../hooks/useAdmin';
+import { useStudents } from '../hooks/useAdmin';
 import logo from '../assets/syncner-logo.png';
 import { useAppSelector, useAppDispatch } from '../redux/store';
 import { useSelector } from 'react-redux';
@@ -39,7 +38,6 @@ const AdminDashboard: React.FC = () => {
 
   // Use real API data instead of mock data
   const { students, loading: studentsLoading, updateStudent, deleteStudent, addStudent, refetch } = useStudents();
-  const { submissions, loading: submissionsLoading, reviewSubmission } = useSubmissions();
   const analyticsState = useSelector((state: { analytics: any }) => state.analytics);
   const analytics = analyticsState.data;
   const analyticsLoading = analyticsState.loading;
@@ -68,10 +66,6 @@ const AdminDashboard: React.FC = () => {
 
   const exportData = () => {
     alert('CSV export functionality would be implemented here');
-  };
-
-  const handleReviewSubmission = async (submissionId: string, score: number, feedback: string, status: string) => {
-    await reviewSubmission(submissionId, { score, feedback, status });
   };
 
   // Modal state management helpers
@@ -180,8 +174,7 @@ const AdminDashboard: React.FC = () => {
   // Determine overall loading state
   const overallLoading = (
     (activeTab === 'students' && studentsLoading) ||
-    (activeTab === 'overview' && analyticsLoading) ||
-    (activeTab === 'submissions' && submissionsLoading)
+    (activeTab === 'overview' && analyticsLoading)
   );
 
   if (overallLoading) {
@@ -197,12 +190,11 @@ const AdminDashboard: React.FC = () => {
   // Error fallback for missing data after loading completes
   const hasError = (
     (activeTab === 'students' && !students) ||
-    (activeTab === 'overview' && !analytics) ||
-    (activeTab === 'submissions' && !submissions)
+    (activeTab === 'overview' && !analytics)
   );
 
   if (hasError) {
-    console.error('AdminDashboard: Missing data for active tab', { activeTab, students, analytics, submissions });
+    console.error('AdminDashboard: Missing data for active tab', { activeTab, students, analytics });
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
@@ -241,8 +233,8 @@ const AdminDashboard: React.FC = () => {
         <nav className="flex space-x-8">
           {[
             { id: 'overview', label: 'Overview', icon: BarChart3 },
-            { id: 'students', label: 'Students', icon: Users },
-            { id: 'submissions', label: 'Task Reviews', icon: FileText }
+            { id: 'students', label: 'Students', icon: Users }
+            // Remove Task Reviews tab
           ].map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -472,9 +464,7 @@ const AdminDashboard: React.FC = () => {
             </div>
           </>
         )}
-        {activeTab === 'submissions' && (
-          <TaskReview submissions={submissions} onReview={handleReviewSubmission} />
-        )}
+        {/* Remove submissions tab content */}
       </div>
 
       {/* Student Detail/Edit Modal */}

@@ -220,67 +220,6 @@ class ApiService {
   }
 
   // Task endpoints
-  async getTasks(trackId?: string, filters?: any) {
-    let url = `${this.baseURL}/tasks`;
-    const params = new URLSearchParams();
-    
-    if (trackId) params.append('track', trackId);
-    if (filters) {
-      Object.entries(filters).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          params.append(key, value.toString());
-        }
-      });
-    }
-    
-    if (params.toString()) {
-      url += `?${params.toString()}`;
-    }
-
-    const response = await fetch(url, {
-      headers: this.getHeaders(),
-    });
-
-    return this.handleResponse(response, false);
-  }
-
-  async getTask(taskId: string) {
-    const response = await fetch(`${this.baseURL}/tasks/${taskId}`, {
-      headers: this.getHeaders(),
-    });
-
-    return this.handleResponse(response, false);
-  }
-
-  async createTask(taskData: any) {
-    const response = await fetch(`${this.baseURL}/tasks`, {
-      method: 'POST',
-      headers: this.getHeaders(),
-      body: JSON.stringify(taskData),
-    });
-
-    return this.handleResponse(response, false);
-  }
-
-  async updateTask(taskId: string, taskData: any) {
-    const response = await fetch(`${this.baseURL}/tasks/${taskId}`, {
-      method: 'PUT',
-      headers: this.getHeaders(),
-      body: JSON.stringify(taskData),
-    });
-
-    return this.handleResponse(response, false);
-  }
-
-  async deleteTask(taskId: string) {
-    const response = await fetch(`${this.baseURL}/tasks/${taskId}`, {
-      method: 'DELETE',
-      headers: this.getHeaders(),
-    });
-
-    return this.handleResponse(response, false);
-  }
-
   async submitTask(taskId: string, submissionData: any) {
     // If files are present, use FormData
     const hasFiles = submissionData.files && Array.isArray(submissionData.files) && submissionData.files.length > 0;
@@ -327,21 +266,6 @@ class ApiService {
       body,
     });
     return this.handleResponse(response, false);
-  }
-
-  async getSubmissions(taskId?: string, userRole?: string) {
-    let url;
-    if (userRole === 'admin') {
-      url = `${this.baseURL}/submissions`;
-    } else if (taskId) {
-      url = `${this.baseURL}/tasks/${taskId}/submissions`;
-    } else {
-      url = `${this.baseURL}/submissions/my`;
-    }
-    const response = await fetch(url, {
-      headers: this.getHeaders(),
-    });
-    return this.handleResponse(response, true);
   }
 
   // Resume endpoints
@@ -458,22 +382,6 @@ class ApiService {
       method: 'POST',
       headers: this.getHeaders(),
       body: JSON.stringify({ userData })
-    });
-    return this.handleResponse(response);
-  }
-
-  async getUpcomingTasks() {
-    const response = await fetch(`${this.baseURL}/tasks/upcoming`, {
-      headers: this.getHeaders(),
-      credentials: 'include'
-    });
-    return this.handleResponse(response);
-  }
-
-  async getAllStudentTasks() {
-    const response = await fetch(`${this.baseURL}/tasks/all`, {
-      headers: this.getHeaders(),
-      credentials: 'include'
     });
     return this.handleResponse(response);
   }

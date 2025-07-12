@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAppSelector } from '../redux/store';
 import { 
   ArrowRightIcon,
@@ -13,8 +13,7 @@ import logo from '../assets/syncner-logo.png';
 import LoadingScreen from '../components/LoadingScreen';
 
 const LandingPage: React.FC = () => {
-  const navigate = useNavigate();
-  const { isAuthenticated, user, isLoading } = useAppSelector((state) => state.auth);
+  const { isLoading } = useAppSelector((state) => state.auth);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
   // Show loading while checking authentication

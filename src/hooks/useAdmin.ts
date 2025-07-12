@@ -20,24 +20,6 @@ interface Student {
   profileComplete?: boolean;
 }
 
-interface Submission {
-  _id: string;
-  taskId: string;
-  studentName: string;
-  studentEmail: string;
-  submittedAt: string;
-  status: 'pending' | 'reviewed' | 'approved' | 'rejected';
-  description: string;
-  liveUrl?: string;
-  githubUrl?: string;
-  notes?: string;
-  files?: string[];
-  score?: number;
-  feedback?: string;
-  reviewedAt?: string;
-  reviewedBy?: string;
-}
-
 interface Analytics {
   totalStudents: number;
   activeStudents: number;
@@ -124,60 +106,6 @@ export const useStudents = (filters?: Record<string, any>) => {
     updateStudent,
     deleteStudent,
     addStudent
-  };
-};
-
-export const useSubmissions = (taskId?: string) => {
-  const [submissions, setSubmissions] = useState<Submission[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchSubmissions = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await apiService.getSubmissions(taskId, 'admin');
-      console.log('Admin submissions API response:', response);
-      if (response.success) {
-        setSubmissions(response.submissions);
-      }
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }, [taskId]);
-
-  useEffect(() => {
-    fetchSubmissions();
-  }, [taskId, fetchSubmissions]);
-
-  const reviewSubmission = async (submissionId: string, reviewData: { score: number; feedback: string; status: string }) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await apiService.reviewSubmission(submissionId, reviewData);
-      if (response.success) {
-        setSubmissions(prev => prev.map(sub =>
-          sub._id === submissionId
-            ? { ...sub, ...reviewData, status: reviewData.status as Submission['status'] }
-            : sub
-        ));
-      } else {
-        setError(response.message || 'Failed to review submission');
-      }
-    } catch (err: any) {
-      setError(err.message || 'Failed to review submission');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return {
-    submissions,
-    loading,
-    error,
-    refetch: fetchSubmissions,
-    reviewSubmission
   };
 };
 

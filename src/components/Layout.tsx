@@ -4,28 +4,18 @@ import { useAppDispatch, useAppSelector } from '../redux/store';
 import { logoutUser } from '../redux/slices/authSlice';
 import { 
   HomeIcon, 
-  ReaderIcon, 
-  FileTextIcon, 
-  GroupIcon, 
+
   GearIcon, 
   ExitIcon,
   BarChartIcon,
   HamburgerMenuIcon,
   Cross1Icon,
-  ListBulletIcon,
   PersonIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  CalendarIcon,
-  ClipboardIcon,
-  EnvelopeClosedIcon,
-  StarIcon,
   LightningBoltIcon,
-  TargetIcon,
-  CheckCircledIcon,
   GlobeIcon,
   RocketIcon,
-  LockClosedIcon
 } from '@radix-ui/react-icons';
 import logo from '../assets/syncner-logo.png';
 import LoadingScreen from './LoadingScreen';
@@ -149,9 +139,6 @@ const Layout: React.FC = () => {
   const studentNavItems = [
     { path: '/student/dashboard', icon: HomeIcon, label: 'Dashboard' },
     { path: '/student/training/current', icon: LightningBoltIcon, label: 'Training' },
-    { path: '/student/tasks', icon: ClipboardIcon, label: 'Tasks' },
-    { path: '/student/tasks/upcoming', icon: CalendarIcon, label: 'Upcoming Tasks' },
-    { path: '/student/submissions', icon: CheckCircledIcon, label: 'My Submissions' },
   ];
 
   const adminNavItems = [

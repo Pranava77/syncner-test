@@ -1,4 +1,4 @@
-import  {  useEffect } from 'react';
+import  { useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './redux/store';
 import { getDefaultRoute } from './utils/routing';
@@ -107,9 +107,6 @@ function App() {
           <Route path="dashboard" element={<KeepAlive id="student-dashboard"><StudentDashboard /></KeepAlive>} />
           <Route path="training/:moduleId" element={<KeepAlive id="training-module"><TrainingModule /></KeepAlive>} />
           <Route path="training/current" element={<KeepAlive id="training-current"><TrainingModule /></KeepAlive>} />
-          <Route path="tasks" element={<KeepAlive id="task-portal"><TaskPortal /></KeepAlive>} />
-          <Route path="tasks/upcoming" element={<KeepAlive id="upcoming-tasks"><UpcomingTasks /></KeepAlive>} />
-          <Route path="submissions" element={<KeepAlive id="student-submissions"><StudentSubmissions /></KeepAlive>} />
           <Route path="profile" element={
             <motion.div
               initial={{ opacity: 0, y: 20 }}
