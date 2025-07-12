@@ -19,6 +19,8 @@ import {
 } from '@radix-ui/react-icons';
 import logo from '../assets/syncner-logo.png';
 import LoadingScreen from './LoadingScreen';
+import { motion, useAnimation, useMotionValue, useTransform } from 'framer-motion';
+import { useRef } from 'react';
 
 const Layout: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -29,6 +31,43 @@ const Layout: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  const controls = useAnimation();
+  const logoRef = useRef(null);
+  const hoverTimeout = useRef<number | null>(null);
+
+  const handleLogoHover = () => {
+    hoverTimeout.current = setTimeout(async () => {
+      await controls.start({
+        scale: 2.2,
+        y: -120,
+        x: 200,
+        rotate: 30,
+        opacity: 0.7,
+        transition: { duration: 1.2, type: 'spring', bounce: 0.4 }
+      });
+      await controls.start({
+        scale: 0.5,
+        y: -300,
+        x: 600,
+        rotate: 60,
+        opacity: 0,
+        transition: { duration: 1.1, type: 'spring', bounce: 0.2 }
+      });
+      // Reset after animation
+      setTimeout(() => {
+        controls.set({ scale: 1, y: 0, x: 0, rotate: 0, opacity: 1 });
+      }, 800);
+    }, 5000);
+  };
+
+  const handleLogoLeave = () => {
+    if (hoverTimeout.current) {
+      clearTimeout(hoverTimeout.current);
+      hoverTimeout.current = null;
+    }
+    controls.start({ scale: 1, y: 0, x: 0, rotate: 0, opacity: 1, transition: { duration: 0.4 } });
+  };
 
   const handleLogout = async () => {
     if (isLoggingOut) return; // Prevent multiple clicks
@@ -75,7 +114,17 @@ const Layout: React.FC = () => {
       <div className={`hidden lg:flex ${isSidebarCollapsed ? 'w-20' : 'w-64'} bg-offblack shadow-lg border-r border-gray-200 dark:border-gray-700 flex-col transition-all duration-300 relative`}>
         {/* Always show logo at the very top, centered */}
         <div className="flex items-center justify-center py-6 border-b border-gray-200 dark:border-gray-700">
-          <img src={logo} alt="Syncner Logo" className="h-10 w-10 object-contain" />
+          <motion.img
+            src={logo}
+            alt="Syncner Logo"
+            className="h-10 w-10 object-contain cursor-pointer"
+            initial={{ scale: 1, y: 0, x: 0, rotate: 0, opacity: 1 }}
+            animate={controls}
+            onMouseEnter={handleLogoHover}
+            onMouseLeave={handleLogoLeave}
+            ref={logoRef}
+            style={{ zIndex: 10 }}
+          />
           {!isSidebarCollapsed && <span className="ml-3 text-paperwhite font-bold text-lg">Syncner</span>}
         </div>
         {/* Arrow toggle at vertical center right edge, overlapping border */}
@@ -108,12 +157,12 @@ const Layout: React.FC = () => {
         </nav>
         {isSidebarCollapsed ? (
           <div className="flex flex-col items-center gap-4 pb-6">
-            <Link
+          <Link
               to={user?.role === 'admin' ? '/admin/profile' : '/student/profile'}
               className="flex items-center justify-center w-10 h-10 rounded-full bg-trueturquoise mb-2"
               title="Profile"
-              aria-label="View profile"
-            >
+            aria-label="View profile"
+          >
               <span className="text-offblack text-base font-bold">
                 {user?.name?.charAt(0) || 'U'}
               </span>
@@ -139,24 +188,24 @@ const Layout: React.FC = () => {
             >
               <div className="bg-trueturquoise p-2 rounded-lg flex items-center justify-center">
                 <span className="text-offblack text-base font-bold">
-                  {user?.name?.charAt(0) || 'U'}
-                </span>
-              </div>
-              <div className="flex flex-col flex-1 min-w-0">
+                {user?.name?.charAt(0) || 'U'}
+              </span>
+            </div>
+            <div className="flex flex-col flex-1 min-w-0">
                 <span className="text-sm font-semibold text-paperwhite truncate">{user?.name}</span>
                 <span className="text-xs text-teallight capitalize truncate">{user?.role}</span>
-              </div>
+            </div>
               <PersonIcon className="h-5 w-5 text-trueturquoise opacity-80 group-hover:scale-110 transition-transform" />
-            </Link>
-            <button
-              onClick={handleLogout}
-              disabled={isLoggingOut}
+          </Link>
+          <button
+            onClick={handleLogout}
+            disabled={isLoggingOut}
               className="flex items-center w-full px-3 py-2 text-sm text-paperwhite hover:bg-trueturquoise/10 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-1"
-            >
+          >
               <ExitIcon className="h-4 w-4 mr-2 text-trueturquoise" />
-              Sign Out
-            </button>
-          </div>
+            Sign Out
+          </button>
+        </div>
         )}
       </div>
 

@@ -392,7 +392,7 @@ const TaskPortal: React.FC = () => {
                   <Clock className="h-3 w-3 lg:h-4 lg:w-4 mr-1" />
                   {task.estimatedTime}
                 </div>
-                <span className={`px-2 py-1 rounded-full text-xs font-medium w-fit ${getDifficultyColor(task.difficulty)}`}> 
+                <span className={`px-2 py-1 rounded-full text-xs font-medium w-fit ${getDifficultyColor(task.difficulty)}`}>
                   {task.difficulty}
                 </span>
               </div>
