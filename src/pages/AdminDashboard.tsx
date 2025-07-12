@@ -48,11 +48,11 @@ const AdminDashboard: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'excellent': return 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400';
-      case 'active': return 'bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400';
-      case 'at-risk': return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-400';
-      case 'inactive': return 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-400';
-      default: return 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-400';
+      case 'excellent': return 'bg-trueturquoise/20 text-trueturquoise';
+      case 'active': return 'bg-trueturquoise/20 text-trueturquoise';
+      case 'at-risk': return 'bg-trueturquoise/20 text-trueturquoise';
+      case 'inactive': return 'bg-trueturquoise/20 text-trueturquoise';
+      default: return 'bg-paperwhite/10 text-teallight';
     }
   };
 
@@ -206,11 +206,11 @@ const AdminDashboard: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">Failed to load {activeTab} data.</h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-4">Please check your network connection or try reloading the page.</p>
+          <h2 className="text-2xl font-bold text-rust mb-4">Failed to load {activeTab} data.</h2>
+          <p className="text-teallight mb-4">Please check your network connection or try reloading the page.</p>
           <button
             onClick={() => window.location.reload()}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium flex items-center"
           >
             Reload
           </button>
@@ -220,25 +220,24 @@ const AdminDashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-black p-4 lg:p-8">
-
+    <div className="min-h-screen bg-offblack p-4 lg:p-8">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Admin Dashboard</h1>
-          <p className="text-gray-600 dark:text-gray-300 mt-1">Monitor student progress and performance</p>
+          <h1 className="text-3xl font-bold text-paperwhite">Admin Dashboard</h1>
+          <p className="text-teallight mt-1">Monitor student progress and performance</p>
         </div>
         <button
           onClick={exportData}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center"
+          className="bg-trueturquoise text-offblack px-5 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold flex items-center gap-2 shadow"
         >
-          <DownloadIcon className="h-4 w-4 mr-2" />
+          <DownloadIcon className="h-5 w-5" />
           Export CSV
         </button>
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-gray-200 dark:border-gray-700">
+      <div className="border-b border-paperwhite/10 mb-8">
         <nav className="flex space-x-8">
           {[
             { id: 'overview', label: 'Overview', icon: BarChart3 },
@@ -246,17 +245,18 @@ const AdminDashboard: React.FC = () => {
             { id: 'submissions', label: 'Task Reviews', icon: FileText }
           ].map((tab) => {
             const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center ${
-                  activeTab === tab.id
-                    ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                    : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-                }`}
+                className={`flex items-center gap-2 px-4 py-2 text-lg font-medium rounded-t-lg transition-colors duration-150
+                  ${isActive
+                    ? 'text-trueturquoise border-b-2 border-trueturquoise bg-offblack'
+                    : 'text-paperwhite/60 hover:text-trueturquoise border-b-2 border-transparent bg-offblack/80'}
+                `}
               >
-                <Icon className="h-4 w-4 mr-2" />
+                <Icon className="w-5 h-5" />
                 {tab.label}
               </button>
             );
@@ -265,112 +265,106 @@ const AdminDashboard: React.FC = () => {
       </div>
 
       {/* Tab Content */}
-      {activeTab === 'overview' && (
-        <div className="space-y-8">
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-8 transition-shadow duration-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">Total Students</p>
-                  <p className="text-3xl font-bold text-gray-900 dark:text-white">{analytics?.totalStudents || 0}</p>
-                </div>
-                <div className="bg-blue-100 dark:bg-blue-900/20 p-3 rounded-lg">
-                  <Users className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-                </div>
+      <div className="space-y-8">
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="bg-paperwhite/10 rounded-xl shadow-lg p-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-teallight text-sm">Total Students</p>
+                <p className="text-3xl font-bold text-paperwhite">{analytics?.totalStudents || 0}</p>
               </div>
-            </div>
-
-            <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-8 transition-shadow duration-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">Active Students</p>
-                  <p className="text-3xl font-bold text-gray-900 dark:text-white">{analytics?.activeStudents || 0}</p>
-                </div>
-                <div className="bg-green-100 dark:bg-green-900/20 p-3 rounded-lg">
-                  <TrendingUp className="h-6 w-6 text-green-600 dark:text-green-400" />
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-8 transition-shadow duration-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">Completion Rate</p>
-                  <p className="text-3xl font-bold text-gray-900 dark:text-white">{analytics?.completionRate || 0}%</p>
-                </div>
-                <div className="bg-purple-100 dark:bg-purple-900/20 p-3 rounded-lg">
-                  <BookOpen className="h-6 w-6 text-purple-600 dark:text-purple-400" />
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-8 transition-shadow duration-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">Avg Progress</p>
-                  <p className="text-3xl font-bold text-gray-900 dark:text-white">{analytics?.avgProgress || 0}%</p>
-                </div>
-                <div className="bg-orange-100 dark:bg-orange-900/20 p-3 rounded-lg">
-                  <ExclamationTriangleIcon className="h-6 w-6 text-orange-600 dark:text-orange-400" />
-                </div>
+              <div className="bg-trueturquoise/20 p-3 rounded-lg">
+                <Users className="h-6 w-6 text-trueturquoise" />
               </div>
             </div>
           </div>
-
-          {/* Attendance Chart */}
-          <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-8 transition-shadow duration-200">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Weekly Attendance</h2>
-            <div className="flex items-end space-x-4 h-40">
-              {analytics?.attendanceData?.map((data: any, index: number) => (
-                <div key={index} className="flex-1 flex flex-col items-center">
-                  <div
-                    className="bg-gradient-to-t from-blue-600 to-blue-400 rounded-t w-full"
-                    style={{ height: `${(data.students / 350) * 100}%` }}
-                  ></div>
-                  <div className="mt-2 text-center">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">{data.students}</p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{data.day}</p>
-                  </div>
-                </div>
-              )) || (
-                <div className="flex-1 flex items-center justify-center text-gray-500">
-                  No attendance data available
-                </div>
-              )}
+          <div className="bg-paperwhite/10 rounded-xl shadow-lg p-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-teallight text-sm">Active Students</p>
+                <p className="text-3xl font-bold text-paperwhite">{analytics?.activeStudents || 0}</p>
+              </div>
+              <div className="bg-trueturquoise/20 p-3 rounded-lg">
+                <TrendingUp className="h-6 w-6 text-trueturquoise" />
+              </div>
+            </div>
+          </div>
+          <div className="bg-paperwhite/10 rounded-xl shadow-lg p-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-teallight text-sm">Completion Rate</p>
+                <p className="text-3xl font-bold text-paperwhite">{analytics?.completionRate || 0}%</p>
+              </div>
+              <div className="bg-trueturquoise/20 p-3 rounded-lg">
+                <BookOpen className="h-6 w-6 text-trueturquoise" />
+              </div>
+            </div>
+          </div>
+          <div className="bg-paperwhite/10 rounded-xl shadow-lg p-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-teallight text-sm">Avg Progress</p>
+                <p className="text-3xl font-bold text-paperwhite">{analytics?.avgProgress || 0}%</p>
+              </div>
+              <div className="bg-trueturquoise/20 p-3 rounded-lg">
+                <ExclamationTriangleIcon className="h-6 w-6 text-trueturquoise" />
+              </div>
             </div>
           </div>
         </div>
-      )}
 
-      {activeTab === 'students' && (
-        <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-8 transition-shadow duration-200">
-          <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+        {/* Attendance Chart */}
+        <div className="bg-paperwhite/10 rounded-xl shadow-lg p-8">
+          <h2 className="text-xl font-semibold text-paperwhite mb-6">Weekly Attendance</h2>
+          <div className="flex items-end space-x-4 h-40">
+            {analytics?.attendanceData?.map((data: any, index: number) => (
+              <div key={index} className="flex-1 flex flex-col items-center">
+                <div
+                  className="bg-trueturquoise rounded-t w-full"
+                  style={{ height: `${(data.students / 350) * 100}%` }}
+                ></div>
+                <div className="mt-2 text-center">
+                  <p className="text-sm font-medium text-paperwhite">{data.students}</p>
+                  <p className="text-xs text-teallight">{data.day}</p>
+                </div>
+              </div>
+            )) || (
+              <div className="flex-1 flex items-center justify-center text-teallight">
+                No attendance data available
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Student Management Table */}
+        <div className="bg-paperwhite/10 rounded-xl shadow-lg p-8">
+          <div className="p-6 border-b border-paperwhite/10">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Student Management</h2>
+              <h2 className="text-xl font-semibold text-paperwhite">Student Management</h2>
               <button
                 onClick={handleAddStudent}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center"
+                className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold flex items-center gap-2 shadow"
               >
-                <PlusIcon className="h-4 w-4 mr-2" />
+                <PlusIcon className="h-4 w-4" />
                 Add Student
               </button>
             </div>
             <div className="flex items-center space-x-4">
               <div className="relative flex-1">
-                <Search className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                <Search className="h-5 w-5 text-teallight absolute left-3 top-1/2 transform -translate-y-1/2" />
                 <input
                   type="text"
                   placeholder="Search students..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-4 py-2 w-full border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="pl-10 pr-4 py-2 w-full border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder-teallight"
                 />
               </div>
               <select
                 value={selectedFilter}
                 onChange={(e) => setSelectedFilter(e.target.value)}
-                className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="border border-paperwhite/20 rounded-lg px-3 py-2 focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite"
               >
                 <option value="all">All Students</option>
                 <option value="active">Active</option>
@@ -380,45 +374,30 @@ const AdminDashboard: React.FC = () => {
               </select>
             </div>
           </div>
-
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50 dark:bg-gray-700">
+              <thead>
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Student
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Department
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Track
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Progress
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Actions
-                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Student</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Department</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Track</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Progress</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Status</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Actions</th>
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              <tbody>
                 {filteredStudents.map((student) => (
-                  <tr key={student._id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                  <tr key={student._id} className="hover:bg-paperwhite/5">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div>
-                        <div className="text-sm font-medium text-gray-900 dark:text-white">{student.name}</div>
-                        <div className="text-sm text-gray-500 dark:text-gray-400">{student.email}</div>
+                        <div className="text-sm font-medium text-paperwhite">{student.name}</div>
+                        <div className="text-sm text-teallight">{student.email}</div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                      {student.department}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                      <span className="text-sm text-gray-900 dark:text-white capitalize">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-paperwhite">{student.department}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-paperwhite">
+                      <span className="text-sm text-paperwhite capitalize">
                         {(() => {
                           switch(student.careerTrack) {
                             case 'fullstack': return 'Full Stack Development';
@@ -432,39 +411,39 @@ const AdminDashboard: React.FC = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
-                        <div className="w-16 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
+                        <div className="w-16 bg-paperwhite/10 rounded-full h-2 mr-2">
                           <div
-                            className="bg-blue-600 h-2 rounded-full"
+                            className="bg-trueturquoise h-2 rounded-full"
                             style={{ width: `${student.progress || 0}%` }}
                           ></div>
                         </div>
-                        <span className="text-sm text-gray-900 dark:text-white">{student.progress || 0}%</span>
+                        <span className="text-sm text-paperwhite">{student.progress || 0}%</span>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(student.status || 'active')}`}>
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-trueturquoise/20 text-trueturquoise">
                         {getStatusIcon(student.status || 'active')}
                         <span className="ml-1 capitalize">{(student.status || 'active') ? (student.status || 'active').replace('-', ' ') : 'Active'}</span>
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center space-x-2">
                         <button
                           onClick={() => handleViewStudent(student)}
-                          className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
+                          className="text-trueturquoise hover:text-trueturquoise/80"
                         >
                           <Eye className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => handleEditStudent(student)}
-                          className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded transition-colors"
+                          className="bg-trueturquoise hover:bg-trueturquoise/90 text-offblack px-2 py-1 rounded transition-colors"
                           title="Edit"
                         >
                           <Edit3 className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => handleDeleteStudent(student._id)}
-                          className="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded transition-colors"
+                          className="bg-rust hover:bg-rust/80 text-paperwhite px-2 py-1 rounded transition-colors"
                           title="Delete"
                         >
                           <Trash2 className="h-4 w-4" />
@@ -476,30 +455,28 @@ const AdminDashboard: React.FC = () => {
               </tbody>
             </table>
           </div>
-
           {filteredStudents.length === 0 && (
             <div className="text-center py-12">
-              <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No Students Found</h3>
-              <p className="text-gray-600 dark:text-gray-400">
+              <Users className="h-12 w-12 text-teallight mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-paperwhite mb-2">No Students Found</h3>
+              <p className="text-teallight">
                 {searchTerm ? 'No students match your search criteria.' : 'No students have been added yet.'}
               </p>
             </div>
           )}
         </div>
-      )}
 
-      {activeTab === 'submissions' && (
+        {/* Task Review Section */}
         <TaskReview submissions={submissions} onReview={handleReviewSubmission} />
-      )}
+      </div>
 
       {/* Student Detail/Edit Modal */}
       {showStudentModal && (selectedStudent || editingStudent) && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-paperwhite dark:bg-gray-800 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                <h2 className="text-2xl font-bold text-paperwhite">
                   {editingStudent ? (showAddStudent ? 'Add New Student' : 'Edit Student') : 'Student Details'}
                 </h2>
                 <button
@@ -521,7 +498,7 @@ const AdminDashboard: React.FC = () => {
                         type="text"
                         value={editingStudent.name}
                         onChange={(e) => setEditingStudent((prev: any) => ({ ...prev, name: e.target.value }))}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite"
                       />
                     </div>
 
@@ -533,7 +510,7 @@ const AdminDashboard: React.FC = () => {
                         type="email"
                         value={editingStudent.email}
                         onChange={(e) => setEditingStudent((prev: any) => ({ ...prev, email: e.target.value }))}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite"
                       />
                     </div>
 
@@ -545,7 +522,7 @@ const AdminDashboard: React.FC = () => {
                         type="tel"
                         value={editingStudent.phone}
                         onChange={(e) => setEditingStudent((prev: any) => ({ ...prev, phone: e.target.value }))}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite"
                       />
                     </div>
 
@@ -557,7 +534,7 @@ const AdminDashboard: React.FC = () => {
                         type="text"
                         value={editingStudent.location}
                         onChange={(e) => setEditingStudent((prev: any) => ({ ...prev, location: e.target.value }))}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite"
                       />
                     </div>
 
@@ -568,7 +545,7 @@ const AdminDashboard: React.FC = () => {
                       <select
                         value={editingStudent.department}
                         onChange={(e) => setEditingStudent((prev: any) => ({ ...prev, department: e.target.value }))}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite"
                       >
                         <option value="">Select Department</option>
                         <option value="Computer Science">Computer Science</option>
@@ -586,7 +563,7 @@ const AdminDashboard: React.FC = () => {
                       <select
                         value={editingStudent.careerTrack}
                         onChange={(e) => setEditingStudent((prev: any) => ({ ...prev, careerTrack: e.target.value }))}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite"
                       >
                         <option value="fullstack">Full Stack Development</option>
                         <option value="ai-ml">AI/ML Engineering</option>
@@ -603,7 +580,7 @@ const AdminDashboard: React.FC = () => {
                         type="text"
                         value={editingStudent.college}
                         onChange={(e) => setEditingStudent((prev: any) => ({ ...prev, college: e.target.value }))}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite"
                       />
                     </div>
 
@@ -615,7 +592,7 @@ const AdminDashboard: React.FC = () => {
                         type="text"
                         value={editingStudent.gpa}
                         onChange={(e) => setEditingStudent((prev: any) => ({ ...prev, gpa: e.target.value }))}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite"
                         placeholder="e.g., 3.8"
                       />
                     </div>
@@ -628,7 +605,7 @@ const AdminDashboard: React.FC = () => {
                         type="password"
                         value={editingStudent.password || ''}
                         onChange={(e) => setEditingStudent((prev: any) => ({ ...prev, password: e.target.value }))}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite"
                         placeholder={showAddStudent ? "Enter password (min 6 chars)" : "Leave blank to keep current password"}
                         required={showAddStudent}
                       />
@@ -641,9 +618,9 @@ const AdminDashboard: React.FC = () => {
                       id="profileComplete"
                       checked={editingStudent.profileComplete}
                       onChange={(e) => setEditingStudent((prev: any) => ({ ...prev, profileComplete: e.target.checked }))}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      className="h-4 w-4 text-trueturquoise focus:ring-trueturquoise border-paperwhite rounded"
                     />
-                    <label htmlFor="profileComplete" className="ml-2 block text-sm text-gray-900 dark:text-white">
+                    <label htmlFor="profileComplete" className="ml-2 block text-sm text-paperwhite">
                       Profile Complete
                     </label>
                   </div>
@@ -651,14 +628,14 @@ const AdminDashboard: React.FC = () => {
                   <div className="flex gap-3 pt-4">
                     <button
                       onClick={handleSaveStudent}
-                      className="flex-1 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center"
+                      className="flex-1 bg-trueturquoise text-offblack py-3 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium flex items-center justify-center"
                     >
                       <FileText className="h-4 w-4 mr-2" />
                       {showAddStudent ? 'Add Student' : 'Save Changes'}
                     </button>
                     <button
                       onClick={handleCloseModal}
-                      className="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium flex items-center"
+                      className="px-6 py-3 border border-paperwhite/20 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-paperwhite/10 dark:hover:bg-paperwhite/5 transition-colors font-medium flex items-center"
                     >
                       <X className="h-4 w-4 mr-2" />
                       Cancel
@@ -669,31 +646,31 @@ const AdminDashboard: React.FC = () => {
                 <div className="space-y-6">
                   {/* Student Info */}
                   <div className="flex items-start space-x-4">
-                    <div className="bg-blue-100 dark:bg-blue-900/20 p-3 rounded-full">
+                    <div className="bg-trueturquoise/20 p-3 rounded-full">
                       <img src={logo} alt="Syncner Logo" className="h-6 w-6 object-contain" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{selectedStudent?.name}</h3>
+                      <h3 className="text-xl font-semibold text-paperwhite">{selectedStudent?.name}</h3>
                       <div className="mt-2 space-y-2">
-                        <div className="flex items-center text-gray-600 dark:text-gray-300">
+                        <div className="flex items-center text-teallight">
                           <Mail className="h-4 w-4 mr-2" />
                           {selectedStudent?.email}
                         </div>
-                        <div className="flex items-center text-gray-600 dark:text-gray-300">
+                        <div className="flex items-center text-teallight">
                           <Phone className="h-4 w-4 mr-2" />
                           {selectedStudent?.phone}
                         </div>
-                        <div className="flex items-center text-gray-600 dark:text-gray-300">
+                        <div className="flex items-center text-teallight">
                           <FileText className="h-4 w-4 mr-2" />
                           {selectedStudent?.location}
                         </div>
-                        <div className="flex items-center text-gray-600 dark:text-gray-300">
+                        <div className="flex items-center text-teallight">
                           <img src={logo} alt="Syncner Logo" className="h-6 w-6 object-contain" />
                           {selectedStudent?.department} • {selectedStudent?.college}
                         </div>
                       </div>
                     </div>
-                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(selectedStudent?.status || 'active')}`}>
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-trueturquoise/20 text-trueturquoise">
                       {getStatusIcon(selectedStudent?.status || 'active')}
                       <span className="ml-1 capitalize">{(selectedStudent?.status || 'active') ? (selectedStudent?.status || 'active').replace('-', ' ') : 'Active'}</span>
                     </span>
@@ -701,17 +678,17 @@ const AdminDashboard: React.FC = () => {
 
                   {/* Progress Stats */}
                   <div className="grid grid-cols-3 gap-4">
-                    <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 text-center">
-                      <p className="text-2xl font-bold text-gray-900 dark:text-white">{selectedStudent?.progress}%</p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Progress</p>
+                    <div className="bg-paperwhite/10 rounded-lg p-4 text-center">
+                      <p className="text-2xl font-bold text-paperwhite">{selectedStudent?.progress}%</p>
+                      <p className="text-sm text-teallight">Progress</p>
                     </div>
-                    <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 text-center">
-                      <p className="text-2xl font-bold text-gray-900 dark:text-white">{selectedStudent?.tasksCompleted}</p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Tasks Done</p>
+                    <div className="bg-paperwhite/10 rounded-lg p-4 text-center">
+                      <p className="text-2xl font-bold text-paperwhite">{selectedStudent?.tasksCompleted}</p>
+                      <p className="text-sm text-teallight">Tasks Done</p>
                     </div>
-                    <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 text-center">
-                      <p className="text-2xl font-bold text-gray-900 dark:text-white">{selectedStudent?.gpa}</p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">GPA</p>
+                    <div className="bg-paperwhite/10 rounded-lg p-4 text-center">
+                      <p className="text-2xl font-bold text-paperwhite">{selectedStudent?.gpa}</p>
+                      <p className="text-sm text-teallight">GPA</p>
                     </div>
                   </div>
 
@@ -719,9 +696,9 @@ const AdminDashboard: React.FC = () => {
                   <div className="border-t border-trueturquoise my-8">
                     <div className="grid md:grid-cols-2 gap-4 text-sm">
                       <div>
-                        <p className="text-gray-600 dark:text-gray-400">Career Track</p>
-                        <p className="font-medium text-gray-900 dark:text-white">
-                          <span className="text-sm text-gray-900 dark:text-white capitalize">
+                        <p className="text-teallight">Career Track</p>
+                        <p className="font-medium text-paperwhite">
+                          <span className="text-sm text-paperwhite capitalize">
                             {(() => {
                               switch(selectedStudent?.careerTrack) {
                                 case 'fullstack': return 'Full Stack Development';
@@ -735,16 +712,16 @@ const AdminDashboard: React.FC = () => {
                         </p>
                       </div>
                       <div>
-                        <p className="text-gray-600 dark:text-gray-400">Join Date</p>
-                        <p className="font-medium text-gray-900 dark:text-white">{selectedStudent?.joinDate}</p>
+                        <p className="text-teallight">Join Date</p>
+                        <p className="font-medium text-paperwhite">{selectedStudent?.joinDate}</p>
                       </div>
                       <div>
-                        <p className="text-gray-600 dark:text-gray-400">Last Active</p>
-                        <p className="font-medium text-gray-900 dark:text-white">{selectedStudent?.lastActive}</p>
+                        <p className="text-teallight">Last Active</p>
+                        <p className="font-medium text-paperwhite">{selectedStudent?.lastActive}</p>
                       </div>
                       <div>
-                        <p className="text-gray-600 dark:text-gray-400">Profile Status</p>
-                        <p className="font-medium text-gray-900 dark:text-white">
+                        <p className="text-teallight">Profile Status</p>
+                        <p className="font-medium text-paperwhite">
                           {selectedStudent?.profileComplete ? 'Complete' : 'Incomplete'}
                         </p>
                       </div>
@@ -754,14 +731,14 @@ const AdminDashboard: React.FC = () => {
                   <div className="flex gap-3">
                     <button
                       onClick={() => handleEditStudent(selectedStudent)}
-                      className="flex-1 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center"
+                      className="flex-1 bg-trueturquoise text-offblack py-3 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium flex items-center justify-center"
                     >
                       <Edit3 className="h-4 w-4 mr-2" />
                       Edit Student
                     </button>
                     <button
                       onClick={handleCloseModal}
-                      className="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium"
+                      className="px-6 py-3 border border-paperwhite/20 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-paperwhite/10 dark:hover:bg-paperwhite/5 transition-colors font-medium"
                     >
                       Close
                     </button>
