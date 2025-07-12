@@ -83,8 +83,8 @@ const StudentProfile: React.FC = () => {
             <div className="flex items-center gap-4 mb-8">
               <div className="bg-trueturquoise p-4 rounded-full flex items-center justify-center shadow-lg">
                 <PersonIcon className="h-10 w-10 text-offblack" />
-              </div>
-              <div>
+          </div>
+            <div>
                 <h2 className="text-2xl font-bold text-paperwhite">{profile?.name || ''}</h2>
                 <p className="text-teallight">{profile?.email || ''}</p>
                 <span className="inline-block bg-trueturquoise/20 text-trueturquoise px-3 py-1 rounded-full text-sm font-medium mt-2">
@@ -98,7 +98,7 @@ const StudentProfile: React.FC = () => {
             </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
+            <div>
                 <label className="block text-sm text-teallight mb-2 font-medium">Full Name</label>
                 <input 
                   name="name" 
@@ -111,8 +111,8 @@ const StudentProfile: React.FC = () => {
                       : 'border-paperwhite/20 bg-offblack/50 text-paperwhite/70'
                   } focus:outline-none`} 
                 />
-              </div>
-              <div>
+            </div>
+            <div>
                 <label className="block text-sm text-teallight mb-2 font-medium">College</label>
                 <input 
                   name="college" 
@@ -125,8 +125,8 @@ const StudentProfile: React.FC = () => {
                       : 'border-paperwhite/20 bg-offblack/50 text-paperwhite/70'
                   } focus:outline-none`} 
                 />
-              </div>
-              <div>
+            </div>
+            <div>
                 <label className="block text-sm text-teallight mb-2 font-medium">Department</label>
                 <input 
                   name="department" 
@@ -139,8 +139,8 @@ const StudentProfile: React.FC = () => {
                       : 'border-paperwhite/20 bg-offblack/50 text-paperwhite/70'
                   } focus:outline-none`} 
                 />
-              </div>
-              <div>
+            </div>
+            <div>
                 <label className="block text-sm text-teallight mb-2 font-medium">Career Track</label>
                 <input 
                   name="careerTrack" 
@@ -153,8 +153,8 @@ const StudentProfile: React.FC = () => {
                       : 'border-paperwhite/20 bg-offblack/50 text-paperwhite/70'
                   } focus:outline-none`} 
                 />
-              </div>
-              <div>
+            </div>
+            <div>
                 <label className="block text-sm text-teallight mb-2 font-medium">Phone Number</label>
                 <input 
                   name="phone" 
@@ -167,8 +167,8 @@ const StudentProfile: React.FC = () => {
                       : 'border-paperwhite/20 bg-offblack/50 text-paperwhite/70'
                   } focus:outline-none`} 
                 />
-              </div>
-              <div>
+            </div>
+            <div>
                 <label className="block text-sm text-teallight mb-2 font-medium">Location</label>
                 <input 
                   name="location" 
@@ -181,8 +181,8 @@ const StudentProfile: React.FC = () => {
                       : 'border-paperwhite/20 bg-offblack/50 text-paperwhite/70'
                   } focus:outline-none`} 
                 />
-              </div>
-              <div>
+            </div>
+            <div>
                 <label className="block text-sm text-teallight mb-2 font-medium">GPA</label>
                 <input 
                   name="gpa" 
@@ -195,8 +195,8 @@ const StudentProfile: React.FC = () => {
                       : 'border-paperwhite/20 bg-offblack/50 text-paperwhite/70'
                   } focus:outline-none`} 
                 />
-              </div>
-              <div>
+            </div>
+            <div>
                 <label className="block text-sm text-teallight mb-2 font-medium">Graduation Year</label>
                 <input 
                   name="graduationYear" 
@@ -213,8 +213,8 @@ const StudentProfile: React.FC = () => {
             </div>
             
             <div className="mt-8 flex gap-4">
-              {editMode ? (
-                <>
+            {editMode ? (
+              <>
                   <button 
                     className="bg-trueturquoise hover:bg-trueturquoise/90 text-offblack px-8 py-3 rounded-lg shadow-lg transition-all duration-200 font-semibold flex items-center gap-2" 
                     onClick={handleSave}
@@ -230,8 +230,8 @@ const StudentProfile: React.FC = () => {
                   >
                     Cancel
                   </button>
-                </>
-              ) : (
+              </>
+            ) : (
                 <button 
                   className="bg-trueturquoise hover:bg-trueturquoise/90 text-offblack px-8 py-3 rounded-lg shadow-lg transition-all duration-200 font-semibold flex items-center gap-2" 
                   onClick={() => setEditMode(true)}
@@ -262,7 +262,7 @@ const StudentProfile: React.FC = () => {
               Progress Overview
             </h3>
             
-            {progress ? (
+          {progress ? (
               <div className="space-y-4">
                 <div className="bg-paperwhite/5 border border-paperwhite/10 rounded-lg p-4">
                   <div className="flex items-center justify-between mb-2">
@@ -277,7 +277,7 @@ const StudentProfile: React.FC = () => {
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4">
                   <div className="bg-paperwhite/5 border border-paperwhite/10 rounded-lg p-4 text-center">
                     <div className="text-2xl font-bold text-trueturquoise mb-1">{progress.streakDays}</div>
                     <div className="text-xs text-teallight">Streak Days</div>
@@ -291,13 +291,13 @@ const StudentProfile: React.FC = () => {
                   <div className="bg-paperwhite/5 border border-paperwhite/10 rounded-lg p-4 text-center">
                     <div className="text-2xl font-bold text-trueturquoise mb-1">{progress.completedModulesCount}</div>
                     <div className="text-xs text-teallight">Modules Completed</div>
-                  </div>
+              </div>
                   
                   <div className="bg-paperwhite/5 border border-paperwhite/10 rounded-lg p-4 text-center">
                     <div className="text-2xl font-bold text-trueturquoise mb-1">{progress.completedTasksCount}</div>
                     <div className="text-xs text-teallight">Tasks Completed</div>
-                  </div>
-                </div>
+              </div>
+              </div>
               </div>
             ) : (
               <div className="text-teallight text-center py-8">
@@ -307,7 +307,7 @@ const StudentProfile: React.FC = () => {
                 <p className="text-sm">No progress data available</p>
               </div>
             )}
-          </div>
+            </div>
         </div>
       </div>
     </div>

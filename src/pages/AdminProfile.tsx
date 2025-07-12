@@ -69,22 +69,22 @@ const AdminProfile: React.FC = () => {
             <div className="flex items-center gap-4 mb-8">
               <div className="bg-trueturquoise p-4 rounded-full flex items-center justify-center shadow-lg">
                 <PersonIcon className="h-10 w-10 text-offblack" />
-              </div>
-              <div>
+          </div>
+          <div>
                 <h2 className="text-2xl font-bold text-paperwhite">{profile?.name || ''}</h2>
                 <p className="text-teallight">{profile?.email || ''}</p>
                 <span className="inline-block bg-trueturquoise/20 text-trueturquoise px-3 py-1 rounded-full text-sm font-medium mt-2">
                   {profile?.role || 'Administrator'}
                 </span>
-              </div>
-            </div>
+          </div>
+        </div>
             
             <h3 className="font-semibold text-lg mb-6 text-trueturquoise flex items-center gap-2">
               <PersonIcon className="w-5 h-5" /> Profile Information
             </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
+          <div>
                 <label className="block text-sm text-teallight mb-2 font-medium">Full Name</label>
                 <input 
                   name="name" 
@@ -97,8 +97,8 @@ const AdminProfile: React.FC = () => {
                       : 'border-paperwhite/20 bg-offblack/50 text-paperwhite/70'
                   } focus:outline-none`} 
                 />
-              </div>
-              <div>
+          </div>
+          <div>
                 <label className="block text-sm text-teallight mb-2 font-medium">Role</label>
                 <input 
                   name="role" 
@@ -106,8 +106,8 @@ const AdminProfile: React.FC = () => {
                   disabled 
                   className="w-full px-4 py-3 rounded-lg border border-paperwhite/20 bg-offblack/50 text-paperwhite/70" 
                 />
-              </div>
-              <div>
+          </div>
+          <div>
                 <label className="block text-sm text-teallight mb-2 font-medium">Phone Number</label>
                 <input 
                   name="phone" 
@@ -120,8 +120,8 @@ const AdminProfile: React.FC = () => {
                       : 'border-paperwhite/20 bg-offblack/50 text-paperwhite/70'
                   } focus:outline-none`} 
                 />
-              </div>
-              <div>
+          </div>
+          <div>
                 <label className="block text-sm text-teallight mb-2 font-medium">Location</label>
                 <input 
                   name="location" 
@@ -134,12 +134,12 @@ const AdminProfile: React.FC = () => {
                       : 'border-paperwhite/20 bg-offblack/50 text-paperwhite/70'
                   } focus:outline-none`} 
                 />
-              </div>
-            </div>
+          </div>
+        </div>
             
             <div className="mt-8 flex gap-4">
-              {editMode ? (
-                <>
+          {editMode ? (
+            <>
                   <button 
                     className="bg-trueturquoise hover:bg-trueturquoise/90 text-offblack px-8 py-3 rounded-lg shadow-lg transition-all duration-200 font-semibold flex items-center gap-2" 
                     onClick={handleSave}
@@ -155,8 +155,8 @@ const AdminProfile: React.FC = () => {
                   >
                     Cancel
                   </button>
-                </>
-              ) : (
+            </>
+          ) : (
                 <button 
                   className="bg-trueturquoise hover:bg-trueturquoise/90 text-offblack px-8 py-3 rounded-lg shadow-lg transition-all duration-200 font-semibold flex items-center gap-2" 
                   onClick={() => setEditMode(true)}
@@ -166,7 +166,7 @@ const AdminProfile: React.FC = () => {
                   </svg>
                   Edit Profile
                 </button>
-              )}
+          )}
             </div>
             
             {success && (
@@ -250,7 +250,7 @@ const AdminProfile: React.FC = () => {
               </Link>
             </div>
           </div>
-        </div>
+      </div>
       </div>
     </div>
   );

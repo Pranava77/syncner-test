@@ -4,7 +4,6 @@ import {
   GearIcon as Settings,
   GroupIcon as Users,
   ReaderIcon as BookOpen,
-  FileTextIcon as Briefcase,
   FileTextIcon as Database,
   FileTextIcon as Save,
   PlusIcon as Plus,
@@ -14,7 +13,6 @@ import {
 } from '@radix-ui/react-icons';
 import apiService from '../services/api';
 import { useStudents } from '../hooks/useAdmin';
-import { useDispatch } from 'react-redux';
 import { fetchSettings } from '../redux/slices/settingsSlice';
 import { useAppDispatch } from '../redux/store';
 
@@ -28,22 +26,6 @@ interface Module {
   skills: string[];
   order: number;
   isActive: boolean;
-}
-
-interface Task {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  difficulty: string;
-  points: number;
-  careerTrack: string;
-  requirements: string[];
-  deliverables: string[];
-  skills: string[];
-  estimatedTime: string;
-  isActive: boolean;
-  assignedTo?: string[];
 }
 
 interface Lesson {
@@ -87,25 +69,6 @@ const AdminSettings: React.FC = () => {
     order: 1,
     isActive: true,
     lessons: [] as Lesson[]
-  });
-
-  // Task management
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [showTaskForm, setShowTaskForm] = useState(false);
-  const [editingTask, setEditingTask] = useState<Task | null>(null);
-  const [taskForm, setTaskForm] = useState({
-    title: '',
-    description: '',
-    category: 'frontend',
-    difficulty: 'Beginner',
-    points: 100,
-    careerTrack: 'fullstack',
-    requirements: [''],
-    deliverables: [''],
-    skills: [''],
-    estimatedTime: '',
-    isActive: true,
-    assignedTo: [] as string[]
   });
 
   // User management
@@ -194,10 +157,6 @@ const AdminSettings: React.FC = () => {
 
   useEffect(() => {
     fetchModules();
-    fetchTasks();
-    if (activeTab === 'tasks') {
-      refetch();
-    }
   }, [activeTab]);
 
   const fetchModules = async () => {
@@ -208,17 +167,6 @@ const AdminSettings: React.FC = () => {
       }
     } catch (error) {
       console.error('Failed to fetch modules:', error);
-    }
-  };
-
-  const fetchTasks = async () => {
-    try {
-      const response = await apiService.getTasks();
-      if (response.success) {
-        setTasks(response.data || []);
-      }
-    } catch (error) {
-      console.error('Failed to fetch tasks:', error);
     }
   };
 
@@ -272,74 +220,10 @@ const AdminSettings: React.FC = () => {
     }
   };
 
-  // Task management functions
-  const handleAddTask = async () => {
-    // Frontend validation for required fields
-    if (!taskForm.estimatedTime || !taskForm.skills || !taskForm.skills[0] || !taskForm.deliverables || !taskForm.deliverables[0]) {
-      alert('Please fill all required fields: Estimated Time, at least one Skill, and at least one Deliverable.');
-      return;
-    }
-    try {
-      const response = await apiService.createTask(taskForm);
-      if (response.success) {
-        setTasks(prev => [...prev, response.data]);
-        setShowTaskForm(false);
-        setTaskForm({
-          title: '',
-          description: '',
-          category: 'frontend',
-          difficulty: 'Beginner',
-          points: 100,
-          careerTrack: 'fullstack',
-          requirements: [''],
-          deliverables: [''],
-          skills: [''],
-          estimatedTime: '',
-          isActive: true,
-          assignedTo: []
-        });
-      }
-    } catch (error) {
-      console.error('Failed to create task:', error);
-    }
-  };
-
-  const handleEditTask = async () => {
-    if (!editingTask) return;
-    // Frontend validation for required fields
-    if (!taskForm.estimatedTime || !taskForm.skills || !taskForm.skills[0] || !taskForm.deliverables || !taskForm.deliverables[0]) {
-      alert('Please fill all required fields: Estimated Time, at least one Skill, and at least one Deliverable.');
-      return;
-    }
-    try {
-      const response = await apiService.updateTask(editingTask.id, taskForm);
-      if (response.success) {
-        setTasks(prev => prev.map(t => t.id === editingTask.id ? response.data : t));
-        setEditingTask(null);
-        setShowTaskForm(false);
-      }
-    } catch (error) {
-      console.error('Failed to update task:', error);
-    }
-  };
-
-  const handleDeleteTask = async (taskId: string) => {
-    if (!confirm('Are you sure you want to delete this task?')) return;
-    try {
-      const response = await apiService.deleteTask(taskId);
-      if (response.success) {
-        setTasks(prev => prev.filter(t => t.id !== taskId));
-      }
-    } catch (error) {
-      console.error('Failed to delete task:', error);
-    }
-  };
-
   const tabs = [
     { id: 'general', label: 'General', icon: Settings },
     { id: 'users', label: 'User Management', icon: Users },
     { id: 'modules', label: 'Training Modules', icon: BookOpen },
-    { id: 'tasks', label: 'Tasks', icon: Briefcase },
     { id: 'integrations', label: 'Integrations', icon: Database }
   ];
 
@@ -765,240 +649,6 @@ const AdminSettings: React.FC = () => {
                           </button>
                           <button
                             onClick={() => handleDeleteModule(module.id)}
-                            className="bg-rust hover:bg-rust/90 text-paperwhite px-2 py-1 rounded transition-colors"
-                            title="Delete"
-                          >
-                            <TrashIcon className="h-4 w-4" />
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Tasks */}
-        {activeTab === 'tasks' && (
-          <div className="space-y-6">
-            <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold text-paperwhite">Tasks</h2>
-              <button
-                onClick={() => setShowTaskForm(true)}
-                className="bg-true-turquoise text-paperwhite px-4 py-2 rounded-lg hover:bg-true-turquoise/90 transition-colors flex items-center"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add Task
-              </button>
-            </div>
-
-            {/* Task Form */}
-            {showTaskForm && (
-              <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6">
-                <h3 className="text-lg font-semibold text-paperwhite mb-4">
-                  {editingTask ? 'Edit Task' : 'Add New Task'}
-                </h3>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <input
-                    type="text"
-                    placeholder="Task Title"
-                    value={taskForm.title}
-                    onChange={(e) => setTaskForm(prev => ({ ...prev, title: e.target.value }))}
-                    className="px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
-                  />
-                  <select
-                    value={taskForm.careerTrack}
-                    onChange={(e) => setTaskForm(prev => ({ ...prev, careerTrack: e.target.value }))}
-                    className="px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
-                  >
-                    <option value="fullstack">Full Stack Development</option>
-                    <option value="ai-ml">AI/ML Engineering</option>
-                    <option value="ui-ux">UI/UX Design</option>
-                    <option value="data-science">Data Science</option>
-                  </select>
-                  <select
-                    value={taskForm.category}
-                    onChange={(e) => setTaskForm(prev => ({ ...prev, category: e.target.value }))}
-                    className="px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
-                  >
-                    <option value="frontend">Frontend</option>
-                    <option value="backend">Backend</option>
-                    <option value="fullstack">Full Stack</option>
-                    <option value="design">Design</option>
-                    <option value="data">Data</option>
-                  </select>
-                  <select
-                    value={taskForm.difficulty}
-                    onChange={(e) => setTaskForm(prev => ({ ...prev, difficulty: e.target.value }))}
-                    className="px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
-                  >
-                    <option value="Beginner">Beginner</option>
-                    <option value="Intermediate">Intermediate</option>
-                    <option value="Advanced">Advanced</option>
-                  </select>
-                  <input
-                    type="number"
-                    placeholder="Points"
-                    value={taskForm.points}
-                    onChange={(e) => setTaskForm(prev => ({ ...prev, points: parseInt(e.target.value) }))}
-                    className="px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Estimated Time"
-                    value={taskForm.estimatedTime}
-                    onChange={(e) => setTaskForm(prev => ({ ...prev, estimatedTime: e.target.value }))}
-                    className="px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
-                  />
-                  <textarea
-                    placeholder="Task Description"
-                    value={taskForm.description}
-                    onChange={(e) => setTaskForm(prev => ({ ...prev, description: e.target.value }))}
-                    className="md:col-span-2 px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
-                    rows={3}
-                  />
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-teallight mb-2">Assign to Students (optional)</label>
-                    <select
-                      multiple
-                      value={taskForm.assignedTo}
-                      onChange={e => {
-                        const options = Array.from(e.target.selectedOptions).map(opt => opt.value);
-                        setTaskForm(prev => ({ ...prev, assignedTo: options }));
-                      }}
-                      className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight h-32"
-                    >
-                 {(users || []).map(student => (
-  <option key={student._id} value={student._id}>
-    {student.name} ({student.email})
-  </option>
-))}
-                    </select>
-                    <p className="text-xs text-teallight">Leave empty to assign by track only.</p>
-                  </div>
-                </div>
-                <div className="flex justify-end space-x-3 mt-4">
-                  <button
-                    onClick={() => {
-                      setShowTaskForm(false);
-                      setEditingTask(null);
-                    }}
-                    className="px-4 py-2 border border-paperwhite/20 text-teallight rounded-lg hover:bg-offblack/20 transition"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={editingTask ? handleEditTask : handleAddTask}
-                    className="px-4 py-2 bg-true-turquoise text-paperwhite rounded-lg hover:bg-true-turquoise/90"
-                  >
-                    {editingTask ? 'Update' : 'Create'} Task
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* Tasks List */}
-            <div className="bg-paperwhite/10 rounded-xl shadow-sm overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-offblack/10">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider">
-                        Task
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider">
-                        Category
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider">
-                        Difficulty
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider">
-                        Points
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider">
-                        Status
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-offblack/10 divide-y divide-offblack/20">
-                    {tasks.map((task) => (
-                      <tr key={task.id} className="hover:bg-offblack/20 transition">
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div>
-                            <div className="text-sm font-medium text-paperwhite">
-                              {task.title}
-                            </div>
-                            <div className="text-sm text-teallight">
-                              {task.description.substring(0, 50)}...
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="text-sm text-paperwhite capitalize">
-                            {(() => {
-                              switch(task.careerTrack) {
-                                case 'fullstack': return 'Full Stack Development';
-                                case 'ai-ml': return 'AI/ML Engineering';
-                                case 'ui-ux': return 'UI/UX Design';
-                                case 'data-science': return 'Data Science';
-                                default: return task.careerTrack;
-                              }
-                            })()}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            task.difficulty === 'Beginner' ? 'bg-teallight text-offblack' :
-                            task.difficulty === 'Intermediate' ? 'bg-teallight text-offblack' :
-                            'bg-rust text-paperwhite'
-                          }`}>
-                            {task.difficulty}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="text-sm text-paperwhite">
-                            {task.points}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            task.isActive ? 'bg-teallight text-offblack' : 'bg-rust text-paperwhite'
-                          }`}>
-                            {task.isActive ? 'Active' : 'Inactive'}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          <button
-                            onClick={() => {
-                              setEditingTask(task);
-                              setTaskForm({
-                                title: task.title,
-                                description: task.description,
-                                category: task.category,
-                                difficulty: task.difficulty,
-                                points: task.points,
-                                careerTrack: task.careerTrack,
-                                requirements: task.requirements,
-                                deliverables: task.deliverables,
-                                skills: task.skills,
-                                estimatedTime: task.estimatedTime,
-                                isActive: task.isActive,
-                                assignedTo: task.assignedTo || []
-                              });
-                              setShowTaskForm(true);
-                            }}
-                            className="bg-true-turquoise hover:bg-true-turquoise/90 text-paperwhite px-2 py-1 rounded transition-colors mr-2"
-                            title="Edit"
-                          >
-                            <Edit3 className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => handleDeleteTask(task.id)}
                             className="bg-rust hover:bg-rust/90 text-paperwhite px-2 py-1 rounded transition-colors"
                             title="Delete"
                           >
