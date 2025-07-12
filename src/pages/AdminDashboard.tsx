@@ -266,208 +266,215 @@ const AdminDashboard: React.FC = () => {
 
       {/* Tab Content */}
       <div className="space-y-8">
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-paperwhite/10 rounded-xl shadow-lg p-8">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-teallight text-sm">Total Students</p>
-                <p className="text-3xl font-bold text-paperwhite">{analytics?.totalStudents || 0}</p>
-              </div>
-              <div className="bg-trueturquoise/20 p-3 rounded-lg">
-                <Users className="h-6 w-6 text-trueturquoise" />
-              </div>
-            </div>
-          </div>
-          <div className="bg-paperwhite/10 rounded-xl shadow-lg p-8">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-teallight text-sm">Active Students</p>
-                <p className="text-3xl font-bold text-paperwhite">{analytics?.activeStudents || 0}</p>
-              </div>
-              <div className="bg-trueturquoise/20 p-3 rounded-lg">
-                <TrendingUp className="h-6 w-6 text-trueturquoise" />
-              </div>
-            </div>
-          </div>
-          <div className="bg-paperwhite/10 rounded-xl shadow-lg p-8">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-teallight text-sm">Completion Rate</p>
-                <p className="text-3xl font-bold text-paperwhite">{analytics?.completionRate || 0}%</p>
-              </div>
-              <div className="bg-trueturquoise/20 p-3 rounded-lg">
-                <BookOpen className="h-6 w-6 text-trueturquoise" />
-              </div>
-            </div>
-          </div>
-          <div className="bg-paperwhite/10 rounded-xl shadow-lg p-8">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-teallight text-sm">Avg Progress</p>
-                <p className="text-3xl font-bold text-paperwhite">{analytics?.avgProgress || 0}%</p>
-              </div>
-              <div className="bg-trueturquoise/20 p-3 rounded-lg">
-                <ExclamationTriangleIcon className="h-6 w-6 text-trueturquoise" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Attendance Chart */}
-        <div className="bg-paperwhite/10 rounded-xl shadow-lg p-8">
-          <h2 className="text-xl font-semibold text-paperwhite mb-6">Weekly Attendance</h2>
-          <div className="flex items-end space-x-4 h-40">
-            {analytics?.attendanceData?.map((data: any, index: number) => (
-              <div key={index} className="flex-1 flex flex-col items-center">
-                <div
-                  className="bg-trueturquoise rounded-t w-full"
-                  style={{ height: `${(data.students / 350) * 100}%` }}
-                ></div>
-                <div className="mt-2 text-center">
-                  <p className="text-sm font-medium text-paperwhite">{data.students}</p>
-                  <p className="text-xs text-teallight">{data.day}</p>
+        {activeTab === 'overview' && (
+          <>
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="bg-paperwhite/10 rounded-xl shadow-lg p-8">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-teallight text-sm">Total Students</p>
+                    <p className="text-3xl font-bold text-paperwhite">{analytics?.totalStudents || 0}</p>
+                  </div>
+                  <div className="bg-trueturquoise/20 p-3 rounded-lg">
+                    <Users className="h-6 w-6 text-trueturquoise" />
+                  </div>
                 </div>
               </div>
-            )) || (
-              <div className="flex-1 flex items-center justify-center text-teallight">
-                No attendance data available
+              <div className="bg-paperwhite/10 rounded-xl shadow-lg p-8">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-teallight text-sm">Active Students</p>
+                    <p className="text-3xl font-bold text-paperwhite">{analytics?.activeStudents || 0}</p>
+                  </div>
+                  <div className="bg-trueturquoise/20 p-3 rounded-lg">
+                    <TrendingUp className="h-6 w-6 text-trueturquoise" />
+                  </div>
+                </div>
               </div>
-            )}
-          </div>
-        </div>
-
-        {/* Student Management Table */}
-        <div className="bg-paperwhite/10 rounded-xl shadow-lg p-8">
-          <div className="p-6 border-b border-paperwhite/10">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-paperwhite">Student Management</h2>
-              <button
-                onClick={handleAddStudent}
-                className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold flex items-center gap-2 shadow"
-              >
-                <PlusIcon className="h-4 w-4" />
-                Add Student
-              </button>
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="relative flex-1">
-                <Search className="h-5 w-5 text-teallight absolute left-3 top-1/2 transform -translate-y-1/2" />
-                <input
-                  type="text"
-                  placeholder="Search students..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-4 py-2 w-full border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder-teallight"
-                />
+              <div className="bg-paperwhite/10 rounded-xl shadow-lg p-8">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-teallight text-sm">Completion Rate</p>
+                    <p className="text-3xl font-bold text-paperwhite">{analytics?.completionRate || 0}%</p>
+                  </div>
+                  <div className="bg-trueturquoise/20 p-3 rounded-lg">
+                    <BookOpen className="h-6 w-6 text-trueturquoise" />
+                  </div>
+                </div>
               </div>
-              <select
-                value={selectedFilter}
-                onChange={(e) => setSelectedFilter(e.target.value)}
-                className="border border-paperwhite/20 rounded-lg px-3 py-2 focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite"
-              >
-                <option value="all">All Students</option>
-                <option value="active">Active</option>
-                <option value="at-risk">At Risk</option>
-                <option value="inactive">Inactive</option>
-                <option value="excellent">Excellent</option>
-              </select>
+              <div className="bg-paperwhite/10 rounded-xl shadow-lg p-8">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-teallight text-sm">Avg Progress</p>
+                    <p className="text-3xl font-bold text-paperwhite">{analytics?.avgProgress || 0}%</p>
+                  </div>
+                  <div className="bg-trueturquoise/20 p-3 rounded-lg">
+                    <ExclamationTriangleIcon className="h-6 w-6 text-trueturquoise" />
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Student</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Department</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Track</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Progress</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredStudents.map((student) => (
-                  <tr key={student._id} className="hover:bg-paperwhite/5">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div>
-                        <div className="text-sm font-medium text-paperwhite">{student.name}</div>
-                        <div className="text-sm text-teallight">{student.email}</div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-paperwhite">{student.department}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-paperwhite">
-                      <span className="text-sm text-paperwhite capitalize">
-                        {(() => {
-                          switch(student.careerTrack) {
-                            case 'fullstack': return 'Full Stack Development';
-                            case 'ai-ml': return 'AI/ML Engineering';
-                            case 'ui-ux': return 'UI/UX Design';
-                            case 'data-science': return 'Data Science';
-                            default: return student.careerTrack;
-                          }
-                        })()}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <div className="w-16 bg-paperwhite/10 rounded-full h-2 mr-2">
-                          <div
-                            className="bg-trueturquoise h-2 rounded-full"
-                            style={{ width: `${student.progress || 0}%` }}
-                          ></div>
-                        </div>
-                        <span className="text-sm text-paperwhite">{student.progress || 0}%</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-trueturquoise/20 text-trueturquoise">
-                        {getStatusIcon(student.status || 'active')}
-                        <span className="ml-1 capitalize">{(student.status || 'active') ? (student.status || 'active').replace('-', ' ') : 'Active'}</span>
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center space-x-2">
-                        <button
-                          onClick={() => handleViewStudent(student)}
-                          className="text-trueturquoise hover:text-trueturquoise/80"
-                        >
-                          <Eye className="h-4 w-4" />
-                        </button>
-                        <button
-                          onClick={() => handleEditStudent(student)}
-                          className="bg-trueturquoise hover:bg-trueturquoise/90 text-offblack px-2 py-1 rounded transition-colors"
-                          title="Edit"
-                        >
-                          <Edit3 className="h-4 w-4" />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteStudent(student._id)}
-                          className="bg-rust hover:bg-rust/80 text-paperwhite px-2 py-1 rounded transition-colors"
-                          title="Delete"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          {filteredStudents.length === 0 && (
-            <div className="text-center py-12">
-              <Users className="h-12 w-12 text-teallight mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-paperwhite mb-2">No Students Found</h3>
-              <p className="text-teallight">
-                {searchTerm ? 'No students match your search criteria.' : 'No students have been added yet.'}
-              </p>
-            </div>
-          )}
-        </div>
 
-        {/* Task Review Section */}
-        <TaskReview submissions={submissions} onReview={handleReviewSubmission} />
+            {/* Attendance Chart */}
+            <div className="bg-paperwhite/10 rounded-xl shadow-lg p-8">
+              <h2 className="text-xl font-semibold text-paperwhite mb-6">Weekly Attendance</h2>
+              <div className="flex items-end space-x-4 h-40">
+                {analytics?.attendanceData?.map((data: any, index: number) => (
+                  <div key={index} className="flex-1 flex flex-col items-center">
+                    <div
+                      className="bg-trueturquoise rounded-t w-full"
+                      style={{ height: `${(data.students / 350) * 100}%` }}
+                    ></div>
+                    <div className="mt-2 text-center">
+                      <p className="text-sm font-medium text-paperwhite">{data.students}</p>
+                      <p className="text-xs text-teallight">{data.day}</p>
+                    </div>
+                  </div>
+                )) || (
+                  <div className="flex-1 flex items-center justify-center text-teallight">
+                    No attendance data available
+                  </div>
+                )}
+              </div>
+            </div>
+          </>
+        )}
+        {activeTab === 'students' && (
+          <>
+            {/* Student Management Table */}
+            <div className="bg-paperwhite/10 rounded-xl shadow-lg p-8">
+              <div className="p-6 border-b border-paperwhite/10">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl font-semibold text-paperwhite">Student Management</h2>
+                  <button
+                    onClick={handleAddStudent}
+                    className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold flex items-center gap-2 shadow"
+                  >
+                    <PlusIcon className="h-4 w-4" />
+                    Add Student
+                  </button>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <div className="relative flex-1">
+                    <Search className="h-5 w-5 text-teallight absolute left-3 top-1/2 transform -translate-y-1/2" />
+                    <input
+                      type="text"
+                      placeholder="Search students..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-10 pr-4 py-2 w-full border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder-teallight"
+                    />
+                  </div>
+                  <select
+                    value={selectedFilter}
+                    onChange={(e) => setSelectedFilter(e.target.value)}
+                    className="border border-paperwhite/20 rounded-lg px-3 py-2 focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite"
+                  >
+                    <option value="all">All Students</option>
+                    <option value="active">Active</option>
+                    <option value="at-risk">At Risk</option>
+                    <option value="inactive">Inactive</option>
+                    <option value="excellent">Excellent</option>
+                  </select>
+                </div>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Student</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Department</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Track</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Progress</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Status</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredStudents.map((student) => (
+                      <tr key={student._id} className="hover:bg-paperwhite/5">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div>
+                            <div className="text-sm font-medium text-paperwhite">{student.name}</div>
+                            <div className="text-sm text-teallight">{student.email}</div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-paperwhite">{student.department}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-paperwhite">
+                          <span className="text-sm text-paperwhite capitalize">
+                            {(() => {
+                              switch(student.careerTrack) {
+                                case 'fullstack': return 'Full Stack Development';
+                                case 'ai-ml': return 'AI/ML Engineering';
+                                case 'ui-ux': return 'UI/UX Design';
+                                case 'data-science': return 'Data Science';
+                                default: return student.careerTrack;
+                              }
+                            })()}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className="w-16 bg-paperwhite/10 rounded-full h-2 mr-2">
+                              <div
+                                className="bg-trueturquoise h-2 rounded-full"
+                                style={{ width: `${student.progress || 0}%` }}
+                              ></div>
+                            </div>
+                            <span className="text-sm text-paperwhite">{student.progress || 0}%</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-trueturquoise/20 text-trueturquoise">
+                            {getStatusIcon(student.status || 'active')}
+                            <span className="ml-1 capitalize">{(student.status || 'active') ? (student.status || 'active').replace('-', ' ') : 'Active'}</span>
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center space-x-2">
+                            <button
+                              onClick={() => handleViewStudent(student)}
+                              className="text-trueturquoise hover:text-trueturquoise/80"
+                            >
+                              <Eye className="h-4 w-4" />
+                            </button>
+                            <button
+                              onClick={() => handleEditStudent(student)}
+                              className="bg-trueturquoise hover:bg-trueturquoise/90 text-offblack px-2 py-1 rounded transition-colors"
+                              title="Edit"
+                            >
+                              <Edit3 className="h-4 w-4" />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteStudent(student._id)}
+                              className="bg-rust hover:bg-rust/80 text-paperwhite px-2 py-1 rounded transition-colors"
+                              title="Delete"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {filteredStudents.length === 0 && (
+                <div className="text-center py-12">
+                  <Users className="h-12 w-12 text-teallight mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-paperwhite mb-2">No Students Found</h3>
+                  <p className="text-teallight">
+                    {searchTerm ? 'No students match your search criteria.' : 'No students have been added yet.'}
+                  </p>
+                </div>
+              )}
+            </div>
+          </>
+        )}
+        {activeTab === 'submissions' && (
+          <TaskReview submissions={submissions} onReview={handleReviewSubmission} />
+        )}
       </div>
 
       {/* Student Detail/Edit Modal */}
