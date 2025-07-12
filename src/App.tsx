@@ -1,4 +1,4 @@
-import  { useState, useEffect } from 'react';
+import  {  useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './redux/store';
 import { getDefaultRoute } from './utils/routing';
@@ -11,11 +11,8 @@ import AdminDashboard from './pages/AdminDashboard';
 import AdminAnalytics from './pages/AdminAnalytics';
 import AdminSettings from './pages/AdminSettings';
 import TrainingModule from './pages/TrainingModule';
-import TaskPortal from './pages/TaskPortal';
 import OnboardingFlow from './pages/OnboardingFlow';
 import ProtectedRoute from './components/ProtectedRoute';
-import UpcomingTasks from './pages/UpcomingTasks';
-import StudentSubmissions from './pages/StudentTasks';
 import AdminDiagnostics from './pages/AdminDiagnostics';
 import StudentLayout from './components/StudentLayout';
 import LoadingScreen from './components/LoadingScreen';
