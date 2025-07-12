@@ -371,14 +371,14 @@ const AdminSettings: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6 lg:space-y-8 p-4 lg:p-8 bg-black">
+    <div className="space-y-6 lg:space-y-8 p-4 lg:p-8 bg-offblack min-h-screen">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-paperwhite">Admin Settings</h1>
         <p className="text-teallight">Manage your platform settings and content</p>
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-teallight mb-8">
+      <div className="border-b border-paperwhite/10 mb-8">
         <nav className="-mb-px flex space-x-8">
           {tabs.map((tab) => {
             const Icon = tab.icon;
@@ -386,12 +386,12 @@ const AdminSettings: React.FC = () => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 transition-colors duration-200
+                className={`py-2 px-1 border-b-2 font-medium text-lg flex items-center space-x-2 transition-colors duration-200
                   ${activeTab === tab.id
-                    ? 'border-true-turquoise text-true-turquoise bg-paperwhite/10 rounded-t'
-                    : 'border-transparent text-teallight hover:text-paperwhite hover:border-teallight'}`}
+                    ? 'text-trueturquoise border-b-2 border-trueturquoise bg-offblack'
+                    : 'text-paperwhite/60 hover:text-trueturquoise border-b-2 border-transparent bg-offblack/80'}`}
               >
-                <Icon className="h-4 w-4" />
+                <Icon className="h-5 w-5" />
                 <span>{tab.label}</span>
               </button>
             );
@@ -403,10 +403,10 @@ const AdminSettings: React.FC = () => {
       <div className="space-y-8">
         {/* General Settings */}
         {activeTab === 'general' && (
-          <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6">
+          <div className="bg-paperwhite/10 rounded-xl shadow-lg p-6">
             <h2 className="text-xl font-semibold text-paperwhite mb-6">General Settings</h2>
             <div className="grid md:grid-cols-2 gap-6">
-              {/* All inputs use bg-offblack, border-teallight, text-paperwhite */}
+              {/* All inputs use bg-offblack, border-paperwhite/20, text-paperwhite */}
               <div>
                 <label className="block text-sm font-medium text-teallight mb-2">
                   Platform Name
@@ -415,7 +415,7 @@ const AdminSettings: React.FC = () => {
                   type="text"
                   value={settingsDraft?.general?.platformName ?? ''}
                   onChange={(e) => handleSettingChange('general', 'platformName', e.target.value)}
-                  className="w-full px-3 py-2 border border-teallight rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent bg-offblack text-paperwhite placeholder:text-teallight"
+                  className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
                 />
               </div>
               <div>
@@ -426,7 +426,7 @@ const AdminSettings: React.FC = () => {
                   type="email"
                   value={settingsDraft?.general?.supportEmail ?? ''}
                   onChange={(e) => handleSettingChange('general', 'supportEmail', e.target.value)}
-                  className="w-full px-3 py-2 border border-teallight rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent bg-offblack text-paperwhite placeholder:text-teallight"
+                  className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
                 />
               </div>
               <div>
@@ -437,7 +437,7 @@ const AdminSettings: React.FC = () => {
                   type="number"
                   value={settingsDraft?.general?.maxStudentsPerAdmin ?? 0}
                   onChange={(e) => handleSettingChange('general', 'maxStudentsPerAdmin', parseInt(e.target.value))}
-                  className="w-full px-3 py-2 border border-teallight rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent bg-offblack text-paperwhite placeholder:text-teallight"
+                  className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
                 />
               </div>
               <div>
@@ -448,7 +448,7 @@ const AdminSettings: React.FC = () => {
                   type="number"
                   value={settingsDraft?.general?.sessionTimeout ?? 0}
                   onChange={(e) => handleSettingChange('general', 'sessionTimeout', parseInt(e.target.value))}
-                  className="w-full px-3 py-2 border border-teallight rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent bg-offblack text-paperwhite placeholder:text-teallight"
+                  className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
                 />
               </div>
               <div>
@@ -459,7 +459,7 @@ const AdminSettings: React.FC = () => {
                   type="text"
                   value={settingsDraft?.general?.siteName ?? ''}
                   onChange={(e) => handleSettingChange('general', 'siteName', e.target.value)}
-                  className="w-full px-3 py-2 border border-teallight rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent bg-offblack text-paperwhite placeholder:text-teallight"
+                  className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
                 />
               </div>
               <div>
@@ -470,7 +470,7 @@ const AdminSettings: React.FC = () => {
                   type="text"
                   value={settingsDraft?.general?.siteDescription ?? ''}
                   onChange={(e) => handleSettingChange('general', 'siteDescription', e.target.value)}
-                  className="w-full px-3 py-2 border border-teallight rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent bg-offblack text-paperwhite placeholder:text-teallight"
+                  className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
                 />
               </div>
             </div>
@@ -503,12 +503,12 @@ const AdminSettings: React.FC = () => {
                     placeholder="Module Title"
                     value={moduleForm.title}
                     onChange={(e) => setModuleForm(prev => ({ ...prev, title: e.target.value }))}
-                    className="px-3 py-2 border border-teallight rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent bg-offblack text-paperwhite placeholder:text-teallight"
+                    className="px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
                   />
                   <select
                     value={moduleForm.careerTrack}
                     onChange={(e) => setModuleForm(prev => ({ ...prev, careerTrack: e.target.value }))}
-                    className="px-3 py-2 border border-teallight rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent bg-offblack text-paperwhite placeholder:text-teallight"
+                    className="px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
                   >
                     <option value="fullstack">Full Stack Development</option>
                     <option value="ai-ml">AI/ML Engineering</option>
@@ -518,7 +518,7 @@ const AdminSettings: React.FC = () => {
                   <select
                     value={moduleForm.difficulty}
                     onChange={(e) => setModuleForm(prev => ({ ...prev, difficulty: e.target.value }))}
-                    className="px-3 py-2 border border-teallight rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent bg-offblack text-paperwhite placeholder:text-teallight"
+                    className="px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
                   >
                     <option value="Beginner">Beginner</option>
                     <option value="Intermediate">Intermediate</option>
@@ -529,13 +529,13 @@ const AdminSettings: React.FC = () => {
                     placeholder="Duration (e.g., 2 hours)"
                     value={moduleForm.duration}
                     onChange={(e) => setModuleForm(prev => ({ ...prev, duration: e.target.value }))}
-                    className="px-3 py-2 border border-teallight rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent bg-offblack text-paperwhite placeholder:text-teallight"
+                    className="px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
                   />
                   <textarea
                     placeholder="Module Description"
                     value={moduleForm.description}
                     onChange={(e) => setModuleForm(prev => ({ ...prev, description: e.target.value }))}
-                    className="md:col-span-2 px-3 py-2 border border-teallight rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent bg-offblack text-paperwhite placeholder:text-teallight"
+                    className="md:col-span-2 px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
                     rows={3}
                   />
                 </div>
@@ -554,7 +554,7 @@ const AdminSettings: React.FC = () => {
                               lessons[idx].title = e.target.value;
                               return { ...prev, lessons };
                             })}
-                            className="flex-1 px-3 py-2 border border-teallight rounded-lg bg-offblack text-paperwhite placeholder:text-teallight"
+                            className="flex-1 px-3 py-2 border border-paperwhite/20 rounded-lg bg-offblack text-paperwhite placeholder:text-teallight"
                           />
                           <select
                             value={lesson.type}
@@ -563,7 +563,7 @@ const AdminSettings: React.FC = () => {
                               lessons[idx].type = e.target.value;
                               return { ...prev, lessons };
                             })}
-                            className="px-3 py-2 border border-teallight rounded-lg bg-offblack text-paperwhite placeholder:text-teallight"
+                            className="px-3 py-2 border border-paperwhite/20 rounded-lg bg-offblack text-paperwhite placeholder:text-teallight"
                           >
                             <option value="video">Video</option>
                             <option value="reading">Reading</option>
@@ -579,7 +579,7 @@ const AdminSettings: React.FC = () => {
                               lessons[idx].duration = e.target.value;
                               return { ...prev, lessons };
                             })}
-                            className="w-32 px-3 py-2 border border-teallight rounded-lg bg-offblack text-paperwhite placeholder:text-teallight"
+                            className="w-32 px-3 py-2 border border-paperwhite/20 rounded-lg bg-offblack text-paperwhite placeholder:text-teallight"
                           />
                           {/* For video lessons, show videoUrl input */}
                           {lesson.type === 'video' && (
@@ -592,7 +592,7 @@ const AdminSettings: React.FC = () => {
                                 lessons[idx].videoUrl = e.target.value;
                                 return { ...prev, lessons };
                               })}
-                              className="flex-1 px-3 py-2 border border-teallight rounded-lg bg-offblack text-paperwhite placeholder:text-teallight"
+                              className="flex-1 px-3 py-2 border border-paperwhite/20 rounded-lg bg-offblack text-paperwhite placeholder:text-teallight"
                             />
                           )}
                           {/* For reading/project/quiz, show content input */}
@@ -605,7 +605,7 @@ const AdminSettings: React.FC = () => {
                                 lessons[idx].content = e.target.value;
                                 return { ...prev, lessons };
                               })}
-                              className="flex-1 px-3 py-2 border border-teallight rounded-lg bg-offblack text-paperwhite placeholder:text-teallight"
+                              className="flex-1 px-3 py-2 border border-paperwhite/20 rounded-lg bg-offblack text-paperwhite placeholder:text-teallight"
                               rows={2}
                             />
                           )}
@@ -618,7 +618,7 @@ const AdminSettings: React.FC = () => {
                               lessons[idx].order = parseInt(e.target.value) || idx + 1;
                               return { ...prev, lessons };
                             })}
-                            className="w-20 px-3 py-2 border border-teallight rounded-lg bg-offblack text-paperwhite placeholder:text-teallight"
+                            className="w-20 px-3 py-2 border border-paperwhite/20 rounded-lg bg-offblack text-paperwhite placeholder:text-teallight"
                           />
                           <button
                             type="button"
@@ -662,7 +662,7 @@ const AdminSettings: React.FC = () => {
                       setShowModuleForm(false);
                       setEditingModule(null);
                     }}
-                    className="px-4 py-2 border border-teallight text-teallight rounded-lg hover:bg-offblack/20 transition"
+                    className="px-4 py-2 border border-paperwhite/20 text-teallight rounded-lg hover:bg-offblack/20 transition"
                   >
                     Cancel
                   </button>
@@ -806,12 +806,12 @@ const AdminSettings: React.FC = () => {
                     placeholder="Task Title"
                     value={taskForm.title}
                     onChange={(e) => setTaskForm(prev => ({ ...prev, title: e.target.value }))}
-                    className="px-3 py-2 border border-teallight rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent bg-offblack text-paperwhite placeholder:text-teallight"
+                    className="px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
                   />
                   <select
                     value={taskForm.careerTrack}
                     onChange={(e) => setTaskForm(prev => ({ ...prev, careerTrack: e.target.value }))}
-                    className="px-3 py-2 border border-teallight rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent bg-offblack text-paperwhite placeholder:text-teallight"
+                    className="px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
                   >
                     <option value="fullstack">Full Stack Development</option>
                     <option value="ai-ml">AI/ML Engineering</option>
@@ -821,7 +821,7 @@ const AdminSettings: React.FC = () => {
                   <select
                     value={taskForm.category}
                     onChange={(e) => setTaskForm(prev => ({ ...prev, category: e.target.value }))}
-                    className="px-3 py-2 border border-teallight rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent bg-offblack text-paperwhite placeholder:text-teallight"
+                    className="px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
                   >
                     <option value="frontend">Frontend</option>
                     <option value="backend">Backend</option>
@@ -832,7 +832,7 @@ const AdminSettings: React.FC = () => {
                   <select
                     value={taskForm.difficulty}
                     onChange={(e) => setTaskForm(prev => ({ ...prev, difficulty: e.target.value }))}
-                    className="px-3 py-2 border border-teallight rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent bg-offblack text-paperwhite placeholder:text-teallight"
+                    className="px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
                   >
                     <option value="Beginner">Beginner</option>
                     <option value="Intermediate">Intermediate</option>
@@ -843,20 +843,20 @@ const AdminSettings: React.FC = () => {
                     placeholder="Points"
                     value={taskForm.points}
                     onChange={(e) => setTaskForm(prev => ({ ...prev, points: parseInt(e.target.value) }))}
-                    className="px-3 py-2 border border-teallight rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent bg-offblack text-paperwhite placeholder:text-teallight"
+                    className="px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
                   />
                   <input
                     type="text"
                     placeholder="Estimated Time"
                     value={taskForm.estimatedTime}
                     onChange={(e) => setTaskForm(prev => ({ ...prev, estimatedTime: e.target.value }))}
-                    className="px-3 py-2 border border-teallight rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent bg-offblack text-paperwhite placeholder:text-teallight"
+                    className="px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
                   />
                   <textarea
                     placeholder="Task Description"
                     value={taskForm.description}
                     onChange={(e) => setTaskForm(prev => ({ ...prev, description: e.target.value }))}
-                    className="md:col-span-2 px-3 py-2 border border-teallight rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent bg-offblack text-paperwhite placeholder:text-teallight"
+                    className="md:col-span-2 px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
                     rows={3}
                   />
                   <div className="md:col-span-2">
@@ -868,7 +868,7 @@ const AdminSettings: React.FC = () => {
                         const options = Array.from(e.target.selectedOptions).map(opt => opt.value);
                         setTaskForm(prev => ({ ...prev, assignedTo: options }));
                       }}
-                      className="w-full px-3 py-2 border border-teallight rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent bg-offblack text-paperwhite placeholder:text-teallight h-32"
+                      className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight h-32"
                     >
                  {(users || []).map(student => (
   <option key={student._id} value={student._id}>
@@ -885,7 +885,7 @@ const AdminSettings: React.FC = () => {
                       setShowTaskForm(false);
                       setEditingTask(null);
                     }}
-                    className="px-4 py-2 border border-teallight text-teallight rounded-lg hover:bg-offblack/20 transition"
+                    className="px-4 py-2 border border-paperwhite/20 text-teallight rounded-lg hover:bg-offblack/20 transition"
                   >
                     Cancel
                   </button>
@@ -1029,14 +1029,14 @@ const AdminSettings: React.FC = () => {
             </div>
             {/* Filters */}
             <div className="flex flex-wrap gap-3 mb-4">
-              <input type="text" placeholder="Name" value={userFilters.name} onChange={e => setUserFilters(f => ({ ...f, name: e.target.value }))} className="px-3 py-2 border border-teallight bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent transition" />
-              <input type="text" placeholder="Email" value={userFilters.email} onChange={e => setUserFilters(f => ({ ...f, email: e.target.value }))} className="px-3 py-2 border border-teallight bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent transition" />
-              <select value={userFilters.role} onChange={e => setUserFilters(f => ({ ...f, role: e.target.value }))} className="px-3 py-2 border border-teallight bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent transition">
+              <input type="text" placeholder="Name" value={userFilters.name} onChange={e => setUserFilters(f => ({ ...f, name: e.target.value }))} className="px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition" />
+              <input type="text" placeholder="Email" value={userFilters.email} onChange={e => setUserFilters(f => ({ ...f, email: e.target.value }))} className="px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition" />
+              <select value={userFilters.role} onChange={e => setUserFilters(f => ({ ...f, role: e.target.value }))} className="px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition">
                 <option value="">All Roles</option>
                 <option value="student">Student</option>
                 <option value="admin">Admin</option>
               </select>
-              <select value={userFilters.careerTrack} onChange={e => setUserFilters(f => ({ ...f, careerTrack: e.target.value }))} className="px-3 py-2 border border-teallight bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent transition">
+              <select value={userFilters.careerTrack} onChange={e => setUserFilters(f => ({ ...f, careerTrack: e.target.value }))} className="px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition">
                 <option value="">All Tracks</option>
                 <option value="fullstack">Full Stack</option>
                 <option value="ai-ml">AI/ML</option>
@@ -1107,16 +1107,16 @@ const AdminSettings: React.FC = () => {
                 <div className="bg-offblack rounded-xl shadow-2xl p-8 w-full max-w-md border border-offblack/20">
                   <h3 className="text-lg font-semibold mb-4 text-paperwhite">{editingUser ? 'Edit User' : 'Add User'}</h3>
                   <div className="space-y-3">
-                    <input type="text" placeholder="Name" value={userForm.name} onChange={e => setUserForm(f => ({ ...f, name: e.target.value }))} className="w-full px-3 py-2 border border-teallight bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent transition" />
-                    <input type="email" placeholder="Email" value={userForm.email} onChange={e => setUserForm(f => ({ ...f, email: e.target.value }))} className="w-full px-3 py-2 border border-teallight bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent transition" />
-                    {!editingUser && <input type="password" placeholder="Password" value={userForm.password} onChange={e => setUserForm(f => ({ ...f, password: e.target.value }))} className="w-full px-3 py-2 border border-teallight bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent transition" />}
-                    <select value={userForm.role} onChange={e => setUserForm(f => ({ ...f, role: e.target.value }))} className="w-full px-3 py-2 border border-teallight bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent transition">
+                    <input type="text" placeholder="Name" value={userForm.name} onChange={e => setUserForm(f => ({ ...f, name: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition" />
+                    <input type="email" placeholder="Email" value={userForm.email} onChange={e => setUserForm(f => ({ ...f, email: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition" />
+                    {!editingUser && <input type="password" placeholder="Password" value={userForm.password} onChange={e => setUserForm(f => ({ ...f, password: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition" />}
+                    <select value={userForm.role} onChange={e => setUserForm(f => ({ ...f, role: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition">
                       <option value="student">Student</option>
                       <option value="admin">Admin</option>
                     </select>
-                    <input type="text" placeholder="College" value={userForm.college} onChange={e => setUserForm(f => ({ ...f, college: e.target.value }))} className="w-full px-3 py-2 border border-teallight bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent transition" />
-                    <input type="text" placeholder="Department" value={userForm.department} onChange={e => setUserForm(f => ({ ...f, department: e.target.value }))} className="w-full px-3 py-2 border border-teallight bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent transition" />
-                    <select value={userForm.careerTrack} onChange={e => setUserForm(f => ({ ...f, careerTrack: e.target.value }))} className="w-full px-3 py-2 border border-teallight bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-true-turquoise focus:border-transparent transition">
+                    <input type="text" placeholder="College" value={userForm.college} onChange={e => setUserForm(f => ({ ...f, college: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition" />
+                    <input type="text" placeholder="Department" value={userForm.department} onChange={e => setUserForm(f => ({ ...f, department: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition" />
+                    <select value={userForm.careerTrack} onChange={e => setUserForm(f => ({ ...f, careerTrack: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition">
                       <option value="">Select Track</option>
                       <option value="fullstack">Full Stack</option>
                       <option value="ai-ml">AI/ML</option>
@@ -1129,7 +1129,7 @@ const AdminSettings: React.FC = () => {
                     </div>
                   </div>
                   <div className="flex justify-end space-x-3 mt-6">
-                    <button onClick={() => setShowUserForm(false)} className="px-4 py-2 border border-teallight text-paperwhite rounded-lg hover:bg-offblack/20 transition">Cancel</button>
+                    <button onClick={() => setShowUserForm(false)} className="px-4 py-2 border border-paperwhite/20 text-paperwhite rounded-lg hover:bg-offblack/20 transition">Cancel</button>
                     <button
                       onClick={async () => {
                         setUserFormError('');
@@ -1187,7 +1187,7 @@ const AdminSettings: React.FC = () => {
                 type="text"
                 value={geminiKeyInput}
                 onChange={handleGeminiKeyChange}
-                className="w-full px-4 py-2 border rounded-lg bg-offblack border-teallight text-paperwhite placeholder:text-teallight"
+                className="w-full px-4 py-2 border rounded-lg bg-offblack border-paperwhite/20 text-paperwhite placeholder:text-teallight"
                 placeholder="Enter Gemini API Key"
               />
               <p className="text-xs text-teallight">Used for AI features (chat, feedback, resume).</p>
@@ -1199,7 +1199,7 @@ const AdminSettings: React.FC = () => {
                 type="text"
                 value={settingsDraft?.integrations?.emailProvider ?? ''}
                 onChange={e => handleSettingChange('integrations', 'emailProvider', e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg bg-offblack border-teallight text-paperwhite placeholder:text-teallight"
+                className="w-full px-4 py-2 border rounded-lg bg-offblack border-paperwhite/20 text-paperwhite placeholder:text-teallight"
                 placeholder="e.g. SendGrid, Gmail, Mailgun"
               />
               <p className="text-xs text-teallight">For reference. Not connected to any provider yet.</p>
@@ -1209,70 +1209,4 @@ const AdminSettings: React.FC = () => {
               <span className="text-paperwhite font-medium">Analytics Enabled</span>
               <button
                 type="button"
-                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${settingsDraft?.integrations?.analyticsEnabled ? 'bg-true-turquoise' : 'bg-offblack'}`}
-                onClick={() => handleSettingChange('integrations', 'analyticsEnabled', !settingsDraft?.integrations?.analyticsEnabled)}
-              >
-                <span className={`h-4 w-4 bg-paperwhite rounded-full shadow transform transition-transform duration-300 ${settingsDraft?.integrations?.analyticsEnabled ? 'translate-x-6' : ''}`}></span>
-              </button>
-            </div>
-            {/* Backup Enabled Toggle */}
-            <div className="flex items-center justify-between">
-              <span className="text-paperwhite font-medium">Backup Enabled</span>
-              <button
-                type="button"
-                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${settingsDraft?.integrations?.backupEnabled ? 'bg-true-turquoise' : 'bg-offblack'}`}
-                onClick={() => handleSettingChange('integrations', 'backupEnabled', !settingsDraft?.integrations?.backupEnabled)}
-              >
-                <span className={`h-4 w-4 bg-paperwhite rounded-full shadow transform transition-transform duration-300 ${settingsDraft?.integrations?.backupEnabled ? 'translate-x-6' : ''}`}></span>
-              </button>
-            </div>
-            <button
-              className="mt-4 bg-true-turquoise text-paperwhite px-6 py-2 rounded-lg hover:bg-true-turquoise/90 transition-all font-medium"
-              onClick={handleSaveSettings}
-              disabled={isSaving}
-            >
-              {isSaving ? 'Saving...' : 'Save Integrations'}
-            </button>
-            {saveMessage && <div className="mt-2 text-teallight">{saveMessage}</div>}
-          </div>
-        )}
-      </div>
-
-      {/* Save Button */}
-      {activeTab === 'general' && (
-        <div className="mt-8 flex justify-end">
-          <button
-            onClick={handleSaveSettings}
-            disabled={isSaving}
-            className="bg-true-turquoise text-paperwhite px-6 py-2 rounded-lg hover:bg-true-turquoise/90 transition-colors font-medium flex items-center disabled:opacity-50"
-          >
-            {isSaving ? (
-              <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-paperwhite mr-2"></div>
-                Saving...
-              </>
-            ) : (
-              <>
-                <Save className="h-4 w-4 mr-2" />
-                Save Settings
-              </>
-            )}
-          </button>
-        </div>
-      )}
-
-      {/* Save Message */}
-      {saveMessage && (
-        <div className={`fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg ${
-          saveMessage.includes('successfully') 
-            ? 'bg-teallight text-offblack' 
-            : 'bg-rust text-paperwhite'
-        }`}>
-          {saveMessage}
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default AdminSettings;
+                className={`
