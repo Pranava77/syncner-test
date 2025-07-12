@@ -154,14 +154,14 @@ const OnboardingFlow: React.FC = () => {
               </h2>
               <div className="space-y-4 text-left">
                 <div className="flex items-start space-x-3">
-                  <CheckCircle className="h-6 w-6 text-green-500 mt-1 flex-shrink-0" />
+                  <CheckCircledIcon className="h-6 w-6 text-green-500 mt-1 flex-shrink-0" />
                   <div>
                     <h3 className="font-medium text-gray-900 dark:text-white">AI-Personalized Learning</h3>
                     <p className="text-gray-600 dark:text-gray-300">Adaptive curriculum that adjusts to your pace and learning style</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <CheckCircle className="h-6 w-6 text-green-500 mt-1 flex-shrink-0" />
+                  <CheckCircledIcon className="h-6 w-6 text-green-500 mt-1 flex-shrink-0" />
                   <div>
                     <h3 className="font-medium text-gray-900 dark:text-white">Real-World Projects</h3>
                     <p className="text-gray-600 dark:text-gray-300">Industry-standard tasks that build your portfolio</p>
@@ -180,7 +180,7 @@ const OnboardingFlow: React.FC = () => {
                 className="w-full mt-8 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all font-medium flex items-center justify-center"
               >
                 Let's Get Started
-                <ArrowRight className="ml-2 h-5 w-5" />
+                <ArrowRightIcon className="ml-2 h-5 w-5" />
               </button>
             </div>
           </div>
@@ -240,7 +240,7 @@ const OnboardingFlow: React.FC = () => {
                 className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
               >
                 Continue
-                <ArrowRight className="ml-2 h-5 w-5" />
+                <ArrowRightIcon className="ml-2 h-5 w-5" />
               </button>
             </div>
           </div>
