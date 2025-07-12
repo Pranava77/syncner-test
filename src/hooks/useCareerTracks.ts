@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import apiService from '../services/api';
 import type { Module } from './useModules';
-import type { Task } from './useTasks';
 
 interface CareerTrack {
   id: string;
@@ -14,7 +13,6 @@ interface CareerTrack {
   skills: string[];
   prerequisites: string[];
   modules: Module[];
-  tasks: Task[];
   enrollmentCount?: number;
   completionRate?: number;
 }

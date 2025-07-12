@@ -8,7 +8,6 @@ interface LoadingScreenProps {
 }
 
 const LoadingScreen: React.FC<LoadingScreenProps> = ({ 
-  message = "Loading...", 
   showProgress = true,
   progressDuration = 2000 
 }) => {
