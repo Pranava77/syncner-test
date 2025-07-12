@@ -1,236 +1,85 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useAppSelector } from '../redux/store';
-import { 
-  ArrowRightIcon,
-  BarChartIcon,
-  TargetIcon,
-  EnvelopeClosedIcon,
-  PersonIcon,
-  CheckCircledIcon
-} from '@radix-ui/react-icons';
 import logo from '../assets/syncner-logo.png';
-import LoadingScreen from '../components/LoadingScreen';
+
+const features = [
+  {
+    icon: (
+      <svg width="32" height="32" fill="none" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#00B8D9" /><path d="M10 16h12M16 10v12" stroke="#FAFAFA" strokeWidth="2" strokeLinecap="round" /></svg>
+    ),
+    title: 'Personalized AI Learning',
+    desc: 'Adaptive paths for every student, powered by AI.'
+  },
+  {
+    icon: (
+      <svg width="32" height="32" fill="none" viewBox="0 0 32 32"><rect x="4" y="4" width="24" height="24" rx="8" fill="#A0D8EF" /><path d="M10 22l6-6 6 6" stroke="#121212" strokeWidth="2" strokeLinecap="round" /></svg>
+    ),
+    title: 'Real-World Projects',
+    desc: 'Work on industry tasks and build your portfolio.'
+  },
+  {
+    icon: (
+      <svg width="32" height="32" fill="none" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#B7410E" /><path d="M16 10v8M16 22h.01" stroke="#FAFAFA" strokeWidth="2" strokeLinecap="round" /></svg>
+    ),
+    title: 'Career-Ready Skills',
+    desc: 'Graduate with confidence and real experience.'
+  }
+];
 
 const LandingPage: React.FC = () => {
-  const { isLoading } = useAppSelector((state) => state.auth);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
-
-  // Show loading while checking authentication
-  if (isLoading) {
-    return (
-      <LoadingScreen 
-        message="Checking authentication..."
-        showProgress={true}
-        progressDuration={1500}
-      />
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-offblack">
-      {/* Header */}
-      <header className="bg-paperwhite/5 backdrop-blur-md shadow-sm fixed w-full z-50 border-b border-paperwhite/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-3">
-              <div>
-                <img src={logo} alt="Syncner Logo" className="h-8 w-8 lg:h-10 lg:w-10 object-contain" />
-              </div>
-              <h1 className="text-2xl font-bold text-paperwhite font-satoshi">Syncner</h1>  
-            </div>
-            
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-4">
-              <Link
-                to="/login"
-                className="bg-trueturquoise text-offblack px-4 lg:px-6 py-2 rounded-lg hover:bg-teallight transition-all font-medium"
-              >
-                Get Started
-              </Link>
-            </div>
-
-            {/* Mobile Menu Button */}
-            <div className="md:hidden flex items-center space-x-2">
-              <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="text-white/80 hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors"
-              >
-                {isMobileMenuOpen ? (
-                  <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                ) : (
-                  <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                  </svg>
-                )}
-              </button>
-            </div>
+    <div className="min-h-screen bg-paperwhite flex flex-col justify-between">
+      {/* Hero */}
+      <main className="flex-1 flex flex-col items-center justify-center px-4 pt-24 pb-12">
+        <div className="flex flex-col items-center space-y-6 max-w-xl w-full">
+          <div className="flex flex-col items-center space-y-2">
+            <img src={logo} alt="Syncner Logo" className="h-16 w-16 mb-2 animate-fade-in" />
+            <h1 className="text-4xl md:text-5xl font-extrabold text-offblack text-center leading-tight">
+              <span className="block">Syncner</span>
+              <span className="block text-true-turquoise">Career Platform</span>
+            </h1>
+            <p className="text-lg md:text-xl text-offblack/70 text-center max-w-md mt-2">
+              AI-powered platform for students to learn, build, and launch their careers.
+            </p>
           </div>
-
-          {/* Mobile Menu */}
-          {isMobileMenuOpen && (
-            <div className="md:hidden py-4 border-t border-white/10">
-              <Link
-                to="/login"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block w-full text-center bg-trueturquoise text-offblack px-6 py-3 rounded-lg hover:bg-teallight transition-all font-medium"
-              >
-                Get Started
-              </Link>
-            </div>
-          )}
-        </div>
-      </header>
-
-      {/* Hero Section */}
-      <section className="pt-24 lg:pt-32 pb-12 lg:pb-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-paperwhite mb-4 lg:mb-6">
-            Transform Students Into
-            <span className="bg-gradient-to-r from-trueturquoise to-teallight bg-clip-text text-transparent block lg:inline">
-              {' '}Industry-Ready{' '}
-            </span>
-            Professionals
-          </h1>
-          <p className="text-lg lg:text-xl text-teallight mb-6 lg:mb-8 max-w-3xl mx-auto leading-relaxed">
-            AI-powered career platform that bridges the gap between education and employment 
-            through personalized training, real-world tasks, and internship simulation.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md sm:max-w-none mx-auto">
+          <div className="flex flex-col sm:flex-row gap-4 w-full justify-center mt-4">
             <Link
               to="/login"
-              className="bg-trueturquoise text-offblack px-6 lg:px-8 py-3 lg:py-4 rounded-lg hover:bg-teallight transition-all font-medium flex items-center justify-center group"
+              className="flex-1 bg-true-turquoise text-paperwhite px-6 py-3 rounded-lg font-semibold text-lg text-center shadow-md hover:bg-teal-light transition-colors"
             >
               Sign In
-              <ArrowRightIcon className="ml-2 h-4 w-4 lg:h-5 lg:w-5 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
               to="/register"
-              className="border-2 border-paperwhite/30 text-paperwhite px-6 lg:px-8 py-3 lg:py-4 rounded-lg hover:border-paperwhite/50 hover:bg-paperwhite/10 transition-all font-medium"
+              className="flex-1 border-2 border-offblack/10 text-offblack px-6 py-3 rounded-lg font-semibold text-lg text-center hover:bg-offblack/5 transition-colors"
             >
               Create Account
             </Link>
           </div>
         </div>
-      </section>
+      </main>
 
-      {/* Features Section */}
-      <section className="py-12 lg:py-20 px-4 sm:px-6 lg:px-8 bg-paperwhite/5 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12 lg:mb-16">
-            <h2 className="text-2xl lg:text-4xl font-bold text-paperwhite mb-3 lg:mb-4">
-              Everything You Need for Career Success
-            </h2>
-            <p className="text-lg lg:text-xl text-teallight">
-              Comprehensive platform designed for both students and college administrators
-            </p>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            <div className="bg-paperwhite/10 backdrop-blur-sm p-6 lg:p-8 rounded-xl hover:bg-paperwhite/15 transition-all border border-paperwhite/10">
-              <div className="bg-trueturquoise p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
-                <BarChartIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
-              </div>
-              <h3 className="text-lg lg:text-xl font-semibold text-paperwhite mb-2 lg:mb-3">AI-Personalized Learning</h3>
-              <p className="text-teallight text-sm lg:text-base">
-                Adaptive learning paths that adjust to each student's pace and performance, 
-                ensuring optimal skill development.
-              </p>
+      {/* Features */}
+      <section className="w-full py-12 bg-paperwhite">
+        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
+          {features.map((f, i) => (
+            <div
+              key={f.title}
+              className="flex flex-col items-center bg-paperwhite border border-offblack/5 rounded-2xl p-8 shadow-sm hover:shadow-lg transition-shadow min-h-[220px]"
+            >
+              <div className="mb-4">{f.icon}</div>
+              <h3 className="text-xl font-bold text-offblack mb-2 text-center">{f.title}</h3>
+              <p className="text-offblack/70 text-center text-base">{f.desc}</p>
             </div>
-
-            <div className="bg-paperwhite/10 backdrop-blur-sm p-6 lg:p-8 rounded-xl hover:bg-paperwhite/15 transition-all border border-paperwhite/10">
-              <div className="bg-teallight p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
-                <PersonIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
-              </div>
-              <h3 className="text-lg lg:text-xl font-semibold text-paperwhite mb-2 lg:mb-3">Real-World Tasks</h3>
-              <p className="text-teallight text-sm lg:text-base">
-                Industry-standard projects and internship simulations that prepare students 
-                for actual workplace challenges.
-              </p>
-            </div>
-
-            <div className="bg-paperwhite/10 backdrop-blur-sm p-6 lg:p-8 rounded-xl hover:bg-paperwhite/15 transition-all border border-paperwhite/10">
-              <div className="bg-rust p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
-                <TargetIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
-              </div>
-              <h3 className="text-lg lg:text-xl font-semibold text-paperwhite mb-2 lg:mb-3">Career Tracks</h3>
-              <p className="text-teallight text-sm lg:text-base">
-                Specialized paths in AI/ML, Full Stack Development, UI/UX Design, 
-                and Data Science with industry-relevant curriculum.
-              </p>
-            </div>
-
-            <div className="bg-paperwhite/10 backdrop-blur-sm p-6 lg:p-8 rounded-xl hover:bg-paperwhite/15 transition-all border border-paperwhite/10">
-              <div className="bg-rust p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
-                <EnvelopeClosedIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
-              </div>
-              <h3 className="text-lg lg:text-xl font-semibold text-paperwhite mb-2 lg:mb-3">Interactive Content</h3>
-              <p className="text-teallight text-sm lg:text-base">
-                Engaging video tutorials, interactive assessments, and hands-on coding 
-                exercises to reinforce learning.
-              </p>
-            </div>
-
-            <div className="bg-paperwhite/10 backdrop-blur-sm p-6 lg:p-8 rounded-xl hover:bg-paperwhite/15 transition-all border border-paperwhite/10">
-              <div className="bg-trueturquoise p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
-                <CheckCircledIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
-              </div>
-              <h3 className="text-lg lg:text-xl font-semibold text-paperwhite mb-2 lg:mb-3">AI Resume Builder</h3>
-              <p className="text-teallight text-sm lg:text-base">
-                Automatically generate professional resumes showcasing completed projects, 
-                skills, and achievements.
-              </p>
-            </div>
-
-            <div className="bg-paperwhite/10 backdrop-blur-sm p-6 lg:p-8 rounded-xl hover:bg-paperwhite/15 transition-all border border-paperwhite/10">
-              <div className="bg-teallight p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
-                <PersonIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
-              </div>
-              <h3 className="text-lg lg:text-xl font-semibold text-paperwhite mb-2 lg:mb-3">Admin Analytics</h3>
-              <p className="text-teallight text-sm lg:text-base">
-                Comprehensive dashboard for tracking student progress, attendance, 
-                and performance analytics.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-12 lg:py-20 px-4 sm:px-6 lg:px-8 bg-trueturquoise/10 backdrop-blur-sm">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl lg:text-4xl font-bold text-paperwhite mb-4 lg:mb-6">
-            Ready to Transform Your Career Journey?
-          </h2>
-          <p className="text-lg lg:text-xl text-teallight mb-6 lg:mb-8">
-            Join thousands of students who are already building their future with Syncner
-          </p>
-          <Link
-            to="/login"
-            className="bg-paperwhite text-trueturquoise px-6 lg:px-8 py-3 lg:py-4 rounded-lg hover:bg-teallight transition-colors font-medium inline-flex items-center"
-          >
-            Get Started Today
-            <ArrowRightIcon className="ml-2 h-4 w-4 lg:h-5 lg:w-5" />
-          </Link>
+          ))}
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-offblack/80 backdrop-blur-sm text-paperwhite py-8 lg:py-12 px-4 sm:px-6 lg:px-8 border-t border-paperwhite/10">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="flex items-center justify-center space-x-3 mb-4 lg:mb-6">
-            <div className="bg-trueturquoise p-2 rounded-lg">
-              <img src={logo} alt="Syncner Logo" className="h-8 w-8 lg:h-10 lg:w-10 object-contain" />
-            </div>
-          </div>
-          <p className="text-teallight mb-3 lg:mb-4 text-sm lg:text-base">
-            Empowering the next generation of professionals through AI-driven career development
-          </p>
-          <p className="text-teallight/80 text-xs lg:text-sm">
-            © 2024 Syncner. All rights reserved.
-          </p>
+      <footer className="w-full py-8 bg-paperwhite border-t border-offblack/10">
+        <div className="flex flex-col items-center space-y-2">
+          <img src={logo} alt="Syncner Logo" className="h-8 w-8" />
+          <span className="text-offblack/60 text-sm">© 2024 Syncner. All rights reserved.</span>
         </div>
       </footer>
     </div>
