@@ -63,7 +63,24 @@ const Layout: React.FC = () => {
         zIndex: 10,
         transition: { duration: 1.2, type: 'spring', bounce: 0.4 }
       });
-    }, 5000);
+    }, 3000);
+
+    // Start shaking after 1 second
+    setTimeout(() => {
+      let shake = true;
+      let shakeCount = 0;
+      const shakeInterval = setInterval(() => {
+        if (!shake || shakeCount > 10) {
+          controls.start({ x: 0, rotate: 0, transition: { duration: 0.1 } });
+          clearInterval(shakeInterval);
+          return;
+        }
+        controls.start({ x: shakeCount % 2 === 0 ? -8 : 8, rotate: shakeCount % 2 === 0 ? -8 : 8, transition: { duration: 0.08 } });
+        shakeCount++;
+      }, 80);
+      // Stop shaking after 2s (so total 3s hover)
+      setTimeout(() => { shake = false; }, 1600);
+    }, 1000);
   };
 
   const handleLogoLeave = () => {
