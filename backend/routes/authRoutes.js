@@ -32,7 +32,6 @@ const updateProfileValidation = [
   body('careerTrack').optional().isIn(['ai-ml', 'fullstack', 'ui-ux', 'data-science']).withMessage('Invalid career track'),
   body('interests').optional().isArray().withMessage('Interests must be an array'),
   body('profileComplete').optional().isBoolean().withMessage('Profile complete must be a boolean'),
-  body('level').optional().isIn(['beginner', 'intermediate', 'advanced']).withMessage('Invalid level'),
   body('gpa').optional().trim().isLength({ max: 10 }).withMessage('GPA cannot exceed 10 characters'),
   body('graduationYear').optional().trim().isLength({ max: 4 }).withMessage('Graduation year cannot exceed 4 characters'),
   validateRequest

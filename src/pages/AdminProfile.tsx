@@ -45,12 +45,14 @@ const AdminProfile: React.FC = () => {
     setLoading(true);
     setSuccess(null);
     try {
-      await ApiService.updateProfile(form);
+      // Remove backend-managed fields before sending
+      const { level, ...allowedFields } = form as any;
+      await ApiService.updateProfile(allowedFields);
       setSuccess('Profile updated successfully!');
       setEditMode(false);
-      setProfile({ ...profile, ...form });
+      setProfile({ ...profile, ...allowedFields });
       setError(null);
-    } catch (err: Error) {
+    } catch (err: any) {
       setError(err.message || 'Failed to update profile');
     } finally {
       setLoading(false);
@@ -180,7 +182,7 @@ const AdminProfile: React.FC = () => {
         {/* Quick Actions Card */}
         <div className="lg:col-span-1">
           <div className="bg-offblack border border-paperwhite/10 rounded-xl shadow-lg p-6">
-            <h3 className="font-semibold text-lg mb-6 text-trueturquoise flex items-center gap-2 font-heading">
+            <h3 className=" text-lg mb-6 text-trueturquoise flex items-center gap-2 font-heading">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>

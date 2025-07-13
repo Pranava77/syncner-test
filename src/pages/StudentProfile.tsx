@@ -48,10 +48,12 @@ const StudentProfile: React.FC = () => {
     setLoading(true);
     setSuccess(null);
     try {
-      await ApiService.updateProfile(form);
+      // Remove backend-managed fields before sending
+      const { level, ...allowedFields } = form as any;
+      await ApiService.updateProfile(allowedFields);
       setSuccess('Profile updated successfully!');
       setEditMode(false);
-      setProfile({ ...profile, ...form });
+      setProfile({ ...profile, ...allowedFields });
       setError(null);
     } catch (err) {
       setError((err as any)?.message || 'Failed to update profile');
