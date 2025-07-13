@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../redux/store';
 import { fetchProgress } from '../redux/slices/progressSlice';
-import { fetchModules } from '../redux/slices/modulesSlice';
+import { fetchLevels } from '../redux/slices/levelsSlice';
 import {
   CodeIcon as Code,
   ColorWheelIcon as Palette,
@@ -22,14 +22,14 @@ const StudentDashboard: React.FC = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   const progressState = useAppSelector((state) => state.progress);
-  const modulesState = useAppSelector((state) => state.modules);
+  const levelsState = useAppSelector((state) => state.levels);
 
   useEffect(() => {
     if (!progressState.data || progressState.lastFetched === null) {
       dispatch(fetchProgress());
     }
-    if (modulesState.lastFetched === null) {
-      dispatch(fetchModules(user?.careerTrack));
+    if (levelsState.lastFetched === null) {
+      dispatch(fetchLevels(user?.careerTrack));
     }
   }, [dispatch, user?.careerTrack]);
 
@@ -44,12 +44,12 @@ const StudentDashboard: React.FC = () => {
   }
   const userTrack = user.careerTrack;
   const progress = progressState.data;
-  const modules = modulesState.data || [];
+  const levels = levelsState.data || [];
   const progressLoading = progressState.loading;
-  const modulesLoading = modulesState.loading;
+  const levelsLoading = levelsState.loading;
 
   // Get current module (first incomplete module)
-  const currentModule = modules.find((m: any) => m.status === 'in-progress') || modules[0];
+  const currentLevel = levels.find((l: any) => l.status === 'in-progress') || levels[0];
 
   const achievements = [
     { title: 'First Module Complete', icon: '🎯', earned: (progress?.completedModulesCount ?? 0) > 0 },
@@ -85,7 +85,7 @@ const StudentDashboard: React.FC = () => {
     }
   };
 
-  if (progressLoading || modulesLoading) {
+  if (progressLoading || levelsLoading) {
     return (
       <LoadingScreen 
         message="Loading your dashboard..."
@@ -136,12 +136,12 @@ const StudentDashboard: React.FC = () => {
       <div className="grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
           {/* Current Learning */}
-          {currentModule && (
+          {currentLevel && (
             <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg lg:text-xl font-semibold text-paperwhite">Continue Learning</h2>
                 <span className="bg-trueturquoise/20 text-trueturquoise px-2 lg:px-3 py-1 rounded-full text-xs lg:text-sm font-medium">
-                  {currentModule.status === 'in-progress' ? 'In Progress' : 'Available'}
+                  {currentLevel.status === 'in-progress' ? 'In Progress' : 'Available'}
                 </span>
               </div>
               
@@ -149,9 +149,9 @@ const StudentDashboard: React.FC = () => {
                 <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-4">
                   <div className="mb-4 lg:mb-0">
                     <h3 className="text-lg font-semibold text-paperwhite mb-1">
-                      {currentModule.title}
+                      {currentLevel.title}
                     </h3>
-                    <p className="text-teallight text-sm lg:text-base">{currentModule.description}</p>
+                    <p className="text-teallight text-sm lg:text-base">{currentLevel.description}</p>
                   </div>
                   <div className="bg-trueturquoise/10 p-2 rounded-lg w-fit">
                     <BookOpen className="h-5 w-5 lg:h-6 lg:w-6 text-trueturquoise" />
@@ -161,12 +161,12 @@ const StudentDashboard: React.FC = () => {
                 <div className="mb-4">
                   <div className="flex justify-between text-sm text-teallight mb-1">
                     <span>Progress</span>
-                    <span>{currentModule.progress || 0}%</span>
+                    <span>{currentLevel.progress || 0}%</span>
                   </div>
                   <div className="w-full bg-paperwhite/20 rounded-full h-2">
                     <div 
                       className="bg-trueturquoise h-2 rounded-full transition-all"
-                      style={{ width: `${currentModule.progress || 0}%` }}
+                      style={{ width: `${currentLevel.progress || 0}%` }}
                     ></div>
                   </div>
                 </div>
@@ -174,10 +174,10 @@ const StudentDashboard: React.FC = () => {
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                   <div className="flex items-center text-teallight text-sm">
                     <Clock className="h-4 w-4 mr-1 text-trueturquoise" />
-                    {currentModule.duration}
+                    {currentLevel.duration}
                   </div>
                   <Link
-                    to={`/student/training/${currentModule.id}`}
+                    to={`/student/training/${currentLevel.id}`}
                     className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-teallight transition-colors font-medium flex items-center justify-center w-full sm:w-auto"
                   >
                     <Play className="h-4 w-4 mr-2 text-offblack" />
@@ -267,7 +267,7 @@ const StudentDashboard: React.FC = () => {
               
               <div className="grid grid-cols-2 gap-4 pt-4">
                 <div className="text-center">
-                  <div className="text-lg font-bold text-trueturquoise">{modules.length}</div>
+                  <div className="text-lg font-bold text-trueturquoise">{levels.length}</div>
                   <div className="text-xs text-teallight">Total Modules</div>
                 </div>
                 <div className="text-center">

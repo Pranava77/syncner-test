@@ -22,6 +22,7 @@ import AdminProfile from './pages/AdminProfile';
 import { AnimatePresence, motion } from 'framer-motion';
 import { fetchCurrentUser } from './redux/slices/authSlice';
 import AdminStaff from './pages/AdminStaff';
+import TrainingLevels from './pages/TrainingLevels';
 
 function AdminWrapper() {
   return (
@@ -106,8 +107,8 @@ function App() {
         } />
         <Route path="/student/*" element={<StudentLayout />}>
           <Route path="dashboard" element={<KeepAlive id="student-dashboard"><StudentDashboard /></KeepAlive>} />
-          <Route path="training/:moduleId" element={<KeepAlive id="training-module"><TrainingModule /></KeepAlive>} />
-          <Route path="training/current" element={<KeepAlive id="training-current"><TrainingModule /></KeepAlive>} />
+          <Route path="training" element={<TrainingLevels />} />
+          <Route path="training/:levelId" element={<TrainingLevels />} />
           <Route path="profile" element={
             <motion.div
               initial={{ opacity: 0, y: 20 }}

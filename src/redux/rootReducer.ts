@@ -6,7 +6,7 @@ import analyticsReducer from './slices/analyticsSlice';
 import settingsReducer from './slices/settingsSlice';
 import diagnosticsReducer from './slices/diagnosticsSlice';
 import progressReducer from './slices/progressSlice';
-import modulesReducer from './slices/modulesSlice';
+import levelsReducer from './slices/levelsSlice';
 import staffReducer from './slices/staffSlice';
 
 const rootReducer = combineReducers({
@@ -17,7 +17,7 @@ const rootReducer = combineReducers({
   settings: settingsReducer,
   diagnostics: diagnosticsReducer,
   progress: progressReducer,
-  modules: modulesReducer,
+  levels: levelsReducer,
   staff: staffReducer,
 });
 

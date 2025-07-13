@@ -42,9 +42,9 @@ const trackSchema = new mongoose.Schema({
   prerequisites: [{
     type: String
   }],
-  modules: [{
+  levels: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Module'
+    ref: 'Level'
   }],
   enrolledStudents: [{
     type: mongoose.Schema.Types.ObjectId,
@@ -79,9 +79,9 @@ trackSchema.virtual('completionRate').get(function() {
   return 0; // Placeholder
 });
 
-// Virtual for module count
-trackSchema.virtual('moduleCount').get(function() {
-  return this.modules.length;
+// Virtual for level count
+trackSchema.virtual('levelCount').get(function() {
+  return this.levels.length;
 });
 
 export default mongoose.model('Track', trackSchema);

@@ -1,28 +1,28 @@
-import Module from '../models/Module.js';
+import Level from '../models/Level.js';
 
-// @desc    Get all modules
-// @route   GET /api/training
+// @desc    Get all levels
+// @route   GET /api/training/levels
 // @access  Public
-const getAllModules = async (req, res) => {
+const getAllLevels = async (req, res) => {
   try {
     const filter = { isActive: true };
     if (req.query.track) {
       filter.careerTrack = req.query.track;
     }
-    const modules = await Module.find(filter);
-    // Convert _id to id for each module
-    const modulesWithId = modules.map(module => {
-      const obj = module.toObject();
+    const levels = await Level.find(filter);
+    // Convert _id to id for each level
+    const levelsWithId = levels.map(level => {
+      const obj = level.toObject();
       obj.id = obj._id;
       delete obj._id;
       return obj;
     });
     res.status(200).json({
       success: true,
-      data: modulesWithId
+      data: levelsWithId
     });
   } catch (error) {
-    console.error('Get modules error:', error);
+    console.error('Get levels error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
@@ -30,21 +30,19 @@ const getAllModules = async (req, res) => {
   }
 };
 
-// @desc    Get module by ID
-// @route   GET /api/training/:id
+// @desc    Get level by ID
+// @route   GET /api/training/levels/:id
 // @access  Public
-const getModuleById = async (req, res) => {
+const getLevelById = async (req, res) => {
   try {
-    const module = await Module.findById(req.params.id);
-    
-    if (!module) {
+    const level = await Level.findById(req.params.id);
+    if (!level) {
       return res.status(404).json({
         success: false,
-        message: 'Module not found'
+        message: 'Level not found'
       });
     }
-    
-    const obj = module.toObject();
+    const obj = level.toObject();
     obj.id = obj._id;
     delete obj._id;
     res.status(200).json({
@@ -52,7 +50,7 @@ const getModuleById = async (req, res) => {
       data: obj
     });
   } catch (error) {
-    console.error('Get module error:', error);
+    console.error('Get level error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
@@ -60,28 +58,26 @@ const getModuleById = async (req, res) => {
   }
 };
 
-// @desc    Create a new module
-// @route   POST /api/training
+// @desc    Create a new level
+// @route   POST /api/training/levels
 // @access  Private/Admin
-const createModule = async (req, res) => {
+const createLevel = async (req, res) => {
   try {
-    const moduleData = {
+    const levelData = {
       ...req.body,
-      id: `module_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+      id: `level_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
     };
-    
-    const module = await Module.create(moduleData);
-    const obj = module.toObject();
+    const level = await Level.create(levelData);
+    const obj = level.toObject();
     obj.id = obj._id;
     delete obj._id;
-    
     res.status(201).json({
       success: true,
-      message: 'Module created successfully',
+      message: 'Level created successfully',
       data: obj
     });
   } catch (error) {
-    console.error('Create module error:', error);
+    console.error('Create level error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
@@ -89,35 +85,32 @@ const createModule = async (req, res) => {
   }
 };
 
-// @desc    Update a module
-// @route   PUT /api/training/:id
+// @desc    Update a level
+// @route   PUT /api/training/levels/:id
 // @access  Private/Admin
-const updateModule = async (req, res) => {
+const updateLevel = async (req, res) => {
   try {
-    const module = await Module.findByIdAndUpdate(
+    const level = await Level.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true, runValidators: true }
     );
-    
-    if (!module) {
+    if (!level) {
       return res.status(404).json({
         success: false,
-        message: 'Module not found'
+        message: 'Level not found'
       });
     }
-    
-    const obj = module.toObject();
+    const obj = level.toObject();
     obj.id = obj._id;
     delete obj._id;
-    
     res.status(200).json({
       success: true,
-      message: 'Module updated successfully',
+      message: 'Level updated successfully',
       data: obj
     });
   } catch (error) {
-    console.error('Update module error:', error);
+    console.error('Update level error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
@@ -125,37 +118,162 @@ const updateModule = async (req, res) => {
   }
 };
 
-// @desc    Delete a module
-// @route   DELETE /api/training/:id
+// @desc    Delete a level
+// @route   DELETE /api/training/levels/:id
 // @access  Private/Admin
-const deleteModule = async (req, res) => {
+const deleteLevel = async (req, res) => {
   try {
-    const module = await Module.findByIdAndDelete(req.params.id);
-    
-    if (!module) {
+    const level = await Level.findByIdAndDelete(req.params.id);
+    if (!level) {
       return res.status(404).json({
         success: false,
-        message: 'Module not found'
+        message: 'Level not found'
       });
     }
-    
     res.status(200).json({
       success: true,
-      message: 'Module deleted successfully'
+      message: 'Level deleted successfully'
     });
   } catch (error) {
-    console.error('Delete module error:', error);
+    console.error('Delete level error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
     });
+  }
+};
+
+// --- LEARN CRUD ---
+// Add learn item
+const addLearn = async (req, res) => {
+  try {
+    const { id } = req.params; // level id
+    const level = await Level.findById(id);
+    if (!level) return res.status(404).json({ success: false, message: 'Level not found' });
+    const learnItem = req.body;
+    level.learn.push(learnItem);
+    await level.save();
+    res.status(201).json({ success: true, message: 'Learn item added', data: level.learn });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+// Update learn item
+const updateLearn = async (req, res) => {
+  try {
+    const { id, learnIdx } = req.params;
+    const level = await Level.findById(id);
+    if (!level) return res.status(404).json({ success: false, message: 'Level not found' });
+    if (!level.learn[learnIdx]) return res.status(404).json({ success: false, message: 'Learn item not found' });
+    level.learn[learnIdx] = { ...level.learn[learnIdx].toObject(), ...req.body };
+    await level.save();
+    res.status(200).json({ success: true, message: 'Learn item updated', data: level.learn[learnIdx] });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+// Delete learn item
+const deleteLearn = async (req, res) => {
+  try {
+    const { id, learnIdx } = req.params;
+    const level = await Level.findById(id);
+    if (!level) return res.status(404).json({ success: false, message: 'Level not found' });
+    if (!level.learn[learnIdx]) return res.status(404).json({ success: false, message: 'Learn item not found' });
+    level.learn.splice(learnIdx, 1);
+    await level.save();
+    res.status(200).json({ success: true, message: 'Learn item deleted' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+// --- TEST CRUD ---
+const addTest = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const level = await Level.findById(id);
+    if (!level) return res.status(404).json({ success: false, message: 'Level not found' });
+    const testItem = req.body;
+    level.test.push(testItem);
+    await level.save();
+    res.status(201).json({ success: true, message: 'Test item added', data: level.test });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+const updateTest = async (req, res) => {
+  try {
+    const { id, testIdx } = req.params;
+    const level = await Level.findById(id);
+    if (!level) return res.status(404).json({ success: false, message: 'Level not found' });
+    if (!level.test[testIdx]) return res.status(404).json({ success: false, message: 'Test item not found' });
+    level.test[testIdx] = { ...level.test[testIdx].toObject(), ...req.body };
+    await level.save();
+    res.status(200).json({ success: true, message: 'Test item updated', data: level.test[testIdx] });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+const deleteTest = async (req, res) => {
+  try {
+    const { id, testIdx } = req.params;
+    const level = await Level.findById(id);
+    if (!level) return res.status(404).json({ success: false, message: 'Level not found' });
+    if (!level.test[testIdx]) return res.status(404).json({ success: false, message: 'Test item not found' });
+    level.test.splice(testIdx, 1);
+    await level.save();
+    res.status(200).json({ success: true, message: 'Test item deleted' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+// --- EXERCISE CRUD ---
+const addExercise = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const level = await Level.findById(id);
+    if (!level) return res.status(404).json({ success: false, message: 'Level not found' });
+    const exerciseItem = req.body;
+    level.exercise.push(exerciseItem);
+    await level.save();
+    res.status(201).json({ success: true, message: 'Exercise item added', data: level.exercise });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+const updateExercise = async (req, res) => {
+  try {
+    const { id, exerciseIdx } = req.params;
+    const level = await Level.findById(id);
+    if (!level) return res.status(404).json({ success: false, message: 'Level not found' });
+    if (!level.exercise[exerciseIdx]) return res.status(404).json({ success: false, message: 'Exercise item not found' });
+    level.exercise[exerciseIdx] = { ...level.exercise[exerciseIdx].toObject(), ...req.body };
+    await level.save();
+    res.status(200).json({ success: true, message: 'Exercise item updated', data: level.exercise[exerciseIdx] });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+const deleteExercise = async (req, res) => {
+  try {
+    const { id, exerciseIdx } = req.params;
+    const level = await Level.findById(id);
+    if (!level) return res.status(404).json({ success: false, message: 'Level not found' });
+    if (!level.exercise[exerciseIdx]) return res.status(404).json({ success: false, message: 'Exercise item not found' });
+    level.exercise.splice(exerciseIdx, 1);
+    await level.save();
+    res.status(200).json({ success: true, message: 'Exercise item deleted' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
 export {
-  getAllModules,
-  getModuleById,
-  createModule,
-  updateModule,
-  deleteModule
+  getAllLevels,
+  getLevelById,
+  createLevel,
+  updateLevel,
+  deleteLevel,
+  addLearn, updateLearn, deleteLearn,
+  addTest, updateTest, deleteTest,
+  addExercise, updateExercise, deleteExercise
 }; 

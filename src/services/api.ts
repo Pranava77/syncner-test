@@ -154,26 +154,23 @@ class ApiService {
     return this.handleResponse(response, false);
   }
 
-  // Training endpoints
-  async getModules(trackId?: string) {
+  // Training endpoints for levels
+  async getLevels(trackId?: string) {
     const url = trackId 
-      ? `${this.baseURL}/training?track=${trackId}`
-      : `${this.baseURL}/training`;
-    
+      ? `${this.baseURL}/training/levels?track=${trackId}`
+      : `${this.baseURL}/training/levels`;
     const response = await fetch(url, {
       headers: this.getHeaders(),
       credentials: 'include',
     });
-
     return this.handleResponse(response, false);
   }
 
-  async getModule(moduleId: string) {
-    const response = await fetch(`${this.baseURL}/training/${moduleId}`, {
+  async getLevel(levelId: string) {
+    const response = await fetch(`${this.baseURL}/training/levels/${levelId}`, {
       headers: this.getHeaders(),
       credentials: 'include',
     });
-
     return this.handleResponse(response, false);
   }
 

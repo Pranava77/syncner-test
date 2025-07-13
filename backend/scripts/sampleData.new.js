@@ -4,6 +4,9 @@ import bcrypt from 'bcryptjs';
 import Staff from '../models/Staff.js';
 import Admin from '../models/Admin.js';
 import User from '../models/User.js';
+import Track from '../models/Track.js';
+import Module from '../models/Module.js';
+import Level from '../models/Level.js';
 
 dotenv.config();
 
@@ -106,6 +109,157 @@ const sampleStudents = [
   }
 ];
 
+const sampleTracks = [
+  {
+    id: 'fullstack',
+    name: 'Full Stack Development',
+    description: 'Learn to build complete web applications using front-end and back-end technologies.',
+    duration: '6 months',
+    difficulty: 'Beginner',
+    averageSalary: '₹8,00,000',
+    careerPaths: ['Web Developer', 'Backend Developer', 'Frontend Developer'],
+    skills: ['JavaScript', 'Node.js', 'React', 'Databases'],
+    prerequisites: [],
+    modules: [],
+    isActive: true,
+    order: 1
+  },
+  {
+    id: 'ai-ml',
+    name: 'AI/ML Engineering',
+    description: 'Dive into artificial intelligence and machine learning concepts and applications.',
+    duration: '8 months',
+    difficulty: 'Intermediate',
+    averageSalary: '₹12,00,000',
+    careerPaths: ['ML Engineer', 'Data Scientist', 'AI Researcher'],
+    skills: ['Python', 'TensorFlow', 'Machine Learning'],
+    prerequisites: [],
+    modules: [],
+    isActive: true,
+    order: 2
+  },
+  {
+    id: 'ui-ux',
+    name: 'UI/UX Design',
+    description: 'Master the art of designing user interfaces and experiences.',
+    duration: '4 months',
+    difficulty: 'Beginner',
+    averageSalary: '₹7,00,000',
+    careerPaths: ['UI Designer', 'UX Researcher', 'Product Designer'],
+    skills: ['Figma', 'Wireframing', 'Prototyping'],
+    prerequisites: [],
+    modules: [],
+    isActive: true,
+    order: 3
+  },
+  {
+    id: 'data-science',
+    name: 'Data Science',
+    description: 'Analyze and interpret complex data to help companies make decisions.',
+    duration: '7 months',
+    difficulty: 'Intermediate',
+    averageSalary: '₹10,00,000',
+    careerPaths: ['Data Analyst', 'Data Scientist', 'Business Analyst'],
+    skills: ['Python', 'Statistics', 'Data Visualization'],
+    prerequisites: [],
+    modules: [],
+    isActive: true,
+    order: 4
+  }
+];
+
+const sampleLevels = [
+  {
+    id: 'level_fullstack_1',
+    title: 'Intro to Web Development',
+    description: 'Basics of HTML, CSS, and JavaScript.',
+    difficulty: 'Beginner',
+    duration: '2 weeks',
+    careerTrack: 'fullstack',
+    skills: ['HTML', 'CSS', 'JavaScript'],
+    prerequisites: [],
+    learn: [
+      { type: 'reading', title: 'HTML Basics', content: 'Learn HTML structure.', order: 1 },
+      { type: 'video', title: 'CSS Introduction', videoUrl: 'https://youtube.com/', order: 2 }
+    ],
+    test: [
+      { question: 'What does HTML stand for?', options: ['HyperText Markup Language', 'Home Tool Markup Language'], answer: 'HyperText Markup Language', order: 1 }
+    ],
+    exercise: [
+      { title: 'Build a simple web page', description: 'Create a basic HTML page.', resources: [], order: 1 }
+    ],
+    order: 1,
+    isActive: true,
+    estimatedHours: 20
+  },
+  {
+    id: 'level_ai_ml_1',
+    title: 'Machine Learning Foundations',
+    description: 'Core ML concepts and Python libraries.',
+    difficulty: 'Intermediate',
+    duration: '3 weeks',
+    careerTrack: 'ai-ml',
+    skills: ['Python', 'Numpy', 'Pandas'],
+    prerequisites: [],
+    learn: [
+      { type: 'reading', title: 'Intro to ML', content: 'What is Machine Learning?', order: 1 }
+    ],
+    test: [
+      { question: 'Which library is used for data manipulation?', options: ['Numpy', 'Pandas'], answer: 'Pandas', order: 1 }
+    ],
+    exercise: [
+      { title: 'Data Cleaning', description: 'Clean a sample dataset.', resources: [], order: 1 }
+    ],
+    order: 1,
+    isActive: true,
+    estimatedHours: 30
+  },
+  {
+    id: 'level_ui_ux_1',
+    title: 'UI/UX Principles',
+    description: 'Fundamentals of user interface and experience design.',
+    difficulty: 'Beginner',
+    duration: '2 weeks',
+    careerTrack: 'ui-ux',
+    skills: ['Wireframing', 'Prototyping'],
+    prerequisites: [],
+    learn: [
+      { type: 'reading', title: 'Wireframing Basics', content: 'Learn to wireframe.', order: 1 }
+    ],
+    test: [
+      { question: 'What is a wireframe?', options: ['A prototype', 'A sketch of UI'], answer: 'A sketch of UI', order: 1 }
+    ],
+    exercise: [
+      { title: 'Create a wireframe', description: 'Draw a wireframe for a login page.', resources: [], order: 1 }
+    ],
+    order: 1,
+    isActive: true,
+    estimatedHours: 15
+  },
+  {
+    id: 'level_data_science_1',
+    title: 'Data Analysis Basics',
+    description: 'Introduction to data analysis and visualization.',
+    difficulty: 'Intermediate',
+    duration: '3 weeks',
+    careerTrack: 'data-science',
+    skills: ['Python', 'Data Visualization'],
+    prerequisites: [],
+    learn: [
+      { type: 'reading', title: 'Data Analysis Overview', content: 'What is data analysis?', order: 1 }
+    ],
+    test: [
+      { question: 'Which tool is used for data visualization?', options: ['Matplotlib', 'TensorFlow'], answer: 'Matplotlib', order: 1 }
+    ],
+    exercise: [
+      { title: 'Visualize Data', description: 'Create a bar chart.', resources: [], order: 1 }
+    ],
+    order: 1,
+    isActive: true,
+    estimatedHours: 25
+  }
+];
+
 const hashPassword = async (plain) => await bcrypt.hash(plain, 10);
 
 const seedData = async () => {
@@ -114,6 +268,16 @@ const seedData = async () => {
     await Admin.deleteMany({});
     await Staff.deleteMany({});
     await User.deleteMany({});
+    await Track.deleteMany({});
+    await Level.deleteMany({});
+    const createdTracks = await Track.insertMany(sampleTracks);
+    const createdLevels = await Level.insertMany(sampleLevels);
+    // Link levels to tracks
+    for (const track of createdTracks) {
+      const levelsForTrack = createdLevels.filter(l => l.careerTrack === track.id);
+      track.levels = levelsForTrack.map(l => l._id);
+      await track.save();
+    }
     const createdAdmins = await Admin.insertMany(sampleAdmins);
     const createdStaff = await Staff.insertMany(sampleStaff);
     // Hash student passwords
@@ -122,7 +286,7 @@ const seedData = async () => {
       password: await hashPassword(s.password)
     })));
     const createdStudents = await User.insertMany(studentsWithHashed);
-    console.log(`Seeded ${createdAdmins.length} admins, ${createdStaff.length} staff, and ${createdStudents.length} students!`);
+    console.log(`Seeded ${createdAdmins.length} admins, ${createdStaff.length} staff, ${createdStudents.length} students, ${createdTracks.length} tracks, and ${createdLevels.length} levels!`);
     process.exit(0);
   } catch (error) {
     console.error('Error seeding data:', error);

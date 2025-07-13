@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import apiService from '../services/api';
 
-export interface Module {
+export interface Level {
   id: string;
   title: string;
   description: string;
@@ -10,7 +10,9 @@ export interface Module {
   careerTrack: string;
   skills: string[];
   prerequisites: string[];
-  lessons: any[];
+  learn: any[];
+  test: any[];
+  exercise: any[];
   order: number;
   isActive: boolean;
   estimatedHours: number;
@@ -18,38 +20,38 @@ export interface Module {
   status?: string;
 }
 
-export const useModules = (trackId?: string) => {
-  const [modules, setModules] = useState<Module[]>([]);
+export const useLevels = (trackId?: string) => {
+  const [levels, setLevels] = useState<Level[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchModules = useCallback(async () => {
+  const fetchLevels = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await apiService.getModules(trackId);
+      const response = await apiService.getLevels(trackId);
       if (response.success) {
         // Handle both array and object with data property
-        const modulesData = Array.isArray(response.data) ? response.data : response.data.modules || response.data;
-        setModules(modulesData || []);
+        const levelsData = Array.isArray(response.data) ? response.data : response.data.levels || response.data;
+        setLevels(levelsData || []);
       } else {
-        setError(response.message || 'Failed to fetch modules');
+        setError(response.message || 'Failed to fetch levels');
       }
     } catch (err: any) {
-      setError(err.message || 'Failed to fetch modules');
+      setError(err.message || 'Failed to fetch levels');
     } finally {
       setLoading(false);
     }
   }, [trackId]);
 
   useEffect(() => {
-    fetchModules();
-  }, [trackId, fetchModules]);
+    fetchLevels();
+  }, [trackId, fetchLevels]);
 
   return {
-    modules,
+    levels,
     loading,
     error,
-    refetch: fetchModules
+    refetch: fetchLevels
   };
 };

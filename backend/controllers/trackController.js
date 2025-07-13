@@ -5,7 +5,7 @@ import Track from '../models/Track.js';
 // @access  Public
 const getAllTracks = async (req, res) => {
   try {
-    const tracks = await Track.find({ isActive: true }).populate('modules');
+    const tracks = await Track.find({ isActive: true }).populate('levels');
     
     res.status(200).json({
       success: true,
@@ -26,7 +26,7 @@ const getAllTracks = async (req, res) => {
 const getTrackById = async (req, res) => {
   try {
     const track = await Track.findOne({ id: req.params.id })
-      .populate('modules');
+      .populate('levels');
     
     if (!track) {
       return res.status(404).json({

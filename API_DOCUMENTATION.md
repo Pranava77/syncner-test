@@ -1182,6 +1182,70 @@ Delete a module (Admin only).
 
 ---
 
+## Training Levels
+
+### Add Learn Item to Level
+**POST** `/training/levels/:id/learn`
+- Admin only
+- Add a new learn item to a level.
+- Request body: `{ type, title, content?, videoUrl?, order? }`
+- Response: `{ success, message, data: [learnItems] }`
+
+### Update Learn Item
+**PUT** `/training/levels/:id/learn/:learnIdx`
+- Admin only
+- Update a learn item by index in the level's learn array.
+- Request body: `{ type?, title?, content?, videoUrl?, order? }`
+- Response: `{ success, message, data: learnItem }`
+
+### Delete Learn Item
+**DELETE** `/training/levels/:id/learn/:learnIdx`
+- Admin only
+- Delete a learn item by index.
+- Response: `{ success, message }`
+
+### Add Test Item to Level
+**POST** `/training/levels/:id/test`
+- Admin only
+- Add a new test item to a level.
+- Request body: `{ question, options, answer, order? }`
+- Response: `{ success, message, data: [testItems] }`
+
+### Update Test Item
+**PUT** `/training/levels/:id/test/:testIdx`
+- Admin only
+- Update a test item by index.
+- Request body: `{ question?, options?, answer?, order? }`
+- Response: `{ success, message, data: testItem }`
+
+### Delete Test Item
+**DELETE** `/training/levels/:id/test/:testIdx`
+- Admin only
+- Delete a test item by index.
+- Response: `{ success, message }`
+
+### Add Exercise Item to Level
+**POST** `/training/levels/:id/exercise`
+- Admin only
+- Add a new exercise item to a level.
+- Request body: `{ title, description?, resources?, order? }`
+- Response: `{ success, message, data: [exerciseItems] }`
+
+### Update Exercise Item
+**PUT** `/training/levels/:id/exercise/:exerciseIdx`
+- Admin only
+- Update an exercise item by index.
+- Request body: `{ title?, description?, resources?, order? }`
+- Response: `{ success, message, data: exerciseItem }`
+
+### Delete Exercise Item
+**DELETE** `/training/levels/:id/exercise/:exerciseIdx`
+- Admin only
+- Delete an exercise item by index.
+- Response: `{ success, message }`
+
+---
+
 ## Career Tracks
 
 ### Get All Tracks
