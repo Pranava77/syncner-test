@@ -23,6 +23,8 @@ import { fetchCurrentUser } from './redux/slices/authSlice';
 import AdminStaff from './pages/AdminStaff';
 import TrainingLevels from './pages/TrainingLevels';
 import StaffDashboard from './pages/StaffDashboard';
+import AdminUsers from './pages/AdminUsers';
+import AdminAdmin from './pages/AdminAdmin';
 
 function AdminWrapper() {
   return (
@@ -123,6 +125,8 @@ function App() {
         </Route>
         <Route path="/admin/*" element={<AdminWrapper />}>
           <Route index element={<AdminDashboard />} />
+          <Route path="users" element={<AdminUsers />} />
+          <Route path="admins" element={<AdminAdmin />} />
           <Route path="staff" element={<AdminStaff />} />
           <Route path="analytics" element={<AdminAnalytics />} />
           <Route path="diagnostics" element={<AdminDiagnostics />} />

@@ -8,6 +8,8 @@ import diagnosticsReducer from './slices/diagnosticsSlice';
 import progressReducer from './slices/progressSlice';
 import levelsReducer from './slices/levelsSlice';
 import staffReducer from './slices/staffSlice';
+import usersReducer from './slices/userSlice';
+import adminsReducer from './slices/adminSlice';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -19,6 +21,8 @@ const rootReducer = combineReducers({
   progress: progressReducer,
   levels: levelsReducer,
   staff: staffReducer,
+  users: usersReducer,
+  admins: adminsReducer,
 });
 
 export default rootReducer;

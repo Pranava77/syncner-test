@@ -316,6 +316,74 @@ class ApiService {
     });
     return this.handleResponse(response, false);
   }
+
+  // User management endpoints (excluding staff)
+  async getAllUsers() {
+    const response = await fetch(`${this.baseURL}/admin/users`, {
+      headers: this.getHeaders(),
+    });
+    return this.handleResponse(response, true);
+  }
+
+  async addUser(userData: any) {
+    const response = await fetch(`${this.baseURL}/admin/users`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify(userData),
+    });
+    return this.handleResponse(response, true);
+  }
+
+  async updateUser(userId: string, userData: any) {
+    const response = await fetch(`${this.baseURL}/admin/users/${userId}`, {
+      method: 'PUT',
+      headers: this.getHeaders(),
+      body: JSON.stringify(userData),
+    });
+    return this.handleResponse(response, true);
+  }
+
+  async deleteUser(userId: string) {
+    const response = await fetch(`${this.baseURL}/admin/users/${userId}`, {
+      method: 'DELETE',
+      headers: this.getHeaders(),
+    });
+    return this.handleResponse(response, true);
+  }
+
+  // Admin management endpoints
+  async getAllAdmins() {
+    const response = await fetch(`${this.baseURL}/admin/users?role=admin`, {
+      headers: this.getHeaders(),
+    });
+    return this.handleResponse(response, true);
+  }
+
+  async addAdmin(adminData: any) {
+    const response = await fetch(`${this.baseURL}/admin/users`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify({ ...adminData, role: 'admin' }),
+    });
+    return this.handleResponse(response, true);
+  }
+
+  async updateAdmin(adminId: string, adminData: any) {
+    const response = await fetch(`${this.baseURL}/admin/users/${adminId}`, {
+      method: 'PUT',
+      headers: this.getHeaders(),
+      body: JSON.stringify({ ...adminData, role: 'admin' }),
+    });
+    return this.handleResponse(response, true);
+  }
+
+  async deleteAdmin(adminId: string) {
+    const response = await fetch(`${this.baseURL}/admin/users/${adminId}`, {
+      method: 'DELETE',
+      headers: this.getHeaders(),
+    });
+    return this.handleResponse(response, true);
+  }
 }
 
 export default new ApiService();

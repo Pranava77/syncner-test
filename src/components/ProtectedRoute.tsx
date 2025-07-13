@@ -35,7 +35,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   // Admin access enforcement
   if (requireAdmin) {
     if (user.role !== 'admin') {
-      // Student/instructor trying to access admin route
+      // Student or staff trying to access admin route
       return <Navigate to={getDefaultRoute(user)} replace />;
     }
     // Admin should not access onboarding
