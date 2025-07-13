@@ -4,7 +4,6 @@ import { useAppDispatch, useAppSelector } from '../redux/store';
 import { logoutUser } from '../redux/slices/authSlice';
 import { 
   HomeIcon, 
-
   GearIcon, 
   ExitIcon,
   BarChartIcon,
@@ -16,6 +15,12 @@ import {
   LightningBoltIcon,
   GlobeIcon,
   RocketIcon,
+  FileTextIcon,
+  IdCardIcon,
+  ChatBubbleIcon,
+  LockClosedIcon,
+  EnvelopeClosedIcon,
+  StarIcon,
 } from '@radix-ui/react-icons';
 import logo from '../assets/syncner-logo.png';
 import LoadingScreen from './LoadingScreen';
@@ -139,6 +144,12 @@ const Layout: React.FC = () => {
   const studentNavItems = [
     { path: '/student/dashboard', icon: HomeIcon, label: 'Dashboard' },
     { path: '/student/training/current', icon: LightningBoltIcon, label: 'Training' },
+    { path: '/student/projects', icon: FileTextIcon, label: 'Projects' },
+    { path: '/student/internships', icon: EnvelopeClosedIcon, label: 'Internships', locked: true },
+    { path: '/student/job-portal', icon: GlobeIcon, label: 'Job Portal', locked: true },
+    { path: '/student/resume', icon: IdCardIcon, label: 'My Resume', locked: true },
+    { path: '/student/mock-interview', icon: ChatBubbleIcon, label: 'Mock Interview', locked: true },
+    { path: '/student/leaderboard', icon: StarIcon, label: 'Leaderboard', locked: true },
   ];
 
   const adminNavItems = [
@@ -187,6 +198,26 @@ const Layout: React.FC = () => {
         <nav className="mt-2 flex-1">
           {navItems.map((item) => {
             const Icon = item.icon;
+            const isLocked = 'locked' in item && item.locked;
+            
+            if (isLocked) {
+              return (
+                <div
+                  key={item.path}
+                  className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : ''} px-3 py-3 text-sm font-medium transition-colors text-paperwhite/50 cursor-not-allowed`}
+                  title="Coming Soon"
+                >
+                  <Icon className="h-5 w-5" />
+                  {!isSidebarCollapsed && (
+                    <>
+                      <span className="ml-3">{item.label}</span>
+                      <LockClosedIcon className="h-4 w-4 ml-auto" />
+                    </>
+                  )}
+                </div>
+              );
+            }
+            
             return (
               <Link
                 key={item.path}
@@ -307,9 +338,25 @@ const Layout: React.FC = () => {
           <p className="text-sm text-gray-600 dark:text-gray-400">{user?.college}</p>
         </div>
 
-        <nav className="py-4">
+        <nav className="space-y-1">
           {navItems.map((item) => {
             const Icon = item.icon;
+            const isLocked = 'locked' in item && item.locked;
+            
+            if (isLocked) {
+              return (
+                <div
+                  key={item.path}
+                  className="flex items-center px-6 py-3 text-sm font-medium transition-colors text-paperwhite/50 cursor-not-allowed"
+                  title="Coming Soon"
+                >
+                  <Icon className="h-5 w-5 mr-3" />
+                  {item.label}
+                  <LockClosedIcon className="h-4 w-4 ml-auto" />
+                </div>
+              );
+            }
+            
             return (
               <Link
                 key={item.path}

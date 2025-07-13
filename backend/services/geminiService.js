@@ -34,25 +34,6 @@ class GeminiService {
     ];
     return await callGemini(messages);
   }
-
-  async generateResumeContent(userData) {
-    const prompt = `Generate professional resume content for:
-Name: ${userData.name}
-Career Track: ${userData.careerTrack}
-Education: ${userData.education?.degree} from ${userData.education?.school}
-Completed Projects: ${(userData.completedProjects || []).map(p => `- ${p.title}: ${p.description}`).join('\n') || 'No projects listed'}
-Skills: ${Object.entries(userData.skills || {}).map(([category, skills]) => `${category}: ${Array.isArray(skills) ? skills.join(', ') : skills}`).join('\n')}
-Please generate:
-1. A compelling professional summary (2-3 sentences)
-2. Enhanced project descriptions that highlight achievements
-3. Skills organized by relevance to their career track
-4. Any additional sections that would strengthen their resume
-Make it ATS-friendly and highlight quantifiable achievements where possible.`;
-    const messages = [
-      { role: 'user', parts: [{ text: prompt }] }
-    ];
-    return await callGemini(messages);
-  }
 }
 
 export default new GeminiService(); 

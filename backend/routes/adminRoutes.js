@@ -54,7 +54,6 @@ router.get('/diagnostics', protect, authorize('admin'), async (req, res) => {
     { name: 'tracks', url: '/api/tracks/health' },
     { name: 'training', url: '/api/training/health' },
     { name: 'admin', url: '/api/admin/health' },
-    { name: 'resume', url: '/api/resume/health' },
     { name: 'settings', url: '/api/admin/settings/health' },
     { name: 'ai', url: '/api/ai/health' }
   ];

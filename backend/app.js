@@ -26,7 +26,6 @@ import userRoutes from './routes/userRoutes.js';
 import trackRoutes from './routes/trackRoutes.js';
 import trainingRoutes from './routes/trainingRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
-import resumeRoutes from './routes/resumeRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
 
@@ -37,7 +36,6 @@ import { errorHandler } from './middleware/errorHandler.js';
 import './models/User.js';
 import './models/Track.js';
 import './models/Module.js';
-import './models/Resume.js';
 import './models/College.js';
 
 // Import geminiService
@@ -84,7 +82,6 @@ app.use('/api/users', userRoutes);
 app.use('/api/tracks', trackRoutes);
 app.use('/api/training', trainingRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/api/resume', resumeRoutes);
 app.use('/api/admin/settings', settingsRoutes);
 app.use('/api/ai', aiRoutes);
 
