@@ -25,6 +25,9 @@ import TrainingLevels from './pages/TrainingLevels';
 import StaffDashboard from './pages/StaffDashboard';
 import AdminUsers from './pages/AdminUsers';
 import AdminAdmin from './pages/AdminAdmin';
+import LevelLearnPage from './pages/LevelLearnPage';
+import LevelTestPage from './pages/LevelTestPage';
+import LevelExercisePage from './pages/LevelExercisePage';
 
 function AdminWrapper() {
   return (
@@ -111,6 +114,9 @@ function App() {
           <Route path="dashboard" element={<KeepAlive id="student-dashboard"><StudentDashboard /></KeepAlive>} />
           <Route path="training" element={<TrainingLevels />} />
           <Route path="training/:levelId" element={<TrainingLevels />} />
+          <Route path="training/:levelId/learn" element={<LevelLearnPage />} />
+          <Route path="training/:levelId/test" element={<LevelTestPage />} />
+          <Route path="training/:levelId/exercise" element={<LevelExercisePage />} />
           <Route path="profile" element={
             <motion.div
               initial={{ opacity: 0, y: 20 }}
