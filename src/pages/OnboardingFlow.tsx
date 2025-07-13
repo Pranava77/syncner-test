@@ -12,6 +12,7 @@ import {
 } from '@radix-ui/react-icons';
 import logo from '../assets/syncner-logo.png';
 import LoadingScreen from '../components/LoadingScreen';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const careerTracks = [
   {
@@ -119,7 +120,7 @@ const OnboardingFlow: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900 py-12 px-4 transition-colors">
+    <div className="min-h-screen bg-[var(--color-offblack)] py-12 px-4 transition-colors font-sans">
       <div className="max-w-4xl mx-auto">
         {/* Logo */}
         <div className="flex justify-center mb-8">
@@ -128,173 +129,190 @@ const OnboardingFlow: React.FC = () => {
         {/* Progress Bar */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Step {step} of 3</span>
-            <span className="text-sm text-gray-500 dark:text-gray-400">{Math.round((step / 3) * 100)}% Complete</span>
+            <span className="text-base font-label text-[var(--color-soft-gray)]">Step {step} of 3</span>
+            <span className="text-base font-label text-[var(--color-soft-gray)]">{Math.round((step / 3) * 100)}% Complete</span>
           </div>
-          <div className="w-full bg-gray-200 dark:bg-gray-800 rounded-full h-2">
+          <div className="w-full bg-[var(--color-soft-gray)] rounded-full h-2">
             <div 
-              className="bg-gradient-to-r from-blue-600 to-purple-600 h-2 rounded-full transition-all duration-500"
+              className="bg-[var(--color-true-turquoise)] h-2 rounded-full transition-all duration-500"
               style={{ width: `${(step / 3) * 100}%` }}
             ></div>
           </div>
         </div>
-
-        {/* Step 1: Welcome */}
-        {step === 1 && (
-          <div className="text-center">
-            <h1 className="text-4xl text-gray-900 dark:text-white mb-4 font-heading">
-              Welcome to Syncner, {user?.name}!
-            </h1>
-            <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto font-label">
-              Let's set up your personalized learning path to help you achieve your career goals.
-            </p>
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 max-w-2xl mx-auto transition-colors">
-              <h2 className="text-2xl text-gray-900 dark:text-white mb-6 font-heading">
-                What makes Syncner special?
-              </h2>
-              <div className="space-y-4 text-left">
-                <div className="flex items-start space-x-3">
-                  <CheckCircledIcon className="h-6 w-6 text-green-500 mt-1 flex-shrink-0" />
-                  <div>
-                    <h3 className="text-gray-900 dark:text-white font-heading">AI-Personalized Learning</h3>
-                    <p className="text-gray-600 dark:text-gray-300">Adaptive curriculum that adjusts to your pace and learning style</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <CheckCircledIcon className="h-6 w-6 text-green-500 mt-1 flex-shrink-0" />
-                  <div>
-                    <h3 className="text-gray-900 dark:text-white font-heading">Real-World Projects</h3>
-                    <p className="text-gray-600 dark:text-gray-300">Industry-standard tasks that build your portfolio</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <CheckCircledIcon className="h-6 w-6 text-green-500 mt-1 flex-shrink-0" />
-                  <div>
-                    <h3 className=" text-gray-900 dark:text-white font-heading">Career Guidance</h3>
-                    <p className="text-gray-600 dark:text-gray-300">AI-powered mentoring and career advice</p>
-                  </div>
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={step}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -24 }}
+            transition={{ duration: 0.4, ease: 'easeInOut' }}
+          >
+            {/* Step 1: Welcome */}
+            {step === 1 && (
+              <div className="text-center" role="region" aria-label="Welcome Step">
+                <h1 className="text-4xl font-heading text-[var(--color-paper-white)] mb-4 leading-tight">
+                  Welcome to Syncner, {user?.name}!
+                </h1>
+                <p className="text-xl font-label text-[var(--color-teal-light)] mb-8 max-w-2xl mx-auto leading-relaxed">
+                  Let's set up your personalized learning path to help you achieve your career goals.
+                </p>
+                <div className="bg-[var(--color-paper-white)]/10 rounded-xl shadow-lg p-8 max-w-2xl mx-auto transition-colors">
+                  <h2 className="text-2xl font-heading text-[var(--color-paper-white)] mb-6 leading-tight">
+                    What makes Syncner special?
+                  </h2>
+                  <ul className="space-y-4 text-left">
+                    <li className="flex items-start space-x-3">
+                      <CheckCircledIcon className="h-6 w-6 text-[var(--color-true-turquoise)] mt-1 flex-shrink-0" aria-hidden="true" />
+                      <div>
+                        <h3 className="font-heading text-[var(--color-paper-white)]">AI-Personalized Learning</h3>
+                        <p className="font-label text-[var(--color-teal-light)]">Adaptive curriculum that adjusts to your pace and learning style</p>
+                      </div>
+                    </li>
+                    <li className="flex items-start space-x-3">
+                      <CheckCircledIcon className="h-6 w-6 text-[var(--color-true-turquoise)] mt-1 flex-shrink-0" aria-hidden="true" />
+                      <div>
+                        <h3 className="font-heading text-[var(--color-paper-white)]">Real-World Projects</h3>
+                        <p className="font-label text-[var(--color-teal-light)]">Industry-standard tasks that build your portfolio</p>
+                      </div>
+                    </li>
+                    <li className="flex items-start space-x-3">
+                      <CheckCircledIcon className="h-6 w-6 text-[var(--color-true-turquoise)] mt-1 flex-shrink-0" aria-hidden="true" />
+                      <div>
+                        <h3 className="font-heading text-[var(--color-paper-white)]">Career Guidance</h3>
+                        <p className="font-label text-[var(--color-teal-light)]">AI-powered mentoring and career advice</p>
+                      </div>
+                    </li>
+                  </ul>
+                  <button
+                    onClick={() => setStep(2)}
+                    className="w-full mt-8 bg-[var(--color-true-turquoise)] text-[var(--color-offblack)] py-3 rounded-lg hover:bg-[var(--color-teal-light)] focus:ring-2 focus:ring-[var(--color-true-turquoise)] focus:outline-none transition-all font-medium flex items-center justify-center text-lg shadow-sm"
+                    aria-label="Start onboarding"
+                  >
+                    Let's Get Started
+                    <ArrowRightIcon className="ml-2 h-5 w-5" aria-hidden="true" />
+                  </button>
                 </div>
               </div>
-              <button
-                onClick={() => setStep(2)}
-                className="w-full mt-8 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all font-medium flex items-center justify-center"
-              >
-                Let's Get Started
-                <ArrowRightIcon className="ml-2 h-5 w-5" />
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Step 2: Career Track Selection */}
-        {step === 2 && (
-          <div>
-            <div className="text-center mb-8">
-              <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                Choose Your Career Track
-              </h1>
-              <p className="text-xl text-gray-600 dark:text-gray-300">
-                Select the path that aligns with your career aspirations
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              {careerTracks.map((track) => {
-                const Icon = track.icon;
-                return (
-                  <div
-                    key={track.id}
-                    onClick={() => handleTrackSelect(track.id)}
-                    className={`bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 cursor-pointer transition-all hover:shadow-xl ${
-                      selectedTrack === track.id 
-                        ? 'ring-2 ring-blue-500 bg-blue-50' 
-                        : 'hover:bg-gray-50 dark:hover:bg-gray-700'
-                    }`}
+            )}
+            {/* Step 2: Career Track Selection */}
+            {step === 2 && (
+              <div role="region" aria-label="Career Track Selection">
+                <div className="text-center mb-8">
+                  <h1 className="text-4xl font-heading text-[var(--color-paper-white)] mb-4 leading-tight">
+                    Choose Your Career Track
+                  </h1>
+                  <p className="text-xl font-label text-[var(--color-teal-light)] leading-relaxed">
+                    Select the path that aligns with your career aspirations
+                  </p>
+                </div>
+                <div className="grid md:grid-cols-2 gap-6">
+                  {careerTracks.map((track) => {
+                    const Icon = track.icon;
+                    return (
+                      <div
+                        key={track.id}
+                        onClick={() => handleTrackSelect(track.id)}
+                        className={`bg-[var(--color-paper-white)] rounded-xl shadow-lg p-6 cursor-pointer transition-all hover:shadow-xl focus-within:ring-2 focus-within:ring-[var(--color-true-turquoise)] outline-none ${
+                          selectedTrack === track.id 
+                            ? 'ring-2 ring-[var(--color-true-turquoise)] bg-[var(--color-teal-light)]' 
+                            : 'hover:bg-[var(--color-soft-gray)]'
+                        }`}
+                        tabIndex={0}
+                        role="button"
+                        aria-pressed={selectedTrack === track.id}
+                        aria-label={track.title}
+                        onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && handleTrackSelect(track.id)}
+                      >
+                        <div className={`bg-gradient-to-r ${track.color} p-3 rounded-lg w-fit mb-4`}>
+                          <Icon className="h-8 w-8 text-[var(--color-paper-white)]" aria-hidden="true" />
+                        </div>
+                        <h3 className="text-xl font-heading text-[var(--color-offblack)] mb-2 leading-tight">
+                          {track.title}
+                        </h3>
+                        <p className="text-[var(--color-offblack)] font-label mb-4 leading-relaxed">{track.description}</p>
+                        <div className="flex flex-wrap gap-2">
+                          {track.skills.map((skill) => (
+                            <span
+                              key={skill}
+                              className="bg-[var(--color-soft-gray)] text-[var(--color-offblack)] px-3 py-1 rounded-full text-sm font-label"
+                            >
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="flex justify-center mt-8">
+                  <button
+                    onClick={() => setStep(3)}
+                    disabled={!selectedTrack}
+                    className="bg-[var(--color-true-turquoise)] text-[var(--color-offblack)] px-8 py-3 rounded-lg hover:bg-[var(--color-teal-light)] focus:ring-2 focus:ring-[var(--color-true-turquoise)] focus:outline-none transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center text-lg shadow-sm"
+                    aria-label="Continue to goals"
                   >
-                    <div className={`bg-gradient-to-r ${track.color} p-3 rounded-lg w-fit mb-4`}>
-                      <Icon className="h-8 w-8 text-white" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                      {track.title}
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-300 mb-4">{track.description}</p>
-                    <div className="flex flex-wrap gap-2">
-                      {track.skills.map((skill) => (
-                        <span
-                          key={skill}
-                          className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 px-3 py-1 rounded-full text-sm"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="flex justify-center mt-8">
-              <button
-                onClick={() => setStep(3)}
-                disabled={!selectedTrack}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
-              >
-                Continue
-                <ArrowRightIcon className="ml-2 h-5 w-5" />
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Step 3: Goals Selection */}
-        {step === 3 && (
-          <div>
-            <div className="text-center mb-8">
-              <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                What are your goals?
-              </h1>
-              <p className="text-xl text-gray-600 dark:text-gray-300">
-                Select all that apply to personalize your experience
-              </p>
-            </div>
-
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 max-w-2xl mx-auto">
-              <div className="grid gap-4">
-                {goalOptions.map((goal) => (
-                  <label
-                    key={goal}
-                    className="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={goals.includes(goal)}
-                      onChange={() => handleGoalToggle(goal)}
-                      className="sr-only"
-                    />
-                    <div className={`w-5 h-5 rounded border-2 flex items-center justify-center mr-3 ${
-                      goals.includes(goal)
-                        ? 'bg-blue-600 border-blue-600'
-                        : 'border-gray-300 dark:border-gray-600'
-                    }`}>
-                      {goals.includes(goal) && (
-                        <CheckCircledIcon className="h-3 w-3 text-white" />
-                      )}
-                    </div>
-                    <span className="text-gray-900 dark:text-white font-medium">{goal}</span>
-                  </label>
-                ))}
+                    Continue
+                    <ArrowRightIcon className="ml-2 h-5 w-5" aria-hidden="true" />
+                  </button>
+                </div>
               </div>
-
-              <button
-                onClick={handleComplete}
-                disabled={goals.length === 0 || isLoading}
-                className="w-full mt-8 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Complete Setup
-              </button>
-            </div>
-          </div>
-        )}
+            )}
+            {/* Step 3: Goals Selection */}
+            {step === 3 && (
+              <div role="region" aria-label="Goals Selection">
+                <div className="text-center mb-8">
+                  <h1 className="text-4xl font-heading text-[var(--color-paper-white)] mb-4 leading-tight">
+                    What are your goals?
+                  </h1>
+                  <p className="text-xl font-label text-[var(--color-teal-light)] leading-relaxed">
+                    Select all that apply to personalize your experience
+                  </p>
+                </div>
+                <div className="bg-[var(--color-paper-white)] rounded-xl shadow-lg p-8 max-w-2xl mx-auto">
+                  <div className="grid gap-4">
+                    {goalOptions.map((goal) => (
+                      <label
+                        key={goal}
+                        className="flex items-center p-4 border border-[var(--color-soft-gray)] rounded-lg cursor-pointer hover:bg-[var(--color-soft-gray)] focus-within:ring-2 focus-within:ring-[var(--color-true-turquoise)] outline-none transition-colors"
+                        tabIndex={0}
+                        role="checkbox"
+                        aria-checked={goals.includes(goal)}
+                        aria-label={goal}
+                        onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && handleGoalToggle(goal)}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={goals.includes(goal)}
+                          onChange={() => handleGoalToggle(goal)}
+                          className="sr-only"
+                          tabIndex={-1}
+                        />
+                        <div className={`w-5 h-5 rounded border-2 flex items-center justify-center mr-3 transition-colors duration-200 ${
+                          goals.includes(goal)
+                            ? 'bg-[var(--color-true-turquoise)] border-[var(--color-true-turquoise)]'
+                            : 'border-[var(--color-soft-gray)]'
+                        }`}>
+                          {goals.includes(goal) && (
+                            <CheckCircledIcon className="h-3 w-3 text-[var(--color-offblack)]" aria-hidden="true" />
+                          )}
+                        </div>
+                        <span className="text-[var(--color-offblack)] font-label text-lg">{goal}</span>
+                      </label>
+                    ))}
+                  </div>
+                  <button
+                    onClick={handleComplete}
+                    disabled={goals.length === 0 || isLoading}
+                    className="w-full mt-8 bg-[var(--color-true-turquoise)] text-[var(--color-offblack)] py-3 rounded-lg hover:bg-[var(--color-teal-light)] focus:ring-2 focus:ring-[var(--color-true-turquoise)] focus:outline-none transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed text-lg shadow-sm"
+                    aria-label="Complete onboarding"
+                  >
+                    Complete Setup
+                  </button>
+                </div>
+              </div>
+            )}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   );

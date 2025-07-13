@@ -278,6 +278,16 @@ class ApiService {
     return this.handleResponse(response, true);
   }
 
+  async addAdmin(adminData: any) {
+    // Ensure role is always 'admin' when creating
+    const response = await fetch(`${this.baseURL}/admin/users`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify({ ...adminData, role: 'admin' }),
+    });
+    return this.handleResponse(response, true);
+  }
+
   // Admin settings endpoints
   async getPlatformSettings() {
     const response = await fetch(`${this.baseURL}/admin/settings`, {
