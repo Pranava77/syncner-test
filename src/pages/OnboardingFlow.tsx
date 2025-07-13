@@ -147,170 +147,170 @@ const OnboardingFlow: React.FC = () => {
             exit={{ opacity: 0, y: -24 }}
             transition={{ duration: 0.4, ease: 'easeInOut' }}
           >
-            {/* Step 1: Welcome */}
-            {step === 1 && (
+        {/* Step 1: Welcome */}
+        {step === 1 && (
               <div className="text-center" role="region" aria-label="Welcome Step">
                 <h1 className="text-4xl font-heading text-paperwhite mb-4 leading-tight">
-                  Welcome to Syncner, {user?.name}!
-                </h1>
+              Welcome to Syncner, {user?.name}!
+            </h1>
                 <p className="text-xl font-label text-teallight mb-8 max-w-2xl mx-auto leading-relaxed">
-                  Let's set up your personalized learning path to help you achieve your career goals.
-                </p>
+              Let's set up your personalized learning path to help you achieve your career goals.
+            </p>
                 <div className="bg-paperwhite/10 rounded-xl shadow-lg p-8 max-w-2xl mx-auto">
                   <h2 className="text-2xl font-heading text-paperwhite mb-6 leading-tight">
-                    What makes Syncner special?
-                  </h2>
+                What makes Syncner special?
+              </h2>
                   <ul className="space-y-4 text-left">
                     <li className="flex items-start space-x-3">
                       <CheckCircledIcon className="h-6 w-6 text-trueturquoise mt-1 flex-shrink-0" aria-hidden="true" />
-                      <div>
+                  <div>
                         <h3 className="font-heading text-paperwhite">AI-Personalized Learning</h3>
                         <p className="font-label text-teallight">Adaptive curriculum that adjusts to your pace and learning style</p>
-                      </div>
+                  </div>
                     </li>
                     <li className="flex items-start space-x-3">
                       <CheckCircledIcon className="h-6 w-6 text-trueturquoise mt-1 flex-shrink-0" aria-hidden="true" />
-                      <div>
+                  <div>
                         <h3 className="font-heading text-paperwhite">Real-World Projects</h3>
                         <p className="font-label text-teallight">Industry-standard tasks that build your portfolio</p>
-                      </div>
+                  </div>
                     </li>
                     <li className="flex items-start space-x-3">
                       <CheckCircledIcon className="h-6 w-6 text-trueturquoise mt-1 flex-shrink-0" aria-hidden="true" />
-                      <div>
+                  <div>
                         <h3 className="font-heading text-paperwhite">Career Guidance</h3>
                         <p className="font-label text-teallight">AI-powered mentoring and career advice</p>
-                      </div>
+                  </div>
                     </li>
                   </ul>
-                  <button
-                    onClick={() => setStep(2)}
+              <button
+                onClick={() => setStep(2)}
                     className="w-full mt-8 bg-trueturquoise text-offblack py-3 rounded-lg hover:bg-trueturquoise/90 focus:ring-2 focus:ring-trueturquoise focus:outline-none transition-all font-medium flex items-center justify-center text-lg shadow-sm"
                     aria-label="Start onboarding"
-                  >
-                    Let's Get Started
+              >
+                Let's Get Started
                     <ArrowRightIcon className="ml-2 h-5 w-5" aria-hidden="true" />
-                  </button>
-                </div>
-              </div>
-            )}
-            {/* Step 2: Career Track Selection */}
-            {step === 2 && (
+              </button>
+            </div>
+          </div>
+        )}
+        {/* Step 2: Career Track Selection */}
+        {step === 2 && (
               <div role="region" aria-label="Career Track Selection">
-                <div className="text-center mb-8">
+            <div className="text-center mb-8">
                   <h1 className="text-4xl font-heading text-paperwhite mb-4 leading-tight">
-                    Choose Your Career Track
-                  </h1>
+                Choose Your Career Track
+              </h1>
                   <p className="text-xl font-label text-teallight leading-relaxed">
-                    Select the path that aligns with your career aspirations
-                  </p>
-                </div>
-                <div className="grid md:grid-cols-2 gap-6">
-                  {careerTracks.map((track) => {
-                    const Icon = track.icon;
-                    return (
-                      <div
-                        key={track.id}
-                        onClick={() => handleTrackSelect(track.id)}
+                Select the path that aligns with your career aspirations
+              </p>
+            </div>
+            <div className="grid md:grid-cols-2 gap-6">
+              {careerTracks.map((track) => {
+                const Icon = track.icon;
+                return (
+                  <div
+                    key={track.id}
+                    onClick={() => handleTrackSelect(track.id)}
                         className={`bg-paperwhite/10 rounded-xl shadow-lg p-6 cursor-pointer transition-all hover:shadow-xl focus-within:ring-2 focus-within:ring-trueturquoise outline-none ${
-                          selectedTrack === track.id 
+                      selectedTrack === track.id 
                             ? 'ring-2 ring-trueturquoise bg-trueturquoise/10' 
                             : 'hover:bg-paperwhite/5'
-                        }`}
+                    }`}
                         tabIndex={0}
                         role="button"
                         aria-pressed={selectedTrack === track.id}
                         aria-label={track.title}
                         onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && handleTrackSelect(track.id)}
-                      >
+                  >
                         <div className="bg-trueturquoise/20 p-3 rounded-lg w-fit mb-4">
                           <Icon className="h-8 w-8 text-trueturquoise" aria-hidden="true" />
-                        </div>
+                    </div>
                         <h3 className="text-xl font-heading text-paperwhite mb-2 leading-tight">
-                          {track.title}
-                        </h3>
+                      {track.title}
+                    </h3>
                         <p className="text-teallight font-label mb-4 leading-relaxed">{track.description}</p>
-                        <div className="flex flex-wrap gap-2">
-                          {track.skills.map((skill) => (
-                            <span
-                              key={skill}
+                    <div className="flex flex-wrap gap-2">
+                      {track.skills.map((skill) => (
+                        <span
+                          key={skill}
                               className="bg-soft-gray text-paperwhite px-3 py-1 rounded-full text-sm font-label"
-                            >
-                              {skill}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="flex justify-center mt-8">
-                  <button
-                    onClick={() => setStep(3)}
-                    disabled={!selectedTrack}
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="flex justify-center mt-8">
+              <button
+                onClick={() => setStep(3)}
+                disabled={!selectedTrack}
                     className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg hover:bg-trueturquoise/90 focus:ring-2 focus:ring-trueturquoise focus:outline-none transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center text-lg shadow-sm"
                     aria-label="Continue to goals"
-                  >
-                    Continue
+              >
+                Continue
                     <ArrowRightIcon className="ml-2 h-5 w-5" aria-hidden="true" />
-                  </button>
-                </div>
-              </div>
-            )}
-            {/* Step 3: Goals Selection */}
-            {step === 3 && (
+              </button>
+            </div>
+          </div>
+        )}
+        {/* Step 3: Goals Selection */}
+        {step === 3 && (
               <div role="region" aria-label="Goals Selection">
-                <div className="text-center mb-8">
+            <div className="text-center mb-8">
                   <h1 className="text-4xl font-heading text-paperwhite mb-4 leading-tight">
-                    What are your goals?
-                  </h1>
+                What are your goals?
+              </h1>
                   <p className="text-xl font-label text-teallight leading-relaxed">
-                    Select all that apply to personalize your experience
-                  </p>
-                </div>
+                Select all that apply to personalize your experience
+              </p>
+            </div>
                 <div className="bg-paperwhite/10 rounded-xl shadow-lg p-8 max-w-2xl mx-auto">
-                  <div className="grid gap-4">
-                    {goalOptions.map((goal) => (
-                      <label
-                        key={goal}
+              <div className="grid gap-4">
+                {goalOptions.map((goal) => (
+                  <label
+                    key={goal}
                         className="flex items-center p-4 border border-paperwhite/20 rounded-lg cursor-pointer hover:bg-paperwhite/5 focus-within:ring-2 focus-within:ring-trueturquoise outline-none transition-colors"
                         tabIndex={0}
                         role="checkbox"
                         aria-checked={goals.includes(goal)}
                         aria-label={goal}
                         onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && handleGoalToggle(goal)}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={goals.includes(goal)}
-                          onChange={() => handleGoalToggle(goal)}
-                          className="sr-only"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={goals.includes(goal)}
+                      onChange={() => handleGoalToggle(goal)}
+                      className="sr-only"
                           tabIndex={-1}
-                        />
+                    />
                         <div className={`w-5 h-5 rounded border-2 flex items-center justify-center mr-3 transition-colors duration-200 ${
-                          goals.includes(goal)
+                      goals.includes(goal)
                             ? 'bg-trueturquoise border-trueturquoise'
                             : 'border-paperwhite/20'
-                        }`}>
-                          {goals.includes(goal) && (
+                    }`}>
+                      {goals.includes(goal) && (
                             <CheckCircledIcon className="h-3 w-3 text-offblack" aria-hidden="true" />
-                          )}
-                        </div>
+                      )}
+                    </div>
                         <span className="text-paperwhite font-label text-lg">{goal}</span>
-                      </label>
-                    ))}
-                  </div>
-                  <button
-                    onClick={handleComplete}
-                    disabled={goals.length === 0 || isLoading}
+                  </label>
+                ))}
+              </div>
+              <button
+                onClick={handleComplete}
+                disabled={goals.length === 0 || isLoading}
                     className="w-full mt-8 bg-trueturquoise text-offblack py-3 rounded-lg hover:bg-trueturquoise/90 focus:ring-2 focus:ring-trueturquoise focus:outline-none transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed text-lg shadow-sm"
                     aria-label="Complete onboarding"
-                  >
-                    Complete Setup
-                  </button>
-                </div>
-              </div>
-            )}
+              >
+                Complete Setup
+              </button>
+            </div>
+          </div>
+        )}
           </motion.div>
         </AnimatePresence>
       </div>

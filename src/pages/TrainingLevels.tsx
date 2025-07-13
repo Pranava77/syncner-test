@@ -85,11 +85,11 @@ const TrainingLevels: React.FC = () => {
         </div>
       )}
       {/* Level Detail */}
-      <main className="flex-1 min-h-screen flex flex-col justify-start items-stretch p-0">
+      <main className="flex-1 p-6 lg:p-12">
         {selectedLevelId ? (
           <TrainingLevelDetail levelId={selectedLevelId} />
         ) : (
-          <div className="text-paperwhite text-center mt-24 text-xl w-full">Select a level to begin learning!</div>
+          <div className="text-paperwhite text-center mt-24 text-xl">Select a level to begin learning!</div>
         )}
       </main>
     </div>
