@@ -10,14 +10,12 @@ const LevelTestPage: React.FC = () => {
     <div className="flex h-full min-h-screen bg-offblack w-full">
       <LevelsSidebar sidebarOpen={true} currentLevel={levelNum} currentSection="test" />
       <main className="flex-1 p-6 lg:p-12">
-        <div className="max-w-3xl mx-auto">
-          <div className="mb-8">
-            <h1 className="text-2xl font-bold text-paperwhite mb-2">Level {levelId} - Test</h1>
-            <p className="text-teallight mb-2">This is the Test section for Level {levelId}. Add your static or demo content here.</p>
-          </div>
-          <div className="space-y-4">
-            <div className="bg-paperwhite/10 rounded-lg p-4 text-paperwhite">Sample test content for Level {levelId}.</div>
-          </div>
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold text-paperwhite mb-2">Level {levelId} - Test</h1>
+          <p className="text-teallight mb-2">This is the Test section for Level {levelId}. Add your static or demo content here.</p>
+        </div>
+        <div className="space-y-4">
+          <div className="bg-paperwhite/10 rounded-lg p-4 text-paperwhite">Sample test content for Level {levelId}.</div>
         </div>
       </main>
     </div>

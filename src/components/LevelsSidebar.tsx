@@ -50,7 +50,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
           </button>
         )}
       </div>
-      <div className="flex-1 space-y-2 overflow-y-auto">
+      <div className="flex-1 space-y-4 overflow-y-auto">
         {[1, 2, 3, 4, 5].map((levelNum) => (
           <div key={levelNum} className="mb-2">
             <button
