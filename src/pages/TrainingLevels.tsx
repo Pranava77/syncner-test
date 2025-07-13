@@ -4,6 +4,7 @@ import { useLevels } from '../hooks/useLevels';
 import { useNavigate, useParams } from 'react-router-dom';
 import LoadingScreen from '../components/LoadingScreen';
 import TrainingLevelDetail from './TrainingLevelDetail';
+import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 
 const TrainingLevels: React.FC = () => {
   const { user } = useAppSelector((state) => state.auth);
@@ -11,6 +12,7 @@ const TrainingLevels: React.FC = () => {
   const navigate = useNavigate();
   const { levels, loading, error } = useLevels(user?.careerTrack);
   const [selectedLevelId, setSelectedLevelId] = useState<string | null>(levelId || null);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   useEffect(() => {
     if (levelId) setSelectedLevelId(levelId);
@@ -28,24 +30,45 @@ const TrainingLevels: React.FC = () => {
   return (
     <div className="flex h-full min-h-screen bg-offblack">
       {/* Levels Sidebar */}
-      <aside className="w-64 bg-paperwhite/10 p-6 border-r border-paperwhite/10 flex flex-col">
-        <h2 className="text-lg font-semibold text-paperwhite mb-4">Levels</h2>
-        <div className="flex-1 space-y-2 overflow-y-auto">
-          {levels.map((level) => (
+      {sidebarOpen && (
+        <aside className="w-64 bg-offblack p-6 border-r border-trueturquoise flex flex-col transition-all duration-300">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-paperwhite">Levels</h2>
             <button
-              key={level.id}
-              onClick={() => handleLevelSelect(level.id)}
-              className={`w-full text-left p-3 rounded-lg transition-colors font-medium text-sm
-                ${selectedLevelId === level.id ? 'bg-trueturquoise/10 border border-trueturquoise text-trueturquoise' : 'hover:bg-paperwhite/10 text-paperwhite'}`}
+              onClick={() => setSidebarOpen(false)}
+              className="ml-2 p-1 rounded hover:bg-trueturquoise/10 focus:outline-none focus:ring-2 focus:ring-trueturquoise"
+              aria-label="Close sidebar"
             >
-              <div className="flex items-center justify-between">
-                <span>{level.title}</span>
-                <span className="ml-2 px-2 py-0.5 rounded-full text-xs font-semibold bg-trueturquoise/20 text-trueturquoise">{level.difficulty}</span>
-              </div>
+              <ChevronLeftIcon className="h-5 w-5 text-trueturquoise" />
             </button>
-          ))}
-        </div>
-      </aside>
+          </div>
+          <div className="flex-1 space-y-2 overflow-y-auto">
+            {levels.map((level) => (
+              <button
+                key={level.id}
+                onClick={() => handleLevelSelect(level.id)}
+                className={`w-full text-left p-3 rounded-lg transition-colors font-medium text-sm
+                  ${selectedLevelId === level.id ? 'bg-trueturquoise/10 border border-trueturquoise text-trueturquoise' : 'hover:bg-paperwhite/10 text-paperwhite'}`}
+              >
+                <div className="flex items-center justify-between">
+                  <span>{level.title}</span>
+                  <span className="ml-2 px-2 py-0.5 rounded-full text-xs font-semibold bg-trueturquoise/20 text-trueturquoise">{level.difficulty}</span>
+                </div>
+              </button>
+            ))}
+          </div>
+        </aside>
+      )}
+      {/* Sidebar Toggle Button (when closed) */}
+      {!sidebarOpen && (
+        <button
+          onClick={() => setSidebarOpen(true)}
+          className="absolute top-8 left-0 z-20 bg-offblack border border-trueturquoise p-2 rounded-r-lg shadow-lg hover:bg-trueturquoise/10 focus:outline-none focus:ring-2 focus:ring-trueturquoise"
+          aria-label="Open sidebar"
+        >
+          <ChevronRightIcon className="h-5 w-5 text-trueturquoise" />
+        </button>
+      )}
       {/* Level Detail */}
       <main className="flex-1 p-6 lg:p-12">
         {selectedLevelId ? (
