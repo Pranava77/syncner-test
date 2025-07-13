@@ -30,7 +30,7 @@ const TrainingLevels: React.FC = () => {
   return (
     <div className="flex h-full min-h-screen bg-offblack">
       {/* Levels Sidebar */}
-      {sidebarOpen && (
+      {sidebarOpen ? (
         <aside className="w-64 bg-offblack p-6 border-r border-trueturquoise flex flex-col transition-all duration-300">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-paperwhite">Levels</h2>
@@ -58,16 +58,17 @@ const TrainingLevels: React.FC = () => {
             ))}
           </div>
         </aside>
-      )}
-      {/* Sidebar Toggle Button (when closed) */}
-      {!sidebarOpen && (
-        <button
-          onClick={() => setSidebarOpen(true)}
-          className="absolute top-8 left-0 z-20 bg-offblack border border-trueturquoise p-2 rounded-r-lg shadow-lg hover:bg-trueturquoise/10 focus:outline-none focus:ring-2 focus:ring-trueturquoise"
-          aria-label="Open sidebar"
-        >
-          <ChevronRightIcon className="h-5 w-5 text-trueturquoise" />
-        </button>
+      ) : (
+        // Render the open button in the Training section of the main sidebar
+        <div className="w-16 flex flex-col items-center justify-start pt-8 bg-offblack border-r border-trueturquoise">
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="p-2 rounded-lg bg-offblack border border-trueturquoise shadow-lg hover:bg-trueturquoise/10 focus:outline-none focus:ring-2 focus:ring-trueturquoise"
+            aria-label="Open sidebar"
+          >
+            <ChevronRightIcon className="h-5 w-5 text-trueturquoise" />
+          </button>
+        </div>
       )}
       {/* Level Detail */}
       <main className="flex-1 p-6 lg:p-12">
