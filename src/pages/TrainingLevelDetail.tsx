@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import apiService from '../services/api';
 import LoadingScreen from '../components/LoadingScreen';
 
@@ -19,17 +20,11 @@ interface Level {
   estimatedHours: number;
 }
 
-const TABS = [
-  { id: 'learn', label: 'Learn' },
-  { id: 'test', label: 'Test' },
-  { id: 'exercise', label: 'Exercise' },
-];
-
-const TrainingLevelDetail: React.FC<{ levelId: string }> = ({ levelId }) => {
+const TrainingLevelDetail: React.FC = () => {
+  const { levelId, section } = useParams<{ levelId: string; section: string }>();
   const [level, setLevel] = useState<Level | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState('learn');
 
   useEffect(() => {
     const fetchLevel = async () => {
@@ -55,6 +50,67 @@ const TrainingLevelDetail: React.FC<{ levelId: string }> = ({ levelId }) => {
   if (error) return <div className="text-red-500 p-8">{error}</div>;
   if (!level) return <div className="text-teallight p-8">Level not found.</div>;
 
+  let sectionContent = null;
+  if (section === 'learn') {
+    sectionContent = (
+      <div className="space-y-4">
+        {level.learn.length === 0 && <div className="text-teallight">No learning content for this level.</div>}
+        {level.learn.map((item, idx) => (
+          <div key={idx} className="bg-paperwhite/10 rounded-lg p-4">
+            <div className="font-semibold text-paperwhite mb-1">{item.title}</div>
+            {item.type === 'video' && item.videoUrl && (
+              <div className="aspect-video mb-2">
+                <iframe
+                  src={item.videoUrl}
+                  title={item.title}
+                  className="w-full h-full rounded-lg"
+                  allowFullScreen
+                />
+              </div>
+            )}
+            {item.content && <div className="text-teallight text-sm">{item.content}</div>}
+          </div>
+        ))}
+      </div>
+    );
+  } else if (section === 'test') {
+    sectionContent = (
+      <div className="space-y-4">
+        {level.test.length === 0 && <div className="text-teallight">No test content for this level.</div>}
+        {level.test.map((q, idx) => (
+          <div key={idx} className="bg-paperwhite/10 rounded-lg p-4">
+            <div className="font-semibold text-paperwhite mb-1">Q{idx + 1}: {q.question}</div>
+            {q.options && q.options.length > 0 && (
+              <ul className="list-disc ml-6 text-teallight text-sm">
+                {q.options.map((opt: string, i: number) => (
+                  <li key={i}>{opt}</li>
+                ))}
+              </ul>
+            )}
+            {q.answer && <div className="text-xs text-trueturquoise mt-2">Answer: {q.answer}</div>}
+          </div>
+        ))}
+      </div>
+    );
+  } else if (section === 'exercise') {
+    sectionContent = (
+      <div className="space-y-4">
+        {level.exercise.length === 0 && <div className="text-teallight">No exercises for this level.</div>}
+        {level.exercise.map((ex, idx) => (
+          <div key={idx} className="bg-paperwhite/10 rounded-lg p-4">
+            <div className="font-semibold text-paperwhite mb-1">{ex.title}</div>
+            {ex.description && <div className="text-teallight text-sm mb-2">{ex.description}</div>}
+            {ex.resources && ex.resources.length > 0 && (
+              <div className="text-xs text-trueturquoise">Resources: {ex.resources.join(', ')}</div>
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  } else {
+    sectionContent = <div className="text-teallight">Invalid section.</div>;
+  }
+
   return (
     <div className="max-w-3xl mx-auto">
       <div className="mb-8">
@@ -70,75 +126,7 @@ const TrainingLevelDetail: React.FC<{ levelId: string }> = ({ levelId }) => {
           ))}
         </div>
       </div>
-      {/* Tabs */}
-      <div className="flex gap-2 mb-6">
-        {TABS.map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`px-4 py-2 rounded-full font-medium transition-colors text-sm
-              ${activeTab === tab.id ? 'bg-trueturquoise text-offblack' : 'bg-paperwhite/10 text-paperwhite hover:bg-paperwhite/20'}`}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-      {/* Tab Content */}
-      <div>
-        {activeTab === 'learn' && (
-          <div className="space-y-4">
-            {level.learn.length === 0 && <div className="text-teallight">No learning content for this level.</div>}
-            {level.learn.map((item, idx) => (
-              <div key={idx} className="bg-paperwhite/10 rounded-lg p-4">
-                <div className="font-semibold text-paperwhite mb-1">{item.title}</div>
-                {item.type === 'video' && item.videoUrl && (
-                  <div className="aspect-video mb-2">
-                    <iframe
-                      src={item.videoUrl}
-                      title={item.title}
-                      className="w-full h-full rounded-lg"
-                      allowFullScreen
-                    />
-                  </div>
-                )}
-                {item.content && <div className="text-teallight text-sm">{item.content}</div>}
-              </div>
-            ))}
-          </div>
-        )}
-        {activeTab === 'test' && (
-          <div className="space-y-4">
-            {level.test.length === 0 && <div className="text-teallight">No test content for this level.</div>}
-            {level.test.map((q, idx) => (
-              <div key={idx} className="bg-paperwhite/10 rounded-lg p-4">
-                <div className="font-semibold text-paperwhite mb-1">Q{idx + 1}: {q.question}</div>
-                {q.options && q.options.length > 0 && (
-                  <ul className="list-disc ml-6 text-teallight text-sm">
-                    {q.options.map((opt: string, i: number) => (
-                      <li key={i}>{opt}</li>
-                    ))}
-                  </ul>
-                )}
-                {q.answer && <div className="text-xs text-trueturquoise mt-2">Answer: {q.answer}</div>}
-              </div>
-            ))}
-          </div>
-        )}
-        {activeTab === 'exercise' && (
-          <div className="space-y-4">
-            {level.exercise.length === 0 && <div className="text-teallight">No exercises for this level.</div>}
-            {level.exercise.map((ex, idx) => (
-              <div key={idx} className="bg-paperwhite/10 rounded-lg p-4">
-                <div className="font-semibold text-paperwhite mb-1">{ex.title}</div>
-                {ex.description && <div className="text-teallight text-sm mb-2">{ex.description}</div>}
-                {ex.resources && ex.resources.length > 0 && (
-                  <div className="text-xs text-trueturquoise">Resources: {ex.resources.join(', ')}</div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      {sectionContent}
     </div>
   );
 };

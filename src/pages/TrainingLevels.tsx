@@ -63,9 +63,24 @@ const TrainingLevels: React.FC = () => {
                 </button>
                 {openDropdowns[levelNum] && (
                   <div id={`level-dropdown-${levelNum}`} className="ml-4 mt-2 space-y-1">
-                    <div className="px-3 py-2 rounded text-xs text-trueturquoise bg-trueturquoise/10">Learn</div>
-                    <div className="px-3 py-2 rounded text-xs text-trueturquoise bg-trueturquoise/10">Test</div>
-                    <div className="px-3 py-2 rounded text-xs text-trueturquoise bg-trueturquoise/10">Exercise</div>
+                    <button
+                      className="w-full text-left px-3 py-2 rounded text-xs text-trueturquoise bg-trueturquoise/10 hover:bg-trueturquoise/20 transition-colors"
+                      onClick={() => navigate(`/student/training/${levelNum}/learn`)}
+                    >
+                      Learn
+                    </button>
+                    <button
+                      className="w-full text-left px-3 py-2 rounded text-xs text-trueturquoise bg-trueturquoise/10 hover:bg-trueturquoise/20 transition-colors"
+                      onClick={() => navigate(`/student/training/${levelNum}/test`)}
+                    >
+                      Test
+                    </button>
+                    <button
+                      className="w-full text-left px-3 py-2 rounded text-xs text-trueturquoise bg-trueturquoise/10 hover:bg-trueturquoise/20 transition-colors"
+                      onClick={() => navigate(`/student/training/${levelNum}/exercise`)}
+                    >
+                      Exercise
+                    </button>
                   </div>
                 )}
               </div>
