@@ -43,10 +43,10 @@ const AdminDiagnostics: React.FC = () => {
     <div className="space-y-6 lg:space-y-8 p-4 lg:p-8 bg-black">
       <div className="flex items-center mb-8 gap-3">
         <CheckCircledIcon className="h-7 w-7 text-trueturquoise" />
-        <h1 className="text-2xl font-bold text-paperwhite">System Diagnostics</h1>
+        <h1 className="text-2xl font-bold text-paperwhite font-heading">System Diagnostics</h1>
       </div>
       <div className="flex items-center justify-between mb-4">
-        <div className="text-teallight text-sm">
+        <div className="text-teallight text-sm font-label">
           Last checked: {timestamp ? new Date(timestamp).toLocaleString() : '—'}
         </div>
         <button
@@ -59,8 +59,8 @@ const AdminDiagnostics: React.FC = () => {
         </button>
       </div>
       <div className="mb-4">
-        <span className={`font-semibold ${healthyCount === totalCount ? 'text-trueturquoise' : 'text-rust'}`}>{healthyCount}/{totalCount}</span>
-        {' '}<span className="text-teallight">modules healthy</span>
+        <span className={`${healthyCount === totalCount ? 'text-trueturquoise' : 'text-rust'} font-label`}>{healthyCount}/{totalCount}</span>
+        {' '}<span className="text-teallight font-label">modules healthy</span>
       </div>
       {error && (
         <div className="bg-rust/10 text-rust px-4 py-2 rounded mb-4 flex items-center gap-2">
@@ -90,11 +90,11 @@ const AdminDiagnostics: React.FC = () => {
                   <td className="px-4 py-2 font-medium text-paperwhite">{diag.module}</td>
                   <td className="px-4 py-2">
                     {diag.healthy ? (
-                      <span className="flex items-center gap-1 text-trueturquoise font-semibold">
+                      <span className="flex items-center gap-1 text-trueturquoise">
                         <CheckCircledIcon className="h-4 w-4" /> Healthy
                       </span>
                     ) : (
-                      <span className="flex items-center gap-1 text-rust font-semibold">
+                      <span className="flex items-center gap-1 text-rust">
                         <ExclamationTriangleIcon className="h-4 w-4" /> Unhealthy
                       </span>
                     )}

@@ -154,7 +154,7 @@ const TrainingModule: React.FC = () => {
       <div className="mb-8">
         <Link
           to="/student/dashboard"
-          className="text-trueturquoise hover:text-teallight font-medium flex items-center mb-4"
+          className="text-trueturquoise hover:text-teallight flex items-center mb-4"
         >
           <ChevronLeftIcon className="h-4 w-4 mr-1" />
           Back to Dashboard
@@ -164,11 +164,11 @@ const TrainingModule: React.FC = () => {
           <div className="flex items-start justify-between mb-6">
             <div>
               <div className="flex items-center space-x-3 mb-3">
-                <span className="px-3 py-1 rounded-full text-sm font-medium bg-trueturquoise/20 text-trueturquoise">{module.difficulty}</span>
+                <span className="px-3 py-1 rounded-full text-sm bg-trueturquoise/20 text-trueturquoise font-label">{module.difficulty}</span>
                 <span className="text-teallight">•</span>
                 <span className="text-teallight">{track?.name}</span>
               </div>
-              <h1 className="text-3xl font-bold text-paperwhite mb-2">{module.title}</h1>
+              <h1 className="text-3xl font-bold text-paperwhite mb-2 font-heading">{module.title}</h1>
               <p className="text-teallight mb-4">{module.description}</p>
               <div className="flex items-center space-x-6 text-sm text-teallight">
                 <div className="flex items-center">
@@ -250,7 +250,7 @@ const TrainingModule: React.FC = () => {
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className={`text-sm font-medium ${
+                      <p className={`text-sm font-label ${
                         index === currentLesson ? 'text-trueturquoise' : 'text-paperwhite'
                       }`}>
                         {lesson.title}
@@ -276,7 +276,7 @@ const TrainingModule: React.FC = () => {
             {/* Prerequisites */}
             {module.prerequisites && module.prerequisites.length > 0 && (
               <div className="mt-6 pt-6 border-t border-trueturquoise">
-                <h4 className="font-medium text-paperwhite mb-3">Prerequisites</h4>
+                <h4 className="font-medium text-paperwhite mb-3 font-heading">Prerequisites</h4>
                 <div className="space-y-2">
                   {module.prerequisites.map((prereq: string) => (
                     <div key={prereq} className="flex items-center text-sm text-teallight">
@@ -333,7 +333,7 @@ const TrainingModule: React.FC = () => {
                       <p className="text-sm text-teallight">{currentContent.duration}</p>
                     </div>
                     <div className="absolute top-4 right-4">
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                      <span className={`px-2 py-1 rounded text-xs font-label ${
                         currentContent.type === 'video' ? 'bg-trueturquoise text-offblack' :
                         currentContent.type === 'reading' ? 'bg-teallight text-offblack' :
                         'bg-rust text-paperwhite'
@@ -344,7 +344,7 @@ const TrainingModule: React.FC = () => {
                   </div>
                 )}
                 <div className="p-8">
-                  <h2 className="text-2xl font-bold text-paperwhite mb-4">
+                  <h2 className="text-2xl font-bold text-paperwhite mb-4 font-heading">
                     {currentContent.title}
                   </h2>
                   <p className="text-teallight mb-6 leading-relaxed">
@@ -352,7 +352,7 @@ const TrainingModule: React.FC = () => {
                   </p>
 
                   <div className="bg-trueturquoise/10 rounded-lg p-4 mb-6">
-                    <h3 className="font-semibold text-trueturquoise mb-2">Key Learning Points:</h3>
+                    <h3 className="text-trueturquoise mb-2 font-heading">Key Learning Points:</h3>
                     <ul className="space-y-1 text-trueturquoise text-sm">
                       <li>• Understand core concepts and terminology</li>
                       <li>• Learn practical implementation techniques</li>
@@ -364,7 +364,7 @@ const TrainingModule: React.FC = () => {
                   {/* Resources */}
                   {currentContent.resources && (
                     <div className="bg-paperwhite/10 rounded-lg p-4">
-                      <h3 className="font-semibold text-paperwhite mb-2">Additional Resources:</h3>
+                      <h3 className="text-paperwhite mb-2 font-heading">Additional Resources:</h3>
                       <ul className="space-y-1">
                         {currentContent.resources.map((resource: string, index: number) => (
                           <li key={index} className="text-sm text-teallight">
@@ -396,20 +396,20 @@ const TrainingModule: React.FC = () => {
                   <div className="bg-rust/10 p-3 rounded-full w-fit mx-auto mb-4">
                     <StarFilledIcon className="h-8 w-8 text-rust" />
                   </div>
-                  <h2 className="text-2xl font-bold text-paperwhite mb-2">Knowledge Check</h2>
+                  <h2 className="text-2xl font-bold text-paperwhite mb-2 font-heading">Knowledge Check</h2>
                   <p className="text-teallight">Test your understanding of the concepts covered</p>
                 </div>
 
                 <div className="max-w-2xl mx-auto">
                   <div className="bg-paperwhite/10 rounded-lg p-6 mb-6">
-                    <h3 className="text-lg font-semibold text-paperwhite mb-4">
+                    <h3 className="text-lg font-semibold text-paperwhite mb-4 font-heading">
                       {quiz.question}
                     </h3>
                     <div className="space-y-3">
                       {quiz.options.map((option: string, index: number) => (
                         <label
                           key={index}
-                          className="flex items-center p-3 border border-paperwhite/20 rounded-lg cursor-pointer hover:bg-paperwhite/5 transition-colors"
+                          className="flex items-center p-3 border border-paperwhite/20 rounded-lg cursor-pointer hover:bg-paperwhite/5 transition-colors font-label"
                         >
                           <input
                             type="radio"

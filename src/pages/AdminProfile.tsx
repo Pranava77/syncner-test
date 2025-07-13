@@ -28,8 +28,8 @@ const AdminProfile: React.FC = () => {
         setProfile(profileRes.data.user);
         setForm(profileRes.data.user);
         setError(null);
-      } catch (err: any) {
-        setError(err.message || 'Failed to load profile');
+      } catch (error) {
+        setError(error instanceof Error ? error.message : 'Failed to load profile');
       } finally {
         setLoading(false);
       }
@@ -71,7 +71,7 @@ const AdminProfile: React.FC = () => {
                 <PersonIcon className="h-10 w-10 text-offblack" />
           </div>
           <div>
-                <h2 className="text-2xl font-bold text-paperwhite">{profile?.name || ''}</h2>
+                <h2 className="text-2xl font-bold text-paperwhite font-heading">{profile?.name || ''}</h2>
                 <p className="text-teallight">{profile?.email || ''}</p>
                 <span className="inline-block bg-trueturquoise/20 text-trueturquoise px-3 py-1 rounded-full text-sm font-medium mt-2">
                   {profile?.role || 'Administrator'}
@@ -79,13 +79,13 @@ const AdminProfile: React.FC = () => {
           </div>
         </div>
             
-            <h3 className="font-semibold text-lg mb-6 text-trueturquoise flex items-center gap-2">
+            <h3 className="font-semibold text-lg mb-6 text-trueturquoise flex items-center gap-2 font-heading">
               <PersonIcon className="w-5 h-5" /> Profile Information
             </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-                <label className="block text-sm text-teallight mb-2 font-medium">Full Name</label>
+                <label className="block text-sm text-teallight mb-2 font-label">Full Name</label>
                 <input 
                   name="name" 
                   value={form.name || ''} 
@@ -99,7 +99,7 @@ const AdminProfile: React.FC = () => {
                 />
           </div>
           <div>
-                <label className="block text-sm text-teallight mb-2 font-medium">Role</label>
+                <label className="block text-sm text-teallight mb-2 font-label">Role</label>
                 <input 
                   name="role" 
                   value={form.role || ''} 
@@ -108,7 +108,7 @@ const AdminProfile: React.FC = () => {
                 />
           </div>
           <div>
-                <label className="block text-sm text-teallight mb-2 font-medium">Phone Number</label>
+                <label className="block text-sm text-teallight mb-2 font-label">Phone Number</label>
                 <input 
                   name="phone" 
                   value={form.phone || ''} 
@@ -122,7 +122,7 @@ const AdminProfile: React.FC = () => {
                 />
           </div>
           <div>
-                <label className="block text-sm text-teallight mb-2 font-medium">Location</label>
+                <label className="block text-sm text-teallight mb-2 font-label">Location</label>
                 <input 
                   name="location" 
                   value={form.location || ''} 
@@ -180,7 +180,7 @@ const AdminProfile: React.FC = () => {
         {/* Quick Actions Card */}
         <div className="lg:col-span-1">
           <div className="bg-offblack border border-paperwhite/10 rounded-xl shadow-lg p-6">
-            <h3 className="font-semibold text-lg mb-6 text-trueturquoise flex items-center gap-2">
+            <h3 className="font-semibold text-lg mb-6 text-trueturquoise flex items-center gap-2 font-heading">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>

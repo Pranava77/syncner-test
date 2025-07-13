@@ -106,8 +106,8 @@ const AIChat: React.FC = () => {
             <RobotIcon className="h-3 w-3 lg:h-4 lg:w-4 text-white" />
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900 dark:text-white text-sm lg:text-base">AI Career Mentor</h3>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <h3 className="font-semibold text-gray-900 dark:text-white text-sm lg:text-base font-heading">AI Career Mentor</h3>
+            <p className="text-xs text-gray-500 dark:text-gray-400 font-label">
               API key required
             </p>
           </div>
@@ -159,8 +159,8 @@ const AIChat: React.FC = () => {
                       ? 'bg-blue-600 text-white'
                       : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
                   }`}>
-                    <p className="text-xs lg:text-sm whitespace-pre-wrap break-words">{message.text}</p>
-                    <p className={`text-xs mt-1 ${
+                    <p className="text-xs lg:text-sm whitespace-pre-wrap break-words font-label">{message.text}</p>
+                    <p className={`text-xs mt-1 font-label ${
                       message.sender === 'user' ? 'text-blue-100' : 'text-gray-500 dark:text-gray-400'
                     }`}>
                       {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}

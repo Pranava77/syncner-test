@@ -257,8 +257,8 @@ const AdminSettings: React.FC = () => {
   return (
     <div className="space-y-6 lg:space-y-8 p-4 lg:p-8 bg-offblack min-h-screen">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-paperwhite">Admin Settings</h1>
-        <p className="text-teallight">Manage your platform settings and content</p>
+        <h1 className="text-3xl font-bold text-paperwhite font-heading">Admin Settings</h1>
+        <p className="text-teallight font-label">Manage your platform settings and content</p>
       </div>
 
       {/* Tabs */}
@@ -288,11 +288,11 @@ const AdminSettings: React.FC = () => {
         {/* General Settings */}
         {activeTab === 'general' && (
           <div className="bg-paperwhite/10 rounded-xl shadow-lg p-6">
-            <h2 className="text-xl font-semibold text-paperwhite mb-6">General Settings</h2>
+            <h2 className="text-xl font-semibold text-paperwhite mb-6 font-heading">General Settings</h2>
             <div className="grid md:grid-cols-2 gap-6">
               {/* All inputs use bg-offblack, border-paperwhite/20, text-paperwhite */}
               <div>
-                <label className="block text-sm font-medium text-teallight mb-2">
+                <label className="block text-sm font-medium text-teallight mb-2 font-label">
                   Platform Name
                 </label>
                 <input
@@ -303,7 +303,7 @@ const AdminSettings: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-teallight mb-2">
+                <label className="block text-sm font-medium text-teallight mb-2 font-label">
                   Support Email
                 </label>
                 <input
@@ -314,7 +314,7 @@ const AdminSettings: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-teallight mb-2">
+                <label className="block text-sm font-medium text-teallight mb-2 font-label">
                   Max Students per Admin
                 </label>
                 <input
@@ -325,7 +325,7 @@ const AdminSettings: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-teallight mb-2">
+                <label className="block text-sm font-medium text-teallight mb-2 font-label">
                   Session Timeout (minutes)
                 </label>
                 <input
@@ -336,7 +336,7 @@ const AdminSettings: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-teallight mb-2">
+                <label className="block text-sm font-medium text-teallight mb-2 font-label">
                   Site Name
                 </label>
                 <input
@@ -347,7 +347,7 @@ const AdminSettings: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-teallight mb-2">
+                <label className="block text-sm font-medium text-teallight mb-2 font-label">
                   Site Description
                 </label>
                 <input
@@ -365,7 +365,7 @@ const AdminSettings: React.FC = () => {
         {activeTab === 'modules' && (
           <div className="space-y-6">
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold text-paperwhite">Training Modules</h2>
+              <h2 className="text-xl font-semibold text-paperwhite font-heading">Training Modules</h2>
               <button
                 onClick={() => setShowModuleForm(true)}
                 className="bg-[#00B8D9] text-[#121212] px-4 py-2 rounded-lg hover:bg-[#00B8D9]/90 transition-colors flex items-center"
@@ -588,7 +588,7 @@ const AdminSettings: React.FC = () => {
                       <tr key={module.id} className="hover:bg-offblack/20 transition">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div>
-                            <div className="text-sm font-medium text-paperwhite">
+                            <div className="text-sm text-paperwhite">
                               {module.title}
                             </div>
                             <div className="text-sm text-teallight">
@@ -668,7 +668,7 @@ const AdminSettings: React.FC = () => {
         {activeTab === 'users' && (
           <div className="space-y-6">
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold text-paperwhite">User Management</h2>
+              <h2 className="text-xl font-semibold text-paperwhite font-heading">User Management</h2>
               <button
                 onClick={() => { setShowUserForm(true); setEditingUser(null); setUserForm({ name: '', email: '', password: '', role: 'student', college: '', department: '', careerTrack: '', isActive: true }); }}
                 className="bg-[#00B8D9] text-[#121212] px-4 py-2 rounded-lg hover:bg-[#00B8D9]/90 transition-colors flex items-center"
@@ -829,12 +829,12 @@ const AdminSettings: React.FC = () => {
         {/* Integrations Tab */}
         {activeTab === 'integrations' && (
           <div className="bg-paperwhite/10 rounded-xl shadow p-6 space-y-8">
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 text-paperwhite">
+            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 text-paperwhite font-heading">
               Integrations
             </h3>
             {/* Gemini API Key */}
             <div>
-              <label className="block text-sm font-medium text-paperwhite mb-2">Gemini API Key</label>
+              <label className="block text-sm font-medium text-paperwhite mb-2 font-label">Gemini API Key</label>
               <input
                 type="text"
                 value={geminiKeyInput}
@@ -846,7 +846,7 @@ const AdminSettings: React.FC = () => {
             </div>
             {/* Email Provider */}
             <div>
-              <label className="block text-sm font-medium text-paperwhite mb-2">Email Provider</label>
+              <label className="block text-sm font-medium text-paperwhite mb-2 font-label">Email Provider</label>
               <input
                 type="text"
                 value={settingsDraft?.integrations?.emailProvider ?? ''}

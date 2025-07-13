@@ -268,42 +268,6 @@ class ApiService {
     return this.handleResponse(response, false);
   }
 
-  // Resume endpoints
-  async getResume() {
-    const response = await fetch(`${this.baseURL}/resume`, {
-      headers: this.getHeaders(),
-    });
-
-    return this.handleResponse(response, true);
-  }
-
-  async generateResume(resumeData: any) {
-    const response = await fetch(`${this.baseURL}/resume/generate`, {
-      method: 'POST',
-      headers: this.getHeaders(),
-      body: JSON.stringify(resumeData),
-    });
-
-    return this.handleResponse(response, true);
-  }
-
-  async enhanceResume(resumeData: any) {
-    const response = await fetch(`${this.baseURL}/resume/enhance`, {
-      method: 'POST',
-      headers: this.getHeaders(),
-      body: JSON.stringify(resumeData),
-    });
-
-    return this.handleResponse(response, true);
-  }
-
-  async getResumeTemplate(track: string) {
-    const response = await fetch(`${this.baseURL}/resume/templates?track=${encodeURIComponent(track)}`, {
-      headers: this.getHeaders(),
-    });
-    return this.handleResponse(response, true);
-  }
-
   // Admin endpoints
   async getStudents(filters?: any) {
     let url = `${this.baseURL}/admin/users`;
@@ -372,16 +336,6 @@ class ApiService {
       method: 'POST',
       headers: this.getHeaders(),
       body: JSON.stringify({ task, submission })
-    });
-    return this.handleResponse(response);
-  }
-
-  // AI Resume Generation
-  async generateResumeContent(userData: any) {
-    const response = await fetch(`${this.baseURL}/ai/resume`, {
-      method: 'POST',
-      headers: this.getHeaders(),
-      body: JSON.stringify({ userData })
     });
     return this.handleResponse(response);
   }

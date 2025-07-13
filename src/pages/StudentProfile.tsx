@@ -85,21 +85,21 @@ const StudentProfile: React.FC = () => {
                 <PersonIcon className="h-10 w-10 text-offblack" />
           </div>
             <div>
-                <h2 className="text-2xl font-bold text-paperwhite">{profile?.name || ''}</h2>
+                <h2 className="text-2xl font-bold text-paperwhite font-heading">{profile?.name || ''}</h2>
                 <p className="text-teallight">{profile?.email || ''}</p>
-                <span className="inline-block bg-trueturquoise/20 text-trueturquoise px-3 py-1 rounded-full text-sm font-medium mt-2">
+                <span className="inline-block bg-trueturquoise/20 text-trueturquoise px-3 py-1 rounded-full text-sm mt-2">
                   Student
                 </span>
               </div>
             </div>
             
-            <h3 className="font-semibold text-lg mb-6 text-trueturquoise flex items-center gap-2">
+            <h3 className="text-lg mb-6 text-trueturquoise flex items-center gap-2 font-heading">
               <PersonIcon className="w-5 h-5" /> Personal Information
             </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-                <label className="block text-sm text-teallight mb-2 font-medium">Full Name</label>
+                <label className="block text-sm text-teallight mb-2 font-label">Full Name</label>
                 <input 
                   name="name" 
                   value={form.name || ''} 
@@ -113,7 +113,7 @@ const StudentProfile: React.FC = () => {
                 />
             </div>
             <div>
-                <label className="block text-sm text-teallight mb-2 font-medium">College</label>
+                <label className="block text-sm text-teallight mb-2 font-label">College</label>
                 <input 
                   name="college" 
                   value={form.college || ''} 
@@ -127,7 +127,7 @@ const StudentProfile: React.FC = () => {
                 />
             </div>
             <div>
-                <label className="block text-sm text-teallight mb-2 font-medium">Department</label>
+                <label className="block text-sm text-teallight mb-2 font-label">Department</label>
                 <input 
                   name="department" 
                   value={form.department || ''} 
@@ -141,7 +141,7 @@ const StudentProfile: React.FC = () => {
                 />
             </div>
             <div>
-                <label className="block text-sm text-teallight mb-2 font-medium">Career Track</label>
+                <label className="block text-sm text-teallight mb-2 font-label">Career Track</label>
                 <input 
                   name="careerTrack" 
                   value={form.careerTrack || ''} 
@@ -155,7 +155,7 @@ const StudentProfile: React.FC = () => {
                 />
             </div>
             <div>
-                <label className="block text-sm text-teallight mb-2 font-medium">Phone Number</label>
+                <label className="block text-sm text-teallight mb-2 font-label">Phone Number</label>
                 <input 
                   name="phone" 
                   value={form.phone || ''} 
@@ -169,7 +169,7 @@ const StudentProfile: React.FC = () => {
                 />
             </div>
             <div>
-                <label className="block text-sm text-teallight mb-2 font-medium">Location</label>
+                <label className="block text-sm text-teallight mb-2 font-label">Location</label>
                 <input 
                   name="location" 
                   value={form.location || ''} 
@@ -183,7 +183,7 @@ const StudentProfile: React.FC = () => {
                 />
             </div>
             <div>
-                <label className="block text-sm text-teallight mb-2 font-medium">GPA</label>
+                <label className="block text-sm text-teallight mb-2 font-label">GPA</label>
                 <input 
                   name="gpa" 
                   value={form.gpa || ''} 
@@ -197,7 +197,7 @@ const StudentProfile: React.FC = () => {
                 />
             </div>
             <div>
-                <label className="block text-sm text-teallight mb-2 font-medium">Graduation Year</label>
+                <label className="block text-sm text-teallight mb-2 font-label">Graduation Year</label>
                 <input 
                   name="graduationYear" 
                   value={form.graduationYear || ''} 
@@ -255,7 +255,7 @@ const StudentProfile: React.FC = () => {
         {/* Progress Overview Card */}
         <div className="lg:col-span-1">
           <div className="bg-offblack border border-paperwhite/10 rounded-xl shadow-lg p-6">
-            <h3 className="font-semibold text-lg mb-6 text-trueturquoise flex items-center gap-2">
+            <h3 className="font-semibold text-lg mb-6 text-trueturquoise flex items-center gap-2 font-heading">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>

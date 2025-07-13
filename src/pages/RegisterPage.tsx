@@ -154,8 +154,8 @@ const RegisterPage: React.FC = () => {
           <div className="flex items-center justify-center mb-4">
             <img src={logo} alt="Syncner Logo" className="h-8 w-8 lg:h-10 lg:w-10 object-contain" />
           </div>
-          <h1 className="text-3xl font-bold text-paperwhite mb-2">Create Account</h1>
-          <p className="text-teallight">Join Syncner and start your learning journey</p>
+          <h1 className="text-3xl font-bold text-paperwhite mb-2 font-heading">Create Account</h1>
+          <p className="text-teallight font-label">Join Syncner and start your learning journey</p>
         </div>
 
         {/* Form */}
@@ -170,7 +170,7 @@ const RegisterPage: React.FC = () => {
 
             {/* Name Field */}
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-paperwhite mb-2">
+              <label htmlFor="name" className="block text-sm font-medium text-paperwhite mb-2 font-label">
                 Full Name
               </label>
               <div className="relative">
@@ -192,12 +192,12 @@ const RegisterPage: React.FC = () => {
                   </div>
                 )}
               </div>
-              {errors.name && <p className="text-rust text-xs mt-1">{errors.name}</p>}
+              {errors.name && <p className="text-rust text-xs mt-1 font-label">{errors.name}</p>}
             </div>
 
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-paperwhite mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-paperwhite mb-2 font-label">
                 Email Address
               </label>
               <div className="relative">
@@ -219,12 +219,12 @@ const RegisterPage: React.FC = () => {
                   </div>
                 )}
               </div>
-              {errors.email && <p className="text-rust text-xs mt-1">{errors.email}</p>}
+              {errors.email && <p className="text-rust text-xs mt-1 font-label">{errors.email}</p>}
             </div>
 
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-paperwhite mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-paperwhite mb-2 font-label">
                 Password
               </label>
               <div className="relative">
@@ -253,7 +253,7 @@ const RegisterPage: React.FC = () => {
                   </div>
                 )}
               </div>
-              {errors.password && <p className="text-rust text-xs mt-1">{errors.password}</p>}
+              {errors.password && <p className="text-rust text-xs mt-1 font-label">{errors.password}</p>}
 
               {formData.password && (
                 <div className="mt-2">
@@ -288,7 +288,7 @@ const RegisterPage: React.FC = () => {
 
             {/* Confirm Password Field */}
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-paperwhite mb-2">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-paperwhite mb-2 font-label">
                 Confirm Password
               </label>
               <div className="relative">
@@ -317,12 +317,12 @@ const RegisterPage: React.FC = () => {
                   </div>
                 )}
               </div>
-              {errors.confirmPassword && <p className="text-rust text-xs mt-1">{errors.confirmPassword}</p>}
+              {errors.confirmPassword && <p className="text-rust text-xs mt-1 font-label">{errors.confirmPassword}</p>}
             </div>
 
             {/* College Field */}
             <div>
-              <label htmlFor="college" className="block text-sm font-medium text-paperwhite mb-2">
+              <label htmlFor="college" className="block text-sm font-medium text-paperwhite mb-2 font-label">
                 College/University
               </label>
               <div className="relative">
@@ -344,12 +344,12 @@ const RegisterPage: React.FC = () => {
                   </div>
                 )}
               </div>
-              {errors.college && <p className="text-rust text-xs mt-1">{errors.college}</p>}
+              {errors.college && <p className="text-rust text-xs mt-1 font-label">{errors.college}</p>}
             </div>
 
             {/* Role Selection */}
             <div>
-              <label htmlFor="role" className="block text-sm font-medium text-paperwhite mb-2">
+              <label htmlFor="role" className="block text-sm font-medium text-paperwhite mb-2 font-label">
                 I am a
               </label>
               <div className="relative">

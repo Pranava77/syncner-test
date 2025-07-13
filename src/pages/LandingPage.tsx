@@ -37,14 +37,14 @@ const LandingPage: React.FC = () => {
               <div>
                 <img src={logo} alt="Syncner Logo" className="h-8 w-8 lg:h-10 lg:w-10 object-contain" />
               </div>
-              <h1 className="text-2xl font-bold text-paperwhite">Syncner</h1>  
+              <h1 className="text-2xl font-bold text-paperwhite font-heading">Syncner</h1>  
             </div>
             
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-4">
               <Link
                 to="/login"
-                className="bg-trueturquoise text-offblack px-4 lg:px-6 py-2 rounded-lg hover:bg-teallight transition-all font-medium"
+                className="bg-trueturquoise text-offblack px-4 lg:px-6 py-2 rounded-lg hover:bg-teallight transition-all"
               >
                 Get Started
               </Link>
@@ -75,7 +75,7 @@ const LandingPage: React.FC = () => {
               <Link
                 to="/login"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block w-full text-center bg-trueturquoise text-offblack px-6 py-3 rounded-lg hover:bg-teallight transition-all font-medium"
+                className="block w-full text-center bg-trueturquoise text-offblack px-6 py-3 rounded-lg hover:bg-teallight transition-all"
               >
                 Get Started
               </Link>
@@ -87,7 +87,7 @@ const LandingPage: React.FC = () => {
       {/* Hero Section */}
       <section className="pt-24 lg:pt-32 pb-12 lg:pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-paperwhite mb-4 lg:mb-6">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-paperwhite mb-4 lg:mb-6 font-heading">
             Transform Students Into
             <span className="bg-gradient-to-r from-trueturquoise to-teallight bg-clip-text text-transparent block lg:inline">
               {' '}Industry-Ready{' '}
@@ -101,14 +101,14 @@ const LandingPage: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md sm:max-w-none mx-auto">
             <Link
               to="/login"
-              className="bg-trueturquoise text-offblack px-6 lg:px-8 py-3 lg:py-4 rounded-lg hover:bg-teallight transition-all font-medium flex items-center justify-center group"
+              className="bg-trueturquoise text-offblack px-6 lg:px-8 py-3 lg:py-4 rounded-lg hover:bg-teallight transition-all flex items-center justify-center group"
             >
               Sign In
               <ArrowRightIcon className="ml-2 h-4 w-4 lg:h-5 lg:w-5 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
               to="/register"
-              className="border-2 border-paperwhite/30 text-paperwhite px-6 lg:px-8 py-3 lg:py-4 rounded-lg hover:border-paperwhite/50 hover:bg-paperwhite/10 transition-all font-medium"
+              className="border-2 border-paperwhite/30 text-paperwhite px-6 lg:px-8 py-3 lg:py-4 rounded-lg hover:border-paperwhite/50 hover:bg-paperwhite/10 transition-all"
             >
               Create Account
             </Link>
@@ -120,7 +120,7 @@ const LandingPage: React.FC = () => {
       <section className="py-12 lg:py-20 px-4 sm:px-6 lg:px-8 bg-paperwhite/5 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12 lg:mb-16">
-            <h2 className="text-2xl lg:text-4xl font-bold text-paperwhite mb-3 lg:mb-4">
+            <h2 className="text-2xl lg:text-4xl font-bold text-paperwhite mb-3 lg:mb-4 font-heading">
               Everything You Need for Career Success
             </h2>
             <p className="text-lg lg:text-xl text-teallight">
@@ -133,7 +133,7 @@ const LandingPage: React.FC = () => {
               <div className="bg-trueturquoise p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
                 <BarChartIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
               </div>
-              <h3 className="text-lg lg:text-xl font-semibold text-paperwhite mb-2 lg:mb-3">AI-Personalized Learning</h3>
+              <h3 className="text-lg lg:text-xl font-semibold text-paperwhite mb-2 lg:mb-3 font-heading">AI-Personalized Learning</h3>
               <p className="text-teallight text-sm lg:text-base">
                 Adaptive learning paths that adjust to each student's pace and performance, 
                 ensuring optimal skill development.
@@ -144,7 +144,7 @@ const LandingPage: React.FC = () => {
               <div className="bg-teallight p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
                 <PersonIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
               </div>
-              <h3 className="text-lg lg:text-xl font-semibold text-paperwhite mb-2 lg:mb-3">Real-World Tasks</h3>
+              <h3 className="text-lg lg:text-xl font-semibold text-paperwhite mb-2 lg:mb-3 font-heading">Real-World Tasks</h3>
               <p className="text-teallight text-sm lg:text-base">
                 Industry-standard projects and internship simulations that prepare students 
                 for actual workplace challenges.
@@ -155,7 +155,7 @@ const LandingPage: React.FC = () => {
               <div className="bg-rust p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
                 <TargetIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
               </div>
-              <h3 className="text-lg lg:text-xl font-semibold text-paperwhite mb-2 lg:mb-3">Career Tracks</h3>
+              <h3 className="text-lg lg:text-xl font-semibold text-paperwhite mb-2 lg:mb-3 font-heading">Career Tracks</h3>
               <p className="text-teallight text-sm lg:text-base">
                 Specialized paths in AI/ML, Full Stack Development, UI/UX Design, 
                 and Data Science with industry-relevant curriculum.
@@ -166,7 +166,7 @@ const LandingPage: React.FC = () => {
               <div className="bg-rust p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
                 <EnvelopeClosedIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
               </div>
-              <h3 className="text-lg lg:text-xl font-semibold text-paperwhite mb-2 lg:mb-3">Interactive Content</h3>
+              <h3 className="text-lg lg:text-xl font-semibold text-paperwhite mb-2 lg:mb-3 font-heading">Interactive Content</h3>
               <p className="text-teallight text-sm lg:text-base">
                 Engaging video tutorials, interactive assessments, and hands-on coding 
                 exercises to reinforce learning.
@@ -177,18 +177,7 @@ const LandingPage: React.FC = () => {
               <div className="bg-trueturquoise p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
                 <CheckCircledIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
               </div>
-              <h3 className="text-lg lg:text-xl font-semibold text-paperwhite mb-2 lg:mb-3">AI Resume Builder</h3>
-              <p className="text-teallight text-sm lg:text-base">
-                Automatically generate professional resumes showcasing completed projects, 
-                skills, and achievements.
-              </p>
-            </div>
-
-            <div className="bg-paperwhite/10 backdrop-blur-sm p-6 lg:p-8 rounded-xl hover:bg-paperwhite/15 transition-all border border-paperwhite/10">
-              <div className="bg-teallight p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
-                <PersonIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
-              </div>
-              <h3 className="text-lg lg:text-xl font-semibold text-paperwhite mb-2 lg:mb-3">Admin Analytics</h3>
+              <h3 className="text-lg lg:text-xl font-semibold text-paperwhite mb-2 lg:mb-3 font-heading">Admin Analytics</h3>
               <p className="text-teallight text-sm lg:text-base">
                 Comprehensive dashboard for tracking student progress, attendance, 
                 and performance analytics.
@@ -201,7 +190,7 @@ const LandingPage: React.FC = () => {
       {/* CTA Section */}
       <section className="py-12 lg:py-20 px-4 sm:px-6 lg:px-8 bg-trueturquoise/10 backdrop-blur-sm">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl lg:text-4xl font-bold text-paperwhite mb-4 lg:mb-6">
+          <h2 className="text-2xl lg:text-4xl font-bold text-paperwhite mb-4 lg:mb-6 font-heading">
             Ready to Transform Your Career Journey?
           </h2>
           <p className="text-lg lg:text-xl text-teallight mb-6 lg:mb-8">
@@ -209,7 +198,7 @@ const LandingPage: React.FC = () => {
           </p>
           <Link
             to="/login"
-            className="bg-paperwhite text-trueturquoise px-6 lg:px-8 py-3 lg:py-4 rounded-lg hover:bg-teallight transition-colors font-medium inline-flex items-center"
+            className="bg-paperwhite text-trueturquoise px-6 lg:px-8 py-3 lg:py-4 rounded-lg hover:bg-teallight transition-colors inline-flex items-center"
           >
             Get Started Today
             <ArrowRightIcon className="ml-2 h-4 w-4 lg:h-5 lg:w-5" />

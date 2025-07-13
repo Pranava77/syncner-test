@@ -216,8 +216,8 @@ const AdminDashboard: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-paperwhite">Admin Dashboard</h1>
-          <p className="text-teallight mt-1">Monitor student progress and performance</p>
+          <h1 className="text-3xl font-bold text-paperwhite font-heading">Admin Dashboard</h1>
+          <p className="text-teallight mt-1 font-label">Monitor student progress and performance</p>
         </div>
         <button
           onClick={exportData}
@@ -488,7 +488,7 @@ const AdminDashboard: React.FC = () => {
                 <div className="space-y-4">
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-label">
                         Full Name
                       </label>
                       <input
@@ -500,7 +500,7 @@ const AdminDashboard: React.FC = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-label">
                         Email Address
                       </label>
                       <input
@@ -512,7 +512,7 @@ const AdminDashboard: React.FC = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-label">
                         Phone Number
                       </label>
                       <input
@@ -524,7 +524,7 @@ const AdminDashboard: React.FC = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-label">
                         Location
                       </label>
                       <input
@@ -536,7 +536,7 @@ const AdminDashboard: React.FC = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-label">
                         Department
                       </label>
                       <select
@@ -554,7 +554,7 @@ const AdminDashboard: React.FC = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-label">
                         Career Track
                       </label>
                       <select
@@ -570,7 +570,7 @@ const AdminDashboard: React.FC = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-label">
                         College
                       </label>
                       <input
@@ -582,7 +582,7 @@ const AdminDashboard: React.FC = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-label">
                         GPA
                       </label>
                       <input
@@ -595,8 +595,8 @@ const AdminDashboard: React.FC = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Password {showAddStudent && <span className="text-red-500">*</span>}
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-label">
+                        Password {showAddStudent && <span className="text-red-500 font-label">*</span>}
                       </label>
                       <input
                         type="password"
@@ -617,7 +617,7 @@ const AdminDashboard: React.FC = () => {
                       onChange={(e) => setEditingStudent((prev: any) => ({ ...prev, profileComplete: e.target.checked }))}
                       className="h-4 w-4 text-trueturquoise focus:ring-trueturquoise border-paperwhite rounded"
                     />
-                    <label htmlFor="profileComplete" className="ml-2 block text-sm text-paperwhite">
+                    <label htmlFor="profileComplete" className="ml-2 block text-sm text-paperwhite font-label">
                       Profile Complete
                     </label>
                   </div>
@@ -647,7 +647,7 @@ const AdminDashboard: React.FC = () => {
                       <img src={logo} alt="Syncner Logo" className="h-6 w-6 object-contain" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-xl font-semibold text-paperwhite">{selectedStudent?.name}</h3>
+                      <h3 className="text-xl text-paperwhite font-heading">{selectedStudent?.name}</h3>
                       <div className="mt-2 space-y-2">
                         <div className="flex items-center text-teallight">
                           <Mail className="h-4 w-4 mr-2" />

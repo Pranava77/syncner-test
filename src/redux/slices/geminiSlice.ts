@@ -38,18 +38,6 @@ export const generateFeedback = createAsyncThunk(
   }
 );
 
-export const generateResumeContent = createAsyncThunk(
-  'gemini/generateResumeContent',
-  async (userData: any, { rejectWithValue }) => {
-    try {
-      const response = await apiService.enhanceResume(userData);
-      return response.data.content;
-    } catch (error: any) {
-      return rejectWithValue(error.message || 'Failed to generate resume content');
-    }
-  }
-);
-
 export const chatWithAI = createAsyncThunk(
   'gemini/chatWithAI',
   async ({ message, context }: { message: string; context?: string }, { rejectWithValue }) => {
@@ -101,21 +89,6 @@ const geminiSlice = createSlice({
         state.error = null;
       })
       .addCase(generateFeedback.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload as string;
-      })
-      
-      // Generate resume content
-      .addCase(generateResumeContent.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(generateResumeContent.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.lastResponse = action.payload;
-        state.error = null;
-      })
-      .addCase(generateResumeContent.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
       })

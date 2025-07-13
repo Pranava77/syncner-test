@@ -147,7 +147,6 @@ const Layout: React.FC = () => {
     { path: '/student/projects', icon: FileTextIcon, label: 'Projects' },
     { path: '/student/internships', icon: EnvelopeClosedIcon, label: 'Internships', locked: true },
     { path: '/student/job-portal', icon: GlobeIcon, label: 'Job Portal', locked: true },
-    { path: '/student/resume', icon: IdCardIcon, label: 'My Resume', locked: true },
     { path: '/student/mock-interview', icon: ChatBubbleIcon, label: 'Mock Interview', locked: true },
     { path: '/student/leaderboard', icon: StarIcon, label: 'Leaderboard', locked: true },
   ];
@@ -204,7 +203,7 @@ const Layout: React.FC = () => {
               return (
                 <div
                   key={item.path}
-                  className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : ''} px-3 py-3 text-sm font-medium transition-colors text-paperwhite/50 cursor-not-allowed`}
+                  className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : ''} px-3 py-3 text-sm transition-colors text-paperwhite/50 cursor-not-allowed`}
                   title="Coming Soon"
                 >
                   <Icon className="h-5 w-5" />
@@ -222,7 +221,7 @@ const Layout: React.FC = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : ''} px-3 py-3 text-sm font-medium transition-colors ${
+                className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : ''} px-3 py-3 text-sm transition-colors ${
                   isActive(item.path)
                     ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise'
                     : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'
@@ -271,7 +270,7 @@ const Layout: React.FC = () => {
               </span>
             </div>
             <div className="flex flex-col flex-1 min-w-0">
-                <span className="text-sm font-semibold text-paperwhite truncate">{user?.name}</span>
+                <span className="text-sm text-paperwhite truncate">{user?.name}</span>
                 <span className="text-xs text-teallight capitalize truncate">{user?.role}</span>
             </div>
               <PersonIcon className="h-5 w-5 text-trueturquoise opacity-80 group-hover:scale-110 transition-transform" />
@@ -324,7 +323,7 @@ const Layout: React.FC = () => {
                 </span>
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-900 dark:text-white">{user?.name}</p>
+                <p className="text-sm text-gray-900 dark:text-white">{user?.name}</p>
                 <p className="text-xs text-gray-600 dark:text-gray-400 capitalize">{user?.role}</p>
               </div>
             </div>
@@ -347,7 +346,7 @@ const Layout: React.FC = () => {
               return (
                 <div
                   key={item.path}
-                  className="flex items-center px-6 py-3 text-sm font-medium transition-colors text-paperwhite/50 cursor-not-allowed"
+                  className="flex items-center px-6 py-3 text-sm transition-colors text-paperwhite/50 cursor-not-allowed"
                   title="Coming Soon"
                 >
                   <Icon className="h-5 w-5 mr-3" />
@@ -362,7 +361,7 @@ const Layout: React.FC = () => {
                 key={item.path}
                 to={item.path}
                 onClick={closeMobileMenu}
-                className={`flex items-center px-6 py-3 text-sm font-medium transition-colors ${
+                className={`flex items-center px-6 py-3 text-sm transition-colors ${
                   isActive(item.path)
                     ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise'
                     : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'

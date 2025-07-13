@@ -62,8 +62,8 @@ const LoginPage: React.FC = () => {
           <div className="flex items-center justify-center space-x-3 mb-4">
             <img src={logo} alt="Syncner Logo" className="h-8 w-8 lg:h-10 lg:w-10 object-contain" />
           </div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-paperwhite mb-2">Welcome Back</h1>
-          <p className="text-teallight text-sm lg:text-base">Sign in to continue your career journey</p>
+          <h1 className="text-2xl lg:text-3xl font-bold text-paperwhite mb-2 font-heading">Welcome Back</h1>
+          <p className="text-teallight text-sm lg:text-base font-label">Sign in to continue your career journey</p>
         </div>
 
         {/* Login Form */}
@@ -77,7 +77,7 @@ const LoginPage: React.FC = () => {
 
           <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-paperwhite mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-paperwhite mb-2 font-label">
                 Email
               </label>
               <div className="relative">
@@ -95,7 +95,7 @@ const LoginPage: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-paperwhite mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-paperwhite mb-2 font-label">
                 Password
               </label>
               <div className="relative">

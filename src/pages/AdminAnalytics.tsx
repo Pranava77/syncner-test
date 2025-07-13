@@ -121,8 +121,8 @@ const AdminAnalytics: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-paperwhite">Analytics Dashboard</h1>
-          <p className="text-teallight mt-1">Comprehensive insights into platform performance</p>
+          <h1 className="text-3xl font-bold text-paperwhite font-heading">Analytics Dashboard</h1>
+          <p className="text-teallight mt-1 font-label">Comprehensive insights into platform performance</p>
         </div>
         <div className="flex items-center space-x-3">
           <select
@@ -143,7 +143,7 @@ const AdminAnalytics: React.FC = () => {
           </button>
           <button
             onClick={exportData}
-            className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-teallight hover:text-offblack transition-colors font-medium flex items-center"
+            className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-teallight hover:text-offblack transition-colors flex items-center"
           >
             <ReaderIcon className="h-4 w-4 mr-2" />
             Export
