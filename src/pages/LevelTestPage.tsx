@@ -92,7 +92,7 @@ const LevelTestPage: React.FC = () => {
       <div className="flex-shrink-0 min-h-screen">
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelNum} currentSection="test" />
       </div>
-      <main className="flex-1 h-full overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full">
+      <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full">
         <div className="mb-8 relative max-w-4xl mx-auto w-full">
           <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
             <div>

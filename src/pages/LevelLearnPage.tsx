@@ -8,9 +8,11 @@ const LevelLearnPage: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
-    <div className="flex h-full min-h-screen bg-offblack w-full">
-      <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelNum} currentSection="learn" />
-      <main className="flex-1 p-6 lg:p-12">
+    <div className="flex min-h-screen w-screen bg-offblack overflow-x-hidden">
+      <div className="flex-shrink-0 min-h-screen">
+        <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelNum} currentSection="learn" />
+      </div>
+      <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full">
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-paperwhite mb-2">Level {levelId} - Learn</h1>
           <p className="text-teallight mb-2">This is the Learn section for Level {levelId}. Add your static or demo content here.</p>
