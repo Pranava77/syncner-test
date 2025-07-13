@@ -183,7 +183,7 @@ const Layout: React.FC = () => {
             ref={logoRef}
             style={{ zIndex: 10 }}
           />
-          {!isSidebarCollapsed && <span className="ml-3 text-paperwhite font-bold text-lg">Syncner</span>}
+          {!isSidebarCollapsed && <span className="ml-3 text-paperwhite text-lg font-heading">Syncner</span>}
         </div>
         {/* Arrow toggle at vertical center right edge, overlapping border */}
         <button
@@ -241,7 +241,7 @@ const Layout: React.FC = () => {
               title="Profile"
             aria-label="View profile"
           >
-              <span className="text-offblack text-base font-bold">
+              <span className="text-offblack text-base font-heading">
                 {user?.name?.charAt(0) || 'U'}
               </span>
             </Link>
@@ -265,13 +265,13 @@ const Layout: React.FC = () => {
               aria-label="View profile"
             >
               <div className="bg-trueturquoise p-2 rounded-md flex items-center justify-center">
-                <span className="text-offblack text-base font-bold">
+                <span className="text-offblack text-base font-heading">
                 {user?.name?.charAt(0) || 'U'}
               </span>
             </div>
             <div className="flex flex-col flex-1 min-w-0">
-                <span className="text-sm text-paperwhite truncate">{user?.name}</span>
-                <span className="text-xs text-teallight capitalize truncate">{user?.role}</span>
+                <span className="text-sm text-paperwhite truncate font-heading">{user?.name}</span>
+                <span className="text-xs text-teallight capitalize truncate font-label">{user?.role}</span>
             </div>
               <PersonIcon className="h-5 w-5 text-trueturquoise opacity-80 group-hover:scale-110 transition-transform" />
           </Link>
@@ -318,7 +318,7 @@ const Layout: React.FC = () => {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-3">
               <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 rounded-full">
-                <span className="text-white text-sm font-bold">
+                <span className="text-white text-base font-heading">
                   {user?.name?.charAt(0) || 'U'}
                 </span>
               </div>
@@ -384,13 +384,13 @@ const Layout: React.FC = () => {
             aria-label="View profile"
           >
             <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 rounded-full flex items-center justify-center">
-              <span className="text-white text-base font-bold">
+              <span className="text-white text-base font-heading">
                 {user?.name?.charAt(0) || 'U'}
               </span>
             </div>
             <div className="flex flex-col flex-1 min-w-0">
-              <span className="text-sm font-semibold text-gray-900 dark:text-white truncate">{user?.name}</span>
-              <span className="text-xs text-gray-600 dark:text-gray-400 capitalize truncate">{user?.role}</span>
+              <span className="text-sm text-gray-900 dark:text-white truncate font-heading">{user?.name}</span>
+              <span className="text-xs text-gray-600 dark:text-gray-400 capitalize truncate font-label">{user?.role}</span>
             </div>
             <PersonIcon className="h-5 w-5 text-blue-500 dark:text-blue-400 opacity-80 group-hover:scale-110 transition-transform" />
           </Link>
