@@ -21,7 +21,7 @@ import {
 } from '@radix-ui/react-icons';
 import { useStudents } from '../hooks/useAdmin';
 import logo from '../assets/syncner-logo.png';
-import { useAppSelector, useAppDispatch } from '../redux/store';
+import {  useAppDispatch } from '../redux/store';
 import { useSelector } from 'react-redux';
 import LoadingScreen from '../components/LoadingScreen';
 import { fetchAnalytics } from '../redux/slices/analyticsSlice';
@@ -44,15 +44,15 @@ const AdminDashboard: React.FC = () => {
   const dispatch = useAppDispatch();
   
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'excellent': return 'bg-trueturquoise/20 text-trueturquoise';
-      case 'active': return 'bg-trueturquoise/20 text-trueturquoise';
-      case 'at-risk': return 'bg-trueturquoise/20 text-trueturquoise';
-      case 'inactive': return 'bg-trueturquoise/20 text-trueturquoise';
-      default: return 'bg-paperwhite/10 text-teallight';
-    }
-  };
+  // const getStatusColor = (status: string) => {
+  //   switch (status) {
+  //     case 'excellent': return 'bg-trueturquoise/20 text-trueturquoise';
+  //     case 'active': return 'bg-trueturquoise/20 text-trueturquoise';
+  //     case 'at-risk': return 'bg-trueturquoise/20 text-trueturquoise';
+  //     case 'inactive': return 'bg-trueturquoise/20 text-trueturquoise';
+  //     default: return 'bg-paperwhite/10 text-teallight';
+  //   }
+  // };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -216,7 +216,7 @@ const AdminDashboard: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-paperwhite font-heading">Admin Dashboard</h1>
+          <h1 className="text-3xl  text-paperwhite font-heading">Admin Dashboard</h1>
           <p className="text-teallight mt-1 font-label">Monitor student progress and performance</p>
         </div>
         <button
@@ -488,7 +488,7 @@ const AdminDashboard: React.FC = () => {
                 <div className="space-y-4">
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-label">
+                      <label className="block text-sm  text-gray-700 dark:text-gray-300 mb-2 font-label">
                         Full Name
                       </label>
                       <input
@@ -500,7 +500,7 @@ const AdminDashboard: React.FC = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-label">
+                      <label className="block text-sm text-gray-700 dark:text-gray-300 mb-2 font-label">
                         Email Address
                       </label>
                       <input
@@ -512,7 +512,7 @@ const AdminDashboard: React.FC = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-label">
+                      <label className="block text-sm text-gray-700 dark:text-gray-300 mb-2 font-label">
                         Phone Number
                       </label>
                       <input
@@ -524,7 +524,7 @@ const AdminDashboard: React.FC = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-label">
+                      <label className="block text-sm text-gray-700 dark:text-gray-300 mb-2 font-label">
                         Location
                       </label>
                       <input
@@ -536,7 +536,7 @@ const AdminDashboard: React.FC = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-label">
+                      <label className="block text-sm text-gray-700 dark:text-gray-300 mb-2 font-label">
                         Department
                       </label>
                       <select
@@ -554,7 +554,7 @@ const AdminDashboard: React.FC = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-label">
+                      <label className="block text-sm text-gray-700 dark:text-gray-300 mb-2 font-label">
                         Career Track
                       </label>
                       <select
@@ -570,7 +570,7 @@ const AdminDashboard: React.FC = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-label">
+                      <label className="block text-sm text-gray-700 dark:text-gray-300 mb-2 font-label">
                         College
                       </label>
                       <input
@@ -582,7 +582,7 @@ const AdminDashboard: React.FC = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-label">
+                      <label className="block text-sm text-gray-700 dark:text-gray-300 mb-2 font-label">
                         GPA
                       </label>
                       <input
@@ -595,7 +595,7 @@ const AdminDashboard: React.FC = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-label">
+                      <label className="block text-sm text-gray-700 dark:text-gray-300 mb-2 font-label">
                         Password {showAddStudent && <span className="text-red-500 font-label">*</span>}
                       </label>
                       <input

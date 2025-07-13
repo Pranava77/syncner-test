@@ -223,7 +223,6 @@ class ApiService {
     let body: any;
     let baseHeaders = this.getHeaders();
     let headers: Record<string, string> = (baseHeaders && typeof baseHeaders === 'object' && !Array.isArray(baseHeaders)) ? { ...baseHeaders as Record<string, string> } : {};
-    let isFormData = false;
     if (hasFiles) {
       body = new FormData();
       Object.entries(submissionData).forEach(([key, value]) => {
@@ -253,7 +252,6 @@ class ApiService {
       });
       // Remove Content-Type so browser sets it
       delete headers['Content-Type'];
-      isFormData = true;
     } else {
       body = JSON.stringify(submissionData);
     }

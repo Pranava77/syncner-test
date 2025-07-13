@@ -5,7 +5,6 @@ import Staff from '../models/Staff.js';
 import Admin from '../models/Admin.js';
 import User from '../models/User.js';
 import Track from '../models/Track.js';
-import Module from '../models/Module.js';
 import Level from '../models/Level.js';
 
 dotenv.config();

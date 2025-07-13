@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import {
   GearIcon as Settings,
   GroupIcon as Users,
-  ReaderIcon as BookOpen,
   FileTextIcon as Database,
   FileTextIcon as Save,
   PlusIcon as Plus,
@@ -16,27 +15,7 @@ import { useStudents } from '../hooks/useAdmin';
 import { fetchSettings } from '../redux/slices/settingsSlice';
 import { useAppDispatch } from '../redux/store';
 
-interface Module {
-  id: string;
-  title: string;
-  description: string;
-  difficulty: string;
-  duration: string;
-  careerTrack: string;
-  skills: string[];
-  order: number;
-  isActive: boolean;
-}
 
-interface Lesson {
-  id: string;
-  title: string;
-  type: string;
-  duration: string;
-  content?: string;
-  videoUrl?: string;
-  order: number;
-}
 
 const AdminSettings: React.FC = () => {
   const [activeTab, setActiveTab] = useState('general');
@@ -54,22 +33,6 @@ const AdminSettings: React.FC = () => {
       dispatch(fetchSettings());
     }
   }, [settings, settingsState.lastFetched, dispatch]);
-
-  // Module management
-  const [modules, setModules] = useState<Module[]>([]);
-  const [showModuleForm, setShowModuleForm] = useState(false);
-  const [editingModule, setEditingModule] = useState<Module | null>(null);
-  const [moduleForm, setModuleForm] = useState({
-    title: '',
-    description: '',
-    difficulty: 'Beginner',
-    duration: '',
-    careerTrack: 'fullstack',
-    skills: [''],
-    order: 1,
-    isActive: true,
-    lessons: [] as Lesson[]
-  });
 
   // User management
   const [userFilters, setUserFilters] = useState({ name: '', email: '', role: '', careerTrack: '' });
@@ -155,75 +118,13 @@ const AdminSettings: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    fetchModules();
-  }, [activeTab]);
+  // User management functions
 
-  const fetchModules = async () => {
-    try {
-      const response = await apiService.getModules();
-      if (response.success) {
-        setModules(response.data || []);
-      }
-    } catch (error) {
-      console.error('Failed to fetch modules:', error);
-    }
-  };
 
-  // Module management functions
-  const handleAddModule = async () => {
-    try {
-      const response = await apiService.createModule(moduleForm);
-      if (response.success) {
-        setModules(prev => [...prev, response.data]);
-        setShowModuleForm(false);
-        setModuleForm({
-          title: '',
-          description: '',
-          difficulty: 'Beginner',
-          duration: '',
-          careerTrack: 'fullstack',
-          skills: [''],
-          order: 1,
-          isActive: true,
-          lessons: []
-        });
-      }
-    } catch (error) {
-      console.error('Failed to create module:', error);
-    }
-  };
-
-  const handleEditModule = async () => {
-    if (!editingModule) return;
-    try {
-      const response = await apiService.updateModule(editingModule.id, moduleForm);
-      if (response.success) {
-        setModules(prev => prev.map(m => m.id === editingModule.id ? response.data : m));
-        setEditingModule(null);
-        setShowModuleForm(false);
-      }
-    } catch (error) {
-      console.error('Failed to update module:', error);
-    }
-  };
-
-  const handleDeleteModule = async (moduleId: string) => {
-    if (!confirm('Are you sure you want to delete this module?')) return;
-    try {
-      const response = await apiService.deleteModule(moduleId);
-      if (response.success) {
-        setModules(prev => prev.filter(m => m.id !== moduleId));
-      }
-    } catch (error) {
-      console.error('Failed to delete module:', error);
-    }
-  };
 
   const tabs = [
     { id: 'general', label: 'General', icon: Settings },
     { id: 'users', label: 'User Management', icon: Users },
-    { id: 'modules', label: 'Training Modules', icon: BookOpen },
     { id: 'integrations', label: 'Integrations', icon: Database }
   ];
 
@@ -257,7 +158,7 @@ const AdminSettings: React.FC = () => {
   return (
     <div className="space-y-6 lg:space-y-8 p-4 lg:p-8 bg-offblack min-h-screen">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-paperwhite font-heading">Admin Settings</h1>
+        <h1 className="text-3xl  text-paperwhite font-heading">Admin Settings</h1>
         <p className="text-teallight font-label">Manage your platform settings and content</p>
       </div>
 
@@ -288,11 +189,11 @@ const AdminSettings: React.FC = () => {
         {/* General Settings */}
         {activeTab === 'general' && (
           <div className="bg-paperwhite/10 rounded-xl shadow-lg p-6">
-            <h2 className="text-xl font-semibold text-paperwhite mb-6 font-heading">General Settings</h2>
+            <h2 className="text-xl text-paperwhite mb-6 font-heading">General Settings</h2>
             <div className="grid md:grid-cols-2 gap-6">
               {/* All inputs use bg-offblack, border-paperwhite/20, text-paperwhite */}
               <div>
-                <label className="block text-sm font-medium text-teallight mb-2 font-label">
+                <label className="block text-sm text-teallight mb-2 font-label">
                   Platform Name
                 </label>
                 <input
@@ -303,7 +204,7 @@ const AdminSettings: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-teallight mb-2 font-label">
+                <label className="block text-sm text-teallight mb-2 font-label">
                   Support Email
                 </label>
                 <input
@@ -314,7 +215,7 @@ const AdminSettings: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-teallight mb-2 font-label">
+                <label className="block text-sm text-teallight mb-2 font-label">
                   Max Students per Admin
                 </label>
                 <input
@@ -325,7 +226,7 @@ const AdminSettings: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-teallight mb-2 font-label">
+                <label className="block text-sm text-teallight mb-2 font-label">
                   Session Timeout (minutes)
                 </label>
                 <input
@@ -336,7 +237,7 @@ const AdminSettings: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-teallight mb-2 font-label">
+                <label className="block text-sm text-teallight mb-2 font-label">
                   Site Name
                 </label>
                 <input
@@ -347,7 +248,7 @@ const AdminSettings: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-teallight mb-2 font-label">
+                <label className="block text-sm text-teallight mb-2 font-label">
                   Site Description
                 </label>
                 <input
@@ -361,314 +262,11 @@ const AdminSettings: React.FC = () => {
           </div>
         )}
 
-        {/* Training Modules */}
-        {activeTab === 'modules' && (
-          <div className="space-y-6">
-            <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold text-paperwhite font-heading">Training Modules</h2>
-              <button
-                onClick={() => setShowModuleForm(true)}
-                className="bg-[#00B8D9] text-[#121212] px-4 py-2 rounded-lg hover:bg-[#00B8D9]/90 transition-colors flex items-center font-medium"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add Module
-              </button>
-            </div>
-
-            {/* Module Form */}
-            {showModuleForm && (
-              <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6">
-                <h3 className="text-lg font-semibold text-paperwhite mb-4">
-                  {editingModule ? 'Edit Module' : 'Add New Module'}
-                </h3>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <input
-                    type="text"
-                    placeholder="Module Title"
-                    value={moduleForm.title}
-                    onChange={(e) => setModuleForm(prev => ({ ...prev, title: e.target.value }))}
-                    className="px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] bg-offblack text-paperwhite placeholder:text-teallight"
-                  />
-                  <select
-                    value={moduleForm.careerTrack}
-                    onChange={(e) => setModuleForm(prev => ({ ...prev, careerTrack: e.target.value }))}
-                    className="px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] bg-offblack text-paperwhite placeholder:text-teallight"
-                  >
-                    <option value="fullstack">Full Stack Development</option>
-                    <option value="ai-ml">AI/ML Engineering</option>
-                    <option value="ui-ux">UI/UX Design</option>
-                    <option value="data-science">Data Science</option>
-                  </select>
-                  <select
-                    value={moduleForm.difficulty}
-                    onChange={(e) => setModuleForm(prev => ({ ...prev, difficulty: e.target.value }))}
-                    className="px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] bg-offblack text-paperwhite placeholder:text-teallight"
-                  >
-                    <option value="Beginner">Beginner</option>
-                    <option value="Intermediate">Intermediate</option>
-                    <option value="Advanced">Advanced</option>
-                  </select>
-                  <input
-                    type="text"
-                    placeholder="Duration (e.g., 2 hours)"
-                    value={moduleForm.duration}
-                    onChange={(e) => setModuleForm(prev => ({ ...prev, duration: e.target.value }))}
-                    className="px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] bg-offblack text-paperwhite placeholder:text-teallight"
-                  />
-                  <textarea
-                    placeholder="Module Description"
-                    value={moduleForm.description}
-                    onChange={(e) => setModuleForm(prev => ({ ...prev, description: e.target.value }))}
-                    className="md:col-span-2 px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] bg-offblack text-paperwhite placeholder:text-teallight"
-                    rows={3}
-                  />
-                </div>
-                <div className="mt-6">
-                  <h4 className="font-semibold text-paperwhite mb-2">Lessons</h4>
-                  {moduleForm.lessons && (moduleForm.lessons.length > 0) && (
-                    <div className="space-y-4 mb-4">
-                      {moduleForm.lessons.map((lesson, idx) => (
-                        <div key={lesson.id || idx} className="p-4 bg-offblack/10 rounded-lg flex flex-col md:flex-row md:items-end gap-2 md:gap-4">
-                          <input
-                            type="text"
-                            placeholder="Lesson Title"
-                            value={lesson.title}
-                            onChange={e => setModuleForm(prev => {
-                              const lessons = [...prev.lessons];
-                              lessons[idx].title = e.target.value;
-                              return { ...prev, lessons };
-                            })}
-                            className="flex-1 px-3 py-2 border border-paperwhite/20 rounded-lg bg-offblack text-paperwhite placeholder:text-teallight"
-                          />
-                          <select
-                            value={lesson.type}
-                            onChange={e => setModuleForm(prev => {
-                              const lessons = [...prev.lessons];
-                              lessons[idx].type = e.target.value;
-                              return { ...prev, lessons };
-                            })}
-                            className="px-3 py-2 border border-paperwhite/20 rounded-lg bg-offblack text-paperwhite placeholder:text-teallight"
-                          >
-                            <option value="video">Video</option>
-                            <option value="reading">Reading</option>
-                            <option value="quiz">Quiz</option>
-                            <option value="project">Project</option>
-                          </select>
-                          <input
-                            type="text"
-                            placeholder="Duration (e.g., 30 min)"
-                            value={lesson.duration}
-                            onChange={e => setModuleForm(prev => {
-                              const lessons = [...prev.lessons];
-                              lessons[idx].duration = e.target.value;
-                              return { ...prev, lessons };
-                            })}
-                            className="w-32 px-3 py-2 border border-paperwhite/20 rounded-lg bg-offblack text-paperwhite placeholder:text-teallight"
-                          />
-                          {/* For video lessons, show videoUrl input */}
-                          {lesson.type === 'video' && (
-                            <input
-                              type="text"
-                              placeholder="YouTube Video URL"
-                              value={lesson.videoUrl || ''}
-                              onChange={e => setModuleForm(prev => {
-                                const lessons = [...prev.lessons];
-                                lessons[idx].videoUrl = e.target.value;
-                                return { ...prev, lessons };
-                              })}
-                              className="flex-1 px-3 py-2 border border-paperwhite/20 rounded-lg bg-offblack text-paperwhite placeholder:text-teallight"
-                            />
-                          )}
-                          {/* For reading/project/quiz, show content input */}
-                          {(lesson.type === 'reading' || lesson.type === 'project' || lesson.type === 'quiz') && (
-                            <textarea
-                              placeholder="Lesson Content"
-                              value={lesson.content || ''}
-                              onChange={e => setModuleForm(prev => {
-                                const lessons = [...prev.lessons];
-                                lessons[idx].content = e.target.value;
-                                return { ...prev, lessons };
-                              })}
-                              className="flex-1 px-3 py-2 border border-paperwhite/20 rounded-lg bg-offblack text-paperwhite placeholder:text-teallight"
-                              rows={2}
-                            />
-                          )}
-                          <input
-                            type="number"
-                            placeholder="Order"
-                            value={lesson.order || idx + 1}
-                            onChange={e => setModuleForm(prev => {
-                              const lessons = [...prev.lessons];
-                              lessons[idx].order = parseInt(e.target.value) || idx + 1;
-                              return { ...prev, lessons };
-                            })}
-                            className="w-20 px-3 py-2 border border-paperwhite/20 rounded-lg bg-offblack text-paperwhite placeholder:text-teallight"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setModuleForm(prev => ({
-                              ...prev,
-                              lessons: prev.lessons.filter((_, i) => i !== idx)
-                            }))}
-                            className="text-rust hover:text-rust/90 px-2"
-                          >
-                            Remove
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => setModuleForm(prev => ({
-                      ...prev,
-                      lessons: [
-                        ...prev.lessons,
-                        {
-                          id: `lesson_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
-                          title: '',
-                          type: 'video',
-                          duration: '',
-                          content: '',
-                          videoUrl: '',
-                          order: ((prev.lessons && prev.lessons.length) || 0) + 1
-                        }
-                      ]
-                    }))}
-                    className="mt-2 bg-[#00B8D9] text-[#121212] px-4 py-2 rounded-lg hover:bg-[#00B8D9]/90"
-                  >
-                    + Add Lesson
-                  </button>
-                </div>
-                <div className="flex justify-end space-x-3 mt-4">
-                  <button
-                    onClick={() => {
-                      setShowModuleForm(false);
-                      setEditingModule(null);
-                    }}
-                    className="px-4 py-2 border border-paperwhite/20 text-teallight rounded-lg hover:bg-offblack/20 transition"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={editingModule ? handleEditModule : handleAddModule}
-                    className="px-4 py-2 bg-[#00B8D9] text-[#121212] rounded-lg hover:bg-[#00B8D9]/90"
-                  >
-                    {editingModule ? 'Update' : 'Create'} Module
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* Modules List */}
-            <div className="bg-paperwhite/10 rounded-xl shadow-sm overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-offblack/10">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider">
-                        Module
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider">
-                        Track
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider">
-                        Difficulty
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider">
-                        Status
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-offblack/10 divide-y divide-offblack/20">
-                    {modules.map((module) => (
-                      <tr key={module.id} className="hover:bg-offblack/20 transition">
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div>
-                            <div className="text-sm text-paperwhite">
-                              {module.title}
-                            </div>
-                            <div className="text-sm text-teallight">
-                              {module.description.substring(0, 50)}...
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="text-sm text-paperwhite capitalize">
-                            {(() => {
-                              switch(module.careerTrack) {
-                                case 'fullstack': return 'Full Stack Development';
-                                case 'ai-ml': return 'AI/ML Engineering';
-                                case 'ui-ux': return 'UI/UX Design';
-                                case 'data-science': return 'Data Science';
-                                default: return module.careerTrack;
-                              }
-                            })()}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            module.difficulty === 'Beginner' ? 'bg-teallight text-offblack' :
-                            module.difficulty === 'Intermediate' ? 'bg-teallight text-offblack' :
-                            'bg-rust text-paperwhite'
-                          }`}>
-                            {module.difficulty}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            module.isActive ? 'bg-teallight text-offblack' : 'bg-rust text-paperwhite'
-                          }`}>
-                            {module.isActive ? 'Active' : 'Inactive'}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          <button
-                            onClick={() => {
-                              setEditingModule(module);
-                              setModuleForm({
-                                title: module.title,
-                                description: module.description,
-                                difficulty: module.difficulty,
-                                duration: module.duration,
-                                careerTrack: module.careerTrack,
-                                skills: module.skills,
-                                order: module.order,
-                                isActive: module.isActive,
-                                lessons: (module as any).lessons || []
-                              });
-                              setShowModuleForm(true);
-                            }}
-                            className="bg-[#00B8D9] hover:bg-[#00B8D9]/90 text-[#121212] px-2 py-1 rounded transition-colors mr-2 font-medium"
-                            title="Edit"
-                          >
-                            <Edit3 className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => handleDeleteModule(module.id)}
-                            className="bg-[#B7410E] hover:bg-[#B7410E]/90 text-[#FAFAFA] px-2 py-1 rounded transition-colors font-medium"
-                            title="Delete"
-                          >
-                            <TrashIcon className="h-4 w-4" />
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* User Management Tab */}
+        {/* User Management */}
         {activeTab === 'users' && (
           <div className="space-y-6">
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold text-paperwhite font-heading">User Management</h2>
+              <h2 className="text-xl text-paperwhite font-heading">User Management</h2>
               <button
                 onClick={() => { setShowUserForm(true); setEditingUser(null); setUserForm({ name: '', email: '', password: '', role: 'student', college: '', department: '', careerTrack: '', isActive: true }); }}
                 className="bg-[#00B8D9] text-[#121212] px-4 py-2 rounded-lg hover:bg-[#00B8D9]/90 transition-colors flex items-center font-medium"
@@ -829,12 +427,12 @@ const AdminSettings: React.FC = () => {
         {/* Integrations Tab */}
         {activeTab === 'integrations' && (
           <div className="bg-paperwhite/10 rounded-xl shadow p-6 space-y-8">
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 text-paperwhite font-heading">
+            <h3 className="text-lg mb-4 flex items-center gap-2 text-paperwhite font-heading">
               Integrations
             </h3>
             {/* Gemini API Key */}
             <div>
-              <label className="block text-sm font-medium text-paperwhite mb-2 font-label">Gemini API Key</label>
+              <label className="block text-sm text-paperwhite mb-2 font-label">Gemini API Key</label>
               <input
                 type="text"
                 value={geminiKeyInput}
@@ -846,7 +444,7 @@ const AdminSettings: React.FC = () => {
             </div>
             {/* Email Provider */}
             <div>
-              <label className="block text-sm font-medium text-paperwhite mb-2 font-label">Email Provider</label>
+              <label className="block text-sm text-paperwhite mb-2 font-label">Email Provider</label>
               <input
                 type="text"
                 value={settingsDraft?.integrations?.emailProvider ?? ''}
