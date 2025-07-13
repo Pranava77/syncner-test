@@ -8,7 +8,7 @@ const router = express.Router();
 const staffValidation = [
   body('name').trim().notEmpty().withMessage('Name is required'),
   body('email').trim().isEmail().withMessage('Valid email is required'),
-  body('role').trim().notEmpty().withMessage('Role is required').isIn(['admin', 'teacher', 'staff']).withMessage('Role must be admin, teacher, or staff'),
+  body('role').trim().notEmpty().withMessage('Role is required').isIn(['admin', 'staff']).withMessage('Role must be admin or staff'),
 ];
 
 // GET /api/staff - List all staff (public or protected)

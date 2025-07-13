@@ -1,4 +1,4 @@
-import Staff from '../models/College.js';
+import Staff from '../models/Staff.js';
 import { validationResult } from 'express-validator';
 
 // GET /api/staff - List all staff
@@ -32,7 +32,7 @@ export const createStaff = async (req, res) => {
     const staff = await Staff.create(req.body);
     res.status(201).json({ success: true, data: staff });
   } catch (error) {
-    res.status(400).json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -47,7 +47,7 @@ export const updateStaff = async (req, res) => {
     if (!staff) return res.status(404).json({ success: false, message: 'Staff not found' });
     res.status(200).json({ success: true, data: staff });
   } catch (error) {
-    res.status(400).json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 

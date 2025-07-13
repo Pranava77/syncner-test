@@ -137,7 +137,7 @@ const login = async (req, res) => {
 const getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id)
-      .populate('completedModules', 'title difficulty')
+      // .populate('completedModules', 'title difficulty')
       .select('-password');
 
     if (!user) {

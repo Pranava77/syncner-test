@@ -20,12 +20,6 @@ const staffSchema = new mongoose.Schema({
     trim: true,
     maxlength: [100, 'Department name cannot exceed 100 characters']
   },
-  role: {
-    type: String,
-    enum: ['admin', 'teacher', 'staff'],
-    default: 'staff',
-    required: true
-  },
   isActive: {
     type: Boolean,
     default: true
@@ -34,4 +28,4 @@ const staffSchema = new mongoose.Schema({
   timestamps: true
 });
 
-export default mongoose.model('Staff', staffSchema);
+export default mongoose.model('Staff', staffSchema); 
