@@ -37,7 +37,7 @@ const LandingPage: React.FC = () => {
               <div>
                 <img src={logo} alt="Syncner Logo" className="h-8 w-8 lg:h-10 lg:w-10 object-contain" />
               </div>
-              <h1 className="text-2xl text-paperwhite font-heading">Syncner</h1>  
+              <h1 className="text-2xl text-paperwhite font-heading" style={{ fontFamily: 'Amatic SC, FK Grotesk, Inter, Helvetica Neue, Arial, sans-serif' }}>Syncner</h1>  
             </div>
             
             {/* Desktop Navigation */}

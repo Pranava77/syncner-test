@@ -183,7 +183,7 @@ const Layout: React.FC = () => {
             ref={logoRef}
             style={{ zIndex: 10 }}
           />
-          {!isSidebarCollapsed && <span className="ml-3 text-paperwhite text-lg font-heading">Syncner</span>}
+          {!isSidebarCollapsed && <span className="ml-3 text-paperwhite text-lg font-heading" style={{ fontFamily: 'Amatic SC, FK Grotesk, Inter, Helvetica Neue, Arial, sans-serif' }}>Syncner</span>}
         </div>
         {/* Arrow toggle at vertical center right edge, overlapping border */}
         <button
