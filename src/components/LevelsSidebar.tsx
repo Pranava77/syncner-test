@@ -32,7 +32,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
   }
 
   return (
-    <aside className="w-64 bg-offblack p-6 border-r border-paperwhite/20 flex flex-col transition-all duration-300">
+    <aside className="w-64 bg-offblack p-6 border-r border-paperwhite/20 flex flex-col h-full transition-all duration-300">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold text-paperwhite">Levels</h2>
         {setSidebarOpen && (
