@@ -254,6 +254,13 @@ class ApiService {
     return this.handleResponse(response);
   }
 
+  async getAllAdmins() {
+    const response = await fetch(`${this.baseURL}/admin/admins`, {
+      headers: this.getHeaders(),
+    });
+    return this.handleResponse(response);
+  }
+
   // Admin settings endpoints
   async getPlatformSettings() {
     const response = await fetch(`${this.baseURL}/admin/settings`, {
@@ -309,6 +316,40 @@ class ApiService {
 
   async deleteStaff(staffId: string) {
     const response = await fetch(`${this.baseURL}/admin/users/${staffId}`, {
+      method: 'DELETE',
+      headers: this.getHeaders(),
+    });
+    return this.handleResponse(response, true);
+  }
+
+  async updateUser(userId: string, userData: any) {
+    const response = await fetch(`${this.baseURL}/admin/users/${userId}`, {
+      method: 'PUT',
+      headers: this.getHeaders(),
+      body: JSON.stringify(userData),
+    });
+    return this.handleResponse(response, true);
+  }
+
+  async deleteUser(userId: string) {
+    const response = await fetch(`${this.baseURL}/admin/users/${userId}`, {
+      method: 'DELETE',
+      headers: this.getHeaders(),
+    });
+    return this.handleResponse(response, true);
+  }
+
+  async updateAdmin(adminId: string, adminData: any) {
+    const response = await fetch(`${this.baseURL}/admin/admins/${adminId}`, {
+      method: 'PUT',
+      headers: this.getHeaders(),
+      body: JSON.stringify(adminData),
+    });
+    return this.handleResponse(response, true);
+  }
+
+  async deleteAdmin(adminId: string) {
+    const response = await fetch(`${this.baseURL}/admin/admins/${adminId}`, {
       method: 'DELETE',
       headers: this.getHeaders(),
     });
