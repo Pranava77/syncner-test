@@ -3,8 +3,8 @@ import React from 'react';
 const projects = [
   {
     id: 1,
-    title: 'Build a To-do Application',
-    description: 'Build a end to end To-do app in MERN Stack',
+    title: 'Personal Portfolio Website',
+    description: 'Create a personal portfolio using React and Tailwind CSS to showcase your projects and skills.',
     points: 100,
     difficulty: 'Beginner',
     status: 'In-progress',
@@ -13,8 +13,8 @@ const projects = [
   },
   {
     id: 2,
-    title: 'Build a To-do Application',
-    description: 'Build a end to end To-do app in MERN Stack',
+    title: 'E-commerce Product Page',
+    description: 'Build a responsive product page for an e-commerce site with cart functionality.',
     points: 150,
     difficulty: 'Intermediate',
     status: 'Not Started',
@@ -23,9 +23,9 @@ const projects = [
   },
   {
     id: 3,
-    title: 'Build a To-do Application',
-    description: 'Build a end to end To-do app in MERN Stack',
-    points: 150,
+    title: 'Chat Application',
+    description: 'Develop a real-time chat app using Socket.io and Node.js.',
+    points: 200,
     difficulty: 'Intermediate',
     status: 'Not Started',
     optional: false,
@@ -33,8 +33,8 @@ const projects = [
   },
   {
     id: 4,
-    title: 'Build a To-do Application',
-    description: 'Build a end to end To-do app in MERN Stack',
+    title: 'Blog Platform (Optional)',
+    description: 'Create a full-stack blog platform with authentication and markdown support.',
     points: 250,
     difficulty: 'Hard',
     status: 'Not Started',
@@ -43,8 +43,8 @@ const projects = [
   },
   {
     id: 5,
-    title: 'Build a To-do Application',
-    description: 'Build a end to end To-do app in MERN Stack',
+    title: 'AI Image Generator (Optional)',
+    description: 'Build an app that generates images from text prompts using an AI API.',
     points: 500,
     difficulty: 'Extreme',
     status: 'Not Started',
