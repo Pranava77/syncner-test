@@ -164,20 +164,6 @@ const getProfile = async (req, res) => {
 // @access  Private
 const updateProfile = async (req, res) => {
   try {
-    const { 
-      name, 
-      college, 
-      department, 
-      phone, 
-      location, 
-      careerTrack, 
-      interests, 
-      profileComplete,
-      level,
-      gpa,
-      graduationYear
-    } = req.body;
-
     const user = await User.findById(req.user.id);
     if (!user) {
       return res.status(404).json({
@@ -185,36 +171,12 @@ const updateProfile = async (req, res) => {
         message: 'User not found'
       });
     }
-
-    // Update fields
-    if (name) user.name = name;
-    if (college) user.college = college;
-    if (department) user.department = department;
-    if (phone) user.phone = phone;
-    if (location) user.location = location;
-    if (careerTrack) user.careerTrack = careerTrack;
-    if (interests) user.interests = interests;
-    if (typeof profileComplete === 'boolean') user.profileComplete = profileComplete;
-    if (level) user.level = level;
-    if (gpa) user.gpa = gpa;
-    if (graduationYear) user.graduationYear = graduationYear;
-
+    // Merge all provided fields from req.body into the user object
+    Object.assign(user, req.body);
     await user.save();
-
-    // Remove password from response
-    user.password = undefined;
-
-    res.status(200).json({
-      success: true,
-      message: 'Profile updated successfully',
-      data: { user }
-    });
+    res.status(200).json({ success: true, data: user });
   } catch (error) {
-    console.error('Update profile error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error'
-    });
+    res.status(400).json({ success: false, message: error.message });
   }
 };
 
