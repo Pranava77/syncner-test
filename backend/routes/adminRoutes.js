@@ -21,7 +21,7 @@ router.post(
     body('email').isEmail().withMessage('Valid email required'),
     body('password').isLength({ min: 6 }).withMessage('Password min 6 chars'),
     body('role').optional().isIn(['student', 'admin', 'staff']).withMessage('Role must be student, admin, or staff'),
-    body('college').notEmpty().withMessage('College required'),
+    body('college').if(body('role').equals('student').or(body('role').equals('staff'))).notEmpty().withMessage('College required'),
   ],
   createUser
 );
