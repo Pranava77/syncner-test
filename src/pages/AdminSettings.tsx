@@ -245,7 +245,7 @@ const AdminSettings: React.FC = () => {
           <p className="text-rust mb-4">{settingsError}</p>
           <button
             onClick={() => dispatch(fetchSettings())}
-            className="bg-[#00B8D9] text-[#FAFAFA] px-4 py-2 rounded-lg hover:bg-[#00B8D9]/90 transition-colors"
+            className="bg-[#00B8D9] text-[#121212] px-4 py-2 rounded-lg hover:bg-[#00B8D9]/90 transition-colors"
           >
             Retry
           </button>
@@ -368,7 +368,7 @@ const AdminSettings: React.FC = () => {
               <h2 className="text-xl font-semibold text-paperwhite">Training Modules</h2>
               <button
                 onClick={() => setShowModuleForm(true)}
-                className="bg-[#00B8D9] text-[#FAFAFA] px-4 py-2 rounded-lg hover:bg-[#00B8D9]/90 transition-colors flex items-center"
+                className="bg-[#00B8D9] text-[#121212] px-4 py-2 rounded-lg hover:bg-[#00B8D9]/90 transition-colors flex items-center"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Add Module
@@ -535,7 +535,7 @@ const AdminSettings: React.FC = () => {
                         }
                       ]
                     }))}
-                    className="mt-2 bg-[#00B8D9] text-[#FAFAFA] px-4 py-2 rounded-lg hover:bg-[#00B8D9]/90"
+                    className="mt-2 bg-[#00B8D9] text-[#121212] px-4 py-2 rounded-lg hover:bg-[#00B8D9]/90"
                   >
                     + Add Lesson
                   </button>
@@ -552,7 +552,7 @@ const AdminSettings: React.FC = () => {
                   </button>
                   <button
                     onClick={editingModule ? handleEditModule : handleAddModule}
-                    className="px-4 py-2 bg-true-turquoise text-paperwhite rounded-lg hover:bg-true-turquoise/90"
+                    className="px-4 py-2 bg-[#00B8D9] text-[#121212] rounded-lg hover:bg-[#00B8D9]/90"
                   >
                     {editingModule ? 'Update' : 'Create'} Module
                   </button>
@@ -642,7 +642,7 @@ const AdminSettings: React.FC = () => {
                               });
                               setShowModuleForm(true);
                             }}
-                            className="bg-[#00B8D9] hover:bg-[#00B8D9]/90 text-[#FAFAFA] px-2 py-1 rounded transition-colors mr-2"
+                            className="bg-[#00B8D9] hover:bg-[#00B8D9]/90 text-[#121212] px-2 py-1 rounded transition-colors mr-2"
                             title="Edit"
                           >
                             <Edit3 className="h-4 w-4" />
@@ -671,7 +671,7 @@ const AdminSettings: React.FC = () => {
               <h2 className="text-xl font-semibold text-paperwhite">User Management</h2>
               <button
                 onClick={() => { setShowUserForm(true); setEditingUser(null); setUserForm({ name: '', email: '', password: '', role: 'student', college: '', department: '', careerTrack: '', isActive: true }); }}
-                className="bg-[#00B8D9] text-[#FAFAFA] px-4 py-2 rounded-lg hover:bg-[#00B8D9]/90 transition-colors flex items-center"
+                className="bg-[#00B8D9] text-[#121212] px-4 py-2 rounded-lg hover:bg-[#00B8D9]/90 transition-colors flex items-center"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Add User
@@ -726,7 +726,7 @@ const AdminSettings: React.FC = () => {
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2 text-paperwhite">
                             <button
                               onClick={() => { setEditingUser(user); setUserForm({ ...user, password: '' }); setShowUserForm(true); }}
-                              className="bg-[#00B8D9] hover:bg-[#00B8D9]/90 text-[#FAFAFA] px-2 py-1 rounded transition-colors"
+                              className="bg-[#00B8D9] hover:bg-[#00B8D9]/90 text-[#121212] px-2 py-1 rounded transition-colors"
                               title="Edit"
                             >
                               <Edit3 className="h-4 w-4" />
@@ -740,7 +740,7 @@ const AdminSettings: React.FC = () => {
                             </button>
                             <button
                               onClick={() => updateStudent(user._id, { ...user, isActive: !user.isActive })}
-                              className={`px-2 py-1 rounded transition-colors ${user.isActive ? 'bg-offblack hover:bg-offblack/20 text-paperwhite' : 'bg-[#00B8D9] hover:bg-[#00B8D9]/90 text-[#FAFAFA]'}`}
+                              className={`px-2 py-1 rounded transition-colors ${user.isActive ? 'bg-offblack hover:bg-offblack/20 text-paperwhite' : 'bg-[#00B8D9] hover:bg-[#00B8D9]/90 text-[#121212]'}`}
                               title={user.isActive ? 'Deactivate' : 'Activate'}
                             >
                               {user.isActive ? <Users className="h-4 w-4" /> : <CheckCircledIcon className="h-4 w-4" />}
@@ -814,7 +814,7 @@ const AdminSettings: React.FC = () => {
                           setUserFormError(err.message || 'Failed to add/update user.');
                         }
                       }}
-                      className="px-4 py-2 bg-[#00B8D9] text-[#FAFAFA] rounded-lg hover:bg-[#00B8D9]/90 transition"
+                      className="px-4 py-2 bg-[#00B8D9] text-[#121212] rounded-lg hover:bg-[#00B8D9]/90 transition"
                     >
                       {editingUser ? 'Update' : 'Add'}
                     </button>
@@ -879,7 +879,7 @@ const AdminSettings: React.FC = () => {
               </button>
             </div>
             <button
-              className="mt-4 bg-[#00B8D9] text-[#FAFAFA] px-6 py-2 rounded-lg hover:bg-[#00B8D9]/90 transition-all font-medium"
+              className="mt-4 bg-[#00B8D9] text-[#121212] px-6 py-2 rounded-lg hover:bg-[#00B8D9]/90 transition-all font-medium"
               onClick={handleSaveSettings}
               disabled={isSaving}
             >
@@ -896,7 +896,7 @@ const AdminSettings: React.FC = () => {
           <button
             onClick={handleSaveSettings}
             disabled={isSaving}
-            className="bg-[#00B8D9] text-[#FAFAFA] px-6 py-2 rounded-lg hover:bg-[#00B8D9]/90 transition-colors font-medium flex items-center disabled:opacity-50"
+            className="bg-[#00B8D9] text-[#121212] px-6 py-2 rounded-lg hover:bg-[#00B8D9]/90 transition-colors font-medium flex items-center disabled:opacity-50"
           >
             {isSaving ? (
               <>

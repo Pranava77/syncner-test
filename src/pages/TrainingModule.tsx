@@ -334,7 +334,7 @@ const TrainingModule: React.FC = () => {
                     </div>
                     <div className="absolute top-4 right-4">
                       <span className={`px-2 py-1 rounded text-xs font-medium ${
-                        currentContent.type === 'video' ? 'bg-trueturquoise text-paperwhite' :
+                        currentContent.type === 'video' ? 'bg-trueturquoise text-offblack' :
                         currentContent.type === 'reading' ? 'bg-teallight text-offblack' :
                         'bg-rust text-paperwhite'
                       }`}>
@@ -380,7 +380,7 @@ const TrainingModule: React.FC = () => {
                     <div className="mt-6">
                       <button
                         onClick={handleLessonComplete}
-                        className="bg-trueturquoise text-paperwhite px-6 py-2 rounded-lg hover:bg-teallight hover:text-offblack transition-colors font-medium flex items-center"
+                        className="bg-trueturquoise text-offblack px-6 py-2 rounded-lg hover:bg-teallight hover:text-offblack transition-colors font-medium flex items-center"
                       >
                         <CheckCircledIcon className="h-4 w-4 mr-2" />
                         Mark as Complete
@@ -471,7 +471,7 @@ const TrainingModule: React.FC = () => {
               <button
                 onClick={handleNext}
                 disabled={currentLesson === module.lessons.length - 1}
-                className="flex items-center px-4 py-2 bg-trueturquoise text-paperwhite rounded-lg hover:bg-teallight hover:text-offblack disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="flex items-center px-4 py-2 bg-trueturquoise text-offblack rounded-lg hover:bg-teallight hover:text-offblack disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 Next
                 <ChevronRightIcon className="h-4 w-4 ml-1" />
