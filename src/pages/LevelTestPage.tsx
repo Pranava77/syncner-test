@@ -88,8 +88,8 @@ const LevelTestPage: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen w-screen bg-offblack overflow-x-hidden">
-      <div className="flex-shrink-0 h-full">
+    <div className="flex min-h-screen w-screen bg-offblack overflow-x-hidden">
+      <div className="flex-shrink-0 min-h-screen">
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelNum} currentSection="test" />
       </div>
       <main className="flex-1 h-full overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full">
