@@ -53,7 +53,11 @@ router.get('/diagnostics', protect, authorize('admin'), async (req, res) => {
     { name: 'users', url: '/api/users/health' },
     { name: 'tracks', url: '/api/tracks/health' },
     { name: 'training', url: '/api/training/health' },
+    { name: 'tasks', url: '/api/tasks/health' },
+    { name: 'progress', url: '/api/progress/health' },
     { name: 'admin', url: '/api/admin/health' },
+    { name: 'resume', url: '/api/resume/health' },
+    { name: 'submissions', url: '/api/submissions/health' },
     { name: 'settings', url: '/api/admin/settings/health' },
     { name: 'ai', url: '/api/ai/health' }
   ];
