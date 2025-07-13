@@ -13,6 +13,7 @@ const TrainingLevels: React.FC = () => {
   const { levels, loading, error } = useLevels(user?.careerTrack);
   const [selectedLevelId, setSelectedLevelId] = useState<string | null>(levelId || null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [openDropdowns, setOpenDropdowns] = useState<{ [key: number]: boolean }>({});
 
   useEffect(() => {
     if (levelId) setSelectedLevelId(levelId);
@@ -27,11 +28,15 @@ const TrainingLevels: React.FC = () => {
     navigate(`/student/training/${id}`);
   };
 
+  const handleDropdownToggle = (levelIdx: number) => {
+    setOpenDropdowns((prev) => ({ ...prev, [levelIdx]: !prev[levelIdx] }));
+  };
+
   return (
     <div className="flex h-full min-h-screen bg-offblack">
       {/* Levels Sidebar */}
       {sidebarOpen ? (
-        <aside className="w-64 bg-offblack p-6 border-r border-trueturquoise flex flex-col transition-all duration-300">
+        <aside className="w-64 bg-offblack p-6 border-r border-paperwhite/20 flex flex-col transition-all duration-300">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-paperwhite">Levels</h2>
             <button
@@ -52,7 +57,7 @@ const TrainingLevels: React.FC = () => {
               >
                 <div className="flex items-center justify-between">
                   <span>{level.title}</span>
-                  <span className="ml-2 px-2 py-0.5 rounded-full text-xs font-semibold bg-trueturquoise/20 text-trueturquoise">{level.difficulty}</span>
+                  {/* Removed difficulty badge */}
                 </div>
               </button>
             ))}
