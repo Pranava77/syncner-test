@@ -148,9 +148,12 @@ const Layout: React.FC = () => {
     { path: '/student/projects', icon: FileTextIcon, label: 'Projects' },
     { path: '/student/internships', icon: EnvelopeClosedIcon, label: 'Internships', locked: true },
     { path: '/student/job-portal', icon: GlobeIcon, label: 'Job Portal', locked: true },
-    { path: '/student/mock-interview', icon: ChatBubbleIcon, label: 'Mock Interview', locked: true },
-    { path: '/student/leaderboard', icon: StarIcon, label: 'Leaderboard', locked: true },
   ];
+  // Add Mock Interview and Leaderboard at the end
+  studentNavItems.push(
+    { path: '/student/mock-interview', icon: ChatBubbleIcon, label: 'Mock Interview', locked: true },
+    { path: '/student/leaderboard', icon: StarIcon, label: 'Leaderboard', locked: true }
+  );
 
   const adminNavItems = [
     { path: '/admin', icon: BarChartIcon, label: 'Admin Dashboard' },
