@@ -37,13 +37,12 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
           <div className="inline-block mb-4">
             <img src={logo} alt="Syncner Logo" className="h-20 w-20 object-contain" />
           </div>
-          <h1 className="text-2xl text-paperwhite mb-2 font-heading" style={{ fontFamily: 'Amatic SC, FK Grotesk, Inter, Helvetica Neue, Arial, sans-serif' }}>Syncner</h1>
-          <p className="text-teallight text-sm font-label">Syncing your success...</p>
+          <h1 className="text-3xl text-paperwhite mb-2 font-heading" style={{ fontFamily: 'Amatic SC, FK Grotesk, Inter, Helvetica Neue, Arial, sans-serif' }}>Syncner</h1>
         </div>
 
         {/* Progress Bar */}
         {showProgress && (
-          <div className="w-64 mx-auto">
+          <div className="w-64 mx-auto mb-4">
             <div className="w-full bg-paperwhite/20 rounded-full h-2">
               <div 
                 className="bg-trueturquoise h-2 rounded-full transition-all duration-300 ease-out"
@@ -53,8 +52,8 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
           </div>
         )}
 
-        {/* Loading Message */}
-        {/* Only show the main message above, not a separate one here */}
+        {/* Tagline below progress bar */}
+        <p className="text-teallight text-sm font-label">Syncing your success...</p>
       </div>
     </div>
   );
