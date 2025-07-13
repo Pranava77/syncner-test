@@ -247,6 +247,13 @@ class ApiService {
     return this.handleResponse(response, true);
   }
 
+  async getAllUsers() {
+    const response = await fetch(`${this.baseURL}/admin/users`, {
+      headers: this.getHeaders(),
+    });
+    return this.handleResponse(response);
+  }
+
   // Admin settings endpoints
   async getPlatformSettings() {
     const response = await fetch(`${this.baseURL}/admin/settings`, {
