@@ -188,52 +188,6 @@ const StudentDashboard: React.FC = () => {
             </div>
           )}
 
-          {/* Career Track Overview */}
-          {user && (
-            <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
-              <div className="flex items-center justify-between mb-4 lg:mb-6">
-                <h2 className="text-lg lg:text-xl font-semibold text-paperwhite">Your Career Track</h2>
-                <Link 
-                  to="/student/training/current"
-                  className="text-trueturquoise dark:text-trueturquoise/50 hover:text-teallight dark:hover:text-trueturquoise transition-colors flex items-center text-sm lg:text-base"
-                >
-                  View All Modules
-                  <ArrowRight className="h-3 w-3 lg:h-4 lg:w-4 ml-1" />
-                </Link>
-              </div>
-              
-              <div className="grid lg:grid-cols-2 gap-4">
-                <div className="bg-paperwhite/10 dark:bg-offblack rounded-lg p-4">
-                  <h3 className="font-semibold text-paperwhite mb-2">{userTrack}</h3>
-                  <p className="text-teallight text-sm mb-3">This is a static description. The actual description should be fetched from the database.</p>
-                  <div className="flex items-center text-sm text-teallight">
-                    <Clock className="h-4 w-4 mr-1" />
-                    {/* Assuming a default duration */}
-                    12 weeks
-                  </div>
-                </div>
-                
-                <div className="space-y-3">
-                  <div>
-                    <p className="text-sm text-teallight">Average Salary</p>
-                    <p className="font-semibold text-paperwhite">This should be fetched from the database</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-teallight">Career Paths</p>
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {/* Assuming a default career paths array */}
-                      {['Path 1', 'Path 2'].slice(0, 3).map((path: string, index: number) => (
-                        <span key={index} className="bg-trueturquoise/10 dark:bg-trueturquoise/90 text-trueturquoise dark:text-trueturquoise/50 px-2 py-1 rounded text-xs">
-                          {path}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
           {/* Upcoming Tasks */}
           {/* The following block was removed as per the edit hint:
           <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
@@ -326,19 +280,6 @@ const StudentDashboard: React.FC = () => {
 
      
 
-          {/* Quick Actions */}
-          <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
-            <h3 className="text-paperwhite mb-4 font-heading">Quick Actions</h3>
-            <div className="space-y-3">
-              <Link
-                to="/student/training/current"
-                className="flex items-center space-x-3 p-3 border border-paperwhite/20 dark:border-offblack rounded-lg hover:bg-paperwhite/20 dark:hover:bg-offblack transition-colors"
-              >
-                <BookOpen className="h-4 w-4 lg:h-5 lg:w-5 text-trueturquoise" />
-                <span className="text-paperwhite text-sm lg:text-base font-label">Continue Learning</span>
-              </Link>
-            </div>
-          </div>
         </div>
       </div>
     </div>
