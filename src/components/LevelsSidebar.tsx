@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 
@@ -15,12 +15,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
   currentLevel,
   currentSection
 }) => {
-  const [openDropdowns, setOpenDropdowns] = useState<{ [key: number]: boolean }>({});
   const navigate = useNavigate();
-
-  const handleDropdownToggle = (levelNum: number) => {
-    setOpenDropdowns((prev) => ({ ...prev, [levelNum]: !prev[levelNum] }));
-  };
 
   if (!sidebarOpen) {
     return (
@@ -50,37 +45,35 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
           </button>
         )}
       </div>
-      <div className="flex-1 space-y-4 overflow-y-auto">
+      <nav className="flex-1 space-y-4 overflow-y-auto">
         {[1, 2, 3, 4, 5].map((levelNum) => (
-          <div key={levelNum} className="mb-2">
+          <div key={levelNum}>
             <button
-              onClick={() => handleDropdownToggle(levelNum)}
-              className={`w-full flex items-center justify-between p-3 rounded-lg transition-colors font-medium text-sm bg-offblack text-paperwhite hover:bg-paperwhite/10 focus:outline-none focus:ring-2 focus:ring-trueturquoise
-                ${currentLevel === levelNum ? 'ring-2 ring-trueturquoise' : ''}`}
-              aria-expanded={!!openDropdowns[levelNum]}
-              aria-controls={`level-dropdown-${levelNum}`}
+              onClick={() => navigate(`/student/training/${levelNum}/learn`)}
+              className={`w-full flex items-center px-4 py-3 rounded-lg transition-colors font-medium text-base text-left
+                ${currentLevel === levelNum ? 'bg-trueturquoise/10 text-trueturquoise' : 'text-paperwhite hover:bg-paperwhite/10'}`}
             >
-              <span>Level {levelNum}</span>
-              <span className={`transition-transform ${openDropdowns[levelNum] ? 'rotate-90' : ''}`}>
-                <ChevronRightIcon className="h-4 w-4 text-trueturquoise" />
-              </span>
+              Level {levelNum}
             </button>
-            {openDropdowns[levelNum] && (
-              <div id={`level-dropdown-${levelNum}`} className="ml-4 mt-2 space-y-1">
+            {currentLevel === levelNum && (
+              <div className="ml-4 mt-2 flex flex-col space-y-1">
                 <button
-                  className={`w-full text-left px-3 py-2 rounded text-xs text-trueturquoise bg-trueturquoise/10 hover:bg-trueturquoise/20 transition-colors ${currentLevel === levelNum && currentSection === 'learn' ? 'bg-trueturquoise/30' : ''}`}
+                  className={`w-full text-left px-3 py-2 rounded font-medium text-xs transition-colors
+                    ${currentSection === 'learn' ? 'bg-trueturquoise text-offblack' : 'bg-paperwhite/10 text-trueturquoise hover:bg-paperwhite/20'}`}
                   onClick={() => navigate(`/student/training/${levelNum}/learn`)}
                 >
                   Learn
                 </button>
                 <button
-                  className={`w-full text-left px-3 py-2 rounded text-xs text-trueturquoise bg-trueturquoise/10 hover:bg-trueturquoise/20 transition-colors ${currentLevel === levelNum && currentSection === 'test' ? 'bg-trueturquoise/30' : ''}`}
+                  className={`w-full text-left px-3 py-2 rounded font-medium text-xs transition-colors
+                    ${currentSection === 'test' ? 'bg-trueturquoise text-offblack' : 'bg-paperwhite/10 text-trueturquoise hover:bg-paperwhite/20'}`}
                   onClick={() => navigate(`/student/training/${levelNum}/test`)}
                 >
                   Test
                 </button>
                 <button
-                  className={`w-full text-left px-3 py-2 rounded text-xs text-trueturquoise bg-trueturquoise/10 hover:bg-trueturquoise/20 transition-colors ${currentLevel === levelNum && currentSection === 'exercise' ? 'bg-trueturquoise/30' : ''}`}
+                  className={`w-full text-left px-3 py-2 rounded font-medium text-xs transition-colors
+                    ${currentSection === 'exercise' ? 'bg-trueturquoise text-offblack' : 'bg-paperwhite/10 text-trueturquoise hover:bg-paperwhite/20'}`}
                   onClick={() => navigate(`/student/training/${levelNum}/exercise`)}
                 >
                   Exercise
@@ -89,7 +82,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
             )}
           </div>
         ))}
-      </div>
+      </nav>
     </aside>
   );
 };
