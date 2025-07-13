@@ -35,7 +35,13 @@ const getAllLevels = async (req, res) => {
 // @access  Public
 const getLevelById = async (req, res) => {
   try {
-    const level = await Level.findById(req.params.id);
+    let level;
+    if (req.params.id === 'current') {
+      // Return the first active level (sorted by order or createdAt)
+      level = await Level.findOne({ isActive: true }).sort({ order: 1, createdAt: 1 });
+    } else {
+      level = await Level.findById(req.params.id);
+    }
     if (!level) {
       return res.status(404).json({
         success: false,

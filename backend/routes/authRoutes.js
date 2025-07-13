@@ -13,7 +13,7 @@ const registerValidation = [
   body('email').isEmail().normalizeEmail().withMessage('Please provide a valid email'),
   body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
   body('college').trim().notEmpty().withMessage('College is required'),
-  body('role').isIn(['student', 'admin']).withMessage('Invalid role'),
+  body('role').isIn(['student', 'admin', 'staff']).withMessage('Invalid role'),
   validateRequest
 ];
 

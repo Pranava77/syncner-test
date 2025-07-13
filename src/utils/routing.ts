@@ -12,6 +12,8 @@ export const getDefaultRoute = (user: User | null): string => {
   switch (user.role) {
     case 'admin':
       return '/admin';
+    case 'staff':
+      return '/staff/dashboard';
     case 'student':
     case 'instructor':
     default:

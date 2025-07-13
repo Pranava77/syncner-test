@@ -236,6 +236,24 @@ class ApiService {
     return this.handleResponse(response, true);
   }
 
+  // Add a method to create a staff user using the User model
+  async addStaffUser(staffData: { name: string; email: string; password: string; department?: string; role?: string }) {
+    const response = await fetch(`${this.baseURL}/admin/users`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify({ ...staffData, role: 'staff' }),
+    });
+    return this.handleResponse(response, true);
+  }
+
+  // Add a method to fetch all users with role=staff
+  async getAllStaffUsers() {
+    const response = await fetch(`${this.baseURL}/admin/users?role=staff`, {
+      headers: this.getHeaders(),
+    });
+    return this.handleResponse(response, true);
+  }
+
   // Admin settings endpoints
   async getPlatformSettings() {
     const response = await fetch(`${this.baseURL}/admin/settings`, {

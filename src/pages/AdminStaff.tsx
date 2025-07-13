@@ -10,7 +10,6 @@ import {
   PlusIcon,
   Pencil1Icon as Edit3,
   TrashIcon,
-  EyeOpenIcon as Eye,
   Cross1Icon as X,
   CheckCircledIcon
 } from '@radix-ui/react-icons';
@@ -20,7 +19,8 @@ const defaultStaffForm = {
   email: '',
   department: '',
   role: 'staff',
-  isActive: true
+  isActive: true,
+  password: '', // Add password field
 };
 
 const AdminStaff: React.FC = () => {
@@ -31,6 +31,8 @@ const AdminStaff: React.FC = () => {
   const [editingStaff, setEditingStaff] = useState<any>(null);
   const [staffForm, setStaffForm] = useState(defaultStaffForm);
   const [formError, setFormError] = useState('');
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [createdPassword, setCreatedPassword] = useState('');
 
   useEffect(() => {
     dispatch(fetchAllStaff());
@@ -56,7 +58,8 @@ const AdminStaff: React.FC = () => {
       email: staff.email || '',
       department: staff.department || '',
       role: staff.role || 'staff',
-      isActive: staff.isActive !== false
+      isActive: staff.isActive !== false,
+      password: '', // Always blank for editing
     });
     setShowModal(true);
     setFormError('');
@@ -73,22 +76,32 @@ const AdminStaff: React.FC = () => {
       setFormError('Name, Email, and Role are required.');
       return;
     }
+    if (!editingStaff && !staffForm.password) {
+      setFormError('Password is required for new staff.');
+      return;
+    }
     setFormError('');
     if (editingStaff && editingStaff._id) {
-      await dispatch(updateStaff({ id: editingStaff._id, staffData: staffForm }));
+      const { password, ...updateData } = staffForm; // Don't send password on edit
+      await dispatch(updateStaff({ id: editingStaff._id, staffData: updateData }));
+      setShowModal(false);
+      setEditingStaff(null);
+      setStaffForm(defaultStaffForm);
     } else {
       await dispatch(createStaff(staffForm));
+      setCreatedPassword(staffForm.password); // Store password for modal
+      setShowModal(false);
+      setShowPasswordModal(true);
+      setEditingStaff(null);
+      setStaffForm(defaultStaffForm);
     }
-    setShowModal(false);
-    setEditingStaff(null);
-    setStaffForm(defaultStaffForm);
   };
 
   return (
     <div className="min-h-screen bg-offblack p-4 lg:p-8">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-paperwhite font-heading">Staff Management</h1>
+          <h1 className="text-3xl text-paperwhite font-heading">Staff Management</h1>
           <p className="text-teallight mt-1 font-label">Manage staff members, roles, and departments</p>
         </div>
         <button
@@ -179,12 +192,43 @@ const AdminStaff: React.FC = () => {
                 <option value="teacher">Teacher</option>
                 <option value="staff">Staff</option>
               </select>
+              {/* Password field only for new staff */}
+              {!editingStaff && (
+                <input
+                  type="text"
+                  placeholder="Password"
+                  value={staffForm.password}
+                  onChange={e => setStaffForm(f => ({ ...f, password: e.target.value }))}
+                  className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight"
+                />
+              )}
               <div className="flex items-center gap-2">
                 <input type="checkbox" checked={staffForm.isActive} onChange={e => setStaffForm(f => ({ ...f, isActive: e.target.checked }))} id="isActive" />
                 <label htmlFor="isActive" className="text-paperwhite">Active</label>
               </div>
               {formError && <div className="text-rust text-sm font-medium">{formError}</div>}
               <button onClick={handleSave} className="w-full bg-trueturquoise text-offblack py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold mt-2">{editingStaff ? 'Save Changes' : 'Add Staff'}</button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Password shown-once modal */}
+      {showPasswordModal && (
+        <div className="fixed inset-0 bg-offblack/60 flex items-center justify-center z-50">
+          <div className="bg-offblack rounded-xl shadow-2xl p-8 w-full max-w-md border border-paperwhite/20">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-paperwhite">Staff Password</h3>
+              <button onClick={() => { setShowPasswordModal(false); setCreatedPassword(''); }} className="text-teallight hover:text-trueturquoise"><X className="h-5 w-5" /></button>
+            </div>
+            <div className="space-y-4">
+              <div className="text-paperwhite text-center">
+                <p className="mb-2">Copy and share this password with the staff member. It will not be shown again.</p>
+                <div className="bg-paperwhite/10 rounded-lg px-4 py-3 text-lg font-mono text-trueturquoise select-all break-all text-center">{createdPassword}</div>
+              </div>
+              <button
+                onClick={() => { navigator.clipboard.writeText(createdPassword); }}
+                className="w-full bg-trueturquoise text-offblack py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold"
+              >Copy Password</button>
             </div>
           </div>
         </div>

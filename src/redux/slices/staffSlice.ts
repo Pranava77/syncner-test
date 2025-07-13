@@ -5,7 +5,8 @@ export const fetchAllStaff = createAsyncThunk(
   'staff/fetchAllStaff',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await apiService.getAllStaff();
+      // Use the new getAllStaffUsers method to fetch staff from User list
+      const response = await apiService.getAllStaffUsers();
       if (!response.success) throw new Error(response.message || 'Failed to fetch staff');
       return response.data;
     } catch (error: any) {
@@ -31,7 +32,8 @@ export const createStaff = createAsyncThunk(
   'staff/createStaff',
   async (staffData: any, { rejectWithValue }) => {
     try {
-      const response = await apiService.createStaff(staffData);
+      // Use the new addStaffUser method to create staff as User
+      const response = await apiService.addStaffUser(staffData);
       if (!response.success) throw new Error(response.message || 'Failed to create staff');
       return response.data;
     } catch (error: any) {

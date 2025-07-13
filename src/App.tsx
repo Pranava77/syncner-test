@@ -22,6 +22,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { fetchCurrentUser } from './redux/slices/authSlice';
 import AdminStaff from './pages/AdminStaff';
 import TrainingLevels from './pages/TrainingLevels';
+import StaffDashboard from './pages/StaffDashboard';
 
 function AdminWrapper() {
   return (
@@ -137,6 +138,11 @@ function App() {
             </motion.div>
           } />
         </Route>
+        <Route path="/staff/dashboard" element={
+          <ProtectedRoute>
+            <StaffDashboard />
+          </ProtectedRoute>
+        } />
       </Routes>
     </AnimatePresence>
   );
