@@ -28,20 +28,12 @@ const getAllUsers = async (req, res) => {
 const getAnalytics = async (req, res) => {
   try {
     const User = (await import('../models/User.js')).default;
-    const Module = (await import('../models/Module.js')).default;
     const Track = (await import('../models/Track.js')).default;
-    const Submission = (await import('../models/Submission.js')).default;
 
     // Students
     const totalStudents = await User.countDocuments({ role: 'student' });
     const activeStudents = await User.countDocuments({ role: 'student', isActive: true });
     const completionRate = totalStudents > 0 ? Math.round((activeStudents / totalStudents) * 100) : 0;
-
-    // Submissions by status
-    const submissionsByStatusAgg = await Submission.aggregate([
-      { $group: { _id: '$status', count: { $sum: 1 } } }
-    ]);
-    const submissionsByStatus = submissionsByStatusAgg.map(s => ({ status: s._id, count: s.count }));
 
     // Students by track
     const trackDistributionAgg = await User.aggregate([
@@ -50,67 +42,12 @@ const getAnalytics = async (req, res) => {
     ]);
     const trackDistribution = trackDistributionAgg.map(t => ({ track: t._id || 'Unassigned', count: t.count }));
 
-    // --- Real Attendance Data (last 7 days) ---
-    const today = new Date();
-    const last7Days = Array.from({ length: 7 }, (_, i) => {
-      const d = new Date(today);
-      d.setDate(today.getDate() - (6 - i));
-      return d;
-    });
-
-    // --- Career Track Data ---
-    const tracks = await Track.find({});
-
-    // --- Module Performance ---
-    const modules = await Module.find({});
-    const modulePerformance = await Promise.all(modules.map(async (mod) => {
-      const progresses = await User.find({ 'moduleProgress.module': mod.id });
-      let completions = 0, totalScore = 0, totalTime = 0, count = 0;
-      progresses.forEach(p => {
-        const mp = p.moduleProgress.find(m => m.module === mod.id && m.status === 'COMPLETED');
-        if (mp) {
-          completions++;
-          totalTime += mp.timeSpent || 0;
-          if (p.taskProgress && Array.isArray(p.taskProgress)) {
-            p.taskProgress.forEach(tp => {
-              if (tp.status === 'COMPLETED' && typeof tp.score === 'number') {
-                totalScore += tp.score;
-                count++;
-              }
-            });
-          }
-        }
-      });
-      return {
-        module: mod.title,
-        completions,
-        avgScore: count ? Math.round(totalScore / count) : 0,
-        avgTime: completions ? (totalTime / completions / 60).toFixed(1) : 0 // min to hours
-      };
-    }));
-
-    // --- Averages ---
-    const allCompletedTasks = await User.find({}).flatMap(p =>
-      (p.taskProgress || []).filter(tp => tp.status === 'COMPLETED' && typeof tp.score === 'number')
-    );
-    const averageTaskScore = allCompletedTasks.length
-      ? Math.round(allCompletedTasks.reduce((sum, tp) => sum + tp.score, 0) / allCompletedTasks.length)
-      : 0;
-
-    const allCompletedModules = await User.find({}).flatMap(p =>
-      (p.moduleProgress || []).filter(mp => mp.status === 'COMPLETED' && typeof mp.timeSpent === 'number')
-    );
-    const averageTimePerModule = allCompletedModules.length
-      ? (allCompletedModules.reduce((sum, mp) => sum + mp.timeSpent, 0) / allCompletedModules.length / 60).toFixed(1)
-      : 0;
-
     res.status(200).json({
       success: true,
       data: {
         totalStudents,
         activeStudents,
         completionRate,
-        submissionsByStatus,
         trackDistribution
       }
     });
