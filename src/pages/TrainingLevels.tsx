@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAppSelector } from '../redux/store';
-import { useLevels } from '../hooks/useLevels';
+import { useLevels, Level } from '../hooks/useLevels';
 import { useNavigate, useParams } from 'react-router-dom';
 import LoadingScreen from '../components/LoadingScreen';
 import TrainingLevelDetail from './TrainingLevelDetail';
@@ -43,7 +43,7 @@ const TrainingLevels: React.FC = () => {
             </button>
           </div>
           <div className="flex-1 space-y-2 overflow-y-auto">
-            {levels.map((level) => (
+            {levels.map((level: Level) => (
               <button
                 key={level.id}
                 onClick={() => handleLevelSelect(level.id)}
@@ -60,13 +60,13 @@ const TrainingLevels: React.FC = () => {
         </aside>
       ) : (
         // Render the open button in the Training section of the main sidebar
-        <div className="w-16 flex flex-col items-center justify-start pt-8 bg-offblack border-r border-trueturquoise">
+        <div className="w-16 flex flex-col items-center justify-start pt-8 bg-offblack border-r border-paperwhite/20">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="p-2 rounded-lg bg-offblack border border-trueturquoise shadow-lg hover:bg-trueturquoise/10 focus:outline-none focus:ring-2 focus:ring-trueturquoise"
+            className="p-1.5 rounded-lg bg-offblack border border-paperwhite/30 shadow-lg hover:bg-trueturquoise/10 focus:outline-none focus:ring-2 focus:ring-trueturquoise"
             aria-label="Open sidebar"
           >
-            <ChevronRightIcon className="h-5 w-5 text-trueturquoise" />
+            <ChevronRightIcon className="h-4 w-4 text-trueturquoise" />
           </button>
         </div>
       )}

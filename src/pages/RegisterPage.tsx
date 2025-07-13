@@ -170,7 +170,7 @@ const RegisterPage: React.FC = () => {
 
             {/* Name Field */}
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-paperwhite mb-2 font-label">
+              <label htmlFor="name" className="block text-sm text-paperwhite mb-2 font-label">
                 Full Name
               </label>
               <div className="relative">
@@ -197,7 +197,7 @@ const RegisterPage: React.FC = () => {
 
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-paperwhite mb-2 font-label">
+              <label htmlFor="email" className="block text-sm text-paperwhite mb-2 font-label">
                 Email Address
               </label>
               <div className="relative">
@@ -224,7 +224,7 @@ const RegisterPage: React.FC = () => {
 
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-paperwhite mb-2 font-label">
+              <label htmlFor="password" className="block text-sm text-paperwhite mb-2 font-label">
                 Password
               </label>
               <div className="relative">
@@ -288,7 +288,7 @@ const RegisterPage: React.FC = () => {
 
             {/* Confirm Password Field */}
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-paperwhite mb-2 font-label">
+              <label htmlFor="confirmPassword" className="block text-sm text-paperwhite mb-2 font-label">
                 Confirm Password
               </label>
               <div className="relative">
@@ -322,7 +322,7 @@ const RegisterPage: React.FC = () => {
 
             {/* College Field */}
             <div>
-              <label htmlFor="college" className="block text-sm font-medium text-paperwhite mb-2 font-label">
+              <label htmlFor="college" className="block text-sm text-paperwhite mb-2 font-label">
                 College/University
               </label>
               <div className="relative">
@@ -349,7 +349,7 @@ const RegisterPage: React.FC = () => {
 
             {/* Role Selection */}
             <div>
-              <label htmlFor="role" className="block text-sm font-medium text-paperwhite mb-2 font-label">
+              <label htmlFor="role" className="block text-sm text-paperwhite mb-2 font-label">
                 I am a
               </label>
               <div className="relative">
