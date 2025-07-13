@@ -245,7 +245,7 @@ const AdminSettings: React.FC = () => {
           <p className="text-rust mb-4">{settingsError}</p>
           <button
             onClick={() => dispatch(fetchSettings())}
-            className="bg-true-turquoise text-paperwhite px-4 py-2 rounded-lg hover:bg-true-turquoise/90 transition-colors"
+            className="bg-[#00B8D9] text-[#FAFAFA] px-4 py-2 rounded-lg hover:bg-[#00B8D9]/90 transition-colors"
           >
             Retry
           </button>
@@ -272,8 +272,8 @@ const AdminSettings: React.FC = () => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`py-2 px-1 border-b-2 font-medium text-lg flex items-center space-x-2 transition-colors duration-200
                   ${activeTab === tab.id
-                    ? 'text-trueturquoise border-b-2 border-trueturquoise bg-offblack'
-                    : 'text-paperwhite/60 hover:text-trueturquoise border-b-2 border-transparent bg-offblack/80'}`}
+                    ? 'text-[#00B8D9] border-b-2 border-[#00B8D9] bg-offblack'
+                    : 'text-paperwhite/60 hover:text-[#00B8D9] border-b-2 border-transparent bg-offblack/80'}`}
               >
                 <Icon className="h-5 w-5" />
                 <span>{tab.label}</span>
@@ -299,7 +299,7 @@ const AdminSettings: React.FC = () => {
                   type="text"
                   value={settingsDraft?.general?.platformName ?? ''}
                   onChange={(e) => handleSettingChange('general', 'platformName', e.target.value)}
-                  className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
+                  className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] bg-offblack text-paperwhite placeholder:text-teallight"
                 />
               </div>
               <div>
@@ -310,7 +310,7 @@ const AdminSettings: React.FC = () => {
                   type="email"
                   value={settingsDraft?.general?.supportEmail ?? ''}
                   onChange={(e) => handleSettingChange('general', 'supportEmail', e.target.value)}
-                  className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
+                  className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] bg-offblack text-paperwhite placeholder:text-teallight"
                 />
               </div>
               <div>
@@ -321,7 +321,7 @@ const AdminSettings: React.FC = () => {
                   type="number"
                   value={settingsDraft?.general?.maxStudentsPerAdmin ?? 0}
                   onChange={(e) => handleSettingChange('general', 'maxStudentsPerAdmin', parseInt(e.target.value))}
-                  className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
+                  className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] bg-offblack text-paperwhite placeholder:text-teallight"
                 />
               </div>
               <div>
@@ -332,7 +332,7 @@ const AdminSettings: React.FC = () => {
                   type="number"
                   value={settingsDraft?.general?.sessionTimeout ?? 0}
                   onChange={(e) => handleSettingChange('general', 'sessionTimeout', parseInt(e.target.value))}
-                  className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
+                  className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] bg-offblack text-paperwhite placeholder:text-teallight"
                 />
               </div>
               <div>
@@ -343,7 +343,7 @@ const AdminSettings: React.FC = () => {
                   type="text"
                   value={settingsDraft?.general?.siteName ?? ''}
                   onChange={(e) => handleSettingChange('general', 'siteName', e.target.value)}
-                  className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
+                  className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] bg-offblack text-paperwhite placeholder:text-teallight"
                 />
               </div>
               <div>
@@ -354,7 +354,7 @@ const AdminSettings: React.FC = () => {
                   type="text"
                   value={settingsDraft?.general?.siteDescription ?? ''}
                   onChange={(e) => handleSettingChange('general', 'siteDescription', e.target.value)}
-                  className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
+                  className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] bg-offblack text-paperwhite placeholder:text-teallight"
                 />
               </div>
             </div>
@@ -368,7 +368,7 @@ const AdminSettings: React.FC = () => {
               <h2 className="text-xl font-semibold text-paperwhite">Training Modules</h2>
               <button
                 onClick={() => setShowModuleForm(true)}
-                className="bg-true-turquoise text-paperwhite px-4 py-2 rounded-lg hover:bg-true-turquoise/90 transition-colors flex items-center"
+                className="bg-[#00B8D9] text-[#FAFAFA] px-4 py-2 rounded-lg hover:bg-[#00B8D9]/90 transition-colors flex items-center"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Add Module
@@ -387,12 +387,12 @@ const AdminSettings: React.FC = () => {
                     placeholder="Module Title"
                     value={moduleForm.title}
                     onChange={(e) => setModuleForm(prev => ({ ...prev, title: e.target.value }))}
-                    className="px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
+                    className="px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] bg-offblack text-paperwhite placeholder:text-teallight"
                   />
                   <select
                     value={moduleForm.careerTrack}
                     onChange={(e) => setModuleForm(prev => ({ ...prev, careerTrack: e.target.value }))}
-                    className="px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
+                    className="px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] bg-offblack text-paperwhite placeholder:text-teallight"
                   >
                     <option value="fullstack">Full Stack Development</option>
                     <option value="ai-ml">AI/ML Engineering</option>
@@ -402,7 +402,7 @@ const AdminSettings: React.FC = () => {
                   <select
                     value={moduleForm.difficulty}
                     onChange={(e) => setModuleForm(prev => ({ ...prev, difficulty: e.target.value }))}
-                    className="px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
+                    className="px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] bg-offblack text-paperwhite placeholder:text-teallight"
                   >
                     <option value="Beginner">Beginner</option>
                     <option value="Intermediate">Intermediate</option>
@@ -413,13 +413,13 @@ const AdminSettings: React.FC = () => {
                     placeholder="Duration (e.g., 2 hours)"
                     value={moduleForm.duration}
                     onChange={(e) => setModuleForm(prev => ({ ...prev, duration: e.target.value }))}
-                    className="px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
+                    className="px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] bg-offblack text-paperwhite placeholder:text-teallight"
                   />
                   <textarea
                     placeholder="Module Description"
                     value={moduleForm.description}
                     onChange={(e) => setModuleForm(prev => ({ ...prev, description: e.target.value }))}
-                    className="md:col-span-2 px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder:text-teallight"
+                    className="md:col-span-2 px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] bg-offblack text-paperwhite placeholder:text-teallight"
                     rows={3}
                   />
                 </div>
@@ -535,7 +535,7 @@ const AdminSettings: React.FC = () => {
                         }
                       ]
                     }))}
-                    className="mt-2 bg-true-turquoise text-paperwhite px-4 py-2 rounded-lg hover:bg-true-turquoise/90"
+                    className="mt-2 bg-[#00B8D9] text-[#FAFAFA] px-4 py-2 rounded-lg hover:bg-[#00B8D9]/90"
                   >
                     + Add Lesson
                   </button>
@@ -642,14 +642,14 @@ const AdminSettings: React.FC = () => {
                               });
                               setShowModuleForm(true);
                             }}
-                            className="bg-true-turquoise hover:bg-true-turquoise/90 text-paperwhite px-2 py-1 rounded transition-colors mr-2"
+                            className="bg-[#00B8D9] hover:bg-[#00B8D9]/90 text-[#FAFAFA] px-2 py-1 rounded transition-colors mr-2"
                             title="Edit"
                           >
                             <Edit3 className="h-4 w-4" />
                           </button>
                           <button
                             onClick={() => handleDeleteModule(module.id)}
-                            className="bg-rust hover:bg-rust/90 text-paperwhite px-2 py-1 rounded transition-colors"
+                            className="bg-[#B7410E] hover:bg-[#B7410E]/90 text-[#FAFAFA] px-2 py-1 rounded transition-colors"
                             title="Delete"
                           >
                             <TrashIcon className="h-4 w-4" />
@@ -671,7 +671,7 @@ const AdminSettings: React.FC = () => {
               <h2 className="text-xl font-semibold text-paperwhite">User Management</h2>
               <button
                 onClick={() => { setShowUserForm(true); setEditingUser(null); setUserForm({ name: '', email: '', password: '', role: 'student', college: '', department: '', careerTrack: '', isActive: true }); }}
-                className="bg-true-turquoise text-paperwhite px-4 py-2 rounded-lg hover:bg-true-turquoise/90 transition-colors flex items-center"
+                className="bg-[#00B8D9] text-[#FAFAFA] px-4 py-2 rounded-lg hover:bg-[#00B8D9]/90 transition-colors flex items-center"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Add User
@@ -680,14 +680,14 @@ const AdminSettings: React.FC = () => {
             <div className="bg-offblack/10 rounded-xl shadow-lg p-6">
               {/* Filters */}
               <div className="flex flex-wrap gap-3 mb-6">
-                <input type="text" placeholder="Name" value={userFilters.name} onChange={e => setUserFilters(f => ({ ...f, name: e.target.value }))} className="px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-true-turquoise/40 focus:border-true-turquoise transition placeholder:text-teallight" />
-                <input type="text" placeholder="Email" value={userFilters.email} onChange={e => setUserFilters(f => ({ ...f, email: e.target.value }))} className="px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-true-turquoise/40 focus:border-true-turquoise transition placeholder:text-teallight" />
-                <select value={userFilters.role} onChange={e => setUserFilters(f => ({ ...f, role: e.target.value }))} className="px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-true-turquoise/40 focus:border-true-turquoise transition">
+                <input type="text" placeholder="Name" value={userFilters.name} onChange={e => setUserFilters(f => ({ ...f, name: e.target.value }))} className="px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] transition placeholder:text-teallight" />
+                <input type="text" placeholder="Email" value={userFilters.email} onChange={e => setUserFilters(f => ({ ...f, email: e.target.value }))} className="px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] transition placeholder:text-teallight" />
+                <select value={userFilters.role} onChange={e => setUserFilters(f => ({ ...f, role: e.target.value }))} className="px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] transition">
                   <option value="">All Roles</option>
                   <option value="student">Student</option>
                   <option value="admin">Admin</option>
                 </select>
-                <select value={userFilters.careerTrack} onChange={e => setUserFilters(f => ({ ...f, careerTrack: e.target.value }))} className="px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-true-turquoise/40 focus:border-true-turquoise transition">
+                <select value={userFilters.careerTrack} onChange={e => setUserFilters(f => ({ ...f, careerTrack: e.target.value }))} className="px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] transition">
                   <option value="">All Tracks</option>
                   <option value="fullstack">Full Stack</option>
                   <option value="ai-ml">AI/ML</option>
@@ -696,10 +696,10 @@ const AdminSettings: React.FC = () => {
                 </select>
               </div>
               {/* Users Table */}
-              <div className="bg-offblack/30 rounded-xl shadow-sm overflow-hidden border border-paperwhite/20">
+              <div className="bg-[#292929] rounded-xl shadow-sm overflow-hidden border border-paperwhite/20">
                 <div className="overflow-x-auto">
                   <table className="w-full">
-                    <thead className="bg-offblack/40">
+                    <thead className="bg-[#292929]">
                       <tr>
                         <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider">Name</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider">Email</th>
@@ -709,7 +709,7 @@ const AdminSettings: React.FC = () => {
                         <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-paperwhite/20 bg-offblack/20">
+                    <tbody className="divide-y divide-paperwhite/20 bg-[#292929]">
                       {usersLoading ? (
                         <tr><td colSpan={6} className="text-center py-6 text-teallight">Loading...</td></tr>
                       ) : (Array.isArray(users) ? users.length : 0) === 0 ? (
@@ -726,21 +726,21 @@ const AdminSettings: React.FC = () => {
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2 text-paperwhite">
                             <button
                               onClick={() => { setEditingUser(user); setUserForm({ ...user, password: '' }); setShowUserForm(true); }}
-                              className="bg-true-turquoise hover:bg-true-turquoise/90 text-paperwhite px-2 py-1 rounded transition-colors"
+                              className="bg-[#00B8D9] hover:bg-[#00B8D9]/90 text-[#FAFAFA] px-2 py-1 rounded transition-colors"
                               title="Edit"
                             >
                               <Edit3 className="h-4 w-4" />
                             </button>
                             <button
                               onClick={() => deleteStudent(user._id)}
-                              className="bg-rust hover:bg-rust/90 text-paperwhite px-2 py-1 rounded transition-colors"
+                              className="bg-[#B7410E] hover:bg-[#B7410E]/90 text-[#FAFAFA] px-2 py-1 rounded transition-colors"
                               title="Delete"
                             >
                               <TrashIcon className="h-4 w-4" />
                             </button>
                             <button
                               onClick={() => updateStudent(user._id, { ...user, isActive: !user.isActive })}
-                              className={`px-2 py-1 rounded transition-colors ${user.isActive ? 'bg-offblack hover:bg-offblack/20 text-paperwhite' : 'bg-true-turquoise hover:bg-true-turquoise/90 text-paperwhite'}`}
+                              className={`px-2 py-1 rounded transition-colors ${user.isActive ? 'bg-offblack hover:bg-offblack/20 text-paperwhite' : 'bg-[#00B8D9] hover:bg-[#00B8D9]/90 text-[#FAFAFA]'}`}
                               title={user.isActive ? 'Deactivate' : 'Activate'}
                             >
                               {user.isActive ? <Users className="h-4 w-4" /> : <CheckCircledIcon className="h-4 w-4" />}
@@ -759,16 +759,16 @@ const AdminSettings: React.FC = () => {
                 <div className="bg-offblack rounded-xl shadow-2xl p-8 w-full max-w-md border border-paperwhite/20">
                   <h3 className="text-lg font-semibold mb-4 text-paperwhite">{editingUser ? 'Edit User' : 'Add User'}</h3>
                   <div className="space-y-3">
-                    <input type="text" placeholder="Name" value={userForm.name} onChange={e => setUserForm(f => ({ ...f, name: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-true-turquoise/40 focus:border-true-turquoise transition placeholder:text-teallight" />
-                    <input type="email" placeholder="Email" value={userForm.email} onChange={e => setUserForm(f => ({ ...f, email: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-true-turquoise/40 focus:border-true-turquoise transition placeholder:text-teallight" />
-                    {!editingUser && <input type="password" placeholder="Password" value={userForm.password} onChange={e => setUserForm(f => ({ ...f, password: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-true-turquoise/40 focus:border-true-turquoise transition placeholder:text-teallight" />}
-                    <select value={userForm.role} onChange={e => setUserForm(f => ({ ...f, role: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-true-turquoise/40 focus:border-true-turquoise transition">
+                    <input type="text" placeholder="Name" value={userForm.name} onChange={e => setUserForm(f => ({ ...f, name: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] transition placeholder:text-teallight" />
+                    <input type="email" placeholder="Email" value={userForm.email} onChange={e => setUserForm(f => ({ ...f, email: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] transition placeholder:text-teallight" />
+                    {!editingUser && <input type="password" placeholder="Password" value={userForm.password} onChange={e => setUserForm(f => ({ ...f, password: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] transition placeholder:text-teallight" />}
+                    <select value={userForm.role} onChange={e => setUserForm(f => ({ ...f, role: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] transition">
                       <option value="student">Student</option>
                       <option value="admin">Admin</option>
                     </select>
-                    <input type="text" placeholder="College" value={userForm.college} onChange={e => setUserForm(f => ({ ...f, college: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-true-turquoise/40 focus:border-true-turquoise transition placeholder:text-teallight" />
-                    <input type="text" placeholder="Department" value={userForm.department} onChange={e => setUserForm(f => ({ ...f, department: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-true-turquoise/40 focus:border-true-turquoise transition placeholder:text-teallight" />
-                    <select value={userForm.careerTrack} onChange={e => setUserForm(f => ({ ...f, careerTrack: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-true-turquoise/40 focus:border-true-turquoise transition">
+                    <input type="text" placeholder="College" value={userForm.college} onChange={e => setUserForm(f => ({ ...f, college: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] transition placeholder:text-teallight" />
+                    <input type="text" placeholder="Department" value={userForm.department} onChange={e => setUserForm(f => ({ ...f, department: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] transition placeholder:text-teallight" />
+                    <select value={userForm.careerTrack} onChange={e => setUserForm(f => ({ ...f, careerTrack: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] transition">
                       <option value="">Select Track</option>
                       <option value="fullstack">Full Stack</option>
                       <option value="ai-ml">AI/ML</option>
@@ -814,7 +814,7 @@ const AdminSettings: React.FC = () => {
                           setUserFormError(err.message || 'Failed to add/update user.');
                         }
                       }}
-                      className="px-4 py-2 bg-true-turquoise text-paperwhite rounded-lg hover:bg-true-turquoise/90 transition"
+                      className="px-4 py-2 bg-[#00B8D9] text-[#FAFAFA] rounded-lg hover:bg-[#00B8D9]/90 transition"
                     >
                       {editingUser ? 'Update' : 'Add'}
                     </button>
@@ -861,7 +861,7 @@ const AdminSettings: React.FC = () => {
               <span className="text-paperwhite font-medium">Analytics Enabled</span>
               <button
                 type="button"
-                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${settingsDraft?.integrations?.analyticsEnabled ? 'bg-trueturquoise' : 'bg-offblack'}`}
+                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${settingsDraft?.integrations?.analyticsEnabled ? 'bg-[#00B8D9]' : 'bg-offblack'}`}
                 onClick={() => handleSettingChange('integrations', 'analyticsEnabled', !settingsDraft?.integrations?.analyticsEnabled)}
               >
                 <span className={`h-4 w-4 bg-paperwhite rounded-full shadow transform transition-transform duration-300 ${settingsDraft?.integrations?.analyticsEnabled ? 'translate-x-6' : ''}`}></span>
@@ -872,14 +872,14 @@ const AdminSettings: React.FC = () => {
               <span className="text-paperwhite font-medium">Backup Enabled</span>
               <button
                 type="button"
-                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${settingsDraft?.integrations?.backupEnabled ? 'bg-trueturquoise' : 'bg-offblack'}`}
+                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${settingsDraft?.integrations?.backupEnabled ? 'bg-[#00B8D9]' : 'bg-offblack'}`}
                 onClick={() => handleSettingChange('integrations', 'backupEnabled', !settingsDraft?.integrations?.backupEnabled)}
               >
                 <span className={`h-4 w-4 bg-paperwhite rounded-full shadow transform transition-transform duration-300 ${settingsDraft?.integrations?.backupEnabled ? 'translate-x-6' : ''}`}></span>
               </button>
             </div>
             <button
-              className="mt-4 bg-trueturquoise text-paperwhite px-6 py-2 rounded-lg hover:bg-trueturquoise/90 transition-all font-medium"
+              className="mt-4 bg-[#00B8D9] text-[#FAFAFA] px-6 py-2 rounded-lg hover:bg-[#00B8D9]/90 transition-all font-medium"
               onClick={handleSaveSettings}
               disabled={isSaving}
             >
@@ -896,7 +896,7 @@ const AdminSettings: React.FC = () => {
           <button
             onClick={handleSaveSettings}
             disabled={isSaving}
-            className="bg-trueturquoise text-paperwhite px-6 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium flex items-center disabled:opacity-50"
+            className="bg-[#00B8D9] text-[#FAFAFA] px-6 py-2 rounded-lg hover:bg-[#00B8D9]/90 transition-colors font-medium flex items-center disabled:opacity-50"
           >
             {isSaving ? (
               <>
