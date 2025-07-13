@@ -56,7 +56,7 @@ const LevelTestPage: React.FC = () => {
   );
   const [timeLeft, setTimeLeft] = useState(TEST_DURATION);
   const [submitted, setSubmitted] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (submitted) return;
@@ -88,9 +88,11 @@ const LevelTestPage: React.FC = () => {
   };
 
   return (
-    <div className="flex h-full min-h-screen w-full bg-offblack">
-      <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelNum} currentSection="test" />
-      <main className="flex-1 p-6 lg:p-12 bg-offblack">
+    <div className="flex h-screen w-screen bg-offblack overflow-hidden">
+      <div className="flex-shrink-0 h-full">
+        <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelNum} currentSection="test" />
+      </div>
+      <main className="flex-1 h-full overflow-y-auto p-6 lg:p-12 bg-offblack">
         <div className="mb-8 relative">
           <div className="flex items-center justify-between mb-6">
             <div>
