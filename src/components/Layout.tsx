@@ -142,18 +142,18 @@ const Layout: React.FC = () => {
 
   const isActive = (path: string) => location.pathname === path;
 
-  const studentNavItems = [
+  // Separate main and bottom nav items for students
+  const mainStudentNavItems = [
     { path: '/student/dashboard', icon: HomeIcon, label: 'Dashboard' },
     { path: '/student/training/current', icon: LightningBoltIcon, label: 'Training' },
     { path: '/student/projects', icon: FileTextIcon, label: 'Projects' },
     { path: '/student/internships', icon: EnvelopeClosedIcon, label: 'Internships', locked: true },
     { path: '/student/job-portal', icon: GlobeIcon, label: 'Job Portal', locked: true },
   ];
-  // Add Mock Interview and Leaderboard at the end
-  studentNavItems.push(
+  const bottomStudentNavItems = [
     { path: '/student/mock-interview', icon: ChatBubbleIcon, label: 'Mock Interview', locked: true },
     { path: '/student/leaderboard', icon: StarIcon, label: 'Leaderboard', locked: true }
-  );
+  ];
 
   const adminNavItems = [
     { path: '/admin', icon: BarChartIcon, label: 'Admin Dashboard' },
@@ -165,7 +165,7 @@ const Layout: React.FC = () => {
     { path: '/admin/settings', icon: GearIcon, label: 'Settings' },
   ];
 
-  const navItems = user?.role === 'admin' ? adminNavItems : studentNavItems;
+  const navItems = user?.role === 'admin' ? adminNavItems : mainStudentNavItems;
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
@@ -190,7 +190,7 @@ const Layout: React.FC = () => {
             ref={logoRef}
             style={{ zIndex: 10 }}
           />
-          {!isSidebarCollapsed && <span className="ml-3 text-paperwhite text-lg font-heading" style={{ fontFamily: 'Amatic SC, FK Grotesk, Inter, Helvetica Neue, Arial, sans-serif' }}>Syncner</span>}
+          {!isSidebarCollapsed && <span className="ml-3 text-paperwhite text-2xl font-heading" style={{ fontFamily: 'Amatic SC, FK Grotesk, Inter, Helvetica Neue, Arial, sans-serif' }}>Syncner</span>}
         </div>
         {/* Arrow toggle at vertical center right edge, overlapping border */}
         <button
@@ -201,44 +201,86 @@ const Layout: React.FC = () => {
         >
           {isSidebarCollapsed ? <ChevronRightIcon className="h-5 w-5 text-paperwhite" /> : <ChevronLeftIcon className="h-5 w-5 text-paperwhite" />}
         </button>
-        <nav className="mt-2 flex-1">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isLocked = 'locked' in item && item.locked;
-            
-            if (isLocked) {
+        <nav className="flex-1 flex flex-col justify-between">
+          <div>
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isLocked = 'locked' in item && item.locked;
+              
+              if (isLocked) {
+                return (
+                  <div
+                    key={item.path}
+                    className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : ''} px-3 py-3 text-sm transition-colors text-paperwhite/50 cursor-not-allowed`}
+                    title="Coming Soon"
+                  >
+                    <Icon className="h-5 w-5" />
+                    {!isSidebarCollapsed && (
+                      <>
+                        <span className="ml-3">{item.label}</span>
+                        <LockClosedIcon className="h-4 w-4 ml-auto" />
+                      </>
+                    )}
+                  </div>
+                );
+              }
+              
               return (
-                <div
+                <Link
                   key={item.path}
-                  className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : ''} px-3 py-3 text-sm transition-colors text-paperwhite/50 cursor-not-allowed`}
-                  title="Coming Soon"
+                  to={item.path}
+                  className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : ''} px-3 py-3 text-sm transition-colors ${
+                    isActive(item.path)
+                      ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise'
+                      : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'
+                  }`}
                 >
                   <Icon className="h-5 w-5" />
-                  {!isSidebarCollapsed && (
-                    <>
-                      <span className="ml-3">{item.label}</span>
-                      <LockClosedIcon className="h-4 w-4 ml-auto" />
-                    </>
-                  )}
-                </div>
+                  {!isSidebarCollapsed && <span className="ml-3">{item.label}</span>}
+                </Link>
               );
-            }
-            
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : ''} px-3 py-3 text-sm transition-colors ${
-                  isActive(item.path)
-                    ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise'
-                    : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'
-                }`}
-              >
-                <Icon className="h-5 w-5" />
-                {!isSidebarCollapsed && <span className="ml-3">{item.label}</span>}
-              </Link>
-            );
-          })}
+            })}
+          </div>
+          {/* Bottom section for Mock Interview and Leaderboard */}
+          {user?.role !== 'admin' && (
+            <div className="mt-4 pt-4 border-t border-paperwhite/10">
+              {bottomStudentNavItems.map((item) => {
+                const Icon = item.icon;
+                const isLocked = 'locked' in item && item.locked;
+                if (isLocked) {
+                  return (
+                    <div
+                      key={item.path}
+                      className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : ''} px-3 py-3 text-sm transition-colors text-paperwhite/50 cursor-not-allowed`}
+                      title="Coming Soon"
+                    >
+                      <Icon className="h-5 w-5" />
+                      {!isSidebarCollapsed && (
+                        <>
+                          <span className="ml-3">{item.label}</span>
+                          <LockClosedIcon className="h-4 w-4 ml-auto" />
+                        </>
+                      )}
+                    </div>
+                  );
+                }
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : ''} px-3 py-3 text-sm transition-colors ${
+                      isActive(item.path)
+                        ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise'
+                        : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'
+                    }`}
+                  >
+                    <Icon className="h-5 w-5" />
+                    {!isSidebarCollapsed && <span className="ml-3">{item.label}</span>}
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </nav>
         {isSidebarCollapsed ? (
           <div className="flex flex-col items-center gap-4 pb-6">
@@ -261,6 +303,7 @@ const Layout: React.FC = () => {
             >
               <ExitIcon className="h-5 w-5 text-trueturquoise" />
             </button>
+            <div className="mt-4 text-center text-xs text-teallight font-label opacity-80 select-none">v1.0</div>
           </div>
         ) : (
           <div className="p-6 border-t border-trueturquoise">
@@ -290,6 +333,7 @@ const Layout: React.FC = () => {
               <ExitIcon className="h-4 w-4 mr-2 text-trueturquoise" />
             Sign Out
           </button>
+          <div className="mt-4 text-center text-xs text-teallight font-label opacity-80 select-none">V1.0</div>
         </div>
         )}
       </div>
@@ -412,6 +456,7 @@ const Layout: React.FC = () => {
             <ExitIcon className="h-5 w-5 mr-3" />
             Sign Out
           </button>
+          <div className="mt-4 text-center text-xs text-teallight font-label opacity-80 select-none">V1.0</div>
         </div>
       </div>
 
