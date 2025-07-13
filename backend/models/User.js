@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema({
   },
   college: {
     type: String,
-    required: [true, 'College is required'],
+    required: function() { return this.role === 'student' || this.role === 'staff'; },
     trim: true,
     maxlength: [100, 'College name cannot exceed 100 characters']
   },
