@@ -2,17 +2,22 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import LevelsSidebar from '../components/LevelsSidebar';
 
+const randomStatus = () => (Math.random() > 0.5 ? 'Completed' : 'Pending');
+
 const mandatoryTasks = [
-  { id: 1, name: 'Explain & Record', brief: 'Explain the topic your friend & record', difficulty: 'Easy', points: 5, status: 'Pending' },
-  { id: 2, name: 'Explain & Record', brief: 'Explain the topic your friend & record', difficulty: 'Medium', points: 10, status: 'Pending' },
-  { id: 3, name: 'Explain & Record', brief: 'Explain the topic your friend & record', difficulty: 'Medium', points: 10, status: 'Pending' },
-  { id: 4, name: 'Explain & Record', brief: 'Explain the topic your friend & record', difficulty: 'Hard', points: 15, status: 'Pending' },
+  { id: 1, name: 'Explain & Record', brief: 'Explain the topic your friend & record', difficulty: 'Easy', points: 5, status: randomStatus() },
+  { id: 2, name: 'Explain & Record', brief: 'Explain the topic your friend & record', difficulty: 'Medium', points: 10, status: randomStatus() },
+  { id: 3, name: 'Explain & Record', brief: 'Explain the topic your friend & record', difficulty: 'Medium', points: 10, status: randomStatus() },
+  { id: 4, name: 'Explain & Record', brief: 'Explain the topic your friend & record', difficulty: 'Hard', points: 15, status: randomStatus() },
 ];
 
 const optionalTasks = [
-  { id: 1, name: 'Explain & Record', brief: 'Explain the topic your friend & record', difficulty: 'Hard', points: 15, status: 'Pending' },
-  { id: 2, name: 'Explain & Record', brief: 'Explain the topic your friend & record', difficulty: 'Extreme', points: 20, status: 'Pending' },
+  { id: 1, name: 'Explain & Record', brief: 'Explain the topic your friend & record', difficulty: 'Hard', points: 15, status: randomStatus() },
+  { id: 2, name: 'Explain & Record', brief: 'Explain the topic your friend & record', difficulty: 'Extreme', points: 20, status: randomStatus() },
 ];
+
+const statusColor = (status: string) =>
+  status === 'Completed' ? 'bg-trueturquoise/20 text-trueturquoise' : 'bg-paperwhite/10 text-teallight';
 
 const LevelExercisePage: React.FC = () => {
   const { levelId } = useParams<{ levelId: string }>();
@@ -51,7 +56,7 @@ const LevelExercisePage: React.FC = () => {
                     <td className="py-3 px-3 text-trueturquoise font-bold">{task.points}</td>
                     <td className="py-3 px-3">
                       <div className="flex items-center gap-2">
-                        <span className="inline-block w-16 h-6 rounded bg-paperwhite/20" />
+                        <span className={`inline-block px-3 py-1 rounded-full font-semibold text-xs ${statusColor(task.status)}`}>{task.status}</span>
                         <button className="bg-paperwhite text-offblack px-4 py-1 rounded font-bold text-sm shadow hover:bg-trueturquoise hover:text-offblack transition-colors">View</button>
                       </div>
                     </td>
@@ -75,7 +80,7 @@ const LevelExercisePage: React.FC = () => {
                     <td className="py-3 px-3 text-trueturquoise font-bold">{task.points}</td>
                     <td className="py-3 px-3">
                       <div className="flex items-center gap-2">
-                        <span className="inline-block w-16 h-6 rounded bg-paperwhite/20" />
+                        <span className={`inline-block px-3 py-1 rounded-full font-semibold text-xs ${statusColor(task.status)}`}>{task.status}</span>
                         <button className="bg-paperwhite text-offblack px-4 py-1 rounded font-bold text-sm shadow hover:bg-trueturquoise hover:text-offblack transition-colors">View</button>
                       </div>
                     </td>
