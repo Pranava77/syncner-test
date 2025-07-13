@@ -21,6 +21,7 @@ import StudentProfile from './pages/StudentProfile';
 import AdminProfile from './pages/AdminProfile';
 import { AnimatePresence, motion } from 'framer-motion';
 import { fetchCurrentUser } from './redux/slices/authSlice';
+import AdminStaff from './pages/AdminStaff';
 
 function AdminWrapper() {
   return (
@@ -121,6 +122,7 @@ function App() {
         </Route>
         <Route path="/admin/*" element={<AdminWrapper />}>
           <Route index element={<AdminDashboard />} />
+          <Route path="staff" element={<AdminStaff />} />
           <Route path="analytics" element={<AdminAnalytics />} />
           <Route path="diagnostics" element={<AdminDiagnostics />} />
           <Route path="settings" element={<AdminSettings />} />

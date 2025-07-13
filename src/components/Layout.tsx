@@ -21,6 +21,7 @@ import {
   LockClosedIcon,
   EnvelopeClosedIcon,
   StarIcon,
+  GroupIcon as Users,
 } from '@radix-ui/react-icons';
 import logo from '../assets/syncner-logo.png';
 import LoadingScreen from './LoadingScreen';
@@ -153,6 +154,7 @@ const Layout: React.FC = () => {
 
   const adminNavItems = [
     { path: '/admin', icon: BarChartIcon, label: 'Admin Dashboard' },
+    { path: '/admin/staff', icon: Users, label: 'Staff Management' },
     { path: '/admin/analytics', icon: RocketIcon, label: 'Analytics' },
     { path: '/admin/diagnostics', icon: GlobeIcon, label: 'System Diagnostics' },
     { path: '/admin/settings', icon: GearIcon, label: 'Settings' },

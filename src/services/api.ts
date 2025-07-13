@@ -365,6 +365,52 @@ class ApiService {
     });
     return this.handleResponse(response, true);
   }
+
+  // Staff endpoints
+  async getAllStaff() {
+    const response = await fetch(`${this.baseURL}/staff`, {
+      headers: this.getHeaders(),
+      credentials: 'include',
+    });
+    return this.handleResponse(response, false);
+  }
+
+  async getStaffById(staffId: string) {
+    const response = await fetch(`${this.baseURL}/staff/${staffId}`, {
+      headers: this.getHeaders(),
+      credentials: 'include',
+    });
+    return this.handleResponse(response, false);
+  }
+
+  async createStaff(staffData: any) {
+    const response = await fetch(`${this.baseURL}/staff`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify(staffData),
+      credentials: 'include',
+    });
+    return this.handleResponse(response, false);
+  }
+
+  async updateStaff(staffId: string, staffData: any) {
+    const response = await fetch(`${this.baseURL}/staff/${staffId}`, {
+      method: 'PUT',
+      headers: this.getHeaders(),
+      body: JSON.stringify(staffData),
+      credentials: 'include',
+    });
+    return this.handleResponse(response, false);
+  }
+
+  async deleteStaff(staffId: string) {
+    const response = await fetch(`${this.baseURL}/staff/${staffId}`, {
+      method: 'DELETE',
+      headers: this.getHeaders(),
+      credentials: 'include',
+    });
+    return this.handleResponse(response, false);
+  }
 }
 
 export default new ApiService();

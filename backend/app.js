@@ -28,6 +28,7 @@ import trainingRoutes from './routes/trainingRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
+import staffRoutes from './routes/staffRoutes.js';
 
 // Import middleware
 import { errorHandler } from './middleware/errorHandler.js';
@@ -84,6 +85,7 @@ app.use('/api/training', trainingRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/admin/settings', settingsRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/staff', staffRoutes);
 
 // Health check endpoint
 const serverStartTime = Date.now();

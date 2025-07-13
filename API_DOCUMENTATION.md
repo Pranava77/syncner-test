@@ -407,6 +407,150 @@ Delete a user (Admin only).
 
 ---
 
+## Staff Management
+
+### Get All Staff
+**GET** `/staff`
+
+Get a list of all staff members. (Authenticated users only)
+
+**Headers:** `Authorization: Bearer <token>`
+
+**Response (200):**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "_id": "staff_id",
+      "name": "Alice Smith",
+      "email": "alice@school.edu",
+      "department": "Mathematics",
+      "role": "teacher",
+      "isActive": true,
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    }
+  ]
+}
+```
+
+### Get Staff by ID
+**GET** `/staff/:id`
+
+Get details of a specific staff member by ID. (Authenticated users only)
+
+**Headers:** `Authorization: Bearer <token>`
+
+**Response (200):**
+```json
+{
+  "success": true,
+  "data": {
+    "_id": "staff_id",
+    "name": "Alice Smith",
+    "email": "alice@school.edu",
+    "department": "Mathematics",
+    "role": "teacher",
+    "isActive": true,
+    "createdAt": "2024-01-01T00:00:00.000Z"
+  }
+}
+```
+
+### Create Staff (Admin Only)
+**POST** `/staff`
+
+Create a new staff member. (Admin only)
+
+**Headers:** `Authorization: Bearer <admin_token>`
+
+**Request Body:**
+```json
+{
+  "name": "Alice Smith",
+  "email": "alice@school.edu",
+  "department": "Mathematics",
+  "role": "teacher",
+  "isActive": true
+}
+```
+
+**Validation:**
+- `name` (string, required)
+- `email` (string, required, valid email format)
+- `role` (string, required, one of: "admin", "teacher", "staff")
+
+**Response (201):**
+```json
+{
+  "success": true,
+  "data": {
+    "_id": "staff_id",
+    "name": "Alice Smith",
+    "email": "alice@school.edu",
+    "department": "Mathematics",
+    "role": "teacher",
+    "isActive": true,
+    "createdAt": "2024-01-01T00:00:00.000Z"
+  }
+}
+```
+
+### Update Staff (Admin Only)
+**PUT** `/staff/:id`
+
+Update an existing staff member. (Admin only)
+
+**Headers:** `Authorization: Bearer <admin_token>`
+
+**Request Body:**
+```json
+{
+  "name": "Alice Smith Updated",
+  "department": "Physics",
+  "role": "admin",
+  "isActive": false
+}
+```
+
+**Validation:**
+- `name` (string, required)
+- `email` (string, required, valid email format)
+- `role` (string, required, one of: "admin", "teacher", "staff")
+
+**Response (200):**
+```json
+{
+  "success": true,
+  "data": {
+    "_id": "staff_id",
+    "name": "Alice Smith Updated",
+    "email": "alice@school.edu",
+    "department": "Physics",
+    "role": "admin",
+    "isActive": false,
+    "createdAt": "2024-01-01T00:00:00.000Z"
+  }
+}
+```
+
+### Delete Staff (Admin Only)
+**DELETE** `/staff/:id`
+
+Delete a staff member. (Admin only)
+
+**Headers:** `Authorization: Bearer <admin_token>`
+
+**Response (200):**
+```json
+{
+  "success": true,
+  "message": "Staff deleted"
+}
+```
+
+---
+
 ## Task Management
 
 ### Get All Tasks

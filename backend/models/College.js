@@ -1,107 +1,37 @@
 import mongoose from 'mongoose';
 
-const collegeSchema = new mongoose.Schema({
+const staffSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'College name is required'],
+    required: [true, 'Staff name is required'],
     trim: true,
-    unique: true
+    maxlength: [100, 'Name cannot exceed 100 characters']
   },
-  code: {
+  email: {
     type: String,
-    required: [true, 'College code is required'],
+    required: [true, 'Email is required'],
     trim: true,
     unique: true,
-    uppercase: true
+    lowercase: true,
+    match: [/.+@.+\..+/, 'Please enter a valid email address']
   },
-  location: {
-    city: String,
-    state: String,
-    country: {
-      type: String,
-      default: 'USA'
-    }
-  },
-  type: {
+  department: {
     type: String,
-    enum: ['university', 'college', 'institute'],
-    default: 'university'
+    trim: true,
+    maxlength: [100, 'Department name cannot exceed 100 characters']
   },
-  departments: [{
-    name: {
-      type: String,
-      required: true,
-      trim: true
-    },
-    code: {
-      type: String,
-      trim: true
-    },
-    isActive: {
-      type: Boolean,
-      default: true
-    }
-  }],
-  adminUsers: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  }],
-  students: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  }],
-  settings: {
-    allowStudentRegistration: {
-      type: Boolean,
-      default: true
-    },
-    requireApproval: {
-      type: Boolean,
-      default: false
-    },
-    maxStudents: {
-      type: Number,
-      default: 1000
-    },
-    allowSelfRegistration: {
-      type: Boolean,
-      default: false
-    },
-    requireEmailVerification: {
-      type: Boolean,
-      default: true
-    },
-    defaultCareerTrack: {
-      type: String,
-      default: 'fullstack'
-    }
+  role: {
+    type: String,
+    enum: ['admin', 'teacher', 'staff'],
+    default: 'staff',
+    required: true
   },
   isActive: {
     type: Boolean,
     default: true
-  },
-  establishedYear: Number,
-  website: String,
-  logo: String
+  }
 }, {
-  timestamps: true,
-  toJSON: { virtuals: true },
-  toObject: { virtuals: true }
+  timestamps: true
 });
 
-// Indexes
-
-collegeSchema.index({ location: 1 });
-collegeSchema.index({ isActive: 1 });
-
-// Virtual for student count
-collegeSchema.virtual('studentCount').get(function() {
-  return this.students.length;
-});
-
-// Virtual for admin count
-collegeSchema.virtual('adminCount').get(function() {
-  return this.adminUsers.length;
-});
-
-export default mongoose.model('College', collegeSchema);
+export default mongoose.model('Staff', staffSchema);
