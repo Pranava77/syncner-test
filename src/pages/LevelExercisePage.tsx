@@ -25,8 +25,8 @@ const LevelExercisePage: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
-    <div className="flex min-h-screen w-screen bg-offblack overflow-x-hidden">
-      <div className="flex-shrink-0 min-h-screen">
+    <div className="flex h-screen bg-offblack overflow-x-hidden">
+      <div className="flex-shrink-0 h-full">
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelNum} currentSection="exercise" />
       </div>
       <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
@@ -68,6 +68,16 @@ const LevelExercisePage: React.FC = () => {
           <h2 className="text-lg font-bold text-paperwhite mt-8 mb-4">Optional</h2>
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="text-xs text-teallight uppercase border-b border-paperwhite/10">
+                  <th className="py-2 px-3 font-semibold">S.No</th>
+                  <th className="py-2 px-3 font-semibold">Task name</th>
+                  <th className="py-2 px-3 font-semibold">Brief</th>
+                  <th className="py-2 px-3 font-semibold">Difficulty Level</th>
+                  <th className="py-2 px-3 font-semibold">Credit Points</th>
+                  <th className="py-2 px-3 font-semibold">Status</th>
+                </tr>
+              </thead>
               <tbody>
                 {optionalTasks.map((task, idx) => (
                   <tr key={task.id} className="border-b border-paperwhite/10 last:border-b-0 hover:bg-paperwhite/10 transition">
