@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
-import { useAppSelector } from '../redux/store';
 import { ReloadIcon, ExclamationTriangleIcon, CheckCircledIcon } from '@radix-ui/react-icons';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { fetchDiagnostics } from '../redux/slices/diagnosticsSlice';
 import { useAppDispatch } from '../redux/store';
 import LoadingScreen from '../components/LoadingScreen';
@@ -43,7 +42,7 @@ const AdminDiagnostics: React.FC = () => {
     <div className="space-y-6 lg:space-y-8 p-4 lg:p-8 bg-black">
       <div className="flex items-center mb-8 gap-3">
         <CheckCircledIcon className="h-7 w-7 text-trueturquoise" />
-        <h1 className="text-2xl font-bold text-paperwhite font-heading">System Diagnostics</h1>
+        <h1 className="text-2xl text-paperwhite font-heading">System Diagnostics</h1>
       </div>
       <div className="flex items-center justify-between mb-4">
         <div className="text-teallight text-sm font-label">
@@ -60,7 +59,7 @@ const AdminDiagnostics: React.FC = () => {
       </div>
       <div className="mb-4">
         <span className={`${healthyCount === totalCount ? 'text-trueturquoise' : 'text-rust'} font-label`}>{healthyCount}/{totalCount}</span>
-        {' '}<span className="text-teallight font-label">modules healthy</span>
+        {' '}<span className="text-teallight font-label">services healthy</span>
       </div>
       {error && (
         <div className="bg-rust/10 text-rust px-4 py-2 rounded mb-4 flex items-center gap-2">
@@ -72,7 +71,7 @@ const AdminDiagnostics: React.FC = () => {
         <table className="min-w-full bg-offblack shadow rounded-lg">
           <thead>
             <tr>
-              <th className="px-4 py-2 text-left text-paperwhite bg-paperwhite/10">Module</th>
+              <th className="px-4 py-2 text-left text-paperwhite bg-paperwhite/10">Service</th>
               <th className="px-4 py-2 text-left text-paperwhite bg-paperwhite/10">Status</th>
               <th className="px-4 py-2 text-left text-paperwhite bg-paperwhite/10">Message</th>
               <th className="px-4 py-2 text-left text-paperwhite bg-paperwhite/10">Error</th>

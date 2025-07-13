@@ -13,9 +13,9 @@ router.put('/', protect, authorize('admin'), updateSettings);
 router.get('/health', async (req, res) => {
   try {
     await Settings.findOne();
-    res.status(200).json({ success: true, message: 'Settings module is healthy' });
+    res.status(200).json({ success: true, message: 'Settings service is healthy' });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Settings module health check failed', error: error.message });
+    res.status(500).json({ success: false, message: 'Settings service health check failed', error: error.message });
   }
 });
 

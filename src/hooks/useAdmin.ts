@@ -12,7 +12,6 @@ interface Student {
   college?: string;
   careerTrack?: string;
   progress?: number;
-  tasksCompleted?: number;
   lastActive?: string;
   status?: string;
   joinDate?: string;
@@ -26,14 +25,7 @@ interface Analytics {
   completionRate: number;
   avgProgress: number;
   attendanceData: Array<{ day: string; students: number }>;
-  submissionsByStatus: Array<{ status: string; count: number }>;
   trackDistribution: Array<{ track: string; count: number }>;
-  averageTaskScore: number;
-  averageTimePerModule: number;
-  studentRetention: number;
-  engagementData: Array<{ date: string; activeUsers: number; sessions: number; avgDuration: number }>;
-  careerTrackData: Array<{ track: string; students: number; avgProgress: number; completionRate: number }>;
-  modulePerformance: Array<{ module: string; completions: number; avgScore: number; avgTime: number }>;
 }
 
 export const useStudents = (filters?: Record<string, any>) => {

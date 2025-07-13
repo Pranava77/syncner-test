@@ -11,9 +11,9 @@ router.get('/', getAllTracks);
 router.get('/health', async (req, res) => {
   try {
     await Track.findOne();
-    res.status(200).json({ success: true, message: 'Tracks module is healthy' });
+    res.status(200).json({ success: true, message: 'Tracks service is healthy' });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Tracks module health check failed', error: error.message });
+    res.status(500).json({ success: false, message: 'Tracks service health check failed', error: error.message });
   }
 });
 

@@ -12,9 +12,9 @@ router.get('/', (req, res) => {
 router.get('/health', async (req, res) => {
   try {
     await User.findOne();
-    res.status(200).json({ success: true, message: 'Users module is healthy' });
+    res.status(200).json({ success: true, message: 'Users service is healthy' });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Users module health check failed', error: error.message });
+    res.status(500).json({ success: false, message: 'Users service health check failed', error: error.message });
   }
 });
 

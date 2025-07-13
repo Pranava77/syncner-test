@@ -39,7 +39,7 @@ router.get('/analytics', protect, authorize('admin'), getAnalytics);
 router.get('/health', async (req, res) => {
   try {
     await User.findOne();
-    res.status(200).json({ success: true, message: 'Admin module is healthy' });
+    res.status(200).json({ success: true, message: 'Admin service is healthy' });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Admin module health check failed', error: error.message });
   }
@@ -53,9 +53,7 @@ router.get('/diagnostics', protect, authorize('admin'), async (req, res) => {
     { name: 'users', url: '/api/users/health' },
     { name: 'tracks', url: '/api/tracks/health' },
     { name: 'training', url: '/api/training/health' },
-    { name: 'tasks', url: '/api/tasks/health' },
     { name: 'admin', url: '/api/admin/health' },
-    { name: 'submissions', url: '/api/submissions/health' },
     { name: 'settings', url: '/api/admin/settings/health' },
     { name: 'ai', url: '/api/ai/health' }
   ];

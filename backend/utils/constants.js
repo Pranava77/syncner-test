@@ -11,13 +11,6 @@ const CAREER_TRACKS = {
   DATA_SCIENCE: 'data-science'
 };
 
-const MODULE_STATUS = {
-  LOCKED: 'locked',
-  AVAILABLE: 'available',
-  IN_PROGRESS: 'in-progress',
-  COMPLETED: 'completed'
-};
-
 const DIFFICULTY_LEVELS = {
   BEGINNER: 'Beginner',
   INTERMEDIATE: 'Intermediate',
@@ -34,7 +27,6 @@ const LESSON_TYPES = {
 export {
   USER_ROLES,
   CAREER_TRACKS,
-  MODULE_STATUS,
   DIFFICULTY_LEVELS,
   LESSON_TYPES
 };

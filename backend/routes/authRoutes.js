@@ -52,9 +52,9 @@ router.get('/health', async (req, res) => {
   try {
     // Try a simple query
     await User.findOne();
-    res.status(200).json({ success: true, message: 'Auth module is healthy' });
+    res.status(200).json({ success: true, message: 'Auth service is healthy' });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Auth module health check failed', error: error.message });
+    res.status(500).json({ success: false, message: 'Auth service health check failed', error: error.message });
   }
 });
 

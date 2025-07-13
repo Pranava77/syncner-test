@@ -12,8 +12,6 @@ export interface User {
   profileComplete: boolean;
   level?: string;
   interests?: string[];
-  completedModules?: string[];
-  taskProgress?: { [key: string]: any };
   streakDays?: number;
   totalPoints?: number;
   phone?: string;

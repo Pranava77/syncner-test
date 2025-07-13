@@ -19,8 +19,6 @@ interface StudentProgressData {
   overallProgress: number;
   streakDays: number;
   totalPoints: number;
-  completedModulesCount: number;
-  completedTasksCount: number;
 }
 
 const StudentProfile: React.FC = () => {
@@ -287,16 +285,6 @@ const StudentProfile: React.FC = () => {
                     <div className="text-2xl font-bold text-trueturquoise mb-1">{progress.totalPoints}</div>
                     <div className="text-xs text-teallight">Total Points</div>
                   </div>
-                  
-                  <div className="bg-paperwhite/5 border border-paperwhite/10 rounded-lg p-4 text-center">
-                    <div className="text-2xl font-bold text-trueturquoise mb-1">{progress.completedModulesCount}</div>
-                    <div className="text-xs text-teallight">Modules Completed</div>
-              </div>
-                  
-                  <div className="bg-paperwhite/5 border border-paperwhite/10 rounded-lg p-4 text-center">
-                    <div className="text-2xl font-bold text-trueturquoise mb-1">{progress.completedTasksCount}</div>
-                    <div className="text-xs text-teallight">Tasks Completed</div>
-              </div>
               </div>
               </div>
             ) : (

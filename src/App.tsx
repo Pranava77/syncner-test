@@ -10,7 +10,6 @@ import StudentDashboard from './pages/StudentDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminAnalytics from './pages/AdminAnalytics';
 import AdminSettings from './pages/AdminSettings';
-import TrainingModule from './pages/TrainingModule';
 import OnboardingFlow from './pages/OnboardingFlow';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminDiagnostics from './pages/AdminDiagnostics';

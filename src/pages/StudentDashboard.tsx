@@ -48,13 +48,8 @@ const StudentDashboard: React.FC = () => {
   const progressLoading = progressState.loading;
   const levelsLoading = levelsState.loading;
 
-  // Get current module (first incomplete module)
-  const currentLevel = levels.find((l: any) => l.status === 'in-progress') || levels[0];
-
-  const achievements = [
-    { title: 'First Module Complete', icon: '🎯', earned: (progress?.completedModulesCount ?? 0) > 0 },
-    { title: 'Week Streak', icon: '🔥', earned: (progress?.streakDays ?? 0) >= 7 },
-  ];
+  // Get current level (first in the list)
+  const currentLevel = levels[0];
 
   const getTrackIcon = () => {
     switch (userTrack) {
@@ -109,14 +104,6 @@ const StudentDashboard: React.FC = () => {
             </p>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
               <div className="text-center">
-                <div className="text-xl lg:text-2xl text-paperwhite font-heading">{progress?.completedModulesCount || 0}</div>
-                <div className="text-teallight text-xs lg:text-sm font-label">Modules Complete</div>
-              </div>
-              <div className="text-center">
-                <div className="text-xl lg:text-2xl text-paperwhite font-heading">{progress?.completedTasksCount || 0}</div>
-                <div className="text-teallight text-xs lg:text-sm font-label">Tasks Done</div>
-              </div>
-              <div className="text-center">
                 <div className="text-xl lg:text-2xl text-paperwhite font-heading">{progress?.streakDays || 0}</div>
                 <div className="text-teallight text-xs lg:text-sm font-label">Day Streak</div>
               </div>
@@ -141,7 +128,7 @@ const StudentDashboard: React.FC = () => {
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg lg:text-xl font-semibold text-paperwhite">Continue Learning</h2>
                 <span className="bg-trueturquoise/20 text-trueturquoise px-2 lg:px-3 py-1 rounded-full text-xs lg:text-sm font-medium">
-                  {currentLevel.status === 'in-progress' ? 'In Progress' : 'Available'}
+                  {currentLevel ? 'Available' : ''}
                 </span>
               </div>
               
@@ -161,12 +148,12 @@ const StudentDashboard: React.FC = () => {
                 <div className="mb-4">
                   <div className="flex justify-between text-sm text-teallight mb-1">
                     <span>Progress</span>
-                    <span>{currentLevel.progress || 0}%</span>
+                    <span>{progress?.overallProgress || 0}%</span>
                   </div>
                   <div className="w-full bg-paperwhite/20 rounded-full h-2">
                     <div 
                       className="bg-trueturquoise h-2 rounded-full transition-all"
-                      style={{ width: `${currentLevel.progress || 0}%` }}
+                      style={{ width: `${progress?.overallProgress || 0}%` }}
                     ></div>
                   </div>
                 </div>
@@ -252,7 +239,7 @@ const StudentDashboard: React.FC = () => {
 
           {/* Progress Stats */}
           <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
-            <h3 className="font-semibold text-paperwhite mb-4 font-heading">Your Progress</h3>
+            <h3 className=" text-paperwhite mb-4 font-heading">Your Progress</h3>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-teallight text-sm lg:text-base">Overall Progress</span>

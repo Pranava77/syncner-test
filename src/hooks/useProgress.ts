@@ -9,16 +9,11 @@ interface Progress {
   totalPoints: number;
   streakDays: number;
   lastActiveDate: string;
-  moduleProgress: Array<{ moduleId: string; progress: number; status: string }>;
-  taskProgress: Array<{ taskId: string; progress: number; status: string }>;
-  achievements: Array<{ achievementId: string; dateAchieved: string }>;
   weeklyGoal: {
     target: number;
     current: number;
     weekStart: string;
   };
-  completedModulesCount: number;
-  completedTasksCount: number;
 }
 
 export const useProgress = () => {

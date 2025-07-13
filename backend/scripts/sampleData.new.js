@@ -119,7 +119,6 @@ const sampleTracks = [
     careerPaths: ['Web Developer', 'Backend Developer', 'Frontend Developer'],
     skills: ['JavaScript', 'Node.js', 'React', 'Databases'],
     prerequisites: [],
-    modules: [],
     isActive: true,
     order: 1
   },
@@ -133,7 +132,6 @@ const sampleTracks = [
     careerPaths: ['ML Engineer', 'Data Scientist', 'AI Researcher'],
     skills: ['Python', 'TensorFlow', 'Machine Learning'],
     prerequisites: [],
-    modules: [],
     isActive: true,
     order: 2
   },
@@ -147,7 +145,6 @@ const sampleTracks = [
     careerPaths: ['UI Designer', 'UX Researcher', 'Product Designer'],
     skills: ['Figma', 'Wireframing', 'Prototyping'],
     prerequisites: [],
-    modules: [],
     isActive: true,
     order: 3
   },
@@ -161,7 +158,6 @@ const sampleTracks = [
     careerPaths: ['Data Analyst', 'Data Scientist', 'Business Analyst'],
     skills: ['Python', 'Statistics', 'Data Visualization'],
     prerequisites: [],
-    modules: [],
     isActive: true,
     order: 4
   }

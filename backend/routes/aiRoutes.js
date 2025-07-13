@@ -6,13 +6,13 @@ const router = express.Router();
 
 router.post('/chat', chatWithAI);
 
-// Health check for AI module
+// Health check for AI service
 router.get('/health', async (req, res) => {
   try {
     await geminiService.chatWithAI('ping', 'healthcheck');
-    res.status(200).json({ success: true, message: 'AI module is healthy (Gemini connected)' });
+    res.status(200).json({ success: true, message: 'AI service is healthy (Gemini connected)' });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'AI module health check failed', error: error.message });
+    res.status(500).json({ success: false, message: 'AI service health check failed', error: error.message });
   }
 });
 

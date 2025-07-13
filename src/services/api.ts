@@ -174,95 +174,6 @@ class ApiService {
     return this.handleResponse(response, false);
   }
 
-  async createModule(moduleData: any) {
-    const response = await fetch(`${this.baseURL}/training`, {
-      method: 'POST',
-      headers: this.getHeaders(),
-      body: JSON.stringify(moduleData),
-      credentials: 'include',
-    });
-
-    return this.handleResponse(response, false);
-  }
-
-  async updateModule(moduleId: string, moduleData: any) {
-    const response = await fetch(`${this.baseURL}/training/${moduleId}`, {
-      method: 'PUT',
-      headers: this.getHeaders(),
-      body: JSON.stringify(moduleData),
-      credentials: 'include',
-    });
-
-    return this.handleResponse(response, false);
-  }
-
-  async deleteModule(moduleId: string) {
-    const response = await fetch(`${this.baseURL}/training/${moduleId}`, {
-      method: 'DELETE',
-      headers: this.getHeaders(),
-      credentials: 'include',
-    });
-
-    return this.handleResponse(response, false);
-  }
-
-  async updateModuleProgress(moduleId: string, lessonId: string) {
-    const response = await fetch(`${this.baseURL}/training/${moduleId}/progress`, {
-      method: 'POST',
-      headers: this.getHeaders(),
-      body: JSON.stringify({ lessonId }),
-    });
-
-    return this.handleResponse(response, false);
-  }
-
-  // Task endpoints
-  async submitTask(taskId: string, submissionData: any) {
-    // If files are present, use FormData
-    const hasFiles = submissionData.files && Array.isArray(submissionData.files) && submissionData.files.length > 0;
-    let body: any;
-    let baseHeaders = this.getHeaders();
-    let headers: Record<string, string> = (baseHeaders && typeof baseHeaders === 'object' && !Array.isArray(baseHeaders)) ? { ...baseHeaders as Record<string, string> } : {};
-    if (hasFiles) {
-      body = new FormData();
-      Object.entries(submissionData).forEach(([key, value]) => {
-        if (key === 'files' && Array.isArray(value)) {
-          (value as any[]).forEach((file: any) => {
-            // If file is a File object, append directly; if base64, convert
-            if (file instanceof File) {
-              body.append('files', file);
-            } else if (file && file.content && file.name) {
-              // Convert base64 to Blob
-              const arr = file.content.split(',');
-              const mime = arr[0].match(/:(.*?);/)[1];
-              const bstr = atob(arr[1]);
-              let n = bstr.length;
-              const u8arr = new Uint8Array(n);
-              while (n--) {
-                u8arr[n] = bstr.charCodeAt(n);
-              }
-              const blob = new Blob([u8arr], { type: mime });
-              const fileObj = new File([blob], file.name, { type: mime });
-              body.append('files', fileObj);
-            }
-          });
-        } else if (value !== undefined && value !== null) {
-          body.append(key, value);
-        }
-      });
-      // Remove Content-Type so browser sets it
-      delete headers['Content-Type'];
-    } else {
-      body = JSON.stringify(submissionData);
-    }
-    const response = await fetch(`${this.baseURL}/tasks/${taskId}/submit`, {
-      method: 'POST',
-      headers,
-      body,
-    });
-    return this.handleResponse(response, false);
-  }
-
   // Admin endpoints
   async getStudents(filters?: any) {
     let url = `${this.baseURL}/admin/users`;
@@ -306,31 +217,12 @@ class ApiService {
     return this.handleResponse(response, true);
   }
 
-  async reviewSubmission(submissionId: string, reviewData: { score: number; feedback: string; status: string }) {
-    const response = await fetch(`${this.baseURL}/submissions/${submissionId}/review`, {
-      method: 'PATCH',
-      headers: this.getHeaders(),
-      body: JSON.stringify(reviewData),
-    });
-    return this.handleResponse(response, false);
-  }
-
   // AI Chat Mentor
   async chatWithAI(message: string, context?: string) {
     const response = await fetch(`${this.baseURL}/ai/chat`, {
       method: 'POST',
       headers: this.getHeaders(),
       body: JSON.stringify({ message, context })
-    });
-    return this.handleResponse(response);
-  }
-
-  // AI Task Feedback
-  async generateFeedback(task: any, submission: string) {
-    const response = await fetch(`${this.baseURL}/ai/feedback`, {
-      method: 'POST',
-      headers: this.getHeaders(),
-      body: JSON.stringify({ task, submission })
     });
     return this.handleResponse(response);
   }
