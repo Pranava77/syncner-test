@@ -48,18 +48,27 @@ const TrainingLevels: React.FC = () => {
             </button>
           </div>
           <div className="flex-1 space-y-2 overflow-y-auto">
-            {levels.map((level: Level) => (
-              <button
-                key={level.id}
-                onClick={() => handleLevelSelect(level.id)}
-                className={`w-full text-left p-3 rounded-lg transition-colors font-medium text-sm
-                  ${selectedLevelId === level.id ? 'bg-trueturquoise/10 border border-trueturquoise text-trueturquoise' : 'hover:bg-paperwhite/10 text-paperwhite'}`}
-              >
-                <div className="flex items-center justify-between">
-                  <span>{level.title}</span>
-                  {/* Removed difficulty badge */}
-                </div>
-              </button>
+            {[1, 2, 3, 4, 5].map((levelNum) => (
+              <div key={levelNum} className="mb-2">
+                <button
+                  onClick={() => handleDropdownToggle(levelNum)}
+                  className={`w-full flex items-center justify-between p-3 rounded-lg transition-colors font-medium text-sm bg-offblack text-paperwhite hover:bg-paperwhite/10 focus:outline-none focus:ring-2 focus:ring-trueturquoise`}
+                  aria-expanded={!!openDropdowns[levelNum]}
+                  aria-controls={`level-dropdown-${levelNum}`}
+                >
+                  <span>Level {levelNum}</span>
+                  <span className={`transition-transform ${openDropdowns[levelNum] ? 'rotate-90' : ''}`}>
+                    <ChevronRightIcon className="h-4 w-4 text-trueturquoise" />
+                  </span>
+                </button>
+                {openDropdowns[levelNum] && (
+                  <div id={`level-dropdown-${levelNum}`} className="ml-4 mt-2 space-y-1">
+                    <div className="px-3 py-2 rounded text-xs text-trueturquoise bg-trueturquoise/10">Learn</div>
+                    <div className="px-3 py-2 rounded text-xs text-trueturquoise bg-trueturquoise/10">Test</div>
+                    <div className="px-3 py-2 rounded text-xs text-trueturquoise bg-trueturquoise/10">Exercise</div>
+                  </div>
+                )}
+              </div>
             ))}
           </div>
         </aside>
@@ -76,11 +85,11 @@ const TrainingLevels: React.FC = () => {
         </div>
       )}
       {/* Level Detail */}
-      <main className="flex-1 p-6 lg:p-12">
+      <main className="flex-1 min-h-screen flex flex-col justify-start items-stretch p-0">
         {selectedLevelId ? (
           <TrainingLevelDetail levelId={selectedLevelId} />
         ) : (
-          <div className="text-paperwhite text-center mt-24 text-xl">Select a level to begin learning!</div>
+          <div className="text-paperwhite text-center mt-24 text-xl w-full">Select a level to begin learning!</div>
         )}
       </main>
     </div>
