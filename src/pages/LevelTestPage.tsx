@@ -7,7 +7,7 @@ const LevelTestPage: React.FC = () => {
   const levelNum = Number(levelId);
 
   return (
-    <div className="flex h-full min-h-screen bg-offblack">
+    <div className="flex h-full min-h-screen bg-offblack w-full">
       <LevelsSidebar sidebarOpen={true} currentLevel={levelNum} currentSection="test" />
       <main className="flex-1 p-6 lg:p-12">
         <div className="max-w-3xl mx-auto">
