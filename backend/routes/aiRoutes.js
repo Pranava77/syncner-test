@@ -1,5 +1,6 @@
 import express from 'express';
 import geminiService from '../services/geminiService.js';
+import { chatWithAI } from '../controllers/gptController.js';
 
 const router = express.Router();
 

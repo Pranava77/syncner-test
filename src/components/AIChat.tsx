@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { PaperPlaneIcon, Cross1Icon, RobotIcon, PersonIcon, SizeIcon, ResetIcon, ExclamationTriangleIcon } from '@radix-ui/react-icons';
+import { PaperPlaneIcon, Cross1Icon, PersonIcon, ChatBubbleIcon as MessageCircle } from '@radix-ui/react-icons';
 import apiService from '../services/api';
 
 interface Message {
@@ -10,9 +10,7 @@ interface Message {
 }
 
 const AIChat: React.FC = () => {
-  
   const [isOpen, setIsOpen] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -23,9 +21,7 @@ const AIChat: React.FC = () => {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -79,13 +75,13 @@ const AIChat: React.FC = () => {
     }
   };
 
+  // Floating button to open modal
   if (!isOpen) {
     return (
       <button
         onClick={() => setIsOpen(true)}
         className="fixed bottom-4 right-4 lg:bottom-6 lg:right-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white p-3 lg:p-4 rounded-full shadow-lg hover:shadow-xl transition-all z-50 group"
       >
-        
         <div className="absolute -top-1 -left-1 lg:-top-2 lg:-left-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 lg:h-5 lg:w-5 flex items-center justify-center animate-pulse">
           AI
         </div>
@@ -93,124 +89,99 @@ const AIChat: React.FC = () => {
     );
   }
 
+  // Modal overlay and chat window
   return (
-    <div className={`fixed bottom-4 right-4 lg:bottom-6 lg:right-6 bg-white dark:bg-gray-800 rounded-xl shadow-2xl z-50 transition-all border border-gray-200 dark:border-gray-700 ${
-      isMinimized 
-        ? 'w-72 lg:w-80 h-14 lg:h-16' 
-        : 'w-[calc(100vw-2rem)] max-w-sm lg:max-w-md xl:max-w-lg h-[70vh] max-h-[500px] lg:h-[500px]'
-    }`}>
-      {/* Header */}
-      <div className="flex items-center justify-between p-3 lg:p-4 border-b border-gray-200 dark:border-gray-700">
-        <div className="flex items-center space-x-2 lg:space-x-3">
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-1.5 lg:p-2 rounded-full">
-            <RobotIcon className="h-3 w-3 lg:h-4 lg:w-4 text-white" />
-          </div>
-          <div>
-            <h3 className="font-semibold text-gray-900 dark:text-white text-sm lg:text-base font-heading">AI Career Mentor</h3>
-            <p className="text-xs text-gray-500 dark:text-gray-400 font-label">
-              API key required
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center space-x-1 lg:space-x-2">
-          <button
-            onClick={() => setIsMinimized(!isMinimized)}
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1"
-          >
-            {isMinimized ? <SizeIcon className="h-3 w-3 lg:h-4 lg:w-4" /> : <ResetIcon className="h-3 w-3 lg:h-4 lg:w-4" />}
-          </button>
-          <button
-            onClick={() => setIsOpen(false)}
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1"
-          >
-            <Cross1Icon className="h-3 w-3 lg:h-4 lg:w-4" />
-          </button>
-        </div>
-      </div>
-
-      {!isMinimized && (
-        <>
-          {/* Error Banner */}
-          
-
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-3 lg:p-4 space-y-3 lg:space-y-4" style={{ height: 'calc(100% - 120px)' }}>
-            {messages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                <div className={`flex items-start space-x-2 max-w-[85%] lg:max-w-[80%] ${
-                  message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''
-                }`}>
-                  <div className={`p-1.5 lg:p-2 rounded-full flex-shrink-0 ${
-                    message.sender === 'user' 
-                      ? 'bg-blue-600' 
-                      : 'bg-gradient-to-r from-purple-600 to-pink-600'
-                  }`}>
-                    {message.sender === 'user' ? (
-                      <PersonIcon className="h-2.5 w-2.5 lg:h-3 lg:w-3 text-white" />
-                    ) : (
-                      <RobotIcon className="h-2.5 w-2.5 lg:h-3 lg:w-3 text-white" />
-                    )}
-                  </div>
-                  <div className={`p-2 lg:p-3 rounded-lg ${
-                    message.sender === 'user'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
-                  }`}>
-                    <p className="text-xs lg:text-sm whitespace-pre-wrap break-words font-label">{message.text}</p>
-                    <p className={`text-xs mt-1 font-label ${
-                      message.sender === 'user' ? 'text-blue-100' : 'text-gray-500 dark:text-gray-400'
-                    }`}>
-                      {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-            {isLoading && (
-              <div className="flex justify-start">
-                <div className="flex items-center space-x-2">
-                  <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-1.5 lg:p-2 rounded-full">
-                    <RobotIcon className="h-2.5 w-2.5 lg:h-3 lg:w-3 text-white" />
-                  </div>
-                  <div className="bg-gray-100 dark:bg-gray-700 p-2 lg:p-3 rounded-lg">
-                    <div className="flex space-x-1">
-                      <div className="w-1.5 h-1.5 lg:w-2 lg:h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                      <div className="w-1.5 h-1.5 lg:w-2 lg:h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                      <div className="w-1.5 h-1.5 lg:w-2 lg:h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
-
-          {/* Input */}
-          <div className="p-3 lg:p-4 border-t border-gray-200 dark:border-gray-700">
-            <div className="flex space-x-2">
-              <textarea
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="API key required to chat"
-                className="flex-1 resize-none border border-gray-300 dark:border-gray-600 rounded-lg px-2 lg:px-3 py-1.5 lg:py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-xs lg:text-sm"
-                rows={1}
-                disabled={isLoading}
-              />
-              <button
-                onClick={handleSendMessage}
-                disabled={!input.trim() || isLoading}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-1.5 lg:p-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <PaperPlaneIcon className="h-3 w-3 lg:h-4 lg:w-4" />
-              </button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black bg-opacity-60 transition-opacity animate-fade-in"
+        onClick={() => setIsOpen(false)}
+      />
+      {/* Chat Modal */}
+      <div className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-2xl h-[80vh] flex flex-col border border-gray-200 dark:border-gray-800 animate-fade-in-up">
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-800">
+          <div className="flex items-center space-x-3">
+            <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-full">
+              <MessageCircle className="h-5 w-5 text-white" />
+            </div>
+            <div>
+              <h3 className="text-lg font-heading text-gray-900 dark:text-white">AI Career Mentor</h3>
+              <p className="text-xs text-gray-500 dark:text-gray-400 font-label">Ask anything about your career, learning, or skills!</p>
             </div>
           </div>
-        </>
-      )}
+          <button
+            onClick={() => setIsOpen(false)}
+            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-2 rounded-full focus:outline-none"
+          >
+            <Cross1Icon className="h-5 w-5" />
+          </button>
+        </div>
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4 bg-gray-50 dark:bg-gray-800">
+          {messages.map((message) => (
+            <div
+              key={message.id}
+              className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+            >
+              <div className={`flex items-end space-x-2 max-w-2xl ${message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
+                <div className={`p-2 rounded-full flex-shrink-0 ${message.sender === 'user' ? 'bg-blue-600' : 'bg-gradient-to-r from-purple-600 to-pink-600'}`}>
+                  {message.sender === 'user' ? (
+                    <PersonIcon className="h-4 w-4 text-white" />
+                  ) : (
+                    <MessageCircle className="h-4 w-4 text-white" />
+                  )}
+                </div>
+                <div className={`px-4 py-2 rounded-2xl shadow-sm ${message.sender === 'user' ? 'bg-blue-600 text-white rounded-br-md' : 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-bl-md'}`}
+                  style={{ maxWidth: '70vw', wordBreak: 'break-word' }}
+                >
+                  <p className="text-sm font-label whitespace-pre-wrap">{message.text}</p>
+                  <span className={`block text-[10px] mt-1 font-label ${message.sender === 'user' ? 'text-blue-100' : 'text-gray-400 dark:text-gray-300'}`}>{message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+          {isLoading && (
+            <div className="flex justify-start">
+              <div className="flex items-center space-x-2">
+                <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-2 rounded-full">
+                  <MessageCircle className="h-4 w-4 text-white" />
+                </div>
+                <div className="bg-white dark:bg-gray-700 px-4 py-2 rounded-2xl">
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+        {/* Input Bar */}
+        <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+          <form className="flex items-center space-x-3" onSubmit={e => { e.preventDefault(); handleSendMessage(); }}>
+            <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Type your message..."
+              className="flex-1 resize-none border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white text-sm font-label"
+              rows={1}
+              disabled={isLoading}
+              style={{ minHeight: 40, maxHeight: 120 }}
+            />
+            <button
+              type="submit"
+              disabled={!input.trim() || isLoading}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-3 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+            >
+              <PaperPlaneIcon className="h-5 w-5" />
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
   );
 };
