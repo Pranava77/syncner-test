@@ -28,7 +28,6 @@ const getAllUsers = async (req, res) => {
 const getAnalytics = async (req, res) => {
   try {
     const User = (await import('../models/User.js')).default;
-    const Progress = (await import('../models/Progress.js')).default;
     const Module = (await import('../models/Module.js')).default;
     const Track = (await import('../models/Track.js')).default;
     const Submission = (await import('../models/Submission.js')).default;
@@ -58,49 +57,14 @@ const getAnalytics = async (req, res) => {
       d.setDate(today.getDate() - (6 - i));
       return d;
     });
-    const attendanceData = await Promise.all(last7Days.map(async (date) => {
-      const start = new Date(date);
-      start.setHours(0, 0, 0, 0);
-      const end = new Date(date);
-      end.setHours(23, 59, 59, 999);
-      const count = await Progress.countDocuments({ lastActive: { $gte: start, $lte: end } });
-      return { day: start.toLocaleDateString('en-US', { weekday: 'short' }), students: count };
-    }));
-
-    // --- Engagement Data (last 7 days) ---
-    const engagementData = await Promise.all(last7Days.map(async (date) => {
-      const start = new Date(date);
-      start.setHours(0, 0, 0, 0);
-      const end = new Date(date);
-      end.setHours(23, 59, 59, 999);
-      const activeUsers = await Progress.countDocuments({ lastActive: { $gte: start, $lte: end } });
-      // Sessions and avgDuration require more tracking; set as null for now
-      return { date: start, activeUsers, sessions: null, avgDuration: null };
-    }));
 
     // --- Career Track Data ---
     const tracks = await Track.find({});
-    const progressByTrack = await Progress.aggregate([
-      { $group: {
-        _id: '$careerTrack',
-        students: { $sum: 1 },
-        avgProgress: { $avg: '$overallProgress' }
-      }}
-    ]);
-    const careerTrackData = tracks.map(track => {
-      const stat = progressByTrack.find(t => t._id === track.id);
-      return {
-        track: track.name,
-        students: stat ? stat.students : 0,
-        avgProgress: stat ? Math.round(stat.avgProgress || 0) : 0,
-        completionRate: stat ? Math.round((stat.avgProgress || 0)) : 0 // proxy: avgProgress as completion
-      };
-    });
 
     // --- Module Performance ---
     const modules = await Module.find({});
     const modulePerformance = await Promise.all(modules.map(async (mod) => {
-      const progresses = await Progress.find({ 'moduleProgress.module': mod.id });
+      const progresses = await User.find({ 'moduleProgress.module': mod.id });
       let completions = 0, totalScore = 0, totalTime = 0, count = 0;
       progresses.forEach(p => {
         const mp = p.moduleProgress.find(m => m.module === mod.id && m.status === 'COMPLETED');
@@ -126,28 +90,19 @@ const getAnalytics = async (req, res) => {
     }));
 
     // --- Averages ---
-    const allProgress = await Progress.find({});
-    const avgProgress = allProgress.length
-      ? Math.round(allProgress.reduce((sum, p) => sum + (p.overallProgress || 0), 0) / allProgress.length)
-      : 0;
-
-    const allCompletedTasks = allProgress.flatMap(p =>
+    const allCompletedTasks = await User.find({}).flatMap(p =>
       (p.taskProgress || []).filter(tp => tp.status === 'COMPLETED' && typeof tp.score === 'number')
     );
     const averageTaskScore = allCompletedTasks.length
       ? Math.round(allCompletedTasks.reduce((sum, tp) => sum + tp.score, 0) / allCompletedTasks.length)
       : 0;
 
-    const allCompletedModules = allProgress.flatMap(p =>
+    const allCompletedModules = await User.find({}).flatMap(p =>
       (p.moduleProgress || []).filter(mp => mp.status === 'COMPLETED' && typeof mp.timeSpent === 'number')
     );
     const averageTimePerModule = allCompletedModules.length
       ? (allCompletedModules.reduce((sum, mp) => sum + mp.timeSpent, 0) / allCompletedModules.length / 60).toFixed(1)
       : 0;
-
-    // Student retention: percent of students active in last 7 days
-    const retentionBase = await Progress.countDocuments({ lastActive: { $gte: new Date(Date.now() - 7*24*60*60*1000) } });
-    const studentRetention = totalStudents ? Math.round((retentionBase / totalStudents) * 100) : 0;
 
     res.status(200).json({
       success: true,
@@ -155,16 +110,8 @@ const getAnalytics = async (req, res) => {
         totalStudents,
         activeStudents,
         completionRate,
-        avgProgress,
-        attendanceData,
         submissionsByStatus,
-        trackDistribution,
-        averageTaskScore,
-        averageTimePerModule,
-        studentRetention,
-        engagementData,
-        careerTrackData,
-        modulePerformance
+        trackDistribution
       }
     });
   } catch (error) {

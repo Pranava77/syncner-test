@@ -1,12 +1,9 @@
 import express from 'express';
-import { chatWithAI, generateTaskFeedback, generateResumeContent } from '../controllers/gptController.js';
 import geminiService from '../services/geminiService.js';
 
 const router = express.Router();
 
 router.post('/chat', chatWithAI);
-router.post('/feedback', generateTaskFeedback);
-router.post('/resume', generateResumeContent);
 
 // Health check for AI module
 router.get('/health', async (req, res) => {

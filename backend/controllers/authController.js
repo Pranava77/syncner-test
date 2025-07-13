@@ -1,6 +1,5 @@
 import { validationResult } from 'express-validator';
 import User from '../models/User.js';
-import Progress from '../models/Progress.js';
 import { generateToken } from '../middleware/auth.js';
 
 // @desc    Register user
