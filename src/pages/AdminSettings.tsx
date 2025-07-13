@@ -696,10 +696,10 @@ const AdminSettings: React.FC = () => {
                 </select>
               </div>
               {/* Users Table */}
-              <div className="bg-offblack/10 rounded-xl shadow-sm overflow-hidden border border-paperwhite/20">
+              <div className="bg-offblack/30 rounded-xl shadow-sm overflow-hidden border border-paperwhite/20">
                 <div className="overflow-x-auto">
                   <table className="w-full">
-                    <thead className="bg-offblack/20">
+                    <thead className="bg-offblack/40">
                       <tr>
                         <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider">Name</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider">Email</th>
@@ -709,7 +709,7 @@ const AdminSettings: React.FC = () => {
                         <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-paperwhite/20">
+                    <tbody className="divide-y divide-paperwhite/20 bg-offblack/20">
                       {usersLoading ? (
                         <tr><td colSpan={6} className="text-center py-6 text-teallight">Loading...</td></tr>
                       ) : (Array.isArray(users) ? users.length : 0) === 0 ? (
