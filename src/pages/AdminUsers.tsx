@@ -17,6 +17,7 @@ import {
 const defaultUserForm = {
   name: '',
   email: '',
+  college: '',
   role: 'student',
   isActive: true,
   password: '',
@@ -56,6 +57,7 @@ const AdminUsers: React.FC = () => {
     setUserForm({
       name: user.name || '',
       email: user.email || '',
+      college: user.college || '',
       role: user.role || 'student',
       isActive: user.isActive !== false,
       password: '',
@@ -71,8 +73,8 @@ const AdminUsers: React.FC = () => {
   };
 
   const handleSave = async () => {
-    if (!userForm.name || !userForm.email || !userForm.role) {
-      setFormError('Name, Email, and Role are required.');
+    if (!userForm.name || !userForm.email || !userForm.role || !userForm.college) {
+      setFormError('Name, Email, Role, and College are required.');
       return;
     }
     if (!editingUser && !userForm.password) {
@@ -183,6 +185,7 @@ const AdminUsers: React.FC = () => {
             <div className="space-y-3">
               <input type="text" placeholder="Name" value={userForm.name} onChange={e => setUserForm(f => ({ ...f, name: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight" />
               <input type="email" placeholder="Email" value={userForm.email} onChange={e => setUserForm(f => ({ ...f, email: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight" />
+              <input type="text" placeholder="College" value={userForm.college} onChange={e => setUserForm(f => ({ ...f, college: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight" />
               <select value={userForm.role} onChange={e => setUserForm(f => ({ ...f, role: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition">
                 <option value="student">Student</option>
               </select>

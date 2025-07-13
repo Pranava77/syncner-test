@@ -18,6 +18,7 @@ const defaultStaffForm = {
   name: '',
   email: '',
   department: '',
+  college: '',
   role: 'staff',
   isActive: true,
   password: '', // Add password field
@@ -57,6 +58,7 @@ const AdminStaff: React.FC = () => {
       name: staff.name || '',
       email: staff.email || '',
       department: staff.department || '',
+      college: staff.college || '',
       role: staff.role || 'staff',
       isActive: staff.isActive !== false,
       password: '', // Always blank for editing
@@ -72,8 +74,8 @@ const AdminStaff: React.FC = () => {
   };
 
   const handleSave = async () => {
-    if (!staffForm.name || !staffForm.email || !staffForm.role) {
-      setFormError('Name, Email, and Role are required.');
+    if (!staffForm.name || !staffForm.email || !staffForm.role || !staffForm.college) {
+      setFormError('Name, Email, Role, and College are required.');
       return;
     }
     if (!editingStaff && !staffForm.password) {
@@ -187,6 +189,7 @@ const AdminStaff: React.FC = () => {
               <input type="text" placeholder="Name" value={staffForm.name} onChange={e => setStaffForm(f => ({ ...f, name: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight" />
               <input type="email" placeholder="Email" value={staffForm.email} onChange={e => setStaffForm(f => ({ ...f, email: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight" />
               <input type="text" placeholder="Department" value={staffForm.department} onChange={e => setStaffForm(f => ({ ...f, department: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight" />
+              <input type="text" placeholder="College" value={staffForm.college} onChange={e => setStaffForm(f => ({ ...f, college: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight" />
               <select value={staffForm.role} onChange={e => setStaffForm(f => ({ ...f, role: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition">
                 <option value="admin">Admin</option>
                 <option value="teacher">Teacher</option>
