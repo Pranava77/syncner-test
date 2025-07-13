@@ -71,7 +71,7 @@ const AdminProfile: React.FC = () => {
                 <PersonIcon className="h-10 w-10 text-offblack" />
           </div>
           <div>
-                <h2 className="text-2xl font-bold text-paperwhite font-heading">{profile?.name || ''}</h2>
+                <h2 className="text-2xl text-paperwhite font-heading">{profile?.name || ''}</h2>
                 <p className="text-teallight">{profile?.email || ''}</p>
                 <span className="inline-block bg-trueturquoise/20 text-trueturquoise px-3 py-1 rounded-full text-sm font-medium mt-2">
                   {profile?.role || 'Administrator'}
@@ -79,7 +79,7 @@ const AdminProfile: React.FC = () => {
           </div>
         </div>
             
-            <h3 className="font-semibold text-lg mb-6 text-trueturquoise flex items-center gap-2 font-heading">
+            <h3 className="text-lg mb-6 text-trueturquoise flex items-center gap-2 font-heading">
               <PersonIcon className="w-5 h-5" /> Profile Information
             </h3>
             
@@ -141,7 +141,7 @@ const AdminProfile: React.FC = () => {
           {editMode ? (
             <>
                   <button 
-                    className="bg-trueturquoise hover:bg-trueturquoise/90 text-offblack px-8 py-3 rounded-lg shadow-lg transition-all duration-200 font-semibold flex items-center gap-2" 
+                    className="bg-trueturquoise hover:bg-trueturquoise/90 text-offblack px-8 py-3 rounded-lg shadow-lg transition-all duration-200 font-medium flex items-center gap-2" 
                     onClick={handleSave}
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -150,7 +150,7 @@ const AdminProfile: React.FC = () => {
                     Save Changes
                   </button>
                   <button 
-                    className="bg-paperwhite/10 hover:bg-paperwhite/20 text-paperwhite px-8 py-3 rounded-lg shadow-lg transition-all duration-200 font-semibold" 
+                    className="bg-paperwhite/10 hover:bg-paperwhite/20 text-paperwhite px-8 py-3 rounded-lg shadow-lg transition-all duration-200 font-medium" 
                     onClick={() => setEditMode(false)}
                   >
                     Cancel
@@ -158,7 +158,7 @@ const AdminProfile: React.FC = () => {
             </>
           ) : (
                 <button 
-                  className="bg-trueturquoise hover:bg-trueturquoise/90 text-offblack px-8 py-3 rounded-lg shadow-lg transition-all duration-200 font-semibold flex items-center gap-2" 
+                  className="bg-trueturquoise hover:bg-trueturquoise/90 text-offblack px-8 py-3 rounded-lg shadow-lg transition-all duration-200 font-medium flex items-center gap-2" 
                   onClick={() => setEditMode(true)}
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

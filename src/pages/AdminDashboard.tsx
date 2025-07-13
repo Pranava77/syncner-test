@@ -221,7 +221,7 @@ const AdminDashboard: React.FC = () => {
         </div>
         <button
           onClick={exportData}
-          className="bg-trueturquoise text-offblack px-5 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold flex items-center gap-2 shadow"
+          className="bg-trueturquoise text-offblack px-5 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium flex items-center gap-2 shadow"
         >
           <DownloadIcon className="h-5 w-5" />
           Export CSV

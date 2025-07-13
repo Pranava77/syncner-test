@@ -101,7 +101,7 @@ const StudentDashboard: React.FC = () => {
       <div className={`bg-trueturquoise/10 rounded-xl p-6 lg:p-8 text-paperwhite`}>
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
           <div className="flex-1 mb-6 lg:mb-0">
-            <h1 className="text-2xl lg:text-3xl font-bold mb-2 text-paperwhite font-heading">
+            <h1 className="text-2xl lg:text-3xl mb-2 text-paperwhite font-heading">
               Welcome back, {user?.name}! 👋
             </h1>
             <p className="text-teallight mb-4 lg:mb-6 text-sm lg:text-base font-label">
@@ -109,19 +109,19 @@ const StudentDashboard: React.FC = () => {
             </p>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
               <div className="text-center">
-                <div className="text-xl lg:text-2xl font-bold text-paperwhite font-heading">{progress?.completedModulesCount || 0}</div>
+                <div className="text-xl lg:text-2xl text-paperwhite font-heading">{progress?.completedModulesCount || 0}</div>
                 <div className="text-teallight text-xs lg:text-sm font-label">Modules Complete</div>
               </div>
               <div className="text-center">
-                <div className="text-xl lg:text-2xl font-bold text-paperwhite font-heading">{progress?.completedTasksCount || 0}</div>
+                <div className="text-xl lg:text-2xl text-paperwhite font-heading">{progress?.completedTasksCount || 0}</div>
                 <div className="text-teallight text-xs lg:text-sm font-label">Tasks Done</div>
               </div>
               <div className="text-center">
-                <div className="text-xl lg:text-2xl font-bold text-paperwhite font-heading">{progress?.streakDays || 0}</div>
+                <div className="text-xl lg:text-2xl text-paperwhite font-heading">{progress?.streakDays || 0}</div>
                 <div className="text-teallight text-xs lg:text-sm font-label">Day Streak</div>
               </div>
               <div className="text-center">
-                <div className="text-xl lg:text-2xl font-bold text-paperwhite font-heading">{progress?.totalPoints || 0}</div>
+                <div className="text-xl lg:text-2xl text-paperwhite font-heading">{progress?.totalPoints || 0}</div>
                 <div className="text-teallight text-xs lg:text-sm font-label">Total Points</div>
               </div>
             </div>
@@ -328,7 +328,7 @@ const StudentDashboard: React.FC = () => {
 
           {/* Quick Actions */}
           <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
-            <h3 className="font-semibold text-paperwhite mb-4 font-heading">Quick Actions</h3>
+            <h3 className="text-paperwhite mb-4 font-heading">Quick Actions</h3>
             <div className="space-y-3">
               <Link
                 to="/student/training/current"

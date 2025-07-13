@@ -37,7 +37,7 @@ const LandingPage: React.FC = () => {
               <div>
                 <img src={logo} alt="Syncner Logo" className="h-8 w-8 lg:h-10 lg:w-10 object-contain" />
               </div>
-              <h1 className="text-2xl font-bold text-paperwhite font-heading">Syncner</h1>  
+              <h1 className="text-2xl text-paperwhite font-heading">Syncner</h1>  
             </div>
             
             {/* Desktop Navigation */}
@@ -87,7 +87,7 @@ const LandingPage: React.FC = () => {
       {/* Hero Section */}
       <section className="pt-24 lg:pt-32 pb-12 lg:pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-paperwhite mb-4 lg:mb-6 font-heading">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl text-paperwhite mb-4 lg:mb-6 font-heading">
             Transform Students Into
             <span className="bg-gradient-to-r from-trueturquoise to-teallight bg-clip-text text-transparent block lg:inline">
               {' '}Industry-Ready{' '}
@@ -120,7 +120,7 @@ const LandingPage: React.FC = () => {
       <section className="py-12 lg:py-20 px-4 sm:px-6 lg:px-8 bg-paperwhite/5 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12 lg:mb-16">
-            <h2 className="text-2xl lg:text-4xl font-bold text-paperwhite mb-3 lg:mb-4 font-heading">
+            <h2 className="text-2xl lg:text-4xl text-paperwhite mb-3 lg:mb-4 font-heading">
               Everything You Need for Career Success
             </h2>
             <p className="text-lg lg:text-xl text-teallight">
@@ -133,7 +133,7 @@ const LandingPage: React.FC = () => {
               <div className="bg-trueturquoise p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
                 <BarChartIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
               </div>
-              <h3 className="text-lg lg:text-xl font-semibold text-paperwhite mb-2 lg:mb-3 font-heading">AI-Personalized Learning</h3>
+              <h3 className="text-lg lg:text-xl text-paperwhite mb-2 lg:mb-3 font-heading">AI-Personalized Learning</h3>
               <p className="text-teallight text-sm lg:text-base">
                 Adaptive learning paths that adjust to each student's pace and performance, 
                 ensuring optimal skill development.
@@ -144,7 +144,7 @@ const LandingPage: React.FC = () => {
               <div className="bg-teallight p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
                 <PersonIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
               </div>
-              <h3 className="text-lg lg:text-xl font-semibold text-paperwhite mb-2 lg:mb-3 font-heading">Real-World Tasks</h3>
+              <h3 className="text-lg lg:text-xl text-paperwhite mb-2 lg:mb-3 font-heading">Real-World Tasks</h3>
               <p className="text-teallight text-sm lg:text-base">
                 Industry-standard projects and internship simulations that prepare students 
                 for actual workplace challenges.
@@ -155,7 +155,7 @@ const LandingPage: React.FC = () => {
               <div className="bg-rust p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
                 <TargetIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
               </div>
-              <h3 className="text-lg lg:text-xl font-semibold text-paperwhite mb-2 lg:mb-3 font-heading">Career Tracks</h3>
+              <h3 className="text-lg lg:text-xl text-paperwhite mb-2 lg:mb-3 font-heading">Career Tracks</h3>
               <p className="text-teallight text-sm lg:text-base">
                 Specialized paths in AI/ML, Full Stack Development, UI/UX Design, 
                 and Data Science with industry-relevant curriculum.
@@ -166,7 +166,7 @@ const LandingPage: React.FC = () => {
               <div className="bg-rust p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
                 <EnvelopeClosedIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
               </div>
-              <h3 className="text-lg lg:text-xl font-semibold text-paperwhite mb-2 lg:mb-3 font-heading">Interactive Content</h3>
+              <h3 className="text-lg lg:text-xl text-paperwhite mb-2 lg:mb-3 font-heading">Interactive Content</h3>
               <p className="text-teallight text-sm lg:text-base">
                 Engaging video tutorials, interactive assessments, and hands-on coding 
                 exercises to reinforce learning.
@@ -177,7 +177,7 @@ const LandingPage: React.FC = () => {
               <div className="bg-trueturquoise p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
                 <CheckCircledIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
               </div>
-              <h3 className="text-lg lg:text-xl font-semibold text-paperwhite mb-2 lg:mb-3 font-heading">Admin Analytics</h3>
+              <h3 className="text-lg lg:text-xl text-paperwhite mb-2 lg:mb-3 font-heading">Admin Analytics</h3>
               <p className="text-teallight text-sm lg:text-base">
                 Comprehensive dashboard for tracking student progress, attendance, 
                 and performance analytics.
@@ -190,7 +190,7 @@ const LandingPage: React.FC = () => {
       {/* CTA Section */}
       <section className="py-12 lg:py-20 px-4 sm:px-6 lg:px-8 bg-trueturquoise/10 backdrop-blur-sm">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl lg:text-4xl font-bold text-paperwhite mb-4 lg:mb-6 font-heading">
+          <h2 className="text-2xl lg:text-4xl text-paperwhite mb-4 lg:mb-6 font-heading">
             Ready to Transform Your Career Journey?
           </h2>
           <p className="text-lg lg:text-xl text-teallight mb-6 lg:mb-8">

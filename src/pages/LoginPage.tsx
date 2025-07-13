@@ -62,7 +62,7 @@ const LoginPage: React.FC = () => {
           <div className="flex items-center justify-center space-x-3 mb-4">
             <img src={logo} alt="Syncner Logo" className="h-8 w-8 lg:h-10 lg:w-10 object-contain" />
           </div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-paperwhite mb-2 font-heading">Welcome Back</h1>
+          <h1 className="text-2xl lg:text-3xl text-paperwhite mb-2 font-heading">Welcome Back</h1>
           <p className="text-teallight text-sm lg:text-base font-label">Sign in to continue your career journey</p>
         </div>
 

@@ -142,28 +142,28 @@ const OnboardingFlow: React.FC = () => {
         {/* Step 1: Welcome */}
         {step === 1 && (
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4 font-heading">
+            <h1 className="text-4xl text-gray-900 dark:text-white mb-4 font-heading">
               Welcome to Syncner, {user?.name}!
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto font-label">
               Let's set up your personalized learning path to help you achieve your career goals.
             </p>
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 max-w-2xl mx-auto transition-colors">
-              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6 font-heading">
+              <h2 className="text-2xl text-gray-900 dark:text-white mb-6 font-heading">
                 What makes Syncner special?
               </h2>
               <div className="space-y-4 text-left">
                 <div className="flex items-start space-x-3">
                   <CheckCircledIcon className="h-6 w-6 text-green-500 mt-1 flex-shrink-0" />
                   <div>
-                    <h3 className="font-medium text-gray-900 dark:text-white font-heading">AI-Personalized Learning</h3>
+                    <h3 className="text-gray-900 dark:text-white font-heading">AI-Personalized Learning</h3>
                     <p className="text-gray-600 dark:text-gray-300">Adaptive curriculum that adjusts to your pace and learning style</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
                   <CheckCircledIcon className="h-6 w-6 text-green-500 mt-1 flex-shrink-0" />
                   <div>
-                    <h3 className="font-medium text-gray-900 dark:text-white font-heading">Real-World Projects</h3>
+                    <h3 className="text-gray-900 dark:text-white font-heading">Real-World Projects</h3>
                     <p className="text-gray-600 dark:text-gray-300">Industry-standard tasks that build your portfolio</p>
                   </div>
                 </div>

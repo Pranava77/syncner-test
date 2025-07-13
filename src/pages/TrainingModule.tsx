@@ -168,7 +168,7 @@ const TrainingModule: React.FC = () => {
                 <span className="text-teallight">•</span>
                 <span className="text-teallight">{track?.name}</span>
               </div>
-              <h1 className="text-3xl font-bold text-paperwhite mb-2 font-heading">{module.title}</h1>
+              <h1 className="text-3xl text-paperwhite mb-2 font-heading">{module.title}</h1>
               <p className="text-teallight mb-4">{module.description}</p>
               <div className="flex items-center space-x-6 text-sm text-teallight">
                 <div className="flex items-center">
@@ -344,7 +344,7 @@ const TrainingModule: React.FC = () => {
                   </div>
                 )}
                 <div className="p-8">
-                  <h2 className="text-2xl font-bold text-paperwhite mb-4 font-heading">
+                  <h2 className="text-2xl text-paperwhite mb-4 font-heading">
                     {currentContent.title}
                   </h2>
                   <p className="text-teallight mb-6 leading-relaxed">
@@ -402,7 +402,7 @@ const TrainingModule: React.FC = () => {
 
                 <div className="max-w-2xl mx-auto">
                   <div className="bg-paperwhite/10 rounded-lg p-6 mb-6">
-                    <h3 className="text-lg font-semibold text-paperwhite mb-4 font-heading">
+                    <h3 className="text-lg text-paperwhite mb-4 font-heading">
                       {quiz.question}
                     </h3>
                     <div className="space-y-3">

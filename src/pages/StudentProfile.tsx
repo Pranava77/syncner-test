@@ -216,7 +216,7 @@ const StudentProfile: React.FC = () => {
             {editMode ? (
               <>
                   <button 
-                    className="bg-trueturquoise hover:bg-trueturquoise/90 text-offblack px-8 py-3 rounded-lg shadow-lg transition-all duration-200 font-semibold flex items-center gap-2" 
+                    className="bg-trueturquoise hover:bg-trueturquoise/90 text-offblack px-8 py-3 rounded-lg shadow-lg transition-all duration-200 font-medium flex items-center gap-2" 
                     onClick={handleSave}
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -225,7 +225,7 @@ const StudentProfile: React.FC = () => {
                     Save Changes
                   </button>
                   <button 
-                    className="bg-paperwhite/10 hover:bg-paperwhite/20 text-paperwhite px-8 py-3 rounded-lg shadow-lg transition-all duration-200 font-semibold" 
+                    className="bg-paperwhite/10 hover:bg-paperwhite/20 text-paperwhite px-8 py-3 rounded-lg shadow-lg transition-all duration-200 font-medium" 
                     onClick={() => setEditMode(false)}
                   >
                     Cancel
@@ -233,7 +233,7 @@ const StudentProfile: React.FC = () => {
               </>
             ) : (
                 <button 
-                  className="bg-trueturquoise hover:bg-trueturquoise/90 text-offblack px-8 py-3 rounded-lg shadow-lg transition-all duration-200 font-semibold flex items-center gap-2" 
+                  className="bg-trueturquoise hover:bg-trueturquoise/90 text-offblack px-8 py-3 rounded-lg shadow-lg transition-all duration-200 font-medium flex items-center gap-2" 
                   onClick={() => setEditMode(true)}
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

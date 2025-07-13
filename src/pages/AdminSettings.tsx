@@ -368,7 +368,7 @@ const AdminSettings: React.FC = () => {
               <h2 className="text-xl font-semibold text-paperwhite font-heading">Training Modules</h2>
               <button
                 onClick={() => setShowModuleForm(true)}
-                className="bg-[#00B8D9] text-[#121212] px-4 py-2 rounded-lg hover:bg-[#00B8D9]/90 transition-colors flex items-center"
+                className="bg-[#00B8D9] text-[#121212] px-4 py-2 rounded-lg hover:bg-[#00B8D9]/90 transition-colors flex items-center font-medium"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Add Module
@@ -642,14 +642,14 @@ const AdminSettings: React.FC = () => {
                               });
                               setShowModuleForm(true);
                             }}
-                            className="bg-[#00B8D9] hover:bg-[#00B8D9]/90 text-[#121212] px-2 py-1 rounded transition-colors mr-2"
+                            className="bg-[#00B8D9] hover:bg-[#00B8D9]/90 text-[#121212] px-2 py-1 rounded transition-colors mr-2 font-medium"
                             title="Edit"
                           >
                             <Edit3 className="h-4 w-4" />
                           </button>
                           <button
                             onClick={() => handleDeleteModule(module.id)}
-                            className="bg-[#B7410E] hover:bg-[#B7410E]/90 text-[#FAFAFA] px-2 py-1 rounded transition-colors"
+                            className="bg-[#B7410E] hover:bg-[#B7410E]/90 text-[#FAFAFA] px-2 py-1 rounded transition-colors font-medium"
                             title="Delete"
                           >
                             <TrashIcon className="h-4 w-4" />
@@ -671,7 +671,7 @@ const AdminSettings: React.FC = () => {
               <h2 className="text-xl font-semibold text-paperwhite font-heading">User Management</h2>
               <button
                 onClick={() => { setShowUserForm(true); setEditingUser(null); setUserForm({ name: '', email: '', password: '', role: 'student', college: '', department: '', careerTrack: '', isActive: true }); }}
-                className="bg-[#00B8D9] text-[#121212] px-4 py-2 rounded-lg hover:bg-[#00B8D9]/90 transition-colors flex items-center"
+                className="bg-[#00B8D9] text-[#121212] px-4 py-2 rounded-lg hover:bg-[#00B8D9]/90 transition-colors flex items-center font-medium"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Add User
@@ -726,21 +726,21 @@ const AdminSettings: React.FC = () => {
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2 text-paperwhite">
                             <button
                               onClick={() => { setEditingUser(user); setUserForm({ ...user, password: '' }); setShowUserForm(true); }}
-                              className="bg-[#00B8D9] hover:bg-[#00B8D9]/90 text-[#121212] px-2 py-1 rounded transition-colors"
+                              className="bg-[#00B8D9] hover:bg-[#00B8D9]/90 text-[#121212] px-2 py-1 rounded transition-colors font-medium"
                               title="Edit"
                             >
                               <Edit3 className="h-4 w-4" />
                             </button>
                             <button
                               onClick={() => deleteStudent(user._id)}
-                              className="bg-[#B7410E] hover:bg-[#B7410E]/90 text-[#FAFAFA] px-2 py-1 rounded transition-colors"
+                              className="bg-[#B7410E] hover:bg-[#B7410E]/90 text-[#FAFAFA] px-2 py-1 rounded transition-colors font-medium"
                               title="Delete"
                             >
                               <TrashIcon className="h-4 w-4" />
                             </button>
                             <button
                               onClick={() => updateStudent(user._id, { ...user, isActive: !user.isActive })}
-                              className={`px-2 py-1 rounded transition-colors ${user.isActive ? 'bg-offblack hover:bg-offblack/20 text-paperwhite' : 'bg-[#00B8D9] hover:bg-[#00B8D9]/90 text-[#121212]'}`}
+                              className={`px-2 py-1 rounded transition-colors font-medium ${user.isActive ? 'bg-offblack hover:bg-offblack/20 text-paperwhite' : 'bg-[#00B8D9] hover:bg-[#00B8D9]/90 text-[#121212]'}`}
                               title={user.isActive ? 'Deactivate' : 'Activate'}
                             >
                               {user.isActive ? <Users className="h-4 w-4" /> : <CheckCircledIcon className="h-4 w-4" />}
