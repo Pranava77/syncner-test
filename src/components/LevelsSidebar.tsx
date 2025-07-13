@@ -19,7 +19,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
 
   if (!sidebarOpen) {
     return (
-      <div className="w-16 flex flex-col items-center justify-start pt-8 bg-offblack border-r border-paperwhite/20">
+      <div className="w-16 flex flex-col items-center justify-start pt-8 bg-offblack border-r border-paperwhite/20 h-full">
         <button
           onClick={() => setSidebarOpen && setSidebarOpen(true)}
           className="p-1.5 rounded-lg bg-offblack border border-paperwhite/30 shadow-lg hover:bg-trueturquoise/10 focus:outline-none focus:ring-2 focus:ring-trueturquoise"
