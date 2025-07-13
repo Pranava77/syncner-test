@@ -5,7 +5,6 @@ import geminiReducer from './slices/geminiSlice';
 import analyticsReducer from './slices/analyticsSlice';
 import settingsReducer from './slices/settingsSlice';
 import diagnosticsReducer from './slices/diagnosticsSlice';
-import progressReducer from './slices/progressSlice';
 import levelsReducer from './slices/levelsSlice';
 import staffReducer from './slices/staffSlice';
 import usersReducer from './slices/userSlice';
@@ -18,7 +17,6 @@ const rootReducer = combineReducers({
   analytics: analyticsReducer,
   settings: settingsReducer,
   diagnostics: diagnosticsReducer,
-  progress: progressReducer,
   levels: levelsReducer,
   staff: staffReducer,
   users: usersReducer,

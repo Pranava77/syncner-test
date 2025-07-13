@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../redux/store';
-import { fetchProgress } from '../redux/slices/progressSlice';
 import { fetchLevels } from '../redux/slices/levelsSlice';
 import {
   CodeIcon as Code,
@@ -21,13 +20,9 @@ import LoadingScreen from '../components/LoadingScreen';
 const StudentDashboard: React.FC = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
-  const progressState = useAppSelector((state) => state.progress);
   const levelsState = useAppSelector((state) => state.levels);
 
   useEffect(() => {
-    if (!progressState.data || progressState.lastFetched === null) {
-      dispatch(fetchProgress());
-    }
     if (levelsState.lastFetched === null) {
       dispatch(fetchLevels(user?.careerTrack));
     }
@@ -43,9 +38,7 @@ const StudentDashboard: React.FC = () => {
     );
   }
   const userTrack = user.careerTrack;
-  const progress = progressState.data;
   const levels = levelsState.data || [];
-  const progressLoading = progressState.loading;
   const levelsLoading = levelsState.loading;
 
   // Get current level (first in the list)
@@ -71,16 +64,16 @@ const StudentDashboard: React.FC = () => {
     }
   };
 
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case 'Beginner': return 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400';
-      case 'Intermediate': return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-400';
-      case 'Advanced': return 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-400';
-      default: return 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-400';
-    }
-  };
+  // const getDifficultyColor = (difficulty: string) => {
+  //   switch (difficulty) {
+  //     case 'Beginner': return 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400';
+  //     case 'Intermediate': return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-400';
+  //     case 'Advanced': return 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-400';
+  //     default: return 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-400';
+  //   }
+  // };
 
-  if (progressLoading || levelsLoading) {
+  if (levelsLoading) {
     return (
       <LoadingScreen 
         message="Loading your dashboard..."
@@ -104,12 +97,8 @@ const StudentDashboard: React.FC = () => {
             </p>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
               <div className="text-center">
-                <div className="text-xl lg:text-2xl text-paperwhite font-heading">{progress?.streakDays || 0}</div>
-                <div className="text-teallight text-xs lg:text-sm font-label">Day Streak</div>
-              </div>
-              <div className="text-center">
-                <div className="text-xl lg:text-2xl text-paperwhite font-heading">{progress?.totalPoints || 0}</div>
-                <div className="text-teallight text-xs lg:text-sm font-label">Total Points</div>
+                <div className="text-xl lg:text-2xl text-paperwhite font-heading">{currentLevel ? 'Available' : 0}</div>
+                <div className="text-teallight text-xs lg:text-sm font-label">Current Module</div>
               </div>
             </div>
           </div>
@@ -148,12 +137,12 @@ const StudentDashboard: React.FC = () => {
                 <div className="mb-4">
                   <div className="flex justify-between text-sm text-teallight mb-1">
                     <span>Progress</span>
-                    <span>{progress?.overallProgress || 0}%</span>
+                    <span>100%</span>
                   </div>
                   <div className="w-full bg-paperwhite/20 rounded-full h-2">
                     <div 
                       className="bg-trueturquoise h-2 rounded-full transition-all"
-                      style={{ width: `${progress?.overallProgress || 0}%` }}
+                      style={{ width: '100%' }}
                     ></div>
                   </div>
                 </div>
@@ -243,12 +232,12 @@ const StudentDashboard: React.FC = () => {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-teallight text-sm lg:text-base">Overall Progress</span>
-                <span className="font-semibold text-paperwhite">{progress?.overallProgress || 0}%</span>
+                <span className="font-semibold text-paperwhite">100%</span>
               </div>
               <div className="w-full bg-paperwhite/20 rounded-full h-2">
                 <div 
                   className="bg-trueturquoise h-2 rounded-full transition-all"
-                  style={{ width: `${progress?.overallProgress || 0}%` }}
+                  style={{ width: '100%' }}
                 ></div>
               </div>
               
@@ -258,7 +247,7 @@ const StudentDashboard: React.FC = () => {
                   <div className="text-xs text-teallight">Total Modules</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-lg font-bold text-trueturquoise">{progress?.completedModulesCount || 0}</div>
+                  <div className="text-lg font-bold text-trueturquoise">0</div>
                   <div className="text-xs text-teallight">Completed</div>
                 </div>
               </div>

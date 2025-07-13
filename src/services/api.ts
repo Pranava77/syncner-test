@@ -126,14 +126,7 @@ class ApiService {
     return data;
   }
 
-  async getUserProgress() {
-    const response = await fetch(`${this.baseURL}/progress`, {
-      headers: this.getHeaders(),
-      credentials: 'include',
-    });
-
-    return this.handleResponse(response, false);
-  }
+  // Remove getUserProgress method
 
   // Career tracks endpoints
   async getCareerTracks() {

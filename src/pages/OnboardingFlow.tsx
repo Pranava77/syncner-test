@@ -170,7 +170,7 @@ const OnboardingFlow: React.FC = () => {
                 <div className="flex items-start space-x-3">
                   <CheckCircledIcon className="h-6 w-6 text-green-500 mt-1 flex-shrink-0" />
                   <div>
-                    <h3 className="font-medium text-gray-900 dark:text-white font-heading">Career Guidance</h3>
+                    <h3 className=" text-gray-900 dark:text-white font-heading">Career Guidance</h3>
                     <p className="text-gray-600 dark:text-gray-300">AI-powered mentoring and career advice</p>
                   </div>
                 </div>

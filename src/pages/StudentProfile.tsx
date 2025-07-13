@@ -15,15 +15,8 @@ interface StudentProfileData {
   graduationYear?: string;
 }
 
-interface StudentProgressData {
-  overallProgress: number;
-  streakDays: number;
-  totalPoints: number;
-}
-
 const StudentProfile: React.FC = () => {
   const [profile, setProfile] = useState<StudentProfileData | null>(null);
-  const [progress, setProgress] = useState<StudentProgressData | null>(null);
   const [editMode, setEditMode] = useState(false);
   const [form, setForm] = useState<StudentProfileData>({ name: '', email: '' });
   const [loading, setLoading] = useState(true);
@@ -37,8 +30,6 @@ const StudentProfile: React.FC = () => {
         const profileRes = await ApiService.getMe();
         setProfile(profileRes.data.user);
         setForm(profileRes.data.user);
-        const progressRes = await ApiService.getUserProgress();
-        setProgress(progressRes.data);
         setError(null);
       } catch (err) {
         setError((err as any)?.message || 'Failed to load profile');
@@ -83,7 +74,7 @@ const StudentProfile: React.FC = () => {
                 <PersonIcon className="h-10 w-10 text-offblack" />
           </div>
             <div>
-                <h2 className="text-2xl font-bold text-paperwhite font-heading">{profile?.name || ''}</h2>
+                <h2 className="text-2xl text-paperwhite font-heading">{profile?.name || ''}</h2>
                 <p className="text-teallight">{profile?.email || ''}</p>
                 <span className="inline-block bg-trueturquoise/20 text-trueturquoise px-3 py-1 rounded-full text-sm mt-2">
                   Student
@@ -253,49 +244,15 @@ const StudentProfile: React.FC = () => {
         {/* Progress Overview Card */}
         <div className="lg:col-span-1">
           <div className="bg-offblack border border-paperwhite/10 rounded-xl shadow-lg p-6">
-            <h3 className="font-semibold text-lg mb-6 text-trueturquoise flex items-center gap-2 font-heading">
+            <h3 className=" text-lg mb-6 text-trueturquoise flex items-center gap-2 font-heading">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
               Progress Overview
             </h3>
             
-          {progress ? (
-              <div className="space-y-4">
-                <div className="bg-paperwhite/5 border border-paperwhite/10 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-teallight font-medium">Overall Progress</span>
-                    <span className="text-2xl font-bold text-trueturquoise">{progress.overallProgress}%</span>
-                  </div>
-                  <div className="w-full bg-paperwhite/10 rounded-full h-2">
-                    <div 
-                      className="bg-trueturquoise h-2 rounded-full transition-all duration-300" 
-                      style={{ width: `${progress.overallProgress}%` }}
-                    ></div>
-                  </div>
-                </div>
-                
-            <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-paperwhite/5 border border-paperwhite/10 rounded-lg p-4 text-center">
-                    <div className="text-2xl font-bold text-trueturquoise mb-1">{progress.streakDays}</div>
-                    <div className="text-xs text-teallight">Streak Days</div>
-                  </div>
-                  
-                  <div className="bg-paperwhite/5 border border-paperwhite/10 rounded-lg p-4 text-center">
-                    <div className="text-2xl font-bold text-trueturquoise mb-1">{progress.totalPoints}</div>
-                    <div className="text-xs text-teallight">Total Points</div>
-                  </div>
-              </div>
-              </div>
-            ) : (
-              <div className="text-teallight text-center py-8">
-                <svg className="w-12 h-12 mx-auto mb-4 text-paperwhite/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-                <p className="text-sm">No progress data available</p>
-              </div>
-            )}
-            </div>
+          {/* The progress card content has been removed */}
+          </div>
         </div>
       </div>
     </div>
