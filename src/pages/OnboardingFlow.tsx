@@ -214,7 +214,7 @@ const OnboardingFlow: React.FC = () => {
                         onClick={() => handleTrackSelect(track.id)}
                         className={`bg-paperwhite/10 rounded-xl shadow-lg p-6 cursor-pointer transition-all hover:shadow-xl focus-within:ring-2 focus-within:ring-trueturquoise outline-none ${
                           selectedTrack === track.id 
-                            ? 'ring-2 ring-trueturquoise bg-teallight' 
+                            ? 'ring-2 ring-trueturquoise bg-trueturquoise/10' 
                             : 'hover:bg-paperwhite/5'
                         }`}
                         tabIndex={0}
@@ -226,15 +226,15 @@ const OnboardingFlow: React.FC = () => {
                         <div className="bg-trueturquoise/20 p-3 rounded-lg w-fit mb-4">
                           <Icon className="h-8 w-8 text-trueturquoise" aria-hidden="true" />
                         </div>
-                        <h3 className="text-xl font-heading text-offblack mb-2 leading-tight">
+                        <h3 className="text-xl font-heading text-paperwhite mb-2 leading-tight">
                           {track.title}
                         </h3>
-                        <p className="text-offblack font-label mb-4 leading-relaxed">{track.description}</p>
+                        <p className="text-teallight font-label mb-4 leading-relaxed">{track.description}</p>
                         <div className="flex flex-wrap gap-2">
                           {track.skills.map((skill) => (
                             <span
                               key={skill}
-                              className="bg-soft-gray text-offblack px-3 py-1 rounded-full text-sm font-label"
+                              className="bg-soft-gray text-paperwhite px-3 py-1 rounded-full text-sm font-label"
                             >
                               {skill}
                             </span>
@@ -296,7 +296,7 @@ const OnboardingFlow: React.FC = () => {
                             <CheckCircledIcon className="h-3 w-3 text-offblack" aria-hidden="true" />
                           )}
                         </div>
-                        <span className="text-offblack font-label text-lg">{goal}</span>
+                        <span className="text-paperwhite font-label text-lg">{goal}</span>
                       </label>
                     ))}
                   </div>
