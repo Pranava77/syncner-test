@@ -1,3 +1,53 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Import Inter from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+/* If you have FK Grotesk webfont, add it here:
+@font-face {
+  font-family: 'FK Grotesk';
+  src: url('/fonts/FKGrotesk.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+*/
+
+html, body {
+  font-family: 'FK Grotesk', 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: #121212;
+  background: #FAFAFA;
+}
+
+/* Headings */
+h1 {
+  @apply font-heading text-heading1;
+}
+h2 {
+  @apply font-heading text-heading2;
+}
+h3 {
+  @apply font-heading text-heading3;
+}
+
+/* Body text */
+p, .body {
+  @apply font-normal text-body;
+}
+
+/* Labels/Captions */
+.label, label, caption, .caption {
+  @apply font-label text-label uppercase tracking-wider;
+}
+
+/* Utility for bold headings */
+.font-heading {
+  font-weight: 700;
+}
+.font-label {
+  font-weight: 600;
+}
