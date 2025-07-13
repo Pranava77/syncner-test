@@ -36,7 +36,7 @@ import { errorHandler } from './middleware/errorHandler.js';
 // Import all MongoDB models to ensure schemas are registered
 import './models/User.js';
 import './models/Track.js';
-import './models/Module.js';
+import './models/Level.js';
 import './models/Staff.js';
 import './models/Admin.js';
 
