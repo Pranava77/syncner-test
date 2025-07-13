@@ -65,7 +65,7 @@ const LevelTestPage: React.FC = () => {
       return;
     }
     timerRef.current = setTimeout(() => setTimeLeft((t) => t - 1), 1000);
-    return () => timerRef.current && clearTimeout(timerRef.current);
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
   }, [timeLeft, submitted]);
 
   const handleCheck = (qIdx: number, optIdx: number) => {
@@ -88,13 +88,13 @@ const LevelTestPage: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen w-screen bg-offblack overflow-hidden">
+    <div className="flex h-screen w-screen bg-offblack overflow-x-hidden">
       <div className="flex-shrink-0 h-full">
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelNum} currentSection="test" />
       </div>
-      <main className="flex-1 h-full overflow-y-auto p-6 lg:p-12 bg-offblack">
-        <div className="mb-8 relative">
-          <div className="flex items-center justify-between mb-6">
+      <main className="flex-1 h-full overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full">
+        <div className="mb-8 relative max-w-4xl mx-auto w-full">
+          <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
             <div>
               <h1 className="text-2xl font-bold text-paperwhite mb-2">Level {levelId} - Test</h1>
               <p className="text-teallight">Answer the following questions:</p>
@@ -114,7 +114,7 @@ const LevelTestPage: React.FC = () => {
           </div>
           <form className="space-y-8" onSubmit={handleSubmit}>
             {questions.map((q, qIdx) => (
-              <div key={qIdx} className="bg-paperwhite/10 rounded-xl p-6 shadow space-y-4">
+              <div key={qIdx} className="bg-paperwhite/10 rounded-xl p-6 shadow space-y-4 w-full">
                 <div className="font-semibold text-paperwhite mb-2">{qIdx + 1}. {q.question}</div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {q.options.map((opt, optIdx) => (
