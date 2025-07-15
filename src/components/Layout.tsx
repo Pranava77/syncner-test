@@ -25,8 +25,7 @@ import {
 } from '@radix-ui/react-icons';
 import logo from '../assets/syncner-logo.png';
 import LoadingScreen from './LoadingScreen';
-import AttendanceHeatmap from './AttendanceHeatmap';
-import { motion, useAnimation, useMotionValue, useTransform } from 'framer-motion';
+import { motion, useAnimation } from 'framer-motion';
 import { useRef } from 'react';
 import axios from 'axios';
 
