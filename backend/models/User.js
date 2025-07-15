@@ -92,6 +92,13 @@ const userSchema = new mongoose.Schema({
   graduationYear: {
     type: String,
     trim: true
+  },
+  activeTodayMinutes: {
+    type: Number,
+    default: 0
+  },
+  activeTodayDate: {
+    type: Date
   }
 }, {
   timestamps: true,

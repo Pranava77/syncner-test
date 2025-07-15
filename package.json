@@ -13,6 +13,7 @@
     "@google/generative-ai": "^0.2.1",
     "@radix-ui/react-icons": "^1.3.2",
     "@reduxjs/toolkit": "^2.8.2",
+    "@uiw/react-heat-map": "^2.3.3",
     "axios": "^1.10.0",
     "framer-motion": "^12.23.3",
     "html2canvas": "^1.4.1",

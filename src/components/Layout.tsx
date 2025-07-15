@@ -25,8 +25,10 @@ import {
 } from '@radix-ui/react-icons';
 import logo from '../assets/syncner-logo.png';
 import LoadingScreen from './LoadingScreen';
+import AttendanceHeatmap from './AttendanceHeatmap';
 import { motion, useAnimation, useMotionValue, useTransform } from 'framer-motion';
 import { useRef } from 'react';
+import axios from 'axios';
 
 const Layout: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -67,6 +69,33 @@ const Layout: React.FC = () => {
     }, 2000);
     return () => clearInterval(interval);
   }, [controls, isLogoAnimating]);
+
+  useEffect(() => {
+    if (!user || user.role !== 'student') return;
+    let interval: ReturnType<typeof setInterval>;
+    let lastActivity = Date.now();
+
+    const activityHandler = () => {
+      lastActivity = Date.now();
+    };
+
+    // Listen for user activity
+    window.addEventListener('mousemove', activityHandler);
+    window.addEventListener('keydown', activityHandler);
+
+    interval = setInterval(() => {
+      // Only ping if user was active in the last 10 minutes
+      if (Date.now() - lastActivity < 10 * 60 * 1000) {
+        axios.get('/api/auth/me').catch(() => {});
+      }
+    }, 5 * 60 * 1000); // every 5 minutes
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('mousemove', activityHandler);
+      window.removeEventListener('keydown', activityHandler);
+    };
+  }, [user]);
 
   const handleLogoHover = () => {
     setIsLogoAnimating(true);
@@ -239,6 +268,10 @@ const Layout: React.FC = () => {
                 </Link>
               );
             })}
+            {/* Attendance Heatmap for students */}
+            {user?.role === 'student' && (
+              <AttendanceHeatmap />
+            )}
           </div>
           {/* Bottom section for Mock Interview and Leaderboard */}
           {user?.role !== 'admin' && false && (

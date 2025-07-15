@@ -29,9 +29,12 @@ import trainingRoutes from './routes/trainingRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
+import attendanceRoutes from './routes/attendanceRoutes.js';
 
 // Import middleware
 import { errorHandler } from './middleware/errorHandler.js';
+import { protect } from './middleware/auth.js';
+import { trackActivity } from './middleware/trackActivity.js';
 
 // Import all MongoDB models to ensure schemas are registered
 import './models/User.js';
@@ -79,12 +82,15 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // API Routes
 app.use('/api/auth', authRoutes);
+// All routes below require authentication and activity tracking
+app.use('/api', protect, trackActivity);
 app.use('/api/users', userRoutes);
 app.use('/api/tracks', trackRoutes);
 app.use('/api/training', trainingRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/admin/settings', settingsRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/attendance', attendanceRoutes);
 
 // Health check endpoint
 const serverStartTime = Date.now();
