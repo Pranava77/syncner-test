@@ -61,10 +61,10 @@ const AttendanceHeatmap: React.FC = () => {
   const verticalOffset = 0;
 
   const colorMap = {
-    present: 'fill-[#00D084]', // Vibrant green
-    absent: 'fill-[#FF5A5F]',  // Vibrant red
-    nodata: 'fill-[#B0BEC5]',  // Soft gray
-    empty: 'fill-gray-800',
+    present: 'fill-[#22c55e]', // Vibrant green
+    absent: 'fill-[#ef4444]',  // Strong red
+    nodata: 'fill-[#a3a3a3]',  // Neutral gray
+    empty: 'fill-[#18181b]',   // Very dark gray
   };
 
   // Tooltip
@@ -103,7 +103,7 @@ const AttendanceHeatmap: React.FC = () => {
                 height="min(80px,18vw)" 
                 viewBox={`-0.5 -0.5 ${columns} 2`} 
                 className="w-full max-w-[98vw] h-[80px] sm:h-[90px] md:h-[100px] lg:h-[110px] mx-auto flex justify-center items-center">
-                <Layout size={{ x: 0.6, y: 0.6 }} flat={false} spacing={1.0} origin={{ x: horizontalOffset, y: verticalOffset }}>
+                <Layout size={{ x: 0.6, y: 0.6 }} flat={false} spacing={1.25} origin={{ x: horizontalOffset, y: verticalOffset }}>
                   {hexes.map((hex, idx) => {
                     const isHovered = hovered === hex.date && !hex.isEmpty;
                     let fillClass =
