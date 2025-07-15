@@ -61,10 +61,10 @@ const AttendanceHeatmap: React.FC = () => {
   const verticalOffset = 0;
 
   const colorMap = {
-    present: 'fill-[#22c55e]', // Vibrant green
-    absent: 'fill-[#ef4444]',  // Strong red
-    nodata: 'fill-[#a3a3a3]',  // Neutral gray
-    empty: 'fill-[#18181b]',   // Very dark gray
+    present: 'fill-[var(--color-true-turquoise)]', // #00B8D9
+    absent: 'fill-[var(--color-rust)]',           // #B7410E
+    nodata: 'fill-[var(--color-soft-gray)]',      // #E5E7EB
+    empty: 'fill-[var(--color-offblack)]',        // #121212
   };
 
   // Tooltip
@@ -72,8 +72,8 @@ const AttendanceHeatmap: React.FC = () => {
     const hex = hexes.find(h => h.date === hovered);
     if (!hex) return null;
     return (
-      <div className="absolute left-1/2 -translate-x-1/2 -top-10 z-50 px-3 py-1 rounded-xl bg-[#23272F] border border-[#00D084] text-xs text-white shadow-2xl pointer-events-none animate-fade-in font-primary flex flex-col items-center gap-1">
-        <div className="font-bold tracking-wide text-[#00D084]">{hex.date}</div>
+      <div className="absolute left-1/2 -translate-x-1/2 -top-10 z-50 px-3 py-1 rounded-xl bg-[var(--color-offblack)] border border-[var(--color-true-turquoise)] text-xs text-[var(--color-paper-white)] shadow-2xl pointer-events-none animate-fade-in font-primary flex flex-col items-center gap-1">
+        <div className="font-bold tracking-wide text-[var(--color-true-turquoise)]">{hex.date}</div>
         <div className="text-sm">{hex.count === 1 ? 'Present' : hex.count === 0 ? 'Absent' : 'No Data'}</div>
       </div>
     );
@@ -93,7 +93,7 @@ const AttendanceHeatmap: React.FC = () => {
                 height="min(80px,18vw)" 
                 viewBox={`-0.5 -0.5 ${columns} 2`} 
                 className="w-full max-w-[98vw] h-[80px] sm:h-[90px] md:h-[100px] lg:h-[110px] mx-auto flex justify-center items-center">
-                <Layout size={{ x: 0.6, y: 0.6 }} flat={false} spacing={1.25} origin={{ x: horizontalOffset, y: verticalOffset }}>
+                <Layout size={{ x: 0.4, y: 0.4 }} flat={false} spacing={1.25} origin={{ x: horizontalOffset, y: verticalOffset }}>
                   {hexes.map((hex, idx) => {
                     const isHovered = hovered === hex.date && !hex.isEmpty;
                     let fillClass =
