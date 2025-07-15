@@ -26,8 +26,6 @@ const AttendanceHeatmap: React.FC = () => {
 
   if (!user?.id) return null;
 
-  // Sidebar usable width: 208px, so use 200px for SVG
-  // Build a 2-row grid for the current month, distributing days across columns
   const today = new Date();
   const year = today.getFullYear();
   const month = today.getMonth();
@@ -56,25 +54,32 @@ const AttendanceHeatmap: React.FC = () => {
     }
   }
 
-  // Centering logic for 2 rows
-  const horizontalOffset = 0;
-  const verticalOffset = 0;
-
   const colorMap = {
-    present: 'fill-[var(--color-true-turquoise)]', // #00B8D9
-    absent: 'fill-[var(--color-rust)]',           // #B7410E
-    nodata: 'fill-[var(--color-soft-gray)]',      // #E5E7EB
-    empty: 'fill-[var(--color-offblack)]',        // #121212
+    present: 'fill-[var(--color-true-turquoise)]',
+    absent: 'fill-[var(--color-rust)]',
+    nodata: 'fill-[var(--color-paper-white)]',
+    empty: 'fill-[var(--color-paper-white)]',
   };
 
-  // Tooltip
   const tooltip = hovered ? (() => {
     const hex = hexes.find(h => h.date === hovered);
     if (!hex) return null;
+    let borderColor = 'var(--color-soft-gray)';
+    let textColor = 'var(--color-soft-gray)';
+    if (hex.count === 1) {
+      borderColor = 'var(--color-true-turquoise)';
+      textColor = 'var(--color-true-turquoise)';
+    } else if (hex.count === 0) {
+      borderColor = 'var(--color-rust)';
+      textColor = 'var(--color-rust)';
+    }
     return (
-      <div className="absolute left-1/2 -translate-x-1/2 -top-10 z-50 px-3 py-1 rounded-xl bg-[var(--color-offblack)] border border-[var(--color-true-turquoise)] text-xs text-[var(--color-paper-white)] shadow-2xl pointer-events-none animate-fade-in font-primary flex flex-col items-center gap-1">
-        <div className="font-bold tracking-wide text-[var(--color-true-turquoise)]">{hex.date}</div>
-        <div className="text-sm">{hex.count === 1 ? 'Present' : hex.count === 0 ? 'Absent' : 'No Data'}</div>
+      <div
+        className="absolute left-1/2 -translate-x-1/2 -top-10 z-50 px-3 py-1 rounded-xl bg-[var(--color-offblack)] text-xs text-[var(--color-paper-white)] shadow-2xl pointer-events-none animate-fade-in font-primary flex flex-col items-center gap-1"
+        style={{ border: `1.5px solid ${borderColor}` }}
+      >
+        <div className="font-bold tracking-wide" style={{ color: textColor }}>{hex.date}</div>
+        <div className="text-sm" style={{ color: textColor }}>{hex.count === 1 ? 'Present' : hex.count === 0 ? 'Absent' : 'No Data'}</div>
       </div>
     );
   })() : null;
@@ -93,7 +98,7 @@ const AttendanceHeatmap: React.FC = () => {
                 height="min(80px,18vw)" 
                 viewBox={`-0.5 -0.5 ${columns} 2`} 
                 className="w-full max-w-[98vw] h-[80px] sm:h-[90px] md:h-[100px] lg:h-[110px] mx-auto flex justify-center items-center">
-                <Layout size={{ x: 0.4, y: 0.4 }} flat={false} spacing={1.25} origin={{ x: horizontalOffset, y: verticalOffset }}>
+                <Layout size={{ x: 0.4, y: 0.4 }} flat={false} spacing={1.25} origin={{ x: 0, y: 0 }}>
                   {hexes.map((hex, idx) => {
                     const isHovered = hovered === hex.date && !hex.isEmpty;
                     let fillClass =
@@ -120,7 +125,7 @@ const AttendanceHeatmap: React.FC = () => {
                           s={hex.s}
                           className={[
                             fillClass,
-                            'stroke-[var(--color-paper-white)]/20', // subtle light border
+                            'stroke-[var(--color-paper-white)]/20',
                             isHovered ? 'ring-2 ring-[var(--color-true-turquoise)]/90 shadow-2xl' : '',
                             'stroke-2 transition-all duration-200 cursor-pointer',
                           ].join(' ')}
