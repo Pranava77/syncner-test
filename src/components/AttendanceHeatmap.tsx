@@ -26,46 +26,49 @@ const AttendanceHeatmap: React.FC = () => {
 
   return (
     <div
-      className="my-6 px-2"
-      style={{ fontFamily: "var(--font-primary, 'Inter', 'Helvetica Neue', Arial, sans-serif)" }}
+      className="my-4"
+      style={{
+        fontFamily: "var(--font-primary, 'Inter', 'Helvetica Neue', Arial, sans-serif)",
+        maxWidth: 220,
+        margin: '0 auto',
+      }}
     >
       <div
-        className="mb-3 text-lg font-bold tracking-wide flex items-center gap-2"
-        style={{ color: 'var(--color-true-turquoise)', letterSpacing: 1.2 }}
+        className="mb-2 text-sm font-semibold tracking-wide"
+        style={{ color: 'var(--color-paper-white, #FAFAFA)' }}
       >
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--color-true-turquoise)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" rx="2" fill="var(--color-true-turquoise)" opacity="0.18"/><rect x="14" y="3" width="7" height="7" rx="2" fill="var(--color-true-turquoise)" opacity="0.18"/><rect x="14" y="14" width="7" height="7" rx="2" fill="var(--color-true-turquoise)" opacity="0.18"/><rect x="3" y="14" width="7" height="7" rx="2" fill="var(--color-true-turquoise)" opacity="0.18"/></svg>
         Attendance
       </div>
       <div
-        className="rounded-xl shadow-lg border"
+        className="shadow border"
         style={{
-          background: 'linear-gradient(135deg, var(--color-offblack) 80%, var(--color-true-turquoise) 120%)',
-          borderColor: 'var(--color-soft-gray)',
-          boxShadow: 'var(--shadow-card)',
+          background: 'var(--color-offblack, #121212)',
+          borderColor: 'var(--color-soft-gray, #E5E7EB)',
+          boxShadow: 'var(--shadow-card, 0 2px 8px rgba(0,0,0,0.06))',
           borderRadius: 'var(--border-radius, 8px)',
-          padding: 20,
+          padding: 14,
         }}
       >
         {loading ? (
-          <div className="text-teal-light text-xs" style={{ color: 'var(--color-teal-light)' }}>Loading attendance...</div>
+          <div className="text-xs" style={{ color: 'var(--color-teal-light, #A0D8EF)' }}>Loading attendance...</div>
         ) : (
           <HeatMap
             value={data}
             startDate={new Date(new Date().getFullYear(), 0, 1)}
             panelColors={{
-              0: 'var(--color-offblack, #121212)',
-              1: 'var(--color-true-turquoise, #00B8D9)',
+              0: 'var(--color-soft-gray, #E5E7EB)', // Absent
+              1: 'var(--color-true-turquoise, #00B8D9)', // Present
             }}
             rectProps={{
-              rx: 5,
+              rx: 3,
               style: {
-                stroke: 'var(--color-soft-gray, #E5E7EB)',
-                strokeWidth: 0.7,
+                stroke: 'var(--color-offblack, #121212)',
+                strokeWidth: 1,
                 transition: 'all 0.18s cubic-bezier(.4,2,.6,1)',
                 cursor: 'pointer',
               },
               onMouseOver: (e: React.MouseEvent<SVGRectElement>) => {
-                (e.target as SVGRectElement).style.filter = 'brightness(1.2) drop-shadow(0 0 4px var(--color-true-turquoise, #00B8D9))';
+                (e.target as SVGRectElement).style.filter = 'brightness(1.15) drop-shadow(0 0 2px var(--color-true-turquoise, #00B8D9))';
               },
               onMouseOut: (e: React.MouseEvent<SVGRectElement>) => {
                 (e.target as SVGRectElement).style.filter = '';
@@ -78,7 +81,7 @@ const AttendanceHeatmap: React.FC = () => {
                 <title>{d.date + ': ' + (d.count ? 'Present' : 'Absent')}</title>
               </rect>
             )}
-            style={{ width: '100%', minWidth: 220, maxWidth: 320, margin: '0 auto', display: 'block' }}
+            style={{ width: '100%', minWidth: 180, maxWidth: 220, margin: '0 auto', display: 'block' }}
           />
         )}
       </div>
