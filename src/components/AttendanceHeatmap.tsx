@@ -65,21 +65,21 @@ const AttendanceHeatmap: React.FC = () => {
   }
 
   return (
-    <div className="my-4 max-w-xs mx-auto">
+    <div className="my-4 max-w-xs mx-auto mt-2">
       <div className="flex items-center gap-2 mb-3">
         <span className="inline-block w-2 h-2 rounded-full bg-trueturquoise shadow-[0_0_8px_#00B8D9]" />
         <span className="text-paperwhite font-bold tracking-widest uppercase text-xs select-none">Attendance</span>
       </div>
-      <div className="bg-offblack border border-softgray shadow-lg rounded-xl p-4 ring-1 ring-trueturquoise/10">
+      <div className="bg-offblack border border-paperwhite/10 rounded-xl p-2">
         {loading ? (
           <div className="text-xs text-teallight">Loading attendance...</div>
         ) : (
-          <div className="py-2 flex justify-center">
+          <div className="py-1 flex justify-center">
             <svg
-              width={weeks * xStep + r}
-              height={days * yStep + r}
+              viewBox={`0 0 ${weeks * xStep + r} ${days * yStep + r}`}
+              width="100%"
+              height="128"
               className="block"
-              style={{ maxWidth: '100%', height: 'auto' }}
             >
               {grid.map((cell) => (
                 <polygon
@@ -87,10 +87,10 @@ const AttendanceHeatmap: React.FC = () => {
                   points={hexPoints(cell.x + r, cell.y + r, r)}
                   className={
                     cell.count === 1
-                      ? 'fill-trueturquoise drop-shadow-[0_0_8px_#00B8D9] hover:fill-teallight hover:drop-shadow-[0_0_16px_#A0D8EF] transition-all duration-200'
+                      ? 'fill-trueturquoise drop-shadow-[0_0_8px_#00B8D9] hover:fill-green-400 hover:drop-shadow-[0_0_16px_#A0D8EF] transition-all duration-200'
                       : cell.count === 0
-                      ? 'fill-softgray opacity-70'
-                      : 'fill-offblack opacity-40'
+                      ? 'fill-softgray opacity-90'
+                      : 'fill-gray-700 opacity-60'
                   }
                 >
                   <title>{cell.date + ': ' + (cell.count === 1 ? 'Present' : cell.count === 0 ? 'Absent' : 'No data')}</title>
