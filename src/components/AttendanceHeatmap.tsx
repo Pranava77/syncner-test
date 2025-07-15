@@ -65,69 +65,89 @@ const AttendanceHeatmap: React.FC = () => {
   const horizontalOffset = firstDayOfWeek / 2;
   const verticalOffset = trailingEmpty > 0 ? trailingEmpty / days / 2 : 0;
 
+  const colorMap = {
+    present: 'fill-[#00D084]', // Vibrant green
+    absent: 'fill-[#FF5A5F]',  // Vibrant red
+    nodata: 'fill-[#B0BEC5]',  // Soft gray
+    empty: 'fill-gray-800',
+  };
+
   // Tooltip
   const tooltip = hovered ? (() => {
     const hex = hexes.find(h => h.date === hovered);
     if (!hex) return null;
     return (
-      <div className="absolute left-1/2 -translate-x-1/2 -top-6 z-50 px-2 py-0.5 rounded-lg bg-offblack border border-softgray text-[10px] text-paperwhite shadow-lg pointer-events-none animate-fade-in font-primary">
-        <div className="font-bold tracking-wide">{hex.date}</div>
-        <div>{hex.count === 1 ? 'Present' : hex.count === 0 ? 'Absent' : 'No Data'}</div>
+      <div className="absolute left-1/2 -translate-x-1/2 -top-10 z-50 px-3 py-1 rounded-xl bg-[#23272F] border border-[#00D084] text-xs text-white shadow-2xl pointer-events-none animate-fade-in font-primary flex flex-col items-center gap-1">
+        <div className="font-bold tracking-wide text-[#00D084]">{hex.date}</div>
+        <div className="text-sm">{hex.count === 1 ? 'Present' : hex.count === 0 ? 'Absent' : 'No Data'}</div>
       </div>
     );
   })() : null;
 
+  // Legend
+  const legend = (
+    <div className="flex justify-center gap-6 mt-4 mb-2 text-xs font-primary">
+      <div className="flex items-center gap-2"><span className="w-4 h-4 rounded-full inline-block bg-[#00D084] border border-[#00D084]"></span> Present</div>
+      <div className="flex items-center gap-2"><span className="w-4 h-4 rounded-full inline-block bg-[#FF5A5F] border border-[#FF5A5F]"></span> Absent</div>
+      <div className="flex items-center gap-2"><span className="w-4 h-4 rounded-full inline-block bg-[#B0BEC5] border border-[#B0BEC5]"></span> No Data</div>
+    </div>
+  );
+
   return (
-    <div className="flex justify-center w-full font-primary">
-      <div className="bg-offblack rounded-xl p-2">
-        {loading ? (
-          <div className="text-xs text-teallight font-primary">Loading attendance...</div>
-        ) : (
-          <div className="flex justify-center py-1 relative w-full">
-            {tooltip}
-            <HexGrid width="100%" height="10vh" viewBox="-0.5 -0.5 7 4" className="w-full h-[10vh] mx-auto">
-              <Layout size={{ x: 1.6, y: 1.6 }} flat={false} spacing={1.0} origin={{ x: horizontalOffset, y: verticalOffset }}>
-                {hexes.map((hex, idx) => {
-                  const isHovered = hovered === hex.date && !hex.isEmpty;
-                  let fillClass =
-                    hex.isEmpty
-                      ? 'fill-gray-800'
-                      : hex.count === 1
-                      ? 'fill-trueturquoise'
-                      : hex.count === 0
-                      ? 'fill-softgray'
-                      : 'fill-gray-700';
-                  if (isHovered) fillClass = 'fill-trueturquoise';
-                  return (
-                    <motion.g
-                      key={hex.date + idx}
-                      whileHover={hex.isEmpty ? {} : { scale: 1.35, filter: 'drop-shadow(0 0 18px #00B8D9)' }}
-                      transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-                      style={{ zIndex: isHovered ? 20 : 1 }}
-                      onMouseEnter={() => !hex.isEmpty && setHovered(hex.date)}
-                      onMouseLeave={() => setHovered(null)}
-                    >
-                      <Hexagon
-                        q={hex.q}
-                        r={hex.r}
-                        s={hex.s}
-                        className={[
-                          fillClass,
-                          isHovered ? 'ring-2 ring-trueturquoise/90 shadow-2xl' : '',
-                          'stroke-none transition-all duration-200 cursor-pointer',
-                        ].join(' ')}
+    <div className="flex flex-col items-center w-full font-primary">
+      <div className="w-full flex flex-col items-center">
+        <h2 className="text-lg font-bold text-paperwhite mb-2 mt-1 tracking-wide">Attendance Heatmap</h2>
+        <div className="bg-offblack rounded-2xl p-4 shadow-lg w-full max-w-xl flex flex-col items-center">
+          {loading ? (
+            <div className="text-xs text-teallight font-primary">Loading attendance...</div>
+          ) : (
+            <div className="flex flex-col items-center w-full relative">
+              {tooltip}
+              <HexGrid width="100%" height="180px" viewBox="-0.5 -0.5 7 4" className="w-full h-[180px] mx-auto">
+                <Layout size={{ x: 1.6, y: 1.6 }} flat={false} spacing={1.0} origin={{ x: horizontalOffset, y: verticalOffset }}>
+                  {hexes.map((hex, idx) => {
+                    const isHovered = hovered === hex.date && !hex.isEmpty;
+                    let fillClass =
+                      hex.isEmpty
+                        ? colorMap.empty
+                        : hex.count === 1
+                        ? colorMap.present
+                        : hex.count === 0
+                        ? colorMap.absent
+                        : colorMap.nodata;
+                    if (isHovered) fillClass = 'fill-[#00D084]';
+                    return (
+                      <motion.g
+                        key={hex.date + idx}
+                        whileHover={hex.isEmpty ? {} : { scale: 1.25, filter: 'drop-shadow(0 0 16px #00D084)' }}
+                        transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                        style={{ zIndex: isHovered ? 20 : 1 }}
+                        onMouseEnter={() => !hex.isEmpty && setHovered(hex.date)}
+                        onMouseLeave={() => setHovered(null)}
                       >
-                        {hex.date && (
-                          <title>{hex.date + ': ' + (hex.count === 1 ? 'Present' : hex.count === 0 ? 'Absent' : 'No data')}</title>
-                        )}
-                      </Hexagon>
-                    </motion.g>
-                  );
-                })}
-              </Layout>
-            </HexGrid>
-          </div>
-        )}
+                        <Hexagon
+                          q={hex.q}
+                          r={hex.r}
+                          s={hex.s}
+                          className={[
+                            fillClass,
+                            isHovered ? 'ring-2 ring-[#00D084]/90 shadow-2xl' : '',
+                            'stroke-none transition-all duration-200 cursor-pointer',
+                          ].join(' ')}
+                        >
+                          {hex.date && (
+                            <title>{hex.date + ': ' + (hex.count === 1 ? 'Present' : hex.count === 0 ? 'Absent' : 'No data')}</title>
+                          )}
+                        </Hexagon>
+                      </motion.g>
+                    );
+                  })}
+                </Layout>
+              </HexGrid>
+              {legend}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
