@@ -268,17 +268,14 @@ const Layout: React.FC = () => {
                 </Link>
               );
             })}
-            {/* Attendance Heatmap for students */}
+            {/* AttendanceHeatmap removed from here */}
+          </div>
+          {/* Bottom section for Mock Interview and Leaderboard */}
+          <div className="mt-auto w-full">
             {user?.role === 'student' && (
               <AttendanceHeatmap />
             )}
           </div>
-          {/* Bottom section for Mock Interview and Leaderboard */}
-          {user?.role !== 'admin' && false && (
-            <div className="mt-4 pt-4 border-t border-paperwhite/10">
-              {/* This section is now removed as items are in mainStudentNavItems */}
-            </div>
-          )}
         </nav>
         {isSidebarCollapsed ? (
           <div className="flex flex-col items-center gap-4 pb-6">

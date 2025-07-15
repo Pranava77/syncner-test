@@ -39,36 +39,34 @@ const AttendanceHeatmap: React.FC = () => {
   const gridWidth = 260;
   const gridHeight = 140;
   const hexSize = 1;
-  const weeks = WEEKS;
-  const days = DAYS;
   const today = new Date();
-  const start = new Date(today.getFullYear(), 0, 1);
+  const year = today.getFullYear();
+  const month = today.getMonth();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const start = new Date(year, month, 1);
   const dataMap = Object.fromEntries(data.map(d => [d.date, d.count]));
 
-  // Build hexes for 7x15 grid
+  // Build hexes for current month (7 columns, up to 5 rows)
+  const weeks = Math.ceil((daysInMonth + start.getDay()) / 7);
+  const days = 7;
   const hexes = [];
+  let dayCounter = 1 - start.getDay();
   for (let q = 0; q < weeks; q++) {
     for (let r = 0; r < days; r++) {
-      const cellDate = new Date(start);
-      cellDate.setDate(start.getDate() + q * 7 + r);
-      if (cellDate > today) continue;
-      const dateStr = cellDate.toISOString().slice(0, 10);
-      hexes.push({
-        q,
-        r,
-        s: -q - r,
-        date: dateStr,
-        count: dataMap[dateStr] ?? -1
-      });
+      const cellDate = new Date(year, month, dayCounter);
+      if (dayCounter > 0 && dayCounter <= daysInMonth) {
+        const dateStr = cellDate.toISOString().slice(0, 10);
+        hexes.push({
+          q,
+          r,
+          s: -q - r,
+          date: dateStr,
+          count: dataMap[dateStr] ?? -1
+        });
+      }
+      dayCounter++;
     }
   }
-
-  // Legend
-  const legend = [
-    { color: 'bg-trueturquoise', label: 'Present' },
-    { color: 'bg-softgray', label: 'Absent' },
-    { color: 'bg-gray-700', label: 'No Data' },
-  ];
 
   // Tooltip content
   const tooltip = hovered
@@ -87,18 +85,10 @@ const AttendanceHeatmap: React.FC = () => {
     : null;
 
   return (
-    <div className="my-4 max-w-xs mx-auto font-primary">
-      <div className="flex items-center gap-2 mb-3">
+    <div className="my-2 max-w-xs mx-auto font-primary">
+      <div className="flex items-center gap-2 mb-2">
         <span className="inline-block w-2 h-2 rounded-full bg-trueturquoise shadow-[0_0_8px_#00B8D9]" />
-        <span className="text-paperwhite font-extrabold tracking-widest uppercase select-none drop-shadow text-xs sm:text-sm md:text-base lg:text-lg font-primary">Attendance</span>
-      </div>
-      <div className="flex flex-wrap items-center gap-3 mb-2">
-        {legend.map((item) => (
-          <div key={item.label} className="flex items-center gap-1">
-            <span className={`inline-block w-3 h-3 rounded-full ${item.color}`}></span>
-            <span className="text-xs sm:text-sm text-teallight font-medium select-none font-primary">{item.label}</span>
-          </div>
-        ))}
+        <span className="text-paperwhite font-bold tracking-widest uppercase select-none drop-shadow text-xs font-primary">Attendance</span>
       </div>
       <div className="bg-offblack rounded-xl p-2">
         {loading ? (
@@ -106,7 +96,7 @@ const AttendanceHeatmap: React.FC = () => {
         ) : (
           <div className="flex justify-center py-1 relative w-full">
             {tooltip}
-            <HexGrid width={gridWidth} height={gridHeight} viewBox="-2 -2 18 8" className="w-full h-auto">
+            <HexGrid width={gridWidth} height={gridHeight} viewBox="-2 -2 8 6" className="w-full h-auto">
               <Layout size={{ x: hexSize, y: hexSize }} flat={false} spacing={1.05} origin={{ x: 0, y: 0 }}>
                 {hexes.map((hex) => (
                   <Hexagon
@@ -122,7 +112,7 @@ const AttendanceHeatmap: React.FC = () => {
                           ? `${COLOR_ABSENT} ${COLOR_ABSENT_GLOW}`
                           : `${COLOR_EMPTY} ${COLOR_EMPTY_GLOW}`,
                         'stroke-none transition-all duration-200',
-                        hovered === hex.date ? 'scale-125 z-10 ring-2 ring-trueturquoise/60 shadow-lg' : '',
+                        hovered === hex.date ? 'scale-150 z-20 ring-2 ring-trueturquoise/80 shadow-2xl' : '',
                         'cursor-pointer',
                       ].join(' ')
                     }
