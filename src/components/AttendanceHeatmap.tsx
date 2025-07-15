@@ -85,8 +85,8 @@ const AttendanceHeatmap: React.FC = () => {
         ) : (
           <div className="flex justify-center py-1 relative w-full">
             {tooltip}
-            <HexGrid width={200} height={110} viewBox="-1.2 -1.2 7.8 4.2" className="mx-auto h-auto">
-              <Layout size={{ x: 0.8, y: 0.8 }} flat={false} spacing={1.1} origin={{ x: horizontalOffset, y: verticalOffset }}>
+            <HexGrid width="100%" height="10vh" viewBox="-1.2 -1.2 7.8 4.2" className="w-full h-[10vh] mx-auto">
+              <Layout size={{ x: 1.2, y: 1.2 }} flat={false} spacing={1.1} origin={{ x: horizontalOffset, y: verticalOffset }}>
                 {hexes.map((hex, idx) => {
                   const isHovered = hovered === hex.date && !hex.isEmpty;
                   let fillClass =
