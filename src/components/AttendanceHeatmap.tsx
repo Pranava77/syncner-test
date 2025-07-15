@@ -36,8 +36,8 @@ const AttendanceHeatmap: React.FC = () => {
   if (!user?.id) return null;
 
   // Responsive grid size
-  const gridWidth = 210;
-  const gridHeight = 120;
+  const gridWidth = 260;
+  const gridHeight = 140;
   const hexSize = 1;
   const weeks = WEEKS;
   const days = DAYS;
@@ -76,7 +76,7 @@ const AttendanceHeatmap: React.FC = () => {
         const hex = hexes.find(h => h.date === hovered);
         if (!hex) return null;
         return (
-          <div className="absolute left-1/2 -translate-x-1/2 -top-8 z-50 px-3 py-1 rounded-lg bg-offblack border border-softgray text-xs text-paperwhite shadow-lg pointer-events-none animate-fade-in">
+          <div className="absolute left-1/2 -translate-x-1/2 -top-8 z-50 px-3 py-1 rounded-lg bg-offblack border border-softgray text-xs text-paperwhite shadow-lg pointer-events-none animate-fade-in font-primary">
             <div className="font-bold tracking-wide">{hex.date}</div>
             <div>
               {hex.count === 1 ? 'Present' : hex.count === 0 ? 'Absent' : 'No Data'}
@@ -87,26 +87,26 @@ const AttendanceHeatmap: React.FC = () => {
     : null;
 
   return (
-    <div className="my-4 max-w-xs mx-auto">
+    <div className="my-4 max-w-xs mx-auto font-primary">
       <div className="flex items-center gap-2 mb-3">
         <span className="inline-block w-2 h-2 rounded-full bg-trueturquoise shadow-[0_0_8px_#00B8D9]" />
-        <span className="text-paperwhite font-extrabold tracking-widest uppercase text-xs select-none drop-shadow">Attendance</span>
+        <span className="text-paperwhite font-extrabold tracking-widest uppercase select-none drop-shadow text-xs sm:text-sm md:text-base lg:text-lg font-primary">Attendance</span>
       </div>
-      <div className="flex items-center gap-3 mb-2">
+      <div className="flex flex-wrap items-center gap-3 mb-2">
         {legend.map((item) => (
           <div key={item.label} className="flex items-center gap-1">
-            <span className={`inline-block w-3 h-3 rounded-full border border-paperwhite/20 ${item.color}`}></span>
-            <span className="text-xs text-teallight font-medium select-none">{item.label}</span>
+            <span className={`inline-block w-3 h-3 rounded-full ${item.color}`}></span>
+            <span className="text-xs sm:text-sm text-teallight font-medium select-none font-primary">{item.label}</span>
           </div>
         ))}
       </div>
-      <div className="bg-offblack border border-paperwhite/10 rounded-xl p-2 relative">
+      <div className="bg-offblack rounded-xl p-2">
         {loading ? (
-          <div className="text-xs text-teallight">Loading attendance...</div>
+          <div className="text-xs text-teallight font-primary">Loading attendance...</div>
         ) : (
-          <div className="flex justify-center py-1 relative">
+          <div className="flex justify-center py-1 relative w-full">
             {tooltip}
-            <HexGrid width={gridWidth} height={gridHeight} viewBox="-2 -2 18 8">
+            <HexGrid width={gridWidth} height={gridHeight} viewBox="-2 -2 18 8" className="w-full h-auto">
               <Layout size={{ x: hexSize, y: hexSize }} flat={false} spacing={1.05} origin={{ x: 0, y: 0 }}>
                 {hexes.map((hex) => (
                   <Hexagon
