@@ -82,7 +82,7 @@ const AttendanceHeatmap: React.FC = () => {
   return (
     <div className="flex flex-col items-center w-full font-primary">
       <div className="w-full flex flex-col items-center">
-        <div className="bg-offblack rounded-2xl p-4 shadow-lg w-full flex flex-col items-center">
+        <div className="bg-paperwhite/10 rounded-xl shadow-lg border border-paperwhite/20 w-full flex flex-col items-center p-2 sm:p-4">
           {loading ? (
             <div className="text-xs text-teallight font-primary">Loading attendance...</div>
           ) : (
@@ -104,11 +104,11 @@ const AttendanceHeatmap: React.FC = () => {
                         : hex.count === 0
                         ? colorMap.absent
                         : colorMap.nodata;
-                    if (isHovered) fillClass = 'fill-[#00D084]';
+                    if (isHovered) fillClass = 'fill-[var(--color-true-turquoise)]';
                     return (
                       <motion.g
                         key={hex.date + idx}
-                        whileHover={hex.isEmpty ? {} : { scale: 1.25, filter: 'drop-shadow(0 0 16px #00D084)' }}
+                        whileHover={hex.isEmpty ? {} : { scale: 1.25, filter: 'drop-shadow(0 0 16px var(--color-true-turquoise))' }}
                         transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                         style={{ zIndex: isHovered ? 20 : 1 }}
                         onMouseEnter={() => !hex.isEmpty && setHovered(hex.date)}
@@ -121,7 +121,7 @@ const AttendanceHeatmap: React.FC = () => {
                           className={[
                             fillClass,
                             'stroke-black', // black border
-                            isHovered ? 'ring-2 ring-[#00D084]/90 shadow-2xl' : '',
+                            isHovered ? 'ring-2 ring-[var(--color-true-turquoise)]/90 shadow-2xl' : '',
                             'stroke-2 transition-all duration-200 cursor-pointer',
                           ].join(' ')}
                         >
