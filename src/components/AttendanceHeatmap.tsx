@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { HexGrid, Layout, Hexagon } from 'react-hexgrid';
 import axios from 'axios';
 import { useAppSelector } from '../redux/store';
+import { motion } from 'framer-motion';
 
 const WEEKS = 15;
 const DAYS = 7;
@@ -96,31 +97,36 @@ const AttendanceHeatmap: React.FC = () => {
         ) : (
           <div className="flex justify-center py-1 relative w-full">
             {tooltip}
-            <HexGrid width={gridWidth} height={gridHeight} viewBox="-2 -2 8 6" className="w-full h-auto">
+            <HexGrid width={gridWidth} height={gridHeight} viewBox={`-1.5 -1.5 8.5 6.5`} className="w-full h-auto">
               <Layout size={{ x: hexSize, y: hexSize }} flat={false} spacing={1.05} origin={{ x: 0, y: 0 }}>
                 {hexes.map((hex) => (
-                  <Hexagon
+                  <motion.g
                     key={hex.date}
-                    q={hex.q}
-                    r={hex.r}
-                    s={hex.s}
-                    className={
-                      [
-                        hex.count === 1
-                          ? `${COLOR_PRESENT} ${COLOR_PRESENT_GLOW}`
-                          : hex.count === 0
-                          ? `${COLOR_ABSENT} ${COLOR_ABSENT_GLOW}`
-                          : `${COLOR_EMPTY} ${COLOR_EMPTY_GLOW}`,
-                        'stroke-none transition-all duration-200',
-                        hovered === hex.date ? 'scale-150 z-20 ring-2 ring-trueturquoise/80 shadow-2xl' : '',
-                        'cursor-pointer',
-                      ].join(' ')
-                    }
+                    whileHover={{ scale: 1.35, filter: 'drop-shadow(0 0 16px #00B8D9)' }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                    style={{ zIndex: hovered === hex.date ? 20 : 1 }}
                     onMouseEnter={() => setHovered(hex.date)}
                     onMouseLeave={() => setHovered(null)}
                   >
-                    <title>{hex.date + ': ' + (hex.count === 1 ? 'Present' : hex.count === 0 ? 'Absent' : 'No data')}</title>
-                  </Hexagon>
+                    <Hexagon
+                      q={hex.q}
+                      r={hex.r}
+                      s={hex.s}
+                      className={
+                        [
+                          hex.count === 1
+                            ? `${COLOR_PRESENT} ${COLOR_PRESENT_GLOW}`
+                            : hex.count === 0
+                            ? `${COLOR_ABSENT} ${COLOR_ABSENT_GLOW}`
+                            : `${COLOR_EMPTY} ${COLOR_EMPTY_GLOW}`,
+                          'stroke-none transition-all duration-200',
+                          'cursor-pointer',
+                        ].join(' ')
+                      }
+                    >
+                      <title>{hex.date + ': ' + (hex.count === 1 ? 'Present' : hex.count === 0 ? 'Absent' : 'No data')}</title>
+                    </Hexagon>
+                  </motion.g>
                 ))}
               </Layout>
             </HexGrid>
