@@ -63,7 +63,7 @@ const AttendanceHeatmap: React.FC = () => {
   })() : null;
 
   return (
-    <div className="my-2 max-w-xs mx-auto font-primary">
+    <div className="flex justify-center w-full font-primary">
       <div className="bg-offblack rounded-xl p-2">
         {loading ? (
           <div className="text-xs text-teallight font-primary">Loading attendance...</div>
