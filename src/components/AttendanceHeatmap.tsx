@@ -64,18 +64,14 @@ const AttendanceHeatmap: React.FC = () => {
 
   return (
     <div className="my-2 max-w-xs mx-auto font-primary">
-      <div className="flex items-center gap-2 mb-2">
-        <span className="inline-block w-2 h-2 rounded-full bg-trueturquoise shadow-[0_0_8px_#00B8D9]" />
-        <span className="text-paperwhite font-bold tracking-widest uppercase select-none drop-shadow text-xs font-primary">Attendance</span>
-      </div>
       <div className="bg-offblack rounded-xl p-2">
         {loading ? (
           <div className="text-xs text-teallight font-primary">Loading attendance...</div>
         ) : (
           <div className="flex justify-center py-1 relative w-full">
             {tooltip}
-            <HexGrid width={300} height={170} viewBox="-1.5 -1.5 9 7" className="w-full h-auto">
-              <Layout size={{ x: 1.1, y: 1.1 }} flat={false} spacing={1.12} origin={{ x: 0, y: 0 }}>
+            <HexGrid width={200} height={110} viewBox="-1.2 -1.2 7.4 5.4" className="w-full h-auto">
+              <Layout size={{ x: 0.8, y: 0.8 }} flat={false} spacing={1.12} origin={{ x: 0, y: 0 }}>
                 {hexes.map((hex) => {
                   const isHovered = hovered === hex.date;
                   let fillClass =
