@@ -56,6 +56,16 @@ const AttendanceHeatmap: React.FC = () => {
     }
   }
 
+  // Calculate leading and trailing empty hexes for centering
+  const firstDayOfWeek = start.getDay();
+  const totalCells = weeks * days;
+  const filledCells = daysInMonth + firstDayOfWeek;
+  const trailingEmpty = totalCells - filledCells;
+  // Center horizontally: shift origin by half the number of leading empty hexes
+  const horizontalOffset = firstDayOfWeek / 2;
+  // Center vertically: shift origin by half the number of trailing empty rows (if any)
+  const verticalOffset = trailingEmpty > 0 ? trailingEmpty / days / 2 : 0;
+
   // Tooltip
   const tooltip = hovered ? (() => {
     const hex = hexes.find(h => h.date === hovered);
@@ -76,8 +86,8 @@ const AttendanceHeatmap: React.FC = () => {
         ) : (
           <div className="flex justify-center py-1 relative w-full">
             {tooltip}
-            <HexGrid width={220} height={60} viewBox="-1.2 -1.2 7.8 3.8" className="w-full h-auto">
-              <Layout size={{ x: 0.7, y: 0.7 }} flat={false} spacing={1.1} origin={{ x: 0, y: 0 }}>
+            <HexGrid width={220} height={80} viewBox="-1.2 -1.2 7.8 3.8" className="w-full h-auto">
+              <Layout size={{ x: 0.7, y: 0.7 }} flat={false} spacing={1.1} origin={{ x: horizontalOffset, y: verticalOffset }}>
                 {hexes.map((hex, idx) => {
                   const isHovered = hovered === hex.date && !hex.isEmpty;
                   let fillClass =
