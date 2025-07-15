@@ -119,7 +119,8 @@ const AttendanceHeatmap: React.FC = () => {
                           r={hex.r}
                           s={hex.s}
                           className={[
-                
+                            fillClass,
+                            'stroke-[var(--color-paper-white)]/20', // subtle light border
                             isHovered ? 'ring-2 ring-[var(--color-true-turquoise)]/90 shadow-2xl' : '',
                             'stroke-2 transition-all duration-200 cursor-pointer',
                           ].join(' ')}
