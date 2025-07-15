@@ -27,19 +27,18 @@ const AttendanceHeatmap: React.FC = () => {
   if (!user?.id) return null;
 
   // Sidebar usable width: 208px, so use 200px for SVG
-  // Build a full 7xN grid for the current month, including empty hexes
+  // Build a 2-row grid for the current month, distributing days across columns
   const today = new Date();
   const year = today.getFullYear();
   const month = today.getMonth();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const start = new Date(year, month, 1);
   const dataMap = Object.fromEntries(data.map(d => [d.date, d.count]));
-  const weeks = Math.ceil((daysInMonth + start.getDay()) / 7);
-  const days = 7;
+  const columns = Math.ceil(daysInMonth / 2);
+  const rows = 2;
   const hexes = [];
-  let dayCounter = 1 - start.getDay();
-  for (let r = 0; r < weeks; r++) { // r = row (week)
-    for (let q = 0; q < days; q++) { // q = column (day)
+  let dayCounter = 1;
+  for (let r = 0; r < rows; r++) {
+    for (let q = 0; q < columns; q++) {
       const cellDate = new Date(year, month, dayCounter);
       let hexObj;
       if (dayCounter > 0 && dayCounter <= daysInMonth) {
@@ -57,13 +56,9 @@ const AttendanceHeatmap: React.FC = () => {
     }
   }
 
-  // Centering logic
-  const firstDayOfWeek = start.getDay();
-  const totalCells = weeks * days;
-  const filledCells = daysInMonth + firstDayOfWeek;
-  const trailingEmpty = totalCells - filledCells;
-  const horizontalOffset = firstDayOfWeek / 2;
-  const verticalOffset = trailingEmpty > 0 ? trailingEmpty / days / 2 : 0;
+  // Centering logic for 2 rows
+  const horizontalOffset = 0;
+  const verticalOffset = 0;
 
   const colorMap = {
     present: 'fill-[#00D084]', // Vibrant green
@@ -97,14 +92,14 @@ const AttendanceHeatmap: React.FC = () => {
     <div className="flex flex-col items-center w-full font-primary">
       <div className="w-full flex flex-col items-center">
         <h2 className="text-lg font-bold text-paperwhite mb-2 mt-1 tracking-wide">Attendance Heatmap</h2>
-        <div className="bg-offblack rounded-2xl p-4 shadow-lg w-full max-w-xl flex flex-col items-center">
+        <div className="bg-offblack rounded-2xl p-4 shadow-lg w-full flex flex-col items-center">
           {loading ? (
             <div className="text-xs text-teallight font-primary">Loading attendance...</div>
           ) : (
             <div className="flex flex-col items-center w-full relative">
               {tooltip}
-              <HexGrid width="100%" height="180px" viewBox="-0.5 -0.5 7 4" className="w-full h-[180px] mx-auto">
-                <Layout size={{ x: 1.6, y: 1.6 }} flat={false} spacing={1.0} origin={{ x: horizontalOffset, y: verticalOffset }}>
+              <HexGrid width="100%" height="110px" viewBox={`-0.5 -0.5 ${columns} 2`} className="w-full h-[110px] mx-auto">
+                <Layout size={{ x: 0.85, y: 0.85 }} flat={false} spacing={1.0} origin={{ x: horizontalOffset, y: verticalOffset }}>
                   {hexes.map((hex, idx) => {
                     const isHovered = hovered === hex.date && !hex.isEmpty;
                     let fillClass =
