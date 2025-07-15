@@ -272,9 +272,7 @@ const Layout: React.FC = () => {
           </div>
           {/* Bottom section for Mock Interview and Leaderboard */}
           <div className="mt-auto w-full">
-            {user?.role === 'student' && (
-              <AttendanceHeatmap />
-            )}
+            {/* AttendanceHeatmap removed from sidebar */}
           </div>
         </nav>
         {isSidebarCollapsed ? (

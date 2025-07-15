@@ -16,6 +16,7 @@ import {
   ChatBubbleIcon as MessageCircle
 } from '@radix-ui/react-icons';
 import LoadingScreen from '../components/LoadingScreen';
+import AttendanceHeatmap from '../components/AttendanceHeatmap';
 
 const StudentDashboard: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -106,6 +107,11 @@ const StudentDashboard: React.FC = () => {
             {getTrackIcon()}
           </div>
         </div>
+      </div>
+
+      {/* Attendance Heatmap */}
+      <div className="flex justify-center my-4">
+        <AttendanceHeatmap />
       </div>
 
       {/* Progress Overview */}
