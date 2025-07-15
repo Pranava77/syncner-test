@@ -26,7 +26,7 @@ const AttendanceHeatmap: React.FC = () => {
 
   if (!user?.id) return null;
 
-  // Build hexes for current month (horizontal: 7 columns for days, rows for weeks)
+  // Build a full 7xN grid for the current month, including empty hexes
   const today = new Date();
   const year = today.getFullYear();
   const month = today.getMonth();
@@ -40,12 +40,18 @@ const AttendanceHeatmap: React.FC = () => {
   for (let r = 0; r < weeks; r++) { // r = row (week)
     for (let q = 0; q < days; q++) { // q = column (day)
       const cellDate = new Date(year, month, dayCounter);
+      let hexObj;
       if (dayCounter > 0 && dayCounter <= daysInMonth) {
         const dateStr = cellDate.toISOString().slice(0, 10);
-        hexes.push({
-          q, r, s: -q - r, date: dateStr, count: dataMap[dateStr] ?? -1
-        });
+        hexObj = {
+          q, r, s: -q - r, date: dateStr, count: dataMap[dateStr] ?? -1, isEmpty: false
+        };
+      } else {
+        hexObj = {
+          q, r, s: -q - r, date: '', count: -2, isEmpty: true
+        };
       }
+      hexes.push(hexObj);
       dayCounter++;
     }
   }
@@ -72,10 +78,12 @@ const AttendanceHeatmap: React.FC = () => {
             {tooltip}
             <HexGrid width={220} height={60} viewBox="-1.2 -1.2 7.8 3.8" className="w-full h-auto">
               <Layout size={{ x: 0.7, y: 0.7 }} flat={false} spacing={1.1} origin={{ x: 0, y: 0 }}>
-                {hexes.map((hex) => {
-                  const isHovered = hovered === hex.date;
+                {hexes.map((hex, idx) => {
+                  const isHovered = hovered === hex.date && !hex.isEmpty;
                   let fillClass =
-                    hex.count === 1
+                    hex.isEmpty
+                      ? 'fill-gray-800'
+                      : hex.count === 1
                       ? 'fill-trueturquoise'
                       : hex.count === 0
                       ? 'fill-softgray'
@@ -83,11 +91,11 @@ const AttendanceHeatmap: React.FC = () => {
                   if (isHovered) fillClass = 'fill-trueturquoise';
                   return (
                     <motion.g
-                      key={hex.date}
-                      whileHover={{ scale: 1.35, filter: 'drop-shadow(0 0 18px #00B8D9)' }}
+                      key={hex.date + idx}
+                      whileHover={hex.isEmpty ? {} : { scale: 1.35, filter: 'drop-shadow(0 0 18px #00B8D9)' }}
                       transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                       style={{ zIndex: isHovered ? 20 : 1 }}
-                      onMouseEnter={() => setHovered(hex.date)}
+                      onMouseEnter={() => !hex.isEmpty && setHovered(hex.date)}
                       onMouseLeave={() => setHovered(null)}
                     >
                       <Hexagon
@@ -100,7 +108,9 @@ const AttendanceHeatmap: React.FC = () => {
                           'stroke-none transition-all duration-200 cursor-pointer',
                         ].join(' ')}
                       >
-                        <title>{hex.date + ': ' + (hex.count === 1 ? 'Present' : hex.count === 0 ? 'Absent' : 'No data')}</title>
+                        {hex.date && (
+                          <title>{hex.date + ': ' + (hex.count === 1 ? 'Present' : hex.count === 0 ? 'Absent' : 'No data')}</title>
+                        )}
                       </Hexagon>
                     </motion.g>
                   );
