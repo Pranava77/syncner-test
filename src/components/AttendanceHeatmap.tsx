@@ -98,8 +98,12 @@ const AttendanceHeatmap: React.FC = () => {
           ) : (
             <div className="flex flex-col items-center w-full relative">
               {tooltip}
-              <HexGrid width="100%" height="110px" viewBox={`-0.5 -0.5 ${columns} 2`} className="w-full h-[110px] mx-auto">
-                <Layout size={{ x: 0.85, y: 0.85 }} flat={false} spacing={1.0} origin={{ x: horizontalOffset, y: verticalOffset }}>
+              <HexGrid 
+                width="100%" 
+                height="min(80px,18vw)" 
+                viewBox={`-0.5 -0.5 ${columns} 2`} 
+                className="w-full max-w-[98vw] h-[80px] sm:h-[90px] md:h-[100px] lg:h-[110px] mx-auto flex justify-center items-center">
+                <Layout size={{ x: 0.6, y: 0.6 }} flat={false} spacing={1.0} origin={{ x: horizontalOffset, y: verticalOffset }}>
                   {hexes.map((hex, idx) => {
                     const isHovered = hovered === hex.date && !hex.isEmpty;
                     let fillClass =
@@ -126,8 +130,9 @@ const AttendanceHeatmap: React.FC = () => {
                           s={hex.s}
                           className={[
                             fillClass,
+                            'stroke-black', // black border
                             isHovered ? 'ring-2 ring-[#00D084]/90 shadow-2xl' : '',
-                            'stroke-none transition-all duration-200 cursor-pointer',
+                            'stroke-2 transition-all duration-200 cursor-pointer',
                           ].join(' ')}
                         >
                           {hex.date && (
