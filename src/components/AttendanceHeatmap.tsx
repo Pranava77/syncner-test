@@ -1,19 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { HexGrid, Layout, Hexagon } from 'react-hexgrid';
 import axios from 'axios';
 import { useAppSelector } from '../redux/store';
 
-// Hexagon SVG helper
-const hexPoints = (cx: number, cy: number, r: number) => {
-  const points = [];
-  for (let i = 0; i < 6; i++) {
-    const angle = Math.PI / 3 * i;
-    points.push([
-      cx + r * Math.cos(angle),
-      cy + r * Math.sin(angle)
-    ]);
-  }
-  return points.map(p => p.join(",")).join(" ");
-};
+const WEEKS = 15;
+const DAYS = 7;
 
 const AttendanceHeatmap: React.FC = () => {
   const { user } = useAppSelector((state) => state.auth);
@@ -36,36 +27,31 @@ const AttendanceHeatmap: React.FC = () => {
 
   if (!user?.id) return null;
 
-  // Build a 7x15 grid (7 days x 15 weeks = 105 cells, enough for 1 year)
-  const weeks = 15;
-  const days = 7;
-  const r = 9; // hex radius
-  const xStep = r * 1.75;
-  const yStep = r * 1.52;
-  const today = new Date();
-  const start = new Date(today.getFullYear(), 0, 1);
   // Map attendance data by date string
   const dataMap = Object.fromEntries(data.map(d => [d.date, d.count]));
+  const today = new Date();
+  const start = new Date(today.getFullYear(), 0, 1);
 
-  // Build grid data
-  const grid: { x: number; y: number; date: string; count: number }[] = [];
-  for (let w = 0; w < weeks; w++) {
-    for (let d = 0; d < days; d++) {
+  // Build hexes for 7x15 grid
+  const hexes = [];
+  for (let q = 0; q < WEEKS; q++) {
+    for (let r = 0; r < DAYS; r++) {
       const cellDate = new Date(start);
-      cellDate.setDate(start.getDate() + w * 7 + d);
+      cellDate.setDate(start.getDate() + q * 7 + r);
       if (cellDate > today) continue;
       const dateStr = cellDate.toISOString().slice(0, 10);
-      grid.push({
-        x: w * xStep + (d % 2 === 1 ? xStep / 2 : 0),
-        y: d * yStep,
+      hexes.push({
+        q,
+        r,
+        s: -q - r,
         date: dateStr,
-        count: dataMap[dateStr] ?? -1 // -1 = empty, 0 = absent, 1 = present
+        count: dataMap[dateStr] ?? -1
       });
     }
   }
 
   return (
-    <div className="my-4 max-w-xs mx-auto mt-2">
+    <div className="my-4 max-w-xs mx-auto">
       <div className="flex items-center gap-2 mb-3">
         <span className="inline-block w-2 h-2 rounded-full bg-trueturquoise shadow-[0_0_8px_#00B8D9]" />
         <span className="text-paperwhite font-bold tracking-widest uppercase text-xs select-none">Attendance</span>
@@ -74,29 +60,28 @@ const AttendanceHeatmap: React.FC = () => {
         {loading ? (
           <div className="text-xs text-teallight">Loading attendance...</div>
         ) : (
-          <div className="py-1 flex justify-center">
-            <svg
-              viewBox={`0 0 ${weeks * xStep + r} ${days * yStep + r}`}
-              width="100%"
-              height="128"
-              className="block"
-            >
-              {grid.map((cell) => (
-                <polygon
-                  key={cell.date}
-                  points={hexPoints(cell.x + r, cell.y + r, r)}
-                  className={
-                    cell.count === 1
-                      ? 'fill-trueturquoise drop-shadow-[0_0_8px_#00B8D9] hover:fill-green-400 hover:drop-shadow-[0_0_16px_#A0D8EF] transition-all duration-200'
-                      : cell.count === 0
-                      ? 'fill-softgray opacity-90'
-                      : 'fill-gray-700 opacity-60'
-                  }
-                >
-                  <title>{cell.date + ': ' + (cell.count === 1 ? 'Present' : cell.count === 0 ? 'Absent' : 'No data')}</title>
-                </polygon>
-              ))}
-            </svg>
+          <div className="flex justify-center py-1">
+            <HexGrid width={210} height={120} viewBox="-2 -2 18 8">
+              <Layout size={{ x: 1, y: 1 }} flat={false} spacing={1.05} origin={{ x: 0, y: 0 }}>
+                {hexes.map((hex) => (
+                  <Hexagon
+                    key={hex.date}
+                    q={hex.q}
+                    r={hex.r}
+                    s={hex.s}
+                    className={
+                      hex.count === 1
+                        ? 'fill-trueturquoise stroke-none hover:fill-green-400 transition-all duration-200'
+                        : hex.count === 0
+                        ? 'fill-softgray stroke-none opacity-90'
+                        : 'fill-gray-700 stroke-none opacity-60'
+                    }
+                  >
+                    <title>{hex.date + ': ' + (hex.count === 1 ? 'Present' : hex.count === 0 ? 'Absent' : 'No data')}</title>
+                  </Hexagon>
+                ))}
+              </Layout>
+            </HexGrid>
           </div>
         )}
       </div>
@@ -104,4 +89,4 @@ const AttendanceHeatmap: React.FC = () => {
   );
 };
 
-export default AttendanceHeatmap; 
+export default AttendanceHeatmap;
