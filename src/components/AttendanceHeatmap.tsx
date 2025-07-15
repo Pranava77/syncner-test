@@ -26,7 +26,7 @@ const AttendanceHeatmap: React.FC = () => {
 
   if (!user?.id) return null;
 
-  // Build hexes for current month
+  // Build hexes for current month (horizontal: 7 columns for days, rows for weeks)
   const today = new Date();
   const year = today.getFullYear();
   const month = today.getMonth();
@@ -37,8 +37,8 @@ const AttendanceHeatmap: React.FC = () => {
   const days = 7;
   const hexes = [];
   let dayCounter = 1 - start.getDay();
-  for (let q = 0; q < weeks; q++) {
-    for (let r = 0; r < days; r++) {
+  for (let r = 0; r < weeks; r++) { // r = row (week)
+    for (let q = 0; q < days; q++) { // q = column (day)
       const cellDate = new Date(year, month, dayCounter);
       if (dayCounter > 0 && dayCounter <= daysInMonth) {
         const dateStr = cellDate.toISOString().slice(0, 10);
@@ -70,8 +70,8 @@ const AttendanceHeatmap: React.FC = () => {
         ) : (
           <div className="flex justify-center py-1 relative w-full">
             {tooltip}
-            <HexGrid width={140} height={80} viewBox="-1.2 -1.2 8 6" className="w-full h-auto">
-              <Layout size={{ x: 0.45, y: 0.45 }} flat={false} spacing={1.1} origin={{ x: 0, y: 0 }}>
+            <HexGrid width={220} height={60} viewBox="-1.2 -1.2 7.8 3.8" className="w-full h-auto">
+              <Layout size={{ x: 0.7, y: 0.7 }} flat={false} spacing={1.1} origin={{ x: 0, y: 0 }}>
                 {hexes.map((hex) => {
                   const isHovered = hovered === hex.date;
                   let fillClass =
