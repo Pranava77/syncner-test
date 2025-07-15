@@ -79,19 +79,9 @@ const AttendanceHeatmap: React.FC = () => {
     );
   })() : null;
 
-  // Legend
-  const legend = (
-    <div className="flex justify-center gap-6 mt-4 mb-2 text-xs font-primary">
-      <div className="flex items-center gap-2"><span className="w-4 h-4 rounded-full inline-block bg-[#00D084] border border-[#00D084]"></span> Present</div>
-      <div className="flex items-center gap-2"><span className="w-4 h-4 rounded-full inline-block bg-[#FF5A5F] border border-[#FF5A5F]"></span> Absent</div>
-      <div className="flex items-center gap-2"><span className="w-4 h-4 rounded-full inline-block bg-[#B0BEC5] border border-[#B0BEC5]"></span> No Data</div>
-    </div>
-  );
-
   return (
     <div className="flex flex-col items-center w-full font-primary">
       <div className="w-full flex flex-col items-center">
-        <h2 className="text-lg font-bold text-paperwhite mb-2 mt-1 tracking-wide">Attendance Heatmap</h2>
         <div className="bg-offblack rounded-2xl p-4 shadow-lg w-full flex flex-col items-center">
           {loading ? (
             <div className="text-xs text-teallight font-primary">Loading attendance...</div>
@@ -144,7 +134,6 @@ const AttendanceHeatmap: React.FC = () => {
                   })}
                 </Layout>
               </HexGrid>
-              {legend}
             </div>
           )}
         </div>
