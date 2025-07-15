@@ -55,7 +55,7 @@ const AttendanceHeatmap: React.FC = () => {
     const hex = hexes.find(h => h.date === hovered);
     if (!hex) return null;
     return (
-      <div className="absolute left-1/2 -translate-x-1/2 -top-8 z-50 px-3 py-1 rounded-lg bg-offblack border border-softgray text-xs text-paperwhite shadow-lg pointer-events-none animate-fade-in font-primary">
+      <div className="absolute left-1/2 -translate-x-1/2 -top-6 z-50 px-2 py-0.5 rounded-lg bg-offblack border border-softgray text-[10px] text-paperwhite shadow-lg pointer-events-none animate-fade-in font-primary">
         <div className="font-bold tracking-wide">{hex.date}</div>
         <div>{hex.count === 1 ? 'Present' : hex.count === 0 ? 'Absent' : 'No Data'}</div>
       </div>
@@ -70,8 +70,8 @@ const AttendanceHeatmap: React.FC = () => {
         ) : (
           <div className="flex justify-center py-1 relative w-full">
             {tooltip}
-            <HexGrid width={200} height={110} viewBox="-1.2 -1.2 8 6" className="w-full h-auto">
-              <Layout size={{ x: 0.75, y: 0.75 }} flat={false} spacing={1.1} origin={{ x: 0, y: 0 }}>
+            <HexGrid width={140} height={80} viewBox="-1.2 -1.2 8 6" className="w-full h-auto">
+              <Layout size={{ x: 0.45, y: 0.45 }} flat={false} spacing={1.1} origin={{ x: 0, y: 0 }}>
                 {hexes.map((hex) => {
                   const isHovered = hovered === hex.date;
                   let fillClass =
