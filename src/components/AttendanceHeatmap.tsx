@@ -26,6 +26,7 @@ const AttendanceHeatmap: React.FC = () => {
 
   if (!user?.id) return null;
 
+  // Sidebar usable width: 208px, so use 200px for SVG
   // Build a full 7xN grid for the current month, including empty hexes
   const today = new Date();
   const year = today.getFullYear();
@@ -56,14 +57,12 @@ const AttendanceHeatmap: React.FC = () => {
     }
   }
 
-  // Calculate leading and trailing empty hexes for centering
+  // Centering logic
   const firstDayOfWeek = start.getDay();
   const totalCells = weeks * days;
   const filledCells = daysInMonth + firstDayOfWeek;
   const trailingEmpty = totalCells - filledCells;
-  // Center horizontally: shift origin by half the number of leading empty hexes
   const horizontalOffset = firstDayOfWeek / 2;
-  // Center vertically: shift origin by half the number of trailing empty rows (if any)
   const verticalOffset = trailingEmpty > 0 ? trailingEmpty / days / 2 : 0;
 
   // Tooltip
@@ -86,8 +85,8 @@ const AttendanceHeatmap: React.FC = () => {
         ) : (
           <div className="flex justify-center py-1 relative w-full">
             {tooltip}
-            <HexGrid width={180} height={100} viewBox="-1.2 -1.2 7.8 4.2" className="mx-auto h-auto">
-              <Layout size={{ x: 0.7, y: 0.7 }} flat={false} spacing={1.1} origin={{ x: horizontalOffset, y: verticalOffset }}>
+            <HexGrid width={200} height={110} viewBox="-1.2 -1.2 7.8 4.2" className="mx-auto h-auto">
+              <Layout size={{ x: 0.8, y: 0.8 }} flat={false} spacing={1.1} origin={{ x: horizontalOffset, y: verticalOffset }}>
                 {hexes.map((hex, idx) => {
                   const isHovered = hovered === hex.date && !hex.isEmpty;
                   let fillClass =
