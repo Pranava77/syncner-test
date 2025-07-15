@@ -147,12 +147,11 @@ const Layout: React.FC = () => {
     { path: '/student/dashboard', icon: HomeIcon, label: 'Dashboard' },
     { path: '/student/training/current', icon: LightningBoltIcon, label: 'Training' },
     { path: '/student/projects', icon: FileTextIcon, label: 'Projects' },
+    { path: '/student/my-resume', icon: IdCardIcon, label: 'My Resume', locked: true },
+    { path: '/student/mock-interview', icon: ChatBubbleIcon, label: 'Mock Interview', locked: true },
+    { path: '/student/leaderboard', icon: StarIcon, label: 'Leaderboard', locked: true },
     { path: '/student/internships', icon: EnvelopeClosedIcon, label: 'Internships', locked: true },
     { path: '/student/job-portal', icon: GlobeIcon, label: 'Job Portal', locked: true },
-  ];
-  const bottomStudentNavItems = [
-    { path: '/student/mock-interview', icon: ChatBubbleIcon, label: 'Mock Interview', locked: true },
-    { path: '/student/leaderboard', icon: StarIcon, label: 'Leaderboard', locked: true }
   ];
 
   const adminNavItems = [
@@ -242,43 +241,9 @@ const Layout: React.FC = () => {
             })}
           </div>
           {/* Bottom section for Mock Interview and Leaderboard */}
-          {user?.role !== 'admin' && (
+          {user?.role !== 'admin' && false && (
             <div className="mt-4 pt-4 border-t border-paperwhite/10">
-              {bottomStudentNavItems.map((item) => {
-                const Icon = item.icon;
-                const isLocked = 'locked' in item && item.locked;
-                if (isLocked) {
-                  return (
-                    <div
-                      key={item.path}
-                      className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : ''} px-3 py-3 text-sm transition-colors text-paperwhite/50 cursor-not-allowed`}
-                      title="Coming Soon"
-                    >
-                      <Icon className="h-5 w-5" />
-                      {!isSidebarCollapsed && (
-                        <>
-                          <span className="ml-3">{item.label}</span>
-                          <LockClosedIcon className="h-4 w-4 ml-auto" />
-                        </>
-                      )}
-                    </div>
-                  );
-                }
-                return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : ''} px-3 py-3 text-sm transition-colors ${
-                      isActive(item.path)
-                        ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise'
-                        : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'
-                    }`}
-                  >
-                    <Icon className="h-5 w-5" />
-                    {!isSidebarCollapsed && <span className="ml-3">{item.label}</span>}
-                  </Link>
-                );
-              })}
+              {/* This section is now removed as items are in mainStudentNavItems */}
             </div>
           )}
         </nav>
