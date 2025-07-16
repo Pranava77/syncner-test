@@ -51,15 +51,16 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
             <button
               onClick={() => navigate(`/student/training/${levelNum}/learn`)}
               className={`w-full flex items-center px-4 py-3 rounded-lg transition-colors font-medium text-base text-left
-                ${currentLevel === levelNum ? 'bg-trueturquoise/10 text-trueturquoise' : 'text-paperwhite hover:bg-paperwhite/10'}`}
+                ${currentLevel === levelNum ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'}`}
             >
+              <LayersIcon className="h-5 w-5 mr-2" />
               Level {levelNum}
             </button>
             {currentLevel === levelNum && (
               <div className="ml-4 mt-2 flex flex-col space-y-1">
                 <button
                   className={`w-full flex items-center gap-2 text-left px-3 py-2 rounded font-medium text-xs transition-colors
-                    ${currentSection === 'learn' ? 'bg-trueturquoise text-offblack' : 'bg-paperwhite/10 text-trueturquoise hover:bg-paperwhite/20'}`}
+                    ${currentSection === 'learn' ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'}`}
                   onClick={() => navigate(`/student/training/${levelNum}/learn`)}
                 >
                   <ReaderIcon className="h-4 w-4" />
@@ -67,7 +68,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                 </button>
                 <button
                   className={`w-full flex items-center gap-2 text-left px-3 py-2 rounded font-medium text-xs transition-colors
-                    ${currentSection === 'test' ? 'bg-trueturquoise text-offblack' : 'bg-paperwhite/10 text-trueturquoise hover:bg-paperwhite/20'}`}
+                    ${currentSection === 'test' ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'}`}
                   onClick={() => navigate(`/student/training/${levelNum}/test`)}
                 >
                   <ClipboardIcon className="h-4 w-4" />
@@ -75,7 +76,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                 </button>
                 <button
                   className={`w-full flex items-center gap-2 text-left px-3 py-2 rounded font-medium text-xs transition-colors
-                    ${currentSection === 'exercise' ? 'bg-trueturquoise text-offblack' : 'bg-paperwhite/10 text-trueturquoise hover:bg-paperwhite/20'}`}
+                    ${currentSection === 'exercise' ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'}`}
                   onClick={() => navigate(`/student/training/${levelNum}/exercise`)}
                 >
                   <Pencil2Icon className="h-4 w-4" />
