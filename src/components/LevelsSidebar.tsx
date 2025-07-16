@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronRightIcon } from '@radix-ui/react-icons';
+import { ChevronRightIcon, ReaderIcon, ClipboardIcon, Pencil2Icon, LayersIcon } from '@radix-ui/react-icons';
 
 interface LevelsSidebarProps {
   sidebarOpen?: boolean;
@@ -34,7 +34,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
   return (
     <aside className="w-64 bg-offblack p-6 border-r border-paperwhite/20 flex flex-col h-full transition-all duration-300">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-paperwhite">Levels</h2>
+        <h2 className="text-lg font-semibold text-paperwhite flex items-center gap-2"><LayersIcon className="h-5 w-5 text-trueturquoise" /> Levels</h2>
         {setSidebarOpen && (
           <button
             onClick={() => setSidebarOpen(false)}
@@ -58,24 +58,27 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
             {currentLevel === levelNum && (
               <div className="ml-4 mt-2 flex flex-col space-y-1">
                 <button
-                  className={`w-full text-left px-3 py-2 rounded font-medium text-xs transition-colors
+                  className={`w-full flex items-center gap-2 text-left px-3 py-2 rounded font-medium text-xs transition-colors
                     ${currentSection === 'learn' ? 'bg-trueturquoise text-offblack' : 'bg-paperwhite/10 text-trueturquoise hover:bg-paperwhite/20'}`}
                   onClick={() => navigate(`/student/training/${levelNum}/learn`)}
                 >
+                  <ReaderIcon className="h-4 w-4" />
                   Learn
                 </button>
                 <button
-                  className={`w-full text-left px-3 py-2 rounded font-medium text-xs transition-colors
+                  className={`w-full flex items-center gap-2 text-left px-3 py-2 rounded font-medium text-xs transition-colors
                     ${currentSection === 'test' ? 'bg-trueturquoise text-offblack' : 'bg-paperwhite/10 text-trueturquoise hover:bg-paperwhite/20'}`}
                   onClick={() => navigate(`/student/training/${levelNum}/test`)}
                 >
+                  <ClipboardIcon className="h-4 w-4" />
                   Test
                 </button>
                 <button
-                  className={`w-full text-left px-3 py-2 rounded font-medium text-xs transition-colors
+                  className={`w-full flex items-center gap-2 text-left px-3 py-2 rounded font-medium text-xs transition-colors
                     ${currentSection === 'exercise' ? 'bg-trueturquoise text-offblack' : 'bg-paperwhite/10 text-trueturquoise hover:bg-paperwhite/20'}`}
                   onClick={() => navigate(`/student/training/${levelNum}/exercise`)}
                 >
+                  <Pencil2Icon className="h-4 w-4" />
                   Exercise
                 </button>
               </div>
