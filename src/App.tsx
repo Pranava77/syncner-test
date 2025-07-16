@@ -19,7 +19,7 @@ import { KeepAlive } from 'react-activation';
 import StudentProfile from './pages/StudentProfile';
 import AdminProfile from './pages/AdminProfile';
 import { AnimatePresence, motion } from 'framer-motion';
-import { fetchCurrentUser } from './redux/slices/authSlice';
+import { fetchCurrentUser, restoreSession } from './redux/slices/authSlice';
 import AdminStaff from './pages/AdminStaff';
 import TrainingLevels from './pages/TrainingLevels';
 import StaffDashboard from './pages/StaffDashboard';
@@ -48,6 +48,7 @@ function App() {
   const location = useLocation();
 
   useEffect(() => {
+    dispatch(restoreSession());
     const token = localStorage.getItem('token');
     if (token) {
       dispatch(fetchCurrentUser());
