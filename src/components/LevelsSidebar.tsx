@@ -32,7 +32,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
   }
 
   return (
-    <aside className="w-64 bg-offblack p-6 border-r border-paperwhite/20 flex flex-col h-full transition-all duration-300">
+    <aside className="w-64 bg-offblack py-6 border-r border-paperwhite/20 flex flex-col h-full transition-all duration-300">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold text-paperwhite flex items-center gap-2"><LayersIcon className="h-5 w-5 text-trueturquoise" /> Levels</h2>
         {setSidebarOpen && (
@@ -50,7 +50,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
           <div key={levelNum}>
             <button
               onClick={() => navigate(`/student/training/${levelNum}/learn`)}
-              className={`w-full flex items-center px-3 py-2 transition-colors text-sm font-${currentLevel === levelNum ? 'semibold' : 'normal'} text-left
+              className={`w-full flex items-center py-2 transition-colors text-sm font-${currentLevel === levelNum ? 'semibold' : 'normal'} text-left
                 ${currentLevel === levelNum ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'}`}
               style={{ borderRadius: 0 }}
             >
@@ -58,9 +58,9 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
               Level {levelNum}
             </button>
             {currentLevel === levelNum && (
-              <div className="ml-4 mt-2 flex flex-col space-y-1">
+              <div className="ml-2 mt-2 flex flex-col space-y-1">
                 <button
-                  className={`w-full flex items-center gap-2 text-left px-3 py-2 transition-colors text-xs font-${currentSection === 'learn' ? 'semibold' : 'normal'}
+                  className={`w-full flex items-center gap-2 text-left py-2 transition-colors text-xs font-${currentSection === 'learn' ? 'semibold' : 'normal'}
                     ${currentSection === 'learn' ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'}`}
                   style={{ borderRadius: 0 }}
                   onClick={() => navigate(`/student/training/${levelNum}/learn`)}
@@ -69,7 +69,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                   Learn
                 </button>
                 <button
-                  className={`w-full flex items-center gap-2 text-left px-3 py-2 transition-colors text-xs font-${currentSection === 'test' ? 'semibold' : 'normal'}
+                  className={`w-full flex items-center gap-2 text-left py-2 transition-colors text-xs font-${currentSection === 'test' ? 'semibold' : 'normal'}
                     ${currentSection === 'test' ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'}`}
                   style={{ borderRadius: 0 }}
                   onClick={() => navigate(`/student/training/${levelNum}/test`)}
@@ -78,7 +78,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                   Test
                 </button>
                 <button
-                  className={`w-full flex items-center gap-2 text-left px-3 py-2 transition-colors text-xs font-${currentSection === 'exercise' ? 'semibold' : 'normal'}
+                  className={`w-full flex items-center gap-2 text-left py-2 transition-colors text-xs font-${currentSection === 'exercise' ? 'semibold' : 'normal'}
                     ${currentSection === 'exercise' ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'}`}
                   style={{ borderRadius: 0 }}
                   onClick={() => navigate(`/student/training/${levelNum}/exercise`)}
