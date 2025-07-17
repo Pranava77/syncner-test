@@ -12,7 +12,6 @@ import AdminAnalytics from './pages/AdminAnalytics';
 import AdminSettings from './pages/AdminSettings';
 import OnboardingFlow from './pages/OnboardingFlow';
 import ProtectedRoute from './components/ProtectedRoute';
-import AdminDiagnostics from './pages/AdminDiagnostics';
 import StudentLayout from './components/StudentLayout';
 import LoadingScreen from './components/LoadingScreen';
 import { KeepAlive } from 'react-activation';
@@ -138,7 +137,6 @@ function App() {
           <Route path="admins" element={<AdminAdmin />} />
           <Route path="staff" element={<AdminStaff />} />
           <Route path="analytics" element={<AdminAnalytics />} />
-          <Route path="diagnostics" element={<AdminDiagnostics />} />
           <Route path="settings" element={<AdminSettings />} />
           <Route path="profile" element={
             <motion.div

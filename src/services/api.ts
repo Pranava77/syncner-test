@@ -380,14 +380,6 @@ class ApiService {
     return this.handleResponse(response);
   }
 
-  async getDiagnostics() {
-    const response = await fetch(`${this.baseURL}/admin/diagnostics`, {
-      headers: this.getHeaders(),
-      credentials: 'include',
-    });
-    return this.handleResponse(response);
-  }
-
   async getAttendance(userId: string) {
     const response = await fetch(`${this.baseURL}/attendance/${userId}`, {
       headers: this.getHeaders(),

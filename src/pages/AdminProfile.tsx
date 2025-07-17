@@ -221,21 +221,6 @@ const AdminProfile: React.FC = () => {
               </Link>
               
               <Link 
-                to="/admin/diagnostics" 
-                className="group bg-paperwhite/5 hover:bg-paperwhite/10 border border-paperwhite/10 hover:border-trueturquoise/30 rounded-lg p-4 flex items-center gap-4 transition-all duration-200"
-              >
-                <div className="bg-trueturquoise p-3 rounded-lg">
-                  <svg className="w-6 h-6 text-offblack" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div>
-                  <span className="font-semibold text-paperwhite group-hover:text-trueturquoise transition-colors">Diagnostics</span>
-                  <p className="text-sm text-teallight">System health check</p>
-                </div>
-              </Link>
-              
-              <Link 
                 to="/admin/settings" 
                 className="group bg-paperwhite/5 hover:bg-paperwhite/10 border border-paperwhite/10 hover:border-trueturquoise/30 rounded-lg p-4 flex items-center gap-4 transition-all duration-200"
               >

@@ -262,35 +262,6 @@ Each module has its own health check endpoint:
 - **Settings:** `GET /admin/settings/health`
 - **AI:** `GET /ai/health`
 
-### System Diagnostics
-**GET** `/admin/diagnostics`
-
-Get comprehensive system diagnostics (Admin only).
-
-**Headers:** `Authorization: Bearer <admin_token>`
-
-**Response (200):**
-```json
-{
-  "success": true,
-  "diagnostics": [
-    {
-      "module": "auth",
-      "healthy": true,
-      "message": "Auth module is healthy",
-      "error": null
-    },
-    {
-      "module": "tasks",
-      "healthy": true,
-      "message": "Tasks module is healthy",
-      "error": null
-    }
-  ],
-  "timestamp": "2024-01-01T00:00:00.000Z"
-}
-```
-
 ---
 
 ## User Management
