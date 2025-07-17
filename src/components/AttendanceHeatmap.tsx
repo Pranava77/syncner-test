@@ -21,7 +21,6 @@ const AttendanceHeatmap: React.FC = () => {
       },
     })
       .then(res => {
-        console.log('[AttendanceHeatmap] API response:', res);
         const attendance = (res.data.data || []).map((rec: any) => ({
           date: new Date(rec.date).toISOString().slice(0, 10),
           count: rec.status === 'present' ? 1 : 0

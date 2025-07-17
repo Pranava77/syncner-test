@@ -52,3 +52,9 @@ p, .body {
 .font-label {
   font-weight: 600;
 }
+
+:root {
+  --color-true-turquoise: #00B8D9;
+  --color-rust: #B7410E;
+  --color-paper-white: #FAFAFA;
+}
