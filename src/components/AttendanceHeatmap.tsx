@@ -163,6 +163,11 @@ const AttendanceHeatmap: React.FC = () => {
                       style={{ color: hasData ? 'var(--color-grey-label)' : 'var(--color-black)' }}
                     >
                       {new Date(year, month - 1).toLocaleString('default', { month: 'long', year: 'numeric' })}
+                      {hasData && (
+                        <div className="text-xs mt-1 font-label text-teallight">
+                          Present: {monthData.filter(d => d.count === 1).length}/{monthData.length}
+                        </div>
+                      )}
                     </div>
                   </div>
                 );
