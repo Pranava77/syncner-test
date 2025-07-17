@@ -126,98 +126,102 @@ const AdminDashboard: React.FC = () => {
       </div>
 
       {/* Students by Track Pie Chart */}
-      <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6 mb-10">
-        <h2 className="text-lg font-semibold text-paperwhite mb-4">Students by Track</h2>
-        <div className="w-full h-64 flex flex-col items-center justify-center">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={trackDistribution}
-                dataKey="count"
-                nameKey="track"
-                cx="50%"
-                cy="50%"
-                innerRadius={50}
-                outerRadius={80}
-                paddingAngle={2}
-                labelLine={false}
-                label={({ cx = 0, cy = 0, midAngle = 0, innerRadius = 0, outerRadius = 0, percent = 0, index }) => {
-                  if (typeof percent !== 'number' || percent < 0.08) return null;
-                  if (typeof midAngle !== 'number' || typeof index !== 'number' || !trackDistribution[index]) return null;
-                  const RADIAN = Math.PI / 180;
-                  const radius = innerRadius + (outerRadius - innerRadius) * 0.7;
-                  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-                  const y = cy + radius * Math.sin(-midAngle * RADIAN);
-                  return (
-                    <text
-                      x={x}
-                      y={y}
-                      fill="#00B8D9"
-                      textAnchor={x > cx ? 'start' : 'end'}
-                      dominantBaseline="central"
-                      fontSize={14}
-                      fontWeight={600}
-                      style={{ textShadow: '0 1px 4px #0008' }}
-                    >
-                      {trackDistribution[index]?.track}
-                    </text>
-                  );
-                }}
-                isAnimationActive={true}
-                animationDuration={900}
-                animationEasing="ease-out"
-                stroke="#222831"
-                strokeWidth={2}
-              >
-                {trackDistribution.map((entry: any, index: number) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                    style={{ filter: 'drop-shadow(0 2px 8px #00B8D955)' }}
-                  />
-                ))}
-              </Pie>
-              {/* Center label for total students */}
-              <text
-                x="50%"
-                y="50%"
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fontSize="28"
-                fontWeight="bold"
-                fill="#00B8D9"
-                style={{ pointerEvents: 'none', textShadow: '0 2px 8px #0008' }}
-              >
-                {userCount}
-              </text>
-              <text
-                x="50%"
-                y="62%"
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fontSize="13"
-                fill="#A0AEC0"
-                style={{ pointerEvents: 'none' }}
-              >
-                students
-              </text>
-              <RechartsTooltip
-                contentStyle={{ background: '#181F2A', border: 'none', borderRadius: 8, color: '#fff', boxShadow: '0 2px 8px #00B8D955' }}
-                itemStyle={{ color: '#00B8D9' }}
-                cursor={{ fill: '#00B8D922' }}
-              />
-            </PieChart>
-          </ResponsiveContainer>
+      <div className="bg-paperwhite/10 rounded-xl shadow-sm p-8 mb-12 flex flex-col items-center">
+        <h2 className="text-lg font-semibold text-paperwhite mb-6">Students by Track</h2>
+        <div className="w-full flex flex-col items-center justify-center">
+          <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto">
+            <ResponsiveContainer width="100%" height={220}>
+              <PieChart>
+                <Pie
+                  data={trackDistribution}
+                  dataKey="count"
+                  nameKey="track"
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={48}
+                  outerRadius={72}
+                  paddingAngle={2}
+                  labelLine={false}
+                  label={({ cx = 0, cy = 0, midAngle = 0, innerRadius = 0, outerRadius = 0, percent = 0, index }) => {
+                    if (typeof percent !== 'number' || percent < 0.12) return null;
+                    if (typeof midAngle !== 'number' || typeof index !== 'number' || !trackDistribution[index]) return null;
+                    const RADIAN = Math.PI / 180;
+                    const radius = innerRadius + (outerRadius - innerRadius) * 0.7;
+                    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+                    return (
+                      <text
+                        x={x}
+                        y={y}
+                        fill="#00B8D9"
+                        textAnchor={x > cx ? 'start' : 'end'}
+                        dominantBaseline="central"
+                        fontSize={13}
+                        fontWeight={500}
+                        style={{ opacity: 0.8 }}
+                      >
+                        {trackDistribution[index]?.track}
+                      </text>
+                    );
+                  }}
+                  isAnimationActive={true}
+                  animationDuration={900}
+                  animationEasing="ease-out"
+                  stroke="#181F2A"
+                  strokeWidth={1}
+                >
+                  {trackDistribution.map((entry: any, index: number) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length] + '99'}
+                    />
+                  ))}
+                </Pie>
+                {/* Minimal Center Label */}
+                <text
+                  x="50%"
+                  y="50%"
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fontSize="26"
+                  fontWeight="bold"
+                  fill="#00B8D9"
+                  style={{ pointerEvents: 'none', opacity: 0.95 }}
+                >
+                  {userCount}
+                </text>
+                <text
+                  x="50%"
+                  y="62%"
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fontSize="12"
+                  fill="#A0AEC0"
+                  style={{ pointerEvents: 'none', fontWeight: 400, opacity: 0.7 }}
+                >
+                  students
+                </text>
+                <RechartsTooltip
+                  contentStyle={{ background: '#181F2A', border: 'none', borderRadius: 8, color: '#fff', boxShadow: '0 2px 8px #00B8D955' }}
+                  itemStyle={{ color: '#00B8D9' }}
+                  cursor={{ fill: '#00B8D922' }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
           {/* Custom Legend */}
-          <div className="flex flex-wrap justify-center gap-4 mt-6">
+          <div className="flex flex-wrap sm:flex-nowrap flex-col sm:flex-row justify-center items-center gap-4 mt-8 w-full">
             {trackDistribution.map((entry: any, idx: number) => (
-              <div key={entry.track} className="flex items-center gap-2">
+              <div
+                key={entry.track}
+                className="flex items-center gap-2 group transition-all"
+              >
                 <span
-                  className="inline-block w-3 h-3 rounded-full"
-                  style={{ background: COLORS[idx % COLORS.length], boxShadow: '0 1px 4px #00B8D955' }}
+                  className="inline-block w-3 h-3 rounded-full transition-all group-hover:shadow-lg"
+                  style={{ background: COLORS[idx % COLORS.length] + 'cc' }}
                 ></span>
-                <span className="text-paperwhite text-sm font-medium">{entry.track}</span>
-                <span className="text-teallight text-xs ml-1">({entry.count})</span>
+                <span className="text-paperwhite text-xs font-medium opacity-80">{entry.track}</span>
+                <span className="text-teallight text-xs ml-1 opacity-60">({entry.count})</span>
               </div>
             ))}
           </div>
