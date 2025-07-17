@@ -39,10 +39,13 @@ const AdminStaff: React.FC = () => {
     dispatch(fetchAllUsers());
   }, [dispatch]);
 
+  // Only show users with role 'staff'
   const filteredStaff = users.filter((s: any) =>
-    s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    s.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    s.department?.toLowerCase().includes(searchTerm.toLowerCase())
+    s.role === 'staff' && (
+      s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      s.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      s.department?.toLowerCase().includes(searchTerm.toLowerCase())
+    )
   );
 
   const handleAdd = () => {
