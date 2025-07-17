@@ -132,8 +132,7 @@ const resetPassword = async (req, res) => {
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
-    const hashed = await bcrypt.hash(password, 10);
-    user.password = hashed;
+    user.password = password; // Set plain password, let pre-save hook hash it
     await user.save();
     res.status(200).json({ success: true, message: 'Password reset successfully' });
   } catch (error) {

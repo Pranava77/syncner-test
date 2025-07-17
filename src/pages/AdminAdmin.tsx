@@ -43,7 +43,7 @@ const AdminAdmin: React.FC = () => {
 
   const filteredAdmins = users.filter((a: any) =>
     a.role === 'admin' && (
-      a.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      a.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
       a.email.toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
