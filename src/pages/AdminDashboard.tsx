@@ -4,26 +4,9 @@ import { useAppDispatch } from '../redux/store';
 import { useSelector } from 'react-redux';
 import LoadingScreen from '../components/LoadingScreen';
 import { fetchAnalytics } from '../redux/slices/analyticsSlice';
-import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, Legend, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, Legend, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
 
 const COLORS = ['#00B8D9', '#FFBB28', '#FF8042', '#A259F7', '#F95F62', '#00C49F'];
-
-// Custom Tooltip for Pie Chart
-const CustomPieTooltip = ({ active, payload }: any) => {
-  if (active && payload && payload.length) {
-    const entry = payload[0].payload;
-    return (
-      <div className="bg-[#181F2A] border-none rounded-lg px-4 py-2 shadow-lg mt-2 text-left min-w-[120px]" style={{ color: '#fff' }}>
-        <div className="flex items-center gap-2 mb-1">
-          <span className="inline-block w-3 h-3 rounded-full" style={{ background: entry.color || '#00B8D9' }}></span>
-          <span className="font-semibold text-paperwhite text-sm">{entry.track}</span>
-        </div>
-        <div className="text-xs text-teallight">{entry.count} students</div>
-      </div>
-    );
-  }
-  return null;
-};
 
 const AdminDashboard: React.FC = () => {
   const analyticsState = useSelector((state: { analytics: any }) => state.analytics);
@@ -150,7 +133,7 @@ const AdminDashboard: React.FC = () => {
             <ResponsiveContainer width="100%" height={220}>
               <PieChart>
                 <Pie
-                  data={trackDistribution.map((entry: any, idx: number) => ({ ...entry, color: COLORS[idx % COLORS.length] + '99' }))}
+                  data={trackDistribution}
                   dataKey="count"
                   nameKey="track"
                   cx="50%"
@@ -159,28 +142,7 @@ const AdminDashboard: React.FC = () => {
                   outerRadius={72}
                   paddingAngle={2}
                   labelLine={false}
-                  label={({ cx = 0, cy = 0, midAngle = 0, innerRadius = 0, outerRadius = 0, percent = 0, index }) => {
-                    if (typeof percent !== 'number' || percent < 0.12) return null;
-                    if (typeof midAngle !== 'number' || typeof index !== 'number' || !trackDistribution[index]) return null;
-                    const RADIAN = Math.PI / 180;
-                    const radius = innerRadius + (outerRadius - innerRadius) * 0.7;
-                    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-                    const y = cy + radius * Math.sin(-midAngle * RADIAN);
-                    return (
-                      <text
-                        x={x}
-                        y={y}
-                        fill="#00B8D9"
-                        textAnchor={x > cx ? 'start' : 'end'}
-                        dominantBaseline="central"
-                        fontSize={13}
-                        fontWeight={500}
-                        style={{ opacity: 0.8 }}
-                      >
-                        {trackDistribution[index]?.track}
-                      </text>
-                    );
-                  }}
+                  label={false}
                   isAnimationActive={true}
                   animationDuration={900}
                   animationEasing="ease-out"
@@ -219,8 +181,8 @@ const AdminDashboard: React.FC = () => {
                   students
                 </text>
                 <RechartsTooltip
-                  content={<CustomPieTooltip />}
-                  wrapperStyle={{ top: 240, left: '50%', transform: 'translateX(-50%)' }}
+                  contentStyle={{ background: '#181F2A', border: 'none', borderRadius: 8, color: '#fff', boxShadow: '0 2px 8px #00B8D955' }}
+                  itemStyle={{ color: '#00B8D9' }}
                   cursor={{ fill: '#00B8D922' }}
                 />
               </PieChart>
@@ -242,6 +204,49 @@ const AdminDashboard: React.FC = () => {
               </div>
             ))}
           </div>
+        </div>
+      </div>
+
+      {/* Modern Bar Chart: Students per Track */}
+      <div className="bg-paperwhite/10 rounded-xl shadow-sm p-8 mb-12 flex flex-col items-center">
+        <h2 className="text-lg font-semibold text-paperwhite mb-6">Students per Track</h2>
+        <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-2xl mx-auto">
+          <ResponsiveContainer width="100%" height={240}>
+            <BarChart data={trackDistribution} barCategoryGap={24}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#22283122" />
+              <XAxis dataKey="track" tick={{ fill: '#A0AEC0', fontSize: 13, fontWeight: 500 }} axisLine={false} tickLine={false} />
+              <YAxis allowDecimals={false} tick={{ fill: '#A0AEC0', fontSize: 13, fontWeight: 500 }} axisLine={false} tickLine={false} />
+              <RechartsTooltip
+                contentStyle={{ background: '#181F2A', border: 'none', borderRadius: 8, color: '#fff', boxShadow: '0 2px 8px #00B8D955' }}
+                itemStyle={{ color: '#00B8D9' }}
+                cursor={{ fill: '#00B8D922' }}
+              />
+              <Bar
+                dataKey="count"
+                radius={[8, 8, 8, 8]}
+                minPointSize={2}
+                isAnimationActive={true}
+              >
+                {trackDistribution.map((entry: any, idx: number) => (
+                  <Cell
+                    key={`bar-cell-${idx}`}
+                    fill={`url(#barGradient${idx})`}
+                    stroke={COLORS[idx % COLORS.length]}
+                    strokeWidth={0.5}
+                  />
+                ))}
+              </Bar>
+              {/* Gradients for bars */}
+              <defs>
+                {trackDistribution.map((entry: any, idx: number) => (
+                  <linearGradient id={`barGradient${idx}`} key={idx} x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={COLORS[idx % COLORS.length]} stopOpacity={0.85} />
+                    <stop offset="100%" stopColor={COLORS[idx % COLORS.length]} stopOpacity={0.45} />
+                  </linearGradient>
+                ))}
+              </defs>
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       </div>
     </div>
