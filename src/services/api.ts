@@ -365,6 +365,14 @@ class ApiService {
     });
     return this.handleResponse(response, true);
   }
+
+  async getDiagnostics() {
+    const response = await fetch(`${this.baseURL}/admin/diagnostics`, {
+      headers: this.getHeaders(),
+      credentials: 'include',
+    });
+    return this.handleResponse(response, true);
+  }
 }
 
 export default new ApiService();

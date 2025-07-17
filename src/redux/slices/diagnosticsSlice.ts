@@ -4,15 +4,8 @@ import apiService from '../../services/api';
 export const fetchDiagnostics = createAsyncThunk(
   'diagnostics/fetchDiagnostics',
   async () => {
-    const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://syncner-test.onrender.com/api';
-    const res = await fetch(`${API_BASE_URL}/admin/diagnostics`, {
-      headers: {
-        'Authorization': `Bearer ${apiService.getToken()}`,
-        'Content-Type': 'application/json',
-      },
-    });
-    if (!res.ok) throw new Error('Failed to fetch diagnostics');
-    const data = await res.json();
+    // Use the new apiService.getDiagnostics method
+    const data = await apiService.getDiagnostics();
     return data;
   }
 );
