@@ -14,7 +14,12 @@ const AttendanceHeatmap: React.FC = () => {
     const userId = user?._id || user?.id;
     if (!userId) return;
     setLoading(true);
-    axios.get(`/api/attendance/${userId}`)
+    const token = localStorage.getItem('token');
+    axios.get(`/api/attendance/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then(res => {
         console.log('[AttendanceHeatmap] API response:', res);
         const attendance = (res.data.data || []).map((rec: any) => ({
