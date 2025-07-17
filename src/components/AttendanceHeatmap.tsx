@@ -9,6 +9,7 @@ const AttendanceHeatmap: React.FC = () => {
   const [data, setData] = useState<{ date: string; count: number }[]>([]);
   const [loading, setLoading] = useState(true);
   const [hovered, setHovered] = useState<string | null>(null);
+  const [tooltip, setTooltip] = useState<{ x: number; y: number; content: string } | null>(null);
 
   useEffect(() => {
     const userId = user?._id || user?.id;
@@ -89,10 +90,7 @@ const AttendanceHeatmap: React.FC = () => {
                   }
                 }
                 return (
-                  <div key={monthKey} className="w-full mb-4">
-                    <div className="text-sm text-paperwhite font-label mb-2">
-                      {new Date(year, month - 1).toLocaleString('default', { month: 'long', year: 'numeric' })}
-                    </div>
+                  <div key={monthKey} className="w-full mb-4 flex items-center justify-between">
                     <HexGrid 
                       width="100%" 
                       height="min(80px,18vw)" 
@@ -130,8 +128,21 @@ const AttendanceHeatmap: React.FC = () => {
                               whileHover={hex.isEmpty ? {} : { scale: 1.25, filter: 'drop-shadow(0 0 16px var(--color-true-turquoise))' }}
                               transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                               style={{ zIndex: isHovered ? 20 : 1 }}
-                              onMouseEnter={() => !hex.isEmpty && setHovered(hex.date)}
-                              onMouseLeave={() => setHovered(null)}
+                              onMouseEnter={e => {
+                                if (!hex.isEmpty) {
+                                  setHovered(hex.date);
+                                  const rect = (e.target as SVGElement).getBoundingClientRect();
+                                  setTooltip({
+                                    x: rect.left + window.scrollX,
+                                    y: rect.top + window.scrollY,
+                                    content: `${hex.date}: ${hex.count === 1 ? 'Present' : hex.count === 0 ? 'Absent' : 'No data'}`
+                                  });
+                                }
+                              }}
+                              onMouseLeave={() => {
+                                setHovered(null);
+                                setTooltip(null);
+                              }}
                             >
                               <Hexagon
                                 q={hex.q}
@@ -153,6 +164,9 @@ const AttendanceHeatmap: React.FC = () => {
                         })}
                       </Layout>
                     </HexGrid>
+                    <div className="text-sm text-paperwhite font-label mb-2 ml-4 whitespace-nowrap min-w-[90px] text-right">
+                      {new Date(year, month - 1).toLocaleString('default', { month: 'long', year: 'numeric' })}
+                    </div>
                   </div>
                 );
               })}
@@ -160,6 +174,21 @@ const AttendanceHeatmap: React.FC = () => {
           )}
         </div>
       </div>
+      {/* Tooltip */}
+      {tooltip && (
+        <div
+          style={{
+            position: 'absolute',
+            left: tooltip.x - 160, // 160px to the left of the hovered hex
+            top: tooltip.y - 32, // slightly above the hex
+            zIndex: 1000,
+            pointerEvents: 'none',
+          }}
+          className="bg-offblack text-paperwhite px-4 py-2 rounded-lg shadow-lg border border-paperwhite/20 text-xs font-label whitespace-nowrap animate-fade-in"
+        >
+          {tooltip.content}
+        </div>
+      )}
     </div>
   );
 };
