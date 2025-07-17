@@ -82,9 +82,11 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // API Routes
 app.use('/api/auth', authRoutes);
+// Public health check for users module
+app.use('/api/users/health', userRoutes); // Only /api/users/health is public
 // All routes below require authentication and activity tracking
 app.use('/api', protect, trackActivity);
-app.use('/api/users', userRoutes);
+app.use('/api/users', userRoutes); // All other /api/users/* are protected
 app.use('/api/tracks', trackRoutes);
 app.use('/api/training', trainingRoutes);
 app.use('/api/admin', adminRoutes);
