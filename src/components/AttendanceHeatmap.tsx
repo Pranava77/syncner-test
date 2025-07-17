@@ -40,6 +40,23 @@ const AttendanceHeatmap: React.FC = () => {
   // Get all months sorted
   const allMonths = Object.keys(attendanceByMonth).sort();
 
+  // Get the range of months to display
+  let monthRange: string[] = [];
+  if (data.length > 0) {
+    // Find earliest and latest dates
+    const dates = data.map(d => new Date(d.date));
+    const minDate = new Date(Math.min(...dates.map(d => d.getTime())));
+    const maxDate = new Date(Math.max(...dates.map(d => d.getTime())));
+    // Start at the first of the min month
+    let current = new Date(minDate.getFullYear(), minDate.getMonth(), 1);
+    const end = new Date(maxDate.getFullYear(), maxDate.getMonth(), 1);
+    while (current <= end) {
+      const key = `${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2, '0')}`;
+      monthRange.push(key);
+      current.setMonth(current.getMonth() + 1);
+    }
+  }
+
   // Helper to get days in a month
   function getDaysInMonth(year: number, month: number) {
     return new Date(year, month + 1, 0).getDate();
@@ -56,11 +73,12 @@ const AttendanceHeatmap: React.FC = () => {
               {allMonths.length === 0 && (
                 <div className="text-xs text-teallight font-primary">No attendance data available.</div>
               )}
-              {allMonths.map((monthKey) => {
+              {(monthRange.length > 0 ? monthRange : allMonths).map((monthKey) => {
                 const [year, month] = monthKey.split('-').map(Number);
                 const daysInMonth = getDaysInMonth(year, month - 1);
+                const monthData = attendanceByMonth[monthKey] || [];
                 const dataMap = Object.fromEntries(
-                  (attendanceByMonth[monthKey] || []).map(d => [new Date(d.date).toISOString().slice(0, 10), d.count])
+                  monthData.map(d => [new Date(d.date).toISOString().slice(0, 10), d.count])
                 );
                 const columns = Math.ceil(daysInMonth / 2);
                 const rows = 2;
@@ -73,7 +91,7 @@ const AttendanceHeatmap: React.FC = () => {
                     if (dayCounter > 0 && dayCounter <= daysInMonth) {
                       const dateStr = cellDate.toISOString().slice(0, 10);
                       hexObj = {
-                        q, r, s: -q - r, date: dateStr, count: dataMap[dateStr] ?? -1, isEmpty: false
+                        q, r, s: -q - r, date: dateStr, count: dataMap[dateStr] ?? -1, isEmpty: !(dateStr in dataMap)
                       };
                     } else {
                       hexObj = {
@@ -84,7 +102,7 @@ const AttendanceHeatmap: React.FC = () => {
                     dayCounter++;
                   }
                 }
-                const hasData = (attendanceByMonth[monthKey] || []).length > 0;
+                const hasData = monthData.length > 0;
                 return (
                   <div key={monthKey} className="w-full flex items-center justify-between">
                     <HexGrid 
@@ -108,7 +126,7 @@ const AttendanceHeatmap: React.FC = () => {
                       </defs>
                       <Layout size={{ x: 0.4, y: 0.4 }} flat={false} spacing={1.25} origin={{ x: 0, y: 0 }}>
                         {hexes.map((hex, idx) => {
-                          const isHovered = hovered === hex.date && !hex.isEmpty;
+                          const isHovered = hovered === hex.date && !hex.isEmpty && hasData;
                           let fillId =
                             hex.isEmpty
                               ? 'paperwhite'
@@ -121,11 +139,11 @@ const AttendanceHeatmap: React.FC = () => {
                           return (
                             <motion.g
                               key={hex.date + idx}
-                              whileHover={hex.isEmpty ? {} : { scale: 1.25, filter: 'drop-shadow(0 0 16px var(--color-true-turquoise))' }}
+                              whileHover={hex.isEmpty || !hasData ? {} : { scale: 1.25, filter: 'drop-shadow(0 0 16px var(--color-true-turquoise))' }}
                               transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                               style={{ zIndex: isHovered ? 20 : 1 }}
                               onMouseEnter={e => {
-                                if (!hex.isEmpty) {
+                                if (!hex.isEmpty && hasData) {
                                   setHovered(hex.date);
                                   const rect = (e.target as SVGElement).getBoundingClientRect();
                                   setTooltip({
@@ -161,7 +179,8 @@ const AttendanceHeatmap: React.FC = () => {
                       </Layout>
                     </HexGrid>
                     <div
-                      className={`text-sm font-label mb-2 ml-4 whitespace-nowrap min-w-[90px] text-right ${hasData ? 'text-gray-400' : 'text-black'}`}
+                      className="text-sm font-label mb-2 ml-4 whitespace-nowrap min-w-[90px] text-right"
+                      style={{ color: hasData ? 'var(--color-paper-white)' : 'var(--color-black)' }}
                     >
                       {new Date(year, month - 1).toLocaleString('default', { month: 'long', year: 'numeric' })}
                     </div>
