@@ -130,6 +130,8 @@ const AdminUsers: React.FC = () => {
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Name</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Email</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">College</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Track</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Role</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Status</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Actions</th>
@@ -137,13 +139,15 @@ const AdminUsers: React.FC = () => {
           </thead>
           <tbody>
             {loading ? (
-              <tr><td colSpan={5} className="text-center py-6 text-teallight">Loading...</td></tr>
+              <tr><td colSpan={7} className="text-center py-6 text-teallight">Loading...</td></tr>
             ) : filteredUsers.length === 0 ? (
-              <tr><td colSpan={5} className="text-center py-6 text-teallight">No users found.</td></tr>
-            ) : filteredUsers.map((u: any) => (
-              <tr key={u._id} className="hover:bg-paperwhite/5">
+              <tr><td colSpan={7} className="text-center py-6 text-teallight">No users found.</td></tr>
+            ) : filteredUsers.map((u: any, idx: number) => (
+              <tr key={u._id || idx} className="hover:bg-paperwhite/5">
                 <td className="px-6 py-4 whitespace-nowrap text-paperwhite font-medium">{u.name}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-paperwhite">{u.email}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-paperwhite">{u.college || '-'}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-paperwhite">{u.careerTrack || '-'}</td>
                 <td className="px-6 py-4 whitespace-nowrap capitalize text-paperwhite">{u.role}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${u.isActive ? 'bg-teallight text-offblack' : 'bg-rust text-paperwhite'}`}>
