@@ -386,6 +386,21 @@ class ApiService {
     });
     return this.handleResponse(response);
   }
+
+  /**
+   * Admin: Reset a user's password
+   * @param userId - The user's ID
+   * @param newPassword - The new password to set
+   */
+  async resetUserPassword(userId: string, newPassword: string) {
+    const response = await fetch(`${this.baseURL}/admin/users/${userId}/reset-password`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify({ password: newPassword }),
+      credentials: 'include',
+    });
+    return this.handleResponse(response);
+  }
 }
 
 export default new ApiService();

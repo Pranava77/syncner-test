@@ -13,6 +13,8 @@ import {
   Cross1Icon as X,
   CheckCircledIcon
 } from '@radix-ui/react-icons';
+import ResetPasswordModal from '../components/ResetPasswordModal';
+import apiService from '../services/api';
 
 const defaultAdminForm = {
   name: '',
@@ -32,6 +34,8 @@ const AdminAdmin: React.FC = () => {
   const [formError, setFormError] = useState('');
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [createdPassword, setCreatedPassword] = useState('');
+  const [resetModalOpen, setResetModalOpen] = useState(false);
+  const [resetUser, setResetUser] = useState<{ name: string; email: string } | null>(null);
 
   useEffect(() => {
     dispatch(fetchAllUsers());
@@ -165,6 +169,17 @@ const AdminAdmin: React.FC = () => {
                     >
                       <TrashIcon className="h-4 w-4" />
                     </button>
+                    {/* Reset Password Button */}
+                    <button
+                      onClick={() => {
+                        setResetUser({ name: a.name, email: a.email });
+                        setResetModalOpen(true);
+                      }}
+                      className="bg-paperwhite/20 hover:bg-trueturquoise/30 text-trueturquoise px-2 py-1 rounded transition-colors"
+                      title="Reset Password"
+                    >
+                      <span className="font-bold text-xs">Reset PW</span>
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -227,6 +242,17 @@ const AdminAdmin: React.FC = () => {
           </div>
         </div>
       )}
+      <ResetPasswordModal
+        open={resetModalOpen}
+        onClose={() => { setResetModalOpen(false); setResetUser(null); }}
+        user={resetUser}
+        onReset={async (password) => {
+          // Find the admin ID from the admins list
+          const adminObj = users.find(a => a.email === resetUser?.email && a.name === resetUser?.name);
+          if (!adminObj) throw new Error('Admin not found');
+          await apiService.resetUserPassword(adminObj._id || adminObj.id, password);
+        }}
+      />
       {error && <div className="text-rust text-center mt-4">{error}</div>}
     </div>
   );

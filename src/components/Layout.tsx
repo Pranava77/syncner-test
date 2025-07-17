@@ -6,7 +6,6 @@ import {
   HomeIcon, 
   GearIcon, 
   ExitIcon,
-  BarChartIcon,
   HamburgerMenuIcon,
   Cross1Icon,
   PersonIcon,
@@ -27,7 +26,6 @@ import logo from '../assets/syncner-logo.png';
 import LoadingScreen from './LoadingScreen';
 import { motion, useAnimation } from 'framer-motion';
 import { useRef } from 'react';
-import axios from 'axios';
 
 const Layout: React.FC = () => {
   const dispatch = useAppDispatch();

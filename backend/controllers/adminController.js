@@ -118,10 +118,35 @@ const deleteUser = async (req, res) => {
   }
 };
 
+// @desc    Reset a user's password (admin)
+// @route   POST /api/admin/users/:id/reset-password
+// @access  Private/Admin
+const resetPassword = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { password } = req.body;
+    if (!password || password.length < 6) {
+      return res.status(400).json({ success: false, message: 'Password must be at least 6 characters' });
+    }
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    const hashed = await bcrypt.hash(password, 10);
+    user.password = hashed;
+    await user.save();
+    res.status(200).json({ success: true, message: 'Password reset successfully' });
+  } catch (error) {
+    console.error('Reset password error:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
 export {
   getAllUsers,
   getAnalytics,
   createUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  resetPassword
 }; 

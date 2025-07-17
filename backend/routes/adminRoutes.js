@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllUsers, getAnalytics, createUser, updateUser, deleteUser } from '../controllers/adminController.js';
+import { getAllUsers, getAnalytics, createUser, updateUser, deleteUser, resetPassword } from '../controllers/adminController.js';
 import { protect } from '../middleware/auth.js';
 import { authorize } from '../middleware/auth.js';
 import { body } from 'express-validator';
@@ -34,6 +34,9 @@ router.put('/users/:id', protect, authorize('admin'), updateUser);
 
 // Delete user (admin only)
 router.delete('/users/:id', protect, authorize('admin'), deleteUser);
+
+// Add after update and delete user routes
+router.post('/users/:id/reset-password', protect, authorize('admin'), resetPassword);
 
 // Get analytics (admin only)
 router.get('/analytics', protect, authorize('admin'), getAnalytics);
