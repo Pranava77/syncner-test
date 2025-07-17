@@ -130,7 +130,7 @@ const AdminDashboard: React.FC = () => {
         <h2 className="text-lg font-semibold text-paperwhite mb-6">Students by Track</h2>
         <div className="w-full flex flex-col items-center justify-center">
           <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto">
-            <ResponsiveContainer width="100%" height={220}>
+            <ResponsiveContainer width="100%" height={320}>
               <PieChart>
                 <Pie
                   data={trackDistribution}
@@ -138,8 +138,8 @@ const AdminDashboard: React.FC = () => {
                   nameKey="track"
                   cx="50%"
                   cy="50%"
-                  innerRadius={48}
-                  outerRadius={72}
+                  innerRadius={70}
+                  outerRadius={120}
                   paddingAngle={2}
                   labelLine={false}
                   label={false}
@@ -162,7 +162,7 @@ const AdminDashboard: React.FC = () => {
                   y="50%"
                   textAnchor="middle"
                   dominantBaseline="middle"
-                  fontSize="26"
+                  fontSize="38"
                   fontWeight="bold"
                   fill="#00B8D9"
                   style={{ pointerEvents: 'none', opacity: 0.95 }}
@@ -174,7 +174,7 @@ const AdminDashboard: React.FC = () => {
                   y="62%"
                   textAnchor="middle"
                   dominantBaseline="middle"
-                  fontSize="12"
+                  fontSize="16"
                   fill="#A0AEC0"
                   style={{ pointerEvents: 'none', fontWeight: 400, opacity: 0.7 }}
                 >
