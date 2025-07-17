@@ -24,6 +24,7 @@ export const getAttendance = async (req, res) => {
     const { userId } = req.params;
     const records = await Attendance.find({ user: userId }).sort({ date: 1 });
     console.log(`[ATTENDANCE DEBUG] getAttendance for userId: ${userId}, records found: ${records.length}`);
+    res.set('Cache-Control', 'no-store');
     res.json({ success: true, data: records });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
