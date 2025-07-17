@@ -27,11 +27,21 @@ const AdminDashboard: React.FC = () => {
   }
 
   // Fallbacks for missing analytics
-  const userCount = analytics?.userCount ?? 0;
+  const userCount = analytics?.totalStudents ?? 0;
   const activeStudents = analytics?.activeStudents ?? 0;
   const completionRate = analytics?.completionRate ?? 0;
-  const studentRetention = analytics?.studentRetention ?? 0;
+  const studentRetention = analytics?.studentRetention;
   const trackDistribution = analytics?.trackDistribution ?? [];
+
+  if (!analytics) {
+    return (
+      <div className="min-h-screen bg-offblack flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-paperwhite text-lg">No analytics data available.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-offblack p-4 lg:p-8">
@@ -72,7 +82,7 @@ const AdminDashboard: React.FC = () => {
             <Users className="h-6 w-6 text-trueturquoise" />
           </div>
           <div>
-            <p className="text-teallight text-sm">Total Users</p>
+            <p className="text-teallight text-sm">Total Students</p>
             <p className="text-2xl font-bold text-paperwhite">{userCount}</p>
           </div>
         </div>
@@ -98,19 +108,21 @@ const AdminDashboard: React.FC = () => {
             </p>
           </div>
         </div>
-        <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6 flex items-center gap-4">
-          <div className="bg-trueturquoise/10 p-3 rounded-lg">
-            <Target className="h-6 w-6 text-trueturquoise" />
+        {typeof studentRetention === 'number' && (
+          <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6 flex items-center gap-4">
+            <div className="bg-trueturquoise/10 p-3 rounded-lg">
+              <Target className="h-6 w-6 text-trueturquoise" />
+            </div>
+            <div>
+              <p className="text-teallight text-sm">Student Retention</p>
+              <p className="text-2xl font-bold text-paperwhite">{studentRetention}%</p>
+              <p className="text-trueturquoise text-xs flex items-center mt-1">
+                <TrendingUp className="h-3 w-3 mr-1" />
+                +1.2% from last month
+              </p>
+            </div>
           </div>
-          <div>
-            <p className="text-teallight text-sm">Student Retention</p>
-            <p className="text-2xl font-bold text-paperwhite">{studentRetention}%</p>
-            <p className="text-trueturquoise text-xs flex items-center mt-1">
-              <TrendingUp className="h-3 w-3 mr-1" />
-              +1.2% from last month
-            </p>
-          </div>
-        </div>
+        )}
       </div>
 
       {/* Students by Track Pie Chart */}
