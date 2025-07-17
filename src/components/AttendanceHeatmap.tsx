@@ -90,7 +90,7 @@ const AttendanceHeatmap: React.FC = () => {
                   }
                 }
                 return (
-                  <div key={monthKey} className="w-full mb-4 flex items-center justify-between">
+                  <div key={monthKey} className="w-full flex items-center justify-between">
                     <HexGrid 
                       width="100%" 
                       height="min(80px,18vw)" 
