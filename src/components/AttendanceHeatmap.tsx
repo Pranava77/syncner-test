@@ -11,9 +11,10 @@ const AttendanceHeatmap: React.FC = () => {
   const [hovered, setHovered] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!user?.id) return;
+    const userId = user?._id || user?.id;
+    if (!userId) return;
     setLoading(true);
-    axios.get(`/api/attendance/${user.id}`)
+    axios.get(`/api/attendance/${userId}`)
       .then(res => {
         const attendance = (res.data.data || []).map((rec: any) => ({
           date: new Date(rec.date).toISOString().slice(0, 10),
@@ -22,9 +23,9 @@ const AttendanceHeatmap: React.FC = () => {
         setData(attendance);
       })
       .finally(() => setLoading(false));
-  }, [user?.id]);
+  }, [user?._id, user?.id]);
 
-  if (!user?.id) return null;
+  if (!user?._id && !user?.id) return null;
 
   const today = new Date();
   const year = today.getFullYear();

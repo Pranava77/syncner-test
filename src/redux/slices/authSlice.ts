@@ -3,6 +3,7 @@ import apiService from '../../services/api';
 
 export interface User {
   id: string;
+  _id?: string;
   email: string;
   name: string;
   role: 'student' | 'admin' | 'staff';
