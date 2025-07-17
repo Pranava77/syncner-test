@@ -109,12 +109,12 @@ const AttendanceHeatmap: React.FC = () => {
                         {hexes.map((hex, idx) => {
                           const isHovered = hovered === hex.date && !hex.isEmpty && hasData;
                           let fillColor = hex.isEmpty
-                            ? 'var(--color-paper-white)'
+                            ? 'var(--color-black)'
                             : hex.count === 1
                             ? 'var(--color-true-turquoise)'
                             : hex.count === 0
                             ? 'var(--color-rust)'
-                            : 'var(--color-paper-white)';
+                            : 'var(--color-black)';
                           if (isHovered) fillColor = 'var(--color-true-turquoise)';
                           return (
                             <motion.g
