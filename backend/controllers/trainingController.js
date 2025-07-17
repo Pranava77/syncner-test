@@ -10,16 +10,9 @@ const getAllLevels = async (req, res) => {
       filter.careerTrack = req.query.track;
     }
     const levels = await Level.find(filter);
-    // Convert _id to id for each level
-    const levelsWithId = levels.map(level => {
-      const obj = level.toObject();
-      obj.id = obj._id;
-      delete obj._id;
-      return obj;
-    });
     res.status(200).json({
       success: true,
-      data: levelsWithId
+      data: levels
     });
   } catch (error) {
     console.error('Get levels error:', error);
@@ -48,12 +41,9 @@ const getLevelById = async (req, res) => {
         message: 'Level not found'
       });
     }
-    const obj = level.toObject();
-    obj.id = obj._id;
-    delete obj._id;
     res.status(200).json({
       success: true,
-      data: obj
+      data: level
     });
   } catch (error) {
     console.error('Get level error:', error);
@@ -69,18 +59,11 @@ const getLevelById = async (req, res) => {
 // @access  Private/Admin
 const createLevel = async (req, res) => {
   try {
-    const levelData = {
-      ...req.body,
-      id: `level_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-    };
-    const level = await Level.create(levelData);
-    const obj = level.toObject();
-    obj.id = obj._id;
-    delete obj._id;
+    const level = await Level.create(req.body);
     res.status(201).json({
       success: true,
       message: 'Level created successfully',
-      data: obj
+      data: level
     });
   } catch (error) {
     console.error('Create level error:', error);
@@ -107,13 +90,10 @@ const updateLevel = async (req, res) => {
         message: 'Level not found'
       });
     }
-    const obj = level.toObject();
-    obj.id = obj._id;
-    delete obj._id;
     res.status(200).json({
       success: true,
       message: 'Level updated successfully',
-      data: obj
+      data: level
     });
   } catch (error) {
     console.error('Update level error:', error);

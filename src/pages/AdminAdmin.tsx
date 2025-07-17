@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import {
-  fetchAllAdmins,
-  createAdmin,
-  updateAdmin,
-  deleteAdmin
-} from '../redux/slices/adminSlice';
+  fetchAllUsers,
+  createUser,
+  updateUser,
+  deleteUser
+} from '../redux/slices/userSlice';
 import {
   PlusIcon,
   Pencil1Icon as Edit3,
@@ -24,7 +24,7 @@ const defaultAdminForm = {
 
 const AdminAdmin: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { data: admins, loading, error } = useAppSelector((state) => state.admins);
+  const { data: users, loading, error } = useAppSelector((state) => state.users);
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingAdmin, setEditingAdmin] = useState<any>(null);
@@ -34,10 +34,10 @@ const AdminAdmin: React.FC = () => {
   const [createdPassword, setCreatedPassword] = useState('');
 
   useEffect(() => {
-    dispatch(fetchAllAdmins());
+    dispatch(fetchAllUsers());
   }, [dispatch]);
 
-  const filteredAdmins = admins.filter((a: any) =>
+  const filteredAdmins = users.filter((a: any) =>
     a.role === 'admin' && (
       a.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       a.email.toLowerCase().includes(searchTerm.toLowerCase())
@@ -66,7 +66,7 @@ const AdminAdmin: React.FC = () => {
 
   const handleDelete = (id: string) => {
     if (window.confirm('Are you sure you want to delete this admin?')) {
-      dispatch(deleteAdmin(id));
+      dispatch(deleteUser(id));
     }
   };
 
@@ -82,12 +82,12 @@ const AdminAdmin: React.FC = () => {
     setFormError('');
     if (editingAdmin && editingAdmin._id) {
       const { password, ...updateData } = adminForm;
-      await dispatch(updateAdmin({ id: editingAdmin._id, adminData: updateData }));
+      await dispatch(updateUser({ id: editingAdmin._id, userData: updateData }));
       setShowModal(false);
       setEditingAdmin(null);
       setAdminForm(defaultAdminForm);
     } else {
-      await dispatch(createAdmin(adminForm));
+      await dispatch(createUser(adminForm));
       setCreatedPassword(adminForm.password);
       setShowModal(false);
       setShowPasswordModal(true);

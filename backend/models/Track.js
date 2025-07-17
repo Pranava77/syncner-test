@@ -2,12 +2,6 @@ import mongoose from 'mongoose';
 import { CAREER_TRACKS, DIFFICULTY_LEVELS } from '../utils/constants.js';
 
 const trackSchema = new mongoose.Schema({
-  id: {
-    type: String,
-    required: true,
-    unique: true,
-    enum: Object.values(CAREER_TRACKS)
-  },
   name: {
     type: String,
     required: [true, 'Track name is required'],
@@ -60,8 +54,15 @@ const trackSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true,
-  toJSON: { virtuals: true },
-  toObject: { virtuals: true }
+  toObject: { virtuals: true },
+  toJSON: { 
+    virtuals: true,
+    transform: function(doc, ret) {
+      ret.id = ret._id;
+      delete ret._id;
+      delete ret.__v;
+    }
+  }
 });
 
 // Indexes

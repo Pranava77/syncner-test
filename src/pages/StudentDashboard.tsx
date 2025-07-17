@@ -17,7 +17,7 @@ import {
 } from '@radix-ui/react-icons';
 import LoadingScreen from '../components/LoadingScreen';
 import AttendanceHeatmap from '../components/AttendanceHeatmap';
-import axios from 'axios';
+import apiService from '../services/api';
 
 const StudentDashboard: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -42,7 +42,7 @@ const StudentDashboard: React.FC = () => {
 
     interval = setInterval(() => {
       if (Date.now() - lastActivity < 10 * 60 * 1000) {
-        axios.get('/api/users').catch(() => {});
+        apiService.getMe().catch(() => {});
       }
     }, 2 * 60 * 1000); // every 2 minutes
 

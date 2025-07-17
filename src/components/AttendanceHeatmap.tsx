@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { HexGrid, Layout, Hexagon } from 'react-hexgrid';
 import { motion } from 'framer-motion';
-import axios from 'axios';
+import apiService from '../services/api';
 import { useAppSelector } from '../redux/store';
 
 const AttendanceHeatmap: React.FC = () => {
@@ -15,14 +15,9 @@ const AttendanceHeatmap: React.FC = () => {
     const userId = user?._id || user?.id;
     if (!userId) return;
     setLoading(true);
-    const token = localStorage.getItem('token');
-    axios.get(`/api/attendance/${userId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
+    apiService.getAttendance(userId)
       .then(res => {
-        const attendance = (res.data.data || []).map((rec: any) => ({
+        const attendance = (res.data || []).map((rec: any) => ({
           date: new Date(rec.date).toISOString().slice(0, 10),
           count: rec.status === 'present' ? 1 : 0
         }));

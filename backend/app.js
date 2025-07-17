@@ -40,7 +40,6 @@ import { trackActivity } from './middleware/trackActivity.js';
 import './models/User.js';
 import './models/Track.js';
 import './models/Level.js';
-import './models/Admin.js';
 
 // Import geminiService
 import geminiService from './services/geminiService.js';

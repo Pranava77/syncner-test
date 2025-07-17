@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import {
-  fetchAllStaff,
-  createStaff,
-  updateStaff,
-  deleteStaff
-} from '../redux/slices/staffSlice';
+  fetchAllUsers,
+  createUser,
+  updateUser,
+  deleteUser
+} from '../redux/slices/userSlice';
 import {
   PlusIcon,
   Pencil1Icon as Edit3,
@@ -26,7 +26,7 @@ const defaultStaffForm = {
 
 const AdminStaff: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { data: staff, loading, error } = useAppSelector((state) => state.staff);
+  const { data: users, loading, error } = useAppSelector((state) => state.users);
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingStaff, setEditingStaff] = useState<any>(null);
@@ -36,10 +36,10 @@ const AdminStaff: React.FC = () => {
   const [createdPassword, setCreatedPassword] = useState('');
 
   useEffect(() => {
-    dispatch(fetchAllStaff());
+    dispatch(fetchAllUsers());
   }, [dispatch]);
 
-  const filteredStaff = staff.filter((s: any) =>
+  const filteredStaff = users.filter((s: any) =>
     s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     s.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     s.department?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -69,7 +69,7 @@ const AdminStaff: React.FC = () => {
 
   const handleDelete = (id: string) => {
     if (window.confirm('Are you sure you want to delete this staff member?')) {
-      dispatch(deleteStaff(id));
+      dispatch(deleteUser(id));
     }
   };
 
@@ -85,12 +85,12 @@ const AdminStaff: React.FC = () => {
     setFormError('');
     if (editingStaff && editingStaff._id) {
       const { password, ...updateData } = staffForm; // Don't send password on edit
-      await dispatch(updateStaff({ id: editingStaff._id, staffData: updateData }));
+      await dispatch(updateUser({ id: editingStaff._id, userData: updateData }));
       setShowModal(false);
       setEditingStaff(null);
       setStaffForm(defaultStaffForm);
     } else {
-      await dispatch(createStaff(staffForm));
+      await dispatch(createUser(staffForm));
       setCreatedPassword(staffForm.password); // Store password for modal
       setShowModal(false);
       setShowPasswordModal(true);

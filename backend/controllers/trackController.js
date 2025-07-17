@@ -25,7 +25,7 @@ const getAllTracks = async (req, res) => {
 // @access  Public
 const getTrackById = async (req, res) => {
   try {
-    const track = await Track.findOne({ id: req.params.id })
+    const track = await Track.findById(req.params.id)
       .populate('levels');
     
     if (!track) {

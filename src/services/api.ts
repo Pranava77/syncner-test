@@ -21,12 +21,11 @@ class ApiService {
     return headers;
   }
 
-  private async handleResponse(response: Response, isAuthEndpoint: boolean = false) {
+  private async handleResponse(response: Response) {
     const data = await response.json();
 
     if (!response.ok) {
-      if (response.status === 401 && isAuthEndpoint) {
-        // Only redirect to login for auth endpoints (login, register, profile)
+      if (response.status === 401) {
         this.clearToken();
         window.location.href = '/login';
       }
@@ -57,7 +56,7 @@ class ApiService {
       credentials: 'include',
     });
 
-    const data = await this.handleResponse(response, true);
+    const data = await this.handleResponse(response);
     if (data.success && data.data.token) {
       this.setToken(data.data.token);
     }
@@ -78,7 +77,7 @@ class ApiService {
       credentials: 'include',
     });
 
-    const data = await this.handleResponse(response, true);
+    const data = await this.handleResponse(response);
     if (data.success && data.data.token) {
       this.setToken(data.data.token);
     }
@@ -91,7 +90,7 @@ class ApiService {
       credentials: 'include',
     });
 
-    return this.handleResponse(response, true);
+    return this.handleResponse(response);
   }
 
   async logout() {
@@ -122,7 +121,7 @@ class ApiService {
       credentials: 'include',
     });
 
-    const data = await this.handleResponse(response, true);
+    const data = await this.handleResponse(response);
     return data;
   }
 
@@ -135,7 +134,7 @@ class ApiService {
       credentials: 'include',
     });
 
-    return this.handleResponse(response, false);
+    return this.handleResponse(response);
   }
 
   async getCareerTrack(trackId: string) {
@@ -144,7 +143,7 @@ class ApiService {
       credentials: 'include',
     });
 
-    return this.handleResponse(response, false);
+    return this.handleResponse(response);
   }
 
   // Training endpoints for levels
@@ -156,7 +155,7 @@ class ApiService {
       headers: this.getHeaders(),
       credentials: 'include',
     });
-    return this.handleResponse(response, false);
+    return this.handleResponse(response);
   }
 
   async getLevel(levelId: string) {
@@ -164,7 +163,7 @@ class ApiService {
       headers: this.getHeaders(),
       credentials: 'include',
     });
-    return this.handleResponse(response, false);
+    return this.handleResponse(response);
   }
 
   // Admin endpoints
@@ -177,7 +176,7 @@ class ApiService {
     const response = await fetch(url, {
       headers: this.getHeaders(),
     });
-    return this.handleResponse(response, true);
+    return this.handleResponse(response);
   }
 
   async updateStudent(studentId: string, studentData: any) {
@@ -186,7 +185,7 @@ class ApiService {
       headers: this.getHeaders(),
       body: JSON.stringify(studentData),
     });
-    return this.handleResponse(response, true);
+    return this.handleResponse(response);
   }
 
   async deleteStudent(studentId: string) {
@@ -194,7 +193,7 @@ class ApiService {
       method: 'DELETE',
       headers: this.getHeaders(),
     });
-    return this.handleResponse(response, true);
+    return this.handleResponse(response);
   }
 
   async getAnalytics(dateRange?: string) {
@@ -207,7 +206,7 @@ class ApiService {
       headers: this.getHeaders(),
     });
 
-    return this.handleResponse(response, true);
+    return this.handleResponse(response);
   }
 
   // AI Chat Mentor
@@ -226,7 +225,7 @@ class ApiService {
       headers: this.getHeaders(),
       body: JSON.stringify(studentData),
     });
-    return this.handleResponse(response, true);
+    return this.handleResponse(response);
   }
 
   // Add a method to create a staff user using the User model
@@ -236,7 +235,7 @@ class ApiService {
       headers: this.getHeaders(),
       body: JSON.stringify({ ...staffData, role: 'staff' }),
     });
-    return this.handleResponse(response, true);
+    return this.handleResponse(response);
   }
 
   // Add a method to fetch all users with role=staff
@@ -244,7 +243,7 @@ class ApiService {
     const response = await fetch(`${this.baseURL}/admin/users?role=staff`, {
       headers: this.getHeaders(),
     });
-    return this.handleResponse(response, true);
+    return this.handleResponse(response);
   }
 
   async getAllUsers() {
@@ -267,7 +266,7 @@ class ApiService {
       headers: this.getHeaders(),
       body: JSON.stringify(adminData),
     });
-    return this.handleResponse(response, true);
+    return this.handleResponse(response);
   }
 
   async deleteAdmin(adminId: string) {
@@ -275,7 +274,7 @@ class ApiService {
       method: 'DELETE',
       headers: this.getHeaders(),
     });
-    return this.handleResponse(response, true);
+    return this.handleResponse(response);
   }
 
   async addAdmin(adminData: any) {
@@ -285,7 +284,7 @@ class ApiService {
       headers: this.getHeaders(),
       body: JSON.stringify({ ...adminData, role: 'admin' }),
     });
-    return this.handleResponse(response, true);
+    return this.handleResponse(response);
   }
 
   // Admin settings endpoints
@@ -293,7 +292,7 @@ class ApiService {
     const response = await fetch(`${this.baseURL}/admin/settings`, {
       headers: this.getHeaders(),
     });
-    return this.handleResponse(response, true);
+    return this.handleResponse(response);
   }
 
   async updatePlatformSettings(settings: any) {
@@ -302,7 +301,7 @@ class ApiService {
       headers: this.getHeaders(),
       body: JSON.stringify(settings),
     });
-    return this.handleResponse(response, true);
+    return this.handleResponse(response);
   }
 
   // Staff endpoints
@@ -311,7 +310,7 @@ class ApiService {
       headers: this.getHeaders(),
       credentials: 'include',
     });
-    return this.handleResponse(response, false);
+    return this.handleResponse(response);
   }
 
   async getStaffById(staffId: string) {
@@ -319,7 +318,7 @@ class ApiService {
       headers: this.getHeaders(),
       credentials: 'include',
     });
-    return this.handleResponse(response, false);
+    return this.handleResponse(response);
   }
 
   async createStaff(staffData: any) {
@@ -329,7 +328,7 @@ class ApiService {
       body: JSON.stringify(staffData),
       credentials: 'include',
     });
-    return this.handleResponse(response, false);
+    return this.handleResponse(response);
   }
 
   async updateStaff(staffId: string, staffData: any) {
@@ -338,7 +337,7 @@ class ApiService {
       headers: this.getHeaders(),
       body: JSON.stringify(staffData),
     });
-    return this.handleResponse(response, true);
+    return this.handleResponse(response);
   }
 
   async deleteStaff(staffId: string) {
@@ -346,7 +345,7 @@ class ApiService {
       method: 'DELETE',
       headers: this.getHeaders(),
     });
-    return this.handleResponse(response, true);
+    return this.handleResponse(response);
   }
 
   async updateUser(userId: string, userData: any) {
@@ -355,7 +354,7 @@ class ApiService {
       headers: this.getHeaders(),
       body: JSON.stringify(userData),
     });
-    return this.handleResponse(response, true);
+    return this.handleResponse(response);
   }
 
   async deleteUser(userId: string) {
@@ -363,7 +362,7 @@ class ApiService {
       method: 'DELETE',
       headers: this.getHeaders(),
     });
-    return this.handleResponse(response, true);
+    return this.handleResponse(response);
   }
 
   async getDiagnostics() {
@@ -371,7 +370,14 @@ class ApiService {
       headers: this.getHeaders(),
       credentials: 'include',
     });
-    return this.handleResponse(response, true);
+    return this.handleResponse(response);
+  }
+
+  async getAttendance(userId: string) {
+    const response = await fetch(`${this.baseURL}/attendance/${userId}`, {
+      headers: this.getHeaders(),
+    });
+    return this.handleResponse(response);
   }
 }
 

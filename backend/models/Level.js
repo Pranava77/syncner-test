@@ -24,7 +24,6 @@ const exerciseSchema = new mongoose.Schema({
 }, { _id: false });
 
 const levelSchema = new mongoose.Schema({
-  id: { type: String, required: true, unique: true },
   title: { type: String, required: true },
   description: { type: String },
   difficulty: { type: String, enum: Object.values(DIFFICULTY_LEVELS), required: true },
@@ -39,7 +38,15 @@ const levelSchema = new mongoose.Schema({
   isActive: { type: Boolean, default: true },
   estimatedHours: { type: Number }
 }, {
-  timestamps: true
+  timestamps: true,
+  toJSON: { 
+    virtuals: true,
+    transform: function(doc, ret) {
+      ret.id = ret._id;
+      delete ret._id;
+      delete ret.__v;
+    }
+  }
 });
 
 export default mongoose.model('Level', levelSchema); 

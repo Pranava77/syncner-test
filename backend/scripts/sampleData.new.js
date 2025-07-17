@@ -1,8 +1,6 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import bcrypt from 'bcryptjs';
-import Staff from '../models/Staff.js';
-import Admin from '../models/Admin.js';
 import User from '../models/User.js';
 import Track from '../models/Track.js';
 import Level from '../models/Level.js';
@@ -110,7 +108,6 @@ const sampleStudents = [
 
 const sampleTracks = [
   {
-    id: 'fullstack',
     name: 'Full Stack Development',
     description: 'Learn to build complete web applications using front-end and back-end technologies.',
     duration: '6 months',
@@ -123,7 +120,6 @@ const sampleTracks = [
     order: 1
   },
   {
-    id: 'ai-ml',
     name: 'AI/ML Engineering',
     description: 'Dive into artificial intelligence and machine learning concepts and applications.',
     duration: '8 months',
@@ -136,7 +132,6 @@ const sampleTracks = [
     order: 2
   },
   {
-    id: 'ui-ux',
     name: 'UI/UX Design',
     description: 'Master the art of designing user interfaces and experiences.',
     duration: '4 months',
@@ -149,7 +144,6 @@ const sampleTracks = [
     order: 3
   },
   {
-    id: 'data-science',
     name: 'Data Science',
     description: 'Analyze and interpret complex data to help companies make decisions.',
     duration: '7 months',
@@ -165,7 +159,6 @@ const sampleTracks = [
 
 const sampleLevels = [
   {
-    id: 'level_fullstack_1',
     title: 'Intro to Web Development',
     description: 'Basics of HTML, CSS, and JavaScript.',
     difficulty: 'Beginner',
@@ -188,7 +181,6 @@ const sampleLevels = [
     estimatedHours: 20
   },
   {
-    id: 'level_ai_ml_1',
     title: 'Machine Learning Foundations',
     description: 'Core ML concepts and Python libraries.',
     difficulty: 'Intermediate',
@@ -210,7 +202,6 @@ const sampleLevels = [
     estimatedHours: 30
   },
   {
-    id: 'level_ui_ux_1',
     title: 'UI/UX Principles',
     description: 'Fundamentals of user interface and experience design.',
     difficulty: 'Beginner',
@@ -232,7 +223,6 @@ const sampleLevels = [
     estimatedHours: 15
   },
   {
-    id: 'level_data_science_1',
     title: 'Data Analysis Basics',
     description: 'Introduction to data analysis and visualization.',
     difficulty: 'Intermediate',
@@ -260,8 +250,6 @@ const hashPassword = async (plain) => await bcrypt.hash(plain, 10);
 const seedData = async () => {
   try {
     await connectDB();
-    await Admin.deleteMany({});
-    await Staff.deleteMany({});
     await User.deleteMany({});
     await Track.deleteMany({});
     await Level.deleteMany({});
@@ -269,12 +257,12 @@ const seedData = async () => {
     const createdLevels = await Level.insertMany(sampleLevels);
     // Link levels to tracks
     for (const track of createdTracks) {
-      const levelsForTrack = createdLevels.filter(l => l.careerTrack === track.id);
+      const levelsForTrack = createdLevels.filter(l => l.careerTrack === track.name);
       track.levels = levelsForTrack.map(l => l._id);
       await track.save();
     }
-    const createdAdmins = await Admin.insertMany(sampleAdmins);
-    const createdStaff = await Staff.insertMany(sampleStaff);
+    const createdAdmins = await User.insertMany(sampleAdmins.map(a => ({...a, role: 'admin'})));
+    const createdStaff = await User.insertMany(sampleStaff.map(s => ({...s, role: 'staff'})));
     // Hash student passwords
     const studentsWithHashed = await Promise.all(sampleStudents.map(async s => ({
       ...s,
