@@ -37,17 +37,12 @@ const AttendanceHeatmap: React.FC = () => {
     attendanceByMonth[key].push(rec);
   });
 
-  // Get all months sorted
-  const allMonths = Object.keys(attendanceByMonth).sort();
-
   // Get the range of months to display
   let monthRange: string[] = [];
   if (data.length > 0) {
-    // Find earliest and latest dates
     const dates = data.map(d => new Date(d.date));
     const minDate = new Date(Math.min(...dates.map(d => d.getTime())));
     const maxDate = new Date(Math.max(...dates.map(d => d.getTime())));
-    // Start at the first of the min month
     let current = new Date(minDate.getFullYear(), minDate.getMonth(), 1);
     const end = new Date(maxDate.getFullYear(), maxDate.getMonth(), 1);
     while (current <= end) {
@@ -70,10 +65,10 @@ const AttendanceHeatmap: React.FC = () => {
             <div className="text-xs text-teallight font-primary">Loading attendance...</div>
           ) : (
             <div className="flex flex-col items-center w-full relative gap-6">
-              {allMonths.length === 0 && (
+              {monthRange.length === 0 && (
                 <div className="text-xs text-teallight font-primary">No attendance data available.</div>
               )}
-              {(monthRange.length > 0 ? monthRange : allMonths).map((monthKey) => {
+              {monthRange.map((monthKey) => {
                 const [year, month] = monthKey.split('-').map(Number);
                 const daysInMonth = getDaysInMonth(year, month - 1);
                 const monthData = attendanceByMonth[monthKey] || [];
@@ -180,7 +175,7 @@ const AttendanceHeatmap: React.FC = () => {
                     </HexGrid>
                     <div
                       className="text-sm font-label mb-2 ml-4 whitespace-nowrap min-w-[90px] text-right"
-                      style={{ color: hasData ? 'var(--color-paper-white)' : 'var(--color-black)' }}
+                      style={{ color: hasData ? 'var(--color-grey-label)' : 'var(--color-black)' }}
                     >
                       {new Date(year, month - 1).toLocaleString('default', { month: 'long', year: 'numeric' })}
                     </div>
