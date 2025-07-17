@@ -81,6 +81,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // API Routes
 app.use('/api/auth', authRoutes);
+
 // Public health check endpoints for diagnostics
 app.use('/api/users/health', userRoutes); // Only /api/users/health is public
 app.use('/api/tracks/health', trackRoutes); // Only /api/tracks/health is public
@@ -88,6 +89,7 @@ app.use('/api/training/health', trainingRoutes); // Only /api/training/health is
 app.use('/api/admin/health', adminRoutes); // Only /api/admin/health is public
 app.use('/api/admin/settings/health', settingsRoutes); // Only /api/admin/settings/health is public
 app.use('/api/ai/health', aiRoutes); // Only /api/ai/health is public
+
 // All routes below require authentication and activity tracking
 app.use('/api', protect, trackActivity);
 app.use('/api/users', userRoutes);
