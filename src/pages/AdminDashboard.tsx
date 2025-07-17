@@ -48,8 +48,8 @@ const AdminDashboard: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl  text-paperwhite font-heading">Admin Dashboard</h1>
-          <p className="text-teallight mt-1 font-label">Monitor student progress and performance</p>
+          <h1 className="text-3xl  text-paperwhite font-heading">Analytics</h1>
+          <p className="text-teallight mt-1 font-label">Comprehensive insights into platform performance</p>
         </div>
         <button
           onClick={exportData}
@@ -58,21 +58,6 @@ const AdminDashboard: React.FC = () => {
           <DownloadIcon className="h-5 w-5" />
           Export CSV
         </button>
-      </div>
-
-      {/* Tabs */}
-      <div className="border-b border-paperwhite/10 mb-8">
-        <nav className="flex space-x-8">
-          <button
-            className={
-              'flex items-center gap-2 px-4 py-2 text-lg font-medium rounded-t-lg transition-colors duration-150 text-trueturquoise border-b-2 border-trueturquoise bg-offblack'
-            }
-            disabled
-          >
-            <BarChart3 className="w-5 h-5" />
-            Overview
-          </button>
-        </nav>
       </div>
 
       {/* Analytics Cards */}

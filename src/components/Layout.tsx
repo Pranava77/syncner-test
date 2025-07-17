@@ -156,11 +156,10 @@ const Layout: React.FC = () => {
   ];
 
   const adminNavItems = [
-    { path: '/admin', icon: BarChartIcon, label: 'Admin Dashboard' },
+    { path: '/admin', icon: RocketIcon, label: 'Analytics' },
     { path: '/admin/users', icon: PersonIcon, label: 'User Management' },
     { path: '/admin/admins', icon: IdCardIcon, label: 'Admin Management' },
     { path: '/admin/staff', icon: Users, label: 'Staff Management' },
-    { path: '/admin/analytics', icon: RocketIcon, label: 'Analytics' },
     { path: '/admin/diagnostics', icon: GlobeIcon, label: 'System Diagnostics' },
     { path: '/admin/settings', icon: GearIcon, label: 'Settings' },
   ];
