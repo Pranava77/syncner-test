@@ -246,8 +246,13 @@ class ApiService {
     return this.handleResponse(response);
   }
 
-  async getAllUsers() {
-    const response = await fetch(`${this.baseURL}/admin/users`, {
+  async getAllUsers(filters?: any) {
+    let url = `${this.baseURL}/admin/users`;
+    if (filters) {
+      const params = new URLSearchParams(filters).toString();
+      if (params) url += `?${params}`;
+    }
+    const response = await fetch(url, {
       headers: this.getHeaders(),
     });
     return this.handleResponse(response);

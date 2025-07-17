@@ -3,12 +3,11 @@ import apiService from '../../services/api';
 
 export const fetchAllUsers = createAsyncThunk(
   'users/fetchAllUsers',
-  async (_, { rejectWithValue }) => {
+  async (filters: any = undefined, { rejectWithValue }) => {
     try {
-      const response = await apiService.getAllUsers();
+      const response = await apiService.getAllUsers(filters);
       if (!response.success) throw new Error(response.message || 'Failed to fetch users');
-      // Only return users who are not staff
-      return response.data.filter((u: any) => u.role !== 'staff');
+      return response.data;
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to fetch users');
     }

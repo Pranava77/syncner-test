@@ -36,7 +36,7 @@ const AdminStaff: React.FC = () => {
   const [createdPassword, setCreatedPassword] = useState('');
 
   useEffect(() => {
-    dispatch(fetchAllUsers());
+    dispatch(fetchAllUsers({ role: 'staff' }));
   }, [dispatch]);
 
   // Only show users with role 'staff'
