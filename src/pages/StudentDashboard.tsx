@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../redux/store';
 import { fetchLevels } from '../redux/slices/levelsSlice';
@@ -23,6 +23,9 @@ const StudentDashboard: React.FC = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   const levelsState = useAppSelector((state) => state.levels);
+
+  // Modal state for AI Chat 'Coming Soon'
+  const [showAIModal, setShowAIModal] = useState(false);
 
   // Attendance ping effect
   React.useEffect(() => {
@@ -252,12 +255,43 @@ const StudentDashboard: React.FC = () => {
               <p className="text-teallight text-sm mb-4">
                 Ask our AI assistant for personalized guidance
               </p>
-              <button className="w-full bg-trueturquoise text-offblack py-2 rounded-lg hover:bg-teallight transition-all font-medium flex items-center justify-center">
+              <button
+                className="w-full bg-trueturquoise text-offblack py-2 rounded-lg hover:bg-teallight transition-all font-medium flex items-center justify-center"
+                onClick={() => setShowAIModal(true)}
+              >
                 <MessageCircle className="h-4 w-4 mr-2" />
                 Chat with AI
               </button>
             </div>
           </div>
+
+          {/* AI Chat Coming Soon Modal */}
+          {showAIModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
+              <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-2xl p-8 max-w-sm w-full text-center relative border border-trueturquoise/30">
+                <button
+                  className="absolute top-3 right-3 text-trueturquoise hover:text-teallight text-xl font-bold focus:outline-none"
+                  onClick={() => setShowAIModal(false)}
+                  aria-label="Close"
+                >
+                  ×
+                </button>
+                <div className="flex flex-col items-center">
+                  <div className="bg-trueturquoise/10 p-4 rounded-full mb-4">
+                    <Brain className="h-8 w-8 text-trueturquoise" />
+                  </div>
+                  <h2 className="text-xl font-semibold text-paperwhite mb-2">Coming Soon!</h2>
+                  <p className="text-teallight mb-4">The AI chat assistant will be available soon. Stay tuned for updates!</p>
+                  <button
+                    className="bg-trueturquoise text-offblack px-6 py-2 rounded-lg hover:bg-teallight transition-colors font-medium mt-2"
+                    onClick={() => setShowAIModal(false)}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Progress Stats */}
           <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
