@@ -8,6 +8,23 @@ import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, Legend, ResponsiveCont
 
 const COLORS = ['#00B8D9', '#FFBB28', '#FF8042', '#A259F7', '#F95F62', '#00C49F'];
 
+// Custom Tooltip for Pie Chart
+const CustomPieTooltip = ({ active, payload }: any) => {
+  if (active && payload && payload.length) {
+    const entry = payload[0].payload;
+    return (
+      <div className="bg-[#181F2A] border-none rounded-lg px-4 py-2 shadow-lg mt-2 text-left min-w-[120px]" style={{ color: '#fff' }}>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="inline-block w-3 h-3 rounded-full" style={{ background: entry.color || '#00B8D9' }}></span>
+          <span className="font-semibold text-paperwhite text-sm">{entry.track}</span>
+        </div>
+        <div className="text-xs text-teallight">{entry.count} students</div>
+      </div>
+    );
+  }
+  return null;
+};
+
 const AdminDashboard: React.FC = () => {
   const analyticsState = useSelector((state: { analytics: any }) => state.analytics);
   const analytics = analyticsState.data;
@@ -133,7 +150,7 @@ const AdminDashboard: React.FC = () => {
             <ResponsiveContainer width="100%" height={220}>
               <PieChart>
                 <Pie
-                  data={trackDistribution}
+                  data={trackDistribution.map((entry: any, idx: number) => ({ ...entry, color: COLORS[idx % COLORS.length] + '99' }))}
                   dataKey="count"
                   nameKey="track"
                   cx="50%"
@@ -202,8 +219,8 @@ const AdminDashboard: React.FC = () => {
                   students
                 </text>
                 <RechartsTooltip
-                  contentStyle={{ background: '#181F2A', border: 'none', borderRadius: 8, color: '#fff', boxShadow: '0 2px 8px #00B8D955' }}
-                  itemStyle={{ color: '#00B8D9' }}
+                  content={<CustomPieTooltip />}
+                  wrapperStyle={{ top: 240, left: '50%', transform: 'translateX(-50%)' }}
                   cursor={{ fill: '#00B8D922' }}
                 />
               </PieChart>
