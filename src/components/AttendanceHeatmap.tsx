@@ -84,6 +84,7 @@ const AttendanceHeatmap: React.FC = () => {
                     dayCounter++;
                   }
                 }
+                const hasData = (attendanceByMonth[monthKey] || []).length > 0;
                 return (
                   <div key={monthKey} className="w-full flex items-center justify-between">
                     <HexGrid 
@@ -159,7 +160,9 @@ const AttendanceHeatmap: React.FC = () => {
                         })}
                       </Layout>
                     </HexGrid>
-                    <div className="text-sm text-paperwhite font-label mb-2 ml-4 whitespace-nowrap min-w-[90px] text-right">
+                    <div
+                      className={`text-sm font-label mb-2 ml-4 whitespace-nowrap min-w-[90px] text-right ${hasData ? 'text-gray-400' : 'text-black'}`}
+                    >
                       {new Date(year, month - 1).toLocaleString('default', { month: 'long', year: 'numeric' })}
                     </div>
                   </div>
