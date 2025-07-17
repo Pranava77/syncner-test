@@ -142,7 +142,7 @@ const AttendanceHeatmap: React.FC = () => {
                                 q={hex.q}
                                 r={hex.r}
                                 s={hex.s}
-                                fill={fillColor}
+                                style={{ fill: fillColor }}
                                 className={[
                                   'stroke-[var(--color-paper-white)]/20',
                                   isHovered ? 'ring-2 ring-[var(--color-true-turquoise)]/90 shadow-2xl' : '',
