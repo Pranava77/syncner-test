@@ -105,32 +105,17 @@ const AttendanceHeatmap: React.FC = () => {
                       height="min(80px,18vw)" 
                       viewBox={`-0.5 -0.5 ${columns} 2`} 
                       className="w-full max-w-[98vw] h-[80px] sm:h-[90px] md:h-[100px] lg:h-[110px] mx-auto flex justify-center items-center">
-                      <defs>
-                        <linearGradient id="present" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="var(--color-true-turquoise)" />
-                          <stop offset="100%" stopColor="var(--color-true-turquoise)" />
-                        </linearGradient>
-                        <linearGradient id="absent" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="var(--color-rust)" />
-                          <stop offset="100%" stopColor="var(--color-rust)" />
-                        </linearGradient>
-                        <linearGradient id="paperwhite" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="var(--color-paper-white)" />
-                          <stop offset="100%" stopColor="var(--color-paper-white)" />
-                        </linearGradient>
-                      </defs>
                       <Layout size={{ x: 0.4, y: 0.4 }} flat={false} spacing={1.25} origin={{ x: 0, y: 0 }}>
                         {hexes.map((hex, idx) => {
                           const isHovered = hovered === hex.date && !hex.isEmpty && hasData;
-                          let fillId =
-                            hex.isEmpty
-                              ? 'paperwhite'
-                              : hex.count === 1
-                              ? 'present'
-                              : hex.count === 0
-                              ? 'absent'
-                              : 'paperwhite';
-                          if (isHovered) fillId = 'present';
+                          let fillColor = hex.isEmpty
+                            ? 'var(--color-paper-white)'
+                            : hex.count === 1
+                            ? 'var(--color-true-turquoise)'
+                            : hex.count === 0
+                            ? 'var(--color-rust)'
+                            : 'var(--color-paper-white)';
+                          if (isHovered) fillColor = 'var(--color-true-turquoise)';
                           return (
                             <motion.g
                               key={hex.date + idx}
@@ -157,7 +142,7 @@ const AttendanceHeatmap: React.FC = () => {
                                 q={hex.q}
                                 r={hex.r}
                                 s={hex.s}
-                                fill={fillId}
+                                fill={fillColor}
                                 className={[
                                   'stroke-[var(--color-paper-white)]/20',
                                   isHovered ? 'ring-2 ring-[var(--color-true-turquoise)]/90 shadow-2xl' : '',
