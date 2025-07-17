@@ -287,6 +287,16 @@ class ApiService {
     return this.handleResponse(response);
   }
 
+  // Add a generic addUser method for admin UI
+  async addUser(userData: any) {
+    const response = await fetch(`${this.baseURL}/admin/users`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify(userData),
+    });
+    return this.handleResponse(response);
+  }
+
   // Admin settings endpoints
   async getPlatformSettings() {
     const response = await fetch(`${this.baseURL}/admin/settings`, {
