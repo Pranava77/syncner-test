@@ -17,11 +17,38 @@ import {
 } from '@radix-ui/react-icons';
 import LoadingScreen from '../components/LoadingScreen';
 import AttendanceHeatmap from '../components/AttendanceHeatmap';
+import axios from 'axios';
 
 const StudentDashboard: React.FC = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   const levelsState = useAppSelector((state) => state.levels);
+
+  // Attendance ping effect
+  React.useEffect(() => {
+    if (!user || user.role !== 'student') return;
+    let interval: ReturnType<typeof setInterval>;
+    let lastActivity = Date.now();
+
+    const activityHandler = () => {
+      lastActivity = Date.now();
+    };
+
+    window.addEventListener('mousemove', activityHandler);
+    window.addEventListener('keydown', activityHandler);
+
+    interval = setInterval(() => {
+      if (Date.now() - lastActivity < 10 * 60 * 1000) {
+        axios.get('/api/users').catch(() => {});
+      }
+    }, 2 * 60 * 1000); // every 2 minutes
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('mousemove', activityHandler);
+      window.removeEventListener('keydown', activityHandler);
+    };
+  }, [user]);
 
   useEffect(() => {
     if (levelsState.lastFetched === null) {

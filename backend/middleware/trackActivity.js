@@ -28,8 +28,8 @@ export const trackActivity = async (req, res, next) => {
     await user.save();
     req.user = user; // Attach updated user to request
 
-    // Auto-mark attendance if activeTodayMinutes >= 30 and not already marked for today
-    if (user.activeTodayMinutes >= 30) {
+    // Auto-mark attendance if activeTodayMinutes >= 3 and not already marked for today
+    if (user.activeTodayMinutes >= 3) {
       const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
       const attendanceExists = await Attendance.findOne({

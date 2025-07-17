@@ -15,7 +15,7 @@ const AttendanceHeatmap: React.FC = () => {
     setLoading(true);
     axios.get(`/api/attendance/${user.id}`)
       .then(res => {
-        const attendance = res.data.data.map((rec: any) => ({
+        const attendance = (res.data.data || []).map((rec: any) => ({
           date: new Date(rec.date).toISOString().slice(0, 10),
           count: rec.status === 'present' ? 1 : 0
         }));

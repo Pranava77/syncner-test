@@ -69,33 +69,6 @@ const Layout: React.FC = () => {
     return () => clearInterval(interval);
   }, [controls, isLogoAnimating]);
 
-  useEffect(() => {
-    if (!user || user.role !== 'student') return;
-    let interval: ReturnType<typeof setInterval>;
-    let lastActivity = Date.now();
-
-    const activityHandler = () => {
-      lastActivity = Date.now();
-    };
-
-    // Listen for user activity
-    window.addEventListener('mousemove', activityHandler);
-    window.addEventListener('keydown', activityHandler);
-
-    interval = setInterval(() => {
-      // Only ping if user was active in the last 10 minutes
-      if (Date.now() - lastActivity < 10 * 60 * 1000) {
-        axios.get('/api/auth/me').catch(() => {});
-      }
-    }, 5 * 60 * 1000); // every 5 minutes
-
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener('mousemove', activityHandler);
-      window.removeEventListener('keydown', activityHandler);
-    };
-  }, [user]);
-
   const handleLogoHover = () => {
     setIsLogoAnimating(true);
     hoverTimeout.current = setTimeout(async () => {
