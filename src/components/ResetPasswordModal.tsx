@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { EyeOpenIcon, EyeClosedIcon } from '@radix-ui/react-icons';
 
 interface ResetPasswordModalProps {
   open: boolean;
@@ -59,18 +60,18 @@ const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({ open, onClose, 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-      <div className="bg-offblack rounded-xl shadow-2xl p-8 w-full max-w-md border border-paperwhite/20 relative">
+      <div className="bg-offblack rounded-xl shadow-2xl p-6 sm:p-8 w-full max-w-md border border-paperwhite/20 relative flex flex-col items-center">
         <button
-          className="absolute top-4 right-4 text-paperwhite hover:text-trueturquoise text-xl font-bold"
+          className="absolute top-3 right-3 sm:top-4 sm:right-4 text-paperwhite hover:text-trueturquoise text-xl font-bold"
           onClick={handleClose}
           aria-label="Close"
         >
           ×
         </button>
-        <h2 className="text-xl font-bold text-paperwhite mb-2">Reset Password</h2>
-        <p className="text-teallight mb-4 text-sm">User: <span className="text-paperwhite font-semibold">{user.name}</span> ({user.email})</p>
+        <h2 className="text-xl font-bold text-paperwhite mb-2 text-center w-full">Reset Password</h2>
+        <p className="text-teallight mb-4 text-sm text-center w-full">User: <span className="text-paperwhite font-semibold">{user.name}</span> ({user.email})</p>
         {success ? (
-          <div className="space-y-4">
+          <div className="space-y-4 w-full flex flex-col items-center">
             <div className="text-paperwhite text-center">
               <p className="mb-2">Password has been reset. Copy and share this password with the user. It will not be shown again.</p>
               <div className="bg-paperwhite/10 rounded-lg px-4 py-3 text-lg font-mono text-trueturquoise select-all break-all text-center">{password}</div>
@@ -85,9 +86,9 @@ const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({ open, onClose, 
             >Close</button>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <label className="block text-paperwhite mb-1 font-label">New Password</label>
-            <div className="flex gap-2">
+          <form onSubmit={handleSubmit} className="space-y-4 w-full flex flex-col items-center">
+            <label className="block text-paperwhite mb-1 font-label w-full">New Password</label>
+            <div className="flex gap-2 w-full">
               <input
                 type={showPassword ? 'text' : 'password'}
                 value={password}
@@ -105,11 +106,14 @@ const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({ open, onClose, 
               <button
                 type="button"
                 onClick={() => setShowPassword(p => !p)}
-                className="bg-paperwhite/10 text-paperwhite px-3 py-2 rounded-lg hover:bg-paperwhite/20 transition-colors font-semibold"
-              >{showPassword ? '🙈' : '👁️'}</button>
+                className="bg-paperwhite/10 text-paperwhite px-3 py-2 rounded-lg hover:bg-paperwhite/20 transition-colors font-semibold flex items-center justify-center"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <EyeClosedIcon className="w-5 h-5" /> : <EyeOpenIcon className="w-5 h-5" />}
+              </button>
             </div>
-            <div className="text-xs text-teallight">Password must be at least 6 characters.</div>
-            {error && <div className="text-rust text-sm font-medium">{error}</div>}
+            <div className="text-xs text-teallight w-full">Password must be at least 6 characters.</div>
+            {error && <div className="text-rust text-sm font-medium w-full">{error}</div>}
             <button
               type="submit"
               disabled={loading || !password}
