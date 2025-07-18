@@ -88,28 +88,21 @@ const LevelTestPage: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen w-screen bg-offblack overflow-x-hidden">
-      <div className="flex-shrink-0 min-h-screen">
+    <div className="flex h-screen bg-offblack overflow-x-hidden">
+      <div className="flex-shrink-0 h-full">
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelNum} currentSection="test" />
       </div>
-      <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full">
-        <div className="mb-8 relative max-w-4xl mx-auto w-full">
+      <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
+        <div className="w-full max-w-3xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
           <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
             <div>
               <h1 className="text-2xl font-bold text-paperwhite mb-2">Level {levelId} - Test</h1>
               <p className="text-teallight">Answer the following questions:</p>
             </div>
-            <div className="flex items-center gap-4 absolute right-0 top-0">
+            <div className="flex items-center gap-4">
               <div className="bg-paperwhite/10 text-trueturquoise font-bold px-4 py-2 rounded-lg text-lg tracking-widest">
                 {formatTime(timeLeft)}
               </div>
-              <button
-                className="bg-trueturquoise text-offblack px-6 py-2 rounded-lg font-bold shadow hover:bg-teallight transition-colors"
-                onClick={handleSubmit}
-                disabled={submitted}
-              >
-                Submit
-              </button>
             </div>
           </div>
           <form className="space-y-8" onSubmit={handleSubmit}>
@@ -135,6 +128,16 @@ const LevelTestPage: React.FC = () => {
             {submitted && (
               <div className="text-trueturquoise font-bold text-center text-lg mt-8">Test submitted! Thank you.</div>
             )}
+            <div className="flex justify-end mt-8">
+              <button
+                className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-teallight transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={handleSubmit}
+                disabled={submitted}
+                type="submit"
+              >
+                Submit
+              </button>
+            </div>
           </form>
         </div>
       </main>
