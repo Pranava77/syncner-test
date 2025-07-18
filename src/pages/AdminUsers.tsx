@@ -11,7 +11,8 @@ import {
   Pencil1Icon as Edit3,
   TrashIcon,
   Cross1Icon as X,
-  CheckCircledIcon
+  CheckCircledIcon,
+  LockClosedIcon
 } from '@radix-ui/react-icons';
 import ResetPasswordModal from '../components/ResetPasswordModal';
 import apiService from '../services/api';
@@ -39,7 +40,7 @@ const AdminUsers: React.FC = () => {
   const [resetUser, setResetUser] = useState<{ name: string; email: string } | null>(null);
 
   useEffect(() => {
-    dispatch(fetchAllUsers());
+    dispatch(fetchAllUsers(undefined));
   }, [dispatch]);
 
   const filteredUsers = users.filter((u: any) =>
@@ -181,9 +182,10 @@ const AdminUsers: React.FC = () => {
                         setResetUser({ name: u.name, email: u.email });
                         setResetModalOpen(true);
                       }}
-                      className="bg-paperwhite/20 hover:bg-trueturquoise/30 text-trueturquoise px-2 py-1 rounded transition-colors"
+                      className="bg-paperwhite/20 hover:bg-trueturquoise/30 text-trueturquoise px-2 py-1 rounded transition-colors flex items-center gap-1"
                       title="Reset Password"
                     >
+                      <LockClosedIcon className="h-4 w-4" />
                       <span className="font-bold text-xs">Reset PW</span>
                     </button>
                   </div>
