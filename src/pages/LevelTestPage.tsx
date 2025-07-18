@@ -89,9 +89,7 @@ const LevelTestPage: React.FC = () => {
 
   return (
     <div className="flex h-screen bg-offblack overflow-x-hidden">
-      <div className="flex-shrink-0 h-full">
-        <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelNum} currentSection="test" />
-      </div>
+      <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelNum} currentSection="test" />
       <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
         <div className="w-full max-w-3xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
           <div className="flex items-center justify-between mb-6 flex-wrap gap-4">

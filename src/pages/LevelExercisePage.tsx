@@ -26,9 +26,7 @@ const LevelExercisePage: React.FC = () => {
 
   return (
     <div className="flex h-screen bg-offblack overflow-x-hidden">
-      <div className="flex-shrink-0 h-full">
-        <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelNum} currentSection="exercise" />
-      </div>
+      <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelNum} currentSection="exercise" />
       <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
         <div className="w-full max-w-5xl bg-paperwhite/5 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
           <h1 className="text-xl font-bold text-paperwhite mb-6">Mandatory Task</h1>
