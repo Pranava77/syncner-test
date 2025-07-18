@@ -111,13 +111,9 @@ function App() {
             <OnboardingFlow />
           </ProtectedRoute>
         } />
-        <Route path="/student/*" element={<StudentLayout />}>
+        {/* Student main pages with Layout sidebar */}
+        <Route path="/student" element={<StudentLayout />}>
           <Route path="dashboard" element={<KeepAlive id="student-dashboard"><StudentDashboard /></KeepAlive>} />
-          <Route path="training" element={<TrainingLevels />} />
-          <Route path="training/:levelId" element={<TrainingLevels />} />
-          <Route path="training/:levelId/learn" element={<LevelLearnPage />} />
-          <Route path="training/:levelId/test" element={<LevelTestPage />} />
-          <Route path="training/:levelId/exercise" element={<LevelExercisePage />} />
           <Route path="projects" element={<ProjectsPage />} />
           <Route path="profile" element={
             <motion.div
@@ -131,6 +127,13 @@ function App() {
           } />
           <Route index element={<Navigate to="dashboard" replace />} />
         </Route>
+        {/* Student training pages with only LevelsSidebar */}
+        <Route path="/student/training" element={<ProtectedRoute><TrainingLevels /></ProtectedRoute>} />
+        <Route path="/student/training/:levelId" element={<ProtectedRoute><TrainingLevels /></ProtectedRoute>} />
+        <Route path="/student/training/:levelId/learn" element={<ProtectedRoute><LevelLearnPage /></ProtectedRoute>} />
+        <Route path="/student/training/:levelId/test" element={<ProtectedRoute><LevelTestPage /></ProtectedRoute>} />
+        <Route path="/student/training/:levelId/exercise" element={<ProtectedRoute><LevelExercisePage /></ProtectedRoute>} />
+        {/* Admin routes */}
         <Route path="/admin/*" element={<AdminWrapper />}>
           <Route index element={<AdminDashboard />} />
           <Route path="users" element={<AdminUsers />} />
