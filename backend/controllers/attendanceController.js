@@ -7,8 +7,11 @@ export const markAttendance = async (req, res) => {
     if (!userId || !date) {
       return res.status(400).json({ success: false, message: 'userId and date are required' });
     }
+    // Normalize date to midnight UTC
+    const normalizedDate = new Date(date);
+    normalizedDate.setUTCHours(0, 0, 0, 0);
     const record = await Attendance.findOneAndUpdate(
-      { user: userId, date: new Date(date).setHours(0,0,0,0) },
+      { user: userId, date: normalizedDate },
       { status: status || 'present' },
       { upsert: true, new: true, setDefaultsOnInsert: true }
     );
