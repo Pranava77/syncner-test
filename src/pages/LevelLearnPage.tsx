@@ -34,7 +34,7 @@ const LevelLearnPage: React.FC = () => {
       <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelNum} currentSection="learn" />
       <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
         {/* Read this first! */}
-        <div className="w-full max-w-3xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
+        <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
           <div className="flex items-center mb-4">
             <h1 className="text-xl font-bold text-paperwhite mr-3">Read this first!</h1>
             <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-trueturquoise text-offblack font-bold text-lg shadow-md">
@@ -49,7 +49,7 @@ const LevelLearnPage: React.FC = () => {
         </div>
 
         {/* Learning Materials */}
-        <div className="w-full max-w-3xl bg-paperwhite/5 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
+        <div className="w-full max-w-5xl bg-paperwhite/5 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
           <h2 className="text-xl font-bold text-paperwhite mb-4">Learning Materials</h2>
           {/* Must watch */}
           <div className="mb-6">
@@ -96,7 +96,7 @@ const LevelLearnPage: React.FC = () => {
         </div>
 
         {/* Action Buttons */}
-        <div className="w-full max-w-3xl flex flex-col sm:flex-row items-center justify-between gap-4 mt-4 mb-8">
+        <div className="w-full max-w-5xl flex flex-col sm:flex-row items-center justify-between gap-4 mt-4 mb-8">
           <button className="w-full sm:w-auto bg-paperwhite text-offblack px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-trueturquoise hover:text-offblack transition-colors mb-2 sm:mb-0">
             Mark as Completed ▼
           </button>
