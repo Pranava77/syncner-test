@@ -2,7 +2,7 @@ import { User } from '../redux/slices/authSlice';
 
 export const getDefaultRoute = (user: User | null): string => {
   if (!user) return '/login';
-  if (!user.profileComplete) return '/onboarding';
+  if (user.role === 'student' && !user.profileComplete) return '/onboarding';
   switch (user.role) {
     case 'admin':
       return '/admin';
