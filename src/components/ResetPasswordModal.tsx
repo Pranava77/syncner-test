@@ -88,12 +88,12 @@ const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({ open, onClose, 
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4 w-full flex flex-col items-center">
             <label className="block text-paperwhite mb-1 font-label w-full">New Password</label>
-            <div className="flex gap-2 w-full">
+            <div className="flex gap-2 w-full min-w-0 items-center">
               <input
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                className="flex-1 px-3 py-2 border border-paperwhite/20 rounded-lg bg-offblack text-paperwhite focus:ring-2 focus:ring-trueturquoise"
+                className="flex-1 min-w-0 px-3 py-2 border border-paperwhite/20 rounded-lg bg-offblack text-paperwhite focus:ring-2 focus:ring-trueturquoise"
                 placeholder="Enter or generate password"
                 required
                 minLength={6}
@@ -101,12 +101,12 @@ const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({ open, onClose, 
               <button
                 type="button"
                 onClick={handleGenerate}
-                className="bg-trueturquoise text-offblack px-3 py-2 rounded-lg hover:bg-teallight transition-colors font-semibold"
+                className="flex-shrink-0 w-24 bg-trueturquoise text-offblack px-3 py-2 rounded-lg hover:bg-teallight transition-colors font-semibold"
               >Generate</button>
               <button
                 type="button"
                 onClick={() => setShowPassword(p => !p)}
-                className="bg-paperwhite/10 text-paperwhite px-3 py-2 rounded-lg hover:bg-paperwhite/20 transition-colors font-semibold flex items-center justify-center"
+                className="flex-shrink-0 w-12 bg-paperwhite/10 text-paperwhite px-0 py-2 rounded-lg hover:bg-paperwhite/20 transition-colors font-semibold flex items-center justify-center"
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
                 {showPassword ? <EyeClosedIcon className="w-5 h-5" /> : <EyeOpenIcon className="w-5 h-5" />}
