@@ -34,7 +34,7 @@ const LevelExercisePage: React.FC = () => {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="text-xs text-teallight uppercase border-b border-paperwhite/10">
-                  <th className="py-2 px-3 font-semibold">S.No</th>
+                  <th className="py-2 px-3  font-semibold">S.No</th>
                   <th className="py-2 px-3 font-semibold">Task name</th>
                   <th className="py-2 px-3 font-semibold">Brief</th>
                   <th className="py-2 px-3 font-semibold">Difficulty Level</th>

@@ -71,6 +71,15 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     }
   }
 
+  // Staff: allow access regardless of profileComplete
+  if (user.role === 'staff') {
+    // If staff somehow lands on onboarding, redirect to staff dashboard
+    if (currentPath === '/onboarding') {
+      return <Navigate to="/staff/dashboard" replace />;
+    }
+    return <>{children}</>;
+  }
+
   // Default: allow access
   return <>{children}</>;
 };
