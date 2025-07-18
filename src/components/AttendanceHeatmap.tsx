@@ -17,10 +17,16 @@ const AttendanceHeatmap: React.FC = () => {
     setLoading(true);
     apiService.getAttendance(userId)
       .then(res => {
-        const attendance = (res.data || []).map((rec: any) => ({
-          date: new Date(rec.date).toISOString().slice(0, 10),
-          count: rec.status === 'present' ? 1 : 0
-        }));
+        // Deduplicate by date, prefer 'present' if multiple records for the same day
+        const attendanceMap: Record<string, number> = {};
+        (res.data || []).forEach((rec: any) => {
+          const dateStr = new Date(rec.date).toISOString().slice(0, 10);
+          // If multiple records for the same day, prefer 'present'
+          if (attendanceMap[dateStr] !== 1) {
+            attendanceMap[dateStr] = rec.status === 'present' ? 1 : 0;
+          }
+        });
+        const attendance = Object.entries(attendanceMap).map(([date, count]) => ({ date, count }));
         setData(attendance);
       })
       .finally(() => setLoading(false));
