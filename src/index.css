@@ -17,6 +17,7 @@
 */
 
 html, body {
+  @apply scroll-smooth;
   font-family: 'FK Grotesk', 'Inter', 'Helvetica Neue', Arial, sans-serif;
   font-size: 1.125rem;
   line-height: 1.7;
