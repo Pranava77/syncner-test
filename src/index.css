@@ -24,7 +24,9 @@ body {
   font-size: 1.125rem;
   line-height: 1.7;
   color: #121212;
-  background: #FAFAFA;
+  background: #000000;
+  @apply select-none;
+
 }
 
 /* Headings */
