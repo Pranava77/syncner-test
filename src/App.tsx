@@ -24,6 +24,7 @@ import TrainingLevels from './pages/TrainingLevels';
 import StaffDashboard from './pages/StaffDashboard';
 import AdminUsers from './pages/AdminUsers';
 import AdminAdmin from './pages/AdminAdmin';
+import AdminCurriculum from './pages/AdminCurriculum';
 import LevelLearnPage from './pages/LevelLearnPage';
 import LevelTestPage from './pages/LevelTestPage';
 import LevelExercisePage from './pages/LevelExercisePage';
@@ -138,6 +139,7 @@ function App() {
           <Route path="users" element={<AdminUsers />} />
           <Route path="admins" element={<AdminAdmin />} />
           <Route path="staff" element={<AdminStaff />} />
+          <Route path="curriculum" element={<AdminCurriculum />} />
           <Route path="analytics" element={<AdminAnalytics />} />
           <Route path="settings" element={<AdminSettings />} />
           <Route path="profile" element={

@@ -30,6 +30,7 @@ import adminRoutes from './routes/adminRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
 import attendanceRoutes from './routes/attendanceRoutes.js';
+import curriculumRoutes from './routes/curriculumRoutes.js';
 
 // Import middleware
 import { errorHandler } from './middleware/errorHandler.js';
@@ -40,6 +41,7 @@ import { trackActivity } from './middleware/trackActivity.js';
 import './models/User.js';
 import './models/Track.js';
 import './models/Level.js';
+import './models/Curriculum.js';
 
 // Import geminiService
 import geminiService from './services/geminiService.js';
@@ -99,6 +101,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/admin/settings', settingsRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/attendance', attendanceRoutes);
+app.use('/api/curriculum', curriculumRoutes);
 
 // Health check endpoint
 const serverStartTime = Date.now();

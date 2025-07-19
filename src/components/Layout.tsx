@@ -158,7 +158,9 @@ const Layout: React.FC = () => {
     { path: '/admin/users', icon: PersonIcon, label: 'User Management' },
     { path: '/admin/admins', icon: IdCardIcon, label: 'Admin Management' },
     { path: '/admin/staff', icon: Users, label: 'Staff Management' },
+    { path: '/admin/curriculum', icon: FileTextIcon, label: 'Level Management' },
     { path: '/admin/settings', icon: GearIcon, label: 'Settings' },
+    
   ];
 
   const navItems = user?.role === 'admin' ? adminNavItems : mainStudentNavItems;

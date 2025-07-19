@@ -1714,6 +1714,384 @@ The current API version is v1. Future versions will be available at `/api/v2/`, 
 
 ---
 
+## Curriculum Management
+
+### Get All Curriculum Items (Admin)
+**GET** `/api/curriculum`
+
+Get all curriculum items with filtering and sorting options. (Admin only)
+
+**Headers:** `Authorization: Bearer <admin_token>`
+
+**Query Parameters:**
+- `type` (optional): Filter by type (syllabus, learn, test, exercise)
+- `careerTrack` (optional): Filter by career track (full-stack, ai-ml, ui-ux, data-science)
+- `isActive` (optional): Filter by active status (true/false)
+- `search` (optional): Text search in title, description, and content
+- `sortBy` (optional): Sort field (order, title, createdAt, updatedAt)
+- `sortOrder` (optional): Sort order (asc/desc)
+
+**Response (200):**
+```json
+{
+  "success": true,
+  "count": 2,
+  "data": [
+    {
+      "id": "curriculum_id",
+      "title": "Introduction to Web Development",
+      "description": "Basic concepts and fundamentals of web development",
+      "type": "syllabus",
+      "content": "HTML, CSS, JavaScript basics, DOM manipulation, responsive design principles",
+      "order": 1,
+      "isActive": true,
+      "careerTrack": "full-stack",
+      "difficulty": "beginner",
+      "estimatedDuration": 30,
+      "tags": ["web", "basics"],
+      "prerequisites": [],
+      "learningObjectives": ["Understand HTML structure", "Learn CSS styling"],
+      "resources": [
+        {
+          "title": "HTML Tutorial",
+          "url": "https://example.com/html-tutorial",
+          "type": "video",
+          "description": "Comprehensive HTML tutorial"
+        }
+      ],
+      "metadata": {
+        "createdBy": {
+          "id": "user_id",
+          "name": "Admin User",
+          "email": "admin@example.com"
+        },
+        "version": 1,
+        "createdAt": "2024-01-15T10:00:00.000Z",
+        "updatedAt": "2024-01-15T10:00:00.000Z"
+      }
+    }
+  ]
+}
+```
+
+### Get Curriculum Statistics (Admin)
+**GET** `/api/curriculum/stats`
+
+Get curriculum statistics grouped by career track and type. (Admin only)
+
+**Headers:** `Authorization: Bearer <admin_token>`
+
+**Response (200):**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "_id": "full-stack",
+      "types": [
+        {
+          "type": "syllabus",
+          "count": 5,
+          "activeCount": 4,
+          "totalDuration": 150
+        },
+        {
+          "type": "learn",
+          "count": 12,
+          "activeCount": 10,
+          "totalDuration": 360
+        }
+      ],
+      "totalItems": 17,
+      "totalActiveItems": 14,
+      "totalDuration": 510
+    }
+  ]
+}
+```
+
+### Get Curriculum Item by ID (Admin)
+**GET** `/api/curriculum/:id`
+
+Get a specific curriculum item by ID. (Admin only)
+
+**Headers:** `Authorization: Bearer <admin_token>`
+
+**Response (200):**
+```json
+{
+  "success": true,
+  "data": {
+    "id": "curriculum_id",
+    "title": "Introduction to Web Development",
+    "description": "Basic concepts and fundamentals of web development",
+    "type": "syllabus",
+    "content": "HTML, CSS, JavaScript basics, DOM manipulation, responsive design principles",
+    "order": 1,
+    "isActive": true,
+    "careerTrack": "full-stack",
+    "difficulty": "beginner",
+    "estimatedDuration": 30,
+    "tags": ["web", "basics"],
+    "prerequisites": [],
+    "learningObjectives": ["Understand HTML structure", "Learn CSS styling"],
+    "resources": [],
+    "metadata": {
+      "createdBy": {
+        "id": "user_id",
+        "name": "Admin User",
+        "email": "admin@example.com"
+      },
+      "version": 1,
+      "createdAt": "2024-01-15T10:00:00.000Z",
+      "updatedAt": "2024-01-15T10:00:00.000Z"
+    }
+  }
+}
+```
+
+### Create Curriculum Item (Admin)
+**POST** `/api/curriculum`
+
+Create a new curriculum item. (Admin only)
+
+**Headers:** `Authorization: Bearer <admin_token>`
+
+**Request Body:**
+```json
+{
+  "title": "HTML Fundamentals",
+  "description": "Learn the basics of HTML markup",
+  "type": "learn",
+  "content": "HTML structure, tags, attributes, semantic elements, forms",
+  "order": 2,
+  "isActive": true,
+  "careerTrack": "full-stack",
+  "difficulty": "beginner",
+  "estimatedDuration": 45,
+  "tags": ["html", "markup"],
+  "prerequisites": ["Introduction to Web Development"],
+  "learningObjectives": ["Understand HTML tags", "Learn semantic elements"],
+  "resources": [
+    {
+      "title": "HTML Documentation",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTML",
+      "type": "document",
+      "description": "Official HTML documentation"
+    }
+  ]
+}
+```
+
+**Validation:**
+- `title` (string, required, 3-200 characters)
+- `description` (string, required, 10-500 characters)
+- `type` (string, required, one of: syllabus, learn, test, exercise)
+- `content` (string, required, minimum 10 characters)
+- `careerTrack` (string, required, one of: full-stack, ai-ml, ui-ux, data-science)
+- `difficulty` (string, optional, one of: beginner, intermediate, advanced)
+- `estimatedDuration` (number, optional, 1-1440 minutes)
+- `order` (number, optional, positive integer)
+- `isActive` (boolean, optional)
+- `tags` (array, optional)
+- `prerequisites` (array, optional)
+- `learningObjectives` (array, optional)
+- `resources` (array, optional)
+
+**Response (201):**
+```json
+{
+  "success": true,
+  "message": "Curriculum item created successfully",
+  "data": {
+    "id": "curriculum_id",
+    "title": "HTML Fundamentals",
+    "description": "Learn the basics of HTML markup",
+    "type": "learn",
+    "content": "HTML structure, tags, attributes, semantic elements, forms",
+    "order": 2,
+    "isActive": true,
+    "careerTrack": "full-stack",
+    "difficulty": "beginner",
+    "estimatedDuration": 45,
+    "tags": ["html", "markup"],
+    "prerequisites": ["Introduction to Web Development"],
+    "learningObjectives": ["Understand HTML tags", "Learn semantic elements"],
+    "resources": [],
+    "metadata": {
+      "createdBy": {
+        "id": "user_id",
+        "name": "Admin User",
+        "email": "admin@example.com"
+      },
+      "version": 1,
+      "createdAt": "2024-01-15T10:00:00.000Z",
+      "updatedAt": "2024-01-15T10:00:00.000Z"
+    }
+  }
+}
+```
+
+### Update Curriculum Item (Admin)
+**PUT** `/api/curriculum/:id`
+
+Update an existing curriculum item. (Admin only)
+
+**Headers:** `Authorization: Bearer <admin_token>`
+
+**Request Body:** Same as create, all fields optional
+
+**Response (200):**
+```json
+{
+  "success": true,
+  "message": "Curriculum item updated successfully",
+  "data": {
+    "id": "curriculum_id",
+    "title": "HTML Fundamentals Updated",
+    "description": "Learn the basics of HTML markup",
+    "type": "learn",
+    "content": "HTML structure, tags, attributes, semantic elements, forms",
+    "order": 2,
+    "isActive": true,
+    "careerTrack": "full-stack",
+    "difficulty": "beginner",
+    "estimatedDuration": 45,
+    "tags": ["html", "markup"],
+    "prerequisites": ["Introduction to Web Development"],
+    "learningObjectives": ["Understand HTML tags", "Learn semantic elements"],
+    "resources": [],
+    "metadata": {
+      "createdBy": {
+        "id": "user_id",
+        "name": "Admin User",
+        "email": "admin@example.com"
+      },
+      "lastModifiedBy": {
+        "id": "user_id",
+        "name": "Admin User",
+        "email": "admin@example.com"
+      },
+      "version": 2,
+      "createdAt": "2024-01-15T10:00:00.000Z",
+      "updatedAt": "2024-01-15T11:00:00.000Z"
+    }
+  }
+}
+```
+
+### Delete Curriculum Item (Admin)
+**DELETE** `/api/curriculum/:id`
+
+Delete a curriculum item. (Admin only)
+
+**Headers:** `Authorization: Bearer <admin_token>`
+
+**Response (200):**
+```json
+{
+  "success": true,
+  "message": "Curriculum item deleted successfully"
+}
+```
+
+### Update Curriculum Order (Admin)
+**PUT** `/api/curriculum/bulk-order`
+
+Update the order of multiple curriculum items. (Admin only)
+
+**Headers:** `Authorization: Bearer <admin_token>`
+
+**Request Body:**
+```json
+{
+  "items": [
+    {
+      "id": "curriculum_id_1",
+      "order": 1
+    },
+    {
+      "id": "curriculum_id_2",
+      "order": 2
+    }
+  ]
+}
+```
+
+**Response (200):**
+```json
+{
+  "success": true,
+  "message": "Curriculum order updated successfully"
+}
+```
+
+### Toggle Curriculum Status (Admin)
+**PATCH** `/api/curriculum/:id/toggle`
+
+Toggle the active status of a curriculum item. (Admin only)
+
+**Headers:** `Authorization: Bearer <admin_token>`
+
+**Response (200):**
+```json
+{
+  "success": true,
+  "message": "Curriculum item activated successfully",
+  "data": {
+    "id": "curriculum_id",
+    "title": "HTML Fundamentals",
+    "isActive": true,
+    "metadata": {
+      "lastModifiedBy": {
+        "id": "user_id",
+        "name": "Admin User",
+        "email": "admin@example.com"
+      }
+    }
+  }
+}
+```
+
+### Get Curriculum by Type and Track (Students)
+**GET** `/api/curriculum/type/:type/track/:careerTrack`
+
+Get curriculum items by type and career track for students. (Authenticated users)
+
+**Headers:** `Authorization: Bearer <token>`
+
+**Query Parameters:**
+- `includeInactive` (optional): Include inactive items (default: false)
+
+**Response (200):**
+```json
+{
+  "success": true,
+  "count": 3,
+  "data": [
+    {
+      "id": "curriculum_id",
+      "title": "HTML Fundamentals",
+      "description": "Learn the basics of HTML markup",
+      "type": "learn",
+      "content": "HTML structure, tags, attributes, semantic elements, forms",
+      "order": 1,
+      "isActive": true,
+      "careerTrack": "full-stack",
+      "difficulty": "beginner",
+      "estimatedDuration": 45,
+      "formattedDuration": "45m",
+      "tags": ["html", "markup"],
+      "prerequisites": ["Introduction to Web Development"],
+      "learningObjectives": ["Understand HTML tags", "Learn semantic elements"],
+      "resources": []
+    }
+  ]
+}
+```
+
+---
+
 ## Support
 
 For API support and questions:
