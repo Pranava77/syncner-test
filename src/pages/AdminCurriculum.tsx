@@ -216,24 +216,25 @@ const AdminCurriculum: React.FC = () => {
 
   const handleLevelSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!levelForm.title.trim() || !levelForm.description.trim()) {
       setFormError('Title and description are required');
       return;
     }
-
     setLoading(true);
     try {
       if (editingLevel) {
         await apiService.put(`/training/levels/${editingLevel.id}`, levelForm);
+        setShowLevelModal(false);
+        setLevelForm(defaultLevelForm);
+        setFormError('');
+        await fetchLevels();
       } else {
-        await apiService.post('/training/levels', levelForm);
+        // Creation is disabled: just close the modal and reset the form
+        setShowLevelModal(false);
+        setLevelForm(defaultLevelForm);
+        setFormError('');
+        // Optionally, show a message: setFormError('Creating new levels is currently disabled.');
       }
-      
-      setShowLevelModal(false);
-      setLevelForm(defaultLevelForm);
-      setFormError('');
-      await fetchLevels();
     } catch (error) {
       console.error('Error saving level:', error);
       setFormError('Failed to save level');
