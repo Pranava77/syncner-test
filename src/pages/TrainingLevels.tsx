@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import LevelsSidebar from '../components/LevelsSidebar';
 import apiService from '../services/api';
 import { motion } from 'framer-motion';
-import { StarIcon, ClockIcon, CheckCircledIcon, X } from '@radix-ui/react-icons';
+import { StarIcon, ClockIcon, CheckCircledIcon, Cross1Icon } from '@radix-ui/react-icons';
 
 interface Level {
   id: string;
@@ -190,7 +190,7 @@ const TrainingLevels: React.FC = () => {
                         </span>
                       ) : (
                         <span className="text-red-400 flex items-center gap-1">
-                          <X className="h-3 w-3" />
+                          <Cross1Icon className="h-3 w-3" />
                           Inactive
                         </span>
                       )}
