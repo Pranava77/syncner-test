@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from '../redux/store';
 import LevelsSidebar from '../components/LevelsSidebar';
 import apiService from '../services/api';
 import { motion } from 'framer-motion';
@@ -25,6 +26,7 @@ interface Level {
 }
 
 const TrainingLevels: React.FC = () => {
+  const { user } = useAppSelector((state) => state.auth);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [levels, setLevels] = useState<Level[]>([]);
   const [loading, setLoading] = useState(true);
@@ -46,6 +48,13 @@ const TrainingLevels: React.FC = () => {
         levelsData = Array.isArray(response.data) ? response.data : [response.data];
       } else if (Array.isArray(response)) {
         levelsData = response;
+      }
+      
+      // Filter levels by user's career track
+      const userCareerTrack = user?.careerTrack;
+      if (userCareerTrack) {
+        levelsData = levelsData.filter((level: Level) => level.careerTrack === userCareerTrack);
+        console.log(`Filtered levels for career track: ${userCareerTrack}`, levelsData);
       }
       
       // Sort by order
@@ -132,14 +141,29 @@ const TrainingLevels: React.FC = () => {
         <div className="max-w-6xl mx-auto">
           <div className="mb-8">
             <h1 className="text-3xl font-heading text-paperwhite mb-2">Training Levels</h1>
-            <p className="text-teallight">Complete these levels to advance your skills</p>
+            <p className="text-teallight">
+              {user?.careerTrack ? 
+                `${getTrackLabel(user.careerTrack)} Track - Complete these levels to advance your skills` :
+                'Complete these levels to advance your skills'
+              }
+            </p>
           </div>
 
           {levels.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-paperwhite/30 text-6xl mb-4">📚</div>
-              <h3 className="text-xl font-heading text-paperwhite mb-2">No levels available</h3>
-              <p className="text-teallight">Check back later for new training content</p>
+              <h3 className="text-xl font-heading text-paperwhite mb-2">
+                {user?.careerTrack ? 
+                  `No levels available for ${getTrackLabel(user.careerTrack)} track` :
+                  'No levels available'
+                }
+              </h3>
+              <p className="text-teallight">
+                {user?.careerTrack ? 
+                  'Check back later for new training content in your track' :
+                  'Check back later for new training content'
+                }
+              </p>
             </div>
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

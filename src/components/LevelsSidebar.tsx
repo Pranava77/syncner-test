@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from '../redux/store';
 import { ChevronRightIcon, ReaderIcon, ClipboardIcon, Pencil2Icon, LayersIcon } from '@radix-ui/react-icons';
 import apiService from '../services/api';
 
@@ -8,6 +9,7 @@ interface Level {
   title: string;
   order: number;
   isActive: boolean;
+  careerTrack: string;
 }
 
 interface LevelsSidebarProps {
@@ -24,12 +26,13 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
   currentSection
 }) => {
   const navigate = useNavigate();
+  const { user } = useAppSelector((state) => state.auth);
   const [levels, setLevels] = useState<Level[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchLevels();
-  }, []);
+  }, [user?.careerTrack]);
 
   const fetchLevels = async () => {
     try {
@@ -41,6 +44,13 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
         levelsData = Array.isArray(response.data) ? response.data : [response.data];
       } else if (Array.isArray(response)) {
         levelsData = response;
+      }
+      
+      // Filter levels by user's career track
+      const userCareerTrack = user?.careerTrack;
+      if (userCareerTrack) {
+        levelsData = levelsData.filter((level: Level) => level.careerTrack === userCareerTrack);
+        console.log(`Sidebar: Filtered levels for career track: ${userCareerTrack}`, levelsData);
       }
       
       // Sort by order and filter active levels
@@ -93,7 +103,12 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
             </div>
           ) : levels.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-xs text-teallight">No levels available</p>
+              <p className="text-xs text-teallight">
+                {user?.careerTrack ? 
+                  `No levels for ${user.careerTrack} track` :
+                  'No levels available'
+                }
+              </p>
             </div>
           ) : (
             levels.map((level) => (
