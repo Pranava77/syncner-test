@@ -14,10 +14,12 @@ import {
   ChevronRightIcon,
   LayersIcon,
   StarIcon,
-  ClockIcon
+  ClockIcon,
+  UpdateIcon as ArrowClockwiseIcon
 } from '@radix-ui/react-icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import apiService from '../services/api';
+import LevelStatus from '../components/LevelStatus';
 
 interface Level {
   id: string;
@@ -99,19 +101,42 @@ const AdminCurriculum: React.FC = () => {
   const [filterTrack, setFilterTrack] = useState<string>('all');
   const [filterDifficulty, setFilterDifficulty] = useState<string>('all');
   const [expandedLevels, setExpandedLevels] = useState<Set<string>>(new Set());
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
-  // Fetch levels on component mount
+  // Fetch levels on component mount and set up auto-refresh
   useEffect(() => {
     fetchLevels();
+    
+    // Auto-refresh every 30 seconds to keep data fresh
+    const interval = setInterval(() => {
+      fetchLevels();
+    }, 30000);
+    
+    return () => clearInterval(interval);
   }, []);
 
   const fetchLevels = async () => {
     setLoading(true);
     try {
+      console.log('Fetching levels from API...');
       const response = await apiService.get('/training/levels');
-      setLevels(response.data);
+      console.log('API Response:', response);
+      
+      // Handle different response formats
+      let levelsData = [];
+      if (response && response.data) {
+        levelsData = Array.isArray(response.data) ? response.data : [response.data];
+      } else if (Array.isArray(response)) {
+        levelsData = response;
+      }
+      
+      console.log('Processed levels data:', levelsData);
+      setLevels(levelsData);
+      setLastUpdated(new Date());
+      setFormError(''); // Clear any previous errors
     } catch (error) {
       console.error('Error fetching levels:', error);
+      setFormError('Failed to load levels. Please check your connection.');
     } finally {
       setLoading(false);
     }
@@ -303,20 +328,44 @@ const AdminCurriculum: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-black text-paperwhite p-6">
+      <LevelStatus onLevelsLoaded={(levels) => {
+        console.log('Levels loaded from status component:', levels);
+        setLevels(levels);
+      }} />
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
           <div>
             <h1 className="text-3xl font-heading text-paperwhite mb-2">Level Management</h1>
             <p className="text-teallight">Create and manage training levels with learn, test, and exercise content</p>
+            {lastUpdated && (
+              <p className="text-xs text-teallight mt-1">
+                Last updated: {lastUpdated.toLocaleTimeString()}
+              </p>
+            )}
+            {formError && (
+              <p className="text-xs text-red-400 mt-1">
+                Error: {formError}
+              </p>
+            )}
           </div>
-          <button
-            onClick={handleAddLevel}
-            className="mt-4 sm:mt-0 flex items-center gap-2 bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium"
-          >
-            <PlusIcon className="h-5 w-5" />
-            Create Level
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={fetchLevels}
+              disabled={loading}
+              className="mt-4 sm:mt-0 flex items-center gap-2 bg-paperwhite/10 text-paperwhite px-4 py-2 rounded-lg hover:bg-paperwhite/20 transition-colors font-medium disabled:opacity-50"
+            >
+              <ArrowClockwiseIcon className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
+              Refresh
+            </button>
+            <button
+              onClick={handleAddLevel}
+              className="mt-4 sm:mt-0 flex items-center gap-2 bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium"
+            >
+              <PlusIcon className="h-5 w-5" />
+              Create Level
+            </button>
+          </div>
         </div>
 
         {/* Filters */}
