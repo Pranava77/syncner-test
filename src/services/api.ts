@@ -401,6 +401,44 @@ class ApiService {
     });
     return this.handleResponse(response);
   }
+
+  // Generic HTTP methods for flexible API calls
+  async get(endpoint: string) {
+    const response = await fetch(`${this.baseURL}${endpoint}`, {
+      headers: this.getHeaders(),
+      credentials: 'include',
+    });
+    return this.handleResponse(response);
+  }
+
+  async post(endpoint: string, data?: any) {
+    const response = await fetch(`${this.baseURL}${endpoint}`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: data ? JSON.stringify(data) : undefined,
+      credentials: 'include',
+    });
+    return this.handleResponse(response);
+  }
+
+  async put(endpoint: string, data?: any) {
+    const response = await fetch(`${this.baseURL}${endpoint}`, {
+      method: 'PUT',
+      headers: this.getHeaders(),
+      body: data ? JSON.stringify(data) : undefined,
+      credentials: 'include',
+    });
+    return this.handleResponse(response);
+  }
+
+  async delete(endpoint: string) {
+    const response = await fetch(`${this.baseURL}${endpoint}`, {
+      method: 'DELETE',
+      headers: this.getHeaders(),
+      credentials: 'include',
+    });
+    return this.handleResponse(response);
+  }
 }
 
 export default new ApiService();

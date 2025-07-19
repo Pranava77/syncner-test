@@ -7,7 +7,7 @@ import {
   Cross1Icon as X,
   CheckCircledIcon,
   FileTextIcon,
-  BookOpenIcon,
+  ReaderIcon as BookOpenIcon,
   ClipboardIcon,
   PlayIcon,
   ChevronDownIcon,
@@ -252,10 +252,11 @@ const AdminCurriculum: React.FC = () => {
 
     setLoading(true);
     try {
-      if (editingContent) {
-        await apiService.put(`/training/levels/${editingLevel?.id}/${editingContent.type}/${editingContent.index}`, contentForm);
-      } else {
-        await apiService.post(`/training/levels/${editingLevel?.id}/${editingContent?.type || 'learn'}`, contentForm);
+      if (editingContent && editingLevel) {
+        await apiService.put(`/training/levels/${editingLevel.id}/${editingContent.type}/${editingContent.index}`, contentForm);
+      } else if (editingLevel) {
+        const contentType = editingContent?.type || 'learn';
+        await apiService.post(`/training/levels/${editingLevel.id}/${contentType}`, contentForm);
       }
       
       setShowContentModal(false);
@@ -826,36 +827,36 @@ const AdminCurriculum: React.FC = () => {
                   />
                 </div>
 
-                {editingContent?.type === 'learn' && (
-                  <div>
-                    <label className="block text-sm font-medium text-paperwhite mb-2">
-                      Type
-                    </label>
-                    <select
-                      value={contentForm.type || 'reading'}
-                      onChange={(e) => setContentForm({ ...contentForm, type: e.target.value })}
-                      className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
-                    >
-                      <option value="reading">Reading</option>
-                      <option value="video">Video</option>
-                      <option value="slide">Slide</option>
-                      <option value="other">Other</option>
-                    </select>
-                  </div>
-                )}
+                                 {editingContent?.type === 'learn' && (
+                   <div>
+                     <label className="block text-sm font-medium text-paperwhite mb-2">
+                       Type
+                     </label>
+                     <select
+                       value={contentForm.type || 'reading'}
+                       onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setContentForm({ ...contentForm, type: e.target.value })}
+                       className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
+                     >
+                       <option value="reading">Reading</option>
+                       <option value="video">Video</option>
+                       <option value="slide">Slide</option>
+                       <option value="other">Other</option>
+                     </select>
+                   </div>
+                 )}
 
-                {editingContent?.type === 'learn' && contentForm.type === 'video' && (
+                 {editingContent?.type === 'learn' && contentForm.type === 'video' && (
                   <div>
                     <label className="block text-sm font-medium text-paperwhite mb-2">
                       Video URL
                     </label>
-                    <input
-                      type="url"
-                      value={contentForm.videoUrl || ''}
-                      onChange={(e) => setContentForm({ ...contentForm, videoUrl: e.target.value })}
-                      className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
-                      placeholder="https://example.com/video"
-                    />
+                                         <input
+                       type="url"
+                       value={contentForm.videoUrl || ''}
+                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => setContentForm({ ...contentForm, videoUrl: e.target.value })}
+                       className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
+                       placeholder="https://example.com/video"
+                     />
                   </div>
                 )}
 
