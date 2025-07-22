@@ -1,22 +1,72 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '../redux/store';
-import { fetchCurriculum } from '../redux/slices/curriculumSlice';
+import { useAppSelector } from '../redux/store';
 import LevelsSidebar from '../components/LevelsSidebar';
+import apiService from '../services/api';
 import { motion } from 'framer-motion';
 import { StarIcon, ClockIcon, CheckCircledIcon, Cross1Icon } from '@radix-ui/react-icons';
 
+interface Level {
+  id: string;
+  title: string;
+  description: string;
+  difficulty: string;
+  duration: string;
+  careerTrack: string;
+  skills: string[];
+  prerequisites: string[];
+  learn: any[];
+  test: any[];
+  exercise: any[];
+  order: number;
+  isActive: boolean;
+  estimatedHours: number;
+  progress?: number;
+  status?: string;
+}
+
 const TrainingLevels: React.FC = () => {
   const { user } = useAppSelector((state) => state.auth);
-  const { data: levels, loading, error } = useAppSelector((state) => state.curriculum);
-  const dispatch = useAppDispatch();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [levels, setLevels] = useState<Level[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user?.careerTrack) {
-      dispatch(fetchCurriculum(user.careerTrack));
+    fetchLevels();
+  }, []);
+
+  const fetchLevels = async () => {
+    try {
+      setLoading(true);
+      const response = await apiService.get('/training/levels');
+      console.log('Training levels response:', response);
+      
+      let levelsData = [];
+      if (response && response.data) {
+        levelsData = Array.isArray(response.data) ? response.data : [response.data];
+      } else if (Array.isArray(response)) {
+        levelsData = response;
+      }
+      
+      // Filter levels by user's career track
+      const userCareerTrack = user?.careerTrack;
+      if (userCareerTrack) {
+        levelsData = levelsData.filter((level: Level) => level.careerTrack === userCareerTrack);
+        console.log(`Filtered levels for career track: ${userCareerTrack}`, levelsData);
+      }
+      
+      // Sort by order
+      levelsData.sort((a, b) => a.order - b.order);
+      setLevels(levelsData);
+    } catch (error) {
+      console.error('Error fetching levels:', error);
+      setError('Failed to load training levels');
+    } finally {
+      setLoading(false);
     }
-  }, [dispatch, user?.careerTrack]);
+  };
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
@@ -47,14 +97,14 @@ const TrainingLevels: React.FC = () => {
     }
   };
 
-  const handleLevelClick = (level: any) => {
+  const handleLevelClick = (level: Level) => {
     navigate(`/student/training/${level.id}/learn`);
   };
 
   if (loading) {
     return (
       <div className="flex h-screen bg-offblack w-full">
-        <LevelsSidebar />
+        <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <main className="flex-1 p-6 lg:p-12 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-trueturquoise mx-auto mb-4"></div>
@@ -68,12 +118,12 @@ const TrainingLevels: React.FC = () => {
   if (error) {
     return (
       <div className="flex h-screen bg-offblack w-full">
-        <LevelsSidebar />
+        <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <main className="flex-1 p-6 lg:p-12 flex items-center justify-center">
           <div className="text-center">
             <p className="text-red-400 text-lg mb-4">{error}</p>
             <button 
-              onClick={() => dispatch(fetchCurriculum(user?.careerTrack))}
+              onClick={fetchLevels}
               className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors"
             >
               Retry
@@ -86,7 +136,7 @@ const TrainingLevels: React.FC = () => {
 
   return (
     <div className="flex h-screen bg-offblack w-full">
-      <LevelsSidebar />
+      <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       <main className="flex-1 overflow-y-auto p-6 lg:p-12">
         <div className="max-w-6xl mx-auto">
           <div className="mb-8">

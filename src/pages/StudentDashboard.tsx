@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../redux/store';
-import { fetchLevels } from '../redux/slices/levelsSlice';
+import { fetchCurriculum } from '../redux/slices/curriculumSlice';
 import {
   CodeIcon as Code,
   ColorWheelIcon as Palette,
@@ -22,7 +22,7 @@ import apiService from '../services/api';
 const StudentDashboard: React.FC = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
-  const levelsState = useAppSelector((state) => state.levels);
+  const curriculumState = useAppSelector((state) => state.curriculum);
 
   // Modal state for AI Chat 'Coming Soon'
   const [showAIModal, setShowAIModal] = useState(false);
@@ -54,8 +54,8 @@ const StudentDashboard: React.FC = () => {
   }, [user]);
 
   useEffect(() => {
-    if (levelsState.lastFetched === null) {
-      dispatch(fetchLevels(user?.careerTrack));
+    if (curriculumState.lastFetched === null) {
+      dispatch(fetchCurriculum(user?.careerTrack));
     }
   }, [dispatch, user?.careerTrack]);
 
@@ -69,8 +69,8 @@ const StudentDashboard: React.FC = () => {
     );
   }
   const userTrack = user.careerTrack;
-  const levels = levelsState.data || [];
-  const levelsLoading = levelsState.loading;
+  const levels = curriculumState.data || [];
+  const levelsLoading = curriculumState.loading;
 
   // Get current level (first in the list)
   const currentLevel = levels[0];

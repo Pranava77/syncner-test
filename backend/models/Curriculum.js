@@ -1,27 +1,5 @@
 import mongoose from 'mongoose';
 
-const learnSchema = new mongoose.Schema({
-  type: { type: String, enum: ['video', 'reading', 'slide', 'other'], required: true },
-  title: { type: String, required: true },
-  content: { type: String },
-  videoUrl: { type: String },
-  order: { type: Number, default: 1 }
-}, { _id: false });
-
-const testSchema = new mongoose.Schema({
-  question: { type: String, required: true },
-  options: [{ type: String }],
-  answer: { type: String },
-  order: { type: Number, default: 1 }
-}, { _id: false });
-
-const exerciseSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  description: { type: String },
-  resources: [{ type: String }],
-  order: { type: Number, default: 1 }
-}, { _id: false });
-
 const curriculumItemSchema = new mongoose.Schema({
   title: { 
     type: String, 
@@ -35,9 +13,16 @@ const curriculumItemSchema = new mongoose.Schema({
     trim: true,
     maxlength: 500
   },
-  learn: [learnSchema],
-  test: [testSchema],
-  exercise: [exerciseSchema],
+  type: { 
+    type: String, 
+    enum: ['syllabus', 'learn', 'test', 'exercise'], 
+    required: true 
+  },
+  content: { 
+    type: String, 
+    required: true,
+    trim: true
+  },
   order: { 
     type: Number, 
     default: 1 

@@ -6,15 +6,10 @@ import {
   createCurriculumItem,
   updateCurriculumItem,
   deleteCurriculumItem,
-  addLearn,
-  updateLearn,
-  deleteLearn,
-  addTest,
-  updateTest,
-  deleteTest,
-  addExercise,
-  updateExercise,
-  deleteExercise
+  getCurriculumStats,
+  getCurriculumByTypeAndTrack,
+  updateCurriculumOrder,
+  toggleCurriculumStatus
 } from '../controllers/curriculumController.js';
 import { protect } from '../middleware/auth.js';
 import { authorize } from '../middleware/auth.js';
@@ -31,6 +26,13 @@ const curriculumValidation = [
     .trim()
     .isLength({ min: 10, max: 500 })
     .withMessage('Description must be between 10 and 500 characters'),
+  body('type')
+    .isIn(['syllabus', 'learn', 'test', 'exercise'])
+    .withMessage('Type must be syllabus, learn, test, or exercise'),
+  body('content')
+    .trim()
+    .isLength({ min: 10 })
+    .withMessage('Content must be at least 10 characters'),
   body('careerTrack')
     .isIn(['full-stack', 'ai-ml', 'ui-ux', 'data-science'])
     .withMessage('Career track must be full-stack, ai-ml, ui-ux, or data-science'),
@@ -78,27 +80,24 @@ const curriculumValidation = [
 ];
 
 // Public routes (for students to view curriculum)
-router.get('/', getAllCurriculumItems);
-router.get('/:id', getCurriculumItemById);
+router.get('/type/:type/track/:careerTrack', protect, getCurriculumByTypeAndTrack);
 
 // Admin routes
+router.get('/', protect, authorize('admin'), getAllCurriculumItems);
+router.get('/stats', protect, authorize('admin'), getCurriculumStats);
+router.get('/:id', protect, authorize('admin'), getCurriculumItemById);
+
 router.post('/', protect, authorize('admin'), curriculumValidation, createCurriculumItem);
 router.put('/:id', protect, authorize('admin'), curriculumValidation, updateCurriculumItem);
 router.delete('/:id', protect, authorize('admin'), deleteCurriculumItem);
 
-// Content routes
-router.post('/:id/learn', protect, authorize('admin'), addLearn);
-router.put('/:id/learn/:learnIdx', protect, authorize('admin'), updateLearn);
-router.delete('/:id/learn/:learnIdx', protect, authorize('admin'), deleteLearn);
+router.put('/bulk-order', protect, authorize('admin'), [
+  body('items').isArray().withMessage('Items must be an array'),
+  body('items.*.id').isMongoId().withMessage('Invalid item ID'),
+  body('items.*.order').isInt({ min: 1 }).withMessage('Order must be a positive integer')
+], updateCurriculumOrder);
 
-router.post('/:id/test', protect, authorize('admin'), addTest);
-router.put('/:id/test/:testIdx', protect, authorize('admin'), updateTest);
-router.delete('/:id/test/:testIdx', protect, authorize('admin'), deleteTest);
-
-router.post('/:id/exercise', protect, authorize('admin'), addExercise);
-router.put('/:id/exercise/:exerciseIdx', protect, authorize('admin'), updateExercise);
-router.delete('/:id/exercise/:exerciseIdx', protect, authorize('admin'), deleteExercise);
-
+router.patch('/:id/toggle', protect, authorize('admin'), toggleCurriculumStatus);
 
 // Health check for curriculum module
 router.get('/health', async (req, res) => {

@@ -1,8 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '../redux/store';
-import { fetchCurriculum } from '../redux/slices/curriculumSlice';
+import { useAppSelector } from '../redux/store';
 import { ChevronRightIcon, ReaderIcon, ClipboardIcon, Pencil2Icon, LayersIcon } from '@radix-ui/react-icons';
+import apiService from '../services/api';
+
+interface Level {
+  id: string;
+  title: string;
+  order: number;
+  isActive: boolean;
+  careerTrack: string;
+}
 
 interface LevelsSidebarProps {
   sidebarOpen?: boolean;
@@ -18,15 +26,45 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
   currentSection
 }) => {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
-  const { data: levels, loading } = useAppSelector((state) => state.curriculum);
+  const [levels, setLevels] = useState<Level[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user?.careerTrack) {
-      dispatch(fetchCurriculum(user.careerTrack));
+    fetchLevels();
+  }, [user?.careerTrack]);
+
+  const fetchLevels = async () => {
+    try {
+      setLoading(true);
+      const response = await apiService.get('/training/levels');
+      
+      let levelsData = [];
+      if (response && response.data) {
+        levelsData = Array.isArray(response.data) ? response.data : [response.data];
+      } else if (Array.isArray(response)) {
+        levelsData = response;
+      }
+      
+      // Filter levels by user's career track
+      const userCareerTrack = user?.careerTrack;
+      if (userCareerTrack) {
+        levelsData = levelsData.filter((level: Level) => level.careerTrack === userCareerTrack);
+        console.log(`Sidebar: Filtered levels for career track: ${userCareerTrack}`, levelsData);
+      }
+      
+      // Sort by order and filter active levels
+      levelsData = levelsData
+        .filter((level: Level) => level.isActive)
+        .sort((a: Level, b: Level) => a.order - b.order);
+      
+      setLevels(levelsData);
+    } catch (error) {
+      console.error('Error fetching levels for sidebar:', error);
+    } finally {
+      setLoading(false);
     }
-  }, [dispatch, user?.careerTrack]);
+  };
 
   return (
     <aside

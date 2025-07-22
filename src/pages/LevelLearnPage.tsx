@@ -1,23 +1,65 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import LevelsSidebar from '../components/LevelsSidebar';
-import { PlayIcon, ReaderIcon, FileTextIcon } from '@radix-ui/react-icons';
-import { useAppSelector, useAppDispatch } from '../redux/store';
-import { fetchCurriculum } from '../redux/slices/curriculumSlice';
+import { PersonIcon, PlayIcon, ReaderIcon, FileTextIcon } from '@radix-ui/react-icons';
+import apiService from '../services/api';
+
+interface Level {
+  id: string;
+  title: string;
+  description: string;
+  difficulty: string;
+  careerTrack: string;
+  learn: LearnItem[];
+  test: any[];
+  exercise: any[];
+  order: number;
+  isActive: boolean;
+}
+
+interface LearnItem {
+  type: 'video' | 'reading' | 'slide' | 'other';
+  title: string;
+  content: string;
+  videoUrl?: string;
+  order: number;
+}
 
 const LevelLearnPage: React.FC = () => {
   const { levelId } = useParams<{ levelId: string }>();
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { data: levels, loading, error } = useAppSelector((state) => state.curriculum);
-  const level = levels.find(l => l.id === levelId);
+  const [level, setLevel] = useState<Level | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (levels.length === 0) {
-      dispatch(fetchCurriculum());
+    if (levelId) {
+      fetchLevel();
     }
-  }, [dispatch, levels.length]);
+  }, [levelId]);
+
+  const fetchLevel = async () => {
+    try {
+      setLoading(true);
+      const response = await apiService.get(`/training/levels/${levelId}`);
+      console.log('Level data response:', response);
+      
+      let levelData = null;
+      if (response && response.data) {
+        levelData = response.data;
+      } else if (response) {
+        levelData = response;
+      }
+      
+      setLevel(levelData);
+    } catch (error) {
+      console.error('Error fetching level:', error);
+      setError('Failed to load level content');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getContentIcon = (type: string) => {
     switch (type) {
@@ -63,7 +105,7 @@ const LevelLearnPage: React.FC = () => {
           <div className="text-center">
             <p className="text-red-400 text-lg mb-4">{error || 'Level not found'}</p>
             <button 
-              onClick={() => dispatch(fetchCurriculum())}
+              onClick={fetchLevel}
               className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors"
             >
               Retry

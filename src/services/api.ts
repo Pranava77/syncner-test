@@ -149,8 +149,8 @@ class ApiService {
   // Training endpoints for levels
   async getLevels(trackId?: string) {
     const url = trackId 
-      ? `${this.baseURL}/curriculum?careerTrack=${trackId}`
-      : `${this.baseURL}/curriculum`;
+      ? `${this.baseURL}/training/levels?track=${trackId}`
+      : `${this.baseURL}/training/levels`;
     const response = await fetch(url, {
       headers: this.getHeaders(),
       credentials: 'include',
@@ -159,7 +159,7 @@ class ApiService {
   }
 
   async getLevel(levelId: string) {
-    const response = await fetch(`${this.baseURL}/curriculum/${levelId}`, {
+    const response = await fetch(`${this.baseURL}/training/levels/${levelId}`, {
       headers: this.getHeaders(),
       credentials: 'include',
     });
