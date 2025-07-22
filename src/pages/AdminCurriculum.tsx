@@ -72,6 +72,7 @@ interface LevelForm {
   prerequisites: string[];
   estimatedHours: number;
   isActive: boolean;
+  type: string; // Added type field
 }
 
 const defaultLevelForm: LevelForm = {
@@ -84,6 +85,7 @@ const defaultLevelForm: LevelForm = {
   prerequisites: [],
   estimatedHours: 1,
   isActive: true,
+  type: 'syllabus', // Added default type
 };
 
 const AdminCurriculum: React.FC = () => {
@@ -229,11 +231,11 @@ const AdminCurriculum: React.FC = () => {
         setFormError('');
         await fetchLevels();
       } else {
-        // Creation is disabled: just close the modal and reset the form
+        await apiService.post('/curriculum', levelForm);
         setShowLevelModal(false);
         setLevelForm(defaultLevelForm);
         setFormError('');
-        // Optionally, show a message: setFormError('Creating new levels is currently disabled.');
+        await fetchLevels();
       }
     } catch (error) {
       console.error('Error saving level:', error);
