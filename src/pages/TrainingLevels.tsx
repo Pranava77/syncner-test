@@ -79,7 +79,7 @@ const TrainingLevels: React.FC = () => {
 
   const getTrackColor = (track: string) => {
     switch (track) {
-      case 'fullstack': return 'bg-blue-500';
+      case 'full-stack': return 'bg-blue-500';
       case 'ai-ml': return 'bg-purple-500';
       case 'ui-ux': return 'bg-pink-500';
       case 'data-science': return 'bg-orange-500';
@@ -89,7 +89,7 @@ const TrainingLevels: React.FC = () => {
 
   const getTrackLabel = (track: string) => {
     switch (track) {
-      case 'fullstack': return 'Full Stack';
+      case 'full-stack': return 'Full Stack';
       case 'ai-ml': return 'AI/ML';
       case 'ui-ux': return 'UI/UX';
       case 'data-science': return 'Data Science';

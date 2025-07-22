@@ -147,7 +147,10 @@ class ApiService {
   }
 
   // Training endpoints for levels
-  async getLevels(type: string, trackId: string) {
+  async getLevels(type: string, trackId?: string) {
+    if (!trackId) {
+      return { success: true, data: [] };
+    }
     const url = `${this.baseURL}/curriculum/type/${type}/track/${trackId}`;
     const response = await fetch(url, {
       headers: this.getHeaders(),
