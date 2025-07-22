@@ -16,6 +16,7 @@ import {
 } from '@radix-ui/react-icons';
 import ResetPasswordModal from '../components/ResetPasswordModal';
 import apiService from '../services/api';
+import { User } from '../redux/slices/authSlice';
 
 const defaultAdminForm = {
   name: '',
@@ -30,7 +31,7 @@ const AdminAdmin: React.FC = () => {
   const { data: users, loading, error } = useAppSelector((state) => state.users);
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const [editingAdmin, setEditingAdmin] = useState<any>(null);
+  const [editingAdmin, setEditingAdmin] = useState<User | null>(null);
   const [adminForm, setAdminForm] = useState(defaultAdminForm);
   const [formError, setFormError] = useState('');
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -42,7 +43,7 @@ const AdminAdmin: React.FC = () => {
     dispatch(fetchAllUsers());
   }, [dispatch]);
 
-  const filteredAdmins = users.filter((a: any) =>
+  const filteredAdmins = users.filter((a: User) =>
     a.role === 'admin' && (
       a.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
       a.email.toLowerCase().includes(searchTerm.toLowerCase())
@@ -56,7 +57,7 @@ const AdminAdmin: React.FC = () => {
     setFormError('');
   };
 
-  const handleEdit = (admin: any) => {
+  const handleEdit = (admin: User) => {
     setEditingAdmin(admin);
     setAdminForm({
       name: admin.name || '',
@@ -143,7 +144,7 @@ const AdminAdmin: React.FC = () => {
               <tr><td colSpan={5} className="text-center py-6 text-teallight">Loading...</td></tr>
             ) : filteredAdmins.length === 0 ? (
               <tr><td colSpan={5} className="text-center py-6 text-teallight">No admins found.</td></tr>
-            ) : filteredAdmins.map((a: any) => (
+            ) : filteredAdmins.map((a: User) => (
               <tr key={a._id} className="hover:bg-paperwhite/5">
                 <td className="px-6 py-4 whitespace-nowrap text-paperwhite font-medium">{a.name}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-paperwhite">{a.email}</td>
@@ -164,7 +165,7 @@ const AdminAdmin: React.FC = () => {
                       <Edit3 className="h-4 w-4" />
                     </button>
                     <button
-                      onClick={() => handleDelete(a._id)}
+                      onClick={() => handleDelete(a._id || a.id)}
                       className="bg-rust hover:bg-rust/80 text-paperwhite px-2 py-1 rounded transition-colors"
                       title="Delete"
                     >

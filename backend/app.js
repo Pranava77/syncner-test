@@ -25,7 +25,6 @@ app.use(cors({
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import trackRoutes from './routes/trackRoutes.js';
-import trainingRoutes from './routes/trainingRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
@@ -40,7 +39,6 @@ import { trackActivity } from './middleware/trackActivity.js';
 // Import all MongoDB models to ensure schemas are registered
 import './models/User.js';
 import './models/Track.js';
-import './models/Level.js';
 import './models/Curriculum.js';
 
 // Import geminiService
@@ -87,7 +85,6 @@ app.use('/api/auth', authRoutes);
 // Public health check endpoints for diagnostics
 app.use('/api/users/health', userRoutes); // Only /api/users/health is public
 app.use('/api/tracks/health', trackRoutes); // Only /api/tracks/health is public
-app.use('/api/training/health', trainingRoutes); // Only /api/training/health is public
 app.use('/api/admin/health', adminRoutes); // Only /api/admin/health is public
 app.use('/api/admin/settings/health', settingsRoutes); // Only /api/admin/settings/health is public
 app.use('/api/ai/health', aiRoutes); // Only /api/ai/health is public
@@ -96,7 +93,6 @@ app.use('/api/ai/health', aiRoutes); // Only /api/ai/health is public
 app.use('/api', protect, trackActivity);
 app.use('/api/users', userRoutes);
 app.use('/api/tracks', trackRoutes);
-app.use('/api/training', trainingRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/admin/settings', settingsRoutes);
 app.use('/api/ai', aiRoutes);

@@ -1,0 +1,72 @@
+
+# API Documentation
+
+## Backend API Endpoints
+
+The backend is built with **Express.js** and provides a RESTful API for the frontend.
+
+### Authentication (`/api/auth`)
+
+*   `POST /register`: Register a new user.
+*   `POST /login`: Log in a user and return a JWT.
+*   `POST /logout`: Log out a user.
+*   `GET /profile`: Get the profile of the currently authenticated user.
+*   `PUT /profile`: Update the profile of the currently authenticated user.
+*   `POST /forgot-password`: (Placeholder) Initiate a password reset.
+*   `POST /reset-password`: (Placeholder) Reset a user's password.
+
+### Users (`/api/users`)
+
+*   `GET /`: (Placeholder) Get a list of users.
+*   `GET /health`: Health check for the users module.
+
+### Admin (`/api/admin`)
+
+*   `GET /users`: Get a list of all users.
+*   `POST /users`: Create a new user.
+*   `PUT /users/:id`: Update a user.
+*   `DELETE /users/:id`: Delete a user.
+*   `POST /users/:id/reset-password`: Reset a user's password.
+*   `GET /analytics`: Get platform analytics.
+*   `GET /health`: Health check for the admin module.
+*   `GET /diagnostics`: Get health checks for all modules.
+
+### Tracks (`/api/tracks`)
+
+*   `GET /`: Get all active career tracks.
+*   `GET /:id`: Get a specific career track by ID.
+*   `GET /health`: Health check for the tracks module.
+
+### Curriculum (`/api/curriculum`)
+
+*   `GET /`: Get all curriculum items, optionally filtered by career track.
+*   `GET /:id`: Get a specific curriculum item by ID.
+*   `POST /`: (Admin) Create a new curriculum item.
+*   `PUT /:id`: (Admin) Update a curriculum item.
+*   `DELETE /:id`: (Admin) Delete a curriculum item.
+*   `POST /:id/learn`: (Admin) Add a "learn" item to a curriculum item.
+*   `PUT /:id/learn/:learnIdx`: (Admin) Update a "learn" item.
+*   `DELETE /:id/learn/:learnIdx`: (Admin) Delete a "learn" item.
+*   `POST /:id/test`: (Admin) Add a "test" item to a curriculum item.
+*   `PUT /:id/test/:testIdx`: (Admin) Update a "test" item.
+*   `DELETE /:id/test/:testIdx`: (Admin) Delete a "test" item.
+*   `POST /:id/exercise`: (Admin) Add an "exercise" item to a curriculum item.
+*   `PUT /:id/exercise/:exerciseIdx`: (Admin) Update an "exercise" item.
+*   `DELETE /:id/exercise/:exerciseIdx`: (Admin) Delete an "exercise" item.
+*   `GET /health`: Health check for the curriculum module.
+
+### AI (`/api/ai`)
+
+*   `POST /chat`: Send a message to the AI chat mentor.
+*   `GET /health`: Health check for the AI service.
+
+### Attendance (`/api/attendance`)
+
+*   `POST /mark`: Mark a student's attendance.
+*   `GET /:userId`: Get the attendance records for a specific user.
+
+### Settings (`/api/admin/settings`)
+
+*   `GET /`: (Admin) Get platform settings.
+*   `PUT /`: (Admin) Update platform settings.
+*   `GET /health`: Health check for the settings module.

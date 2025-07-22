@@ -1,0 +1,55 @@
+
+# Implementation Details
+
+## Frontend
+
+*   **Framework**: React with TypeScript
+*   **Routing**: `react-router-dom`
+*   **State Management**: Redux Toolkit (`@reduxjs/toolkit`)
+*   **Styling**: Tailwind CSS with a custom theme.
+*   **UI Components**: Radix UI for accessible, unstyled components.
+*   **Animations**: `framer-motion` for UI animations.
+*   **HTTP Client**: A custom `ApiService` class that wraps `fetch`.
+*   **Code Structure**: The `src` directory is organized by feature, with `components`, `hooks`, `pages`, `redux`, `services`, and `utils` directories.
+
+## Backend
+
+*   **Framework**: Express.js
+*   **Database**: MongoDB with Mongoose for object data modeling.
+*   **Authentication**: JSON Web Tokens (JWT)
+*   **Middleware**:
+    *   `cors`: For handling Cross-Origin Resource Sharing.
+    *   `helmet`: For security headers.
+    *   `compression`: For response compression.
+    *   `express-rate-limit`: For rate limiting API requests.
+    *   `express-validator`: For request validation.
+    *   Custom middleware for authentication (`protect`), authorization (`authorize`), error handling (`errorHandler`), and activity tracking (`trackActivity`).
+*   **Code Structure**: The `backend` directory is organized by feature, with `config`, `controllers`, `middleware`, `models`, `routes`, `services`, and `utils` directories.
+
+## Key Libraries and Technologies
+
+### Frontend
+
+*   `react`: Core UI library.
+*   `redux`: State management.
+*   `tailwindcss`: CSS framework.
+*   `react-router-dom`: Routing.
+*   `framer-motion`: Animations.
+*   `radix-ui/react-icons`: Icons.
+*   `react-hexgrid`: For the attendance heatmap.
+*   `react-activation`: For keeping components alive (e.g., `KeepAlive` on the student dashboard).
+
+### Backend
+
+*   `express`: Web framework.
+*   `mongoose`: MongoDB object modeling.
+*   `jsonwebtoken`: For JWT creation and verification.
+*   `bcryptjs`: For password hashing.
+*   `cors`, `helmet`, `compression`: Standard Express middleware for security and performance.
+*   `dotenv`: For managing environment variables.
+*   `node-fetch`: For making HTTP requests from the backend (used in the Gemini service).
+
+## Deployment
+
+*   The `vercel.json` files in both the root and `backend` directories suggest that the application is intended for deployment on **Vercel**.
+*   The frontend is likely deployed as a static site, while the backend is deployed as a serverless function.

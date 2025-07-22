@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
-  BarChartIcon,
   ReloadIcon,
-  ReaderIcon,
   ExclamationTriangleIcon,
-  StarFilledIcon as Award,
   TargetIcon as Target,
-  ClockIcon as Clock,
-  GroupIcon as Users,
   ArrowTopRightIcon as TrendingUp
 } from '@radix-ui/react-icons';
 
@@ -25,7 +20,7 @@ const AdminAnalytics: React.FC = () => {
   const [dateRange, setDateRange] = useState('30');
 
   const dispatch = useAppDispatch();
-  const analyticsState = useSelector((state: any) => state.analytics);
+  const analyticsState = useSelector((state: { analytics: { data: any; loading: boolean; error: string | null; lastFetched: number | null } }) => state.analytics);
   const analytics = analyticsState.data;
   const loading = analyticsState.loading;
   const error = analyticsState.error;
@@ -45,8 +40,8 @@ const AdminAnalytics: React.FC = () => {
     try {
       await dispatch(fetchAnalytics(dateRange)).unwrap();
       alert('Data refreshed successfully!');
-    } catch (error) {
-      alert('Failed to refresh data. Please try again.');
+    } catch (error: unknown) {
+      alert(`Failed to refresh data: ${(error as Error).message}. Please try again.`);
     }
   };
 
@@ -136,7 +131,7 @@ const AdminAnalytics: React.FC = () => {
             onClick={exportData}
             className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-teallight hover:text-offblack transition-colors flex items-center"
           >
-            <ReaderIcon className="h-4 w-4 mr-2" />
+            <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
             Export
           </button>
         </div>
@@ -144,6 +139,36 @@ const AdminAnalytics: React.FC = () => {
 
       {/* Key Performance Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-teallight text-sm">Total Students</p>
+              <p className="text-3xl font-bold text-paperwhite">{analytics.totalStudents}</p>
+              <p className="text-trueturquoise text-sm flex items-center mt-1">
+                <TrendingUp className="h-3 w-3 mr-1" />
+                +5.1% from last month
+              </p>
+            </div>
+            <div className="bg-teallight/10 p-3 rounded-lg">
+              <svg className="h-6 w-6 text-trueturquoise" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h-2a2 2 0 01-2-2V3a1 1 0 011-1h4a1 1 0 011 1v15a2 2 0 01-2 2zM7 20H5a2 2 0 01-2-2V9a1 1 0 011-1h4a1 1 0 011 1v9a2 2 0 01-2 2z"></path></svg>
+            </div>
+          </div>
+        </div>
+        <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-teallight text-sm">Active Students</p>
+              <p className="text-3xl font-bold text-paperwhite">{analytics.activeStudents}</p>
+              <p className="text-trueturquoise text-sm flex items-center mt-1">
+                <TrendingUp className="h-3 w-3 mr-1" />
+                +1.2% from last month
+              </p>
+            </div>
+            <div className="bg-rust/10 p-3 rounded-lg">
+              <svg className="h-6 w-6 text-rust" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h-2a2 2 0 01-2-2V3a1 1 0 011-1h4a1 1 0 011 1v15a2 2 0 01-2 2zM7 20H5a2 2 0 01-2-2V9a1 1 0 011-1h4a1 1 0 011 1v9a2 2 0 01-2 2z"></path></svg>
+            </div>
+          </div>
+        </div>
         <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -159,21 +184,23 @@ const AdminAnalytics: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-teallight text-sm">Student Retention</p>
-              <p className="text-3xl font-bold text-paperwhite">{performanceMetrics.studentRetention}%</p>
-              <p className="text-trueturquoise text-sm flex items-center mt-1">
-                <TrendingUp className="h-3 w-3 mr-1" />
-                +1.2% from last month
-              </p>
-            </div>
-            <div className="bg-rust/10 p-3 rounded-lg">
-              <Users className="h-6 w-6 text-rust" />
+        {typeof performanceMetrics.studentRetention === 'number' && (
+          <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-teallight text-sm">Student Retention</p>
+                <p className="text-3xl font-bold text-paperwhite">{performanceMetrics.studentRetention}%</p>
+                <p className="text-trueturquoise text-sm flex items-center mt-1">
+                  <TrendingUp className="h-3 w-3 mr-1" />
+                  +1.2% from last month
+                </p>
+              </div>
+              <div className="bg-rust/10 p-3 rounded-lg">
+                <svg className="h-6 w-6 text-rust" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h-2a2 2 0 01-2-2V3a1 1 0 011-1h4a1 1 0 011 1v15a2 2 0 01-2 2zM7 20H5a2 2 0 01-2-2V9a1 1 0 011-1h4a1 1 0 011 1v9a2 2 0 01-2 2z"></path></svg>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Students by Track Pie Chart */}
@@ -190,7 +217,7 @@ const AdminAnalytics: React.FC = () => {
               outerRadius={80}
               label
             >
-              {(analytics.trackDistribution || []).map((_: any, index: number) => (
+              {(analytics.trackDistribution || []).map((_: unknown, index: number) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>

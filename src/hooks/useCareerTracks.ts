@@ -27,8 +27,8 @@ export const useCareerTrack = (trackId: string) => {
       if (response.success) {
         setTrack(response.data.track);
       }
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError((err as Error).message);
     } finally {
       setLoading(false);
     }

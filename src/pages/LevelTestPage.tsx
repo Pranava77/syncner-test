@@ -1,20 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import LevelsSidebar from '../components/LevelsSidebar';
-import apiService from '../services/api';
-
-interface Level {
-  id: string;
-  title: string;
-  description: string;
-  difficulty: string;
-  careerTrack: string;
-  learn: any[];
-  test: TestItem[];
-  exercise: any[];
-  order: number;
-  isActive: boolean;
-}
+import { useAppSelector, useAppDispatch } from '../redux/store';
+import { fetchCurriculum } from '../redux/slices/curriculumSlice';
 
 interface TestItem {
   question: string;
@@ -28,20 +16,20 @@ const TEST_DURATION = 10 * 60; // 10 minutes in seconds
 const LevelTestPage: React.FC = () => {
   const { levelId } = useParams<{ levelId: string }>();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [level, setLevel] = useState<Level | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data: levels, loading, error } = useAppSelector((state) => state.curriculum);
+  const level = levels.find(l => l.id === levelId);
   const [answers, setAnswers] = useState<{ [qIdx: number]: boolean[] }>({});
   const [timeLeft, setTimeLeft] = useState(TEST_DURATION);
   const [submitted, setSubmitted] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    if (levelId) {
-      fetchLevel();
+    if (levels.length === 0) {
+      dispatch(fetchCurriculum());
     }
-  }, [levelId]);
+  }, [dispatch, levels.length]);
 
   useEffect(() => {
     if (submitted) return;
@@ -53,35 +41,14 @@ const LevelTestPage: React.FC = () => {
     return () => { if (timerRef.current) clearTimeout(timerRef.current); };
   }, [timeLeft, submitted]);
 
-  const fetchLevel = async () => {
-    try {
-      setLoading(true);
-      const response = await apiService.get(`/training/levels/${levelId}`);
-      console.log('Level test data response:', response);
-      
-      let levelData = null;
-      if (response && response.data) {
-        levelData = response.data;
-      } else if (response) {
-        levelData = response;
-      }
-      
-      setLevel(levelData);
-      
-      // Initialize answers for all questions
-      if (levelData && levelData.test) {
-        const initialAnswers = Object.fromEntries(
-          levelData.test.map((_, i) => [i, new Array(levelData.test[i].options.length).fill(false)])
-        );
-        setAnswers(initialAnswers);
-      }
-    } catch (error) {
-      console.error('Error fetching level:', error);
-      setError('Failed to load test content');
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    if (level && level.test) {
+      const initialAnswers = Object.fromEntries(
+        level.test.map((_, i) => [i, new Array(level.test[i].options.length).fill(false)])
+      );
+      setAnswers(initialAnswers);
     }
-  };
+  }, [level]);
 
   const handleCheck = (qIdx: number, optIdx: number) => {
     if (submitted) return;
@@ -124,7 +91,7 @@ const LevelTestPage: React.FC = () => {
           <div className="text-center">
             <p className="text-red-400 text-lg mb-4">{error || 'Level not found'}</p>
             <button 
-              onClick={fetchLevel}
+              onClick={() => dispatch(fetchCurriculum())}
               className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors"
             >
               Retry

@@ -10,9 +10,9 @@ export interface Level {
   careerTrack: string;
   skills: string[];
   prerequisites: string[];
-  learn: any[];
-  test: any[];
-  exercise: any[];
+  learn: unknown[];
+  test: unknown[];
+  exercise: unknown[];
   order: number;
   isActive: boolean;
   estimatedHours: number;
@@ -37,8 +37,8 @@ export const useLevels = (trackId?: string) => {
       } else {
         setError(response.message || 'Failed to fetch levels');
       }
-    } catch (err: any) {
-      setError(err.message || 'Failed to fetch levels');
+    } catch (err: unknown) {
+      setError((err as Error).message || 'Failed to fetch levels');
     } finally {
       setLoading(false);
     }

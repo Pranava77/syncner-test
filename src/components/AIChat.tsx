@@ -53,7 +53,7 @@ const AIChat: React.FC = () => {
           timestamp: new Date(),
         } as Message,
       ]);
-    } catch (error: any) {
+    } catch (error: unknown) {
       setMessages((prev) => [
         ...prev,
         {

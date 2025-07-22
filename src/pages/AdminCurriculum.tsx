@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import {
+  fetchCurriculum,
+} from '../redux/slices/curriculumSlice';
+import {
   PlusIcon,
   Pencil1Icon as EditIcon,
   TrashIcon,
@@ -19,14 +22,12 @@ import {
 } from '@radix-ui/react-icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import apiService from '../services/api';
-import LevelStatus from '../components/LevelStatus';
 
-interface Level {
+interface Curriculum {
   id: string;
   title: string;
   description: string;
   difficulty: string;
-  duration: string;
   careerTrack: string;
   skills: string[];
   prerequisites: string[];
@@ -35,7 +36,7 @@ interface Level {
   exercise: ExerciseItem[];
   order: number;
   isActive: boolean;
-  estimatedHours: number;
+  estimatedDuration: number; // Changed from estimatedHours to estimatedDuration to match backend
   createdAt: string;
   updatedAt: string;
 }
@@ -62,91 +63,54 @@ interface ExerciseItem {
   order: number;
 }
 
-interface LevelForm {
+interface CurriculumForm {
   title: string;
   description: string;
   difficulty: string;
-  duration: string;
   careerTrack: string;
   skills: string[];
   prerequisites: string[];
-  estimatedHours: number;
+  estimatedDuration: number; // Changed from estimatedHours to estimatedDuration
   isActive: boolean;
 }
 
-const defaultLevelForm: LevelForm = {
+const defaultCurriculumForm: CurriculumForm = {
   title: '',
   description: '',
   difficulty: 'Beginner',
-  duration: '',
+  
   careerTrack: 'fullstack',
   skills: [],
   prerequisites: [],
-  estimatedHours: 1,
+  estimatedDuration: 1,
   isActive: true,
 };
 
 const AdminCurriculum: React.FC = () => {
   const dispatch = useAppDispatch();
-  const [levels, setLevels] = useState<Level[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [showLevelModal, setShowLevelModal] = useState(false);
+  const { data: curriculum, loading, error } = useAppSelector((state) => state.curriculum);
+  const [showCurriculumModal, setShowCurriculumModal] = useState(false);
   const [showContentModal, setShowContentModal] = useState(false);
-  const [editingLevel, setEditingLevel] = useState<Level | null>(null);
+  const [editingCurriculum, setEditingCurriculum] = useState<Curriculum | null>(null);
   const [editingContent, setEditingContent] = useState<{ type: 'learn' | 'test' | 'exercise', item: any, index: number } | null>(null);
-  const [levelForm, setLevelForm] = useState<LevelForm>(defaultLevelForm);
+  const [curriculumForm, setCurriculumForm] = useState<CurriculumForm>(defaultCurriculumForm);
   const [contentForm, setContentForm] = useState<any>({});
   const [formError, setFormError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterTrack, setFilterTrack] = useState<string>('all');
   const [filterDifficulty, setFilterDifficulty] = useState<string>('all');
-  const [expandedLevels, setExpandedLevels] = useState<Set<string>>(new Set());
+  const [expandedCurriculum, setExpandedCurriculum] = useState<Set<string>>(new Set());
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
-  // Fetch levels on component mount and set up auto-refresh
   useEffect(() => {
-    fetchLevels();
-    
-    // Auto-refresh every 30 seconds to keep data fresh
-    const interval = setInterval(() => {
-      fetchLevels();
-    }, 30000);
-    
-    return () => clearInterval(interval);
-  }, []);
+    dispatch(fetchCurriculum());
+  }, [dispatch]);
 
-  const fetchLevels = async () => {
-    setLoading(true);
-    try {
-      console.log('Fetching levels from API...');
-      const response = await apiService.get('/training/levels');
-      console.log('API Response:', response);
-      
-      // Handle different response formats
-      let levelsData = [];
-      if (response && response.data) {
-        levelsData = Array.isArray(response.data) ? response.data : [response.data];
-      } else if (Array.isArray(response)) {
-        levelsData = response;
-      }
-      
-      console.log('Processed levels data:', levelsData);
-      setLevels(levelsData);
-      setLastUpdated(new Date());
-      setFormError(''); // Clear any previous errors
-    } catch (error) {
-      console.error('Error fetching levels:', error);
-      setFormError('Failed to load levels. Please check your connection.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const filteredLevels = levels.filter(level => {
-    const matchesSearch = level.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         level.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesTrack = filterTrack === 'all' || level.careerTrack === filterTrack;
-    const matchesDifficulty = filterDifficulty === 'all' || level.difficulty === filterDifficulty;
+  const filteredCurriculum = curriculum.filter(item => {
+    const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         item.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesTrack = filterTrack === 'all' || item.careerTrack === filterTrack;
+    const matchesDifficulty = filterDifficulty === 'all' || item.difficulty === filterDifficulty;
     return matchesSearch && matchesTrack && matchesDifficulty;
   });
 
@@ -179,89 +143,84 @@ const AdminCurriculum: React.FC = () => {
     }
   };
 
-  const handleAddLevel = () => {
-    setEditingLevel(null);
-    setLevelForm(defaultLevelForm);
-    setShowLevelModal(true);
+  const handleAddCurriculum = () => {
+    setEditingCurriculum(null);
+    setCurriculumForm(defaultCurriculumForm);
+    setShowCurriculumModal(true);
     setFormError('');
   };
 
-  const handleEditLevel = (level: Level) => {
-    setEditingLevel(level);
-    setLevelForm({
-      title: level.title,
-      description: level.description,
-      difficulty: level.difficulty,
-      duration: level.duration,
-      careerTrack: level.careerTrack,
-      skills: level.skills,
-      prerequisites: level.prerequisites,
-      estimatedHours: level.estimatedHours,
-      isActive: level.isActive,
-    });
-    setShowLevelModal(true);
+  const handleEditCurriculum = (item: Curriculum) => {
+    setEditingCurriculum(item);
+    setCurriculumForm({
+      title: item.title,
+      description: item.description,
+      difficulty: item.difficulty,
+      // duration: item.duration, // Removed as it's not in the backend model
+      estimatedDuration: item.estimatedDuration,
+      careerTrack: item.careerTrack,
+      skills: item.skills,
+      prerequisites: item.prerequisites,
+    setShowCurriculumModal(true);
     setFormError('');
   };
 
-  const handleDeleteLevel = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this level?')) {
+  const handleDeleteCurriculum = async (id: string) => {
+    if (window.confirm('Are you sure you want to delete this curriculum item?')) {
       try {
-        await apiService.delete(`/training/levels/${id}`);
-        await fetchLevels();
+        await apiService.delete(`/curriculum/${id}`);
+        dispatch(fetchCurriculum());
       } catch (error) {
-        console.error('Error deleting level:', error);
+        console.error('Error deleting curriculum item:', error);
       }
     }
   };
 
-  const handleLevelSubmit = async (e: React.FormEvent) => {
+  const handleCurriculumSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!levelForm.title.trim() || !levelForm.description.trim()) {
+    if (!curriculumForm.title.trim() || !curriculumForm.description.trim()) {
       setFormError('Title and description are required');
       return;
     }
-    setLoading(true);
     try {
-      if (editingLevel) {
-        await apiService.put(`/training/levels/${editingLevel.id}`, levelForm);
-        setShowLevelModal(false);
-        setLevelForm(defaultLevelForm);
-        setFormError('');
-        await fetchLevels();
+      const payload = {
+        ...curriculumForm,
+        estimatedDuration: curriculumForm.estimatedDuration,
+      };
+      if (editingCurriculum) {
+        await apiService.put(`/curriculum/${editingCurriculum.id}`, payload);
       } else {
-        // Creation is disabled: just close the modal and reset the form
-        setShowLevelModal(false);
-        setLevelForm(defaultLevelForm);
-        setFormError('');
-        // Optionally, show a message: setFormError('Creating new levels is currently disabled.');
+        await apiService.post('/curriculum', payload);
       }
+      setShowCurriculumModal(false);
+      setCurriculumForm(defaultCurriculumForm);
+      setFormError('');
+      dispatch(fetchCurriculum());
     } catch (error) {
-      console.error('Error saving level:', error);
-      setFormError('Failed to save level');
-    } finally {
-      setLoading(false);
+      console.error('Error saving curriculum item:', error);
+      setFormError('Failed to save curriculum item');
     }
   };
 
-  const handleAddContent = (levelId: string, type: 'learn' | 'test' | 'exercise') => {
+  const handleAddContent = (curriculumId: string, type: 'learn' | 'test' | 'exercise') => {
     setEditingContent(null);
     setContentForm({});
     setShowContentModal(true);
     setFormError('');
   };
 
-  const handleEditContent = (levelId: string, type: 'learn' | 'test' | 'exercise', item: any, index: number) => {
+  const handleEditContent = (curriculumId: string, type: 'learn' | 'test' | 'exercise', item: any, index: number) => {
     setEditingContent({ type, item, index });
     setContentForm({ ...item });
     setShowContentModal(true);
     setFormError('');
   };
 
-  const handleDeleteContent = async (levelId: string, type: 'learn' | 'test' | 'exercise', index: number) => {
+  const handleDeleteContent = async (curriculumId: string, type: 'learn' | 'test' | 'exercise', index: number) => {
     if (window.confirm('Are you sure you want to delete this content?')) {
       try {
-        await apiService.delete(`/training/levels/${levelId}/${type}/${index}`);
-        await fetchLevels();
+        await apiService.delete(`/curriculum/${curriculumId}/${type}/${index}`);
+        dispatch(fetchCurriculum());
       } catch (error) {
         console.error('Error deleting content:', error);
       }
@@ -271,34 +230,31 @@ const AdminCurriculum: React.FC = () => {
   const handleContentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!contentForm.title || !contentForm.content) {
-      setFormError('Title and content are required');
+    if (!contentForm.title) {
+      setFormError('Title is required');
       return;
     }
 
-    setLoading(true);
     try {
-      if (editingContent && editingLevel) {
-        await apiService.put(`/training/levels/${editingLevel.id}/${editingContent.type}/${editingContent.index}`, contentForm);
-      } else if (editingLevel) {
+      if (editingContent && editingCurriculum) {
+        await apiService.put(`/curriculum/${editingCurriculum.id}/${editingContent.type}/${editingContent.index}`, contentForm);
+      } else if (editingCurriculum) {
         const contentType = editingContent?.type || 'learn';
-        await apiService.post(`/training/levels/${editingLevel.id}/${contentType}`, contentForm);
+        await apiService.post(`/curriculum/${editingCurriculum.id}/${contentType}`, contentForm);
       }
       
       setShowContentModal(false);
       setContentForm({});
       setFormError('');
-      await fetchLevels();
+      dispatch(fetchCurriculum());
     } catch (error) {
       console.error('Error saving content:', error);
       setFormError('Failed to save content');
-    } finally {
-      setLoading(false);
     }
   };
 
   const toggleExpanded = (id: string) => {
-    setExpandedLevels(prev => {
+    setExpandedCurriculum(prev => {
       const newSet = new Set(prev);
       if (newSet.has(id)) {
         newSet.delete(id);
@@ -329,30 +285,26 @@ const AdminCurriculum: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-black text-paperwhite p-6">
-      <LevelStatus onLevelsLoaded={(levels) => {
-        console.log('Levels loaded from status component:', levels);
-        setLevels(levels);
-      }} />
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
           <div>
-            <h1 className="text-3xl font-heading text-paperwhite mb-2">Level Management</h1>
-            <p className="text-teallight">Create and manage training levels with learn, test, and exercise content</p>
+            <h1 className="text-3xl font-heading text-paperwhite mb-2">Curriculum Management</h1>
+            <p className="text-teallight">Create and manage training curriculum with learn, test, and exercise content</p>
             {lastUpdated && (
               <p className="text-xs text-teallight mt-1">
                 Last updated: {lastUpdated.toLocaleTimeString()}
               </p>
             )}
-            {formError && (
+            {error && (
               <p className="text-xs text-red-400 mt-1">
-                Error: {formError}
+                Error: {error}
               </p>
             )}
           </div>
           <div className="flex gap-2">
             <button
-              onClick={fetchLevels}
+              onClick={() => dispatch(fetchCurriculum())}
               disabled={loading}
               className="mt-4 sm:mt-0 flex items-center gap-2 bg-paperwhite/10 text-paperwhite px-4 py-2 rounded-lg hover:bg-paperwhite/20 transition-colors font-medium disabled:opacity-50"
             >
@@ -360,11 +312,11 @@ const AdminCurriculum: React.FC = () => {
               Refresh
             </button>
             <button
-              onClick={handleAddLevel}
+              onClick={handleAddCurriculum}
               className="mt-4 sm:mt-0 flex items-center gap-2 bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium"
             >
               <PlusIcon className="h-5 w-5" />
-              Create Level
+              Create Curriculum
             </button>
           </div>
         </div>
@@ -374,7 +326,7 @@ const AdminCurriculum: React.FC = () => {
           <div className="flex-1">
             <input
               type="text"
-              placeholder="Search levels..."
+              placeholder="Search curriculum..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full px-4 py-2 bg-offblack border border-paperwhite/20 rounded-lg text-paperwhite placeholder-teallight focus:outline-none focus:border-trueturquoise"
@@ -403,23 +355,23 @@ const AdminCurriculum: React.FC = () => {
           </select>
         </div>
 
-        {/* Levels */}
+        {/* Curriculum */}
         <div className="grid gap-4">
           {loading ? (
             <div className="text-center py-12">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-trueturquoise mx-auto"></div>
-              <p className="text-teallight mt-4">Loading levels...</p>
+              <p className="text-teallight mt-4">Loading curriculum...</p>
             </div>
-          ) : filteredLevels.length === 0 ? (
+          ) : filteredCurriculum.length === 0 ? (
             <div className="text-center py-12">
               <LayersIcon className="h-16 w-16 text-paperwhite/30 mx-auto mb-4" />
-              <h3 className="text-xl font-heading text-paperwhite mb-2">No levels found</h3>
-              <p className="text-teallight">Create your first training level to get started</p>
+              <h3 className="text-xl font-heading text-paperwhite mb-2">No curriculum found</h3>
+              <p className="text-teallight">Create your first curriculum item to get started</p>
             </div>
           ) : (
-            filteredLevels.map((level) => (
+            filteredCurriculum.map((item) => (
               <motion.div
-                key={level.id}
+                key={item.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="bg-offblack border border-paperwhite/20 rounded-lg overflow-hidden"
@@ -427,51 +379,51 @@ const AdminCurriculum: React.FC = () => {
                 <div className="p-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className={`p-2 rounded-lg ${getDifficultyColor(level.difficulty)}`}>
+                      <div className={`p-2 rounded-lg ${getDifficultyColor(item.difficulty)}`}>
                         <StarIcon className="h-5 w-5" />
                       </div>
                       <div>
-                        <h3 className="text-lg font-heading text-paperwhite">{level.title}</h3>
-                        <p className="text-teallight text-sm">{level.description}</p>
+                        <h3 className="text-lg font-heading text-paperwhite">{item.title}</h3>
+                        <p className="text-teallight text-sm">{item.description}</p>
                         <div className="flex items-center gap-4 mt-1">
-                          <span className={`px-2 py-1 rounded text-xs font-medium ${getTrackColor(level.careerTrack)} text-white`}>
-                            {getTrackLabel(level.careerTrack)}
+                          <span className={`px-2 py-1 rounded text-xs font-medium ${getTrackColor(item.careerTrack)} text-white`}>
+                            {getTrackLabel(item.careerTrack)}
                           </span>
-                          <span className={`px-2 py-1 rounded text-xs font-medium ${getDifficultyColor(level.difficulty)} text-white`}>
-                            {level.difficulty}
+                          <span className={`px-2 py-1 rounded text-xs font-medium ${getDifficultyColor(item.difficulty)} text-white`}>
+                            {item.difficulty}
                           </span>
                           <span className="text-xs text-teallight flex items-center gap-1">
                             <ClockIcon className="h-3 w-3" />
-                            {level.estimatedHours}h
+                            {item.estimatedDuration}h
                           </span>
                           <span className="text-xs text-teallight">
-                            Order: {level.order}
+                            Order: {item.order}
                           </span>
-                          <span className={`flex items-center gap-1 text-xs ${level.isActive ? 'text-green-400' : 'text-red-400'}`}>
-                            {level.isActive ? <CheckCircledIcon className="h-3 w-3" /> : <X className="h-3 w-3" />}
-                            {level.isActive ? 'Active' : 'Inactive'}
+                          <span className={`flex items-center gap-1 text-xs ${item.isActive ? 'text-green-400' : 'text-red-400'}`}>
+                            {item.isActive ? <CheckCircledIcon className="h-3 w-3" /> : <X className="h-3 w-3" />}
+                            {item.isActive ? 'Active' : 'Inactive'}
                           </span>
                         </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={() => toggleExpanded(level.id)}
+                        onClick={() => toggleExpanded(item.id)}
                         className="p-2 text-teallight hover:text-paperwhite transition-colors"
                       >
-                        {expandedLevels.has(level.id) ? <ChevronDownIcon className="h-4 w-4" /> : <ChevronRightIcon className="h-4 w-4" />}
+                        {expandedCurriculum.has(item.id) ? <ChevronDownIcon className="h-4 w-4" /> : <ChevronRightIcon className="h-4 w-4" />}
                       </button>
                       <button
-                        onClick={() => handleEditLevel(level)}
+                        onClick={() => handleEditCurriculum(item)}
                         className="p-2 text-teallight hover:text-trueturquoise transition-colors"
-                        title="Edit Level"
+                        title="Edit Curriculum"
                       >
                         <EditIcon className="h-4 w-4" />
                       </button>
                       <button
-                        onClick={() => handleDeleteLevel(level.id)}
+                        onClick={() => handleDeleteCurriculum(item.id)}
                         className="p-2 text-teallight hover:text-red-400 transition-colors"
-                        title="Delete Level"
+                        title="Delete Curriculum"
                       >
                         <TrashIcon className="h-4 w-4" />
                       </button>
@@ -480,7 +432,7 @@ const AdminCurriculum: React.FC = () => {
                 </div>
                 
                 <AnimatePresence>
-                  {expandedLevels.has(level.id) && (
+                  {expandedCurriculum.has(item.id) && (
                     <motion.div
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 'auto', opacity: 1 }}
@@ -494,7 +446,7 @@ const AdminCurriculum: React.FC = () => {
                           <div>
                             <h4 className="text-sm font-medium text-paperwhite mb-2">Skills:</h4>
                             <div className="flex flex-wrap gap-1">
-                              {level.skills.map((skill, index) => (
+                              {item.skills.map((skill: string, index: number) => (
                                 <span key={index} className="px-2 py-1 bg-trueturquoise/20 text-trueturquoise text-xs rounded">
                                   {skill}
                                 </span>
@@ -504,13 +456,11 @@ const AdminCurriculum: React.FC = () => {
                           <div>
                             <h4 className="text-sm font-medium text-paperwhite mb-2">Prerequisites:</h4>
                             <div className="flex flex-wrap gap-1">
-                              {level.prerequisites.map((prereq, index) => (
+                              {item.prerequisites.map((prereq: string, index: number) => (
                                 <span key={index} className="px-2 py-1 bg-paperwhite/20 text-paperwhite text-xs rounded">
                                   {prereq}
                                 </span>
                               ))}
-                            </div>
-                          </div>
                         </div>
 
                         {/* Content Sections */}
@@ -520,34 +470,34 @@ const AdminCurriculum: React.FC = () => {
                             <div className="flex items-center justify-between mb-3">
                               <h4 className="text-sm font-medium text-paperwhite flex items-center gap-2">
                                 <BookOpenIcon className="h-4 w-4 text-green-400" />
-                                Learn Content ({level.learn.length})
+                                Learn Content ({item.learn.length})
                               </h4>
                               <button
-                                onClick={() => handleAddContent(level.id, 'learn')}
+                                onClick={() => handleAddContent(item.id, 'learn')}
                                 className="text-xs bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 transition-colors"
                               >
                                 Add Learn
                               </button>
                             </div>
                             <div className="space-y-2">
-                              {level.learn.map((item, index) => (
+                              {item.learn.map((learnItem: LearnItem, index: number) => (
                                 <div key={index} className="flex items-center justify-between p-2 bg-paperwhite/5 rounded">
                                   <div className="flex items-center gap-2">
                                     <div className={`p-1 rounded ${getContentColor('learn')}`}>
                                       {getContentIcon('learn')}
                                     </div>
-                                    <span className="text-sm text-paperwhite">{item.title}</span>
-                                    <span className="text-xs text-teallight">({item.type})</span>
+                                    <span className="text-sm text-paperwhite">{learnItem.title}</span>
+                                    <span className="text-xs text-teallight">({learnItem.type})</span>
                                   </div>
                                   <div className="flex items-center gap-1">
                                     <button
-                                      onClick={() => handleEditContent(level.id, 'learn', item, index)}
+                                      onClick={() => handleEditContent(item.id, 'learn', learnItem, index)}
                                       className="p-1 text-teallight hover:text-trueturquoise transition-colors"
                                     >
                                       <EditIcon className="h-3 w-3" />
                                     </button>
                                     <button
-                                      onClick={() => handleDeleteContent(level.id, 'learn', index)}
+                                      onClick={() => handleDeleteContent(item.id, 'learn', index)}
                                       className="p-1 text-teallight hover:text-red-400 transition-colors"
                                     >
                                       <TrashIcon className="h-3 w-3" />
@@ -563,33 +513,33 @@ const AdminCurriculum: React.FC = () => {
                             <div className="flex items-center justify-between mb-3">
                               <h4 className="text-sm font-medium text-paperwhite flex items-center gap-2">
                                 <ClipboardIcon className="h-4 w-4 text-yellow-400" />
-                                Test Content ({level.test.length})
+                                Test Content ({item.test.length})
                               </h4>
                               <button
-                                onClick={() => handleAddContent(level.id, 'test')}
+                                onClick={() => handleAddContent(item.id, 'test')}
                                 className="text-xs bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 transition-colors"
                               >
                                 Add Test
                               </button>
                             </div>
                             <div className="space-y-2">
-                              {level.test.map((item, index) => (
+                              {item.test.map((testItem: TestItem, index: number) => (
                                 <div key={index} className="flex items-center justify-between p-2 bg-paperwhite/5 rounded">
                                   <div className="flex items-center gap-2">
                                     <div className={`p-1 rounded ${getContentColor('test')}`}>
                                       {getContentIcon('test')}
                                     </div>
-                                    <span className="text-sm text-paperwhite">{item.question}</span>
+                                    <span className="text-sm text-paperwhite">{testItem.question}</span>
                                   </div>
                                   <div className="flex items-center gap-1">
                                     <button
-                                      onClick={() => handleEditContent(level.id, 'test', item, index)}
+                                      onClick={() => handleEditContent(item.id, 'test', testItem, index)}
                                       className="p-1 text-teallight hover:text-trueturquoise transition-colors"
                                     >
                                       <EditIcon className="h-3 w-3" />
                                     </button>
                                     <button
-                                      onClick={() => handleDeleteContent(level.id, 'test', index)}
+                                      onClick={() => handleDeleteContent(item.id, 'test', index)}
                                       className="p-1 text-teallight hover:text-red-400 transition-colors"
                                     >
                                       <TrashIcon className="h-3 w-3" />
@@ -605,33 +555,33 @@ const AdminCurriculum: React.FC = () => {
                             <div className="flex items-center justify-between mb-3">
                               <h4 className="text-sm font-medium text-paperwhite flex items-center gap-2">
                                 <PlayIcon className="h-4 w-4 text-purple-400" />
-                                Exercise Content ({level.exercise.length})
+                                Exercise Content ({item.exercise.length})
                               </h4>
                               <button
-                                onClick={() => handleAddContent(level.id, 'exercise')}
+                                onClick={() => handleAddContent(item.id, 'exercise')}
                                 className="text-xs bg-purple-500 text-white px-2 py-1 rounded hover:bg-purple-600 transition-colors"
                               >
                                 Add Exercise
                               </button>
                             </div>
                             <div className="space-y-2">
-                              {level.exercise.map((item, index) => (
+                              {item.exercise.map((exerciseItem: ExerciseItem, index: number) => (
                                 <div key={index} className="flex items-center justify-between p-2 bg-paperwhite/5 rounded">
                                   <div className="flex items-center gap-2">
                                     <div className={`p-1 rounded ${getContentColor('exercise')}`}>
                                       {getContentIcon('exercise')}
                                     </div>
-                                    <span className="text-sm text-paperwhite">{item.title}</span>
+                                    <span className="text-sm text-paperwhite">{exerciseItem.title}</span>
                                   </div>
                                   <div className="flex items-center gap-1">
                                     <button
-                                      onClick={() => handleEditContent(level.id, 'exercise', item, index)}
+                                      onClick={() => handleEditContent(item.id, 'exercise', exerciseItem, index)}
                                       className="p-1 text-teallight hover:text-trueturquoise transition-colors"
                                     >
                                       <EditIcon className="h-3 w-3" />
                                     </button>
                                     <button
-                                      onClick={() => handleDeleteContent(level.id, 'exercise', index)}
+                                      onClick={() => handleDeleteContent(item.id, 'exercise', index)}
                                       className="p-1 text-teallight hover:text-red-400 transition-colors"
                                     >
                                       <TrashIcon className="h-3 w-3" />
@@ -639,8 +589,6 @@ const AdminCurriculum: React.FC = () => {
                                   </div>
                                 </div>
                               ))}
-                            </div>
-                          </div>
                         </div>
                       </div>
                     </motion.div>
@@ -652,15 +600,15 @@ const AdminCurriculum: React.FC = () => {
         </div>
       </div>
 
-      {/* Level Modal */}
+      {/* Curriculum Modal */}
       <AnimatePresence>
-        {showLevelModal && (
+        {showCurriculumModal && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
-            onClick={() => setShowLevelModal(false)}
+            onClick={() => setShowCurriculumModal(false)}
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
@@ -671,27 +619,27 @@ const AdminCurriculum: React.FC = () => {
             >
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-heading text-paperwhite">
-                  {editingLevel ? 'Edit Level' : 'Create Level'}
+                  {editingCurriculum ? 'Edit Curriculum' : 'Create Curriculum'}
                 </h2>
                 <button
-                  onClick={() => setShowLevelModal(false)}
+                  onClick={() => setShowCurriculumModal(false)}
                   className="p-2 text-teallight hover:text-paperwhite transition-colors"
                 >
                   <X className="h-5 w-5" />
                 </button>
               </div>
 
-              <form onSubmit={handleLevelSubmit} className="space-y-4">
+              <form onSubmit={handleCurriculumSubmit} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-paperwhite mb-2">
                     Title *
                   </label>
                   <input
                     type="text"
-                    value={levelForm.title}
-                    onChange={(e) => setLevelForm({ ...levelForm, title: e.target.value })}
+                    value={curriculumForm.title}
+                    onChange={(e) => setCurriculumForm({ ...curriculumForm, title: e.target.value })}
                     className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
-                    placeholder="Enter level title"
+                    placeholder="Enter curriculum title"
                   />
                 </div>
 
@@ -700,11 +648,11 @@ const AdminCurriculum: React.FC = () => {
                     Description *
                   </label>
                   <textarea
-                    value={levelForm.description}
-                    onChange={(e) => setLevelForm({ ...levelForm, description: e.target.value })}
+                    value={curriculumForm.description}
+                    onChange={(e) => setCurriculumForm({ ...curriculumForm, description: e.target.value })}
                     rows={3}
                     className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise resize-none"
-                    placeholder="Enter level description"
+                    placeholder="Enter curriculum description"
                   />
                 </div>
 
@@ -714,8 +662,8 @@ const AdminCurriculum: React.FC = () => {
                       Difficulty *
                     </label>
                     <select
-                      value={levelForm.difficulty}
-                      onChange={(e) => setLevelForm({ ...levelForm, difficulty: e.target.value })}
+                      value={curriculumForm.difficulty}
+                      onChange={(e) => setCurriculumForm({ ...curriculumForm, difficulty: e.target.value })}
                       className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
                     >
                       <option value="Beginner">Beginner</option>
@@ -729,8 +677,8 @@ const AdminCurriculum: React.FC = () => {
                       Career Track *
                     </label>
                     <select
-                      value={levelForm.careerTrack}
-                      onChange={(e) => setLevelForm({ ...levelForm, careerTrack: e.target.value })}
+                      value={curriculumForm.careerTrack}
+                      onChange={(e) => setCurriculumForm({ ...curriculumForm, careerTrack: e.target.value })}
                       className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
                     >
                       <option value="fullstack">Full Stack</option>
@@ -742,18 +690,7 @@ const AdminCurriculum: React.FC = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-paperwhite mb-2">
-                      Duration
-                    </label>
-                    <input
-                      type="text"
-                      value={levelForm.duration}
-                      onChange={(e) => setLevelForm({ ...levelForm, duration: e.target.value })}
-                      className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
-                      placeholder="e.g., 2-3 weeks"
-                    />
-                  </div>
+                  
 
                   <div>
                     <label className="block text-sm font-medium text-paperwhite mb-2">
@@ -761,8 +698,8 @@ const AdminCurriculum: React.FC = () => {
                     </label>
                     <input
                       type="number"
-                      value={levelForm.estimatedHours}
-                      onChange={(e) => setLevelForm({ ...levelForm, estimatedHours: parseInt(e.target.value) || 1 })}
+                      value={curriculumForm.estimatedDuration}
+                      onChange={(e) => setCurriculumForm({ ...curriculumForm, estimatedDuration: parseInt(e.target.value) || 1 })}
                       className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
                       min="1"
                     />
@@ -775,8 +712,8 @@ const AdminCurriculum: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    value={levelForm.skills.join(', ')}
-                    onChange={(e) => setLevelForm({ ...levelForm, skills: e.target.value.split(',').map(s => s.trim()).filter(s => s) })}
+                    value={curriculumForm.skills.join(', ')}
+                    onChange={(e) => setCurriculumForm({ ...curriculumForm, skills: e.target.value.split(',').map(s => s.trim()).filter(s => s) })}
                     className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
                     placeholder="e.g., HTML, CSS, JavaScript"
                   />
@@ -788,8 +725,8 @@ const AdminCurriculum: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    value={levelForm.prerequisites.join(', ')}
-                    onChange={(e) => setLevelForm({ ...levelForm, prerequisites: e.target.value.split(',').map(s => s.trim()).filter(s => s) })}
+                    value={curriculumForm.prerequisites.join(', ')}
+                    onChange={(e) => setCurriculumForm({ ...curriculumForm, prerequisites: e.target.value.split(',').map(s => s.trim()).filter(s => s) })}
                     className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
                     placeholder="e.g., Basic programming knowledge"
                   />
@@ -799,8 +736,8 @@ const AdminCurriculum: React.FC = () => {
                   <input
                     type="checkbox"
                     id="isActive"
-                    checked={levelForm.isActive}
-                    onChange={(e) => setLevelForm({ ...levelForm, isActive: e.target.checked })}
+                    checked={curriculumForm.isActive}
+                    onChange={(e) => setCurriculumForm({ ...curriculumForm, isActive: e.target.checked })}
                     className="w-4 h-4 text-trueturquoise bg-black border-paperwhite/20 rounded focus:ring-trueturquoise"
                   />
                   <label htmlFor="isActive" className="text-sm text-paperwhite">
@@ -818,11 +755,11 @@ const AdminCurriculum: React.FC = () => {
                     disabled={loading}
                     className="flex-1 bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium disabled:opacity-50"
                   >
-                    {loading ? 'Saving...' : (editingLevel ? 'Update' : 'Create')}
+                    {loading ? 'Saving...' : (editingCurriculum ? 'Update' : 'Create')}
                   </button>
                   <button
                     type="button"
-                    onClick={() => setShowLevelModal(false)}
+                    onClick={() => setShowCurriculumModal(false)}
                     className="px-4 py-2 border border-paperwhite/20 text-paperwhite rounded-lg hover:bg-paperwhite/10 transition-colors"
                   >
                     Cancel
@@ -916,8 +853,8 @@ const AdminCurriculum: React.FC = () => {
                   </label>
                   <textarea
                     value={contentForm.content || contentForm.question || contentForm.description || ''}
-                    onChange={(e) => {
-                      const field = editingContent?.type === 'test' ? 'question' : 
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                      const field = editingContent?.type === 'test' ? 'question' :
                                    editingContent?.type === 'exercise' ? 'description' : 'content';
                       setContentForm({ ...contentForm, [field]: e.target.value });
                     }}
@@ -999,6 +936,4 @@ const AdminCurriculum: React.FC = () => {
       </AnimatePresence>
     </div>
   );
-};
-
-export default AdminCurriculum; 
+}; 

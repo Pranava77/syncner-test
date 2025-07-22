@@ -39,8 +39,8 @@ const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({ open, onClose, 
       await onReset(password);
       setSuccess(true);
       setShowPassword(true);
-    } catch (err: any) {
-      setError(err.message || 'Failed to reset password');
+    } catch (err: unknown) {
+      setError((err as Error).message || 'Failed to reset password');
     } finally {
       setLoading(false);
     }

@@ -19,7 +19,7 @@ const AttendanceHeatmap: React.FC = () => {
       .then(res => {
         // Deduplicate by date, prefer 'present' if multiple records for the same day
         const attendanceMap: Record<string, number> = {};
-        (res.data || []).forEach((rec: any) => {
+        (res.data || []).forEach((rec: { date: string, status: string }) => {
           const dateStr = new Date(rec.date).toISOString().slice(0, 10);
           // If multiple records for the same day, prefer 'present'
           if (attendanceMap[dateStr] !== 1) {
@@ -44,12 +44,12 @@ const AttendanceHeatmap: React.FC = () => {
   });
 
   // Get the range of months to display
-  let monthRange: string[] = [];
+  const monthRange: string[] = [];
   if (data.length > 0) {
     const dates = data.map(d => new Date(d.date));
     const minDate = new Date(Math.min(...dates.map(d => d.getTime())));
     const maxDate = new Date(Math.max(...dates.map(d => d.getTime())));
-    let current = new Date(minDate.getFullYear(), minDate.getMonth(), 1);
+    const current = new Date(minDate.getFullYear(), minDate.getMonth(), 1);
     const end = new Date(maxDate.getFullYear(), maxDate.getMonth(), 1);
     while (current <= end) {
       const key = `${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2, '0')}`;

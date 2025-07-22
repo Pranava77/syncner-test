@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import apiService from '../services/api';
 
 interface LevelStatusProps {
@@ -10,7 +10,7 @@ const LevelStatus: React.FC<LevelStatusProps> = ({ onLevelsLoaded }) => {
   const [message, setMessage] = useState('');
   const [levelCount, setLevelCount] = useState(0);
 
-  const checkLevels = async () => {
+  const checkLevels = useCallback(async () => {
     setStatus('loading');
     setMessage('Checking levels...');
     
@@ -35,16 +35,16 @@ const LevelStatus: React.FC<LevelStatusProps> = ({ onLevelsLoaded }) => {
       setStatus('error');
       setMessage(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
-  };
+  }, [onLevelsLoaded]);
 
   useEffect(() => {
     checkLevels();
-  }, []);
+  }, [checkLevels]);
 
   return (
     <div className="fixed bottom-4 left-4 bg-offblack border border-paperwhite/20 rounded-lg p-3 z-50">
       <div className="flex items-center gap-2 mb-2">
-        <div className={`w-2 h-2 rounded-full ${
+        <div className={`w-2 h-2 rounded-full ${ 
           status === 'loading' ? 'bg-yellow-400 animate-pulse' :
           status === 'success' ? 'bg-green-400' : 
           status === 'error' ? 'bg-red-400' : 'bg-gray-400'

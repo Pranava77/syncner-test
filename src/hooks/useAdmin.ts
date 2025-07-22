@@ -28,7 +28,7 @@ interface Analytics {
   trackDistribution: Array<{ track: string; count: number }>;
 }
 
-export const useStudents = (filters?: Record<string, any>) => {
+export const useStudents = (filters?: Record<string, unknown>) => {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -40,8 +40,8 @@ export const useStudents = (filters?: Record<string, any>) => {
       if (response.success) {
         setStudents(response.data);
       }
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError((err as Error).message);
     } finally {
       setLoading(false);
     }
@@ -58,8 +58,8 @@ export const useStudents = (filters?: Record<string, any>) => {
         await fetchStudents(); // Refresh the list
         return response.data;
       }
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError((err as Error).message);
       throw err;
     }
   };
@@ -71,8 +71,8 @@ export const useStudents = (filters?: Record<string, any>) => {
         await fetchStudents(); // Refresh the list
         return response.data;
       }
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError((err as Error).message);
       throw err;
     }
   };
@@ -84,8 +84,8 @@ export const useStudents = (filters?: Record<string, any>) => {
         await fetchStudents(); // Refresh the list
         return response.data;
       }
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError((err as Error).message);
       throw err;
     }
   };
@@ -106,19 +106,19 @@ export const useAnalytics = (dateRange?: string) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchAnalytics = async () => {
+  const fetchAnalytics = useCallback(async () => {
     try {
       setLoading(true);
       const response = await apiService.getAnalytics(dateRange);
       if (response.success) {
         setAnalytics(response.data);
       }
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError((err as Error).message);
     } finally {
       setLoading(false);
     }
-  };
+  }, [dateRange]);
 
   useEffect(() => {
     fetchAnalytics();
@@ -130,4 +130,4 @@ export const useAnalytics = (dateRange?: string) => {
     error,
     refetch: fetchAnalytics
   };
-}; 
+};

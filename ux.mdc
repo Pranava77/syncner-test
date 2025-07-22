@@ -1,0 +1,38 @@
+
+# UX Documentation
+
+## User Roles and Flows
+
+The application defines three primary user roles: **Student**, **Admin**, and **Staff**.
+
+### Student Flow
+
+1.  **Registration/Login**: Students can register with their name, email, password, and college. Upon login, they are redirected to their dashboard.
+2.  **Onboarding**: If a student's profile is incomplete, they are redirected to an onboarding flow where they select their career track and define their goals.
+3.  **Dashboard**: The student dashboard provides an overview of their progress, current learning modules, and an attendance heatmap.
+4.  **Training**: Students can access training curriculum based on their chosen career track. Each curriculum item is divided into "Learn", "Test", and "Exercise" sections.
+5.  **Profile Management**: Students can view and edit their profile information.
+6.  **AI Chat**: A floating AI chat mentor is available to assist students.
+
+### Admin Flow
+
+1.  **Login**: Admins log in to access the admin dashboard.
+2.  **Dashboard**: The admin dashboard displays analytics, including student distribution by career track.
+3.  **User Management**: Admins can view, create, edit, and delete users (students, staff, and other admins). They can also reset user passwords.
+4.  **Curriculum Management**: Admins can create, edit, and delete curriculum items and their content (learn, test, exercise).
+5.  **Settings**: Admins can configure platform-wide settings, including integrations like the Gemini API key.
+6.  **Analytics**: A dedicated analytics page provides more in-depth insights into platform performance.
+
+### Staff Flow
+
+1.  **Login**: Staff members log in to a dedicated staff dashboard.
+2.  **Dashboard**: The staff dashboard is currently a placeholder, indicating that staff-specific features are planned for the future.
+
+## Key UX Features
+
+*   **Role-Based Access Control (RBAC)**: The application enforces strict role-based access, ensuring users only see relevant information and have appropriate permissions.
+*   **Protected Routes**: Routes are protected based on authentication status and user role.
+*   **Onboarding for Students**: A guided onboarding process helps personalize the learning experience for new students.
+*   **AI-Powered Assistance**: An integrated AI chat provides on-demand support to students.
+*   **Visual Feedback**: The UI provides visual feedback for loading states, errors, and successes, enhancing the user experience.
+*   **Responsive Design**: The application is designed to be accessible and usable across various devices.

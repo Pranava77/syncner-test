@@ -6,10 +6,9 @@ import { validationResult } from 'express-validator';
 // @access  Private/Admin
 const getAllCurriculumItems = async (req, res) => {
   try {
-    const { type, careerTrack, isActive, search, sortBy = 'order', sortOrder = 'asc' } = req.query;
+    const { careerTrack, isActive, search, sortBy = 'order', sortOrder = 'asc' } = req.query;
     
     const filter = {};
-    if (type) filter.type = type;
     if (careerTrack) filter.careerTrack = careerTrack;
     if (isActive !== undefined) filter.isActive = isActive === 'true';
     
@@ -92,8 +91,6 @@ const createCurriculumItem = async (req, res) => {
     const {
       title,
       description,
-      type,
-      content,
       order,
       isActive = true,
       careerTrack,
@@ -114,8 +111,6 @@ const createCurriculumItem = async (req, res) => {
     const curriculumItem = await Curriculum.create({
       title,
       description,
-      type,
-      content,
       order,
       isActive,
       careerTrack,
@@ -222,116 +217,127 @@ const deleteCurriculumItem = async (req, res) => {
   }
 };
 
-// @desc    Get curriculum statistics
-// @route   GET /api/curriculum/stats
-// @access  Private/Admin
-const getCurriculumStats = async (req, res) => {
+// --- LEARN CRUD ---
+// Add learn item
+const addLearn = async (req, res) => {
   try {
-    const stats = await Curriculum.getStatistics();
-    
-    res.status(200).json({
-      success: true,
-      data: stats
-    });
+    const { id } = req.params; // curriculum id
+    const curriculum = await Curriculum.findById(id);
+    if (!curriculum) return res.status(404).json({ success: false, message: 'Curriculum not found' });
+    const learnItem = req.body;
+    curriculum.learn.push(learnItem);
+    await curriculum.save();
+    res.status(201).json({ success: true, message: 'Learn item added', data: curriculum.learn });
   } catch (error) {
-    console.error('Get curriculum stats error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error'
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
-
-// @desc    Get curriculum by type and career track
-// @route   GET /api/curriculum/type/:type/track/:careerTrack
-// @access  Private
-const getCurriculumByTypeAndTrack = async (req, res) => {
+// Update learn item
+const updateLearn = async (req, res) => {
   try {
-    const { type, careerTrack } = req.params;
-    const { includeInactive = false } = req.query;
-    
-    const curriculumItems = await Curriculum.getByTypeAndTrack(type, careerTrack, { includeInactive });
-    
-    res.status(200).json({
-      success: true,
-      count: curriculumItems.length,
-      data: curriculumItems
-    });
+    const { id, learnIdx } = req.params;
+    const curriculum = await Curriculum.findById(id);
+    if (!curriculum) return res.status(404).json({ success: false, message: 'Curriculum not found' });
+    if (!curriculum.learn[learnIdx]) return res.status(404).json({ success: false, message: 'Learn item not found' });
+    curriculum.learn[learnIdx] = { ...curriculum.learn[learnIdx].toObject(), ...req.body };
+    await curriculum.save();
+    res.status(200).json({ success: true, message: 'Learn item updated', data: curriculum.learn[learnIdx] });
   } catch (error) {
-    console.error('Get curriculum by type and track error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error'
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
-
-// @desc    Bulk update curriculum order
-// @route   PUT /api/curriculum/bulk-order
-// @access  Private/Admin
-const updateCurriculumOrder = async (req, res) => {
+// Delete learn item
+const deleteLearn = async (req, res) => {
   try {
-    const { items } = req.body;
-    
-    if (!Array.isArray(items)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Items must be an array'
-      });
-    }
-    
-    const updatePromises = items.map(item => 
-      Curriculum.findByIdAndUpdate(item.id, { order: item.order })
-    );
-    
-    await Promise.all(updatePromises);
-    
-    res.status(200).json({
-      success: true,
-      message: 'Curriculum order updated successfully'
-    });
+    const { id, learnIdx } = req.params;
+    const curriculum = await Curriculum.findById(id);
+    if (!curriculum) return res.status(404).json({ success: false, message: 'Curriculum not found' });
+    if (!curriculum.learn[learnIdx]) return res.status(404).json({ success: false, message: 'Learn item not found' });
+    curriculum.learn.splice(learnIdx, 1);
+    await curriculum.save();
+    res.status(200).json({ success: true, message: 'Learn item deleted' });
   } catch (error) {
-    console.error('Update curriculum order error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error'
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
-
-// @desc    Toggle curriculum item active status
-// @route   PATCH /api/curriculum/:id/toggle
-// @access  Private/Admin
-const toggleCurriculumStatus = async (req, res) => {
+// --- TEST CRUD ---
+const addTest = async (req, res) => {
   try {
-    const curriculumItem = await Curriculum.findById(req.params.id);
-    
-    if (!curriculumItem) {
-      return res.status(404).json({
-        success: false,
-        message: 'Curriculum item not found'
-      });
-    }
-    
-    curriculumItem.isActive = !curriculumItem.isActive;
-    curriculumItem.metadata.lastModifiedBy = req.user.id;
-    
-    await curriculumItem.save();
-    
-    await curriculumItem.populate('metadata.createdBy', 'name email')
-                      .populate('metadata.lastModifiedBy', 'name email');
-    
-    res.status(200).json({
-      success: true,
-      message: `Curriculum item ${curriculumItem.isActive ? 'activated' : 'deactivated'} successfully`,
-      data: curriculumItem
-    });
+    const { id } = req.params;
+    const curriculum = await Curriculum.findById(id);
+    if (!curriculum) return res.status(404).json({ success: false, message: 'Curriculum not found' });
+    const testItem = req.body;
+    curriculum.test.push(testItem);
+    await curriculum.save();
+    res.status(201).json({ success: true, message: 'Test item added', data: curriculum.test });
   } catch (error) {
-    console.error('Toggle curriculum status error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error'
-    });
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+const updateTest = async (req, res) => {
+  try {
+    const { id, testIdx } = req.params;
+    const curriculum = await Curriculum.findById(id);
+    if (!curriculum) return res.status(404).json({ success: false, message: 'Curriculum not found' });
+    if (!curriculum.test[testIdx]) return res.status(404).json({ success: false, message: 'Test item not found' });
+    curriculum.test[testIdx] = { ...curriculum.test[testIdx].toObject(), ...req.body };
+    await curriculum.save();
+    res.status(200).json({ success: true, message: 'Test item updated', data: curriculum.test[testIdx] });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+const deleteTest = async (req, res) => {
+  try {
+    const { id, testIdx } = req.params;
+    const curriculum = await Curriculum.findById(id);
+    if (!curriculum) return res.status(404).json({ success: false, message: 'Curriculum not found' });
+    if (!curriculum.test[testIdx]) return res.status(404).json({ success: false, message: 'Test item not found' });
+    curriculum.test.splice(testIdx, 1);
+    await curriculum.save();
+    res.status(200).json({ success: true, message: 'Test item deleted' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+// --- EXERCISE CRUD ---
+const addExercise = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const curriculum = await Curriculum.findById(id);
+    if (!curriculum) return res.status(404).json({ success: false, message: 'Curriculum not found' });
+    const exerciseItem = req.body;
+    curriculum.exercise.push(exerciseItem);
+    await curriculum.save();
+    res.status(201).json({ success: true, message: 'Exercise item added', data: curriculum.exercise });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+const updateExercise = async (req, res) => {
+  try {
+    const { id, exerciseIdx } = req.params;
+    const curriculum = await Curriculum.findById(id);
+    if (!curriculum) return res.status(404).json({ success: false, message: 'Curriculum not found' });
+    if (!curriculum.exercise[exerciseIdx]) return res.status(404).json({ success: false, message: 'Exercise item not found' });
+    curriculum.exercise[exerciseIdx] = { ...curriculum.exercise[exerciseIdx].toObject(), ...req.body };
+    await curriculum.save();
+    res.status(200).json({ success: true, message: 'Exercise item updated', data: curriculum.exercise[exerciseIdx] });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+const deleteExercise = async (req, res) => {
+  try {
+    const { id, exerciseIdx } = req.params;
+    const curriculum = await Curriculum.findById(id);
+    if (!curriculum) return res.status(404).json({ success: false, message: 'Curriculum not found' });
+    if (!curriculum.exercise[exerciseIdx]) return res.status(404).json({ success: false, message: 'Exercise item not found' });
+    curriculum.exercise.splice(exerciseIdx, 1);
+    await curriculum.save();
+    res.status(200).json({ success: true, message: 'Exercise item deleted' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -341,8 +347,7 @@ export {
   createCurriculumItem,
   updateCurriculumItem,
   deleteCurriculumItem,
-  getCurriculumStats,
-  getCurriculumByTypeAndTrack,
-  updateCurriculumOrder,
-  toggleCurriculumStatus
+  addLearn, updateLearn, deleteLearn,
+  addTest, updateTest, deleteTest,
+  addExercise, updateExercise, deleteExercise
 }; 

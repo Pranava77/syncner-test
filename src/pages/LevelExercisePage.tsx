@@ -1,20 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import LevelsSidebar from '../components/LevelsSidebar';
-import apiService from '../services/api';
-
-interface Level {
-  id: string;
-  title: string;
-  description: string;
-  difficulty: string;
-  careerTrack: string;
-  learn: any[];
-  test: any[];
-  exercise: ExerciseItem[];
-  order: number;
-  isActive: boolean;
-}
+import { useAppSelector, useAppDispatch } from '../redux/store';
+import { fetchCurriculum } from '../redux/slices/curriculumSlice';
 
 interface ExerciseItem {
   title: string;
@@ -26,38 +14,16 @@ interface ExerciseItem {
 const LevelExercisePage: React.FC = () => {
   const { levelId } = useParams<{ levelId: string }>();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [level, setLevel] = useState<Level | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data: levels, loading, error } = useAppSelector((state) => state.curriculum);
+  const level = levels.find(l => l.id === levelId);
 
   useEffect(() => {
-    if (levelId) {
-      fetchLevel();
+    if (levels.length === 0) {
+      dispatch(fetchCurriculum());
     }
-  }, [levelId]);
-
-  const fetchLevel = async () => {
-    try {
-      setLoading(true);
-      const response = await apiService.get(`/training/levels/${levelId}`);
-      console.log('Level exercise data response:', response);
-      
-      let levelData = null;
-      if (response && response.data) {
-        levelData = response.data;
-      } else if (response) {
-        levelData = response;
-      }
-      
-      setLevel(levelData);
-    } catch (error) {
-      console.error('Error fetching level:', error);
-      setError('Failed to load exercise content');
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [dispatch, levels.length]);
 
   const statusColor = (status: string) =>
     status === 'Completed' ? 'bg-trueturquoise/20 text-trueturquoise' : 'bg-paperwhite/10 text-teallight';
@@ -84,7 +50,7 @@ const LevelExercisePage: React.FC = () => {
           <div className="text-center">
             <p className="text-red-400 text-lg mb-4">{error || 'Level not found'}</p>
             <button 
-              onClick={fetchLevel}
+              onClick={() => dispatch(fetchCurriculum())}
               className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors"
             >
               Retry
@@ -127,14 +93,14 @@ const LevelExercisePage: React.FC = () => {
               <h1 className="text-2xl font-bold text-paperwhite mb-2">Level {level.order}: {level.title} - Exercises</h1>
               <p className="text-teallight">{level.description}</p>
             </div>
-            <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2">
               <span className="px-3 py-1 rounded-full bg-paperwhite/10 text-trueturquoise font-semibold text-sm">
                 {level.difficulty}
               </span>
               <span className="px-3 py-1 rounded-full bg-paperwhite/10 text-trueturquoise font-semibold text-sm">
                 {level.careerTrack}
               </span>
-            </div>
+                      </div>
           </div>
         </div>
 

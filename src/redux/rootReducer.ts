@@ -4,7 +4,7 @@ import themeReducer from './slices/themeSlice';
 import geminiReducer from './slices/geminiSlice';
 import analyticsReducer from './slices/analyticsSlice';
 import settingsReducer from './slices/settingsSlice';
-import levelsReducer from './slices/levelsSlice';
+import curriculumReducer from './slices/curriculumSlice';
 import usersReducer from './slices/userSlice';
 
 const rootReducer = combineReducers({
@@ -13,7 +13,7 @@ const rootReducer = combineReducers({
   gemini: geminiReducer,
   analytics: analyticsReducer,
   settings: settingsReducer,
-  levels: levelsReducer,
+  curriculum: curriculumReducer,
   users: usersReducer,
 });
 

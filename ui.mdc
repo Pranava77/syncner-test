@@ -1,0 +1,43 @@
+
+# UI Documentation
+
+## Design System and Components
+
+The application utilizes a modern, dark-themed UI built with **React** and **Tailwind CSS**. The design is clean, with a focus on usability and visual appeal.
+
+### Core Components
+
+*   **Layout**: A consistent layout is used across the application, featuring a sidebar for navigation and a main content area. The sidebar is collapsible for a better user experience on smaller screens.
+*   **AIChat**: A floating AI chat component that expands into a modal for interaction.
+*   **AttendanceHeatmap**: A visual representation of student attendance using a hexagonal grid.
+*   **LoadingScreen**: A full-screen loading indicator with a logo and progress bar.
+*   **ProtectedRoute**: A higher-order component that handles route protection based on user authentication and role.
+*   **ResetPasswordModal**: A modal for admins to reset user passwords.
+*   **StudentLayout**: A specialized layout for the student-facing sections of the application.
+
+### Styling and Theme
+
+*   **Dark Mode**: The application defaults to a dark theme, with a color palette centered around black, off-black, and shades of turquoise and rust for highlights.
+*   **Typography**: The primary font is "Inter", with "Amatic SC" used for headings to give a unique, stylized look.
+*   **Icons**: Icons from `radix-ui/react-icons` are used throughout the application for a consistent and modern look.
+*   **Animations**: The UI incorporates subtle animations using `framer-motion` to enhance the user experience.
+
+## Key UI Pages
+
+### Student-Facing Pages
+
+*   **LandingPage**: A visually appealing landing page that introduces the platform and its features.
+*   **LoginPage/RegisterPage**: Clean and simple forms for user authentication.
+*   **StudentDashboard**: A central hub for students, displaying their progress and current learning modules.
+*   **TrainingLevels**: A page that lists all available curriculum items for the student's career track.
+*   **LevelLearnPage/LevelTestPage/LevelExercisePage**: Dedicated pages for the different sections of a curriculum item.
+*   **StudentProfile**: A page for students to view and edit their profile information.
+
+### Admin-Facing Pages
+
+*   **AdminDashboard**: An overview of key platform analytics.
+*   **AdminUsers/AdminStaff/AdminAdmin**: Tables for managing different user roles.
+*   **AdminCurriculum**: A page for managing curriculum items and their content.
+*   **AdminAnalytics**: A more detailed view of platform analytics with charts and graphs.
+*   **AdminSettings**: A page for configuring platform settings.
+*   **AdminProfile**: A page for admins to manage their own profile.
