@@ -26,7 +26,6 @@ interface Level {
   title: string;
   description: string;
   difficulty: string;
-  duration: string;
   careerTrack: string;
   skills: string[];
   prerequisites: string[];
@@ -35,11 +34,11 @@ interface Level {
   exercise: ExerciseItem[];
   order: number;
   isActive: boolean;
-  estimatedHours: number;
+  estimatedDuration: number; // Changed to match backend
   createdAt: string;
   updatedAt: string;
   type: string;
-  content: string; // Added content property
+  content: string;
 }
 
 interface LearnItem {
@@ -68,25 +67,24 @@ interface LevelForm {
   title: string;
   description: string;
   difficulty: string;
-  duration: string;
   careerTrack: string;
   skills: string[];
   prerequisites: string[];
-  estimatedHours: number;
+  estimatedDuration: number; // Changed to match backend
   isActive: boolean;
   type: string;
-  content: string; // Added content field
+  content: string;
 }
 
 const defaultLevelForm: LevelForm = {
   title: 'New Level',
   description: 'A detailed description for the new level.',
   difficulty: 'beginner',
-  duration: '',
+  // duration: '', // Removed as it's not in the backend model
   careerTrack: 'full-stack',
   skills: [],
   prerequisites: [],
-  estimatedHours: 1,
+  estimatedDuration: 1,
   isActive: true,
   type: 'syllabus',
   content: 'Default content for the new level, at least 10 characters.',
@@ -198,11 +196,11 @@ const AdminCurriculum: React.FC = () => {
       title: level.title,
       description: level.description,
       difficulty: level.difficulty,
-      duration: level.duration,
+      // duration: level.duration, // Removed as it's not in the backend model
       careerTrack: level.careerTrack,
       skills: level.skills,
       prerequisites: level.prerequisites,
-      estimatedHours: level.estimatedHours,
+      estimatedDuration: level.estimatedDuration,
       isActive: level.isActive,
       type: level.type, // Assuming level has a type property
       content: level.content, // Assuming level has a content property
@@ -450,7 +448,7 @@ const AdminCurriculum: React.FC = () => {
                           </span>
                           <span className="text-xs text-teallight flex items-center gap-1">
                             <ClockIcon className="h-3 w-3" />
-                            {level.estimatedHours}h
+                            {level.estimatedDuration}h
                           </span>
                           <span className="text-xs text-teallight">
                             Order: {level.order}
@@ -782,8 +780,8 @@ const AdminCurriculum: React.FC = () => {
                     </label>
                     <input
                       type="number"
-                      value={levelForm.estimatedHours}
-                      onChange={(e) => setLevelForm({ ...levelForm, estimatedHours: parseInt(e.target.value) || 1 })}
+                      value={levelForm.estimatedDuration}
+                      onChange={(e) => setLevelForm({ ...levelForm, estimatedDuration: parseInt(e.target.value) || 1 })}
                       className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
                       min="1"
                     />
