@@ -38,6 +38,8 @@ interface Level {
   estimatedHours: number;
   createdAt: string;
   updatedAt: string;
+  type: string;
+  content: string; // Added content property
 }
 
 interface LearnItem {
@@ -72,20 +74,22 @@ interface LevelForm {
   prerequisites: string[];
   estimatedHours: number;
   isActive: boolean;
-  type: string; // Added type field
+  type: string;
+  content: string; // Added content field
 }
 
 const defaultLevelForm: LevelForm = {
-  title: '',
-  description: '',
-  difficulty: 'Beginner',
+  title: 'New Level',
+  description: 'A detailed description for the new level.',
+  difficulty: 'beginner',
   duration: '',
-  careerTrack: 'fullstack',
+  careerTrack: 'full-stack',
   skills: [],
   prerequisites: [],
   estimatedHours: 1,
   isActive: true,
-  type: 'syllabus', // Added default type
+  type: 'syllabus',
+  content: 'Default content for the new level, at least 10 characters.',
 };
 
 const AdminCurriculum: React.FC = () => {
@@ -200,6 +204,8 @@ const AdminCurriculum: React.FC = () => {
       prerequisites: level.prerequisites,
       estimatedHours: level.estimatedHours,
       isActive: level.isActive,
+      type: level.type, // Assuming level has a type property
+      content: level.content, // Assuming level has a content property
     });
     setShowLevelModal(true);
     setFormError('');
@@ -710,6 +716,19 @@ const AdminCurriculum: React.FC = () => {
                   />
                 </div>
 
+                <div>
+                  <label className="block text-sm font-medium text-paperwhite mb-2">
+                    Content *
+                  </label>
+                  <textarea
+                    value={levelForm.content}
+                    onChange={(e) => setLevelForm({ ...levelForm, content: e.target.value })}
+                    rows={5}
+                    className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise resize-none"
+                    placeholder="Enter content for the level (e.g., syllabus details)"
+                  />
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-paperwhite mb-2">
@@ -735,7 +754,7 @@ const AdminCurriculum: React.FC = () => {
                       onChange={(e) => setLevelForm({ ...levelForm, careerTrack: e.target.value })}
                       className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
                     >
-                      <option value="fullstack">Full Stack</option>
+                      <option value="full-stack">Full Stack</option>
                       <option value="ai-ml">AI/ML</option>
                       <option value="ui-ux">UI/UX</option>
                       <option value="data-science">Data Science</option>
