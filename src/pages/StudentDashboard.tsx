@@ -77,7 +77,7 @@ const StudentDashboard: React.FC = () => {
 
   const getTrackIcon = () => {
     switch (userTrack) {
-      case 'fullstack': return <Code className="h-5 w-5 lg:h-6 lg:w-6" />;
+      case 'full-stack': return <Code className="h-5 w-5 lg:h-6 lg:w-6" />;
       case 'ui-ux': return <Palette className="h-5 w-5 lg:h-6 lg:w-6" />;
       case 'data-science': return <BarChart3 className="h-5 w-5 lg:h-6 lg:w-6" />;
       case 'ai-ml': return <Brain className="h-5 w-5 lg:h-6 lg:w-6" />;
@@ -87,7 +87,7 @@ const StudentDashboard: React.FC = () => {
 
   const getTrackColor = () => {
     switch (userTrack) {
-      case 'fullstack': return 'from-blue-600 to-cyan-600';
+      case 'full-stack': return 'from-blue-600 to-cyan-600';
       case 'ui-ux': return 'from-green-600 to-emerald-600';
       case 'data-science': return 'from-orange-600 to-red-600';
       case 'ai-ml': return 'from-purple-600 to-pink-600';

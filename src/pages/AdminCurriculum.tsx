@@ -165,7 +165,7 @@ const AdminCurriculum: React.FC = () => {
 
   const getTrackColor = (track: string) => {
     switch (track) {
-      case 'fullstack': return 'bg-blue-500';
+      case 'full-stack': return 'bg-blue-500';
       case 'ai-ml': return 'bg-purple-500';
       case 'ui-ux': return 'bg-pink-500';
       case 'data-science': return 'bg-orange-500';
@@ -392,7 +392,7 @@ const AdminCurriculum: React.FC = () => {
             className="px-4 py-2 bg-offblack border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
           >
             <option value="all">All Tracks</option>
-            <option value="fullstack">Full Stack</option>
+            <option value="full-stack">Full Stack</option>
             <option value="ai-ml">AI/ML</option>
             <option value="ui-ux">UI/UX</option>
             <option value="data-science">Data Science</option>
