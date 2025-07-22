@@ -4,7 +4,7 @@ import apiService from '../../services/api';
 export const fetchCurriculum = createAsyncThunk(
   'curriculum/fetchCurriculum',
   async ({ type, trackId }: { type: string; trackId?: string }) => {
-    const response = await apiService.get(`/curriculum/type/${type}/track/${trackId}`);
+    const response = await apiService.getLevels(type, trackId);
     if (!response.success) throw new Error(response.message || 'Failed to fetch curriculum');
     return response.data || [];
   }
