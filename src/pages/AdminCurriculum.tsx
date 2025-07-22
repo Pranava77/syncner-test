@@ -260,7 +260,7 @@ const AdminCurriculum: React.FC = () => {
   const handleDeleteContent = async (levelId: string, type: 'learn' | 'test' | 'exercise', index: number) => {
     if (window.confirm('Are you sure you want to delete this content?')) {
       try {
-        await apiService.delete(`/training/levels/${levelId}/${type}/${index}`);
+        await apiService.delete(`/curriculum/${levelId}/${type}/${index}`);
         await fetchLevels();
       } catch (error) {
         console.error('Error deleting content:', error);

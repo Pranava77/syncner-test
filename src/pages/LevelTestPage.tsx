@@ -56,7 +56,7 @@ const LevelTestPage: React.FC = () => {
   const fetchLevel = async () => {
     try {
       setLoading(true);
-      const response = await apiService.get(`/training/levels/${levelId}`);
+      const response = await apiService.getLevel(levelId);
       console.log('Level test data response:', response);
       
       let levelData = null;

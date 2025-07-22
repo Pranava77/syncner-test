@@ -15,7 +15,7 @@ const LevelStatus: React.FC<LevelStatusProps> = ({ onLevelsLoaded }) => {
     setMessage('Checking levels...');
     
     try {
-      const response = await apiService.get('/training/levels');
+      const response = await apiService.getLevels();
       console.log('Levels API Response:', response);
       
       let levels = [];
