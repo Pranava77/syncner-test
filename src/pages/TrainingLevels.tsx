@@ -40,7 +40,7 @@ const TrainingLevels: React.FC = () => {
   const fetchLevels = async () => {
     try {
       setLoading(true);
-      const response = await apiService.getLevels();
+      const response = await apiService.getLevels({ type: 'learn', trackId: user?.careerTrack });
       console.log('Training levels response:', response);
       
       let levelsData = [];
