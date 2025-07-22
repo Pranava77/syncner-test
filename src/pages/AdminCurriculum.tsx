@@ -119,7 +119,7 @@ const AdminCurriculum: React.FC = () => {
     setLoading(true);
     try {
       console.log('Fetching levels from API...');
-      const response = await apiService.get('/training/levels');
+      const response = await apiService.getLevels();
       console.log('API Response:', response);
       
       // Handle different response formats
@@ -206,7 +206,7 @@ const AdminCurriculum: React.FC = () => {
   const handleDeleteLevel = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this level?')) {
       try {
-        await apiService.delete(`/training/levels/${id}`);
+        await apiService.delete(`/curriculum/${id}`);
         await fetchLevels();
       } catch (error) {
         console.error('Error deleting level:', error);
@@ -223,7 +223,7 @@ const AdminCurriculum: React.FC = () => {
     setLoading(true);
     try {
       if (editingLevel) {
-        await apiService.put(`/training/levels/${editingLevel.id}`, levelForm);
+        await apiService.put(`/curriculum/${editingLevel.id}`, levelForm);
         setShowLevelModal(false);
         setLevelForm(defaultLevelForm);
         setFormError('');
@@ -279,7 +279,7 @@ const AdminCurriculum: React.FC = () => {
     setLoading(true);
     try {
       if (editingContent && editingLevel) {
-        await apiService.put(`/training/levels/${editingLevel.id}/${editingContent.type}/${editingContent.index}`, contentForm);
+        await apiService.put(`/curriculum/${editingLevel.id}/${editingContent.type}/${editingContent.index}`, contentForm);
       } else if (editingLevel) {
         const contentType = editingContent?.type || 'learn';
         await apiService.post(`/curriculum/${editingLevel.id}/${contentType}`, contentForm);
