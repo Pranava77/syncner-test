@@ -161,6 +161,7 @@ const AdminCurriculum: React.FC = () => {
       careerTrack: item.careerTrack,
       skills: item.skills,
       prerequisites: item.prerequisites,
+    });
     setShowCurriculumModal(true);
     setFormError('');
   };
