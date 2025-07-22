@@ -282,7 +282,7 @@ const AdminCurriculum: React.FC = () => {
         await apiService.put(`/training/levels/${editingLevel.id}/${editingContent.type}/${editingContent.index}`, contentForm);
       } else if (editingLevel) {
         const contentType = editingContent?.type || 'learn';
-        await apiService.post(`/training/levels/${editingLevel.id}/${contentType}`, contentForm);
+        await apiService.post(`/curriculum/${editingLevel.id}/${contentType}`, contentForm);
       }
       
       setShowContentModal(false);
