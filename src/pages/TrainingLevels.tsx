@@ -78,19 +78,12 @@ const TrainingLevels: React.FC = () => {
       console.log('User career track:', userCareerTrack);
       
       if (userCareerTrack) {
-        // Map frontend career track names to backend format
-        const trackMapping: Record<string, string> = {
-          'fullstack': 'full-stack',
-          'ai-ml': 'ai-ml',
-          'ui-ux': 'ui-ux',
-          'data-science': 'data-science'
-        };
-        const mappedTrack = trackMapping[userCareerTrack] || userCareerTrack;
-        console.log(`Mapping career track: ${userCareerTrack} → ${mappedTrack}`);
+        // No mapping needed - backend and frontend use same format
+        console.log(`User career track: ${userCareerTrack}`);
         
         const beforeFilter = levelsData.length;
-        levelsData = levelsData.filter((level: Level) => level.careerTrack === mappedTrack);
-        console.log(`Filtered levels: ${beforeFilter} → ${levelsData.length} for track ${mappedTrack}`);
+        levelsData = levelsData.filter((level: Level) => level.careerTrack === userCareerTrack);
+        console.log(`Filtered levels: ${beforeFilter} → ${levelsData.length} for track ${userCareerTrack}`);
       }
       
       // Sort by order
