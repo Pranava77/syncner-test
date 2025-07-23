@@ -71,8 +71,16 @@ const TrainingLevels: React.FC = () => {
       // Filter levels by user's career track
       const userCareerTrack = user?.careerTrack;
       if (userCareerTrack) {
-        levelsData = levelsData.filter((level: Level) => level.careerTrack === userCareerTrack);
-        console.log(`Filtered levels for career track: ${userCareerTrack}`, levelsData);
+        // Map frontend career track names to backend format
+        const trackMapping: Record<string, string> = {
+          'fullstack': 'full-stack',
+          'ai-ml': 'ai-ml',
+          'ui-ux': 'ui-ux',
+          'data-science': 'data-science'
+        };
+        const mappedTrack = trackMapping[userCareerTrack] || userCareerTrack;
+        levelsData = levelsData.filter((level: Level) => level.careerTrack === mappedTrack);
+        console.log(`Filtered levels for career track: ${userCareerTrack} (mapped to ${mappedTrack})`, levelsData);
       }
       
       // Sort by order

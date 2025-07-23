@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
 import Track from '../models/Track.js';
-import Level from '../models/Level.js';
+import Curriculum from '../models/Curriculum.js';
 
 dotenv.config();
 
@@ -111,7 +111,7 @@ const sampleTracks = [
     name: 'Full Stack Development',
     description: 'Learn to build complete web applications using front-end and back-end technologies.',
     duration: '6 months',
-    difficulty: 'Beginner',
+    difficulty: 'beginner',
     averageSalary: '₹8,00,000',
     careerPaths: ['Web Developer', 'Backend Developer', 'Frontend Developer'],
     skills: ['JavaScript', 'Node.js', 'React', 'Databases'],
@@ -123,7 +123,7 @@ const sampleTracks = [
     name: 'AI/ML Engineering',
     description: 'Dive into artificial intelligence and machine learning concepts and applications.',
     duration: '8 months',
-    difficulty: 'Intermediate',
+    difficulty: 'intermediate',
     averageSalary: '₹12,00,000',
     careerPaths: ['ML Engineer', 'Data Scientist', 'AI Researcher'],
     skills: ['Python', 'TensorFlow', 'Machine Learning'],
@@ -135,7 +135,7 @@ const sampleTracks = [
     name: 'UI/UX Design',
     description: 'Master the art of designing user interfaces and experiences.',
     duration: '4 months',
-    difficulty: 'Beginner',
+    difficulty: 'beginner',
     averageSalary: '₹7,00,000',
     careerPaths: ['UI Designer', 'UX Researcher', 'Product Designer'],
     skills: ['Figma', 'Wireframing', 'Prototyping'],
@@ -147,7 +147,7 @@ const sampleTracks = [
     name: 'Data Science',
     description: 'Analyze and interpret complex data to help companies make decisions.',
     duration: '7 months',
-    difficulty: 'Intermediate',
+    difficulty: 'intermediate',
     averageSalary: '₹10,00,000',
     careerPaths: ['Data Analyst', 'Data Scientist', 'Business Analyst'],
     skills: ['Python', 'Statistics', 'Data Visualization'],
@@ -157,91 +157,147 @@ const sampleTracks = [
   }
 ];
 
-const sampleLevels = [
+const sampleCurriculum = [
+  // Full Stack Development - Level 1
   {
-    title: 'Intro to Web Development',
-    description: 'Basics of HTML, CSS, and JavaScript.',
-    difficulty: 'Beginner',
-    duration: '2 weeks',
-    careerTrack: 'fullstack',
-    skills: ['HTML', 'CSS', 'JavaScript'],
-    prerequisites: [],
-    learn: [
-      { type: 'reading', title: 'HTML Basics', content: 'Learn HTML structure.', order: 1 },
-      { type: 'video', title: 'CSS Introduction', videoUrl: 'https://youtube.com/', order: 2 }
-    ],
-    test: [
-      { question: 'What does HTML stand for?', options: ['HyperText Markup Language', 'Home Tool Markup Language'], answer: 'HyperText Markup Language', order: 1 }
-    ],
-    exercise: [
-      { title: 'Build a simple web page', description: 'Create a basic HTML page.', resources: [], order: 1 }
-    ],
+    title: 'HTML Fundamentals',
+    description: 'Learn the basics of HTML markup language',
+    type: 'learn',
+    content: 'HTML is the standard markup language for creating web pages. Learn about elements, tags, and document structure.',
     order: 1,
     isActive: true,
-    estimatedHours: 20
+    careerTrack: 'full-stack',
+    difficulty: 'beginner',
+    estimatedDuration: 60,
+    tags: ['HTML', 'Web Development', 'Markup'],
+    prerequisites: [],
+    learningObjectives: ['Understand HTML structure', 'Use basic HTML tags', 'Create simple web pages'],
+    metadata: {
+      createdBy: null, // Will be set during seeding
+      version: 1
+    }
   },
   {
-    title: 'Machine Learning Foundations',
-    description: 'Core ML concepts and Python libraries.',
-    difficulty: 'Intermediate',
-    duration: '3 weeks',
+    title: 'HTML Quiz',
+    description: 'Test your HTML knowledge',
+    type: 'test',
+    content: 'What does HTML stand for?',
+    order: 2,
+    isActive: true,
+    careerTrack: 'full-stack',
+    difficulty: 'beginner',
+    estimatedDuration: 15,
+    tags: ['HTML', 'Quiz', 'Assessment'],
+    prerequisites: ['HTML Fundamentals'],
+    learningObjectives: ['Assess HTML knowledge'],
+    metadata: {
+      createdBy: null,
+      version: 1
+    }
+  },
+  {
+    title: 'Build Your First Webpage',
+    description: 'Create a simple HTML webpage',
+    type: 'exercise',
+    content: 'Create a personal webpage using HTML with your name, bio, and favorite hobbies.',
+    order: 3,
+    isActive: true,
+    careerTrack: 'full-stack',
+    difficulty: 'beginner',
+    estimatedDuration: 90,
+    tags: ['HTML', 'Practice', 'Project'],
+    prerequisites: ['HTML Fundamentals'],
+    learningObjectives: ['Apply HTML knowledge', 'Create a complete webpage'],
+    resources: [
+      {
+        title: 'HTML Reference',
+        url: 'https://developer.mozilla.org/en-US/docs/Web/HTML',
+        type: 'external',
+        description: 'Complete HTML reference guide'
+      }
+    ],
+    metadata: {
+      createdBy: null,
+      version: 1
+    }
+  },
+  
+  // AI/ML Track
+  {
+    title: 'Python Basics for ML',
+    description: 'Learn Python fundamentals for machine learning',
+    type: 'learn',
+    content: 'Python is the most popular language for machine learning. Learn variables, data types, and basic operations.',
+    order: 1,
+    isActive: true,
     careerTrack: 'ai-ml',
-    skills: ['Python', 'Numpy', 'Pandas'],
+    difficulty: 'beginner',
+    estimatedDuration: 120,
+    tags: ['Python', 'Programming', 'ML'],
     prerequisites: [],
-    learn: [
-      { type: 'reading', title: 'Intro to ML', content: 'What is Machine Learning?', order: 1 }
-    ],
-    test: [
-      { question: 'Which library is used for data manipulation?', options: ['Numpy', 'Pandas'], answer: 'Pandas', order: 1 }
-    ],
-    exercise: [
-      { title: 'Data Cleaning', description: 'Clean a sample dataset.', resources: [], order: 1 }
-    ],
-    order: 1,
-    isActive: true,
-    estimatedHours: 30
+    learningObjectives: ['Write Python code', 'Understand data types', 'Use basic operations'],
+    metadata: {
+      createdBy: null,
+      version: 1
+    }
   },
   {
-    title: 'UI/UX Principles',
-    description: 'Fundamentals of user interface and experience design.',
-    difficulty: 'Beginner',
-    duration: '2 weeks',
+    title: 'Python Quiz',
+    description: 'Test your Python knowledge',
+    type: 'test',
+    content: 'Which Python library is most commonly used for data manipulation?',
+    order: 2,
+    isActive: true,
+    careerTrack: 'ai-ml',
+    difficulty: 'beginner',
+    estimatedDuration: 15,
+    tags: ['Python', 'Quiz'],
+    prerequisites: ['Python Basics for ML'],
+    learningObjectives: ['Assess Python knowledge'],
+    metadata: {
+      createdBy: null,
+      version: 1
+    }
+  },
+  
+  // UI/UX Track
+  {
+    title: 'Design Principles',
+    description: 'Learn fundamental design principles',
+    type: 'learn',
+    content: 'Understand the core principles of design including balance, contrast, hierarchy, and alignment.',
+    order: 1,
+    isActive: true,
     careerTrack: 'ui-ux',
-    skills: ['Wireframing', 'Prototyping'],
+    difficulty: 'beginner',
+    estimatedDuration: 90,
+    tags: ['Design', 'UI/UX', 'Principles'],
     prerequisites: [],
-    learn: [
-      { type: 'reading', title: 'Wireframing Basics', content: 'Learn to wireframe.', order: 1 }
-    ],
-    test: [
-      { question: 'What is a wireframe?', options: ['A prototype', 'A sketch of UI'], answer: 'A sketch of UI', order: 1 }
-    ],
-    exercise: [
-      { title: 'Create a wireframe', description: 'Draw a wireframe for a login page.', resources: [], order: 1 }
-    ],
-    order: 1,
-    isActive: true,
-    estimatedHours: 15
+    learningObjectives: ['Understand design principles', 'Apply visual hierarchy', 'Create balanced layouts'],
+    metadata: {
+      createdBy: null,
+      version: 1
+    }
   },
+  
+  // Data Science Track
   {
-    title: 'Data Analysis Basics',
-    description: 'Introduction to data analysis and visualization.',
-    difficulty: 'Intermediate',
-    duration: '3 weeks',
-    careerTrack: 'data-science',
-    skills: ['Python', 'Data Visualization'],
-    prerequisites: [],
-    learn: [
-      { type: 'reading', title: 'Data Analysis Overview', content: 'What is data analysis?', order: 1 }
-    ],
-    test: [
-      { question: 'Which tool is used for data visualization?', options: ['Matplotlib', 'TensorFlow'], answer: 'Matplotlib', order: 1 }
-    ],
-    exercise: [
-      { title: 'Visualize Data', description: 'Create a bar chart.', resources: [], order: 1 }
-    ],
+    title: 'Data Analysis Fundamentals',
+    description: 'Introduction to data analysis concepts',
+    type: 'learn',
+    content: 'Learn the basics of data analysis including data types, descriptive statistics, and data visualization.',
     order: 1,
     isActive: true,
-    estimatedHours: 25
+    careerTrack: 'data-science',
+    difficulty: 'beginner',
+    estimatedDuration: 150,
+    tags: ['Data Analysis', 'Statistics', 'Visualization'],
+    prerequisites: [],
+    learningObjectives: ['Understand data types', 'Calculate basic statistics', 'Create simple visualizations'],
+    metadata: {
+      createdBy: null,
+      version: 1
+    }
   }
 ];
 
@@ -252,24 +308,45 @@ const seedData = async () => {
     await connectDB();
     await User.deleteMany({});
     await Track.deleteMany({});
-    await Level.deleteMany({});
+    await Curriculum.deleteMany({}); // Changed from Level.deleteMany
     const createdTracks = await Track.insertMany(sampleTracks);
-    const createdLevels = await Level.insertMany(sampleLevels);
-    // Link levels to tracks
-    for (const track of createdTracks) {
-      const levelsForTrack = createdLevels.filter(l => l.careerTrack === track.name);
-      track.levels = levelsForTrack.map(l => l._id);
-      await track.save();
-    }
-    const createdAdmins = await User.insertMany(sampleAdmins.map(a => ({...a, role: 'admin'})));
-    const createdStaff = await User.insertMany(sampleStaff.map(s => ({...s, role: 'staff'})));
+    // Hash admin and staff passwords
+    const adminsWithHashed = await Promise.all(sampleAdmins.map(async a => ({
+      ...a,
+      role: 'admin',
+      password: await hashPassword('AdminPass123')
+    })));
+    const staffWithHashed = await Promise.all(sampleStaff.map(async s => ({
+      ...s,
+      role: 'staff',
+      password: await hashPassword('StaffPass123')
+    })));
+    const createdAdmins = await User.insertMany(adminsWithHashed);
+    const createdStaff = await User.insertMany(staffWithHashed);
     // Hash student passwords
     const studentsWithHashed = await Promise.all(sampleStudents.map(async s => ({
       ...s,
       password: await hashPassword(s.password)
     })));
     const createdStudents = await User.insertMany(studentsWithHashed);
-    console.log(`Seeded ${createdAdmins.length} admins, ${createdStaff.length} staff, ${createdStudents.length} students, ${createdTracks.length} tracks, and ${createdLevels.length} levels!`);
+    
+    // Set createdBy for curriculum items
+    const adminId = createdAdmins[0]._id;
+    const curriculumWithCreator = sampleCurriculum.map(item => ({
+      ...item,
+      metadata: {
+        ...item.metadata,
+        createdBy: adminId
+      }
+    }));
+    const createdCurriculum = await Curriculum.insertMany(curriculumWithCreator);
+    // Link curriculum to tracks
+    for (const track of createdTracks) {
+      const curriculumForTrack = createdCurriculum.filter(c => c.careerTrack === track.name.toLowerCase().replace(' ', '-'));
+      track.curriculum = curriculumForTrack.map(c => c._id);
+      await track.save();
+    }
+    console.log(`Seeded ${createdAdmins.length} admins, ${createdStaff.length} staff, ${createdStudents.length} students, ${createdTracks.length} tracks, and ${createdCurriculum.length} curriculum items!`);
     process.exit(0);
   } catch (error) {
     console.error('Error seeding data:', error);
