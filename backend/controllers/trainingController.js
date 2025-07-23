@@ -7,27 +7,37 @@ const groupCurriculumIntoLevels = (items) => {
   const levelsMap = new Map();
 
   items.forEach(item => {
-    // Use a composite key to uniquely identify a level
-    const key = `${item.careerTrack}_${item.title}`.toLowerCase();
+    // Use order and career track as the key to group items by level
+    const key = `${item.careerTrack}_${item.order}`;
 
     if (!levelsMap.has(key)) {
+      // Find the syllabus item for this level to get the base title and description
+      const syllabusItem = items.find(i => 
+        i.careerTrack === item.careerTrack && 
+        i.order === item.order && 
+        i.type === 'syllabus'
+      );
+      
+      // Use syllabus item if available, otherwise use the current item
+      const baseItem = syllabusItem || item;
+      
       levelsMap.set(key, {
-        id: item._id.toString(), // Convert ObjectId to string for consistency
-        title: item.title,
-        description: item.description,
-        difficulty: item.difficulty,
-        duration: item.formattedDuration || `${Math.floor(item.estimatedDuration / 60)}h ${item.estimatedDuration % 60}m`,
-        careerTrack: item.careerTrack,
-        skills: item.tags || [], // Map tags to skills
-        prerequisites: item.prerequisites || [],
-        order: item.order,
-        isActive: item.isActive,
-        estimatedHours: Math.ceil(item.estimatedDuration / 60), // Convert minutes to hours, round up
+        id: baseItem._id.toString(), // Convert ObjectId to string for consistency
+        title: baseItem.title,
+        description: baseItem.description,
+        difficulty: baseItem.difficulty,
+        duration: baseItem.formattedDuration || `${Math.floor(baseItem.estimatedDuration / 60)}h ${baseItem.estimatedDuration % 60}m`,
+        careerTrack: baseItem.careerTrack,
+        skills: baseItem.tags || [], // Map tags to skills
+        prerequisites: baseItem.prerequisites || [],
+        order: baseItem.order,
+        isActive: baseItem.isActive,
+        estimatedHours: Math.ceil(baseItem.estimatedDuration / 60), // Convert minutes to hours, round up
         learn: [],
         test: [],
         exercise: [],
-        createdAt: item.createdAt,
-        updatedAt: item.updatedAt
+        createdAt: baseItem.createdAt,
+        updatedAt: baseItem.updatedAt
       });
     }
 
@@ -93,6 +103,14 @@ const groupCurriculumIntoLevels = (items) => {
     learnCount: l.learn.length,
     testCount: l.test.length,
     exerciseCount: l.exercise.length
+  })));
+  
+  console.log('Grouping debug - Input items:', items.map(item => ({
+    id: item._id,
+    title: item.title,
+    type: item.type,
+    order: item.order,
+    careerTrack: item.careerTrack
   })));
 
   return levels;
@@ -173,10 +191,10 @@ export const getAllLevels = async (req, res) => {
     // Combine both grouped levels and standalone levels
     const allLevels = [...levels, ...formattedStandaloneLevels];
     
-    // Remove duplicates based on title and career track
+    // Remove duplicates based on order and career track (not title)
     const uniqueLevels = allLevels.filter((level, index, self) => 
       index === self.findIndex(l => 
-        l.title === level.title && l.careerTrack === level.careerTrack
+        l.order === level.order && l.careerTrack === level.careerTrack
       )
     );
     

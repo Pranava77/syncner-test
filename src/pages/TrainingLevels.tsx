@@ -86,9 +86,18 @@ const TrainingLevels: React.FC = () => {
       
       console.log('Processed levels data:', levelsData);
       
+      // Ensure we have unique levels by order and career track
+      const uniqueLevels = levelsData.filter((level: Level, index: number, self: Level[]) => 
+        index === self.findIndex((l: Level) => 
+          l.order === level.order && l.careerTrack === level.careerTrack
+        )
+      );
+      
       // Sort by order
-      levelsData.sort((a: Level, b: Level) => a.order - b.order);
-      console.log('Final levels data:', levelsData);
+      uniqueLevels.sort((a: Level, b: Level) => a.order - b.order);
+      console.log('Final unique levels data:', uniqueLevels);
+      
+      levelsData = uniqueLevels;
       
       setLevels(levelsData);
       setError(null); // Clear any errors on success

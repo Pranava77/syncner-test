@@ -10,6 +10,9 @@ interface Level {
   order: number;
   isActive: boolean;
   careerTrack: string;
+  learn: any[];
+  test: any[];
+  exercise: any[];
 }
 
 interface LevelsSidebarProps {
@@ -60,12 +63,19 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
       
       console.log('Sidebar: Raw levels data:', levelsData);
       
+      // Ensure we have unique levels by order and career track
+      const uniqueLevels = levelsData.filter((level: Level, index: number, self: Level[]) => 
+        index === self.findIndex((l: Level) => 
+          l.order === level.order && l.careerTrack === level.careerTrack
+        )
+      );
+      
       // Sort by order and filter active levels
-      levelsData = levelsData
+      levelsData = uniqueLevels
         .filter((level: Level) => level.isActive)
         .sort((a: Level, b: Level) => a.order - b.order);
       
-      console.log('Sidebar: Final filtered levels:', levelsData);
+      console.log('Sidebar: Final filtered unique levels:', levelsData);
       setLevels(levelsData);
     } catch (error) {
       console.error('Error fetching levels for sidebar:', error);
@@ -139,6 +149,11 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                     <div className="flex-1 text-left">
                       <div className="font-medium">Level {level.order}</div>
                       <div className="text-xs text-teallight truncate">{level.title}</div>
+                      <div className="text-xs text-teallight/60 flex items-center gap-2 mt-1">
+                        <span>{level.learn?.length || 0} learn</span>
+                        <span>{level.test?.length || 0} test</span>
+                        <span>{level.exercise?.length || 0} exercise</span>
+                      </div>
                     </div>
                   )}
               </button>
@@ -151,7 +166,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                       onClick={() => navigate(`/student/training/${level.id}/learn`)}
                   >
                     <ReaderIcon className={`h-4 w-4 ${currentSection === 'learn' ? 'text-trueturquoise' : 'text-paperwhite'}`} />
-                    Learn
+                    Learn ({level.learn?.length || 0})
                   </button>
                   <button
                     className={`w-full flex items-center gap-2 text-left py-2 transition-colors text-xs font-${currentSection === 'test' ? 'semibold' : 'normal'}
@@ -160,7 +175,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                       onClick={() => navigate(`/student/training/${level.id}/test`)}
                   >
                     <ClipboardIcon className={`h-4 w-4 ${currentSection === 'test' ? 'text-trueturquoise' : 'text-paperwhite'}`} />
-                    Test
+                    Test ({level.test?.length || 0})
                   </button>
                   <button
                     className={`w-full flex items-center gap-2 text-left py-2 transition-colors text-xs font-${currentSection === 'exercise' ? 'semibold' : 'normal'}
@@ -169,7 +184,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                       onClick={() => navigate(`/student/training/${level.id}/exercise`)}
                   >
                     <Pencil2Icon className={`h-4 w-4 ${currentSection === 'exercise' ? 'text-trueturquoise' : 'text-paperwhite'}`} />
-                    Exercise
+                    Exercise ({level.exercise?.length || 0})
                   </button>
                 </div>
               )}
