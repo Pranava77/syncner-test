@@ -11,7 +11,7 @@ const groupCurriculumIntoLevels = (items) => {
 
     if (!levelsMap.has(key)) {
       levelsMap.set(key, {
-        id: item._id, // Use the first item's ID as the level's ID
+        id: item._id.toString(), // Convert ObjectId to string for consistency
         title: item.title,
         description: item.description,
         difficulty: item.difficulty,
@@ -163,6 +163,7 @@ export const getLevelById = async (req, res) => {
       });
     }
 
+    // First, try to find the curriculum item by ID
     const representativeItem = await Curriculum.findById(id);
 
     if (!representativeItem) {
@@ -180,12 +181,12 @@ export const getLevelById = async (req, res) => {
       type: representativeItem.type
     });
 
-    // Find all items that constitute this level
+    // Find all items that constitute this level (same title and career track)
     const curriculumItems = await Curriculum.find({
       title: representativeItem.title,
       careerTrack: representativeItem.careerTrack,
       isActive: true
-    });
+    }).sort({ order: 'asc' });
 
     console.log('Training controller: Found curriculum items for level:', curriculumItems.length);
 
@@ -196,6 +197,7 @@ export const getLevelById = async (req, res) => {
       });
     }
 
+    // Group the items into a level
     const levels = groupCurriculumIntoLevels(curriculumItems);
 
     if (levels.length === 0) {
@@ -205,16 +207,17 @@ export const getLevelById = async (req, res) => {
       });
     }
 
+    const level = levels[0];
     console.log('Training controller: Returning level:', {
-      id: levels[0].id,
-      title: levels[0].title,
-      careerTrack: levels[0].careerTrack,
-      learnCount: levels[0].learn.length,
-      testCount: levels[0].test.length,
-      exerciseCount: levels[0].exercise.length
+      id: level.id,
+      title: level.title,
+      careerTrack: level.careerTrack,
+      learnCount: level.learn.length,
+      testCount: level.test.length,
+      exerciseCount: level.exercise.length
     });
 
-    res.status(200).json({ success: true, data: levels[0] });
+    res.status(200).json({ success: true, data: level });
   } catch (error) {
     console.error('Get level by ID error:', error);
     res.status(500).json({ 

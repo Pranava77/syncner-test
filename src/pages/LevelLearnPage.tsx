@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import LevelsSidebar from '../components/LevelsSidebar';
 import { PlayIcon, ReaderIcon, FileTextIcon } from '@radix-ui/react-icons';
@@ -33,17 +33,12 @@ const LevelLearnPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (levelId) {
-      fetchLevel();
-    }
-  }, [levelId, fetchLevel]);
-
-  const fetchLevel = async () => {
+  const fetchLevel = useCallback(async () => {
     try {
       setLoading(true);
+      console.log('LevelLearnPage: Fetching level with ID:', levelId);
       const response = await apiService.get(`/training/levels/${levelId}`);
-      console.log('Level data response:', response);
+      console.log('LevelLearnPage: Level data response:', response);
       
       let levelData = null;
       if (response && response.data) {
@@ -52,14 +47,21 @@ const LevelLearnPage: React.FC = () => {
         levelData = response;
       }
       
+      console.log('LevelLearnPage: Processed level data:', levelData);
       setLevel(levelData);
     } catch (error) {
-      console.error('Error fetching level:', error);
-      setError('Failed to load level content');
+      console.error('LevelLearnPage: Error fetching level:', error);
+      setError(`Failed to load level content: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setLoading(false);
     }
-  };
+  }, [levelId]);
+
+  useEffect(() => {
+    if (levelId) {
+      fetchLevel();
+    }
+  }, [levelId, fetchLevel]);
 
   const getContentIcon = (type: string) => {
     switch (type) {
@@ -133,7 +135,7 @@ const LevelLearnPage: React.FC = () => {
               </span>
               <span className="px-3 py-1 rounded-full bg-paperwhite/10 text-trueturquoise font-semibold text-sm">
                 {level.careerTrack}
-            </span>
+              </span>
             </div>
           </div>
         </div>
@@ -158,24 +160,24 @@ const LevelLearnPage: React.FC = () => {
                     <div className="flex-1">
                       <h3 className="text-lg font-semibold text-paperwhite">{item.title}</h3>
                       <span className="text-xs text-teallight capitalize">{item.type}</span>
-            </div>
-          </div>
+                    </div>
+                  </div>
                   
                   <div className="mb-4">
                     <p className="text-paperwhite text-sm leading-relaxed">{item.content}</p>
-            </div>
+                  </div>
                   
                   {item.type === 'video' && item.videoUrl && (
                     <div className="mb-4">
-                <a
+                      <a
                         href={item.videoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
-                >
+                      >
                         <PlayIcon className="h-4 w-4" />
                         Watch Video
-                </a>
+                      </a>
                     </div>
                   )}
                 </div>
