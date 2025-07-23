@@ -79,6 +79,31 @@ const seedData = async () => {
         }
       },
       {
+        title: 'Introduction to Web Development - HTML Elements Deep Dive',
+        description: 'Master HTML elements and their proper usage',
+        type: 'learn',
+        content: 'Dive deeper into HTML elements including headings, paragraphs, lists, links, images, tables, and forms. Learn about semantic HTML5 elements like header, nav, main, section, article, aside, and footer.',
+        order: 1,
+        careerTrack: 'full-stack',
+        difficulty: 'beginner',
+        estimatedDuration: 60,
+        tags: ['html', 'elements', 'semantic', 'html5'],
+        prerequisites: ['Introduction to Web Development'],
+        learningObjectives: ['Master HTML elements', 'Understand semantic HTML', 'Create accessible markup'],
+        resources: [
+          {
+            title: 'HTML5 Semantic Elements',
+            url: 'https://www.w3schools.com/html/html5_semantic_elements.asp',
+            type: 'document',
+            description: 'Guide to semantic HTML5 elements'
+          }
+        ],
+        metadata: {
+          createdBy: adminUser._id,
+          version: 1
+        }
+      },
+      {
         title: 'Introduction to Web Development - HTML Quiz',
         description: 'Test your knowledge of HTML fundamentals',
         type: 'test',
@@ -90,6 +115,42 @@ const seedData = async () => {
         tags: ['html', 'quiz', 'assessment'],
         prerequisites: ['Introduction to Web Development'],
         learningObjectives: ['Test HTML knowledge', 'Validate understanding'],
+        resources: [],
+        metadata: {
+          createdBy: adminUser._id,
+          version: 1
+        }
+      },
+      {
+        title: 'Introduction to Web Development - HTML Elements Quiz',
+        description: 'Test your knowledge of HTML elements and semantic markup',
+        type: 'test',
+        content: 'Which HTML element is used to define a navigation section?\nA) <nav>\nB) <header>\nC) <section>\nD) <div>\nAnswer: A',
+        order: 1,
+        careerTrack: 'full-stack',
+        difficulty: 'beginner',
+        estimatedDuration: 15,
+        tags: ['html', 'quiz', 'semantic'],
+        prerequisites: ['Introduction to Web Development'],
+        learningObjectives: ['Test semantic HTML knowledge', 'Validate element understanding'],
+        resources: [],
+        metadata: {
+          createdBy: adminUser._id,
+          version: 1
+        }
+      },
+      {
+        title: 'Introduction to Web Development - HTML Forms Quiz',
+        description: 'Test your knowledge of HTML forms and input elements',
+        type: 'test',
+        content: 'Which input type is used for email addresses?\nA) type="text"\nB) type="email"\nC) type="mail"\nD) type="address"\nAnswer: B',
+        order: 1,
+        careerTrack: 'full-stack',
+        difficulty: 'beginner',
+        estimatedDuration: 15,
+        tags: ['html', 'quiz', 'forms'],
+        prerequisites: ['Introduction to Web Development'],
+        learningObjectives: ['Test form knowledge', 'Validate input understanding'],
         resources: [],
         metadata: {
           createdBy: adminUser._id,
@@ -114,6 +175,31 @@ const seedData = async () => {
             url: 'https://www.wpkube.com/html5-cheat-sheet/',
             type: 'document',
             description: 'Quick reference for HTML tags'
+          }
+        ],
+        metadata: {
+          createdBy: adminUser._id,
+          version: 1
+        }
+      },
+      {
+        title: 'Introduction to Web Development - Build a Portfolio Page',
+        description: 'Create a comprehensive portfolio page showcasing your skills',
+        type: 'exercise',
+        content: 'Build a professional portfolio page with multiple sections: header with navigation, about section, skills section, projects section, and contact form. Use semantic HTML and ensure accessibility.',
+        order: 1,
+        careerTrack: 'full-stack',
+        difficulty: 'beginner',
+        estimatedDuration: 90,
+        tags: ['html', 'portfolio', 'semantic', 'accessibility'],
+        prerequisites: ['Introduction to Web Development'],
+        learningObjectives: ['Create complex layouts', 'Implement semantic HTML', 'Ensure accessibility'],
+        resources: [
+          {
+            title: 'HTML Accessibility Guide',
+            url: 'https://developer.mozilla.org/en-US/docs/Learn/Accessibility/HTML',
+            type: 'document',
+            description: 'Guide to accessible HTML'
           }
         ],
         metadata: {
@@ -165,6 +251,31 @@ const seedData = async () => {
         }
       },
       {
+        title: 'CSS Styling and Layout - Advanced CSS Techniques',
+        description: 'Master advanced CSS concepts and modern layout techniques',
+        type: 'learn',
+        content: 'Explore advanced CSS concepts including CSS Grid, custom properties (CSS variables), animations, transitions, and modern layout techniques. Learn about CSS architecture and best practices.',
+        order: 2,
+        careerTrack: 'full-stack',
+        difficulty: 'beginner',
+        estimatedDuration: 75,
+        tags: ['css', 'grid', 'animations', 'variables'],
+        prerequisites: ['CSS Styling and Layout'],
+        learningObjectives: ['Master CSS Grid', 'Use CSS variables', 'Create animations'],
+        resources: [
+          {
+            title: 'CSS Grid Guide',
+            url: 'https://css-tricks.com/snippets/css/complete-guide-grid/',
+            type: 'document',
+            description: 'Complete CSS Grid guide'
+          }
+        ],
+        metadata: {
+          createdBy: adminUser._id,
+          version: 1
+        }
+      },
+      {
         title: 'CSS Styling and Layout - CSS Quiz',
         description: 'Test your CSS knowledge',
         type: 'test',
@@ -176,6 +287,42 @@ const seedData = async () => {
         tags: ['css', 'quiz', 'assessment'],
         prerequisites: ['CSS Styling and Layout'],
         learningObjectives: ['Test CSS knowledge', 'Validate understanding'],
+        resources: [],
+        metadata: {
+          createdBy: adminUser._id,
+          version: 1
+        }
+      },
+      {
+        title: 'CSS Styling and Layout - CSS Layout Quiz',
+        description: 'Test your knowledge of CSS layout techniques',
+        type: 'test',
+        content: 'Which CSS property is used to create a flexbox layout?\nA) display: flex\nB) display: grid\nC) display: block\nD) display: inline\nAnswer: A',
+        order: 2,
+        careerTrack: 'full-stack',
+        difficulty: 'beginner',
+        estimatedDuration: 15,
+        tags: ['css', 'quiz', 'layout'],
+        prerequisites: ['CSS Styling and Layout'],
+        learningObjectives: ['Test layout knowledge', 'Validate flexbox understanding'],
+        resources: [],
+        metadata: {
+          createdBy: adminUser._id,
+          version: 1
+        }
+      },
+      {
+        title: 'CSS Styling and Layout - CSS Selectors Quiz',
+        description: 'Test your knowledge of CSS selectors and specificity',
+        type: 'test',
+        content: 'Which CSS selector has the highest specificity?\nA) .class\nB) #id\nC) element\nD) *\nAnswer: B',
+        order: 2,
+        careerTrack: 'full-stack',
+        difficulty: 'beginner',
+        estimatedDuration: 15,
+        tags: ['css', 'quiz', 'selectors'],
+        prerequisites: ['CSS Styling and Layout'],
+        learningObjectives: ['Test selector knowledge', 'Validate specificity understanding'],
         resources: [],
         metadata: {
           createdBy: adminUser._id,
@@ -200,6 +347,31 @@ const seedData = async () => {
             url: 'https://css-tricks.com/snippets/css/a-guide-to-flexbox/',
             type: 'document',
             description: 'Complete flexbox guide'
+          }
+        ],
+        metadata: {
+          createdBy: adminUser._id,
+          version: 1
+        }
+      },
+      {
+        title: 'CSS Styling and Layout - Create a Responsive Dashboard',
+        description: 'Build a responsive dashboard using CSS Grid and Flexbox',
+        type: 'exercise',
+        content: 'Create a responsive dashboard layout with header, sidebar, main content area, and footer. Use CSS Grid for the overall layout and Flexbox for component layouts. Make it mobile-friendly with media queries.',
+        order: 2,
+        careerTrack: 'full-stack',
+        difficulty: 'beginner',
+        estimatedDuration: 120,
+        tags: ['css', 'dashboard', 'responsive', 'grid'],
+        prerequisites: ['CSS Styling and Layout'],
+        learningObjectives: ['Create complex layouts', 'Implement responsive design', 'Use CSS Grid and Flexbox'],
+        resources: [
+          {
+            title: 'CSS Grid Layout',
+            url: 'https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout',
+            type: 'document',
+            description: 'CSS Grid layout guide'
           }
         ],
         metadata: {
@@ -253,6 +425,31 @@ const seedData = async () => {
         }
       },
       {
+        title: 'Introduction to Machine Learning - Data Preprocessing Techniques',
+        description: 'Learn essential data preprocessing techniques for machine learning',
+        type: 'learn',
+        content: 'Data preprocessing is crucial for successful machine learning. Learn about data cleaning, handling missing values, feature scaling, encoding categorical variables, and data splitting techniques.',
+        order: 1,
+        careerTrack: 'ai-ml',
+        difficulty: 'beginner',
+        estimatedDuration: 75,
+        tags: ['data-preprocessing', 'cleaning', 'scaling', 'encoding'],
+        prerequisites: ['Introduction to Machine Learning'],
+        learningObjectives: ['Clean and preprocess data', 'Handle missing values', 'Scale features'],
+        resources: [
+          {
+            title: 'Data Preprocessing Guide',
+            url: 'https://scikit-learn.org/stable/modules/preprocessing.html',
+            type: 'document',
+            description: 'Scikit-learn preprocessing guide'
+          }
+        ],
+        metadata: {
+          createdBy: adminUser._id,
+          version: 1
+        }
+      },
+      {
         title: 'Introduction to Machine Learning - Python Data Science Quiz',
         description: 'Test your Python and data science knowledge',
         type: 'test',
@@ -264,6 +461,42 @@ const seedData = async () => {
         tags: ['python', 'quiz', 'data-science'],
         prerequisites: ['Introduction to Machine Learning'],
         learningObjectives: ['Test Python knowledge', 'Validate data science concepts'],
+        resources: [],
+        metadata: {
+          createdBy: adminUser._id,
+          version: 1
+        }
+      },
+      {
+        title: 'Introduction to Machine Learning - Data Preprocessing Quiz',
+        description: 'Test your knowledge of data preprocessing techniques',
+        type: 'test',
+        content: 'Which technique is used to handle missing values in a dataset?\nA) Data imputation\nB) Data deletion\nC) Data scaling\nD) Data encoding\nAnswer: A',
+        order: 1,
+        careerTrack: 'ai-ml',
+        difficulty: 'beginner',
+        estimatedDuration: 20,
+        tags: ['data-preprocessing', 'quiz', 'missing-values'],
+        prerequisites: ['Introduction to Machine Learning'],
+        learningObjectives: ['Test preprocessing knowledge', 'Validate understanding'],
+        resources: [],
+        metadata: {
+          createdBy: adminUser._id,
+          version: 1
+        }
+      },
+      {
+        title: 'Introduction to Machine Learning - ML Concepts Quiz',
+        description: 'Test your understanding of machine learning concepts',
+        type: 'test',
+        content: 'What is the difference between supervised and unsupervised learning?\nA) Supervised uses labeled data, unsupervised uses unlabeled data\nB) Supervised uses unlabeled data, unsupervised uses labeled data\nC) Both use labeled data\nD) Both use unlabeled data\nAnswer: A',
+        order: 1,
+        careerTrack: 'ai-ml',
+        difficulty: 'beginner',
+        estimatedDuration: 20,
+        tags: ['ml-concepts', 'quiz', 'supervised-unsupervised'],
+        prerequisites: ['Introduction to Machine Learning'],
+        learningObjectives: ['Test ML concepts', 'Validate understanding'],
         resources: [],
         metadata: {
           createdBy: adminUser._id,
@@ -288,6 +521,31 @@ const seedData = async () => {
             url: 'https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_iris.html',
             type: 'document',
             description: 'Sample dataset for practice'
+          }
+        ],
+        metadata: {
+          createdBy: adminUser._id,
+          version: 1
+        }
+      },
+      {
+        title: 'Introduction to Machine Learning - Build Your First ML Model',
+        description: 'Create and train your first machine learning model',
+        type: 'exercise',
+        content: 'Using the preprocessed data from previous exercises, build a simple classification model using scikit-learn. Train the model, evaluate its performance, and create a prediction system.',
+        order: 1,
+        careerTrack: 'ai-ml',
+        difficulty: 'beginner',
+        estimatedDuration: 150,
+        tags: ['ml-model', 'classification', 'scikit-learn', 'project'],
+        prerequisites: ['Introduction to Machine Learning'],
+        learningObjectives: ['Build ML models', 'Train and evaluate', 'Make predictions'],
+        resources: [
+          {
+            title: 'Scikit-learn Tutorial',
+            url: 'https://scikit-learn.org/stable/tutorial/',
+            type: 'document',
+            description: 'Official scikit-learn tutorial'
           }
         ],
         metadata: {
