@@ -54,6 +54,22 @@ const groupCurriculumIntoLevels = (items) => {
       resources: item.resources || []
     };
 
+    // For exercise items, process resources properly
+    if (item.type === 'exercise') {
+      // Convert resources to the format expected by frontend
+      if (item.resources && Array.isArray(item.resources)) {
+        contentItem.resources = item.resources.map(resource => {
+          if (typeof resource === 'string') {
+            return resource;
+          } else if (resource && typeof resource === 'object') {
+            // If it's an object with title and url, format it as a string
+            return resource.title ? `${resource.title}: ${resource.url || resource.description || ''}` : resource.url || resource.description || '';
+          }
+          return String(resource);
+        });
+      }
+    }
+
     // For test items, parse the content to extract options and answer
     if (item.type === 'test') {
       const lines = item.content.split('\n');

@@ -46,6 +46,18 @@ const LevelExercisePage: React.FC = () => {
       }
       
       setLevel(levelData);
+      
+      // Debug exercise data
+      if (levelData && levelData.exercise) {
+        console.log('LevelExercisePage: Exercise data:', levelData.exercise);
+        console.log('LevelExercisePage: Exercise data length:', levelData.exercise.length);
+        levelData.exercise.forEach((exercise: any, index: number) => {
+          console.log(`LevelExercisePage: Exercise ${index}:`, exercise);
+          console.log(`LevelExercisePage: Exercise ${index} resources:`, exercise.resources);
+        });
+      } else {
+        console.log('LevelExercisePage: No exercise data found in level:', levelData);
+      }
     } catch (error) {
       console.error('LevelExercisePage: Error fetching level:', error);
       setError(`Failed to load exercise content: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -96,7 +108,9 @@ const LevelExercisePage: React.FC = () => {
     );
   }
 
-  if (level.exercise.length === 0) {
+  const validExercises = level.exercise ? level.exercise.filter(e => e && e.title && e.description) : [];
+  
+  if (!level.exercise || level.exercise.length === 0 || validExercises.length === 0) {
     return (
       <div className="flex h-screen bg-offblack overflow-x-hidden">
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="exercise" />
@@ -141,7 +155,7 @@ const LevelExercisePage: React.FC = () => {
 
         {/* Exercise Content */}
         <div className="w-full max-w-5xl space-y-6">
-          {level.exercise.map((exercise, index) => (
+          {validExercises.map((exercise, index) => (
             <div key={index} className="bg-paperwhite/5 rounded-xl border border-paperwhite/20 shadow-lg p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-2 rounded-lg bg-green-500">

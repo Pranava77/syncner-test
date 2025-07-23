@@ -56,14 +56,20 @@ const LevelTestPage: React.FC = () => {
       // Initialize answers for all questions
       if (levelData && levelData.test) {
         console.log('LevelTestPage: Test data:', levelData.test);
+        console.log('LevelTestPage: Test data length:', levelData.test.length);
+        
         const initialAnswers = Object.fromEntries(
           levelData.test.map((testItem: any, i: number) => {
             const optionsLength = testItem.options ? testItem.options.length : 0;
             console.log(`LevelTestPage: Question ${i} has ${optionsLength} options:`, testItem);
+            console.log(`LevelTestPage: Question ${i} options:`, testItem.options);
+            console.log(`LevelTestPage: Question ${i} answer:`, testItem.answer);
             return [i, new Array(optionsLength).fill(false)];
           })
         );
         setAnswers(initialAnswers);
+      } else {
+        console.log('LevelTestPage: No test data found in level:', levelData);
       }
     } catch (error) {
       console.error('LevelTestPage: Error fetching level:', error);
@@ -141,7 +147,9 @@ const LevelTestPage: React.FC = () => {
     );
   }
 
-  if (level.test.length === 0) {
+  const validQuestions = level.test ? level.test.filter(q => q && q.question && q.options && q.options.length > 0) : [];
+  
+  if (!level.test || level.test.length === 0 || validQuestions.length === 0) {
     return (
       <div className="flex h-screen bg-offblack overflow-x-hidden">
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" />
@@ -171,7 +179,7 @@ const LevelTestPage: React.FC = () => {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h1 className="text-2xl font-bold text-paperwhite mb-2">Level {level.order}: {level.title} - Test</h1>
-              <p className="text-teallight">Test your knowledge with {level.test.length} questions</p>
+              <p className="text-teallight">Test your knowledge with {validQuestions.length} questions</p>
             </div>
             <div className="flex items-center gap-4">
               <div className="text-center">
@@ -179,7 +187,7 @@ const LevelTestPage: React.FC = () => {
                 <div className="text-xs text-teallight">Time Remaining</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-paperwhite">{level.test.length}</div>
+                <div className="text-2xl font-bold text-paperwhite">{validQuestions.length}</div>
                 <div className="text-xs text-teallight">Questions</div>
               </div>
             </div>
@@ -188,7 +196,7 @@ const LevelTestPage: React.FC = () => {
 
         {/* Test Questions */}
         <form onSubmit={handleSubmit} className="w-full max-w-5xl space-y-6">
-          {level.test.map((question, qIdx) => (
+          {validQuestions.map((question, qIdx) => (
             <div key={qIdx} className="bg-paperwhite/5 rounded-xl border border-paperwhite/20 shadow-lg p-6">
               <h3 className="text-lg font-semibold text-paperwhite mb-4">
                 Question {qIdx + 1}: {question.question}
