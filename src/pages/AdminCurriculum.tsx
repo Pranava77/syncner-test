@@ -19,7 +19,7 @@ import {
 } from '@radix-ui/react-icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import apiService from '../services/api';
-import LevelsSidebar from '../components/LevelsSidebar';
+
 
 interface Level {
   id: string;
@@ -100,7 +100,6 @@ const AdminCurriculum: React.FC = () => {
   const [filterTrack, setFilterTrack] = useState<string>('all');
   const [filterDifficulty, setFilterDifficulty] = useState<string>('all');
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
   const [showTrackSelection, setShowTrackSelection] = useState(true);
 
@@ -492,8 +491,6 @@ const AdminCurriculum: React.FC = () => {
 
   return (
     <div className="flex h-screen bg-offblack w-full">
-      <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto p-6 lg:p-12">
         <div className="max-w-6xl mx-auto">
