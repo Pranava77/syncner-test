@@ -15,6 +15,7 @@ app.use(cors({
   origin: [
     'https://syncner-test.netlify.app',
     'http://localhost:5173', // Added for local development
+    'http://localhost:3000', // Additional local development port
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
@@ -40,8 +41,9 @@ import { trackActivity } from './middleware/trackActivity.js';
 // Import all MongoDB models to ensure schemas are registered
 import './models/User.js';
 import './models/Track.js';
-
 import './models/Curriculum.js';
+import './models/Attendance.js';
+import './models/Settings.js';
 
 // Import geminiService
 import geminiService from './services/geminiService.js';
@@ -68,9 +70,6 @@ if (process.env.NODE_ENV === 'production') {
   app.use('/api/', limiter);
 }
 
-// CORS - Simplified for development
-
-
 // Compression
 app.use(compression());
 
@@ -81,19 +80,46 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Static files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// API Routes
+// API Routes - Public routes first
 app.use('/api/auth', authRoutes);
 
-// Public health check endpoints for diagnostics
-app.use('/api/users/health', userRoutes); // Only /api/users/health is public
-app.use('/api/tracks/health', trackRoutes); // Only /api/tracks/health is public
-app.use('/api/training/health', trainingRoutes); // Only /api/training/health is public
-app.use('/api/admin/health', adminRoutes); // Only /api/admin/health is public
-app.use('/api/admin/settings/health', settingsRoutes); // Only /api/admin/settings/health is public
-app.use('/api/ai/health', aiRoutes); // Only /api/ai/health is public
+// Health check endpoints (public)
+app.get('/api/auth/health', (req, res) => {
+  res.status(200).json({ success: true, message: 'Auth service is healthy' });
+});
+
+app.get('/api/users/health', (req, res) => {
+  res.status(200).json({ success: true, message: 'Users service is healthy' });
+});
+
+app.get('/api/tracks/health', (req, res) => {
+  res.status(200).json({ success: true, message: 'Tracks service is healthy' });
+});
+
+app.get('/api/training/health', (req, res) => {
+  res.status(200).json({ success: true, message: 'Training service is healthy' });
+});
+
+app.get('/api/admin/health', (req, res) => {
+  res.status(200).json({ success: true, message: 'Admin service is healthy' });
+});
+
+app.get('/api/admin/settings/health', (req, res) => {
+  res.status(200).json({ success: true, message: 'Settings service is healthy' });
+});
+
+app.get('/api/ai/health', (req, res) => {
+  res.status(200).json({ success: true, message: 'AI service is healthy' });
+});
+
+app.get('/api/curriculum/health', (req, res) => {
+  res.status(200).json({ success: true, message: 'Curriculum service is healthy' });
+});
 
 // All routes below require authentication and activity tracking
 app.use('/api', protect, trackActivity);
+
+// Protected routes
 app.use('/api/users', userRoutes);
 app.use('/api/tracks', trackRoutes);
 app.use('/api/training', trainingRoutes);

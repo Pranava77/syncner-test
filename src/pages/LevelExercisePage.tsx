@@ -35,7 +35,7 @@ const LevelExercisePage: React.FC = () => {
     try {
       setLoading(true);
       console.log('LevelExercisePage: Fetching level with ID:', levelId);
-      const response = await apiService.get(`/training/levels/${levelId}`);
+      const response = await apiService.getLevel(levelId!);
       console.log('LevelExercisePage: Level data response:', response);
       
       let levelData = null;
@@ -43,11 +43,6 @@ const LevelExercisePage: React.FC = () => {
         levelData = response.data;
       } else if (response) {
         levelData = response;
-      }
-      
-      console.log('LevelExercisePage: Processed level data:', levelData);
-      if (levelData && levelData.exercise) {
-        console.log('LevelExercisePage: Exercise data:', levelData.exercise);
       }
       
       setLevel(levelData);

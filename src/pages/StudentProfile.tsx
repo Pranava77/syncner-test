@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import ApiService from '../services/api';
-import LoadingScreen from '../components/LoadingScreen';
-import { PersonIcon } from '@radix-ui/react-icons';
+import React, { useState, useEffect } from 'react';
+import apiService from '../services/api';
+import { useAppSelector } from '../redux/store';
 
 interface StudentProfileData {
   name: string;
@@ -16,245 +15,193 @@ interface StudentProfileData {
 }
 
 const StudentProfile: React.FC = () => {
-  const [profile, setProfile] = useState<StudentProfileData | null>(null);
-  const [editMode, setEditMode] = useState(false);
-  const [form, setForm] = useState<StudentProfileData>({ name: '', email: '' });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+  const { user } = useAppSelector((state) => state.auth);
+  const [profileData, setProfileData] = useState<StudentProfileData>({
+    name: '',
+    email: '',
+    phone: '',
+    location: '',
+    college: '',
+    department: '',
+    careerTrack: '',
+    gpa: '',
+    graduationYear: ''
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
       try {
-        const profileRes = await ApiService.getMe();
-        setProfile(profileRes.data.user);
-        setForm(profileRes.data.user);
-        setError(null);
-      } catch (err) {
-        setError((err as any)?.message || 'Failed to load profile');
-      } finally {
-        setLoading(false);
+        const profileRes = await apiService.getMe();
+        if (profileRes.success && profileRes.data.user) {
+          const userData = profileRes.data.user;
+          setProfileData({
+            name: userData.name || '',
+            email: userData.email || '',
+            phone: userData.phone || '',
+            location: userData.location || '',
+            college: userData.college || '',
+            department: userData.department || '',
+            careerTrack: userData.careerTrack || '',
+            gpa: userData.gpa || '',
+            graduationYear: userData.graduationYear || ''
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error);
       }
     };
     fetchData();
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setProfileData({ ...profileData, [e.target.name]: e.target.value });
   };
 
   const handleSave = async () => {
-    setLoading(true);
-    setSuccess(null);
+    setIsLoading(true);
+    setMessage('');
     try {
-      // Remove backend-managed fields before sending
-      const { ...allowedFields } = form as any;
-      await ApiService.updateProfile(allowedFields);
-      setSuccess('Profile updated successfully!');
-      setEditMode(false);
-      setProfile({ ...profile, ...allowedFields });
-      setError(null);
-    } catch (err) {
-      setError((err as any)?.message || 'Failed to update profile');
+      const allowedFields = ['name', 'phone', 'location', 'college', 'department', 'careerTrack', 'gpa', 'graduationYear'];
+      const updateData: any = {};
+      allowedFields.forEach(field => {
+        if (profileData[field as keyof StudentProfileData] !== undefined) {
+          updateData[field] = profileData[field as keyof StudentProfileData];
+        }
+      });
+      await apiService.updateProfile(updateData);
+      setMessage('Profile updated successfully!');
+    } catch (error) {
+      setMessage('Failed to update profile');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  if (loading) return <LoadingScreen message="Loading profile..." />;
-  if (error) return <div className="text-rust p-4">{error}</div>;
-
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Profile Information Card */}
-        <div className="lg:col-span-2">
-          <div className="bg-offblack border border-paperwhite/10 rounded-xl shadow-lg p-8">
-            <div className="flex items-center gap-4 mb-8">
-              <div className="bg-trueturquoise p-4 rounded-full flex items-center justify-center shadow-lg">
-                <PersonIcon className="h-10 w-10 text-offblack" />
+    <div className="min-h-screen bg-offblack text-paperwhite p-4">
+      <div className="max-w-2xl mx-auto">
+        <h1 className="text-3xl font-heading mb-8">Student Profile</h1>
+        
+        <div className="bg-paperwhite/5 border border-paperwhite/20 rounded-lg p-6 space-y-4">
+          <div>
+            <label className="block text-sm font-label mb-2">Name</label>
+            <input
+              type="text"
+              name="name"
+              value={profileData.name}
+              onChange={handleChange}
+              className="w-full bg-paperwhite/10 border border-paperwhite/20 rounded px-3 py-2 text-paperwhite"
+            />
           </div>
-            <div>
-                <h2 className="text-2xl text-paperwhite font-heading">{profile?.name || ''}</h2>
-                <p className="text-teallight">{profile?.email || ''}</p>
-                <span className="inline-block bg-trueturquoise/20 text-trueturquoise px-3 py-1 rounded-full text-sm mt-2">
-                  Student
-                </span>
-              </div>
-            </div>
-            
-            <h3 className="text-lg mb-6 text-trueturquoise flex items-center gap-2 font-heading">
-              <PersonIcon className="w-5 h-5" /> Personal Information
-            </h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-                <label className="block text-sm text-teallight mb-2 font-label">Full Name</label>
-                <input 
-                  name="name" 
-                  value={form.name || ''} 
-                  onChange={handleChange} 
-                  disabled={!editMode} 
-                  className={`w-full px-4 py-3 rounded-lg border transition-all duration-200 ${
-                    editMode 
-                      ? 'border-trueturquoise bg-offblack text-paperwhite focus:ring-2 focus:ring-trueturquoise/50' 
-                      : 'border-paperwhite/20 bg-offblack/50 text-paperwhite/70'
-                  } focus:outline-none`} 
-                />
-            </div>
-            <div>
-                <label className="block text-sm text-teallight mb-2 font-label">College</label>
-                <input 
-                  name="college" 
-                  value={form.college || ''} 
-                  onChange={handleChange} 
-                  disabled={!editMode} 
-                  className={`w-full px-4 py-3 rounded-lg border transition-all duration-200 ${
-                    editMode 
-                      ? 'border-trueturquoise bg-offblack text-paperwhite focus:ring-2 focus:ring-trueturquoise/50' 
-                      : 'border-paperwhite/20 bg-offblack/50 text-paperwhite/70'
-                  } focus:outline-none`} 
-                />
-            </div>
-            <div>
-                <label className="block text-sm text-teallight mb-2 font-label">Department</label>
-                <input 
-                  name="department" 
-                  value={form.department || ''} 
-                  onChange={handleChange} 
-                  disabled={!editMode} 
-                  className={`w-full px-4 py-3 rounded-lg border transition-all duration-200 ${
-                    editMode 
-                      ? 'border-trueturquoise bg-offblack text-paperwhite focus:ring-2 focus:ring-trueturquoise/50' 
-                      : 'border-paperwhite/20 bg-offblack/50 text-paperwhite/70'
-                  } focus:outline-none`} 
-                />
-            </div>
-            <div>
-                <label className="block text-sm text-teallight mb-2 font-label">Career Track</label>
-                <input 
-                  name="careerTrack" 
-                  value={form.careerTrack || ''} 
-                  onChange={handleChange} 
-                  disabled={!editMode} 
-                  className={`w-full px-4 py-3 rounded-lg border transition-all duration-200 ${
-                    editMode 
-                      ? 'border-trueturquoise bg-offblack text-paperwhite focus:ring-2 focus:ring-trueturquoise/50' 
-                      : 'border-paperwhite/20 bg-offblack/50 text-paperwhite/70'
-                  } focus:outline-none`} 
-                />
-            </div>
-            <div>
-                <label className="block text-sm text-teallight mb-2 font-label">Phone Number</label>
-                <input 
-                  name="phone" 
-                  value={form.phone || ''} 
-                  onChange={handleChange} 
-                  disabled={!editMode} 
-                  className={`w-full px-4 py-3 rounded-lg border transition-all duration-200 ${
-                    editMode 
-                      ? 'border-trueturquoise bg-offblack text-paperwhite focus:ring-2 focus:ring-trueturquoise/50' 
-                      : 'border-paperwhite/20 bg-offblack/50 text-paperwhite/70'
-                  } focus:outline-none`} 
-                />
-            </div>
-            <div>
-                <label className="block text-sm text-teallight mb-2 font-label">Location</label>
-                <input 
-                  name="location" 
-                  value={form.location || ''} 
-                  onChange={handleChange} 
-                  disabled={!editMode} 
-                  className={`w-full px-4 py-3 rounded-lg border transition-all duration-200 ${
-                    editMode 
-                      ? 'border-trueturquoise bg-offblack text-paperwhite focus:ring-2 focus:ring-trueturquoise/50' 
-                      : 'border-paperwhite/20 bg-offblack/50 text-paperwhite/70'
-                  } focus:outline-none`} 
-                />
-            </div>
-            <div>
-                <label className="block text-sm text-teallight mb-2 font-label">GPA</label>
-                <input 
-                  name="gpa" 
-                  value={form.gpa || ''} 
-                  onChange={handleChange} 
-                  disabled={!editMode} 
-                  className={`w-full px-4 py-3 rounded-lg border transition-all duration-200 ${
-                    editMode 
-                      ? 'border-trueturquoise bg-offblack text-paperwhite focus:ring-2 focus:ring-trueturquoise/50' 
-                      : 'border-paperwhite/20 bg-offblack/50 text-paperwhite/70'
-                  } focus:outline-none`} 
-                />
-            </div>
-            <div>
-                <label className="block text-sm text-teallight mb-2 font-label">Graduation Year</label>
-                <input 
-                  name="graduationYear" 
-                  value={form.graduationYear || ''} 
-                  onChange={handleChange} 
-                  disabled={!editMode} 
-                  className={`w-full px-4 py-3 rounded-lg border transition-all duration-200 ${
-                    editMode 
-                      ? 'border-trueturquoise bg-offblack text-paperwhite focus:ring-2 focus:ring-trueturquoise/50' 
-                      : 'border-paperwhite/20 bg-offblack/50 text-paperwhite/70'
-                  } focus:outline-none`} 
-                />
-              </div>
-            </div>
-            
-            <div className="mt-8 flex gap-4">
-            {editMode ? (
-              <>
-                  <button 
-                    className="bg-trueturquoise hover:bg-trueturquoise/90 text-offblack px-8 py-3 rounded-lg shadow-lg transition-all duration-200 font-medium flex items-center gap-2" 
-                    onClick={handleSave}
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                    Save Changes
-                  </button>
-                  <button 
-                    className="bg-paperwhite/10 hover:bg-paperwhite/20 text-paperwhite px-8 py-3 rounded-lg shadow-lg transition-all duration-200 font-medium" 
-                    onClick={() => setEditMode(false)}
-                  >
-                    Cancel
-                  </button>
-              </>
-            ) : (
-                <button 
-                  className="bg-trueturquoise hover:bg-trueturquoise/90 text-offblack px-8 py-3 rounded-lg shadow-lg transition-all duration-200 font-medium flex items-center gap-2" 
-                  onClick={() => setEditMode(true)}
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                  </svg>
-                  Edit Profile
-                </button>
-              )}
-            </div>
-            
-            {success && (
-              <div className="mt-4 p-4 bg-trueturquoise/20 border border-trueturquoise/30 rounded-lg text-trueturquoise">
-                {success}
-              </div>
-            )}
+          
+          <div>
+            <label className="block text-sm font-label mb-2">Email</label>
+            <input
+              type="email"
+              name="email"
+              value={profileData.email}
+              disabled
+              className="w-full bg-paperwhite/10 border border-paperwhite/20 rounded px-3 py-2 text-paperwhite/50"
+            />
           </div>
-        </div>
-
-        {/* Progress Overview Card */}
-        <div className="lg:col-span-1">
-          <div className="bg-offblack border border-paperwhite/10 rounded-xl shadow-lg p-6">
-            <h3 className=" text-lg mb-6 text-trueturquoise flex items-center gap-2 font-heading">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
-              Progress Overview
-            </h3>
-            
-          {/* The progress card content has been removed */}
+          
+          <div>
+            <label className="block text-sm font-label mb-2">Phone</label>
+            <input
+              type="tel"
+              name="phone"
+              value={profileData.phone}
+              onChange={handleChange}
+              className="w-full bg-paperwhite/10 border border-paperwhite/20 rounded px-3 py-2 text-paperwhite"
+            />
           </div>
+          
+          <div>
+            <label className="block text-sm font-label mb-2">Location</label>
+            <input
+              type="text"
+              name="location"
+              value={profileData.location}
+              onChange={handleChange}
+              className="w-full bg-paperwhite/10 border border-paperwhite/20 rounded px-3 py-2 text-paperwhite"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-label mb-2">College</label>
+            <input
+              type="text"
+              name="college"
+              value={profileData.college}
+              onChange={handleChange}
+              className="w-full bg-paperwhite/10 border border-paperwhite/20 rounded px-3 py-2 text-paperwhite"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-label mb-2">Department</label>
+            <input
+              type="text"
+              name="department"
+              value={profileData.department}
+              onChange={handleChange}
+              className="w-full bg-paperwhite/10 border border-paperwhite/20 rounded px-3 py-2 text-paperwhite"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-label mb-2">Career Track</label>
+            <select
+              name="careerTrack"
+              value={profileData.careerTrack}
+              onChange={handleChange}
+              className="w-full bg-paperwhite/10 border border-paperwhite/20 rounded px-3 py-2 text-paperwhite"
+            >
+              <option value="">Select Career Track</option>
+              <option value="full-stack">Full Stack Development</option>
+              <option value="ai-ml">AI & Machine Learning</option>
+              <option value="ui-ux">UI/UX Design</option>
+              <option value="data-science">Data Science</option>
+            </select>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-label mb-2">GPA</label>
+            <input
+              type="text"
+              name="gpa"
+              value={profileData.gpa}
+              onChange={handleChange}
+              className="w-full bg-paperwhite/10 border border-paperwhite/20 rounded px-3 py-2 text-paperwhite"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-label mb-2">Graduation Year</label>
+            <input
+              type="text"
+              name="graduationYear"
+              value={profileData.graduationYear}
+              onChange={handleChange}
+              className="w-full bg-paperwhite/10 border border-paperwhite/20 rounded px-3 py-2 text-paperwhite"
+            />
+          </div>
+          
+          {message && (
+            <div className={`p-3 rounded ${message.includes('success') ? 'bg-trueturquoise/20 text-trueturquoise' : 'bg-rust/20 text-rust'}`}>
+              {message}
+            </div>
+          )}
+          
+          <button
+            onClick={handleSave}
+            disabled={isLoading}
+            className="w-full bg-trueturquoise text-offblack py-2 px-4 rounded hover:bg-trueturquoise/90 transition-colors disabled:opacity-50"
+          >
+            {isLoading ? 'Saving...' : 'Save Changes'}
+          </button>
         </div>
       </div>
     </div>

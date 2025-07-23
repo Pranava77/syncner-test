@@ -37,8 +37,6 @@ const register = async (req, res) => {
       role
     });
 
-    // Remove logic that creates a Progress record for students on registration.
-
     // Generate token
     const token = generateToken(user._id);
 
@@ -136,7 +134,7 @@ const login = async (req, res) => {
 // @access  Private
 const getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id)
+    const user = await User.findById(req.user._id)
       .select('-password');
 
     if (!user) {
@@ -164,19 +162,41 @@ const getProfile = async (req, res) => {
 // @access  Private
 const updateProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user._id);
     if (!user) {
       return res.status(404).json({
         success: false,
         message: 'User not found'
       });
     }
-    // Merge all provided fields from req.body into the user object
-    Object.assign(user, req.body);
+
+    // Define allowed fields for update
+    const allowedFields = ['name', 'college', 'department', 'phone', 'location', 'careerTrack', 'interests', 'profileComplete', 'gpa', 'graduationYear'];
+    const updateData = {};
+    
+    allowedFields.forEach(field => {
+      if (req.body[field] !== undefined) {
+        updateData[field] = req.body[field];
+      }
+    });
+
+    // Update user
+    Object.assign(user, updateData);
     await user.save();
-    res.status(200).json({ success: true, data: user });
+
+    // Remove password from response
+    user.password = undefined;
+
+    res.status(200).json({ 
+      success: true, 
+      data: { user } 
+    });
   } catch (error) {
-    res.status(400).json({ success: false, message: error.message });
+    console.error('Update profile error:', error);
+    res.status(400).json({ 
+      success: false, 
+      message: error.message 
+    });
   }
 };
 

@@ -124,10 +124,6 @@ export const getAllLevels = async (req, res) => {
       // Use the normalized track value
       filter.careerTrack = normalizedTrack;
     }
-    
-    if (track) {
-      filter.careerTrack = track;
-    }
 
     const curriculumItems = await Curriculum.find(filter).sort({ order: 'asc' });
     

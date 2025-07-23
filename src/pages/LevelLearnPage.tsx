@@ -37,7 +37,7 @@ const LevelLearnPage: React.FC = () => {
     try {
       setLoading(true);
       console.log('LevelLearnPage: Fetching level with ID:', levelId);
-      const response = await apiService.get(`/training/levels/${levelId}`);
+      const response = await apiService.getLevel(levelId!);
       console.log('LevelLearnPage: Level data response:', response);
       
       let levelData = null;
@@ -47,11 +47,10 @@ const LevelLearnPage: React.FC = () => {
         levelData = response;
       }
       
-      console.log('LevelLearnPage: Processed level data:', levelData);
       setLevel(levelData);
     } catch (error) {
       console.error('LevelLearnPage: Error fetching level:', error);
-      setError(`Failed to load level content: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      setError(`Failed to load learning content: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setLoading(false);
     }
