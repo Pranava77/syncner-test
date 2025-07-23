@@ -15,30 +15,45 @@ const groupCurriculumIntoLevels = (items) => {
         title: item.title,
         description: item.description,
         difficulty: item.difficulty,
-        duration: item.formattedDuration, // Assuming a virtual or method exists
+        duration: item.formattedDuration || `${Math.floor(item.estimatedDuration / 60)}h ${item.estimatedDuration % 60}m`,
         careerTrack: item.careerTrack,
-        skills: item.tags, // Map tags to skills
-        prerequisites: item.prerequisites,
+        skills: item.tags || [], // Map tags to skills
+        prerequisites: item.prerequisites || [],
         order: item.order,
         isActive: item.isActive,
-        estimatedHours: item.estimatedDuration / 60, // Convert minutes to hours
+        estimatedHours: Math.ceil(item.estimatedDuration / 60), // Convert minutes to hours, round up
         learn: [],
         test: [],
         exercise: [],
+        createdAt: item.createdAt,
+        updatedAt: item.updatedAt
       });
     }
 
     const level = levelsMap.get(key);
 
+    // Create a clean object for each content item
+    const contentItem = {
+      type: item.type,
+      title: item.title,
+      content: item.content,
+      order: item.order,
+      videoUrl: item.videoUrl,
+      options: item.options,
+      answer: item.answer,
+      description: item.description,
+      resources: item.resources || []
+    };
+
     switch (item.type) {
       case 'learn':
-        level.learn.push({ ...item.toObject() });
+        level.learn.push(contentItem);
         break;
       case 'test':
-        level.test.push({ ...item.toObject() });
+        level.test.push(contentItem);
         break;
       case 'exercise':
-        level.exercise.push({ ...item.toObject() });
+        level.exercise.push(contentItem);
         break;
       default:
         break;
@@ -53,6 +68,10 @@ const groupCurriculumIntoLevels = (items) => {
 // @access  Private
 export const getAllLevels = async (req, res) => {
   try {
+    console.log('Training controller: getAllLevels called');
+    console.log('Training controller: User:', req.user);
+    console.log('Training controller: Query params:', req.query);
+    
     const { track } = req.query;
     const filter = { isActive: true };
     
@@ -70,14 +89,18 @@ export const getAllLevels = async (req, res) => {
 
     const curriculumItems = await Curriculum.find(filter).sort({ order: 'asc' });
     
+    console.log(`Found ${curriculumItems.length} curriculum items for filter:`, filter);
+    
     if (!curriculumItems || curriculumItems.length === 0) {
-      return res.status(404).json({ 
-        success: false, 
+      return res.status(200).json({ 
+        success: true, 
+        data: [],
         message: 'No curriculum items found for the specified criteria' 
       });
     }
     
     const levels = groupCurriculumIntoLevels(curriculumItems);
+    console.log(`Grouped into ${levels.length} levels:`, levels.map(l => ({ id: l.id, title: l.title, careerTrack: l.careerTrack })));
 
     res.status(200).json({ success: true, data: levels });
   } catch (error) {

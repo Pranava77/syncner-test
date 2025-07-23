@@ -182,11 +182,14 @@ class ApiService {
     const url = trackId 
       ? `${this.baseURL}/training/levels?track=${trackId}`
       : `${this.baseURL}/training/levels`;
+    console.log('API: Fetching levels from:', url);
     const response = await fetch(url, {
       headers: this.getHeaders(),
       credentials: 'include',
     });
-    return this.handleResponse(response);
+    const result = await this.handleResponse(response);
+    console.log('API: Levels response:', result);
+    return result;
   }
 
   async getLevel(levelId: string) {
@@ -435,11 +438,15 @@ class ApiService {
 
   // Generic HTTP methods for flexible API calls
   async get(endpoint: string) {
-    const response = await fetch(`${this.baseURL}${endpoint}`, {
+    const url = `${this.baseURL}${endpoint}`;
+    console.log('API: Generic GET request to:', url);
+    const response = await fetch(url, {
       headers: this.getHeaders(),
       credentials: 'include',
     });
-    return this.handleResponse(response);
+    const result = await this.handleResponse(response);
+    console.log('API: Generic GET response:', result);
+    return result;
   }
 
   async post(endpoint: string, data?: any) {

@@ -78,11 +78,15 @@ const TrainingLevels: React.FC = () => {
       console.log('User career track:', userCareerTrack);
       
       if (userCareerTrack) {
-        // No mapping needed - backend and frontend use same format
         console.log(`User career track: ${userCareerTrack}`);
         
         const beforeFilter = levelsData.length;
-        levelsData = levelsData.filter((level: Level) => level.careerTrack === userCareerTrack);
+        // Handle both frontend and backend career track formats
+        const normalizedUserTrack = userCareerTrack === 'fullstack' ? 'full-stack' : userCareerTrack;
+        levelsData = levelsData.filter((level: Level) => {
+          const normalizedLevelTrack = level.careerTrack === 'fullstack' ? 'full-stack' : level.careerTrack;
+          return normalizedLevelTrack === normalizedUserTrack;
+        });
         console.log(`Filtered levels: ${beforeFilter} → ${levelsData.length} for track ${userCareerTrack}`);
       }
       
@@ -101,6 +105,7 @@ const TrainingLevels: React.FC = () => {
   };
 
   useEffect(() => {
+    console.log('TrainingLevels: User data changed:', user);
     fetchLevels();
   }, [user]);
 
@@ -115,6 +120,7 @@ const TrainingLevels: React.FC = () => {
 
   const getTrackColor = (track: string) => {
     switch (track) {
+      case 'full-stack': return 'bg-blue-500';
       case 'fullstack': return 'bg-blue-500';
       case 'ai-ml': return 'bg-purple-500';
       case 'ui-ux': return 'bg-pink-500';
@@ -125,6 +131,7 @@ const TrainingLevels: React.FC = () => {
 
   const getTrackLabel = (track: string) => {
     switch (track) {
+      case 'full-stack': return 'Full Stack';
       case 'fullstack': return 'Full Stack';
       case 'ai-ml': return 'AI/ML';
       case 'ui-ux': return 'UI/UX';

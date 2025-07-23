@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../redux/store';
 import { ChevronRightIcon, ReaderIcon, ClipboardIcon, Pencil2Icon, LayersIcon } from '@radix-ui/react-icons';
@@ -45,7 +45,12 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
       // Filter levels by user's career track
       const userCareerTrack = user?.careerTrack;
       if (userCareerTrack) {
-        levelsData = levelsData.filter((level: Level) => level.careerTrack === userCareerTrack);
+        // Handle both frontend and backend career track formats
+        const normalizedUserTrack = userCareerTrack === 'fullstack' ? 'full-stack' : userCareerTrack;
+        levelsData = levelsData.filter((level: Level) => {
+          const normalizedLevelTrack = level.careerTrack === 'fullstack' ? 'full-stack' : level.careerTrack;
+          return normalizedLevelTrack === normalizedUserTrack;
+        });
         console.log(`Sidebar: Filtered levels for career track: ${userCareerTrack}`, levelsData);
       }
       
@@ -63,6 +68,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
   }, [user]);
 
   useEffect(() => {
+    console.log('LevelsSidebar: User data changed:', user);
     fetchLevels();
   }, [fetchLevels]);
 

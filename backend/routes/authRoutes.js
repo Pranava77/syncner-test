@@ -29,7 +29,7 @@ const updateProfileValidation = [
   body('department').optional().trim().isLength({ max: 50 }).withMessage('Department cannot exceed 50 characters'),
   body('phone').optional().trim().isLength({ max: 20 }).withMessage('Phone cannot exceed 20 characters'),
   body('location').optional().trim().isLength({ max: 100 }).withMessage('Location cannot exceed 100 characters'),
-  body('careerTrack').optional().isIn(['ai-ml', 'fullstack', 'ui-ux', 'data-science']).withMessage('Invalid career track'),
+  body('careerTrack').optional().isIn(['ai-ml', 'full-stack', 'ui-ux', 'data-science']).withMessage('Invalid career track'),
   body('interests').optional().isArray().withMessage('Interests must be an array'),
   body('profileComplete').optional().isBoolean().withMessage('Profile complete must be a boolean'),
   body('gpa').optional().trim().isLength({ max: 10 }).withMessage('GPA cannot exceed 10 characters'),
