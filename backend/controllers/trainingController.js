@@ -129,6 +129,8 @@ const groupCurriculumIntoLevels = (items) => {
     careerTrack: item.careerTrack
   })));
 
+
+
   return levels;
 };
 
