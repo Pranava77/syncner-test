@@ -133,6 +133,9 @@ const AdminCurriculum: React.FC = () => {
         return acc;
       }, {}));
       
+      // Sort levels by order
+      levelsData.sort((a: Level, b: Level) => a.order - b.order);
+      
       setLevels(levelsData);
       setLastUpdated(new Date());
       setFormError(''); // Clear any previous errors
@@ -583,6 +586,16 @@ const AdminCurriculum: React.FC = () => {
                     <p className="text-teallight">
                       Manage training levels and content for {getTrackLabel(selectedTrack || '')} track
                     </p>
+                    <div className="flex items-center gap-4 mt-2 text-sm text-teallight">
+                      <span className="flex items-center gap-1">
+                        <LayersIcon className="h-4 w-4" />
+                        {filteredLevels.length} levels total
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <StarIcon className="h-4 w-4" />
+                        Level {filteredLevels.length > 0 ? `1 - ${filteredLevels[filteredLevels.length - 1].order}` : '0'} progression
+                      </span>
+                    </div>
                     {lastUpdated && (
                       <p className="text-xs text-teallight mt-1">
                         Last updated: {lastUpdated.toLocaleTimeString()}
@@ -668,19 +681,29 @@ const AdminCurriculum: React.FC = () => {
                   </div>
                 </div>
               ) : (
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 relative">
                   {filteredLevels.map((level, index) => (
                     <motion.div
                       key={level.id}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      className="bg-offblack border border-paperwhite/20 rounded-xl p-6 hover:border-trueturquoise/50 hover:bg-paperwhite/5 transition-all duration-300 group"
+                      className="bg-offblack border border-paperwhite/20 rounded-xl p-6 hover:border-trueturquoise/50 hover:bg-paperwhite/5 transition-all duration-300 group relative"
                     >
-                      {/* Header with difficulty and track */}
+                      {/* Level Order Indicator */}
+                      <div className="absolute top-2 right-2 bg-paperwhite/10 text-paperwhite/60 text-xs px-2 py-1 rounded-full">
+                        #{level.order}
+                      </div>
+                      {/* Header with level number, difficulty and track */}
                       <div className="flex items-center justify-between mb-4">
-                        <div className={`p-2 rounded-lg ${getDifficultyColor(level.difficulty)}`}>
-                          <StarIcon className="h-5 w-5" />
+                        <div className="flex items-center gap-3">
+                          {/* Level Number Badge */}
+                          <div className="bg-trueturquoise text-offblack px-3 py-1 rounded-lg font-bold text-sm">
+                            Level {level.order}
+                          </div>
+                          <div className={`p-2 rounded-lg ${getDifficultyColor(level.difficulty)}`}>
+                            <StarIcon className="h-5 w-5" />
+                          </div>
                         </div>
                         <span className={`px-2 py-1 rounded text-xs font-medium ${getTrackColor(level.careerTrack)} text-white`}>
                           {getTrackLabel(level.careerTrack)}
@@ -688,7 +711,9 @@ const AdminCurriculum: React.FC = () => {
                       </div>
 
                       {/* Title and Description */}
-                      <h3 className="text-lg font-heading text-paperwhite mb-2">{level.title}</h3>
+                      <h3 className="text-lg font-heading text-paperwhite mb-2">
+                        Level {level.order}: {level.title}
+                      </h3>
                       <p className="text-teallight text-sm mb-4 line-clamp-2">{level.description}</p>
 
                       {/* Duration and Difficulty */}

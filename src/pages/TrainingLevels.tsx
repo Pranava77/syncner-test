@@ -229,18 +229,30 @@ const TrainingLevels: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                   onClick={() => handleLevelClick(level)}
-                  className="bg-offblack border border-paperwhite/20 rounded-lg p-6 cursor-pointer hover:border-trueturquoise/50 hover:bg-paperwhite/5 transition-all duration-300"
+                  className="bg-offblack border border-paperwhite/20 rounded-lg p-6 cursor-pointer hover:border-trueturquoise/50 hover:bg-paperwhite/5 transition-all duration-300 relative"
                 >
+                  {/* Level Order Indicator */}
+                  <div className="absolute top-2 right-2 bg-paperwhite/10 text-paperwhite/60 text-xs px-2 py-1 rounded-full">
+                    #{level.order}
+                  </div>
                   <div className="flex items-center justify-between mb-4">
-                    <div className={`p-2 rounded-lg ${getDifficultyColor(level.difficulty)}`}>
-                      <StarIcon className="h-5 w-5" />
+                    <div className="flex items-center gap-3">
+                      {/* Level Number Badge */}
+                      <div className="bg-trueturquoise text-offblack px-3 py-1 rounded-lg font-bold text-sm">
+                        Level {level.order}
+                      </div>
+                      <div className={`p-2 rounded-lg ${getDifficultyColor(level.difficulty)}`}>
+                        <StarIcon className="h-5 w-5" />
+                      </div>
                     </div>
                     <span className={`px-2 py-1 rounded text-xs font-medium ${getTrackColor(level.careerTrack)} text-white`}>
                       {getTrackLabel(level.careerTrack)}
                     </span>
                   </div>
 
-                  <h3 className="text-lg font-heading text-paperwhite mb-2">{level.title}</h3>
+                  <h3 className="text-lg font-heading text-paperwhite mb-2">
+                    Level {level.order}: {level.title}
+                  </h3>
                   <p className="text-teallight text-sm mb-4 line-clamp-2">{level.description}</p>
 
                   <div className="space-y-2 mb-4">
