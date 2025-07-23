@@ -261,8 +261,7 @@ const AdminUsers: React.FC = () => {
           await apiService.resetUserPassword(userObj._id || userObj.id, password);
         }}
       />
-      {error && <div className="text-rust text-center mt-4">{error}</div>}
-    </div>
+      </div>
   );
 };
 

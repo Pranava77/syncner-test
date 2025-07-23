@@ -30,10 +30,6 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
   const [levels, setLevels] = useState<Level[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchLevels();
-  }, [fetchLevels, user?.careerTrack]);
-
   const fetchLevels = useCallback(async () => {
     try {
       setLoading(true);
@@ -64,7 +60,11 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    fetchLevels();
+  }, [fetchLevels]);
 
   return (
     <aside
