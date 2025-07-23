@@ -76,6 +76,7 @@ interface LevelForm {
   prerequisites: string[];
   estimatedHours: number;
   isActive: boolean;
+  order?: number;
 }
 
 const defaultLevelForm: LevelForm = {
@@ -133,45 +134,91 @@ const AdminCurriculum: React.FC = () => {
       
       console.log('Processed levels data:', levelsData);
       
-      // Group curriculum items by level to create unique levels
-      const levelMap = new Map();
-      console.log('Starting to group curriculum items. Total items:', levelsData.length);
+      // First, find all syllabus items (main levels)
+      const syllabusItems = levelsData.filter((item: any) => item.type === 'syllabus');
+      console.log('Found syllabus items:', syllabusItems.length);
       
-      levelsData.forEach((item: any) => {
-        // Create a unique key for each level based on order and career track
+      // Create level map from syllabus items
+      const levelMap = new Map();
+      
+      syllabusItems.forEach((syllabus: any) => {
+        const levelKey = `${syllabus.order}-${syllabus.careerTrack}`;
+        console.log('Creating level from syllabus:', { title: syllabus.title, order: syllabus.order, careerTrack: syllabus.careerTrack });
+        
+        levelMap.set(levelKey, {
+          id: syllabus.id || levelKey,
+          title: syllabus.title,
+          description: syllabus.description || syllabus.content || '',
+          difficulty: syllabus.difficulty || 'beginner',
+          duration: syllabus.duration || '',
+          careerTrack: syllabus.careerTrack,
+          skills: syllabus.tags || [],
+          prerequisites: syllabus.prerequisites || [],
+          learn: [],
+          test: [],
+          exercise: [],
+          order: syllabus.order || 1,
+          isActive: syllabus.isActive !== false,
+          estimatedHours: syllabus.estimatedDuration ? Math.ceil(syllabus.estimatedDuration / 60) : 1,
+          createdAt: syllabus.createdAt || new Date().toISOString(),
+          updatedAt: syllabus.updatedAt || new Date().toISOString()
+        });
+      });
+      
+      // Now add content items to their respective levels
+      const contentItems = levelsData.filter((item: any) => item.type !== 'syllabus');
+      console.log('Found content items:', contentItems.length);
+      
+      contentItems.forEach((item: any) => {
         const levelKey = `${item.order}-${item.careerTrack}`;
-        console.log('Processing item:', { title: item.title, order: item.order, type: item.type, careerTrack: item.careerTrack, levelKey });
-        
-        if (!levelMap.has(levelKey)) {
-          // Create a new level object
-          levelMap.set(levelKey, {
-            id: item.id || levelKey,
-            title: item.title,
-            description: item.description || '',
-            difficulty: item.difficulty || 'beginner',
-            duration: item.duration || '',
-            careerTrack: item.careerTrack,
-            skills: item.skills || [],
-            prerequisites: item.prerequisites || [],
-            learn: [],
-            test: [],
-            exercise: [],
-            order: item.order || 1,
-            isActive: item.isActive !== false,
-            estimatedHours: item.estimatedHours || 1,
-            createdAt: item.createdAt || new Date().toISOString(),
-            updatedAt: item.updatedAt || new Date().toISOString()
-          });
-        }
-        
-        // Add content to the appropriate section based on type
         const level = levelMap.get(levelKey);
-        if (item.type === 'learn') {
-          level.learn.push(item);
-        } else if (item.type === 'test') {
-          level.test.push(item);
-        } else if (item.type === 'exercise') {
-          level.exercise.push(item);
+        
+        if (level) {
+          console.log('Adding content to level:', { levelTitle: level.title, contentType: item.type, contentTitle: item.title });
+          
+          if (item.type === 'learn') {
+            level.learn.push({
+              id: item.id,
+              type: 'reading',
+              title: item.title,
+              content: item.content || '',
+              videoUrl: '',
+              order: item.order || 1
+            });
+          } else if (item.type === 'test') {
+            // Parse test content to extract question and options
+            const lines = (item.content || '').split('\n');
+            const question = lines[0] || item.title;
+            const options: string[] = [];
+            let answer = '';
+            
+            for (let i = 1; i < lines.length; i++) {
+              const line = lines[i].trim();
+              if (line.startsWith('A)') || line.startsWith('B)') || line.startsWith('C)') || line.startsWith('D)')) {
+                options.push(line.substring(2).trim());
+              } else if (line.startsWith('Answer:')) {
+                answer = line.split(':')[1]?.trim() || '';
+              }
+            }
+            
+            level.test.push({
+              id: item.id,
+              question: question,
+              options: options,
+              answer: answer,
+              order: item.order || 1
+            });
+          } else if (item.type === 'exercise') {
+            level.exercise.push({
+              id: item.id,
+              title: item.title,
+              description: item.content || item.description || '',
+              resources: item.resources || [],
+              order: item.order || 1
+            });
+          }
+        } else {
+          console.warn('No level found for content item:', { title: item.title, order: item.order, careerTrack: item.careerTrack });
         }
       });
       
@@ -184,6 +231,15 @@ const AdminCurriculum: React.FC = () => {
         acc[level.careerTrack] = (acc[level.careerTrack] || 0) + 1;
         return acc;
       }, {}));
+      
+      // Debug: Show content distribution
+      uniqueLevels.forEach((level: Level) => {
+        console.log(`Level ${level.order}: ${level.title}`, {
+          learn: level.learn.length,
+          test: level.test.length,
+          exercise: level.exercise.length
+        });
+      });
       
       setLevels(uniqueLevels);
       setLastUpdated(new Date());
@@ -231,7 +287,8 @@ const AdminCurriculum: React.FC = () => {
     setEditingLevel(null);
     setLevelForm({
       ...defaultLevelForm,
-      careerTrack: selectedTrack || 'full-stack'
+      careerTrack: selectedTrack || 'full-stack',
+      order: levels.length + 1 // Auto-assign next order number
     });
     setShowLevelModal(true);
     setFormError('');
@@ -298,7 +355,9 @@ const AdminCurriculum: React.FC = () => {
           ...levelForm,
           type: 'syllabus',
           content: levelForm.description,
-          estimatedDuration: levelForm.estimatedHours * 60
+          estimatedDuration: levelForm.estimatedHours * 60,
+          tags: levelForm.skills,
+          learningObjectives: levelForm.prerequisites
         });
         setShowLevelModal(false);
         setLevelForm(defaultLevelForm);
@@ -312,7 +371,9 @@ const AdminCurriculum: React.FC = () => {
           ...levelForm,
           type: 'syllabus',
           content: levelForm.description,
-          estimatedDuration: levelForm.estimatedHours * 60
+          estimatedDuration: levelForm.estimatedHours * 60,
+          tags: levelForm.skills,
+          learningObjectives: levelForm.prerequisites
         });
         setShowLevelModal(false);
         setLevelForm(defaultLevelForm);
@@ -452,13 +513,16 @@ const AdminCurriculum: React.FC = () => {
             type: editingContent.type,
             careerTrack: editingLevel.careerTrack,
             difficulty: editingLevel.difficulty,
-            order: contentForm.order || 1,
-            isActive: true
+            order: editingLevel.order, // Use the level's order
+            isActive: true,
+            prerequisites: [editingLevel.title], // Link to the level
+            tags: [contentType, editingLevel.careerTrack]
           };
 
           if (contentType === 'learn') {
             updateData.content = contentForm.content;
             updateData.videoUrl = contentForm.videoUrl;
+            updateData.description = contentForm.title;
           } else if (contentType === 'test') {
             // Format test content
             let formattedContent = contentForm.question;
@@ -471,9 +535,11 @@ const AdminCurriculum: React.FC = () => {
               formattedContent += `\nAnswer: ${contentForm.answer}`;
             }
             updateData.content = formattedContent;
+            updateData.description = contentForm.title;
           } else if (contentType === 'exercise') {
             updateData.content = contentForm.description;
             updateData.resources = contentForm.resources || [];
+            updateData.description = contentForm.title;
           }
 
           await apiService.put(`/curriculum/${itemToUpdate._id}`, updateData);
@@ -485,13 +551,16 @@ const AdminCurriculum: React.FC = () => {
           type: contentType,
           careerTrack: editingLevel.careerTrack,
           difficulty: editingLevel.difficulty,
-          order: contentForm.order || 1,
-          isActive: true
+          order: editingLevel.order, // Use the level's order
+          isActive: true,
+          prerequisites: [editingLevel.title], // Link to the level
+          tags: [contentType, editingLevel.careerTrack]
         };
 
         if (contentType === 'learn') {
           newContentData.content = contentForm.content;
           newContentData.videoUrl = contentForm.videoUrl;
+          newContentData.description = contentForm.title;
         } else if (contentType === 'test') {
           // Format test content
           let formattedContent = contentForm.question;
@@ -504,9 +573,11 @@ const AdminCurriculum: React.FC = () => {
             formattedContent += `\nAnswer: ${contentForm.answer}`;
           }
           newContentData.content = formattedContent;
+          newContentData.description = contentForm.title;
         } else if (contentType === 'exercise') {
           newContentData.content = contentForm.description;
           newContentData.resources = contentForm.resources || [];
+          newContentData.description = contentForm.title;
         }
 
         await apiService.post('/curriculum', newContentData);
