@@ -125,18 +125,65 @@ export const getAllLevels = async (req, res) => {
     
     console.log(`Found ${curriculumItems.length} curriculum items for filter:`, filter);
     
-    if (!curriculumItems || curriculumItems.length === 0) {
-      return res.status(200).json({ 
-        success: true, 
-        data: [],
-        message: 'No curriculum items found for the specified criteria' 
-      });
+    // Check if we have curriculum items that can be grouped
+    let levels = [];
+    if (curriculumItems && curriculumItems.length > 0) {
+      // Group curriculum items into levels
+      levels = groupCurriculumIntoLevels(curriculumItems);
+      console.log(`Grouped into ${levels.length} levels from curriculum items`);
     }
     
-    const levels = groupCurriculumIntoLevels(curriculumItems);
-    console.log(`Grouped into ${levels.length} levels:`, levels.map(l => ({ id: l.id, title: l.title, careerTrack: l.careerTrack })));
+    // Also check for standalone level records (created through admin interface)
+    // These are curriculum items with type 'level', 'syllabus', or items that don't have corresponding content
+    const standaloneLevels = await Curriculum.find({
+      ...filter,
+      $or: [
+        { type: 'level' },
+        { type: 'syllabus' },
+        { type: { $exists: false } }
+      ]
+    }).sort({ order: 'asc' });
+    
+    console.log(`Found ${standaloneLevels.length} standalone level records`);
+    
+    // Convert standalone levels to the expected format
+    const formattedStandaloneLevels = standaloneLevels.map(item => ({
+      id: item._id.toString(),
+      title: item.title,
+      description: item.description,
+      difficulty: item.difficulty,
+      duration: item.formattedDuration || `${Math.floor((item.estimatedDuration || 60) / 60)}h ${(item.estimatedDuration || 60) % 60}m`,
+      careerTrack: item.careerTrack,
+      skills: item.tags || [],
+      prerequisites: item.prerequisites || [],
+      order: item.order,
+      isActive: item.isActive,
+      estimatedHours: Math.ceil((item.estimatedDuration || 60) / 60),
+      learn: item.learn || [],
+      test: item.test || [],
+      exercise: item.exercise || [],
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt
+    }));
+    
+    // Combine both grouped levels and standalone levels
+    const allLevels = [...levels, ...formattedStandaloneLevels];
+    
+    // Remove duplicates based on title and career track
+    const uniqueLevels = allLevels.filter((level, index, self) => 
+      index === self.findIndex(l => 
+        l.title === level.title && l.careerTrack === level.careerTrack
+      )
+    );
+    
+    // Sort by order and filter active ones
+    const finalLevels = uniqueLevels
+      .filter(level => level.isActive)
+      .sort((a, b) => a.order - b.order);
+    
+    console.log(`Final result: ${finalLevels.length} levels:`, finalLevels.map(l => ({ id: l.id, title: l.title, careerTrack: l.careerTrack })));
 
-    res.status(200).json({ success: true, data: levels });
+    res.status(200).json({ success: true, data: finalLevels });
   } catch (error) {
     console.error('Get all levels error:', error);
     res.status(500).json({ 
