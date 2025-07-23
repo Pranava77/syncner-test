@@ -22,12 +22,16 @@ const sampleAdmins = [
     name: 'Alice Admin',
     email: 'alice.admin@example.com',
     department: 'Administration',
+    college: 'Tech University',
+    role: 'admin',
     isActive: true
   },
   {
     name: 'Bob Admin',
     email: 'bob.admin@example.com',
     department: 'Administration',
+    college: 'Tech University',
+    role: 'admin',
     isActive: true
   }
 ];
@@ -37,12 +41,16 @@ const sampleStaff = [
     name: 'Diana Staff',
     email: 'diana.staff@example.com',
     department: 'Support',
+    college: 'Tech University',
+    role: 'staff',
     isActive: true
   },
   {
     name: 'Ethan Staff',
     email: 'ethan.staff@example.com',
     department: 'IT',
+    college: 'Tech University',
+    role: 'staff',
     isActive: false
   }
 ];
@@ -55,7 +63,7 @@ const sampleStudents = [
     role: 'student',
     college: 'Tech University',
     department: 'Computer Science',
-    careerTrack: 'fullstack',
+    careerTrack: 'full-stack',
     profileComplete: true,
     isActive: true,
     phone: '+91-9000000001',
@@ -313,12 +321,10 @@ const seedData = async () => {
     // Hash admin and staff passwords
     const adminsWithHashed = await Promise.all(sampleAdmins.map(async a => ({
       ...a,
-      role: 'admin',
       password: await hashPassword('AdminPass123')
     })));
     const staffWithHashed = await Promise.all(sampleStaff.map(async s => ({
       ...s,
-      role: 'staff',
       password: await hashPassword('StaffPass123')
     })));
     const createdAdmins = await User.insertMany(adminsWithHashed);
