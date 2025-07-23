@@ -1,20 +1,20 @@
 const USER_ROLES = {
   STUDENT: 'student',
   ADMIN: 'admin',
-  INSTRUCTOR: 'instructor'
+  STAFF: 'staff'
 };
 
 const CAREER_TRACKS = {
-  FULLSTACK: 'fullstack',
+  FULLSTACK: 'full-stack',
   AI_ML: 'ai-ml',
   UI_UX: 'ui-ux',
   DATA_SCIENCE: 'data-science'
 };
 
 const DIFFICULTY_LEVELS = {
-  BEGINNER: 'Beginner',
-  INTERMEDIATE: 'Intermediate',
-  ADVANCED: 'Advanced'
+  BEGINNER: 'beginner',
+  INTERMEDIATE: 'intermediate',
+  ADVANCED: 'advanced'
 };
 
 const LESSON_TYPES = {

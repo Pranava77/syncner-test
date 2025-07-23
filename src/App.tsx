@@ -14,6 +14,7 @@ import OnboardingFlow from './pages/OnboardingFlow';
 import ProtectedRoute from './components/ProtectedRoute';
 import StudentLayout from './components/StudentLayout';
 import LoadingScreen from './components/LoadingScreen';
+import ErrorBoundary from './components/ErrorBoundary';
 import { KeepAlive } from 'react-activation';
 import StudentProfile from './pages/StudentProfile';
 import AdminProfile from './pages/AdminProfile';
@@ -43,8 +44,6 @@ function App() {
   const { isAuthenticated, user, isLoading, isRestoringSession } = useAppSelector((state) => state.auth);
   const { isDarkMode } = useAppSelector((state) => state.theme);
   
-  // Remove isInitializing state
-  // const [isInitializing] = useState(true);
   const location = useLocation();
 
   useEffect(() => {
@@ -53,7 +52,7 @@ function App() {
     if (token) {
       dispatch(fetchCurrentUser());
     }
-  }, [dispatch]); // Only run once on mount
+  }, [dispatch]);
 
   useEffect(() => {
     console.log('App.tsx Auth State:', {
@@ -78,88 +77,91 @@ function App() {
   }, [isDarkMode]);
 
   // Show loading while initializing authentication or restoring session
-  // Remove isInitializing from the loading check
   if (isLoading || isRestoringSession) {
     return (
-      <LoadingScreen 
-        message={isRestoringSession ? "Restoring session..." : "Loading..."}
-        showProgress={true}
-        progressDuration={2500}
-      />
+      <ErrorBoundary>
+        <LoadingScreen 
+          message={isRestoringSession ? "Restoring session..." : "Loading..."}
+          showProgress={true}
+          progressDuration={2500}
+        />
+      </ErrorBoundary>
     );
   }
 
   return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={
-          isAuthenticated && user && !isLoading && !isRestoringSession ? (
-            <Navigate to={getDefaultRoute(user)} replace />
-          ) : (
-            <LoginPage />
-          )
-        } />
-        <Route path="/register" element={
-          isAuthenticated && user && !isLoading && !isRestoringSession ? (
-            <Navigate to={getDefaultRoute(user)} replace />
-          ) : (
-            <RegisterPage />
-          )
-        } />
-        <Route path="/onboarding" element={
-          <ProtectedRoute>
-            <OnboardingFlow />
-          </ProtectedRoute>
-        } />
-        {/* Student main pages with Layout sidebar */}
-        <Route path="/student/*" element={<StudentLayout />}>
-          <Route path="dashboard" element={<KeepAlive id="student-dashboard"><StudentDashboard /></KeepAlive>} />
-          <Route path="training" element={<TrainingLevels />} />
-          <Route path="training/:levelId" element={<TrainingLevels />} />
-          <Route path="training/:levelId/learn" element={<LevelLearnPage />} />
-          <Route path="training/:levelId/test" element={<LevelTestPage />} />
-          <Route path="training/:levelId/exercise" element={<LevelExercisePage />} />
-          <Route path="projects" element={<ProjectsPage />} />
-          <Route path="profile" element={
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              <StudentProfile />
-            </motion.div>
+    <ErrorBoundary>
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={
+            isAuthenticated && user && !isLoading && !isRestoringSession ? (
+              <Navigate to={getDefaultRoute(user)} replace />
+            ) : (
+              <LoginPage />
+            )
           } />
-          <Route index element={<Navigate to="dashboard" replace />} />
-        </Route>
-        {/* Admin routes */}
-        <Route path="/admin/*" element={<AdminWrapper />}>
-          <Route index element={<AdminDashboard />} />
-          <Route path="users" element={<AdminUsers />} />
-          <Route path="admins" element={<AdminAdmin />} />
-          <Route path="staff" element={<AdminStaff />} />
-          <Route path="curriculum" element={<AdminCurriculum />} />
-          <Route path="analytics" element={<AdminAnalytics />} />
-          <Route path="settings" element={<AdminSettings />} />
-          <Route path="profile" element={
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              <AdminProfile />
-            </motion.div>
+          <Route path="/register" element={
+            isAuthenticated && user && !isLoading && !isRestoringSession ? (
+              <Navigate to={getDefaultRoute(user)} replace />
+            ) : (
+              <RegisterPage />
+            )
           } />
-        </Route>
-        <Route path="/staff/dashboard" element={
-          <ProtectedRoute>
-            <StaffDashboard />
-          </ProtectedRoute>
-        } />
-      </Routes>
-    </AnimatePresence>
+          <Route path="/onboarding" element={
+            <ProtectedRoute>
+              <OnboardingFlow />
+            </ProtectedRoute>
+          } />
+          {/* Student main pages with Layout sidebar */}
+          <Route path="/student/*" element={<StudentLayout />}>
+            <Route path="dashboard" element={<KeepAlive id="student-dashboard"><StudentDashboard /></KeepAlive>} />
+            <Route path="training" element={<TrainingLevels />} />
+            <Route path="training/:levelId" element={<TrainingLevels />} />
+            <Route path="training/:levelId/learn" element={<LevelLearnPage />} />
+            <Route path="training/:levelId/test" element={<LevelTestPage />} />
+            <Route path="training/:levelId/exercise" element={<LevelExercisePage />} />
+            <Route path="projects" element={<ProjectsPage />} />
+            <Route path="profile" element={
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <StudentProfile />
+              </motion.div>
+            } />
+            <Route index element={<Navigate to="dashboard" replace />} />
+          </Route>
+          {/* Admin routes */}
+          <Route path="/admin/*" element={<AdminWrapper />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="users" element={<AdminUsers />} />
+            <Route path="admins" element={<AdminAdmin />} />
+            <Route path="staff" element={<AdminStaff />} />
+            <Route path="curriculum" element={<AdminCurriculum />} />
+            <Route path="analytics" element={<AdminAnalytics />} />
+            <Route path="settings" element={<AdminSettings />} />
+            <Route path="profile" element={
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <AdminProfile />
+              </motion.div>
+            } />
+          </Route>
+          <Route path="/staff/dashboard" element={
+            <ProtectedRoute>
+              <StaffDashboard />
+            </ProtectedRoute>
+          } />
+        </Routes>
+      </AnimatePresence>
+    </ErrorBoundary>
   );
 }
 

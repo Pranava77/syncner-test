@@ -1,6 +1,28 @@
 import { useState, useEffect, useCallback } from 'react';
 import apiService from '../services/api';
 
+interface LearnItem {
+  type: 'video' | 'reading' | 'slide' | 'other';
+  title: string;
+  content: string;
+  videoUrl?: string;
+  order: number;
+}
+
+interface TestItem {
+  question: string;
+  options: string[];
+  answer: string;
+  order: number;
+}
+
+interface ExerciseItem {
+  title: string;
+  description: string;
+  resources: string[];
+  order: number;
+}
+
 export interface Level {
   id: string;
   title: string;
@@ -10,9 +32,9 @@ export interface Level {
   careerTrack: string;
   skills: string[];
   prerequisites: string[];
-  learn: unknown[];
-  test: unknown[];
-  exercise: unknown[];
+  learn: LearnItem[];
+  test: TestItem[];
+  exercise: ExerciseItem[];
   order: number;
   isActive: boolean;
   estimatedHours: number;

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useAppDispatch } from '../redux/store';
 import {
   PlusIcon,
   Pencil1Icon as EditIcon,
@@ -87,7 +86,6 @@ const defaultLevelForm: LevelForm = {
 };
 
 const AdminCurriculum: React.FC = () => {
-  const dispatch = useAppDispatch();
   const [levels, setLevels] = useState<Level[]>([]);
   const [loading, setLoading] = useState(false);
   const [showLevelModal, setShowLevelModal] = useState(false);
@@ -243,14 +241,14 @@ const AdminCurriculum: React.FC = () => {
     }
   };
 
-  const handleAddContent = (levelId: string, type: 'learn' | 'test' | 'exercise') => {
-    setEditingContent(null);
+  const handleAddContent = (type: 'learn' | 'test' | 'exercise') => {
+    setEditingContent({ type, item: null, index: -1 });
     setContentForm({});
     setShowContentModal(true);
     setFormError('');
   };
 
-  const handleEditContent = (levelId: string, type: 'learn' | 'test' | 'exercise', item: any, index: number) => {
+  const handleEditContent = (type: 'learn' | 'test' | 'exercise', item: any, index: number) => {
     setEditingContent({ type, item, index });
     setContentForm({ ...item });
     setShowContentModal(true);
@@ -523,7 +521,7 @@ const AdminCurriculum: React.FC = () => {
                                 Learn Content ({level.learn.length})
                               </h4>
                               <button
-                                onClick={() => handleAddContent(level.id, 'learn')}
+                                onClick={() => handleAddContent('learn')}
                                 className="text-xs bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 transition-colors"
                               >
                                 Add Learn
@@ -541,7 +539,7 @@ const AdminCurriculum: React.FC = () => {
                                   </div>
                                   <div className="flex items-center gap-1">
                                     <button
-                                      onClick={() => handleEditContent(level.id, 'learn', item, index)}
+                                      onClick={() => handleEditContent('learn', item, index)}
                                       className="p-1 text-teallight hover:text-trueturquoise transition-colors"
                                     >
                                       <EditIcon className="h-3 w-3" />
@@ -566,7 +564,7 @@ const AdminCurriculum: React.FC = () => {
                                 Test Content ({level.test.length})
                               </h4>
                               <button
-                                onClick={() => handleAddContent(level.id, 'test')}
+                                onClick={() => handleAddContent('test')}
                                 className="text-xs bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 transition-colors"
                               >
                                 Add Test
@@ -583,7 +581,7 @@ const AdminCurriculum: React.FC = () => {
                                   </div>
                                   <div className="flex items-center gap-1">
                                     <button
-                                      onClick={() => handleEditContent(level.id, 'test', item, index)}
+                                      onClick={() => handleEditContent('test', item, index)}
                                       className="p-1 text-teallight hover:text-trueturquoise transition-colors"
                                     >
                                       <EditIcon className="h-3 w-3" />
@@ -608,7 +606,7 @@ const AdminCurriculum: React.FC = () => {
                                 Exercise Content ({level.exercise.length})
                               </h4>
                               <button
-                                onClick={() => handleAddContent(level.id, 'exercise')}
+                                onClick={() => handleAddContent('exercise')}
                                 className="text-xs bg-purple-500 text-white px-2 py-1 rounded hover:bg-purple-600 transition-colors"
                               >
                                 Add Exercise
@@ -625,7 +623,7 @@ const AdminCurriculum: React.FC = () => {
                                   </div>
                                   <div className="flex items-center gap-1">
                                     <button
-                                      onClick={() => handleEditContent(level.id, 'exercise', item, index)}
+                                      onClick={() => handleEditContent('exercise', item, index)}
                                       className="p-1 text-teallight hover:text-trueturquoise transition-colors"
                                     >
                                       <EditIcon className="h-3 w-3" />
@@ -853,7 +851,7 @@ const AdminCurriculum: React.FC = () => {
             >
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-heading text-paperwhite">
-                  {editingContent ? `Edit ${editingContent.type}` : `Add ${editingContent?.type || 'learn'}`}
+                  {editingContent ? `Edit ${editingContent.type}` : `Add Content`}
                 </h2>
                 <button
                   onClick={() => setShowContentModal(false)}

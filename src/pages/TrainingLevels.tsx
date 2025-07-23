@@ -6,6 +6,28 @@ import apiService from '../services/api';
 import { motion } from 'framer-motion';
 import { StarIcon, ClockIcon, CheckCircledIcon, Cross1Icon } from '@radix-ui/react-icons';
 
+interface LearnItem {
+  type: 'video' | 'reading' | 'slide' | 'other';
+  title: string;
+  content: string;
+  videoUrl?: string;
+  order: number;
+}
+
+interface TestItem {
+  question: string;
+  options: string[];
+  answer: string;
+  order: number;
+}
+
+interface ExerciseItem {
+  title: string;
+  description: string;
+  resources: string[];
+  order: number;
+}
+
 interface Level {
   id: string;
   title: string;
@@ -15,9 +37,9 @@ interface Level {
   careerTrack: string;
   skills: string[];
   prerequisites: string[];
-  learn: any[];
-  test: any[];
-  exercise: any[];
+  learn: LearnItem[];
+  test: TestItem[];
+  exercise: ExerciseItem[];
   order: number;
   isActive: boolean;
   estimatedHours: number;
@@ -33,37 +55,38 @@ const TrainingLevels: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchLevels = async () => {
-      try {
-        setLoading(true);
-        const response = await apiService.get('/training/levels');
-        console.log('Training levels response:', response);
-        
-        let levelsData = [];
-        if (response && response.data) {
-          levelsData = Array.isArray(response.data) ? response.data : [response.data];
-        } else if (Array.isArray(response)) {
-          levelsData = response;
-        }
-        
-        // Filter levels by user's career track
-        const userCareerTrack = user?.careerTrack;
-        if (userCareerTrack) {
-          levelsData = levelsData.filter((level: Level) => level.careerTrack === userCareerTrack);
-          console.log(`Filtered levels for career track: ${userCareerTrack}`, levelsData);
-        }
-        
-        // Sort by order
-        levelsData.sort((a: Level, b: Level) => a.order - b.order);
-        setLevels(levelsData);
-      } catch (error) {
-        console.error('Error fetching levels:', error);
-        setError('Failed to load training levels');
-      } finally {
-        setLoading(false);
+  const fetchLevels = async () => {
+    try {
+      setLoading(true);
+      const response = await apiService.get('/training/levels');
+      console.log('Training levels response:', response);
+      
+      let levelsData = [];
+      if (response && response.data) {
+        levelsData = Array.isArray(response.data) ? response.data : [response.data];
+      } else if (Array.isArray(response)) {
+        levelsData = response;
       }
-    };
+      
+      // Filter levels by user's career track
+      const userCareerTrack = user?.careerTrack;
+      if (userCareerTrack) {
+        levelsData = levelsData.filter((level: Level) => level.careerTrack === userCareerTrack);
+        console.log(`Filtered levels for career track: ${userCareerTrack}`, levelsData);
+      }
+      
+      // Sort by order
+      levelsData.sort((a: Level, b: Level) => a.order - b.order);
+      setLevels(levelsData);
+    } catch (error) {
+      console.error('Error fetching levels:', error);
+      setError('Failed to load training levels');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchLevels();
   }, [user]);
 

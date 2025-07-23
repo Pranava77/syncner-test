@@ -25,11 +25,42 @@ class ApiService {
     const data = await response.json();
 
     if (!response.ok) {
+      // Handle authentication errors
       if (response.status === 401) {
         this.clearToken();
-        window.location.href = '/login';
+        // Redirect to login page
+        if (typeof window !== 'undefined') {
+          window.location.href = '/login';
+        }
+        throw new Error('Authentication failed. Please log in again.');
       }
-      throw new Error(data.message || 'An error occurred');
+      
+      // Handle authorization errors
+      if (response.status === 403) {
+        throw new Error('Access denied. You do not have permission to perform this action.');
+      }
+      
+      // Handle not found errors
+      if (response.status === 404) {
+        throw new Error('Resource not found.');
+      }
+      
+      // Handle validation errors
+      if (response.status === 400) {
+        const errorMessage = data.message || 'Invalid request data';
+        if (data.errors && Array.isArray(data.errors)) {
+          const validationErrors = data.errors.map((err: any) => err.message).join(', ');
+          throw new Error(`Validation failed: ${validationErrors}`);
+        }
+        throw new Error(errorMessage);
+      }
+      
+      // Handle server errors
+      if (response.status >= 500) {
+        throw new Error('Server error. Please try again later.');
+      }
+      
+      throw new Error(data.message || `HTTP ${response.status}: ${response.statusText}`);
     }
 
     return data;
