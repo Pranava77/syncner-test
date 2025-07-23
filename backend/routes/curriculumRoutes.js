@@ -9,7 +9,11 @@ import {
   getCurriculumStats,
   getCurriculumByTypeAndTrack,
   updateCurriculumOrder,
-  toggleCurriculumStatus
+  toggleCurriculumStatus,
+  getContentByType,
+  createContentItem,
+  updateContentItem,
+  deleteContentItem
 } from '../controllers/curriculumController.js';
 import { protect } from '../middleware/auth.js';
 import { authorize } from '../middleware/auth.js';
@@ -86,6 +90,13 @@ router.get('/type/:type/track/:careerTrack', protect, getCurriculumByTypeAndTrac
 router.get('/', protect, authorize('admin'), getAllCurriculumItems);
 router.get('/stats', protect, authorize('admin'), getCurriculumStats);
 router.get('/:id', protect, authorize('admin'), getCurriculumItemById);
+
+// Content-specific routes
+router.get('/content/:type', protect, authorize('admin'), getContentByType);
+router.get('/content/:type/track/:careerTrack', protect, authorize('admin'), getContentByType);
+router.post('/content', protect, authorize('admin'), curriculumValidation, createContentItem);
+router.put('/content/:id', protect, authorize('admin'), curriculumValidation, updateContentItem);
+router.delete('/content/:id', protect, authorize('admin'), deleteContentItem);
 
 router.post('/', protect, authorize('admin'), curriculumValidation, createCurriculumItem);
 router.put('/:id', protect, authorize('admin'), curriculumValidation, updateCurriculumItem);

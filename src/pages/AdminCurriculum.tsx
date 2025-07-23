@@ -77,7 +77,7 @@ interface LevelForm {
 const defaultLevelForm: LevelForm = {
   title: '',
   description: '',
-  difficulty: 'Beginner',
+  difficulty: 'beginner',
   duration: '',
   careerTrack: 'full-stack',
   skills: [],
@@ -101,16 +101,19 @@ const AdminCurriculum: React.FC = () => {
   const [filterDifficulty, setFilterDifficulty] = useState<string>('all');
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
+  const [showTrackSelection, setShowTrackSelection] = useState(true);
 
   useEffect(() => {
     fetchLevels();
   }, []);
 
-  const fetchLevels = async () => {
+  const fetchLevels = async (track?: string) => {
     setLoading(true);
     try {
       console.log('Fetching levels from API...');
-      const response = await apiService.get('/training/levels');
+      const url = track ? `/training/levels?track=${track}` : '/training/levels';
+      const response = await apiService.get(url);
       console.log('API Response:', response);
       
       // Handle different response formats
@@ -169,7 +172,10 @@ const AdminCurriculum: React.FC = () => {
 
   const handleAddLevel = () => {
     setEditingLevel(null);
-    setLevelForm(defaultLevelForm);
+    setLevelForm({
+      ...defaultLevelForm,
+      careerTrack: selectedTrack || 'full-stack'
+    });
     setShowLevelModal(true);
     setFormError('');
   };
@@ -179,7 +185,7 @@ const AdminCurriculum: React.FC = () => {
     setLevelForm({
       title: level.title,
       description: level.description,
-      difficulty: level.difficulty,
+      difficulty: level.difficulty.toLowerCase(),
       duration: level.duration,
       careerTrack: level.careerTrack,
       skills: level.skills,
@@ -256,16 +262,51 @@ const AdminCurriculum: React.FC = () => {
     }
   };
 
-  const handleAddContent = (type: 'learn' | 'test' | 'exercise') => {
+  const handleAddContent = (type: 'learn' | 'test' | 'exercise', level: Level) => {
     setEditingContent({ type, item: null, index: -1 });
-    setContentForm({});
+    setEditingLevel(level);
+    setContentForm({
+      title: '',
+      order: 1,
+      type: type === 'learn' ? 'reading' : undefined,
+      content: '',
+      videoUrl: '',
+      question: '',
+      options: [],
+      answer: '',
+      description: '',
+      resources: []
+    });
     setShowContentModal(true);
     setFormError('');
   };
 
-  const handleEditContent = (type: 'learn' | 'test' | 'exercise', item: any, index: number) => {
+  const handleEditContent = (type: 'learn' | 'test' | 'exercise', item: any, index: number, level: Level) => {
     setEditingContent({ type, item, index });
-    setContentForm({ ...item });
+    setEditingLevel(level);
+    
+    // Parse content based on type
+    let parsedForm = { ...item };
+    
+    if (type === 'test' && item.content) {
+      const lines = item.content.split('\n');
+      parsedForm.question = lines[0];
+      parsedForm.options = [];
+      parsedForm.answer = '';
+      
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (line.startsWith('A)') || line.startsWith('B)') || line.startsWith('C)') || line.startsWith('D)')) {
+          parsedForm.options.push(line.substring(2).trim());
+        } else if (line.startsWith('Answer:') || line.startsWith('Correct Answer:')) {
+          parsedForm.answer = line.split(':')[1]?.trim() || '';
+        }
+      }
+    } else if (type === 'exercise') {
+      parsedForm.description = item.content;
+    }
+    
+    setContentForm(parsedForm);
     setShowContentModal(true);
     setFormError('');
   };
@@ -289,7 +330,7 @@ const AdminCurriculum: React.FC = () => {
             await apiService.delete(`/curriculum/${levelItems[index]._id}`);
           }
         }
-        await fetchLevels();
+        await fetchLevels(selectedTrack || undefined);
       } catch (error) {
         console.error('Error deleting content:', error);
       }
@@ -336,7 +377,8 @@ const AdminCurriculum: React.FC = () => {
             type: editingContent.type,
             careerTrack: editingLevel.careerTrack,
             difficulty: editingLevel.difficulty,
-            order: contentForm.order || 1
+            order: contentForm.order || 1,
+            isActive: true
           };
 
           if (contentType === 'learn') {
@@ -368,7 +410,8 @@ const AdminCurriculum: React.FC = () => {
           type: contentType,
           careerTrack: editingLevel.careerTrack,
           difficulty: editingLevel.difficulty,
-          order: contentForm.order || 1
+          order: contentForm.order || 1,
+          isActive: true
         };
 
         if (contentType === 'learn') {
@@ -397,7 +440,7 @@ const AdminCurriculum: React.FC = () => {
       setShowContentModal(false);
       setContentForm({});
       setFormError('');
-      await fetchLevels();
+      await fetchLevels(selectedTrack || undefined);
     } catch (error) {
       console.error('Error saving content:', error);
       setFormError('Failed to save content');
@@ -405,6 +448,12 @@ const AdminCurriculum: React.FC = () => {
       setLoading(false);
     }
   };
+
+  // Get track statistics
+  const trackStats = levels.reduce((acc: Record<string, number>, level: Level) => {
+    acc[level.careerTrack] = (acc[level.careerTrack] || 0) + 1;
+    return acc;
+  }, {});
 
   // Filter levels based on search and filters
   const filteredLevels = levels.filter(level => {
@@ -415,6 +464,18 @@ const AdminCurriculum: React.FC = () => {
     
     return matchesSearch && matchesTrack && matchesDifficulty;
   });
+
+  const handleTrackSelect = (track: string) => {
+    setSelectedTrack(track);
+    setShowTrackSelection(false);
+    fetchLevels(track);
+  };
+
+  const handleBackToTracks = () => {
+    setSelectedTrack(null);
+    setShowTrackSelection(true);
+    setLevels([]);
+  };
 
   if (loading && levels.length === 0) {
     return (
@@ -436,237 +497,427 @@ const AdminCurriculum: React.FC = () => {
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto p-6 lg:p-12">
         <div className="max-w-6xl mx-auto">
-          {/* Header */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-3xl font-heading text-paperwhite mb-2">Level Management</h1>
-                <p className="text-teallight">
-                  Create and manage training levels with learn, test, and exercise content
-                </p>
-                {lastUpdated && (
-                  <p className="text-xs text-teallight mt-1">
-                    Last updated: {lastUpdated.toLocaleTimeString()}
-                  </p>
-                )}
-                {formError && (
-                  <p className="text-xs text-red-400 mt-1">
-                    Error: {formError}
-                  </p>
-                )}
+          {showTrackSelection ? (
+            // Track Selection View
+            <>
+              {/* Header */}
+              <div className="mb-8">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h1 className="text-3xl font-heading text-paperwhite mb-2">Curriculum Management</h1>
+                    <p className="text-teallight">
+                      Select a career track to manage its training levels and content
+                    </p>
+                    {formError && (
+                      <p className="text-xs text-red-400 mt-1">
+                        Error: {formError}
+                      </p>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => fetchLevels()}
+                    disabled={loading}
+                    className="flex items-center gap-2 bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium disabled:opacity-50"
+                  >
+                    <ArrowClockwiseIcon className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+                    Refresh All
+                  </button>
+                </div>
               </div>
-              <button
-                onClick={handleAddLevel}
-                className="flex items-center gap-2 bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium"
-              >
-                <PlusIcon className="h-5 w-5" />
-                Create Level
-              </button>
-            </div>
-          </div>
 
-          {/* Filters and Search */}
-          <div className="mb-6 p-4 bg-paperwhite/5 rounded-lg border border-paperwhite/10">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-paperwhite mb-2">Search</label>
-                <input
-                  type="text"
-                  placeholder="Search levels..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full px-3 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite placeholder-teallight focus:outline-none focus:border-trueturquoise text-sm"
-                />
+              {/* Track Selection Grid */}
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                {[
+                  { id: 'full-stack', name: 'Full Stack', icon: '💻', color: 'bg-blue-500' },
+                  { id: 'ai-ml', name: 'AI/ML', icon: '🤖', color: 'bg-purple-500' },
+                  { id: 'ui-ux', name: 'UI/UX', icon: '🎨', color: 'bg-pink-500' },
+                  { id: 'data-science', name: 'Data Science', icon: '📊', color: 'bg-orange-500' }
+                ].map((track, index) => (
+                  <motion.div
+                    key={track.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    onClick={() => handleTrackSelect(track.id)}
+                    className="bg-offblack border border-paperwhite/20 rounded-lg p-6 cursor-pointer hover:border-trueturquoise/50 hover:bg-paperwhite/5 transition-all duration-300"
+                  >
+                    <div className="text-center">
+                      <div className={`w-16 h-16 ${track.color} rounded-full flex items-center justify-center mx-auto mb-4 text-2xl`}>
+                        {track.icon}
+                      </div>
+                      <h3 className="text-lg font-heading text-paperwhite mb-2">{track.name}</h3>
+                      <p className="text-teallight text-sm mb-4">
+                        {trackStats[track.id] || 0} levels available
+                      </p>
+                      <div className="text-xs text-teallight">
+                        Click to manage levels
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-paperwhite mb-2">Track</label>
-                <select
-                  value={filterTrack}
-                  onChange={(e) => setFilterTrack(e.target.value)}
-                  className="w-full px-3 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise text-sm"
-                >
-                  <option value="all">All Tracks</option>
-                  <option value="full-stack">Full Stack</option>
-                  <option value="ai-ml">AI/ML</option>
-                  <option value="ui-ux">UI/UX</option>
-                  <option value="data-science">Data Science</option>
-                </select>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-paperwhite mb-2">Difficulty</label>
-                <select
-                  value={filterDifficulty}
-                  onChange={(e) => setFilterDifficulty(e.target.value)}
-                  className="w-full px-3 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise text-sm"
-                >
-                  <option value="all">All Difficulties</option>
-                  <option value="Beginner">Beginner</option>
-                  <option value="Intermediate">Intermediate</option>
-                  <option value="Advanced">Advanced</option>
-                </select>
-              </div>
-              
-              <div className="flex items-end">
-                <button
-                  onClick={fetchLevels}
-                  disabled={loading}
-                  className="w-full flex items-center justify-center gap-2 bg-trueturquoise text-offblack px-3 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium disabled:opacity-50 text-sm"
-                >
-                  <ArrowClockwiseIcon className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-                  Refresh
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Levels Grid */}
-          {filteredLevels.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="text-paperwhite/30 text-6xl mb-4">📚</div>
-              <h3 className="text-xl font-heading text-paperwhite mb-2">No levels found</h3>
-              <p className="text-teallight mb-6">Create your first training level to get started</p>
-              <div className="space-y-2 text-sm text-teallight">
-                <p>Debug Info:</p>
-                <p>Total levels in database: {levels.length}</p>
-                <p>Filter track: {filterTrack}</p>
-                <p>Filter difficulty: {filterDifficulty}</p>
-                <p>Search term: "{searchTerm}"</p>
-                <button 
-                  onClick={fetchLevels}
-                  className="mt-4 bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors text-sm"
-                >
-                  Refresh Data
-                </button>
-              </div>
-            </div>
+            </>
           ) : (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {filteredLevels.map((level, index) => (
-                <motion.div
-                  key={level.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="bg-offblack border border-paperwhite/20 rounded-lg p-6 hover:border-trueturquoise/50 hover:bg-paperwhite/5 transition-all duration-300"
-                >
-                  {/* Header with difficulty and track */}
-                  <div className="flex items-center justify-between mb-4">
-                    <div className={`p-2 rounded-lg ${getDifficultyColor(level.difficulty)}`}>
-                      <StarIcon className="h-5 w-5" />
+            // Level Management View
+            <>
+              {/* Header */}
+              <div className="mb-8">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="flex items-center gap-4 mb-2">
+                      <button
+                        onClick={handleBackToTracks}
+                        className="p-2 text-teallight hover:text-paperwhite transition-colors"
+                        title="Back to Tracks"
+                      >
+                        <ChevronRightIcon className="h-5 w-5 rotate-180" />
+                      </button>
+                      <h1 className="text-3xl font-heading text-paperwhite">
+                        {getTrackLabel(selectedTrack || '')} Track Management
+                      </h1>
                     </div>
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${getTrackColor(level.careerTrack)} text-white`}>
-                      {getTrackLabel(level.careerTrack)}
-                    </span>
+                    <p className="text-teallight">
+                      Manage training levels and content for {getTrackLabel(selectedTrack || '')} track
+                    </p>
+                    {lastUpdated && (
+                      <p className="text-xs text-teallight mt-1">
+                        Last updated: {lastUpdated.toLocaleTimeString()}
+                      </p>
+                    )}
+                    {formError && (
+                      <p className="text-xs text-red-400 mt-1">
+                        Error: {formError}
+                      </p>
+                    )}
                   </div>
+                  <button
+                    onClick={handleAddLevel}
+                    className="flex items-center gap-2 bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium"
+                  >
+                    <PlusIcon className="h-5 w-5" />
+                    Create Level
+                  </button>
+                </div>
+              </div>
 
-                  {/* Title and Description */}
-                  <h3 className="text-lg font-heading text-paperwhite mb-2">{level.title}</h3>
-                  <p className="text-teallight text-sm mb-4 line-clamp-2">{level.description}</p>
-
-                  {/* Duration and Difficulty */}
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center gap-2 text-xs text-teallight">
-                      <ClockIcon className="h-3 w-3" />
-                      <span>{level.estimatedHours}h estimated</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-teallight">
-                      <span className={`px-2 py-1 rounded ${getDifficultyColor(level.difficulty)} text-white`}>
-                        {level.difficulty}
-                      </span>
-                    </div>
+              {/* Filters and Search */}
+              <div className="mb-6 p-4 bg-paperwhite/5 rounded-lg border border-paperwhite/10">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-paperwhite mb-2">Search</label>
+                    <input
+                      type="text"
+                      placeholder="Search levels..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-full px-3 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite placeholder-teallight focus:outline-none focus:border-trueturquoise text-sm"
+                    />
                   </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-paperwhite mb-2">Difficulty</label>
+                    <select
+                      value={filterDifficulty}
+                      onChange={(e) => setFilterDifficulty(e.target.value)}
+                      className="w-full px-3 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise text-sm"
+                    >
+                      <option value="all">All Difficulties</option>
+                      <option value="beginner">Beginner</option>
+                      <option value="intermediate">Intermediate</option>
+                      <option value="advanced">Advanced</option>
+                    </select>
+                  </div>
+                  
+                  <div className="flex items-end">
+                    <button
+                      onClick={() => fetchLevels(selectedTrack || undefined)}
+                      disabled={loading}
+                      className="w-full flex items-center justify-center gap-2 bg-trueturquoise text-offblack px-3 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium disabled:opacity-50 text-sm"
+                    >
+                      <ArrowClockwiseIcon className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+                      Refresh
+                    </button>
+                  </div>
+                </div>
+              </div>
 
-                  {/* Content Counts */}
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-4 text-xs text-teallight">
-                      <span>📖 {level.learn.length} learn</span>
-                      <span>📝 {level.test.length} test</span>
-                      <span>💪 {level.exercise.length} exercise</span>
-                    </div>
-                    <div className="flex items-center gap-1 text-xs">
-                      {level.isActive ? (
-                        <span className="text-green-400 flex items-center gap-1">
-                          <CheckCircledIcon className="h-3 w-3" />
-                          Active
+              {/* Levels Grid */}
+              {filteredLevels.length === 0 ? (
+                <div className="text-center py-12">
+                  <div className="text-paperwhite/30 text-6xl mb-4">📚</div>
+                  <h3 className="text-xl font-heading text-paperwhite mb-2">No levels found</h3>
+                  <p className="text-teallight mb-6">Create your first training level for this track</p>
+                  <div className="space-y-2 text-sm text-teallight">
+                    <p>Debug Info:</p>
+                    <p>Selected track: {selectedTrack}</p>
+                    <p>Total levels in database: {levels.length}</p>
+                    <p>Filter difficulty: {filterDifficulty}</p>
+                    <p>Search term: "{searchTerm}"</p>
+                    <button 
+                      onClick={() => fetchLevels(selectedTrack || undefined)}
+                      className="mt-4 bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors text-sm"
+                    >
+                      Refresh Data
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  {filteredLevels.map((level, index) => (
+                    <motion.div
+                      key={level.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="bg-offblack border border-paperwhite/20 rounded-lg p-6 hover:border-trueturquoise/50 hover:bg-paperwhite/5 transition-all duration-300"
+                    >
+                      {/* Header with difficulty and track */}
+                      <div className="flex items-center justify-between mb-4">
+                        <div className={`p-2 rounded-lg ${getDifficultyColor(level.difficulty)}`}>
+                          <StarIcon className="h-5 w-5" />
+                        </div>
+                        <span className={`px-2 py-1 rounded text-xs font-medium ${getTrackColor(level.careerTrack)} text-white`}>
+                          {getTrackLabel(level.careerTrack)}
                         </span>
-                      ) : (
-                        <span className="text-red-400 flex items-center gap-1">
-                          <Cross1Icon className="h-3 w-3" />
-                          Inactive
-                        </span>
+                      </div>
+
+                      {/* Title and Description */}
+                      <h3 className="text-lg font-heading text-paperwhite mb-2">{level.title}</h3>
+                      <p className="text-teallight text-sm mb-4 line-clamp-2">{level.description}</p>
+
+                      {/* Duration and Difficulty */}
+                      <div className="space-y-2 mb-4">
+                        <div className="flex items-center gap-2 text-xs text-teallight">
+                          <ClockIcon className="h-3 w-3" />
+                          <span>{level.estimatedHours}h estimated</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs text-teallight">
+                          <span className={`px-2 py-1 rounded ${getDifficultyColor(level.difficulty)} text-white`}>
+                            {level.difficulty}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Content Counts */}
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-4 text-xs text-teallight">
+                          <span>📖 {level.learn.length} learn</span>
+                          <span>📝 {level.test.length} test</span>
+                          <span>💪 {level.exercise.length} exercise</span>
+                        </div>
+                        <div className="flex items-center gap-1 text-xs">
+                          {level.isActive ? (
+                            <span className="text-green-400 flex items-center gap-1">
+                              <CheckCircledIcon className="h-3 w-3" />
+                              Active
+                            </span>
+                          ) : (
+                            <span className="text-red-400 flex items-center gap-1">
+                              <Cross1Icon className="h-3 w-3" />
+                              Inactive
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Skills */}
+                      {level.skills.length > 0 && (
+                        <div className="mb-4">
+                          <div className="flex flex-wrap gap-1">
+                            {level.skills.slice(0, 3).map((skill, idx) => (
+                              <span key={idx} className="px-2 py-1 bg-trueturquoise/20 text-trueturquoise text-xs rounded">
+                                {skill}
+                              </span>
+                            ))}
+                            {level.skills.length > 3 && (
+                              <span className="px-2 py-1 bg-paperwhite/20 text-paperwhite text-xs rounded">
+                                +{level.skills.length - 3} more
+                              </span>
+                            )}
+                          </div>
+                        </div>
                       )}
-                    </div>
-                  </div>
 
-                  {/* Skills */}
-                  {level.skills.length > 0 && (
-                    <div className="mb-4">
-                      <div className="flex flex-wrap gap-1">
-                        {level.skills.slice(0, 3).map((skill, idx) => (
-                          <span key={idx} className="px-2 py-1 bg-trueturquoise/20 text-trueturquoise text-xs rounded">
-                            {skill}
-                          </span>
-                        ))}
-                        {level.skills.length > 3 && (
-                          <span className="px-2 py-1 bg-paperwhite/20 text-paperwhite text-xs rounded">
-                            +{level.skills.length - 3} more
-                          </span>
+                      {/* Content Sections */}
+                      <div className="space-y-3 mb-4">
+                        {/* Learn Content */}
+                        {level.learn.length > 0 && (
+                          <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-3">
+                            <div className="flex items-center justify-between mb-2">
+                              <h4 className="text-sm font-medium text-green-400 flex items-center gap-1">
+                                📖 Learn Content ({level.learn.length})
+                              </h4>
+                            </div>
+                            <div className="space-y-2">
+                              {level.learn.slice(0, 2).map((item, idx) => (
+                                <div key={idx} className="flex items-center justify-between bg-green-500/5 rounded p-2">
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-xs text-paperwhite font-medium truncate">{item.title}</p>
+                                    <p className="text-xs text-teallight truncate">{item.type}</p>
+                                  </div>
+                                  <div className="flex items-center gap-1 ml-2">
+                                    <button
+                                      onClick={() => handleEditContent('learn', item, idx, level)}
+                                      className="p-1 text-green-400 hover:text-green-300 transition-colors"
+                                      title="Edit"
+                                    >
+                                      <EditIcon className="h-3 w-3" />
+                                    </button>
+                                    <button
+                                      onClick={() => handleDeleteContent(level.id, 'learn', idx)}
+                                      className="p-1 text-red-400 hover:text-red-300 transition-colors"
+                                      title="Delete"
+                                    >
+                                      <TrashIcon className="h-3 w-3" />
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
+                              {level.learn.length > 2 && (
+                                <p className="text-xs text-teallight text-center">
+                                  +{level.learn.length - 2} more learn items
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Test Content */}
+                        {level.test.length > 0 && (
+                          <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
+                            <div className="flex items-center justify-between mb-2">
+                              <h4 className="text-sm font-medium text-yellow-400 flex items-center gap-1">
+                                📝 Test Content ({level.test.length})
+                              </h4>
+                            </div>
+                            <div className="space-y-2">
+                              {level.test.slice(0, 2).map((item, idx) => (
+                                <div key={idx} className="flex items-center justify-between bg-yellow-500/5 rounded p-2">
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-xs text-paperwhite font-medium truncate">{item.question}</p>
+                                    <p className="text-xs text-teallight">{item.options.length} options</p>
+                                  </div>
+                                  <div className="flex items-center gap-1 ml-2">
+                                    <button
+                                      onClick={() => handleEditContent('test', item, idx, level)}
+                                      className="p-1 text-yellow-400 hover:text-yellow-300 transition-colors"
+                                      title="Edit"
+                                    >
+                                      <EditIcon className="h-3 w-3" />
+                                    </button>
+                                    <button
+                                      onClick={() => handleDeleteContent(level.id, 'test', idx)}
+                                      className="p-1 text-red-400 hover:text-red-300 transition-colors"
+                                      title="Delete"
+                                    >
+                                      <TrashIcon className="h-3 w-3" />
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
+                              {level.test.length > 2 && (
+                                <p className="text-xs text-teallight text-center">
+                                  +{level.test.length - 2} more test items
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Exercise Content */}
+                        {level.exercise.length > 0 && (
+                          <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-3">
+                            <div className="flex items-center justify-between mb-2">
+                              <h4 className="text-sm font-medium text-purple-400 flex items-center gap-1">
+                                💪 Exercise Content ({level.exercise.length})
+                              </h4>
+                            </div>
+                            <div className="space-y-2">
+                              {level.exercise.slice(0, 2).map((item, idx) => (
+                                <div key={idx} className="flex items-center justify-between bg-purple-500/5 rounded p-2">
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-xs text-paperwhite font-medium truncate">{item.title}</p>
+                                    <p className="text-xs text-teallight truncate">{item.description}</p>
+                                  </div>
+                                  <div className="flex items-center gap-1 ml-2">
+                                    <button
+                                      onClick={() => handleEditContent('exercise', item, idx, level)}
+                                      className="p-1 text-purple-400 hover:text-purple-300 transition-colors"
+                                      title="Edit"
+                                    >
+                                      <EditIcon className="h-3 w-3" />
+                                    </button>
+                                    <button
+                                      onClick={() => handleDeleteContent(level.id, 'exercise', idx)}
+                                      className="p-1 text-red-400 hover:text-red-300 transition-colors"
+                                      title="Delete"
+                                    >
+                                      <TrashIcon className="h-3 w-3" />
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
+                              {level.exercise.length > 2 && (
+                                <p className="text-xs text-teallight text-center">
+                                  +{level.exercise.length - 2} more exercise items
+                                </p>
+                              )}
+                            </div>
+                          </div>
                         )}
                       </div>
-                    </div>
-                  )}
 
-                  {/* Admin Controls */}
-                  <div className="border-t border-paperwhite/10 pt-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => handleEditLevel(level)}
-                          className="p-2 text-teallight hover:text-trueturquoise transition-colors"
-                          title="Edit Level"
-                        >
-                          <EditIcon className="h-4 w-4" />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteLevel(level.id)}
-                          className="p-2 text-teallight hover:text-red-400 transition-colors"
-                          title="Delete Level"
-                        >
-                          <TrashIcon className="h-4 w-4" />
-                        </button>
-                      </div>
-                      
-                      {/* Content Management Buttons */}
-                      <div className="flex items-center gap-1">
-                        <button
-                          onClick={() => handleAddContent('learn')}
+                      {/* Admin Controls */}
+                      <div className="border-t border-paperwhite/10 pt-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => handleEditLevel(level)}
+                              className="p-2 text-teallight hover:text-trueturquoise transition-colors"
+                              title="Edit Level"
+                            >
+                              <EditIcon className="h-4 w-4" />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteLevel(level.id)}
+                              className="p-2 text-teallight hover:text-red-400 transition-colors"
+                              title="Delete Level"
+                            >
+                              <TrashIcon className="h-4 w-4" />
+                            </button>
+                          </div>
+                          
+                          {/* Content Management Buttons */}
+                          <div className="flex items-center gap-1">
+                                                    <button
+                          onClick={() => handleAddContent('learn', level)}
                           className="px-2 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600 transition-colors"
                           title="Add Learn Content"
                         >
                           +Learn
                         </button>
                         <button
-                          onClick={() => handleAddContent('test')}
+                          onClick={() => handleAddContent('test', level)}
                           className="px-2 py-1 bg-yellow-500 text-white text-xs rounded hover:bg-yellow-600 transition-colors"
                           title="Add Test Content"
                         >
                           +Test
                         </button>
                         <button
-                          onClick={() => handleAddContent('exercise')}
+                          onClick={() => handleAddContent('exercise', level)}
                           className="px-2 py-1 bg-purple-500 text-white text-xs rounded hover:bg-purple-600 transition-colors"
                           title="Add Exercise Content"
                         >
                           +Exercise
                         </button>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </div>
       </main>
@@ -747,16 +998,15 @@ const AdminCurriculum: React.FC = () => {
                     <label className="block text-sm font-medium text-paperwhite mb-2">
                       Career Track *
                     </label>
-                    <select
-                      value={levelForm.careerTrack}
-                      onChange={(e) => setLevelForm({ ...levelForm, careerTrack: e.target.value })}
-                      className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
-                    >
-                      <option value="full-stack">Full Stack</option>
-                      <option value="ai-ml">AI/ML</option>
-                      <option value="ui-ux">UI/UX</option>
-                      <option value="data-science">Data Science</option>
-                    </select>
+                    <input
+                      type="text"
+                      value={getTrackLabel(levelForm.careerTrack)}
+                      disabled
+                      className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite/50 cursor-not-allowed"
+                    />
+                    <p className="text-xs text-teallight mt-1">
+                      Track is determined by your selection
+                    </p>
                   </div>
                 </div>
 
@@ -914,20 +1164,7 @@ const AdminCurriculum: React.FC = () => {
                   </div>
                 )}
 
-                {editingContent?.type === 'learn' && contentForm.type === 'video' && (
-                  <div>
-                    <label className="block text-sm font-medium text-paperwhite mb-2">
-                      Video URL
-                    </label>
-                    <input
-                      type="url"
-                      value={contentForm.videoUrl || ''}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setContentForm({ ...contentForm, videoUrl: e.target.value })}
-                      className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
-                      placeholder="https://example.com/video"
-                    />
-                  </div>
-                )}
+
 
                 {editingContent?.type === 'learn' && (
                   <div>
@@ -1020,6 +1257,19 @@ Option 3"
                     />
                   </div>
                 )}
+
+                <div>
+                  <label className="block text-sm font-medium text-paperwhite mb-2">
+                    Order
+                  </label>
+                  <input
+                    type="number"
+                    value={contentForm.order || 1}
+                    onChange={(e) => setContentForm({ ...contentForm, order: parseInt(e.target.value) || 1 })}
+                    className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
+                    min="1"
+                  />
+                </div>
 
                 {formError && (
                   <div className="text-red-400 text-sm">{formError}</div>

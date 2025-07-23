@@ -335,6 +335,182 @@ const toggleCurriculumStatus = async (req, res) => {
   }
 };
 
+// @desc    Get content by type and track
+// @route   GET /api/curriculum/content/:type
+// @access  Private/Admin
+const getContentByType = async (req, res) => {
+  try {
+    const { type } = req.params;
+    const { careerTrack, levelTitle, sortBy = 'order', sortOrder = 'asc' } = req.query;
+    
+    const filter = { type };
+    if (careerTrack) filter.careerTrack = careerTrack;
+    if (levelTitle) filter.title = levelTitle;
+    
+    const sortOptions = {};
+    sortOptions[sortBy] = sortOrder === 'desc' ? -1 : 1;
+    
+    const content = await Curriculum.find(filter)
+      .sort(sortOptions)
+      .populate('metadata.createdBy', 'name email')
+      .populate('metadata.lastModifiedBy', 'name email');
+    
+    res.status(200).json({
+      success: true,
+      count: content.length,
+      data: content
+    });
+  } catch (error) {
+    console.error('Get content by type error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+};
+
+// @desc    Create content item
+// @route   POST /api/curriculum/content
+// @access  Private/Admin
+const createContentItem = async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        errors: errors.array()
+      });
+    }
+    
+    const {
+      title,
+      type,
+      content,
+      careerTrack,
+      difficulty,
+      order = 1,
+      isActive = true,
+      videoUrl,
+      resources
+    } = req.body;
+    
+    const curriculumItem = new Curriculum({
+      title,
+      type,
+      content,
+      careerTrack,
+      difficulty,
+      order,
+      isActive,
+      videoUrl,
+      resources,
+      metadata: {
+        createdBy: req.user.id,
+        createdAt: new Date(),
+        lastModifiedBy: req.user.id,
+        lastModifiedAt: new Date()
+      }
+    });
+    
+    await curriculumItem.save();
+    
+    res.status(201).json({
+      success: true,
+      data: curriculumItem
+    });
+  } catch (error) {
+    console.error('Create content item error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+};
+
+// @desc    Update content item
+// @route   PUT /api/curriculum/content/:id
+// @access  Private/Admin
+const updateContentItem = async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        errors: errors.array()
+      });
+    }
+    
+    const curriculumItem = await Curriculum.findById(req.params.id);
+    
+    if (!curriculumItem) {
+      return res.status(404).json({
+        success: false,
+        message: 'Content item not found'
+      });
+    }
+    
+    const {
+      title,
+      content,
+      order,
+      isActive,
+      videoUrl,
+      resources
+    } = req.body;
+    
+    curriculumItem.title = title || curriculumItem.title;
+    curriculumItem.content = content || curriculumItem.content;
+    curriculumItem.order = order || curriculumItem.order;
+    curriculumItem.isActive = isActive !== undefined ? isActive : curriculumItem.isActive;
+    curriculumItem.videoUrl = videoUrl || curriculumItem.videoUrl;
+    curriculumItem.resources = resources || curriculumItem.resources;
+    curriculumItem.metadata.lastModifiedBy = req.user.id;
+    curriculumItem.metadata.lastModifiedAt = new Date();
+    
+    await curriculumItem.save();
+    
+    res.status(200).json({
+      success: true,
+      data: curriculumItem
+    });
+  } catch (error) {
+    console.error('Update content item error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+};
+
+// @desc    Delete content item
+// @route   DELETE /api/curriculum/content/:id
+// @access  Private/Admin
+const deleteContentItem = async (req, res) => {
+  try {
+    const curriculumItem = await Curriculum.findById(req.params.id);
+    
+    if (!curriculumItem) {
+      return res.status(404).json({
+        success: false,
+        message: 'Content item not found'
+      });
+    }
+    
+    await curriculumItem.deleteOne();
+    
+    res.status(200).json({
+      success: true,
+      message: 'Content item deleted successfully'
+    });
+  } catch (error) {
+    console.error('Delete content item error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+};
+
 export {
   getAllCurriculumItems,
   getCurriculumItemById,
@@ -344,5 +520,9 @@ export {
   getCurriculumStats,
   getCurriculumByTypeAndTrack,
   updateCurriculumOrder,
-  toggleCurriculumStatus
+  toggleCurriculumStatus,
+  getContentByType,
+  createContentItem,
+  updateContentItem,
+  deleteContentItem
 }; 
