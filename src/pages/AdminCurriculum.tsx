@@ -250,7 +250,7 @@ const AdminCurriculum: React.FC = () => {
     setFormError('');
   };
 
-  const handleEditContent = (levelId: string, type: 'learn' | 'test' | 'exercise', item: any, index: number) => { // Temporary comment
+  const handleEditContent = (levelId: string, type: 'learn' | 'test' | 'exercise', item: any, index: number) => {
     setEditingContent({ type, item, index });
     setContentForm({ ...item });
     setShowContentModal(true);
@@ -855,7 +855,6 @@ const AdminCurriculum: React.FC = () => {
                 <h2 className="text-2xl font-heading text-paperwhite">
                   {editingContent ? `Edit ${editingContent.type}` : `Add ${editingContent?.type || 'learn'}`}
                 </h2>
-                </h2>
                 <button
                   onClick={() => setShowContentModal(false)}
                   className="p-2 text-teallight hover:text-paperwhite transition-colors"
@@ -938,7 +937,9 @@ const AdminCurriculum: React.FC = () => {
                       onChange={(e) => setContentForm({ ...contentForm, options: e.target.value.split('\n').filter(s => s.trim()) })}
                       rows={3}
                       className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise resize-none"
-                      placeholder="Option 1&#10;Option 2&#10;Option 3"
+                      placeholder="Option 1
+Option 2
+Option 3"
                     />
                   </div>
                 )}
