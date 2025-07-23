@@ -128,15 +128,59 @@ const AdminCurriculum: React.FC = () => {
       }
       
       console.log('Processed levels data:', levelsData);
-      console.log('AdminCurriculum: Levels by track:', levelsData.reduce((acc: Record<string, number>, level: Level) => {
+      
+      // Group curriculum items by level to create unique levels
+      const levelMap = new Map();
+      console.log('Starting to group curriculum items. Total items:', levelsData.length);
+      
+      levelsData.forEach((item: any) => {
+        // Create a unique key for each level based on title and career track
+        const levelKey = `${item.title}-${item.careerTrack}`;
+        
+        if (!levelMap.has(levelKey)) {
+          // Create a new level object
+          levelMap.set(levelKey, {
+            id: item.id || levelKey,
+            title: item.title,
+            description: item.description || '',
+            difficulty: item.difficulty || 'beginner',
+            duration: item.duration || '',
+            careerTrack: item.careerTrack,
+            skills: item.skills || [],
+            prerequisites: item.prerequisites || [],
+            learn: [],
+            test: [],
+            exercise: [],
+            order: item.order || 1,
+            isActive: item.isActive !== false,
+            estimatedHours: item.estimatedHours || 1,
+            createdAt: item.createdAt || new Date().toISOString(),
+            updatedAt: item.updatedAt || new Date().toISOString()
+          });
+        }
+        
+        // Add content to the appropriate section based on type
+        const level = levelMap.get(levelKey);
+        if (item.type === 'learn') {
+          level.learn.push(item);
+        } else if (item.type === 'test') {
+          level.test.push(item);
+        } else if (item.type === 'exercise') {
+          level.exercise.push(item);
+        }
+      });
+      
+      // Convert map to array and sort by order
+      const uniqueLevels = Array.from(levelMap.values()).sort((a: Level, b: Level) => a.order - b.order);
+      console.log('Grouping complete. Unique levels created:', uniqueLevels.length);
+      
+      console.log('Unique levels after grouping:', uniqueLevels);
+      console.log('AdminCurriculum: Levels by track:', uniqueLevels.reduce((acc: Record<string, number>, level: Level) => {
         acc[level.careerTrack] = (acc[level.careerTrack] || 0) + 1;
         return acc;
       }, {}));
       
-      // Sort levels by order
-      levelsData.sort((a: Level, b: Level) => a.order - b.order);
-      
-      setLevels(levelsData);
+      setLevels(uniqueLevels);
       setLastUpdated(new Date());
       setFormError(''); // Clear any previous errors
     } catch (error) {
