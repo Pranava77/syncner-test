@@ -26,6 +26,7 @@ interface Level {
   title: string;
   description: string;
   difficulty: string;
+  duration: string;
   careerTrack: string;
   skills: string[];
   prerequisites: string[];
@@ -34,11 +35,9 @@ interface Level {
   exercise: ExerciseItem[];
   order: number;
   isActive: boolean;
-  estimatedDuration: number; // Changed to match backend
+  estimatedHours: number;
   createdAt: string;
   updatedAt: string;
-  type: string;
-  content: string;
 }
 
 interface LearnItem {
@@ -67,27 +66,24 @@ interface LevelForm {
   title: string;
   description: string;
   difficulty: string;
+  duration: string;
   careerTrack: string;
   skills: string[];
   prerequisites: string[];
-  estimatedDuration: number; // Changed to match backend
+  estimatedHours: number;
   isActive: boolean;
-  type: string;
-  content: string;
 }
 
 const defaultLevelForm: LevelForm = {
-  title: 'New Level',
-  description: 'A detailed description for the new level.',
-  difficulty: 'beginner',
-  // duration: '', // Removed as it's not in the backend model
+  title: '',
+  description: '',
+  difficulty: 'Beginner',
+  duration: '',
   careerTrack: 'fullstack',
   skills: [],
   prerequisites: [],
-  estimatedDuration: 1,
+  estimatedHours: 1,
   isActive: true,
-  type: 'syllabus',
-  content: 'Default content for the new level, at least 10 characters.',
 };
 
 const AdminCurriculum: React.FC = () => {
@@ -123,7 +119,7 @@ const AdminCurriculum: React.FC = () => {
     setLoading(true);
     try {
       console.log('Fetching levels from API...');
-      const response = await apiService.getLevels();
+      const response = await apiService.get('/training/levels');
       console.log('API Response:', response);
       
       // Handle different response formats
@@ -196,14 +192,12 @@ const AdminCurriculum: React.FC = () => {
       title: level.title,
       description: level.description,
       difficulty: level.difficulty,
-      // duration: level.duration, // Removed as it's not in the backend model
+      duration: level.duration,
       careerTrack: level.careerTrack,
       skills: level.skills,
       prerequisites: level.prerequisites,
-      estimatedDuration: level.estimatedDuration,
+      estimatedHours: level.estimatedHours,
       isActive: level.isActive,
-      type: level.type, // Assuming level has a type property
-      content: level.content, // Assuming level has a content property
     });
     setShowLevelModal(true);
     setFormError('');
@@ -212,7 +206,7 @@ const AdminCurriculum: React.FC = () => {
   const handleDeleteLevel = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this level?')) {
       try {
-        await apiService.delete(`/curriculum/${id}`);
+        await apiService.delete(`/training/levels/${id}`);
         await fetchLevels();
       } catch (error) {
         console.error('Error deleting level:', error);
@@ -229,17 +223,17 @@ const AdminCurriculum: React.FC = () => {
     setLoading(true);
     try {
       if (editingLevel) {
-        await apiService.put(`/curriculum/${editingLevel.id}`, levelForm);
+        await apiService.put(`/training/levels/${editingLevel.id}`, levelForm);
         setShowLevelModal(false);
         setLevelForm(defaultLevelForm);
         setFormError('');
         await fetchLevels();
       } else {
-        await apiService.post('/curriculum', levelForm);
+        // Creation is disabled: just close the modal and reset the form
         setShowLevelModal(false);
         setLevelForm(defaultLevelForm);
         setFormError('');
-        await fetchLevels();
+        // Optionally, show a message: setFormError('Creating new levels is currently disabled.');
       }
     } catch (error) {
       console.error('Error saving level:', error);
@@ -266,7 +260,7 @@ const AdminCurriculum: React.FC = () => {
   const handleDeleteContent = async (levelId: string, type: 'learn' | 'test' | 'exercise', index: number) => {
     if (window.confirm('Are you sure you want to delete this content?')) {
       try {
-        await apiService.delete(`/curriculum/${levelId}/${type}/${index}`);
+        await apiService.delete(`/training/levels/${levelId}/${type}/${index}`);
         await fetchLevels();
       } catch (error) {
         console.error('Error deleting content:', error);
@@ -285,10 +279,10 @@ const AdminCurriculum: React.FC = () => {
     setLoading(true);
     try {
       if (editingContent && editingLevel) {
-        await apiService.put(`/curriculum/${editingLevel.id}/${editingContent.type}/${editingContent.index}`, contentForm);
+        await apiService.put(`/training/levels/${editingLevel.id}/${editingContent.type}/${editingContent.index}`, contentForm);
       } else if (editingLevel) {
         const contentType = editingContent?.type || 'learn';
-        await apiService.post(`/curriculum/${editingLevel.id}/${contentType}`, contentForm);
+        await apiService.post(`/training/levels/${editingLevel.id}/${contentType}`, contentForm);
       }
       
       setShowContentModal(false);
@@ -448,7 +442,7 @@ const AdminCurriculum: React.FC = () => {
                           </span>
                           <span className="text-xs text-teallight flex items-center gap-1">
                             <ClockIcon className="h-3 w-3" />
-                            {level.estimatedDuration}h
+                            {level.estimatedHours}h
                           </span>
                           <span className="text-xs text-teallight">
                             Order: {level.order}
@@ -714,19 +708,6 @@ const AdminCurriculum: React.FC = () => {
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-paperwhite mb-2">
-                    Content *
-                  </label>
-                  <textarea
-                    value={levelForm.content}
-                    onChange={(e) => setLevelForm({ ...levelForm, content: e.target.value })}
-                    rows={5}
-                    className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise resize-none"
-                    placeholder="Enter content for the level (e.g., syllabus details)"
-                  />
-                </div>
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-paperwhite mb-2">
@@ -752,7 +733,7 @@ const AdminCurriculum: React.FC = () => {
                       onChange={(e) => setLevelForm({ ...levelForm, careerTrack: e.target.value })}
                       className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
                     >
-                      <option value="full-stack">Full Stack</option>
+                      <option value="fullstack">Full Stack</option>
                       <option value="ai-ml">AI/ML</option>
                       <option value="ui-ux">UI/UX</option>
                       <option value="data-science">Data Science</option>
@@ -780,8 +761,8 @@ const AdminCurriculum: React.FC = () => {
                     </label>
                     <input
                       type="number"
-                      value={levelForm.estimatedDuration}
-                      onChange={(e) => setLevelForm({ ...levelForm, estimatedDuration: parseInt(e.target.value) || 1 })}
+                      value={levelForm.estimatedHours}
+                      onChange={(e) => setLevelForm({ ...levelForm, estimatedHours: parseInt(e.target.value) || 1 })}
                       className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
                       min="1"
                     />

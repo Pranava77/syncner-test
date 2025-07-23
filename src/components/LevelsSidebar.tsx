@@ -37,7 +37,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
   const fetchLevels = async () => {
     try {
       setLoading(true);
-      const response = await apiService.getLevels();
+      const response = await apiService.get('/training/levels');
       
       let levelsData = [];
       if (response && response.data) {

@@ -40,7 +40,7 @@ const TrainingLevels: React.FC = () => {
   const fetchLevels = async () => {
     try {
       setLoading(true);
-      const response = await apiService.getLevels({ type: 'learn', trackId: user?.careerTrack });
+      const response = await apiService.get('/training/levels');
       console.log('Training levels response:', response);
       
       let levelsData = [];
@@ -79,7 +79,7 @@ const TrainingLevels: React.FC = () => {
 
   const getTrackColor = (track: string) => {
     switch (track) {
-      case 'full-stack': return 'bg-blue-500';
+      case 'fullstack': return 'bg-blue-500';
       case 'ai-ml': return 'bg-purple-500';
       case 'ui-ux': return 'bg-pink-500';
       case 'data-science': return 'bg-orange-500';
@@ -89,7 +89,7 @@ const TrainingLevels: React.FC = () => {
 
   const getTrackLabel = (track: string) => {
     switch (track) {
-      case 'full-stack': return 'Full Stack';
+      case 'fullstack': return 'Full Stack';
       case 'ai-ml': return 'AI/ML';
       case 'ui-ux': return 'UI/UX';
       case 'data-science': return 'Data Science';

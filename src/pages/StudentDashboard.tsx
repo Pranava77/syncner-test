@@ -54,6 +54,7 @@ const StudentDashboard: React.FC = () => {
   }, [user]);
 
   useEffect(() => {
+    console.log('StudentDashboard: user.careerTrack on useEffect:', user?.careerTrack);
     if (user?.careerTrack && curriculumState.lastFetched === null) {
       dispatch(fetchCurriculum({ type: 'learn', trackId: user.careerTrack }));
     }
