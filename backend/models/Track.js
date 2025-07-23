@@ -7,6 +7,11 @@ const trackSchema = new mongoose.Schema({
     required: [true, 'Track name is required'],
     trim: true
   },
+  displayName: {
+    type: String,
+    required: [true, 'Track display name is required'],
+    trim: true
+  },
   description: {
     type: String,
     required: [true, 'Track description is required'],

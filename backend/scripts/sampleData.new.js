@@ -116,7 +116,8 @@ const sampleStudents = [
 
 const sampleTracks = [
   {
-    name: 'Full Stack Development',
+    name: 'full-stack',
+    displayName: 'Full Stack Development',
     description: 'Learn to build complete web applications using front-end and back-end technologies.',
     duration: '6 months',
     difficulty: 'beginner',
@@ -128,7 +129,8 @@ const sampleTracks = [
     order: 1
   },
   {
-    name: 'AI/ML Engineering',
+    name: 'ai-ml',
+    displayName: 'AI/ML Engineering',
     description: 'Dive into artificial intelligence and machine learning concepts and applications.',
     duration: '8 months',
     difficulty: 'intermediate',
@@ -140,7 +142,8 @@ const sampleTracks = [
     order: 2
   },
   {
-    name: 'UI/UX Design',
+    name: 'ui-ux',
+    displayName: 'UI/UX Design',
     description: 'Master the art of designing user interfaces and experiences.',
     duration: '4 months',
     difficulty: 'beginner',
@@ -152,7 +155,8 @@ const sampleTracks = [
     order: 3
   },
   {
-    name: 'Data Science',
+    name: 'data-science',
+    displayName: 'Data Science',
     description: 'Analyze and interpret complex data to help companies make decisions.',
     duration: '7 months',
     difficulty: 'intermediate',
@@ -494,8 +498,8 @@ const seedData = async () => {
     const createdCurriculum = await Curriculum.insertMany(curriculumWithCreator);
     // Link curriculum to tracks
     for (const track of createdTracks) {
-      const curriculumForTrack = createdCurriculum.filter(c => c.careerTrack === track.name.toLowerCase().replace(' ', '-'));
-      track.curriculum = curriculumForTrack.map(c => c._id);
+      const curriculumForTrack = createdCurriculum.filter(c => c.careerTrack === track.name);
+      track.levels = curriculumForTrack.map(c => c._id);
       await track.save();
     }
     console.log(`Seeded ${createdAdmins.length} admins, ${createdStaff.length} staff, ${createdStudents.length} students, ${createdTracks.length} tracks, and ${createdCurriculum.length} curriculum items!`);
