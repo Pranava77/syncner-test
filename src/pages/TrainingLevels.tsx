@@ -4,7 +4,7 @@ import { useAppSelector } from '../redux/store';
 import LevelsSidebar from '../components/LevelsSidebar';
 import apiService from '../services/api';
 import { motion } from 'framer-motion';
-import { StarIcon, ClockIcon, CheckCircledIcon, Cross1Icon } from '@radix-ui/react-icons';
+import { StarIcon, ClockIcon, CheckCircledIcon, Cross1Icon, ReaderIcon, ClipboardIcon, PlayIcon } from '@radix-ui/react-icons';
 
 interface LearnItem {
   type: 'video' | 'reading' | 'slide' | 'other';
@@ -256,11 +256,20 @@ const TrainingLevels: React.FC = () => {
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4 text-xs text-teallight">
-                      <span>📖 {level.learn.length} learn</span>
-                      <span>📝 {level.test.length} test</span>
-                      <span>💪 {level.exercise.length} exercise</span>
-                    </div>
+                                      <div className="flex items-center gap-4 text-xs text-teallight">
+                    <span className="flex items-center gap-1">
+                      <ReaderIcon className="h-3 w-3" />
+                      {level.learn.length} learn
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <ClipboardIcon className="h-3 w-3" />
+                      {level.test.length} test
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <PlayIcon className="h-3 w-3" />
+                      {level.exercise.length} exercise
+                    </span>
+                  </div>
                     <div className="flex items-center gap-1 text-xs">
                       {level.isActive ? (
                         <span className="text-green-400 flex items-center gap-1">

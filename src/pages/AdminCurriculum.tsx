@@ -15,7 +15,11 @@ import {
   StarIcon,
   ClockIcon,
   UpdateIcon as ArrowClockwiseIcon,
-  HamburgerMenuIcon
+  HamburgerMenuIcon,
+  DesktopIcon,
+  RocketIcon,
+  ImageIcon,
+  BarChartIcon
 } from '@radix-ui/react-icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import apiService from '../services/api';
@@ -525,33 +529,36 @@ const AdminCurriculum: React.FC = () => {
               {/* Track Selection Grid */}
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                 {[
-                  { id: 'full-stack', name: 'Full Stack', icon: '💻', color: 'bg-blue-500' },
-                  { id: 'ai-ml', name: 'AI/ML', icon: '🤖', color: 'bg-purple-500' },
-                  { id: 'ui-ux', name: 'UI/UX', icon: '🎨', color: 'bg-pink-500' },
-                  { id: 'data-science', name: 'Data Science', icon: '📊', color: 'bg-orange-500' }
-                ].map((track, index) => (
-                  <motion.div
-                    key={track.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    onClick={() => handleTrackSelect(track.id)}
-                    className="bg-offblack border border-paperwhite/20 rounded-lg p-6 cursor-pointer hover:border-trueturquoise/50 hover:bg-paperwhite/5 transition-all duration-300"
-                  >
-                    <div className="text-center">
-                      <div className={`w-16 h-16 ${track.color} rounded-full flex items-center justify-center mx-auto mb-4 text-2xl`}>
-                        {track.icon}
+                  { id: 'full-stack', name: 'Full Stack', icon: DesktopIcon, color: 'bg-blue-500', bgColor: 'bg-blue-500/20', borderColor: 'border-blue-500/30' },
+                  { id: 'ai-ml', name: 'AI/ML', icon: RocketIcon, color: 'bg-purple-500', bgColor: 'bg-purple-500/20', borderColor: 'border-purple-500/30' },
+                  { id: 'ui-ux', name: 'UI/UX', icon: ImageIcon, color: 'bg-pink-500', bgColor: 'bg-pink-500/20', borderColor: 'border-pink-500/30' },
+                  { id: 'data-science', name: 'Data Science', icon: BarChartIcon, color: 'bg-orange-500', bgColor: 'bg-orange-500/20', borderColor: 'border-orange-500/30' }
+                ].map((track, index) => {
+                  const IconComponent = track.icon;
+                  return (
+                    <motion.div
+                      key={track.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      onClick={() => handleTrackSelect(track.id)}
+                      className="bg-offblack border border-paperwhite/20 rounded-xl p-6 cursor-pointer hover:border-trueturquoise/50 hover:bg-paperwhite/5 transition-all duration-300 group"
+                    >
+                      <div className="text-center">
+                        <div className={`w-16 h-16 ${track.bgColor} ${track.borderColor} border-2 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                          <IconComponent className="h-8 w-8 text-paperwhite" />
+                        </div>
+                        <h3 className="text-lg font-heading text-paperwhite mb-2">{track.name}</h3>
+                        <p className="text-teallight text-sm mb-4">
+                          {trackStats[track.id] || 0} levels available
+                        </p>
+                        <div className="text-xs text-teallight group-hover:text-trueturquoise transition-colors">
+                          Click to manage levels
+                        </div>
                       </div>
-                      <h3 className="text-lg font-heading text-paperwhite mb-2">{track.name}</h3>
-                      <p className="text-teallight text-sm mb-4">
-                        {trackStats[track.id] || 0} levels available
-                      </p>
-                      <div className="text-xs text-teallight">
-                        Click to manage levels
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
+                    </motion.div>
+                  );
+                })}
               </div>
             </>
           ) : (
@@ -641,7 +648,9 @@ const AdminCurriculum: React.FC = () => {
               {/* Levels Grid */}
               {filteredLevels.length === 0 ? (
                 <div className="text-center py-12">
-                  <div className="text-paperwhite/30 text-6xl mb-4">📚</div>
+                  <div className="text-paperwhite/30 mb-4">
+                    <FileTextIcon className="h-16 w-16 mx-auto" />
+                  </div>
                   <h3 className="text-xl font-heading text-paperwhite mb-2">No levels found</h3>
                   <p className="text-teallight mb-6">Create your first training level for this track</p>
                   <div className="space-y-2 text-sm text-teallight">
@@ -666,7 +675,7 @@ const AdminCurriculum: React.FC = () => {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      className="bg-offblack border border-paperwhite/20 rounded-lg p-6 hover:border-trueturquoise/50 hover:bg-paperwhite/5 transition-all duration-300"
+                      className="bg-offblack border border-paperwhite/20 rounded-xl p-6 hover:border-trueturquoise/50 hover:bg-paperwhite/5 transition-all duration-300 group"
                     >
                       {/* Header with difficulty and track */}
                       <div className="flex items-center justify-between mb-4">
@@ -698,9 +707,18 @@ const AdminCurriculum: React.FC = () => {
                       {/* Content Counts */}
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-4 text-xs text-teallight">
-                          <span>📖 {level.learn.length} learn</span>
-                          <span>📝 {level.test.length} test</span>
-                          <span>💪 {level.exercise.length} exercise</span>
+                          <span className="flex items-center gap-1">
+                            <BookOpenIcon className="h-3 w-3" />
+                            {level.learn.length} learn
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <ClipboardIcon className="h-3 w-3" />
+                            {level.test.length} test
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <PlayIcon className="h-3 w-3" />
+                            {level.exercise.length} exercise
+                          </span>
                         </div>
                         <div className="flex items-center gap-1 text-xs">
                           {level.isActive ? (
@@ -739,15 +757,16 @@ const AdminCurriculum: React.FC = () => {
                       <div className="space-y-3 mb-4">
                         {/* Learn Content */}
                         {level.learn.length > 0 && (
-                          <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-3">
+                          <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-3">
                             <div className="flex items-center justify-between mb-2">
                               <h4 className="text-sm font-medium text-green-400 flex items-center gap-1">
-                                📖 Learn Content ({level.learn.length})
+                                <BookOpenIcon className="h-3 w-3" />
+                                Learn Content ({level.learn.length})
                               </h4>
                             </div>
                             <div className="space-y-2">
                               {level.learn.slice(0, 2).map((item, idx) => (
-                                <div key={idx} className="flex items-center justify-between bg-green-500/5 rounded p-2">
+                                <div key={idx} className="flex items-center justify-between bg-green-500/5 rounded-lg p-2">
                                   <div className="flex-1 min-w-0">
                                     <p className="text-xs text-paperwhite font-medium truncate">{item.title}</p>
                                     <p className="text-xs text-teallight truncate">{item.type}</p>
@@ -781,15 +800,16 @@ const AdminCurriculum: React.FC = () => {
 
                         {/* Test Content */}
                         {level.test.length > 0 && (
-                          <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
+                          <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-3">
                             <div className="flex items-center justify-between mb-2">
                               <h4 className="text-sm font-medium text-yellow-400 flex items-center gap-1">
-                                📝 Test Content ({level.test.length})
+                                <ClipboardIcon className="h-3 w-3" />
+                                Test Content ({level.test.length})
                               </h4>
                             </div>
                             <div className="space-y-2">
                               {level.test.slice(0, 2).map((item, idx) => (
-                                <div key={idx} className="flex items-center justify-between bg-yellow-500/5 rounded p-2">
+                                <div key={idx} className="flex items-center justify-between bg-yellow-500/5 rounded-lg p-2">
                                   <div className="flex-1 min-w-0">
                                     <p className="text-xs text-paperwhite font-medium truncate">{item.question}</p>
                                     <p className="text-xs text-teallight">{item.options.length} options</p>
@@ -823,15 +843,16 @@ const AdminCurriculum: React.FC = () => {
 
                         {/* Exercise Content */}
                         {level.exercise.length > 0 && (
-                          <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-3">
+                          <div className="bg-purple-500/10 border border-purple-500/20 rounded-xl p-3">
                             <div className="flex items-center justify-between mb-2">
                               <h4 className="text-sm font-medium text-purple-400 flex items-center gap-1">
-                                💪 Exercise Content ({level.exercise.length})
+                                <PlayIcon className="h-3 w-3" />
+                                Exercise Content ({level.exercise.length})
                               </h4>
                             </div>
                             <div className="space-y-2">
                               {level.exercise.slice(0, 2).map((item, idx) => (
-                                <div key={idx} className="flex items-center justify-between bg-purple-500/5 rounded p-2">
+                                <div key={idx} className="flex items-center justify-between bg-purple-500/5 rounded-lg p-2">
                                   <div className="flex-1 min-w-0">
                                     <p className="text-xs text-paperwhite font-medium truncate">{item.title}</p>
                                     <p className="text-xs text-teallight truncate">{item.description}</p>
