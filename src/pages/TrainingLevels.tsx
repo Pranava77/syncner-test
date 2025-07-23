@@ -58,8 +58,11 @@ const TrainingLevels: React.FC = () => {
   const fetchLevels = async () => {
     try {
       setLoading(true);
+      setError(null); // Clear any previous errors
+      
+      console.log('Fetching training levels...');
       const response = await apiService.get('/training/levels');
-      console.log('Training levels response:', response);
+      console.log('Training levels API response:', response);
       
       let levelsData = [];
       if (response && response.data) {
@@ -68,8 +71,12 @@ const TrainingLevels: React.FC = () => {
         levelsData = response;
       }
       
+      console.log('Processed levels data:', levelsData);
+      
       // Filter levels by user's career track
       const userCareerTrack = user?.careerTrack;
+      console.log('User career track:', userCareerTrack);
+      
       if (userCareerTrack) {
         // Map frontend career track names to backend format
         const trackMapping: Record<string, string> = {
@@ -79,16 +86,22 @@ const TrainingLevels: React.FC = () => {
           'data-science': 'data-science'
         };
         const mappedTrack = trackMapping[userCareerTrack] || userCareerTrack;
+        console.log(`Mapping career track: ${userCareerTrack} → ${mappedTrack}`);
+        
+        const beforeFilter = levelsData.length;
         levelsData = levelsData.filter((level: Level) => level.careerTrack === mappedTrack);
-        console.log(`Filtered levels for career track: ${userCareerTrack} (mapped to ${mappedTrack})`, levelsData);
+        console.log(`Filtered levels: ${beforeFilter} → ${levelsData.length} for track ${mappedTrack}`);
       }
       
       // Sort by order
       levelsData.sort((a: Level, b: Level) => a.order - b.order);
+      console.log('Final levels data:', levelsData);
+      
       setLevels(levelsData);
+      setError(null); // Clear any errors on success
     } catch (error) {
       console.error('Error fetching levels:', error);
-      setError('Failed to load training levels');
+      setError(`Failed to load training levels: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setLoading(false);
     }
@@ -150,14 +163,21 @@ const TrainingLevels: React.FC = () => {
       <div className="flex h-screen bg-offblack w-full">
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <main className="flex-1 p-6 lg:p-12 flex items-center justify-center">
-          <div className="text-center">
-            <p className="text-red-400 text-lg mb-4">{error}</p>
-            <button 
-              onClick={fetchLevels}
-              className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors"
-            >
-              Retry
-            </button>
+          <div className="text-center max-w-md">
+            <div className="text-red-400 text-4xl mb-4">⚠️</div>
+            <h3 className="text-xl font-heading text-paperwhite mb-2">Unable to Load Training Levels</h3>
+            <p className="text-teallight text-sm mb-6">{error}</p>
+            <div className="space-y-3">
+              <button 
+                onClick={fetchLevels}
+                className="w-full bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium"
+              >
+                Try Again
+              </button>
+              <p className="text-xs text-teallight">
+                If the problem persists, please check your connection or contact support.
+              </p>
+            </div>
           </div>
         </main>
       </div>
@@ -188,12 +208,23 @@ const TrainingLevels: React.FC = () => {
                   'No levels available'
                 }
               </h3>
-              <p className="text-teallight">
+              <p className="text-teallight mb-6">
                 {user?.careerTrack ? 
                   'Check back later for new training content in your track' :
                   'Check back later for new training content'
                 }
               </p>
+              <div className="space-y-2 text-sm text-teallight">
+                <p>Debug Info:</p>
+                <p>User Career Track: {user?.careerTrack || 'Not set'}</p>
+                <p>Total Levels Found: {levels.length}</p>
+                <button 
+                  onClick={fetchLevels}
+                  className="mt-4 bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors text-sm"
+                >
+                  Refresh Data
+                </button>
+              </div>
             </div>
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
