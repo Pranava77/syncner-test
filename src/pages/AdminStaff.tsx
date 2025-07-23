@@ -30,6 +30,7 @@ const defaultStaffForm = {
 const AdminStaff: React.FC = () => {
   const dispatch = useAppDispatch();
   const { data: users, loading } = useAppSelector((state) => state.users);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingStaff, setEditingStaff] = useState<any>(null);
@@ -39,9 +40,20 @@ const AdminStaff: React.FC = () => {
   const [createdPassword, setCreatedPassword] = useState('');
   const [resetModalOpen, setResetModalOpen] = useState(false);
   const [resetUser, setResetUser] = useState<{ name: string; email: string } | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    dispatch(fetchAllUsers({ role: 'staff' }));
+    const loadStaff = async () => {
+      try {
+        setError(null);
+        await dispatch(fetchAllUsers({ role: 'staff' })).unwrap();
+      } catch (err: any) {
+        setError(err.message || 'Failed to load staff members');
+        console.error('Staff load error:', err);
+      }
+    };
+    loadStaff();
   }, [dispatch]);
 
   // Only show users with role 'staff'
@@ -75,35 +87,57 @@ const AdminStaff: React.FC = () => {
     setFormError('');
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this staff member?')) {
-      dispatch(deleteUser(id));
+      try {
+        setError(null);
+        await dispatch(deleteUser(id)).unwrap();
+        setSuccessMessage('Staff member deleted successfully');
+        setTimeout(() => setSuccessMessage(null), 3000);
+      } catch (err: any) {
+        setError(err.message || 'An error occurred while deleting staff member');
+        console.error('Staff delete error:', err);
+      }
     }
   };
 
   const handleSave = async () => {
-    if (!staffForm.name || !staffForm.email || !staffForm.role || !staffForm.college) {
-      setFormError('Name, Email, Role, and College are required.');
-      return;
-    }
-    if (!editingStaff && !staffForm.password) {
-      setFormError('Password is required for new staff.');
-      return;
-    }
-    setFormError('');
-    if (editingStaff && editingStaff._id) {
-      const { password, ...updateData } = staffForm; // Don't send password on edit
-      await dispatch(updateUser({ id: editingStaff._id, userData: updateData }));
-      setShowModal(false);
-      setEditingStaff(null);
-      setStaffForm(defaultStaffForm);
-    } else {
-      await dispatch(createUser(staffForm));
-      setCreatedPassword(staffForm.password); // Store password for modal
-      setShowModal(false);
-      setShowPasswordModal(true);
-      setEditingStaff(null);
-      setStaffForm(defaultStaffForm);
+    try {
+      setIsSubmitting(true);
+      setError(null);
+      if (!staffForm.name || !staffForm.email || !staffForm.role || !staffForm.college) {
+        setFormError('Name, Email, Role, and College are required.');
+        return;
+      }
+      if (!editingStaff && !staffForm.password) {
+        setFormError('Password is required for new staff.');
+        return;
+      }
+      setFormError('');
+      
+      if (editingStaff && editingStaff._id) {
+        const { password, ...updateData } = staffForm; // Don't send password on edit
+        const result = await dispatch(updateUser({ id: editingStaff._id, userData: updateData })).unwrap();
+        setShowModal(false);
+        setEditingStaff(null);
+        setStaffForm(defaultStaffForm);
+        setSuccessMessage('Staff member updated successfully');
+        setTimeout(() => setSuccessMessage(null), 3000);
+      } else {
+        const result = await dispatch(createUser(staffForm)).unwrap();
+        setCreatedPassword(staffForm.password); // Store password for modal
+        setShowModal(false);
+        setShowPasswordModal(true);
+        setEditingStaff(null);
+        setStaffForm(defaultStaffForm);
+        setSuccessMessage('Staff member created successfully');
+        setTimeout(() => setSuccessMessage(null), 3000);
+      }
+    } catch (err: any) {
+      setError(err.message || 'An error occurred while saving staff member');
+      console.error('Staff save error:', err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -113,6 +147,16 @@ const AdminStaff: React.FC = () => {
         <div>
           <h1 className="text-3xl text-paperwhite font-heading">Staff Management</h1>
           <p className="text-teallight mt-1 font-label">Manage staff members, roles, and departments</p>
+          {successMessage && (
+            <div className="mt-2 p-2 bg-green-500/20 border border-green-500/30 rounded-lg text-green-400 text-sm">
+              {successMessage}
+            </div>
+          )}
+          {error && (
+            <div className="mt-2 p-2 bg-red-500/20 border border-red-500/30 rounded-lg text-red-400 text-sm">
+              {error}
+            </div>
+          )}
         </div>
         <button
           onClick={handleAdd}
@@ -227,7 +271,13 @@ const AdminStaff: React.FC = () => {
                 <label htmlFor="isActive" className="text-paperwhite">Active</label>
               </div>
               {formError && <div className="text-rust text-sm font-medium">{formError}</div>}
-              <button onClick={handleSave} className="w-full bg-trueturquoise text-offblack py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold mt-2">{editingStaff ? 'Save Changes' : 'Add Staff'}</button>
+              <button 
+                onClick={handleSave} 
+                disabled={isSubmitting}
+                className="w-full bg-trueturquoise text-offblack py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? 'Saving...' : (editingStaff ? 'Save Changes' : 'Add Staff')}
+              </button>
             </div>
           </div>
         </div>
@@ -258,13 +308,21 @@ const AdminStaff: React.FC = () => {
         onClose={() => { setResetModalOpen(false); setResetUser(null); }}
         user={resetUser}
         onReset={async (password) => {
-          // Find the staff ID from the staff list
-          const staffObj = users.find(s => s.email === resetUser?.email && s.name === resetUser?.name);
-          if (!staffObj) throw new Error('Staff not found');
-          await apiService.resetUserPassword(staffObj._id || staffObj.id, password);
+          try {
+            setError(null);
+            // Find the staff ID from the staff list
+            const staffObj = users.find(s => s.email === resetUser?.email && s.name === resetUser?.name);
+            if (!staffObj) throw new Error('Staff not found');
+            await apiService.resetUserPassword(staffObj._id || staffObj.id, password);
+            setSuccessMessage('Password reset successfully');
+            setTimeout(() => setSuccessMessage(null), 3000);
+          } catch (err: any) {
+            setError(err.message || 'Failed to reset password');
+            console.error('Password reset error:', err);
+            throw err; // Re-throw so the modal can handle it
+          }
         }}
       />
-      {error && <div className="text-rust text-center mt-4">{error}</div>}
     </div>
   );
 };
