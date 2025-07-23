@@ -1,5 +1,6 @@
 import Curriculum from '../models/Curriculum.js';
 import { validationResult } from 'express-validator';
+import { normalizeCareerTrack } from '../utils/careerTrackUtils.js';
 
 // @desc    Get all curriculum items
 // @route   GET /api/curriculum
@@ -10,7 +11,10 @@ const getAllCurriculumItems = async (req, res) => {
     
     const filter = {};
     if (type) filter.type = type;
-    if (careerTrack) filter.careerTrack = careerTrack;
+    if (careerTrack) {
+      // Normalize the career track value
+      filter.careerTrack = normalizeCareerTrack(careerTrack);
+    }
     if (isActive !== undefined) filter.isActive = isActive === 'true';
     
     let query = Curriculum.find(filter);
@@ -250,7 +254,10 @@ const getCurriculumByTypeAndTrack = async (req, res) => {
     const { type, careerTrack } = req.params;
     const { includeInactive = false } = req.query;
     
-    const curriculumItems = await Curriculum.getByTypeAndTrack(type, careerTrack, { includeInactive });
+    // Normalize the career track value
+    const normalizedCareerTrack = normalizeCareerTrack(careerTrack);
+    
+    const curriculumItems = await Curriculum.getByTypeAndTrack(type, normalizedCareerTrack, { includeInactive });
     
     res.status(200).json({
       success: true,
@@ -344,7 +351,10 @@ const getContentByType = async (req, res) => {
     const { careerTrack, levelTitle, sortBy = 'order', sortOrder = 'asc' } = req.query;
     
     const filter = { type };
-    if (careerTrack) filter.careerTrack = careerTrack;
+    if (careerTrack) {
+      // Normalize the career track value
+      filter.careerTrack = normalizeCareerTrack(careerTrack);
+    }
     if (levelTitle) filter.title = levelTitle;
     
     const sortOptions = {};

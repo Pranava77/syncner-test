@@ -1,5 +1,6 @@
 import Curriculum from '../models/Curriculum.js';
 import { CAREER_TRACKS } from '../utils/constants.js';
+import { normalizeCareerTrack, isValidCareerTrack, getCareerTrackErrorMessage } from '../utils/careerTrackUtils.js';
 
 // Helper function to group curriculum items into levels
 const groupCurriculumIntoLevels = (items) => {
@@ -109,12 +110,19 @@ export const getAllLevels = async (req, res) => {
     const { track } = req.query;
     const filter = { isActive: true };
     
-    // Validate career track if provided
-    if (track && !Object.values(CAREER_TRACKS).includes(track)) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Invalid career track. Must be one of: full-stack, ai-ml, ui-ux, data-science' 
-      });
+    // Validate and normalize career track if provided
+    if (track) {
+      const normalizedTrack = normalizeCareerTrack(track);
+      
+      if (!isValidCareerTrack(track)) {
+        return res.status(400).json({ 
+          success: false, 
+          message: getCareerTrackErrorMessage()
+        });
+      }
+      
+      // Use the normalized track value
+      filter.careerTrack = normalizedTrack;
     }
     
     if (track) {

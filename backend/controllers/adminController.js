@@ -1,6 +1,7 @@
 import User from '../models/User.js';
 import bcrypt from 'bcryptjs';
 import { validationResult } from 'express-validator';
+import { normalizeCareerTrack } from '../utils/careerTrackUtils.js';
 
 // @desc    Get all users
 // @route   GET /api/admin/users
@@ -12,7 +13,7 @@ const getAllUsers = async (req, res) => {
     if (name) filter.name = { $regex: name, $options: 'i' };
     if (email) filter.email = { $regex: email, $options: 'i' };
     if (role) filter.role = role;
-    if (careerTrack) filter.careerTrack = careerTrack;
+    if (careerTrack) filter.careerTrack = normalizeCareerTrack(careerTrack);
     if (isActive !== undefined) filter.isActive = isActive === 'true';
     const users = await User.find(filter).select('-password');
     res.status(200).json({ success: true, count: users.length, data: users });
