@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../redux/store';
+import { useAppDispatch } from '../redux/store';
 import {
   PlusIcon,
   Pencil1Icon as EditIcon,
@@ -250,7 +250,7 @@ const AdminCurriculum: React.FC = () => {
     setFormError('');
   };
 
-  const handleEditContent = (levelId: string, type: 'learn' | 'test' | 'exercise', item: any, index: number) => {
+  const handleEditContent = (levelId: string, type: 'learn' | 'test' | 'exercise', item: any, index: number) => { // Temporary comment
     setEditingContent({ type, item, index });
     setContentForm({ ...item });
     setShowContentModal(true);
@@ -853,7 +853,8 @@ const AdminCurriculum: React.FC = () => {
             >
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-heading text-paperwhite">
-                  {editingContent ? `Edit ${editingContent.type}` : `Add ${editingContent?.type || 'Learn'}`}
+                  {editingContent ? `Edit ${editingContent.type}` : `Add ${editingContent?.type || 'learn'}`}
+                </h2>
                 </h2>
                 <button
                   onClick={() => setShowContentModal(false)}

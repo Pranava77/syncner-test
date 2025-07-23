@@ -8,11 +8,8 @@ import {
   BarChartIcon as BarChart3,
   LightningBoltIcon as Brain,
   ReaderIcon as BookOpen,
-  ArrowRightIcon as ArrowRight,
   PlayIcon as Play,
-  CheckCircledIcon as CheckCircle,
   ClockIcon as Clock,
-  StarFilledIcon as Star,
   ChatBubbleIcon as MessageCircle
 } from '@radix-ui/react-icons';
 import LoadingScreen from '../components/LoadingScreen';
@@ -30,8 +27,9 @@ const StudentDashboard: React.FC = () => {
   // Attendance ping effect
   React.useEffect(() => {
     if (!user || user.role !== 'student') return;
-    let interval: ReturnType<typeof setInterval>;
+
     let lastActivity = Date.now();
+    let interval: ReturnType<typeof setInterval>;
 
     const activityHandler = () => {
       lastActivity = Date.now();
@@ -61,14 +59,6 @@ const StudentDashboard: React.FC = () => {
   }, [dispatch, user?.careerTrack, curriculumState.lastFetched]);
 
   if (!user || !user.careerTrack) {
-    return (
-      <LoadingScreen 
-        message="Loading your dashboard..."
-        showProgress={true}
-        progressDuration={1800}
-      />
-    );
-  }
     return (
       <LoadingScreen 
         message="Loading your dashboard..."

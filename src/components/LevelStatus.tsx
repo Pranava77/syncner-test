@@ -10,7 +10,7 @@ const LevelStatus: React.FC<LevelStatusProps> = ({ onLevelsLoaded }) => {
   const [message, setMessage] = useState('');
   const [levelCount, setLevelCount] = useState(0);
 
-  const checkLevels = async () => {
+  const checkLevels = useCallback(async () => {
     setStatus('loading');
     setMessage('Checking levels...');
     
@@ -35,11 +35,11 @@ const LevelStatus: React.FC<LevelStatusProps> = ({ onLevelsLoaded }) => {
       setStatus('error');
       setMessage(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
-  };
+  }, [onLevelsLoaded]);
 
   useEffect(() => {
     checkLevels();
-  }, []);
+  }, [checkLevels]);
 
   return (
     <div className="fixed bottom-4 left-4 bg-offblack border border-paperwhite/20 rounded-lg p-3 z-50">

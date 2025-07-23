@@ -63,8 +63,8 @@ export const loginUser = createAsyncThunk(
       } else {
         return rejectWithValue(response.message || 'Login failed');
       }
-    } catch (error: any) {
-      return rejectWithValue(error.message || 'Login failed');
+    } catch (error: unknown) {
+      return rejectWithValue((error as Error).message || 'Login failed');
     }
   }
 );
@@ -81,8 +81,8 @@ export const registerUser = createAsyncThunk(
     try {
       const response = await apiService.register(userData);
       return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.message || 'Registration failed');
+    } catch (error: unknown) {
+      return rejectWithValue((error as Error).message || 'Registration failed');
     }
   }
 );
@@ -93,8 +93,8 @@ export const fetchCurrentUser = createAsyncThunk(
     try {
       const response = await apiService.getMe();
       return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.message || 'Failed to fetch user');
+    } catch (error: unknown) {
+      return rejectWithValue((error as Error).message || 'Failed to fetch user');
     }
   }
 );
@@ -105,8 +105,8 @@ export const updateUserProfile = createAsyncThunk(
     try {
       const response = await apiService.updateProfile(profileData);
       return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.message || 'Profile update failed');
+    } catch (error: unknown) {
+      return rejectWithValue((error as Error).message || 'Profile update failed');
     }
   }
 );
@@ -117,8 +117,8 @@ export const logoutUser = createAsyncThunk(
     try {
       await apiService.logout();
       return null;
-    } catch (error: any) {
-      return rejectWithValue(error.message || 'Logout failed');
+    } catch (error: unknown) {
+      return rejectWithValue((error as Error).message || 'Logout failed');
     }
   }
 );
@@ -146,9 +146,6 @@ const authSlice = createSlice({
       if (token) {
         state.token = token;
         state.isAuthenticated = true;
-      } else {
-        state.token = null;
-        state.isAuthenticated = false;
       }
       state.isRestoringSession = false;
     },

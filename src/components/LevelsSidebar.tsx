@@ -32,9 +32,9 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
 
   useEffect(() => {
     fetchLevels();
-  }, [user?.careerTrack]);
+  }, [fetchLevels, user?.careerTrack]);
 
-  const fetchLevels = async () => {
+  const fetchLevels = useCallback(async () => {
     try {
       setLoading(true);
       const response = await apiService.get('/training/levels');

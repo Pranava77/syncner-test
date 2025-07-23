@@ -26,7 +26,6 @@ import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import trackRoutes from './routes/trackRoutes.js';
 import trainingRoutes from './routes/trainingRoutes.js';
-import trainingRoutes from './routes/trainingRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
@@ -97,7 +96,6 @@ app.use('/api/ai/health', aiRoutes); // Only /api/ai/health is public
 app.use('/api', protect, trackActivity);
 app.use('/api/users', userRoutes);
 app.use('/api/tracks', trackRoutes);
-app.use('/api/training', trainingRoutes);
 app.use('/api/training', trainingRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/admin/settings', settingsRoutes);

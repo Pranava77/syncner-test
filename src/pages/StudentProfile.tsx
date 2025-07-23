@@ -49,7 +49,7 @@ const StudentProfile: React.FC = () => {
     setSuccess(null);
     try {
       // Remove backend-managed fields before sending
-      const { level, ...allowedFields } = form as any;
+      const { ...allowedFields } = form as any;
       await ApiService.updateProfile(allowedFields);
       setSuccess('Profile updated successfully!');
       setEditMode(false);

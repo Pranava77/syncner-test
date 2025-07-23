@@ -29,7 +29,7 @@ const defaultStaffForm = {
 
 const AdminStaff: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { data: users, loading, error } = useAppSelector((state) => state.users);
+  const { data: users, loading } = useAppSelector((state) => state.users);
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingStaff, setEditingStaff] = useState<any>(null);

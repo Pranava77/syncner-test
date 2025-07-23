@@ -1,15 +1,15 @@
 import React from 'react';
-import { BarChartIcon as BarChart3, DownloadIcon, GroupIcon as Users, TargetIcon as Target, ArrowTopRightIcon as TrendingUp } from '@radix-ui/react-icons';
+import { DownloadIcon, GroupIcon as Users, TargetIcon as Target, ArrowTopRightIcon as TrendingUp } from '@radix-ui/react-icons';
 import { useAppDispatch } from '../redux/store';
 import { useSelector } from 'react-redux';
 import LoadingScreen from '../components/LoadingScreen';
 import { fetchAnalytics } from '../redux/slices/analyticsSlice';
-import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, Legend, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
 
 const COLORS = ['#00B8D9', '#FFBB28', '#FF8042', '#A259F7', '#F95F62', '#00C49F'];
 
 const AdminDashboard: React.FC = () => {
-  const analyticsState = useSelector((state: { analytics: any }) => state.analytics);
+  const analyticsState = useSelector((state: any) => state.analytics);
   const analytics = analyticsState.data;
   const analyticsLoading = analyticsState.loading;
   const dispatch = useAppDispatch();

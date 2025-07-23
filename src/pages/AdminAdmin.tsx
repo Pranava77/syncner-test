@@ -87,7 +87,7 @@ const AdminAdmin: React.FC = () => {
     }
     setFormError('');
     if (editingAdmin && editingAdmin._id) {
-      const { password, ...updateData } = adminForm;
+      const { ...updateData } = adminForm;
       await dispatch(updateUser({ id: editingAdmin._id, userData: updateData }));
       setShowModal(false);
       setEditingAdmin(null);

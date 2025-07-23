@@ -41,7 +41,7 @@ const LevelTestPage: React.FC = () => {
     if (levelId) {
       fetchLevel();
     }
-  }, [levelId]);
+  }, [levelId, fetchLevel]);
 
   useEffect(() => {
     if (submitted) return;

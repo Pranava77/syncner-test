@@ -46,14 +46,14 @@ const AdminProfile: React.FC = () => {
     setSuccess(null);
     try {
       // Remove backend-managed fields before sending
-      const { level, ...allowedFields } = form as any;
+      const { ...allowedFields } = form as any;
       await ApiService.updateProfile(allowedFields);
       setSuccess('Profile updated successfully!');
       setEditMode(false);
       setProfile({ ...profile, ...allowedFields });
       setError(null);
     } catch (err: any) {
-      setError(err.message || 'Failed to update profile');
+      setError((err as any).message || 'Failed to update profile');
     } finally {
       setLoading(false);
     }

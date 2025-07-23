@@ -35,7 +35,7 @@ const LevelExercisePage: React.FC = () => {
     if (levelId) {
       fetchLevel();
     }
-  }, [levelId]);
+  }, [levelId, fetchLevel]);
 
   const fetchLevel = async () => {
     try {

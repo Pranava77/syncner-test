@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import LevelsSidebar from '../components/LevelsSidebar';
-import { PersonIcon, PlayIcon, ReaderIcon, FileTextIcon } from '@radix-ui/react-icons';
+import { PlayIcon, ReaderIcon, FileTextIcon } from '@radix-ui/react-icons';
 import apiService from '../services/api';
 
 interface Level {
@@ -37,7 +37,7 @@ const LevelLearnPage: React.FC = () => {
     if (levelId) {
       fetchLevel();
     }
-  }, [levelId]);
+  }, [levelId, fetchLevel]);
 
   const fetchLevel = async () => {
     try {

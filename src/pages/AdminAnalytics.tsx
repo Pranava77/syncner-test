@@ -8,7 +8,7 @@ import {
 
 import {
   PieChart, Pie, Cell, Tooltip as RechartsTooltip, Legend,
-  BarChart as ReBarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer
+  ResponsiveContainer
 } from 'recharts';
 import { fetchAnalytics } from '../redux/slices/analyticsSlice';
 import { useAppDispatch } from '../redux/store';
@@ -20,7 +20,7 @@ const AdminAnalytics: React.FC = () => {
   const [dateRange, setDateRange] = useState('30');
 
   const dispatch = useAppDispatch();
-  const analyticsState = useSelector((state: { analytics: { data: any; loading: boolean; error: string | null; lastFetched: number | null } }) => state.analytics);
+  const analyticsState = useSelector((state: any) => state.analytics);
   const analytics = analyticsState.data;
   const loading = analyticsState.loading;
   const error = analyticsState.error;

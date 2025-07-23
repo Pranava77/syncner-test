@@ -34,39 +34,38 @@ const TrainingLevels: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const fetchLevels = async () => {
+      try {
+        setLoading(true);
+        const response = await apiService.get('/training/levels');
+        console.log('Training levels response:', response);
+        
+        let levelsData = [];
+        if (response && response.data) {
+          levelsData = Array.isArray(response.data) ? response.data : [response.data];
+        } else if (Array.isArray(response)) {
+          levelsData = response;
+        }
+        
+        // Filter levels by user's career track
+        const userCareerTrack = user?.careerTrack;
+        if (userCareerTrack) {
+          levelsData = levelsData.filter((level: Level) => level.careerTrack === userCareerTrack);
+          console.log(`Filtered levels for career track: ${userCareerTrack}`, levelsData);
+        }
+        
+        // Sort by order
+        levelsData.sort((a: Level, b: Level) => a.order - b.order);
+        setLevels(levelsData);
+      } catch (error) {
+        console.error('Error fetching levels:', error);
+        setError('Failed to load training levels');
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchLevels();
-  }, []);
-
-  const fetchLevels = async () => {
-    try {
-      setLoading(true);
-      const response = await apiService.get('/training/levels');
-      console.log('Training levels response:', response);
-      
-      let levelsData = [];
-      if (response && response.data) {
-        levelsData = Array.isArray(response.data) ? response.data : [response.data];
-      } else if (Array.isArray(response)) {
-        levelsData = response;
-      }
-      
-      // Filter levels by user's career track
-      const userCareerTrack = user?.careerTrack;
-      if (userCareerTrack) {
-        levelsData = levelsData.filter((level: Level) => level.careerTrack === userCareerTrack);
-        console.log(`Filtered levels for career track: ${userCareerTrack}`, levelsData);
-      }
-      
-      // Sort by order
-      levelsData.sort((a, b) => a.order - b.order);
-      setLevels(levelsData);
-    } catch (error) {
-      console.error('Error fetching levels:', error);
-      setError('Failed to load training levels');
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [user]);
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
