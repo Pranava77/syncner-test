@@ -61,7 +61,7 @@ const TrainingLevels: React.FC = () => {
       setError(null); // Clear any previous errors
       
       console.log('Fetching training levels...');
-      const response = await apiService.get('/training/levels');
+      const response = await apiService.getLevels();
       console.log('Training levels API response:', response);
       
       let levelsData = [];
@@ -108,10 +108,10 @@ const TrainingLevels: React.FC = () => {
   }, [user]);
 
   const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case 'Beginner': return 'bg-green-500';
-      case 'Intermediate': return 'bg-yellow-500';
-      case 'Advanced': return 'bg-red-500';
+    switch (difficulty.toLowerCase()) {
+      case 'beginner': return 'bg-green-500';
+      case 'intermediate': return 'bg-yellow-500';
+      case 'advanced': return 'bg-red-500';
       default: return 'bg-gray-500';
     }
   };
@@ -252,7 +252,7 @@ const TrainingLevels: React.FC = () => {
                     </div>
                     <div className="flex items-center gap-2 text-xs text-teallight">
                       <span className={`px-2 py-1 rounded ${getDifficultyColor(level.difficulty)} text-white`}>
-                        {level.difficulty}
+                        {level.difficulty.charAt(0).toUpperCase() + level.difficulty.slice(1)}
                       </span>
                     </div>
                   </div>
