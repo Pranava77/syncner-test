@@ -28,7 +28,10 @@ const defaultAdminForm = {
 
 const AdminAdmin: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { data: users, loading, error } = useAppSelector((state) => state.users);
+  const { data: users, loading } = useAppSelector((state) => state.users);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingAdmin, setEditingAdmin] = useState<User | null>(null);
@@ -40,7 +43,16 @@ const AdminAdmin: React.FC = () => {
   const [resetUser, setResetUser] = useState<{ name: string; email: string } | null>(null);
 
   useEffect(() => {
-    dispatch(fetchAllUsers());
+    const loadAdmins = async () => {
+      try {
+        setError(null);
+        await dispatch(fetchAllUsers({ role: 'admin' })).unwrap();
+      } catch (err: any) {
+        setError(err.message || 'Failed to load admins');
+        console.error('Admin load error:', err);
+      }
+    };
+    loadAdmins();
   }, [dispatch]);
 
   const filteredAdmins = users.filter((a: User) =>
@@ -70,35 +82,57 @@ const AdminAdmin: React.FC = () => {
     setFormError('');
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this admin?')) {
-      dispatch(deleteUser(id));
+      try {
+        setError(null);
+        await dispatch(deleteUser(id)).unwrap();
+        setSuccessMessage('Admin deleted successfully');
+        setTimeout(() => setSuccessMessage(null), 3000);
+      } catch (err: any) {
+        setError(err.message || 'An error occurred while deleting admin');
+        console.error('Admin delete error:', err);
+      }
     }
   };
 
   const handleSave = async () => {
-    if (!adminForm.name || !adminForm.email || !adminForm.role) {
-      setFormError('Name, Email, and Role are required.');
-      return;
-    }
-    if (!editingAdmin && !adminForm.password) {
-      setFormError('Password is required for new admins.');
-      return;
-    }
-    setFormError('');
-    if (editingAdmin && editingAdmin._id) {
-      const { ...updateData } = adminForm;
-      await dispatch(updateUser({ id: editingAdmin._id, userData: updateData }));
-      setShowModal(false);
-      setEditingAdmin(null);
-      setAdminForm(defaultAdminForm);
-    } else {
-      await dispatch(createUser(adminForm));
-      setCreatedPassword(adminForm.password);
-      setShowModal(false);
-      setShowPasswordModal(true);
-      setEditingAdmin(null);
-      setAdminForm(defaultAdminForm);
+    try {
+      setIsSubmitting(true);
+      setError(null);
+      if (!adminForm.name || !adminForm.email || !adminForm.role) {
+        setFormError('Name, Email, and Role are required.');
+        return;
+      }
+      if (!editingAdmin && !adminForm.password) {
+        setFormError('Password is required for new admins.');
+        return;
+      }
+      setFormError('');
+      
+      if (editingAdmin && editingAdmin._id) {
+        const { password, ...updateData } = adminForm;
+        await dispatch(updateUser({ id: editingAdmin._id, userData: updateData })).unwrap();
+        setShowModal(false);
+        setEditingAdmin(null);
+        setAdminForm(defaultAdminForm);
+        setSuccessMessage('Admin updated successfully');
+        setTimeout(() => setSuccessMessage(null), 3000);
+      } else {
+        await dispatch(createUser(adminForm)).unwrap();
+        setCreatedPassword(adminForm.password);
+        setShowModal(false);
+        setShowPasswordModal(true);
+        setEditingAdmin(null);
+        setAdminForm(defaultAdminForm);
+        setSuccessMessage('Admin created successfully');
+        setTimeout(() => setSuccessMessage(null), 3000);
+      }
+    } catch (err: any) {
+      setError(err.message || 'An error occurred while saving admin');
+      console.error('Admin save error:', err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -108,6 +142,16 @@ const AdminAdmin: React.FC = () => {
         <div>
           <h1 className="text-3xl text-paperwhite font-heading">Admin Management</h1>
           <p className="text-teallight mt-1 font-label">Manage admins</p>
+          {successMessage && (
+            <div className="mt-2 p-2 bg-green-500/20 border border-green-500/30 rounded-lg text-green-400 text-sm">
+              {successMessage}
+            </div>
+          )}
+          {error && (
+            <div className="mt-2 p-2 bg-red-500/20 border border-red-500/30 rounded-lg text-red-400 text-sm">
+              {error}
+            </div>
+          )}
         </div>
         <button
           onClick={handleAdd}
@@ -218,7 +262,13 @@ const AdminAdmin: React.FC = () => {
                 <label htmlFor="isActive" className="text-paperwhite">Active</label>
               </div>
               {formError && <div className="text-rust text-sm font-medium">{formError}</div>}
-              <button onClick={handleSave} className="w-full bg-trueturquoise text-offblack py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold mt-2">{editingAdmin ? 'Save Changes' : 'Add Admin'}</button>
+              <button 
+                onClick={handleSave} 
+                disabled={isSubmitting}
+                className="w-full bg-trueturquoise text-offblack py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? 'Saving...' : (editingAdmin ? 'Save Changes' : 'Add Admin')}
+              </button>
             </div>
           </div>
         </div>
@@ -249,13 +299,21 @@ const AdminAdmin: React.FC = () => {
         onClose={() => { setResetModalOpen(false); setResetUser(null); }}
         user={resetUser}
         onReset={async (password) => {
-          // Find the admin ID from the admins list
-          const adminObj = users.find(a => a.email === resetUser?.email && a.name === resetUser?.name);
-          if (!adminObj) throw new Error('Admin not found');
-          await apiService.resetUserPassword(adminObj._id || adminObj.id, password);
+          try {
+            setError(null);
+            // Find the admin ID from the admins list
+            const adminObj = users.find(a => a.email === resetUser?.email && a.name === resetUser?.name);
+            if (!adminObj) throw new Error('Admin not found');
+            await apiService.resetUserPassword(adminObj._id || adminObj.id, password);
+            setSuccessMessage('Password reset successfully');
+            setTimeout(() => setSuccessMessage(null), 3000);
+          } catch (err: any) {
+            setError(err.message || 'Failed to reset password');
+            console.error('Password reset error:', err);
+            throw err; // Re-throw so the modal can handle it
+          }
         }}
       />
-      {error && <div className="text-rust text-center mt-4">{error}</div>}
     </div>
   );
 };

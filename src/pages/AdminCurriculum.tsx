@@ -106,6 +106,9 @@ const AdminCurriculum: React.FC = () => {
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
   const [showTrackSelection, setShowTrackSelection] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     fetchLevels();
@@ -113,6 +116,7 @@ const AdminCurriculum: React.FC = () => {
 
   const fetchLevels = async (track?: string) => {
     setLoading(true);
+    setError(null);
     try {
       console.log('Fetching curriculum from API...');
       const url = track ? `/curriculum?careerTrack=${track}` : '/curriculum';
@@ -184,9 +188,11 @@ const AdminCurriculum: React.FC = () => {
       setLevels(uniqueLevels);
       setLastUpdated(new Date());
       setFormError(''); // Clear any previous errors
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching levels:', error);
-      setFormError('Failed to load levels. Please check your connection.');
+      const errorMessage = error.message || 'Failed to load levels. Please check your connection.';
+      setError(errorMessage);
+      setFormError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -251,6 +257,7 @@ const AdminCurriculum: React.FC = () => {
   const handleDeleteLevel = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this level?')) {
       try {
+        setError(null);
         // Find the level to get its title and career track
         const level = levels.find(l => l.id === id);
         if (level) {
@@ -266,9 +273,13 @@ const AdminCurriculum: React.FC = () => {
             await apiService.delete(`/curriculum/${item._id}`);
           }
         }
-        await fetchLevels();
-      } catch (error) {
+        await fetchLevels(selectedTrack || undefined);
+        setSuccessMessage('Level deleted successfully');
+        setTimeout(() => setSuccessMessage(null), 3000);
+      } catch (error: any) {
         console.error('Error deleting level:', error);
+        const errorMessage = error.message || 'Failed to delete level';
+        setError(errorMessage);
       }
     }
   };
@@ -279,7 +290,8 @@ const AdminCurriculum: React.FC = () => {
       setFormError('Title and description are required');
       return;
     }
-    setLoading(true);
+    setIsSubmitting(true);
+    setError(null);
     try {
       if (editingLevel) {
         await apiService.put(`/curriculum/${editingLevel.id}`, {
@@ -291,7 +303,9 @@ const AdminCurriculum: React.FC = () => {
         setShowLevelModal(false);
         setLevelForm(defaultLevelForm);
         setFormError('');
-        await fetchLevels();
+        await fetchLevels(selectedTrack || undefined);
+        setSuccessMessage('Level updated successfully');
+        setTimeout(() => setSuccessMessage(null), 3000);
       } else {
         // Create new level
         await apiService.post('/curriculum', {
@@ -303,13 +317,17 @@ const AdminCurriculum: React.FC = () => {
         setShowLevelModal(false);
         setLevelForm(defaultLevelForm);
         setFormError('');
-        await fetchLevels();
+        await fetchLevels(selectedTrack || undefined);
+        setSuccessMessage('Level created successfully');
+        setTimeout(() => setSuccessMessage(null), 3000);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving level:', error);
-      setFormError('Failed to save level');
+      const errorMessage = error.message || 'Failed to save level';
+      setFormError(errorMessage);
+      setError(errorMessage);
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -365,6 +383,7 @@ const AdminCurriculum: React.FC = () => {
   const handleDeleteContent = async (levelId: string, type: 'learn' | 'test' | 'exercise', index: number) => {
     if (window.confirm('Are you sure you want to delete this content?')) {
       try {
+        setError(null);
         // Find the level to get its title and career track
         const level = levels.find(l => l.id === levelId);
         if (level) {
@@ -382,8 +401,12 @@ const AdminCurriculum: React.FC = () => {
           }
         }
         await fetchLevels(selectedTrack || undefined);
-      } catch (error) {
+        setSuccessMessage('Content deleted successfully');
+        setTimeout(() => setSuccessMessage(null), 3000);
+      } catch (error: any) {
         console.error('Error deleting content:', error);
+        const errorMessage = error.message || 'Failed to delete content';
+        setError(errorMessage);
       }
     }
   };
@@ -409,7 +432,8 @@ const AdminCurriculum: React.FC = () => {
       return;
     }
 
-    setLoading(true);
+    setIsSubmitting(true);
+    setError(null);
     try {
       if (editingContent && editingLevel) {
         // Find the specific content item to update
@@ -492,11 +516,15 @@ const AdminCurriculum: React.FC = () => {
       setContentForm({});
       setFormError('');
       await fetchLevels(selectedTrack || undefined);
-    } catch (error) {
+      setSuccessMessage('Content saved successfully');
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (error: any) {
       console.error('Error saving content:', error);
-      setFormError('Failed to save content');
+      const errorMessage = error.message || 'Failed to save content';
+      setFormError(errorMessage);
+      setError(errorMessage);
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -535,6 +563,18 @@ const AdminCurriculum: React.FC = () => {
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-trueturquoise mx-auto mb-4"></div>
             <p className="text-paperwhite text-lg">Loading curriculum levels...</p>
+            {error && (
+              <div className="mt-4 p-3 bg-red-500/20 border border-red-500/30 rounded-lg text-red-400 text-sm max-w-md mx-auto">
+                <p className="font-medium">Error loading curriculum:</p>
+                <p>{error}</p>
+                <button 
+                  onClick={() => fetchLevels(selectedTrack || undefined)}
+                  className="mt-2 bg-trueturquoise text-offblack px-3 py-1 rounded text-xs hover:bg-trueturquoise/90 transition-colors"
+                >
+                  Retry
+                </button>
+              </div>
+            )}
           </div>
         </main>
       </div>
@@ -557,6 +597,16 @@ const AdminCurriculum: React.FC = () => {
                     <p className="text-teallight">
                       Select a career track to manage its training levels and content
                     </p>
+                    {successMessage && (
+                      <div className="mt-2 p-2 bg-green-500/20 border border-green-500/30 rounded-lg text-green-400 text-sm">
+                        {successMessage}
+                      </div>
+                    )}
+                    {error && (
+                      <div className="mt-2 p-2 bg-red-500/20 border border-red-500/30 rounded-lg text-red-400 text-sm">
+                        {error}
+                      </div>
+                    )}
                     {formError && (
                       <p className="text-xs text-red-400 mt-1">
                         Error: {formError}
@@ -645,6 +695,16 @@ const AdminCurriculum: React.FC = () => {
                       <p className="text-xs text-teallight mt-1">
                         Last updated: {lastUpdated.toLocaleTimeString()}
                       </p>
+                    )}
+                    {successMessage && (
+                      <div className="mt-2 p-2 bg-green-500/20 border border-green-500/30 rounded-lg text-green-400 text-sm">
+                        {successMessage}
+                      </div>
+                    )}
+                    {error && (
+                      <div className="mt-2 p-2 bg-red-500/20 border border-red-500/30 rounded-lg text-red-400 text-sm">
+                        {error}
+                      </div>
                     )}
                     {formError && (
                       <p className="text-xs text-red-400 mt-1">
@@ -1172,10 +1232,10 @@ const AdminCurriculum: React.FC = () => {
                 <div className="flex gap-3 pt-4">
                   <button
                     type="submit"
-                    disabled={loading}
-                    className="flex-1 bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium disabled:opacity-50"
+                    disabled={isSubmitting}
+                    className="flex-1 bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {loading ? 'Saving...' : (editingLevel ? 'Update' : 'Create')}
+                    {isSubmitting ? 'Saving...' : (editingLevel ? 'Update' : 'Create')}
                   </button>
                   <button
                     type="button"
@@ -1366,10 +1426,10 @@ Option 3"
                 <div className="flex gap-3 pt-4">
                   <button
                     type="submit"
-                    disabled={loading}
-                    className="flex-1 bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium disabled:opacity-50"
+                    disabled={isSubmitting}
+                    className="flex-1 bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {loading ? 'Saving...' : (editingContent ? 'Update' : 'Create')}
+                    {isSubmitting ? 'Saving...' : (editingContent ? 'Update' : 'Create')}
                   </button>
                   <button
                     type="button"

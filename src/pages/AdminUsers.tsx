@@ -28,7 +28,10 @@ const defaultUserForm = {
 
 const AdminUsers: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { data: users, loading, error } = useAppSelector((state) => state.users);
+  const { data: users, loading } = useAppSelector((state) => state.users);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingUser, setEditingUser] = useState<any>(null);
@@ -40,7 +43,16 @@ const AdminUsers: React.FC = () => {
   const [resetUser, setResetUser] = useState<{ name: string; email: string } | null>(null);
 
   useEffect(() => {
-    dispatch(fetchAllUsers(undefined));
+    const loadUsers = async () => {
+      try {
+        setError(null);
+        await dispatch(fetchAllUsers({ role: 'student' })).unwrap();
+      } catch (err: any) {
+        setError(err.message || 'Failed to load users');
+        console.error('User load error:', err);
+      }
+    };
+    loadUsers();
   }, [dispatch]);
 
   const filteredUsers = users.filter((u: any) =>
@@ -71,35 +83,57 @@ const AdminUsers: React.FC = () => {
     setFormError('');
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
-      dispatch(deleteUser(id));
+      try {
+        setError(null);
+        await dispatch(deleteUser(id)).unwrap();
+        setSuccessMessage('User deleted successfully');
+        setTimeout(() => setSuccessMessage(null), 3000);
+      } catch (err: any) {
+        setError(err.message || 'An error occurred while deleting user');
+        console.error('User delete error:', err);
+      }
     }
   };
 
   const handleSave = async () => {
-    if (!userForm.name || !userForm.email || !userForm.role || !userForm.college) {
-      setFormError('Name, Email, Role, and College are required.');
-      return;
-    }
-    if (!editingUser && !userForm.password) {
-      setFormError('Password is required for new users.');
-      return;
-    }
-    setFormError('');
-    if (editingUser && editingUser._id) {
-      const { password, ...updateData } = userForm;
-      await dispatch(updateUser({ id: editingUser._id, userData: updateData }));
-      setShowModal(false);
-      setEditingUser(null);
-      setUserForm(defaultUserForm);
-    } else {
-      await dispatch(createUser(userForm));
-      setCreatedPassword(userForm.password);
-      setShowModal(false);
-      setShowPasswordModal(true);
-      setEditingUser(null);
-      setUserForm(defaultUserForm);
+    try {
+      setIsSubmitting(true);
+      setError(null);
+      if (!userForm.name || !userForm.email || !userForm.role || !userForm.college) {
+        setFormError('Name, Email, Role, and College are required.');
+        return;
+      }
+      if (!editingUser && !userForm.password) {
+        setFormError('Password is required for new users.');
+        return;
+      }
+      setFormError('');
+      
+      if (editingUser && editingUser._id) {
+        const { password, ...updateData } = userForm;
+        await dispatch(updateUser({ id: editingUser._id, userData: updateData })).unwrap();
+        setShowModal(false);
+        setEditingUser(null);
+        setUserForm(defaultUserForm);
+        setSuccessMessage('User updated successfully');
+        setTimeout(() => setSuccessMessage(null), 3000);
+      } else {
+        await dispatch(createUser(userForm)).unwrap();
+        setCreatedPassword(userForm.password);
+        setShowModal(false);
+        setShowPasswordModal(true);
+        setEditingUser(null);
+        setUserForm(defaultUserForm);
+        setSuccessMessage('User created successfully');
+        setTimeout(() => setSuccessMessage(null), 3000);
+      }
+    } catch (err: any) {
+      setError(err.message || 'An error occurred while saving user');
+      console.error('User save error:', err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -109,6 +143,16 @@ const AdminUsers: React.FC = () => {
         <div>
           <h1 className="text-3xl text-paperwhite font-heading">User Management</h1>
           <p className="text-teallight mt-1 font-label">Manage students</p>
+          {successMessage && (
+            <div className="mt-2 p-2 bg-green-500/20 border border-green-500/30 rounded-lg text-green-400 text-sm">
+              {successMessage}
+            </div>
+          )}
+          {error && (
+            <div className="mt-2 p-2 bg-red-500/20 border border-red-500/30 rounded-lg text-red-400 text-sm">
+              {error}
+            </div>
+          )}
         </div>
         <button
           onClick={handleAdd}
@@ -224,7 +268,13 @@ const AdminUsers: React.FC = () => {
                 <label htmlFor="isActive" className="text-paperwhite">Active</label>
               </div>
               {formError && <div className="text-rust text-sm font-medium">{formError}</div>}
-              <button onClick={handleSave} className="w-full bg-trueturquoise text-offblack py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold mt-2">{editingUser ? 'Save Changes' : 'Add User'}</button>
+              <button 
+                onClick={handleSave} 
+                disabled={isSubmitting}
+                className="w-full bg-trueturquoise text-offblack py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? 'Saving...' : (editingUser ? 'Save Changes' : 'Add User')}
+              </button>
             </div>
           </div>
         </div>
@@ -255,10 +305,19 @@ const AdminUsers: React.FC = () => {
         onClose={() => { setResetModalOpen(false); setResetUser(null); }}
         user={resetUser}
         onReset={async (password) => {
-          // Find the user ID from the users list
-          const userObj = users.find(u => u.email === resetUser?.email && u.name === resetUser?.name);
-          if (!userObj) throw new Error('User not found');
-          await apiService.resetUserPassword(userObj._id || userObj.id, password);
+          try {
+            setError(null);
+            // Find the user ID from the users list
+            const userObj = users.find(u => u.email === resetUser?.email && u.name === resetUser?.name);
+            if (!userObj) throw new Error('User not found');
+            await apiService.resetUserPassword(userObj._id || userObj.id, password);
+            setSuccessMessage('Password reset successfully');
+            setTimeout(() => setSuccessMessage(null), 3000);
+          } catch (err: any) {
+            setError(err.message || 'Failed to reset password');
+            console.error('Password reset error:', err);
+            throw err; // Re-throw so the modal can handle it
+          }
         }}
       />
       </div>
