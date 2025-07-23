@@ -39,11 +39,30 @@ const groupCurriculumIntoLevels = (items) => {
       content: item.content,
       order: item.order,
       videoUrl: item.videoUrl,
-      options: item.options,
-      answer: item.answer,
       description: item.description,
       resources: item.resources || []
     };
+
+    // For test items, parse the content to extract options and answer
+    if (item.type === 'test') {
+      const lines = item.content.split('\n');
+      const question = lines[0];
+      const options = [];
+      let answer = '';
+      
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (line.startsWith('A)') || line.startsWith('B)') || line.startsWith('C)') || line.startsWith('D)')) {
+          options.push(line.substring(2).trim());
+        } else if (line.startsWith('Answer:') || line.startsWith('Correct Answer:')) {
+          answer = line.split(':')[1]?.trim() || '';
+        }
+      }
+      
+      contentItem.question = question;
+      contentItem.options = options;
+      contentItem.answer = answer || 'A'; // Default to A if no answer specified
+    }
 
     switch (item.type) {
       case 'learn':
@@ -60,7 +79,22 @@ const groupCurriculumIntoLevels = (items) => {
     }
   });
 
-  return Array.from(levelsMap.values());
+  // Sort levels by order and filter active ones
+  const levels = Array.from(levelsMap.values())
+    .filter(level => level.isActive)
+    .sort((a, b) => a.order - b.order);
+
+  console.log('Grouped levels:', levels.map(l => ({
+    id: l.id,
+    title: l.title,
+    careerTrack: l.careerTrack,
+    order: l.order,
+    learnCount: l.learn.length,
+    testCount: l.test.length,
+    exerciseCount: l.exercise.length
+  })));
+
+  return levels;
 };
 
 // @desc    Get all levels (grouped from curriculum)
@@ -118,6 +152,8 @@ export const getAllLevels = async (req, res) => {
 // @access  Private
 export const getLevelById = async (req, res) => {
   try {
+    console.log('Training controller: getLevelById called with ID:', req.params.id);
+    
     const { id } = req.params;
     
     if (!id || id.trim() === '') {
@@ -130,11 +166,19 @@ export const getLevelById = async (req, res) => {
     const representativeItem = await Curriculum.findById(id);
 
     if (!representativeItem) {
+      console.log('Training controller: No curriculum item found with ID:', id);
       return res.status(404).json({ 
         success: false, 
         message: 'Level not found' 
       });
     }
+
+    console.log('Training controller: Found representative item:', {
+      id: representativeItem._id,
+      title: representativeItem.title,
+      careerTrack: representativeItem.careerTrack,
+      type: representativeItem.type
+    });
 
     // Find all items that constitute this level
     const curriculumItems = await Curriculum.find({
@@ -142,6 +186,8 @@ export const getLevelById = async (req, res) => {
       careerTrack: representativeItem.careerTrack,
       isActive: true
     });
+
+    console.log('Training controller: Found curriculum items for level:', curriculumItems.length);
 
     if (!curriculumItems || curriculumItems.length === 0) {
       return res.status(404).json({ 
@@ -158,6 +204,15 @@ export const getLevelById = async (req, res) => {
         message: 'Level not found' 
       });
     }
+
+    console.log('Training controller: Returning level:', {
+      id: levels[0].id,
+      title: levels[0].title,
+      careerTrack: levels[0].careerTrack,
+      learnCount: levels[0].learn.length,
+      testCount: levels[0].test.length,
+      exerciseCount: levels[0].exercise.length
+    });
 
     res.status(200).json({ success: true, data: levels[0] });
   } catch (error) {

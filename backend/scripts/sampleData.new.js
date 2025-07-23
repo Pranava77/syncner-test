@@ -166,7 +166,7 @@ const sampleTracks = [
 ];
 
 const sampleCurriculum = [
-  // Full Stack Development - Level 1
+  // Full Stack Development - Level 1: HTML Fundamentals
   {
     title: 'HTML Fundamentals',
     description: 'Learn the basics of HTML markup language',
@@ -181,22 +181,22 @@ const sampleCurriculum = [
     prerequisites: [],
     learningObjectives: ['Understand HTML structure', 'Use basic HTML tags', 'Create simple web pages'],
     metadata: {
-      createdBy: null, // Will be set during seeding
+      createdBy: null,
       version: 1
     }
   },
   {
-    title: 'HTML Quiz',
+    title: 'HTML Fundamentals',
     description: 'Test your HTML knowledge',
     type: 'test',
-    content: 'What does HTML stand for?',
-    order: 2,
+    content: 'What does HTML stand for?\nA) Hyper Text Markup Language\nB) High Tech Modern Language\nC) Home Tool Markup Language\nD) Hyperlink and Text Markup Language\nAnswer: A',
+    order: 1,
     isActive: true,
     careerTrack: 'full-stack',
     difficulty: 'beginner',
     estimatedDuration: 15,
     tags: ['HTML', 'Quiz', 'Assessment'],
-    prerequisites: ['HTML Fundamentals'],
+    prerequisites: [],
     learningObjectives: ['Assess HTML knowledge'],
     metadata: {
       createdBy: null,
@@ -204,17 +204,17 @@ const sampleCurriculum = [
     }
   },
   {
-    title: 'Build Your First Webpage',
+    title: 'HTML Fundamentals',
     description: 'Create a simple HTML webpage',
     type: 'exercise',
     content: 'Create a personal webpage using HTML with your name, bio, and favorite hobbies.',
-    order: 3,
+    order: 1,
     isActive: true,
     careerTrack: 'full-stack',
     difficulty: 'beginner',
     estimatedDuration: 90,
     tags: ['HTML', 'Practice', 'Project'],
-    prerequisites: ['HTML Fundamentals'],
+    prerequisites: [],
     learningObjectives: ['Apply HTML knowledge', 'Create a complete webpage'],
     resources: [
       {
@@ -229,8 +229,64 @@ const sampleCurriculum = [
       version: 1
     }
   },
+
+  // Full Stack Development - Level 2: CSS Styling
+  {
+    title: 'CSS Styling',
+    description: 'Learn to style your HTML with CSS',
+    type: 'learn',
+    content: 'CSS (Cascading Style Sheets) is used to style and layout web pages. Learn about selectors, properties, and the box model.',
+    order: 2,
+    isActive: true,
+    careerTrack: 'full-stack',
+    difficulty: 'beginner',
+    estimatedDuration: 90,
+    tags: ['CSS', 'Styling', 'Web Design'],
+    prerequisites: ['HTML Fundamentals'],
+    learningObjectives: ['Understand CSS selectors', 'Apply styles to elements', 'Use the box model'],
+    metadata: {
+      createdBy: null,
+      version: 1
+    }
+  },
+  {
+    title: 'CSS Styling',
+    description: 'Test your CSS knowledge',
+    type: 'test',
+    content: 'Which CSS property is used to change the text color?\nA) text-color\nB) color\nC) font-color\nD) text-style\nAnswer: B',
+    order: 2,
+    isActive: true,
+    careerTrack: 'full-stack',
+    difficulty: 'beginner',
+    estimatedDuration: 15,
+    tags: ['CSS', 'Quiz'],
+    prerequisites: ['HTML Fundamentals'],
+    learningObjectives: ['Assess CSS knowledge'],
+    metadata: {
+      createdBy: null,
+      version: 1
+    }
+  },
+  {
+    title: 'CSS Styling',
+    description: 'Style your HTML webpage',
+    type: 'exercise',
+    content: 'Add CSS styling to your HTML webpage to make it visually appealing with colors, fonts, and layout.',
+    order: 2,
+    isActive: true,
+    careerTrack: 'full-stack',
+    difficulty: 'beginner',
+    estimatedDuration: 120,
+    tags: ['CSS', 'Practice', 'Styling'],
+    prerequisites: ['HTML Fundamentals'],
+    learningObjectives: ['Apply CSS styles', 'Create responsive layouts'],
+    metadata: {
+      createdBy: null,
+      version: 1
+    }
+  },
   
-  // AI/ML Track
+  // AI/ML Track - Level 1: Python Basics
   {
     title: 'Python Basics for ML',
     description: 'Learn Python fundamentals for machine learning',
@@ -250,25 +306,43 @@ const sampleCurriculum = [
     }
   },
   {
-    title: 'Python Quiz',
+    title: 'Python Basics for ML',
     description: 'Test your Python knowledge',
     type: 'test',
-    content: 'Which Python library is most commonly used for data manipulation?',
-    order: 2,
+    content: 'Which Python library is most commonly used for data manipulation?\nA) NumPy\nB) Pandas\nC) Matplotlib\nD) Scikit-learn\nAnswer: B',
+    order: 1,
     isActive: true,
     careerTrack: 'ai-ml',
     difficulty: 'beginner',
     estimatedDuration: 15,
     tags: ['Python', 'Quiz'],
-    prerequisites: ['Python Basics for ML'],
+    prerequisites: [],
     learningObjectives: ['Assess Python knowledge'],
     metadata: {
       createdBy: null,
       version: 1
     }
   },
+  {
+    title: 'Python Basics for ML',
+    description: 'Practice Python programming',
+    type: 'exercise',
+    content: 'Write a Python script that calculates the average of a list of numbers and prints the result.',
+    order: 1,
+    isActive: true,
+    careerTrack: 'ai-ml',
+    difficulty: 'beginner',
+    estimatedDuration: 60,
+    tags: ['Python', 'Practice', 'Programming'],
+    prerequisites: [],
+    learningObjectives: ['Write Python functions', 'Work with lists', 'Use basic operations'],
+    metadata: {
+      createdBy: null,
+      version: 1
+    }
+  },
   
-  // UI/UX Track
+  // UI/UX Track - Level 1: Design Principles
   {
     title: 'Design Principles',
     description: 'Learn fundamental design principles',
@@ -287,8 +361,44 @@ const sampleCurriculum = [
       version: 1
     }
   },
+  {
+    title: 'Design Principles',
+    description: 'Test your design knowledge',
+    type: 'test',
+    content: 'Which design principle refers to the visual weight distribution in a layout?\nA) Contrast\nB) Balance\nC) Hierarchy\nD) Alignment\nAnswer: B',
+    order: 1,
+    isActive: true,
+    careerTrack: 'ui-ux',
+    difficulty: 'beginner',
+    estimatedDuration: 15,
+    tags: ['Design', 'Quiz'],
+    prerequisites: [],
+    learningObjectives: ['Assess design knowledge'],
+    metadata: {
+      createdBy: null,
+      version: 1
+    }
+  },
+  {
+    title: 'Design Principles',
+    description: 'Create a design mockup',
+    type: 'exercise',
+    content: 'Design a simple landing page mockup applying the design principles you learned.',
+    order: 1,
+    isActive: true,
+    careerTrack: 'ui-ux',
+    difficulty: 'beginner',
+    estimatedDuration: 120,
+    tags: ['Design', 'Practice', 'Mockup'],
+    prerequisites: [],
+    learningObjectives: ['Apply design principles', 'Create visual mockups'],
+    metadata: {
+      createdBy: null,
+      version: 1
+    }
+  },
   
-  // Data Science Track
+  // Data Science Track - Level 1: Data Analysis Fundamentals
   {
     title: 'Data Analysis Fundamentals',
     description: 'Introduction to data analysis concepts',
@@ -302,6 +412,42 @@ const sampleCurriculum = [
     tags: ['Data Analysis', 'Statistics', 'Visualization'],
     prerequisites: [],
     learningObjectives: ['Understand data types', 'Calculate basic statistics', 'Create simple visualizations'],
+    metadata: {
+      createdBy: null,
+      version: 1
+    }
+  },
+  {
+    title: 'Data Analysis Fundamentals',
+    description: 'Test your data analysis knowledge',
+    type: 'test',
+    content: 'What is the most common measure of central tendency?\nA) Mode\nB) Median\nC) Mean\nD) Range\nAnswer: C',
+    order: 1,
+    isActive: true,
+    careerTrack: 'data-science',
+    difficulty: 'beginner',
+    estimatedDuration: 15,
+    tags: ['Data Analysis', 'Quiz'],
+    prerequisites: [],
+    learningObjectives: ['Assess data analysis knowledge'],
+    metadata: {
+      createdBy: null,
+      version: 1
+    }
+  },
+  {
+    title: 'Data Analysis Fundamentals',
+    description: 'Analyze a dataset',
+    type: 'exercise',
+    content: 'Analyze a simple dataset and create basic visualizations using Python or Excel.',
+    order: 1,
+    isActive: true,
+    careerTrack: 'data-science',
+    difficulty: 'beginner',
+    estimatedDuration: 180,
+    tags: ['Data Analysis', 'Practice', 'Visualization'],
+    prerequisites: [],
+    learningObjectives: ['Analyze real data', 'Create visualizations', 'Interpret results'],
     metadata: {
       createdBy: null,
       version: 1
