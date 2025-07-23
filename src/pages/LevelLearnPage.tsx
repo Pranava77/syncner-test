@@ -18,7 +18,7 @@ interface Level {
 }
 
 interface LearnItem {
-  type: 'video' | 'reading' | 'slide' | 'other';
+  type: 'video' | 'reading' | 'slide' | 'other' | 'learn';
   title: string;
   content: string;
   videoUrl?: string;
@@ -48,6 +48,17 @@ const LevelLearnPage: React.FC = () => {
       }
       
       setLevel(levelData);
+      
+      // Debug learn data
+      if (levelData && levelData.learn) {
+        console.log('LevelLearnPage: Learn data:', levelData.learn);
+        console.log('LevelLearnPage: Learn data length:', levelData.learn.length);
+        levelData.learn.forEach((learn: any, index: number) => {
+          console.log(`LevelLearnPage: Learn ${index}:`, learn);
+        });
+      } else {
+        console.log('LevelLearnPage: No learn data found in level:', levelData);
+      }
     } catch (error) {
       console.error('LevelLearnPage: Error fetching level:', error);
       setError(`Failed to load learning content: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -67,6 +78,7 @@ const LevelLearnPage: React.FC = () => {
       case 'video': return <PlayIcon className="h-4 w-4" />;
       case 'reading': return <ReaderIcon className="h-4 w-4" />;
       case 'slide': return <FileTextIcon className="h-4 w-4" />;
+      case 'learn': return <ReaderIcon className="h-4 w-4" />;
       default: return <FileTextIcon className="h-4 w-4" />;
     }
   };
@@ -76,6 +88,7 @@ const LevelLearnPage: React.FC = () => {
       case 'video': return 'bg-red-500';
       case 'reading': return 'bg-blue-500';
       case 'slide': return 'bg-green-500';
+      case 'learn': return 'bg-blue-500';
       default: return 'bg-gray-500';
     }
   };

@@ -229,9 +229,9 @@ export const getLevelById = async (req, res) => {
       type: representativeItem.type
     });
 
-    // Find all items that constitute this level (same title and career track)
+    // Find all items that constitute this level (same order and career track)
     const curriculumItems = await Curriculum.find({
-      title: representativeItem.title,
+      order: representativeItem.order,
       careerTrack: representativeItem.careerTrack,
       isActive: true
     }).sort({ order: 'asc' });
