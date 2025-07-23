@@ -182,6 +182,9 @@ class ApiService {
     const url = trackId 
       ? `${this.baseURL}/training/levels?track=${trackId}`
       : `${this.baseURL}/training/levels`;
+    console.log('=== API DEBUG ===');
+    console.log('API: trackId parameter:', trackId);
+    console.log('API: trackId type:', typeof trackId);
     console.log('API: Fetching levels from:', url);
     const response = await fetch(url, {
       headers: this.getHeaders(),

@@ -60,8 +60,21 @@ const TrainingLevels: React.FC = () => {
       setLoading(true);
       setError(null); // Clear any previous errors
       
-      console.log('Fetching training levels...');
-      const response = await apiService.getLevels();
+      // Get user's career track
+      const userCareerTrack = user?.careerTrack;
+      console.log('=== TRAINING LEVELS DEBUG ===');
+      console.log('User object:', user);
+      console.log('User career track:', userCareerTrack);
+      console.log('User career track type:', typeof userCareerTrack);
+      
+      if (!userCareerTrack) {
+        setError('No career track assigned to user');
+        setLoading(false);
+        return;
+      }
+      
+      console.log('Fetching training levels for track:', userCareerTrack);
+      const response = await apiService.getLevels(userCareerTrack);
       console.log('Training levels API response:', response);
       
       let levelsData = [];
@@ -72,21 +85,6 @@ const TrainingLevels: React.FC = () => {
       }
       
       console.log('Processed levels data:', levelsData);
-      
-      // Filter levels by user's career track
-      const userCareerTrack = user?.careerTrack;
-      console.log('User career track:', userCareerTrack);
-      
-      if (userCareerTrack) {
-        console.log(`User career track: ${userCareerTrack}`);
-        
-        const beforeFilter = levelsData.length;
-        // Filter by user's career track
-        levelsData = levelsData.filter((level: Level) => {
-          return level.careerTrack === userCareerTrack;
-        });
-        console.log(`Filtered levels: ${beforeFilter} → ${levelsData.length} for track ${userCareerTrack}`);
-      }
       
       // Sort by order
       levelsData.sort((a: Level, b: Level) => a.order - b.order);

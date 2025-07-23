@@ -33,7 +33,23 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
   const fetchLevels = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await apiService.get('/training/levels');
+      
+      // Get user's career track
+      const userCareerTrack = user?.careerTrack;
+      console.log('=== SIDEBAR DEBUG ===');
+      console.log('User object:', user);
+      console.log('User career track:', userCareerTrack);
+      console.log('User career track type:', typeof userCareerTrack);
+      
+      if (!userCareerTrack) {
+        console.log('No career track assigned to user');
+        setLevels([]);
+        setLoading(false);
+        return;
+      }
+      
+      console.log('Sidebar: Fetching levels for track:', userCareerTrack);
+      const response = await apiService.getLevels(userCareerTrack);
       
       let levelsData = [];
       if (response && response.data) {
@@ -42,23 +58,18 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
         levelsData = response;
       }
       
-      // Filter levels by user's career track
-      const userCareerTrack = user?.careerTrack;
-      if (userCareerTrack) {
-        levelsData = levelsData.filter((level: Level) => {
-          return level.careerTrack === userCareerTrack;
-        });
-        console.log(`Sidebar: Filtered levels for career track: ${userCareerTrack}`, levelsData);
-      }
+      console.log('Sidebar: Raw levels data:', levelsData);
       
       // Sort by order and filter active levels
       levelsData = levelsData
         .filter((level: Level) => level.isActive)
         .sort((a: Level, b: Level) => a.order - b.order);
       
+      console.log('Sidebar: Final filtered levels:', levelsData);
       setLevels(levelsData);
     } catch (error) {
       console.error('Error fetching levels for sidebar:', error);
+      setLevels([]);
     } finally {
       setLoading(false);
     }
