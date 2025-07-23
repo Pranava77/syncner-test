@@ -241,8 +241,8 @@ const TrainingLevels: React.FC = () => {
                       <div className="bg-trueturquoise text-offblack px-3 py-1 rounded-lg font-bold text-sm">
                         Level {level.order}
                       </div>
-                      <div className={`p-2 rounded-lg ${getDifficultyColor(level.difficulty)}`}>
-                        <StarIcon className="h-5 w-5" />
+                      <div className={`px-2 py-1 rounded text-xs font-medium ${getDifficultyColor(level.difficulty)} text-white`}>
+                        {level.difficulty}
                       </div>
                     </div>
                     <span className={`px-2 py-1 rounded text-xs font-medium ${getTrackColor(level.careerTrack)} text-white`}>

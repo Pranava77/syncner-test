@@ -114,8 +114,8 @@ const AdminCurriculum: React.FC = () => {
   const fetchLevels = async (track?: string) => {
     setLoading(true);
     try {
-      console.log('Fetching levels from API...');
-      const url = track ? `/training/levels?track=${track}` : '/training/levels';
+      console.log('Fetching curriculum from API...');
+      const url = track ? `/curriculum?careerTrack=${track}` : '/curriculum';
       const response = await apiService.get(url);
       console.log('API Response:', response);
       
@@ -134,8 +134,9 @@ const AdminCurriculum: React.FC = () => {
       console.log('Starting to group curriculum items. Total items:', levelsData.length);
       
       levelsData.forEach((item: any) => {
-        // Create a unique key for each level based on title and career track
-        const levelKey = `${item.title}-${item.careerTrack}`;
+        // Create a unique key for each level based on order and career track
+        const levelKey = `${item.order}-${item.careerTrack}`;
+        console.log('Processing item:', { title: item.title, order: item.order, type: item.type, careerTrack: item.careerTrack, levelKey });
         
         if (!levelMap.has(levelKey)) {
           // Create a new level object
@@ -745,8 +746,8 @@ const AdminCurriculum: React.FC = () => {
                           <div className="bg-trueturquoise text-offblack px-3 py-1 rounded-lg font-bold text-sm">
                             Level {level.order}
                           </div>
-                          <div className={`p-2 rounded-lg ${getDifficultyColor(level.difficulty)}`}>
-                            <StarIcon className="h-5 w-5" />
+                          <div className={`px-2 py-1 rounded text-xs font-medium ${getDifficultyColor(level.difficulty)} text-white`}>
+                            {level.difficulty}
                           </div>
                         </div>
                         <span className={`px-2 py-1 rounded text-xs font-medium ${getTrackColor(level.careerTrack)} text-white`}>
