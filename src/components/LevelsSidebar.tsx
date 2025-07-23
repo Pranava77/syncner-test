@@ -45,11 +45,8 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
       // Filter levels by user's career track
       const userCareerTrack = user?.careerTrack;
       if (userCareerTrack) {
-        // Handle both frontend and backend career track formats
-        const normalizedUserTrack = userCareerTrack === 'fullstack' ? 'full-stack' : userCareerTrack;
         levelsData = levelsData.filter((level: Level) => {
-          const normalizedLevelTrack = level.careerTrack === 'fullstack' ? 'full-stack' : level.careerTrack;
-          return normalizedLevelTrack === normalizedUserTrack;
+          return level.careerTrack === userCareerTrack;
         });
         console.log(`Sidebar: Filtered levels for career track: ${userCareerTrack}`, levelsData);
       }

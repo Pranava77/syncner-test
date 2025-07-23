@@ -78,7 +78,7 @@ const defaultLevelForm: LevelForm = {
   description: '',
   difficulty: 'Beginner',
   duration: '',
-  careerTrack: 'fullstack',
+  careerTrack: 'full-stack',
   skills: [],
   prerequisites: [],
   estimatedHours: 1,
@@ -159,7 +159,7 @@ const AdminCurriculum: React.FC = () => {
 
   const getTrackColor = (track: string) => {
     switch (track) {
-      case 'fullstack': return 'bg-blue-500';
+      case 'full-stack': return 'bg-blue-500';
       case 'ai-ml': return 'bg-purple-500';
       case 'ui-ux': return 'bg-pink-500';
       case 'data-science': return 'bg-orange-500';
@@ -169,7 +169,7 @@ const AdminCurriculum: React.FC = () => {
 
   const getTrackLabel = (track: string) => {
     switch (track) {
-      case 'fullstack': return 'Full Stack';
+      case 'full-stack': return 'Full Stack';
       case 'ai-ml': return 'AI/ML';
       case 'ui-ux': return 'UI/UX';
       case 'data-science': return 'Data Science';
@@ -384,7 +384,7 @@ const AdminCurriculum: React.FC = () => {
             className="px-4 py-2 bg-offblack border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
           >
             <option value="all">All Tracks</option>
-            <option value="fullstack">Full Stack</option>
+            <option value="full-stack">Full Stack</option>
             <option value="ai-ml">AI/ML</option>
             <option value="ui-ux">UI/UX</option>
             <option value="data-science">Data Science</option>
@@ -731,7 +731,7 @@ const AdminCurriculum: React.FC = () => {
                       onChange={(e) => setLevelForm({ ...levelForm, careerTrack: e.target.value })}
                       className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
                     >
-                      <option value="fullstack">Full Stack</option>
+                      <option value="full-stack">Full Stack</option>
                       <option value="ai-ml">AI/ML</option>
                       <option value="ui-ux">UI/UX</option>
                       <option value="data-science">Data Science</option>

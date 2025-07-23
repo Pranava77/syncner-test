@@ -24,7 +24,7 @@ const careerTracks = [
     skills: ['Python', 'TensorFlow', 'PyTorch', 'Data Analysis']
   },
   {
-    id: 'fullstack',
+    id: 'full-stack',
     title: 'Full Stack Development',
     description: 'Frontend & Backend Development, APIs, Databases',
     icon: CodeIcon,
