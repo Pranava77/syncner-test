@@ -116,9 +116,9 @@ const AdminCurriculum: React.FC = () => {
   const fetchLevels = async () => {
     setLoading(true);
     try {
-      console.log('Fetching levels from API...');
+      console.log('AdminCurriculum: Fetching levels from API...');
       const response = await apiService.get('/training/levels');
-      console.log('API Response:', response);
+      console.log('AdminCurriculum: API Response:', response);
       
       // Handle different response formats
       let levelsData = [];
@@ -128,12 +128,17 @@ const AdminCurriculum: React.FC = () => {
         levelsData = response;
       }
       
-      console.log('Processed levels data:', levelsData);
+      console.log('AdminCurriculum: Processed levels data:', levelsData);
+      console.log('AdminCurriculum: Levels by track:', levelsData.reduce((acc: Record<string, number>, level: Level) => {
+        acc[level.careerTrack] = (acc[level.careerTrack] || 0) + 1;
+        return acc;
+      }, {}));
+      
       setLevels(levelsData);
       setLastUpdated(new Date());
       setFormError(''); // Clear any previous errors
     } catch (error) {
-      console.error('Error fetching levels:', error);
+      console.error('AdminCurriculum: Error fetching levels:', error);
       setFormError('Failed to load levels. Please check your connection.');
     } finally {
       setLoading(false);
@@ -204,7 +209,21 @@ const AdminCurriculum: React.FC = () => {
   const handleDeleteLevel = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this level?')) {
       try {
-        await apiService.delete(`/training/levels/${id}`);
+        // Find the level to get its title and career track
+        const level = levels.find(l => l.id === id);
+        if (level) {
+          // Delete all curriculum items for this level (same title and career track)
+          const response = await apiService.get('/curriculum');
+          const curriculumItems = response.data || [];
+          const itemsToDelete = curriculumItems.filter((item: any) => 
+            item.title === level.title && item.careerTrack === level.careerTrack
+          );
+          
+          // Delete each item
+          for (const item of itemsToDelete) {
+            await apiService.delete(`/curriculum/${item._id}`);
+          }
+        }
         await fetchLevels();
       } catch (error) {
         console.error('Error deleting level:', error);
@@ -221,17 +240,28 @@ const AdminCurriculum: React.FC = () => {
     setLoading(true);
     try {
       if (editingLevel) {
-        await apiService.put(`/training/levels/${editingLevel.id}`, levelForm);
+        await apiService.put(`/curriculum/${editingLevel.id}`, {
+          ...levelForm,
+          type: 'syllabus',
+          content: levelForm.description,
+          estimatedDuration: levelForm.estimatedHours * 60
+        });
         setShowLevelModal(false);
         setLevelForm(defaultLevelForm);
         setFormError('');
         await fetchLevels();
       } else {
-        // Creation is disabled: just close the modal and reset the form
+        // Create new level
+        await apiService.post('/curriculum', {
+          ...levelForm,
+          type: 'syllabus',
+          content: levelForm.description,
+          estimatedDuration: levelForm.estimatedHours * 60
+        });
         setShowLevelModal(false);
         setLevelForm(defaultLevelForm);
         setFormError('');
-        // Optionally, show a message: setFormError('Creating new levels is currently disabled.');
+        await fetchLevels();
       }
     } catch (error) {
       console.error('Error saving level:', error);
@@ -258,7 +288,22 @@ const AdminCurriculum: React.FC = () => {
   const handleDeleteContent = async (levelId: string, type: 'learn' | 'test' | 'exercise', index: number) => {
     if (window.confirm('Are you sure you want to delete this content?')) {
       try {
-        await apiService.delete(`/training/levels/${levelId}/${type}/${index}`);
+        // Find the level to get its title and career track
+        const level = levels.find(l => l.id === levelId);
+        if (level) {
+          // Find the specific content item to delete
+          const response = await apiService.get('/curriculum');
+          const curriculumItems = response.data || [];
+          const levelItems = curriculumItems.filter((item: any) => 
+            item.title === level.title && 
+            item.careerTrack === level.careerTrack &&
+            item.type === type
+          ).sort((a: any, b: any) => a.order - b.order);
+          
+          if (levelItems[index]) {
+            await apiService.delete(`/curriculum/${levelItems[index]._id}`);
+          }
+        }
         await fetchLevels();
       } catch (error) {
         console.error('Error deleting content:', error);
@@ -269,18 +314,99 @@ const AdminCurriculum: React.FC = () => {
   const handleContentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!contentForm.title || !contentForm.content) {
-      setFormError('Title and content are required');
+    if (!contentForm.title) {
+      setFormError('Title is required');
+      return;
+    }
+
+    // Validate content based on type
+    const contentType = editingContent?.type || 'learn';
+    if (contentType === 'learn' && !contentForm.content) {
+      setFormError('Content is required for learn items');
+      return;
+    } else if (contentType === 'test' && !contentForm.question) {
+      setFormError('Question is required for test items');
+      return;
+    } else if (contentType === 'exercise' && !contentForm.description) {
+      setFormError('Description is required for exercise items');
       return;
     }
 
     setLoading(true);
     try {
       if (editingContent && editingLevel) {
-        await apiService.put(`/training/levels/${editingLevel.id}/${editingContent.type}/${editingContent.index}`, contentForm);
+        // Find the specific content item to update
+        const response = await apiService.get('/curriculum');
+        const curriculumItems = response.data || [];
+        const levelItems = curriculumItems.filter((item: any) => 
+          item.title === editingLevel.title && 
+          item.careerTrack === editingLevel.careerTrack &&
+          item.type === editingContent.type
+        ).sort((a: any, b: any) => a.order - b.order);
+        
+        if (levelItems[editingContent.index]) {
+          const itemToUpdate = levelItems[editingContent.index];
+          const updateData: any = {
+            title: contentForm.title,
+            type: editingContent.type,
+            careerTrack: editingLevel.careerTrack,
+            difficulty: editingLevel.difficulty,
+            order: contentForm.order || 1
+          };
+
+          if (contentType === 'learn') {
+            updateData.content = contentForm.content;
+            updateData.videoUrl = contentForm.videoUrl;
+          } else if (contentType === 'test') {
+            // Format test content
+            let formattedContent = contentForm.question;
+            if (contentForm.options && contentForm.options.length > 0) {
+              formattedContent += '\n' + contentForm.options.map((opt: string, idx: number) => 
+                `${String.fromCharCode(65 + idx)}) ${opt}`
+              ).join('\n');
+            }
+            if (contentForm.answer) {
+              formattedContent += `\nAnswer: ${contentForm.answer}`;
+            }
+            updateData.content = formattedContent;
+          } else if (contentType === 'exercise') {
+            updateData.content = contentForm.description;
+            updateData.resources = contentForm.resources || [];
+          }
+
+          await apiService.put(`/curriculum/${itemToUpdate._id}`, updateData);
+        }
       } else if (editingLevel) {
-        const contentType = editingContent?.type || 'learn';
-        await apiService.post(`/training/levels/${editingLevel.id}/${contentType}`, contentForm);
+        // Create new content item
+        const newContentData: any = {
+          title: contentForm.title,
+          type: contentType,
+          careerTrack: editingLevel.careerTrack,
+          difficulty: editingLevel.difficulty,
+          order: contentForm.order || 1
+        };
+
+        if (contentType === 'learn') {
+          newContentData.content = contentForm.content;
+          newContentData.videoUrl = contentForm.videoUrl;
+        } else if (contentType === 'test') {
+          // Format test content
+          let formattedContent = contentForm.question;
+          if (contentForm.options && contentForm.options.length > 0) {
+            formattedContent += '\n' + contentForm.options.map((opt: string, idx: number) => 
+              `${String.fromCharCode(65 + idx)}) ${opt}`
+            ).join('\n');
+          }
+          if (contentForm.answer) {
+            formattedContent += `\nAnswer: ${contentForm.answer}`;
+          }
+          newContentData.content = formattedContent;
+        } else if (contentType === 'exercise') {
+          newContentData.content = contentForm.description;
+          newContentData.resources = contentForm.resources || [];
+        }
+
+        await apiService.post('/curriculum', newContentData);
       }
       
       setShowContentModal(false);
@@ -337,6 +463,9 @@ const AdminCurriculum: React.FC = () => {
           <div>
             <h1 className="text-3xl font-heading text-paperwhite mb-2">Level Management</h1>
             <p className="text-teallight">Create and manage training levels with learn, test, and exercise content</p>
+            <p className="text-xs text-teallight mt-1">
+              Showing all tracks: Full Stack, AI/ML, UI/UX, Data Science
+            </p>
             {lastUpdated && (
               <p className="text-xs text-teallight mt-1">
                 Last updated: {lastUpdated.toLocaleTimeString()}
@@ -412,7 +541,20 @@ const AdminCurriculum: React.FC = () => {
             <div className="text-center py-12">
               <LayersIcon className="h-16 w-16 text-paperwhite/30 mx-auto mb-4" />
               <h3 className="text-xl font-heading text-paperwhite mb-2">No levels found</h3>
-              <p className="text-teallight">Create your first training level to get started</p>
+              <p className="text-teallight mb-4">Create your first training level to get started</p>
+              <div className="text-sm text-teallight">
+                <p>Debug Info:</p>
+                <p>Total levels in database: {levels.length}</p>
+                <p>Filter track: {filterTrack}</p>
+                <p>Filter difficulty: {filterDifficulty}</p>
+                <p>Search term: "{searchTerm}"</p>
+                <button 
+                  onClick={fetchLevels}
+                  className="mt-4 bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors text-sm"
+                >
+                  Refresh Data
+                </button>
+              </div>
             </div>
           ) : (
             filteredLevels.map((level) => (
@@ -908,22 +1050,50 @@ const AdminCurriculum: React.FC = () => {
                   </div>
                 )}
 
-                <div>
-                  <label className="block text-sm font-medium text-paperwhite mb-2">
-                    {editingContent?.type === 'test' ? 'Question' : editingContent?.type === 'exercise' ? 'Description' : 'Content'} *
-                  </label>
-                  <textarea
-                    value={contentForm.content || contentForm.question || contentForm.description || ''}
-                    onChange={(e) => {
-                      const field = editingContent?.type === 'test' ? 'question' : 
-                                   editingContent?.type === 'exercise' ? 'description' : 'content';
-                      setContentForm({ ...contentForm, [field]: e.target.value });
-                    }}
-                    rows={4}
-                    className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise resize-none"
-                    placeholder={`Enter ${editingContent?.type === 'test' ? 'question' : editingContent?.type === 'exercise' ? 'description' : 'content'}`}
-                  />
-                </div>
+                {editingContent?.type === 'learn' && (
+                  <div>
+                    <label className="block text-sm font-medium text-paperwhite mb-2">
+                      Content *
+                    </label>
+                    <textarea
+                      value={contentForm.content || ''}
+                      onChange={(e) => setContentForm({ ...contentForm, content: e.target.value })}
+                      rows={4}
+                      className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise resize-none"
+                      placeholder="Enter content"
+                    />
+                  </div>
+                )}
+
+                {editingContent?.type === 'test' && (
+                  <div>
+                    <label className="block text-sm font-medium text-paperwhite mb-2">
+                      Question *
+                    </label>
+                    <textarea
+                      value={contentForm.question || ''}
+                      onChange={(e) => setContentForm({ ...contentForm, question: e.target.value })}
+                      rows={3}
+                      className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise resize-none"
+                      placeholder="Enter question"
+                    />
+                  </div>
+                )}
+
+                {editingContent?.type === 'exercise' && (
+                  <div>
+                    <label className="block text-sm font-medium text-paperwhite mb-2">
+                      Description *
+                    </label>
+                    <textarea
+                      value={contentForm.description || ''}
+                      onChange={(e) => setContentForm({ ...contentForm, description: e.target.value })}
+                      rows={4}
+                      className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise resize-none"
+                      placeholder="Enter description"
+                    />
+                  </div>
+                )}
 
                 {editingContent?.type === 'test' && (
                   <div>
