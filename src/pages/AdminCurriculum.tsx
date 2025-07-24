@@ -860,7 +860,7 @@ const AdminCurriculum: React.FC = () => {
                   </div>
                 </div>
               ) : (
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 relative">
+                <div className="grid gap-6 grid-cols-1 relative">
                   {filteredLevels.map((level, index) => (
                     <motion.div
                       key={level.id}
