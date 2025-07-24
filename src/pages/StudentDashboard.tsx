@@ -37,17 +37,26 @@ const StudentDashboard: React.FC = () => {
 
     window.addEventListener('mousemove', activityHandler);
     window.addEventListener('keydown', activityHandler);
+    window.addEventListener('click', activityHandler);
+    window.addEventListener('scroll', activityHandler);
 
     interval = setInterval(() => {
-      if (Date.now() - lastActivity < 10 * 60 * 1000) {
-        apiService.getMe().catch(() => {});
+      const timeSinceLastActivity = Date.now() - lastActivity;
+      
+      // If user has been active in the last 5 minutes, ping the server
+      if (timeSinceLastActivity < 5 * 60 * 1000) {
+        apiService.getMe().catch((error) => {
+          console.error('Attendance ping failed:', error);
+        });
       }
-    }, 2 * 60 * 1000); // every 2 minutes
+    }, 1 * 60 * 1000); // every 1 minute
 
     return () => {
       clearInterval(interval);
       window.removeEventListener('mousemove', activityHandler);
       window.removeEventListener('keydown', activityHandler);
+      window.removeEventListener('click', activityHandler);
+      window.removeEventListener('scroll', activityHandler);
     };
   }, [user]);
 
