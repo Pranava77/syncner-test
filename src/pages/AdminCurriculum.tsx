@@ -128,7 +128,6 @@ const AdminCurriculum: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showTemplates, setShowTemplates] = useState(false);
 
   useEffect(() => {
     fetchLevels();
@@ -654,43 +653,7 @@ const AdminCurriculum: React.FC = () => {
     fetchLevels(track);
   };
 
-  const applyTemplate = (templateType: string) => {
-    const templates = {
-      'web-development': {
-        brief: 'Web development is the process of creating websites and web applications that run on the internet. It involves writing code that browsers can understand and display to users.',
-        whyLearn: 'Web development is one of the most in-demand skills in today\'s digital world. Every business needs a website, and the demand for web developers continues to grow.',
-        whereUsed: 'Web development is used everywhere! From simple business websites to complex applications like Facebook, Netflix, and Google.',
-        customExample: 'Think of web development like building a house. HTML is the foundation and structure, CSS is the design and decoration, and JavaScript is the electrical system that makes everything interactive.'
-      },
-      'ai-ml': {
-        brief: 'Machine Learning is a subset of artificial intelligence that enables computers to learn and make decisions from data without being explicitly programmed.',
-        whyLearn: 'Machine Learning is revolutionizing every industry - from healthcare and finance to entertainment and transportation.',
-        whereUsed: 'ML is used in recommendation systems, autonomous vehicles, medical diagnosis, fraud detection, and countless other applications.',
-        customExample: 'Think of ML like teaching a child to recognize animals. You show them many pictures, and over time, they learn to identify new animals they\'ve never seen before.'
-      },
-      'ui-ux': {
-        brief: 'User Experience (UX) Design is the process of creating products that provide meaningful and relevant experiences to users.',
-        whyLearn: 'UX design is crucial for business success. Good UX leads to higher user satisfaction, increased engagement, and better conversion rates.',
-        whereUsed: 'UX design is used in websites, mobile apps, software applications, digital products, and even physical products.',
-        customExample: 'Think of UX design like designing a restaurant. You consider the layout, lighting, menu design, and service flow to create a natural and enjoyable experience.'
-      },
-      'data-science': {
-        brief: 'Data Science is an interdisciplinary field that uses scientific methods to extract knowledge and insights from structured and unstructured data.',
-        whyLearn: 'Data Science is one of the fastest-growing fields with high demand and excellent salaries. Every industry needs data scientists.',
-        whereUsed: 'Data Science is used in finance, healthcare, marketing, sports analytics, and virtually every industry that collects data.',
-        customExample: 'Think of Data Science like being a detective. You collect evidence, analyze patterns, form hypotheses, and solve mysteries using data.'
-      }
-    };
 
-    const template = templates[templateType as keyof typeof templates];
-    if (template) {
-      setLevelForm({
-        ...levelForm,
-        readFirst: template
-      });
-      setShowTemplates(false);
-    }
-  };
 
   const handleBackToTracks = () => {
     setSelectedTrack(null);
@@ -1405,62 +1368,12 @@ const AdminCurriculum: React.FC = () => {
 
                 {/* Read First Section */}
                 <div className="border-t border-paperwhite/20 pt-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div>
-                      <h3 className="text-lg font-semibold text-paperwhite">Read This First! Section</h3>
-                      <p className="text-sm text-teallight">
-                        This section appears to students before the learning materials to provide context and motivation.
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setShowTemplates(!showTemplates)}
-                      className="text-sm text-trueturquoise hover:text-teallight transition-colors"
-                    >
-                      {showTemplates ? 'Hide' : 'Show'} Templates
-                    </button>
+                  <div className="mb-4">
+                    <h3 className="text-lg font-semibold text-paperwhite">Read This First! Section</h3>
+                    <p className="text-sm text-teallight">
+                      This section appears to students before the learning materials to provide context and motivation.
+                    </p>
                   </div>
-                  
-                  {/* Content Templates */}
-                  {showTemplates && (
-                    <div className="mb-6 p-4 bg-paperwhite/5 rounded-lg border border-paperwhite/10">
-                      <h4 className="text-sm font-medium text-paperwhite mb-3">Quick Templates</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <button
-                          type="button"
-                          onClick={() => applyTemplate('web-development')}
-                          className="text-left p-3 bg-paperwhite/5 rounded-lg border border-paperwhite/10 hover:bg-paperwhite/10 transition-colors"
-                        >
-                          <div className="text-xs font-medium text-trueturquoise">Web Development</div>
-                          <div className="text-xs text-teallight">HTML, CSS, JavaScript basics</div>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => applyTemplate('ai-ml')}
-                          className="text-left p-3 bg-paperwhite/5 rounded-lg border border-paperwhite/10 hover:bg-paperwhite/10 transition-colors"
-                        >
-                          <div className="text-xs font-medium text-trueturquoise">AI/ML</div>
-                          <div className="text-xs text-teallight">Machine learning fundamentals</div>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => applyTemplate('ui-ux')}
-                          className="text-left p-3 bg-paperwhite/5 rounded-lg border border-paperwhite/10 hover:bg-paperwhite/10 transition-colors"
-                        >
-                          <div className="text-xs font-medium text-trueturquoise">UI/UX Design</div>
-                          <div className="text-xs text-teallight">User experience design</div>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => applyTemplate('data-science')}
-                          className="text-left p-3 bg-paperwhite/5 rounded-lg border border-paperwhite/10 hover:bg-paperwhite/10 transition-colors"
-                        >
-                          <div className="text-xs font-medium text-trueturquoise">Data Science</div>
-                          <div className="text-xs text-teallight">Data analysis and statistics</div>
-                        </button>
-                      </div>
-                    </div>
-                  )}
                   
                   <div className="space-y-4">
                     <div>
