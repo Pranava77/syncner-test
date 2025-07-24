@@ -13,6 +13,8 @@ dist-ssr
 package-lock.json
 backend/package-lock.json
 
+
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -24,8 +26,10 @@ backend/package-lock.json
 *.sln
 *.sw?
 .env
+.env.example
+backend/env.example
+
 
 
 #files
-
 .pm/
