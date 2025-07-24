@@ -47,6 +47,12 @@ const seedData = async () => {
         tags: ['web', 'basics', 'html', 'css'],
         prerequisites: [],
         learningObjectives: ['Understand HTML structure', 'Learn CSS styling', 'Basic JavaScript concepts'],
+        readFirst: {
+          brief: 'Web development is the process of creating websites and web applications that run on the internet. It involves writing code that browsers can understand and display to users.',
+          whyLearn: 'Web development is one of the most in-demand skills in today\'s digital world. Every business needs a website, and the demand for web developers continues to grow. Learning web development opens up countless career opportunities.',
+          whereUsed: 'Web development is used everywhere! From simple business websites to complex applications like Facebook, Netflix, and Google. E-commerce sites, social media platforms, online banking, and educational platforms all rely on web development.',
+          customExample: 'Think of web development like building a house. HTML is the foundation and structure (walls, rooms), CSS is the design and decoration (paint, furniture), and JavaScript is the electrical system and appliances that make everything interactive and functional.'
+        },
         resources: [],
         metadata: {
           createdBy: adminUser._id,
@@ -393,6 +399,12 @@ const seedData = async () => {
         tags: ['ai', 'ml', 'basics', 'python'],
         prerequisites: [],
         learningObjectives: ['Understand ML concepts', 'Learn data preprocessing', 'Model evaluation'],
+        readFirst: {
+          brief: 'Machine Learning is a subset of artificial intelligence that enables computers to learn and make decisions from data without being explicitly programmed. It\'s like teaching a computer to recognize patterns and make predictions.',
+          whyLearn: 'Machine Learning is revolutionizing every industry - from healthcare and finance to entertainment and transportation. Companies are actively seeking ML professionals, and the field offers excellent career opportunities with high salaries and continuous innovation.',
+          whereUsed: 'ML is used in recommendation systems (Netflix, Amazon), autonomous vehicles, medical diagnosis, fraud detection, natural language processing (Siri, Alexa), image recognition, and countless other applications that impact our daily lives.',
+          customExample: 'Think of ML like teaching a child to recognize animals. You show them many pictures of cats and dogs, and over time, they learn to identify new cats and dogs they\'ve never seen before. ML algorithms work similarly - they learn patterns from data to make predictions on new, unseen data.'
+        },
         resources: [],
         metadata: {
           createdBy: adminUser._id,
@@ -567,6 +579,12 @@ const seedData = async () => {
         tags: ['ux', 'design', 'user-research', 'wireframing'],
         prerequisites: [],
         learningObjectives: ['Understand UX principles', 'Learn user research', 'Create wireframes'],
+        readFirst: {
+          brief: 'User Experience (UX) Design is the process of creating products that provide meaningful and relevant experiences to users. It focuses on understanding user needs, behaviors, and emotions to design intuitive and enjoyable interfaces.',
+          whyLearn: 'UX design is crucial for business success. Good UX leads to higher user satisfaction, increased engagement, and better conversion rates. Companies are investing heavily in UX professionals as they recognize that user experience directly impacts their bottom line.',
+          whereUsed: 'UX design is used in websites, mobile apps, software applications, digital products, and even physical products. Every successful product you use - from Instagram to Spotify to your banking app - has been carefully designed with UX principles.',
+          customExample: 'Think of UX design like designing a restaurant. You consider the layout (easy navigation), lighting (visual hierarchy), menu design (information architecture), and service flow (user journey). Good UX makes everything feel natural and enjoyable, just like a well-designed restaurant experience.'
+        },
         resources: [],
         metadata: {
           createdBy: adminUser._id,
@@ -655,6 +673,12 @@ const seedData = async () => {
         tags: ['data-science', 'statistics', 'analytics', 'python'],
         prerequisites: [],
         learningObjectives: ['Understand data science process', 'Learn statistical concepts', 'Data visualization'],
+        readFirst: {
+          brief: 'Data Science is an interdisciplinary field that uses scientific methods, processes, algorithms, and systems to extract knowledge and insights from structured and unstructured data. It combines statistics, programming, and domain expertise.',
+          whyLearn: 'Data Science is one of the fastest-growing fields with high demand and excellent salaries. Every industry needs data scientists to make sense of their data and drive informed decisions. It\'s a skill that will be valuable for decades to come.',
+          whereUsed: 'Data Science is used in finance (risk assessment, fraud detection), healthcare (disease prediction, drug discovery), marketing (customer segmentation, campaign optimization), sports (player performance analysis), and virtually every industry that collects data.',
+          customExample: 'Think of Data Science like being a detective. You collect evidence (data), analyze patterns (statistics), form hypotheses (models), and solve mysteries (business problems). Just like a detective uses various tools and methods, data scientists use programming, statistics, and domain knowledge to uncover insights.'
+        },
         resources: [],
         metadata: {
           createdBy: adminUser._id,

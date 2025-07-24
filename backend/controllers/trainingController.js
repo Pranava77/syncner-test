@@ -30,6 +30,12 @@ const groupCurriculumIntoLevels = (items) => {
         careerTrack: baseItem.careerTrack,
         skills: baseItem.tags || [], // Map tags to skills
         prerequisites: baseItem.prerequisites || [],
+        readFirst: baseItem.readFirst || {
+          brief: '',
+          whyLearn: '',
+          whereUsed: '',
+          customExample: ''
+        },
         order: baseItem.order,
         isActive: baseItem.isActive,
         estimatedHours: Math.ceil(baseItem.estimatedDuration / 60), // Convert minutes to hours, round up

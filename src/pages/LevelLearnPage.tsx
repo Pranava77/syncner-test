@@ -1,8 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import LevelsSidebar from '../components/LevelsSidebar';
-import { PlayIcon, ReaderIcon, FileTextIcon } from '@radix-ui/react-icons';
+import { PlayIcon, ReaderIcon, FileTextIcon, ChevronUpIcon, ChevronDownIcon } from '@radix-ui/react-icons';
+import { motion, AnimatePresence } from 'framer-motion';
 import apiService from '../services/api';
+
+interface ReadFirst {
+  brief?: string;
+  whyLearn?: string;
+  whereUsed?: string;
+  customExample?: string;
+}
 
 interface Level {
   id: string;
@@ -15,6 +23,7 @@ interface Level {
   exercise: any[];
   order: number;
   isActive: boolean;
+  readFirst?: ReadFirst;
 }
 
 interface LearnItem {
@@ -32,6 +41,7 @@ const LevelLearnPage: React.FC = () => {
   const [level, setLevel] = useState<Level | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [readFirstExpanded, setReadFirstExpanded] = useState(true);
 
   const fetchLevel = useCallback(async () => {
     try {
@@ -151,6 +161,105 @@ const LevelLearnPage: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Read This First! Section */}
+        {level.readFirst && (level.readFirst.brief || level.readFirst.whyLearn || level.readFirst.whereUsed || level.readFirst.customExample) && (
+          <div className="w-full max-w-5xl bg-gradient-to-r from-trueturquoise/10 to-teallight/10 rounded-xl border border-trueturquoise/30 shadow-lg p-6 mb-8">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="bg-trueturquoise text-offblack p-2 rounded-lg">
+                  <ReaderIcon className="h-6 w-6" />
+                </div>
+                <h2 className="text-xl font-bold text-paperwhite">Read This First!</h2>
+              </div>
+              <button
+                onClick={() => setReadFirstExpanded(!readFirstExpanded)}
+                className="flex items-center gap-2 text-trueturquoise hover:text-teallight transition-colors"
+              >
+                <span className="text-sm font-medium">
+                  {readFirstExpanded ? 'Collapse' : 'Expand'}
+                </span>
+                {readFirstExpanded ? (
+                  <ChevronUpIcon className="h-4 w-4" />
+                ) : (
+                  <ChevronDownIcon className="h-4 w-4" />
+                )}
+              </button>
+            </div>
+            
+            <AnimatePresence>
+              {readFirstExpanded && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  className="space-y-6 overflow-hidden"
+                >
+                  {level.readFirst.brief && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1 }}
+                      className="bg-paperwhite/5 rounded-lg p-4 border border-paperwhite/10 hover:bg-paperwhite/10 transition-colors"
+                    >
+                      <h3 className="text-lg font-semibold text-trueturquoise mb-2 flex items-center gap-2">
+                        <span>📖</span>
+                        Brief - What is this?
+                      </h3>
+                      <p className="text-paperwhite leading-relaxed">{level.readFirst.brief}</p>
+                    </motion.div>
+                  )}
+                  
+                  {level.readFirst.whyLearn && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2 }}
+                      className="bg-paperwhite/5 rounded-lg p-4 border border-paperwhite/10 hover:bg-paperwhite/10 transition-colors"
+                    >
+                      <h3 className="text-lg font-semibold text-trueturquoise mb-2 flex items-center gap-2">
+                        <span>🎯</span>
+                        Why you need to learn this
+                      </h3>
+                      <p className="text-paperwhite leading-relaxed">{level.readFirst.whyLearn}</p>
+                    </motion.div>
+                  )}
+                  
+                  {level.readFirst.whereUsed && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3 }}
+                      className="bg-paperwhite/5 rounded-lg p-4 border border-paperwhite/10 hover:bg-paperwhite/10 transition-colors"
+                    >
+                      <h3 className="text-lg font-semibold text-trueturquoise mb-2 flex items-center gap-2">
+                        <span>🌍</span>
+                        Where it is used
+                      </h3>
+                      <p className="text-paperwhite leading-relaxed">{level.readFirst.whereUsed}</p>
+                    </motion.div>
+                  )}
+                  
+                  {level.readFirst.customExample && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.4 }}
+                      className="bg-paperwhite/5 rounded-lg p-4 border border-paperwhite/10 hover:bg-paperwhite/10 transition-colors"
+                    >
+                      <h3 className="text-lg font-semibold text-trueturquoise mb-2 flex items-center gap-2">
+                        <span>💡</span>
+                        Custom Example
+                      </h3>
+                      <p className="text-paperwhite leading-relaxed whitespace-pre-wrap">{level.readFirst.customExample}</p>
+                    </motion.div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
 
         {/* Learning Materials */}
         <div className="w-full max-w-5xl bg-paperwhite/5 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">

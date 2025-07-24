@@ -57,6 +57,28 @@ const curriculumItemSchema = new mongoose.Schema({
     type: String,
     trim: true
   }],
+  readFirst: {
+    brief: {
+      type: String,
+      trim: true,
+      maxlength: 500
+    },
+    whyLearn: {
+      type: String,
+      trim: true,
+      maxlength: 500
+    },
+    whereUsed: {
+      type: String,
+      trim: true,
+      maxlength: 500
+    },
+    customExample: {
+      type: String,
+      trim: true,
+      maxlength: 1000
+    }
+  },
   resources: [{
     title: { type: String, required: true },
     url: { type: String },

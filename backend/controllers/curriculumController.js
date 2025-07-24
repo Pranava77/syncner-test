@@ -106,6 +106,7 @@ const createCurriculumItem = async (req, res) => {
       tags = [],
       prerequisites = [],
       learningObjectives = [],
+      readFirst = {},
       resources = []
     } = req.body;
     
@@ -128,6 +129,7 @@ const createCurriculumItem = async (req, res) => {
       tags,
       prerequisites,
       learningObjectives,
+      readFirst,
       resources,
       metadata
     });

@@ -68,6 +68,30 @@ const curriculumValidation = [
     .optional()
     .isArray()
     .withMessage('Learning objectives must be an array'),
+  body('readFirst')
+    .optional()
+    .isObject()
+    .withMessage('Read first must be an object'),
+  body('readFirst.brief')
+    .optional()
+    .trim()
+    .isLength({ min: 1, max: 500 })
+    .withMessage('Brief must be between 1 and 500 characters'),
+  body('readFirst.whyLearn')
+    .optional()
+    .trim()
+    .isLength({ min: 1, max: 500 })
+    .withMessage('Why learn must be between 1 and 500 characters'),
+  body('readFirst.whereUsed')
+    .optional()
+    .trim()
+    .isLength({ min: 1, max: 500 })
+    .withMessage('Where used must be between 1 and 500 characters'),
+  body('readFirst.customExample')
+    .optional()
+    .trim()
+    .isLength({ min: 1, max: 1000 })
+    .withMessage('Custom example must be between 1 and 1000 characters'),
   body('resources')
     .optional()
     .isArray()
