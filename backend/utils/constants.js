@@ -6,6 +6,7 @@ const USER_ROLES = {
 
 const CAREER_TRACKS = {
   FULLSTACK: 'full-stack',
+  FULLSTACK_OLD: 'fullstack', // Legacy value
   AI_ML: 'ai-ml',
   UI_UX: 'ui-ux',
   DATA_SCIENCE: 'data-science'
@@ -13,6 +14,7 @@ const CAREER_TRACKS = {
 
 const DIFFICULTY_LEVELS = {
   BEGINNER: 'beginner',
+  BEGINNER_OLD: 'Beginner', // Legacy value
   INTERMEDIATE: 'intermediate',
   ADVANCED: 'advanced'
 };

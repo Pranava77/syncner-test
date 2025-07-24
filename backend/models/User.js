@@ -43,7 +43,8 @@ const userSchema = new mongoose.Schema({
   },
   careerTrack: {
     type: String,
-    enum: Object.values(CAREER_TRACKS)
+    enum: Object.values(CAREER_TRACKS),
+    required: function() { return this.role === 'student' || this.role === 'staff'; }
   },
   level: {
     type: String,
@@ -116,6 +117,21 @@ userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
+
+// Normalize enum values before saving
+userSchema.pre('save', function(next) {
+  // Normalize careerTrack values (only if it exists)
+  if (this.careerTrack === 'fullstack') {
+    this.careerTrack = 'full-stack';
+  }
+  
+  // Normalize level values
+  if (this.level === 'Beginner') {
+    this.level = 'beginner';
+  }
+  
   next();
 });
 
