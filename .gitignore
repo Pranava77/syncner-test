@@ -24,3 +24,8 @@ backend/package-lock.json
 *.sln
 *.sw?
 .env
+
+
+#files
+
+.pm/
