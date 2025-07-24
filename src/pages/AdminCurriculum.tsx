@@ -42,6 +42,9 @@ interface Level {
   estimatedHours: number;
   createdAt: string;
   updatedAt: string;
+  learnExpanded?: boolean;
+  testExpanded?: boolean;
+  exerciseExpanded?: boolean;
 }
 
 interface LearnItem {
@@ -746,11 +749,11 @@ const AdminCurriculum: React.FC = () => {
                         <ChevronRightIcon className="h-5 w-5 rotate-180" />
                       </button>
                       <h1 className="text-3xl font-heading text-paperwhite">
-                        {getTrackLabel(selectedTrack || '')} Track Management
+                        {getTrackLabel(selectedTrack || '')} Curriculum Management
                       </h1>
                     </div>
                     <p className="text-teallight">
-                      Manage training levels and content for {getTrackLabel(selectedTrack || '')} track
+                      Manage training levels and content for {getTrackLabel(selectedTrack || '')} curriculum
                     </p>
                     <div className="flex items-center gap-4 mt-2 text-sm text-teallight">
                       <span className="flex items-center gap-1">
@@ -957,133 +960,169 @@ const AdminCurriculum: React.FC = () => {
                       {/* Content Sections */}
                       <div className="space-y-3 mb-4">
                         {/* Learn Content */}
-                        {level.learn.length > 0 && (
-                          <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-3">
-                            <div className="flex items-center justify-between mb-2">
-                              <h4 className="text-sm font-medium text-green-400 flex items-center gap-1">
-                                <BookOpenIcon className="h-3 w-3" />
-                                Learn Content ({level.learn.length})
-                              </h4>
-                            </div>
+                        <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-3">
+                          <div className="flex items-center justify-between mb-2">
+                            <h4 className="text-sm font-medium text-green-400 flex items-center gap-1">
+                              <BookOpenIcon className="h-3 w-3" />
+                              Learn Content ({level.learn.length})
+                            </h4>
+                            <button
+                              onClick={() => {
+                                const updatedLevels = levels.map(l => 
+                                  l.id === level.id 
+                                    ? { ...l, learnExpanded: !l.learnExpanded }
+                                    : l
+                                );
+                                setLevels(updatedLevels);
+                              }}
+                              className="p-1 text-green-400 hover:text-green-300 transition-colors"
+                            >
+                              {level.learnExpanded ? <ChevronDownIcon className="h-3 w-3" /> : <ChevronRightIcon className="h-3 w-3" />}
+                            </button>
+                          </div>
+                          {level.learnExpanded && (
                             <div className="space-y-2">
-                              {level.learn.slice(0, 2).map((item, idx) => (
-                                <div key={idx} className="flex items-center justify-between bg-green-500/5 rounded-lg p-2">
-                                  <div className="flex-1 min-w-0">
-                                    <p className="text-xs text-paperwhite font-medium truncate">{item.title}</p>
-                                    <p className="text-xs text-teallight truncate">{item.type}</p>
+                              {level.learn.length > 0 ? (
+                                level.learn.map((item, idx) => (
+                                  <div key={idx} className="flex items-center justify-between bg-green-500/5 rounded-lg p-2">
+                                    <div className="flex-1 min-w-0">
+                                      <p className="text-xs text-paperwhite font-medium truncate">{item.title}</p>
+                                      <p className="text-xs text-teallight truncate">{item.type}</p>
+                                    </div>
+                                    <div className="flex items-center gap-1 ml-2">
+                                      <button
+                                        onClick={() => handleEditContent('learn', item, idx, level)}
+                                        className="p-1 text-green-400 hover:text-green-300 transition-colors"
+                                        title="Edit"
+                                      >
+                                        <EditIcon className="h-3 w-3" />
+                                      </button>
+                                      <button
+                                        onClick={() => handleDeleteContent(level.id, 'learn', idx)}
+                                        className="p-1 text-red-400 hover:text-red-300 transition-colors"
+                                        title="Delete"
+                                      >
+                                        <TrashIcon className="h-3 w-3" />
+                                      </button>
+                                    </div>
                                   </div>
-                                  <div className="flex items-center gap-1 ml-2">
-                                    <button
-                                      onClick={() => handleEditContent('learn', item, idx, level)}
-                                      className="p-1 text-green-400 hover:text-green-300 transition-colors"
-                                      title="Edit"
-                                    >
-                                      <EditIcon className="h-3 w-3" />
-                                    </button>
-                                    <button
-                                      onClick={() => handleDeleteContent(level.id, 'learn', idx)}
-                                      className="p-1 text-red-400 hover:text-red-300 transition-colors"
-                                      title="Delete"
-                                    >
-                                      <TrashIcon className="h-3 w-3" />
-                                    </button>
-                                  </div>
-                                </div>
-                              ))}
-                              {level.learn.length > 2 && (
-                                <p className="text-xs text-teallight text-center">
-                                  +{level.learn.length - 2} more learn items
-                                </p>
+                                ))
+                              ) : (
+                                <p className="text-xs text-teallight text-center py-2">No learn content yet</p>
                               )}
                             </div>
-                          </div>
-                        )}
+                          )}
+                        </div>
 
                         {/* Test Content */}
-                        {level.test.length > 0 && (
-                          <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-3">
-                            <div className="flex items-center justify-between mb-2">
-                              <h4 className="text-sm font-medium text-yellow-400 flex items-center gap-1">
-                                <ClipboardIcon className="h-3 w-3" />
-                                Test Content ({level.test.length})
-                              </h4>
-                            </div>
+                        <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
+                          <div className="flex items-center justify-between mb-2">
+                            <h4 className="text-sm font-medium text-yellow-400 flex items-center gap-1">
+                              <ClipboardIcon className="h-3 w-3" />
+                              Test Content ({level.test.length})
+                            </h4>
+                            <button
+                              onClick={() => {
+                                const updatedLevels = levels.map(l => 
+                                  l.id === level.id 
+                                    ? { ...l, testExpanded: !l.testExpanded }
+                                    : l
+                                );
+                                setLevels(updatedLevels);
+                              }}
+                              className="p-1 text-yellow-400 hover:text-yellow-300 transition-colors"
+                            >
+                              {level.testExpanded ? <ChevronDownIcon className="h-3 w-3" /> : <ChevronRightIcon className="h-3 w-3" />}
+                            </button>
+                          </div>
+                          {level.testExpanded && (
                             <div className="space-y-2">
-                              {level.test.slice(0, 2).map((item, idx) => (
-                                <div key={idx} className="flex items-center justify-between bg-yellow-500/5 rounded-lg p-2">
-                                  <div className="flex-1 min-w-0">
-                                    <p className="text-xs text-paperwhite font-medium truncate">{item.question}</p>
-                                    <p className="text-xs text-teallight">{item.options.length} options</p>
+                              {level.test.length > 0 ? (
+                                level.test.map((item, idx) => (
+                                  <div key={idx} className="flex items-center justify-between bg-yellow-500/5 rounded-lg p-2">
+                                    <div className="flex-1 min-w-0">
+                                      <p className="text-xs text-paperwhite font-medium truncate">{item.question}</p>
+                                      <p className="text-xs text-teallight">{item.options.length} options</p>
+                                    </div>
+                                    <div className="flex items-center gap-1 ml-2">
+                                      <button
+                                        onClick={() => handleEditContent('test', item, idx, level)}
+                                        className="p-1 text-yellow-400 hover:text-yellow-300 transition-colors"
+                                        title="Edit"
+                                      >
+                                        <EditIcon className="h-3 w-3" />
+                                      </button>
+                                      <button
+                                        onClick={() => handleDeleteContent(level.id, 'test', idx)}
+                                        className="p-1 text-red-400 hover:text-red-300 transition-colors"
+                                        title="Delete"
+                                      >
+                                        <TrashIcon className="h-3 w-3" />
+                                      </button>
+                                    </div>
                                   </div>
-                                  <div className="flex items-center gap-1 ml-2">
-                                    <button
-                                      onClick={() => handleEditContent('test', item, idx, level)}
-                                      className="p-1 text-yellow-400 hover:text-yellow-300 transition-colors"
-                                      title="Edit"
-                                    >
-                                      <EditIcon className="h-3 w-3" />
-                                    </button>
-                                    <button
-                                      onClick={() => handleDeleteContent(level.id, 'test', idx)}
-                                      className="p-1 text-red-400 hover:text-red-300 transition-colors"
-                                      title="Delete"
-                                    >
-                                      <TrashIcon className="h-3 w-3" />
-                                    </button>
-                                  </div>
-                                </div>
-                              ))}
-                              {level.test.length > 2 && (
-                                <p className="text-xs text-teallight text-center">
-                                  +{level.test.length - 2} more test items
-                                </p>
+                                ))
+                              ) : (
+                                <p className="text-xs text-teallight text-center py-2">No test content yet</p>
                               )}
                             </div>
-                          </div>
-                        )}
+                          )}
+                        </div>
 
                         {/* Exercise Content */}
-                        {level.exercise.length > 0 && (
-                          <div className="bg-purple-500/10 border border-purple-500/20 rounded-xl p-3">
-                            <div className="flex items-center justify-between mb-2">
-                              <h4 className="text-sm font-medium text-purple-400 flex items-center gap-1">
-                                <PlayIcon className="h-3 w-3" />
-                                Exercise Content ({level.exercise.length})
-                              </h4>
-                            </div>
+                        <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-3">
+                          <div className="flex items-center justify-between mb-2">
+                            <h4 className="text-sm font-medium text-purple-400 flex items-center gap-1">
+                              <PlayIcon className="h-3 w-3" />
+                              Exercise Content ({level.exercise.length})
+                            </h4>
+                            <button
+                              onClick={() => {
+                                const updatedLevels = levels.map(l => 
+                                  l.id === level.id 
+                                    ? { ...l, exerciseExpanded: !l.exerciseExpanded }
+                                    : l
+                                );
+                                setLevels(updatedLevels);
+                              }}
+                              className="p-1 text-purple-400 hover:text-purple-300 transition-colors"
+                            >
+                              {level.exerciseExpanded ? <ChevronDownIcon className="h-3 w-3" /> : <ChevronRightIcon className="h-3 w-3" />}
+                            </button>
+                          </div>
+                          {level.exerciseExpanded && (
                             <div className="space-y-2">
-                              {level.exercise.slice(0, 2).map((item, idx) => (
-                                <div key={idx} className="flex items-center justify-between bg-purple-500/5 rounded-lg p-2">
-                                  <div className="flex-1 min-w-0">
-                                    <p className="text-xs text-paperwhite font-medium truncate">{item.title}</p>
-                                    <p className="text-xs text-teallight truncate">{item.description}</p>
+                              {level.exercise.length > 0 ? (
+                                level.exercise.map((item, idx) => (
+                                  <div key={idx} className="flex items-center justify-between bg-purple-500/5 rounded-lg p-2">
+                                    <div className="flex-1 min-w-0">
+                                      <p className="text-xs text-paperwhite font-medium truncate">{item.title}</p>
+                                      <p className="text-xs text-teallight truncate">{item.description}</p>
+                                    </div>
+                                    <div className="flex items-center gap-1 ml-2">
+                                      <button
+                                        onClick={() => handleEditContent('exercise', item, idx, level)}
+                                        className="p-1 text-purple-400 hover:text-purple-300 transition-colors"
+                                        title="Edit"
+                                      >
+                                        <EditIcon className="h-3 w-3" />
+                                      </button>
+                                      <button
+                                        onClick={() => handleDeleteContent(level.id, 'exercise', idx)}
+                                        className="p-1 text-red-400 hover:text-red-300 transition-colors"
+                                        title="Delete"
+                                      >
+                                        <TrashIcon className="h-3 w-3" />
+                                      </button>
+                                    </div>
                                   </div>
-                                  <div className="flex items-center gap-1 ml-2">
-                                    <button
-                                      onClick={() => handleEditContent('exercise', item, idx, level)}
-                                      className="p-1 text-purple-400 hover:text-purple-300 transition-colors"
-                                      title="Edit"
-                                    >
-                                      <EditIcon className="h-3 w-3" />
-                                    </button>
-                                    <button
-                                      onClick={() => handleDeleteContent(level.id, 'exercise', idx)}
-                                      className="p-1 text-red-400 hover:text-red-300 transition-colors"
-                                      title="Delete"
-                                    >
-                                      <TrashIcon className="h-3 w-3" />
-                                    </button>
-                                  </div>
-                                </div>
-                              ))}
-                              {level.exercise.length > 2 && (
-                                <p className="text-xs text-teallight text-center">
-                                  +{level.exercise.length - 2} more exercise items
-                                </p>
+                                ))
+                              ) : (
+                                <p className="text-xs text-teallight text-center py-2">No exercise content yet</p>
                               )}
                             </div>
-                          </div>
-                        )}
+                          )}
+                        </div>
                       </div>
 
                       {/* Admin Controls */}
