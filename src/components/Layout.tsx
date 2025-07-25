@@ -21,6 +21,7 @@ import {
   EnvelopeClosedIcon,
   StarIcon,
   GroupIcon as Users,
+  CalendarIcon,
 } from '@radix-ui/react-icons';
 import logo from '../assets/syncner-logo.png';
 import LoadingScreen from './LoadingScreen';
@@ -160,7 +161,7 @@ const Layout: React.FC = () => {
     { path: '/admin/staff', icon: Users, label: 'Staff Management' },
     { path: '/admin/curriculum', icon: FileTextIcon, label: 'Level Management' },
     { path: '/admin/settings', icon: GearIcon, label: 'Settings' },
-    
+    { path: '/admin/attendance', icon: CalendarIcon, label: 'Attendance' },
   ];
 
   const navItems = user?.role === 'admin' ? adminNavItems : mainStudentNavItems;

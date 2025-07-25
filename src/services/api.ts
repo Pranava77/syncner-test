@@ -425,6 +425,67 @@ class ApiService {
   }
 
   /**
+   * Admin: Mark absences for a specific date
+   * @param date - The date to mark absences for (optional, defaults to today)
+   */
+  async markAbsences(date?: string) {
+    const response = await fetch(`${this.baseURL}/attendance/mark-absences`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify({ date }),
+    });
+    return this.handleResponse(response);
+  }
+
+  /**
+   * Admin: Mark absences for a date range
+   * @param startDate - Start date in YYYY-MM-DD format
+   * @param endDate - End date in YYYY-MM-DD format
+   */
+  async markAbsencesForRange(startDate: string, endDate: string) {
+    const response = await fetch(`${this.baseURL}/attendance/mark-absences-range`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify({ startDate, endDate }),
+    });
+    return this.handleResponse(response);
+  }
+
+  /**
+   * Get attendance statistics for a user
+   * @param userId - The user's ID
+   * @param startDate - Optional start date for filtering
+   * @param endDate - Optional end date for filtering
+   */
+  async getAttendanceStats(userId: string, startDate?: string, endDate?: string) {
+    let url = `${this.baseURL}/attendance/stats/${userId}`;
+    const params = new URLSearchParams();
+    if (startDate) params.append('startDate', startDate);
+    if (endDate) params.append('endDate', endDate);
+    if (params.toString()) url += `?${params.toString()}`;
+    
+    const response = await fetch(url, {
+      headers: this.getHeaders(),
+    });
+    return this.handleResponse(response);
+  }
+
+  /**
+   * Mark attendance for a specific user and date
+   * @param userId - The user's ID
+   * @param date - The date to mark attendance for
+   * @param status - The attendance status ('present' or 'absent')
+   */
+  async markAttendance(userId: string, date: string, status: 'present' | 'absent' = 'present') {
+    const response = await fetch(`${this.baseURL}/attendance/mark`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify({ userId, date, status }),
+    });
+    return this.handleResponse(response);
+  }
+
+  /**
    * Admin: Reset a user's password
    * @param userId - The user's ID
    * @param newPassword - The new password to set
