@@ -121,11 +121,25 @@ const AttendanceHeatmap: React.FC = () => {
                             : hex.count === 0
                             ? 'var(--color-rust)'
                             : 'var(--color-black)';
-                          if (isHovered) fillColor = 'var(--color-true-turquoise)';
+                          // Keep original color on hover, just add brightness
+                          if (isHovered) {
+                            if (hex.count === 1) {
+                              fillColor = 'var(--color-true-turquoise)'; // Keep blue for present
+                            } else if (hex.count === 0) {
+                              fillColor = 'var(--color-rust)'; // Keep red for absent
+                            }
+                          }
                           return (
                             <motion.g
                               key={hex.date + idx}
-                              whileHover={hex.isEmpty || !hasData ? {} : { scale: 1.25, filter: 'drop-shadow(0 0 16px var(--color-true-turquoise))' }}
+                              whileHover={hex.isEmpty || !hasData ? {} : { 
+                                scale: 1.25, 
+                                filter: hex.count === 1 
+                                  ? 'drop-shadow(0 0 16px var(--color-true-turquoise))' 
+                                  : hex.count === 0 
+                                  ? 'drop-shadow(0 0 16px var(--color-rust))' 
+                                  : 'drop-shadow(0 0 16px var(--color-true-turquoise))'
+                              }}
                               transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                               style={{ zIndex: isHovered ? 20 : 1 }}
                               onMouseEnter={e => {
@@ -151,7 +165,13 @@ const AttendanceHeatmap: React.FC = () => {
                                 style={{ fill: fillColor }}
                                 className={[
                                   'stroke-[var(--color-paper-white)]/20',
-                                  isHovered ? 'ring-2 ring-[var(--color-true-turquoise)]/90 shadow-2xl' : '',
+                                  isHovered ? `ring-2 shadow-2xl ${
+                                    hex.count === 1 
+                                      ? 'ring-[var(--color-true-turquoise)]/90' 
+                                      : hex.count === 0 
+                                      ? 'ring-[var(--color-rust)]/90' 
+                                      : 'ring-[var(--color-true-turquoise)]/90'
+                                  }` : '',
                                   'stroke-2 transition-all duration-200 cursor-pointer',
                                 ].join(' ')}
                               >
