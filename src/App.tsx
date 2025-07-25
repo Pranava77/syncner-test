@@ -10,7 +10,6 @@ import StudentDashboard from './pages/StudentDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminAnalytics from './pages/AdminAnalytics';
 import AdminSettings from './pages/AdminSettings';
-import AdminAttendance from './pages/AdminAttendance';
 import OnboardingFlow from './pages/OnboardingFlow';
 import ProtectedRoute from './components/ProtectedRoute';
 import StudentLayout from './components/StudentLayout';
@@ -144,7 +143,6 @@ function App() {
             <Route path="curriculum" element={<AdminCurriculum />} />
             <Route path="analytics" element={<AdminAnalytics />} />
             <Route path="settings" element={<AdminSettings />} />
-            <Route path="attendance" element={<AdminAttendance />} />
             <Route path="profile" element={
               <motion.div
                 initial={{ opacity: 0, y: 20 }}

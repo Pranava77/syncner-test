@@ -7,11 +7,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "migrate:fix-enums": "node migrations/fixUserEnums.js",
-    "attendance:yesterday": "node utils/attendanceUtils.js yesterday",
-    "attendance:date": "node utils/attendanceUtils.js date",
-    "attendance:range": "node utils/attendanceUtils.js range",
-    "attendance:week": "node utils/attendanceUtils.js week"
+    "migrate:fix-enums": "node migrations/fixUserEnums.js"
   },
   "keywords": [
     "education",
@@ -34,6 +30,7 @@
     "mongodb": "^6.17.0",
     "mongoose": "^8.0.3",
     "multer": "^1.4.5-lts.1",
+    "node-cron": "^3.0.3",
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {

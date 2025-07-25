@@ -1,5 +1,6 @@
 import Attendance from '../models/Attendance.js';
 import User from '../models/User.js';
+import cronService from '../services/cronService.js';
 
 // POST /api/attendance/mark
 export const markAttendance = async (req, res) => {
@@ -30,6 +31,41 @@ export const getAttendance = async (req, res) => {
     console.log(`[ATTENDANCE DEBUG] getAttendance for userId: ${userId}, records found: ${records.length}`);
     res.set('Cache-Control', 'no-store');
     res.json({ success: true, data: records });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// POST /api/attendance/trigger-marking (Admin only - for testing)
+export const triggerAttendanceMarking = async (req, res) => {
+  try {
+    // Check if user is admin
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Admin access required' });
+    }
+
+    const result = await cronService.triggerAttendanceMarking();
+    res.json({ 
+      success: true, 
+      message: `Successfully marked ${result.markedAbsences} absences, skipped ${result.skipped} existing records`,
+      data: result
+    });
+  } catch (error) {
+    console.error('[ATTENDANCE ERROR]', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// GET /api/attendance/cron-status (Admin only)
+export const getCronStatus = async (req, res) => {
+  try {
+    // Check if user is admin
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Admin access required' });
+    }
+
+    const status = cronService.getStatus();
+    res.json({ success: true, data: status });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
