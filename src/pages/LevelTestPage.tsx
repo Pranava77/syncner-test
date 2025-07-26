@@ -172,12 +172,11 @@ const LevelTestPage: React.FC = () => {
   }
 
   return (
-    <div className="flex h-screen bg-offblack overflow-y-hidden">
+    <div className="flex h-screen bg-offblack overflow-x-hidden">
       <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" />
-      <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack">
-        <div className="max-w-5xl mx-auto">
+      <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
           {/* Test Header */}
-          <div className="bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
+          <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-4">
                 <div className="bg-trueturquoise text-offblack p-3 rounded-lg">
@@ -205,7 +204,7 @@ const LevelTestPage: React.FC = () => {
           </div>
 
           {/* Test Questions */}
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="w-full max-w-5xl space-y-6">
           {validQuestions.map((question, qIdx) => (
             <div key={qIdx} className="bg-paperwhite/5 rounded-xl border border-paperwhite/20 shadow-lg p-6">
               <h3 className="text-lg font-semibold text-paperwhite mb-4">
@@ -294,7 +293,6 @@ const LevelTestPage: React.FC = () => {
             </div>
             )}
           </form>
-        </div>
       </main>
     </div>
   );
