@@ -199,9 +199,9 @@ const LevelTestPage: React.FC = () => {
   return (
     <div className="flex h-screen bg-offblack overflow-hidden">
       <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" />
-      <main className="flex-1 flex flex-col bg-offblack overflow-hidden">
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12" ref={scrollContainerRef}>
-          <div className="max-w-5xl mx-auto flex flex-col items-center">
+      <main className="flex-1 h-screen overflow-y-auto bg-offblack">
+        <div className="p-4 sm:p-6 lg:p-12" ref={scrollContainerRef}>
+          <div className="max-w-5xl mx-auto">
           {/* Test Header */}
           <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
             <div className="flex items-center justify-between mb-4">
