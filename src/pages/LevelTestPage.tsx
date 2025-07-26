@@ -37,6 +37,7 @@ const LevelTestPage: React.FC = () => {
   const [timeLeft, setTimeLeft] = useState(TEST_DURATION);
   const [submitted, setSubmitted] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const fetchLevel = useCallback(async () => {
     try {
@@ -109,6 +110,18 @@ const LevelTestPage: React.FC = () => {
     setSubmitted(true);
   };
 
+  // Scroll to top when test is submitted
+  useEffect(() => {
+    if (submitted && scrollContainerRef.current) {
+      // Small delay to ensure DOM has updated
+      setTimeout(() => {
+        if (scrollContainerRef.current) {
+          scrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }, 100);
+    }
+  }, [submitted]);
+
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60).toString().padStart(2, '0');
     const s = (seconds % 60).toString().padStart(2, '0');
@@ -175,7 +188,7 @@ const LevelTestPage: React.FC = () => {
     <div className="flex h-screen bg-offblack overflow-hidden">
       <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" />
       <main className="flex-1 flex flex-col bg-offblack overflow-hidden">
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12" ref={scrollContainerRef}>
           <div className="max-w-5xl mx-auto flex flex-col items-center">
           {/* Test Header */}
           <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
@@ -208,7 +221,7 @@ const LevelTestPage: React.FC = () => {
           {!submitted ? (
             <>
               {/* Test Questions */}
-              <div className="w-full max-w-5xl space-y-6">
+              <div className="w-full max-w-5xl space-y-6 pb-8">
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {validQuestions.map((question, qIdx) => (
                     <div key={qIdx} className="bg-paperwhite/5 rounded-xl border border-paperwhite/20 shadow-lg p-6">
@@ -265,7 +278,7 @@ const LevelTestPage: React.FC = () => {
             </>
           ) : (
             /* Results View */
-            <div className="w-full max-w-5xl space-y-6">
+            <div className="w-full max-w-5xl space-y-6 pb-8">
               {/* Results Header */}
               <div className="bg-gradient-to-r from-trueturquoise/10 to-teallight/10 rounded-xl border border-trueturquoise/30 shadow-lg p-6 text-center">
                 <h2 className="text-2xl font-bold text-paperwhite mb-4">Test Completed!</h2>
