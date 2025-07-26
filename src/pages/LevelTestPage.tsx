@@ -203,76 +203,64 @@ const LevelTestPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Test Questions */}
-          <form onSubmit={handleSubmit} className="w-full max-w-5xl space-y-6">
-          {validQuestions.map((question, qIdx) => (
-            <div key={qIdx} className="bg-paperwhite/5 rounded-xl border border-paperwhite/20 shadow-lg p-6">
-              <h3 className="text-lg font-semibold text-paperwhite mb-4">
-                Question {qIdx + 1}: {question.question}
-              </h3>
-              
-              <div className="space-y-4">
-                {question.options.map((option, optIdx) => (
-                  <label 
-                    key={optIdx} 
-                    className="flex items-center p-4 border border-paperwhite/20 rounded-lg cursor-pointer hover:bg-paperwhite/5 focus-within:ring-2 focus-within:ring-trueturquoise outline-none transition-colors"
-                    tabIndex={0}
-                    role="checkbox"
-                    aria-checked={answers[qIdx]?.[optIdx] || false}
-                    aria-label={option}
-                    onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && handleCheck(qIdx, optIdx)}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={answers[qIdx]?.[optIdx] || false}
-                      onChange={() => handleCheck(qIdx, optIdx)}
-                      disabled={submitted}
-                      className="sr-only"
-                      tabIndex={-1}
-                    />
-                    <div className={`w-6 h-6 rounded border-2 flex items-center justify-center mr-4 transition-colors duration-200 ${
-                      answers[qIdx]?.[optIdx]
-                        ? 'bg-trueturquoise border-trueturquoise'
-                        : 'border-paperwhite/20'
-                    }`}>
-                      {answers[qIdx]?.[optIdx] && (
-                        <CheckCircledIcon className="h-4 w-4 text-offblack" aria-hidden="true" />
-                      )}
+          {!submitted ? (
+            <>
+              {/* Test Questions */}
+              <form onSubmit={handleSubmit} className="w-full max-w-5xl space-y-6">
+                {validQuestions.map((question, qIdx) => (
+                  <div key={qIdx} className="bg-paperwhite/5 rounded-xl border border-paperwhite/20 shadow-lg p-6">
+                    <h3 className="text-lg font-semibold text-paperwhite mb-4">
+                      Question {qIdx + 1}: {question.question}
+                    </h3>
+                    
+                    <div className="space-y-4">
+                      {question.options.map((option, optIdx) => (
+                        <label 
+                          key={optIdx} 
+                          className="flex items-center p-4 border border-paperwhite/20 rounded-lg cursor-pointer hover:bg-paperwhite/5 focus-within:ring-2 focus-within:ring-trueturquoise outline-none transition-colors"
+                          tabIndex={0}
+                          role="checkbox"
+                          aria-checked={answers[qIdx]?.[optIdx] || false}
+                          aria-label={option}
+                          onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && handleCheck(qIdx, optIdx)}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={answers[qIdx]?.[optIdx] || false}
+                            onChange={() => handleCheck(qIdx, optIdx)}
+                            disabled={submitted}
+                            className="sr-only"
+                            tabIndex={-1}
+                          />
+                          <div className={`w-6 h-6 rounded border-2 flex items-center justify-center mr-4 transition-colors duration-200 ${
+                            answers[qIdx]?.[optIdx]
+                              ? 'bg-trueturquoise border-trueturquoise'
+                              : 'border-paperwhite/20'
+                          }`}>
+                            {answers[qIdx]?.[optIdx] && (
+                              <CheckCircledIcon className="h-4 w-4 text-offblack" aria-hidden="true" />
+                            )}
+                          </div>
+                          <span className="text-paperwhite text-lg">{option}</span>
+                        </label>
+                      ))}
                     </div>
-                    <span className="text-paperwhite text-lg">{option}</span>
-                  </label>
+                  </div>
                 ))}
-              </div>
 
-              {submitted && (
-                <div className="mt-4 p-4 rounded-lg bg-gradient-to-r from-trueturquoise/10 to-teallight/10 border border-trueturquoise/30">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-sm font-semibold text-paperwhite">Correct Answer:</span>
-                    <span className="text-sm text-trueturquoise font-bold">{question.answer}</span>
-                  </div>
-                  <div className="text-teallight">
-                    Your answer: {answers[qIdx]?.findIndex(a => a) !== -1 ? 
-                      question.options[answers[qIdx]?.findIndex(a => a) || 0] : 'Not answered'}
-                  </div>
+                {/* Submit Button */}
+                <div className="flex justify-center">
+                  <button
+                    type="submit"
+                    className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-trueturquoise/90 transition-colors"
+                  >
+                    Submit Test
+                  </button>
                 </div>
-              )}
-            </div>
-          ))}
-
-          {/* Submit Button */}
-          {!submitted && (
-            <div className="flex justify-center">
-              <button
-                type="submit"
-                className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-trueturquoise/90 transition-colors"
-              >
-                Submit Test
-              </button>
-            </div>
-          )}
-
-          {/* Results */}
-          {submitted && (
+              </form>
+            </>
+          ) : (
+            /* Results View */
             <div className="w-full max-w-5xl bg-gradient-to-r from-trueturquoise/10 to-teallight/10 rounded-xl border border-trueturquoise/30 shadow-lg p-6 text-center">
               <h2 className="text-2xl font-bold text-paperwhite mb-4">Test Completed!</h2>
               <p className="text-teallight mb-6 text-lg">You've completed the test for this level.</p>
@@ -291,8 +279,7 @@ const LevelTestPage: React.FC = () => {
                 </button>
               </div>
             </div>
-            )}
-          </form>
+          )}
       </main>
     </div>
   );
