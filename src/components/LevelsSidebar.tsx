@@ -92,7 +92,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
 
   return (
     <aside
-      className={`relative h-screen flex flex-col border-r border-paperwhite/20 bg-offblack transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-16'}`}
+      className={`relative h-full flex flex-col border-r border-paperwhite/20 bg-offblack transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-16'}`}
       style={{ minWidth: sidebarOpen ? '16rem' : '4rem' }}
     >
       {/* Toggle Button - vertical center, right edge */}
@@ -119,7 +119,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
         </div>
         
         {/* Levels Navigation */}
-        <nav className="flex-1 space-y-4 overflow-y-auto max-h-0">
+        <nav className="flex-1 space-y-4 overflow-y-auto">
           {loading ? (
             <div className="text-center py-8">
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-trueturquoise mx-auto mb-2"></div>
