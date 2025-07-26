@@ -172,42 +172,43 @@ const LevelTestPage: React.FC = () => {
   }
 
   return (
-    <div className="flex h-screen bg-offblack overflow-x-hidden">
+    <div className="flex h-screen bg-offblack overflow-hidden">
       <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" />
-      <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
-        {/* Test Header */}
-        <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-4">
-              <div className="bg-trueturquoise text-offblack p-3 rounded-lg">
-                <ReaderIcon className="h-8 w-8" />
-              </div>
-              <div>
-                <h1 className="text-3xl font-heading text-paperwhite mb-2">Level {level.order}: {level.title} - Test</h1>
-                <p className="text-teallight text-lg">Test your knowledge with {validQuestions.length} questions</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-6">
-              <div className="text-center bg-paperwhite/5 rounded-lg p-4 border border-paperwhite/10">
-                <div className="flex items-center gap-2 mb-2">
-                  <ClockIcon className="h-5 w-5 text-trueturquoise" />
-                  <div className="text-2xl font-bold text-trueturquoise">{formatTime(timeLeft)}</div>
+      <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack">
+        <div className="max-w-5xl mx-auto">
+          {/* Test Header */}
+          <div className="bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-4">
+                <div className="bg-trueturquoise text-offblack p-3 rounded-lg">
+                  <ReaderIcon className="h-8 w-8" />
                 </div>
-                <div className="text-xs text-teallight font-label">Time Remaining</div>
+                <div>
+                  <h1 className="text-2xl font-bold text-paperwhite mb-2">Level {level.order}: {level.title} - Test</h1>
+                  <p className="text-teallight text-lg">Test your knowledge with {validQuestions.length} questions</p>
+                </div>
               </div>
-              <div className="text-center bg-paperwhite/5 rounded-lg p-4 border border-paperwhite/10">
-                <div className="text-2xl font-bold text-paperwhite mb-2">{validQuestions.length}</div>
-                <div className="text-xs text-teallight font-label">Questions</div>
+              <div className="flex items-center gap-6">
+                <div className="text-center bg-paperwhite/5 rounded-lg p-4 border border-paperwhite/10">
+                  <div className="flex items-center gap-2 mb-2">
+                    <ClockIcon className="h-5 w-5 text-trueturquoise" />
+                    <div className="text-2xl font-bold text-trueturquoise">{formatTime(timeLeft)}</div>
+                  </div>
+                  <div className="text-xs text-teallight font-label">Time Remaining</div>
+                </div>
+                <div className="text-center bg-paperwhite/5 rounded-lg p-4 border border-paperwhite/10">
+                  <div className="text-2xl font-bold text-paperwhite mb-2">{validQuestions.length}</div>
+                  <div className="text-xs text-teallight font-label">Questions</div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Test Questions */}
-        <form onSubmit={handleSubmit} className="w-full max-w-5xl space-y-6">
+          {/* Test Questions */}
+          <form onSubmit={handleSubmit} className="space-y-6">
           {validQuestions.map((question, qIdx) => (
             <div key={qIdx} className="bg-paperwhite/5 rounded-xl border border-paperwhite/20 shadow-lg p-6">
-              <h3 className="text-xl font-heading text-paperwhite mb-4">
+              <h3 className="text-lg font-semibold text-paperwhite mb-4">
                 Question {qIdx + 1}: {question.question}
               </h3>
               
@@ -247,8 +248,8 @@ const LevelTestPage: React.FC = () => {
               {submitted && (
                 <div className="mt-4 p-4 rounded-lg bg-gradient-to-r from-trueturquoise/10 to-teallight/10 border border-trueturquoise/30">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-lg font-heading text-paperwhite">Correct Answer:</span>
-                    <span className="text-lg text-trueturquoise font-bold">{question.answer}</span>
+                    <span className="text-sm font-semibold text-paperwhite">Correct Answer:</span>
+                    <span className="text-sm text-trueturquoise font-bold">{question.answer}</span>
                   </div>
                   <div className="text-teallight">
                     Your answer: {answers[qIdx]?.findIndex(a => a) !== -1 ? 
@@ -264,7 +265,7 @@ const LevelTestPage: React.FC = () => {
             <div className="flex justify-center">
               <button
                 type="submit"
-                className="bg-trueturquoise text-offblack px-10 py-4 rounded-lg font-bold text-xl shadow-lg hover:bg-trueturquoise/90 transition-colors"
+                className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-trueturquoise/90 transition-colors"
               >
                 Submit Test
               </button>
@@ -274,7 +275,7 @@ const LevelTestPage: React.FC = () => {
           {/* Results */}
           {submitted && (
             <div className="w-full max-w-5xl bg-gradient-to-r from-trueturquoise/10 to-teallight/10 rounded-xl border border-trueturquoise/30 shadow-lg p-6 text-center">
-              <h2 className="text-3xl font-heading text-paperwhite mb-4">Test Completed!</h2>
+              <h2 className="text-2xl font-bold text-paperwhite mb-4">Test Completed!</h2>
               <p className="text-teallight mb-6 text-lg">You've completed the test for this level.</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button 
@@ -291,8 +292,9 @@ const LevelTestPage: React.FC = () => {
                 </button>
               </div>
             </div>
-          )}
-        </form>
+            )}
+          </form>
+        </div>
       </main>
     </div>
   );
