@@ -261,22 +261,78 @@ const LevelTestPage: React.FC = () => {
             </>
           ) : (
             /* Results View */
-            <div className="w-full max-w-5xl bg-gradient-to-r from-trueturquoise/10 to-teallight/10 rounded-xl border border-trueturquoise/30 shadow-lg p-6 text-center">
-              <h2 className="text-2xl font-bold text-paperwhite mb-4">Test Completed!</h2>
-              <p className="text-teallight mb-6 text-lg">You've completed the test for this level.</p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button 
-                  onClick={() => navigate(`/student/training/${levelId}/learn`)}
-                  className="bg-paperwhite text-offblack px-8 py-3 rounded-lg font-bold hover:bg-trueturquoise hover:text-offblack transition-colors text-lg shadow-sm"
-                >
-                  Back to Learning
-                </button>
-                <button 
-                  onClick={() => navigate(`/student/training/${levelId}/exercise`)}
-                  className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold hover:bg-trueturquoise/90 transition-colors text-lg shadow-sm"
-                >
-                  Go to Exercise
-                </button>
+            <div className="w-full max-w-5xl space-y-6">
+              {/* Results Header */}
+              <div className="bg-gradient-to-r from-trueturquoise/10 to-teallight/10 rounded-xl border border-trueturquoise/30 shadow-lg p-6 text-center">
+                <h2 className="text-2xl font-bold text-paperwhite mb-4">Test Completed!</h2>
+                <p className="text-teallight mb-6 text-lg">You've completed the test for this level.</p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <button 
+                    onClick={() => navigate(`/student/training/${levelId}/learn`)}
+                    className="bg-paperwhite text-offblack px-8 py-3 rounded-lg font-bold hover:bg-trueturquoise hover:text-offblack transition-colors text-lg shadow-sm"
+                  >
+                    Back to Learning
+                  </button>
+                  <button 
+                    onClick={() => navigate(`/student/training/${levelId}/exercise`)}
+                    className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold hover:bg-trueturquoise/90 transition-colors text-lg shadow-sm"
+                  >
+                    Go to Exercise
+                  </button>
+                </div>
+              </div>
+
+              {/* Answers Review Section */}
+              <div className="bg-paperwhite/5 rounded-xl border border-paperwhite/20 shadow-lg p-6">
+                <h3 className="text-xl font-bold text-paperwhite mb-6 text-center">Review Your Answers</h3>
+                <div className="space-y-6">
+                  {validQuestions.map((question, qIdx) => (
+                    <div key={qIdx} className="bg-paperwhite/5 rounded-lg border border-paperwhite/10 p-4">
+                      <h4 className="text-lg font-semibold text-paperwhite mb-3">
+                        Question {qIdx + 1}: {question.question}
+                      </h4>
+                      
+                      <div className="space-y-2 mb-3">
+                        {question.options.map((option, optIdx) => (
+                          <div 
+                            key={optIdx} 
+                            className={`flex items-center p-3 rounded-lg border ${
+                              answers[qIdx]?.[optIdx] 
+                                ? 'bg-trueturquoise/20 border-trueturquoise/30' 
+                                : 'bg-paperwhite/5 border-paperwhite/10'
+                            }`}
+                          >
+                            <div className={`w-5 h-5 rounded border-2 flex items-center justify-center mr-3 ${
+                              answers[qIdx]?.[optIdx]
+                                ? 'bg-trueturquoise border-trueturquoise'
+                                : 'border-paperwhite/20'
+                            }`}>
+                              {answers[qIdx]?.[optIdx] && (
+                                <CheckCircledIcon className="h-3 w-3 text-offblack" aria-hidden="true" />
+                              )}
+                            </div>
+                            <span className={`text-sm ${
+                              answers[qIdx]?.[optIdx] ? 'text-trueturquoise font-semibold' : 'text-paperwhite'
+                            }`}>
+                              {option}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="bg-gradient-to-r from-trueturquoise/10 to-teallight/10 rounded-lg p-3 border border-trueturquoise/20">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-sm font-semibold text-paperwhite">Correct Answer:</span>
+                          <span className="text-sm text-trueturquoise font-bold">{question.answer}</span>
+                        </div>
+                        <div className="text-xs text-teallight">
+                          Your answer: {answers[qIdx]?.findIndex(a => a) !== -1 ? 
+                            question.options[answers[qIdx]?.findIndex(a => a) || 0] : 'Not answered'}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           )}
