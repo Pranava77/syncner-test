@@ -130,14 +130,12 @@ const LevelTestPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="fixed inset-0 flex bg-offblack overflow-hidden">
+      <div className="flex h-screen bg-offblack overflow-x-hidden">
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" />
-        <main className="flex-1 overflow-hidden bg-offblack">
-          <div className="h-screen flex items-center justify-center p-4 sm:p-6 lg:p-12">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-trueturquoise mx-auto mb-4"></div>
-              <p className="text-paperwhite text-lg">Loading test content...</p>
-            </div>
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-trueturquoise mx-auto mb-4"></div>
+            <p className="text-paperwhite text-lg">Loading test content...</p>
           </div>
         </main>
       </div>
@@ -146,19 +144,17 @@ const LevelTestPage: React.FC = () => {
 
   if (error || !level) {
     return (
-      <div className="fixed inset-0 flex bg-offblack overflow-hidden">
+      <div className="flex h-screen bg-offblack overflow-x-hidden">
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" />
-        <main className="flex-1 overflow-hidden bg-offblack">
-          <div className="h-screen flex items-center justify-center p-4 sm:p-6 lg:p-12">
-            <div className="text-center">
-              <p className="text-rust text-lg mb-4">{error || 'Level not found'}</p>
-              <button 
-                onClick={fetchLevel}
-                className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors"
-              >
-                Retry
-              </button>
-            </div>
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
+          <div className="text-center">
+            <p className="text-rust text-lg mb-4">{error || 'Level not found'}</p>
+            <button 
+              onClick={fetchLevel}
+              className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors"
+            >
+              Retry
+            </button>
           </div>
         </main>
       </div>
@@ -169,21 +165,19 @@ const LevelTestPage: React.FC = () => {
   
   if (!level.test || level.test.length === 0 || validQuestions.length === 0) {
     return (
-      <div className="fixed inset-0 flex bg-offblack overflow-hidden">
+      <div className="flex h-screen bg-offblack overflow-x-hidden">
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" />
-        <main className="flex-1 overflow-hidden bg-offblack">
-          <div className="h-screen flex items-center justify-center p-4 sm:p-6 lg:p-12">
-            <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 text-center">
-              <div className="text-paperwhite/30 text-6xl mb-4">📝</div>
-              <h2 className="text-2xl font-heading text-paperwhite mb-2">No Test Available</h2>
-              <p className="text-teallight mb-6 text-lg">This level doesn't have any test questions yet.</p>
-              <button 
-                onClick={() => navigate(`/student/training/${levelId}/learn`)}
-                className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold hover:bg-trueturquoise/90 transition-colors text-lg shadow-sm"
-              >
-                Back to Learning
-              </button>
-            </div>
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
+          <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 text-center">
+            <div className="text-paperwhite/30 text-6xl mb-4">📝</div>
+            <h2 className="text-2xl font-heading text-paperwhite mb-2">No Test Available</h2>
+            <p className="text-teallight mb-6 text-lg">This level doesn't have any test questions yet.</p>
+            <button 
+              onClick={() => navigate(`/student/training/${levelId}/learn`)}
+              className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold hover:bg-trueturquoise/90 transition-colors text-lg shadow-sm"
+            >
+              Back to Learning
+            </button>
           </div>
         </main>
       </div>
@@ -191,11 +185,9 @@ const LevelTestPage: React.FC = () => {
   }
 
   return (
-    <div className="fixed inset-0 flex bg-offblack overflow-hidden">
+    <div className="flex h-screen bg-offblack overflow-x-hidden">
       <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" />
-      <main className="flex-1 overflow-hidden bg-offblack">
-        <div className="h-screen overflow-y-auto p-4 sm:p-6 lg:p-12" ref={scrollContainerRef}>
-          <div className="max-w-5xl mx-auto">
+      <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center" ref={scrollContainerRef}>
           {/* Test Header */}
           <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
             <div className="flex items-center justify-between mb-4">
@@ -359,10 +351,8 @@ const LevelTestPage: React.FC = () => {
               </div>
             </div>
           )}
-        </div>
-      </div>
-    </main>
-  </div>
+      </main>
+    </div>
   );
 };
 
