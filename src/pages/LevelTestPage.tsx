@@ -206,58 +206,60 @@ const LevelTestPage: React.FC = () => {
           {!submitted ? (
             <>
               {/* Test Questions */}
-              <form onSubmit={handleSubmit} className="w-full max-w-5xl space-y-6">
-                {validQuestions.map((question, qIdx) => (
-                  <div key={qIdx} className="bg-paperwhite/5 rounded-xl border border-paperwhite/20 shadow-lg p-6">
-                    <h3 className="text-lg font-semibold text-paperwhite mb-4">
-                      Question {qIdx + 1}: {question.question}
-                    </h3>
-                    
-                    <div className="space-y-4">
-                      {question.options.map((option, optIdx) => (
-                        <label 
-                          key={optIdx} 
-                          className="flex items-center p-4 border border-paperwhite/20 rounded-lg cursor-pointer hover:bg-paperwhite/5 focus-within:ring-2 focus-within:ring-trueturquoise outline-none transition-colors"
-                          tabIndex={0}
-                          role="checkbox"
-                          aria-checked={answers[qIdx]?.[optIdx] || false}
-                          aria-label={option}
-                          onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && handleCheck(qIdx, optIdx)}
-                        >
-                          <input
-                            type="checkbox"
-                            checked={answers[qIdx]?.[optIdx] || false}
-                            onChange={() => handleCheck(qIdx, optIdx)}
-                            disabled={submitted}
-                            className="sr-only"
-                            tabIndex={-1}
-                          />
-                          <div className={`w-6 h-6 rounded border-2 flex items-center justify-center mr-4 transition-colors duration-200 ${
-                            answers[qIdx]?.[optIdx]
-                              ? 'bg-trueturquoise border-trueturquoise'
-                              : 'border-paperwhite/20'
-                          }`}>
-                            {answers[qIdx]?.[optIdx] && (
-                              <CheckCircledIcon className="h-4 w-4 text-offblack" aria-hidden="true" />
-                            )}
-                          </div>
-                          <span className="text-paperwhite text-lg">{option}</span>
-                        </label>
-                      ))}
+              <div className="w-full max-w-5xl space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  {validQuestions.map((question, qIdx) => (
+                    <div key={qIdx} className="bg-paperwhite/5 rounded-xl border border-paperwhite/20 shadow-lg p-6">
+                      <h3 className="text-lg font-semibold text-paperwhite mb-4">
+                        Question {qIdx + 1}: {question.question}
+                      </h3>
+                      
+                      <div className="space-y-4">
+                        {question.options.map((option, optIdx) => (
+                          <label 
+                            key={optIdx} 
+                            className="flex items-center p-4 border border-paperwhite/20 rounded-lg cursor-pointer hover:bg-paperwhite/5 focus-within:ring-2 focus-within:ring-trueturquoise outline-none transition-colors"
+                            tabIndex={0}
+                            role="checkbox"
+                            aria-checked={answers[qIdx]?.[optIdx] || false}
+                            aria-label={option}
+                            onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && handleCheck(qIdx, optIdx)}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={answers[qIdx]?.[optIdx] || false}
+                              onChange={() => handleCheck(qIdx, optIdx)}
+                              disabled={submitted}
+                              className="sr-only"
+                              tabIndex={-1}
+                            />
+                            <div className={`w-6 h-6 rounded border-2 flex items-center justify-center mr-4 transition-colors duration-200 ${
+                              answers[qIdx]?.[optIdx]
+                                ? 'bg-trueturquoise border-trueturquoise'
+                                : 'border-paperwhite/20'
+                            }`}>
+                              {answers[qIdx]?.[optIdx] && (
+                                <CheckCircledIcon className="h-4 w-4 text-offblack" aria-hidden="true" />
+                              )}
+                            </div>
+                            <span className="text-paperwhite text-lg">{option}</span>
+                          </label>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </form>
 
-                {/* Submit Button */}
-                <div className="flex justify-center">
+                {/* Submit Button - Fixed at Bottom */}
+                <div className="flex justify-center pt-4">
                   <button
-                    type="submit"
+                    onClick={handleSubmit}
                     className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-trueturquoise/90 transition-colors"
                   >
                     Submit Test
                   </button>
                 </div>
-              </form>
+              </div>
             </>
           ) : (
             /* Results View */
