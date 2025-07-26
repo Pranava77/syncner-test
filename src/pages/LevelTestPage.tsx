@@ -189,7 +189,7 @@ const LevelTestPage: React.FC = () => {
       <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" />
       <main className="flex-1 flex flex-col bg-offblack overflow-hidden">
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12" ref={scrollContainerRef}>
-          <div className="max-w-5xl mx-auto flex flex-col items-center">
+          <div className="max-w-5xl mx-auto flex flex-col items-center h-full">
           {/* Test Header */}
           <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
             <div className="flex items-center justify-between mb-4">
@@ -221,8 +221,8 @@ const LevelTestPage: React.FC = () => {
           {!submitted ? (
             <>
               {/* Test Questions */}
-              <div className="w-full max-w-5xl space-y-6 pb-8">
-                <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="w-full max-w-5xl space-y-6 pb-8 flex-1 flex flex-col">
+                <form onSubmit={handleSubmit} className="space-y-6 flex-1 flex flex-col">
                   {validQuestions.map((question, qIdx) => (
                     <div key={qIdx} className="bg-paperwhite/5 rounded-xl border border-paperwhite/20 shadow-lg p-6">
                       <h3 className="text-lg font-semibold text-paperwhite mb-4">
@@ -266,7 +266,7 @@ const LevelTestPage: React.FC = () => {
                 </form>
 
                 {/* Submit Button - Fixed at Bottom */}
-                <div className="flex justify-center pt-4">
+                <div className="flex justify-center pt-4 mt-auto">
                   <button
                     onClick={handleSubmit}
                     className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-trueturquoise/90 transition-colors"
