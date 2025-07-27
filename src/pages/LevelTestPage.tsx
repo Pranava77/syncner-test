@@ -187,7 +187,7 @@ const LevelTestPage: React.FC = () => {
   return (
     <div className="flex h-screen bg-offblack overflow-x-hidden">
       <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" />
-      <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center h-screen" ref={scrollContainerRef}>
+      <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center" ref={scrollContainerRef}>
           {/* Test Header */}
           <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
             <div className="flex items-center justify-between mb-4">
@@ -229,23 +229,15 @@ const LevelTestPage: React.FC = () => {
                       
                       <div className="space-y-4">
                         {question.options.map((option, optIdx) => (
-                          <label 
+                          <div 
                             key={optIdx} 
-                            className="flex items-center p-4 border border-paperwhite/20 rounded-lg cursor-pointer hover:bg-paperwhite/5 focus-within:ring-2 focus-within:ring-inset focus-within:ring-trueturquoise outline-none transition-colors"
-                            tabIndex={0}
-                            role="checkbox"
-                            aria-checked={answers[qIdx]?.[optIdx] || false}
-                            aria-label={option}
-                            onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && handleCheck(qIdx, optIdx)}
+                            className={`flex items-center p-4 border rounded-lg cursor-pointer hover:bg-paperwhite/5 transition-colors ${
+                              answers[qIdx]?.[optIdx] 
+                                ? 'bg-trueturquoise/20 border-trueturquoise/30' 
+                                : 'bg-paperwhite/5 border-paperwhite/10'
+                            }`}
+                            onClick={() => handleCheck(qIdx, optIdx)}
                           >
-                            <input
-                              type="checkbox"
-                              checked={answers[qIdx]?.[optIdx] || false}
-                              onChange={() => handleCheck(qIdx, optIdx)}
-                              disabled={submitted}
-                              className="sr-only"
-                              tabIndex={-1}
-                            />
                             <div className={`w-6 h-6 rounded border-2 flex items-center justify-center mr-4 transition-colors duration-200 ${
                               answers[qIdx]?.[optIdx]
                                 ? 'bg-trueturquoise border-trueturquoise'
@@ -255,8 +247,12 @@ const LevelTestPage: React.FC = () => {
                                 <CheckCircledIcon className="h-4 w-4 text-offblack" aria-hidden="true" />
                               )}
                             </div>
-                            <span className="text-paperwhite text-lg">{option}</span>
-                          </label>
+                            <span className={`text-lg ${
+                              answers[qIdx]?.[optIdx] ? 'text-trueturquoise font-semibold' : 'text-paperwhite'
+                            }`}>
+                              {option}
+                            </span>
+                          </div>
                         ))}
                       </div>
                     </div>
