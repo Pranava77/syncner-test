@@ -219,8 +219,8 @@ const LevelTestPage: React.FC = () => {
           {!submitted ? (
             <>
               {/* Test Questions */}
-              <div className="w-full max-w-5xl flex flex-col space-y-6 pb-8">
-                <form onSubmit={handleSubmit} className="flex flex-col space-y-6">
+              <div className="w-full max-w-5xl space-y-6 pb-8">
+                <form onSubmit={handleSubmit} className="space-y-6">
                   {validQuestions.map((question, qIdx) => (
                     <div key={qIdx} className="bg-paperwhite/5 rounded-xl border border-paperwhite/20 shadow-lg p-6">
                       <h3 className="text-lg font-semibold text-paperwhite mb-4">
@@ -231,7 +231,7 @@ const LevelTestPage: React.FC = () => {
                         {question.options.map((option, optIdx) => (
                           <label 
                             key={optIdx} 
-                            className="flex items-center p-4 border border-paperwhite/20 rounded-lg cursor-pointer hover:bg-paperwhite/5 focus-within:ring-2 focus-within:ring-trueturquoise outline-none transition-colors"
+                            className="flex items-center p-4 border border-paperwhite/20 rounded-lg cursor-pointer hover:bg-paperwhite/5 focus-within:ring-2 focus-within:ring-inset focus-within:ring-trueturquoise outline-none transition-colors"
                             tabIndex={0}
                             role="checkbox"
                             aria-checked={answers[qIdx]?.[optIdx] || false}
