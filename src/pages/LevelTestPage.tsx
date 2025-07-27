@@ -188,8 +188,8 @@ const LevelTestPage: React.FC = () => {
     <div className="flex h-screen bg-offblack overflow-hidden">
       <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" />
       <main className="flex-1 overflow-hidden bg-offblack">
-        <div className="h-full overflow-y-auto p-4 sm:p-6 lg:p-12" ref={scrollContainerRef}>
-          <div className="max-w-5xl mx-auto">
+        <div className="h-full max-h-screen overflow-y-auto p-4 sm:p-6 lg:p-12" ref={scrollContainerRef}>
+          <div className="max-w-5xl mx-auto pb-8">
           {/* Test Header */}
           <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
             <div className="flex items-center justify-between mb-4">
@@ -221,7 +221,7 @@ const LevelTestPage: React.FC = () => {
           {!submitted ? (
             <>
               {/* Test Questions */}
-              <div className="w-full max-w-5xl space-y-6 pb-8">
+              <div className="w-full max-w-5xl space-y-6">
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {validQuestions.map((question, qIdx) => (
                     <div key={qIdx} className="bg-paperwhite/5 rounded-xl border border-paperwhite/20 shadow-lg p-6">
