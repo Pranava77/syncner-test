@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import LevelsSidebar from '../components/LevelsSidebar';
-import { PlayIcon, ReaderIcon, FileTextIcon, ChevronUpIcon, ChevronDownIcon } from '@radix-ui/react-icons';
+import { PlayIcon, ReaderIcon, FileTextIcon, ChevronUpIcon, ChevronDownIcon, ExternalLinkIcon } from '@radix-ui/react-icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import apiService from '../services/api';
 
@@ -100,6 +100,22 @@ const LevelLearnPage: React.FC = () => {
       case 'slide': return 'bg-green-500';
       case 'learn': return 'bg-blue-500';
       default: return 'bg-gray-500';
+    }
+  };
+
+  const generateYouTubeSearchUrl = (title: string, levelTitle: string) => {
+    const searchQuery = encodeURIComponent(`${title} ${levelTitle} tutorial`);
+    return `https://www.youtube.com/results?search_query=${searchQuery}`;
+  };
+
+  const handleLearningCardClick = (item: LearnItem) => {
+    // If there's already a videoUrl, use that
+    if (item.type === 'video' && item.videoUrl) {
+      window.open(item.videoUrl, '_blank', 'noopener,noreferrer');
+    } else {
+      // Otherwise, search YouTube for related content
+      const youtubeUrl = generateYouTubeSearchUrl(item.title, level?.title || '');
+      window.open(youtubeUrl, '_blank', 'noopener,noreferrer');
     }
   };
 
@@ -273,13 +289,20 @@ const LevelLearnPage: React.FC = () => {
           ) : (
             <div className="space-y-4">
               {level.learn.map((item, index) => (
-                <div key={index} className="bg-paperwhite/10 rounded-lg p-4">
+                <div 
+                  key={index} 
+                  className="bg-paperwhite/10 rounded-lg p-4 cursor-pointer hover:bg-paperwhite/20 transition-all duration-200 hover:scale-[1.02] border border-transparent hover:border-trueturquoise/30"
+                  onClick={() => handleLearningCardClick(item)}
+                >
                   <div className="flex items-center gap-3 mb-3">
                     <div className={`p-2 rounded-lg ${getContentColor(item.type)}`}>
                       {getContentIcon(item.type)}
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-paperwhite">{item.title}</h3>
+                      <h3 className="text-lg font-semibold text-paperwhite flex items-center gap-2">
+                        {item.title}
+                        <ExternalLinkIcon className="h-4 w-4 text-trueturquoise" />
+                      </h3>
                       <span className="text-xs text-teallight capitalize">{item.type}</span>
                     </div>
                   </div>
@@ -290,17 +313,16 @@ const LevelLearnPage: React.FC = () => {
                   
                   {item.type === 'video' && item.videoUrl && (
                     <div className="mb-4">
-                      <a
-                        href={item.videoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
-                      >
+                      <div className="inline-flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg">
                         <PlayIcon className="h-4 w-4" />
                         Watch Video
-                      </a>
+                      </div>
                     </div>
                   )}
+                  
+                  <div className="text-xs text-trueturquoise/70 mt-2">
+                    Click to {item.type === 'video' && item.videoUrl ? 'watch video' : 'search YouTube for related content'}
+                  </div>
                 </div>
               ))}
             </div>
