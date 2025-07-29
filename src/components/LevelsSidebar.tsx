@@ -107,7 +107,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
         </button>
       )}
       {/* Sidebar Content */}
-      <div className={`flex-1 flex flex-col py-24 pl-2 pr-2 transition-opacity duration-200 ${sidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none select-none'}`}
+      <div className={`flex-1 flex flex-col py-24 transition-opacity duration-200 ${sidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none select-none'}`}
         style={{ transitionProperty: 'opacity' }}
       >
         {/* Header */}
