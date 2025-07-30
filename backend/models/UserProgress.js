@@ -75,12 +75,13 @@ userProgressSchema.index({ user: 1, 'completedLevels.levelId': 1 });
 userProgressSchema.methods.isLevelUnlocked = function(levelOrder) {
   if (levelOrder === 1) return true; // First level is always unlocked
   
-  // Check if previous level is completed
+  // Check if previous level exists and has exercise completed
   const previousLevel = this.completedLevels.find(
     level => level.levelOrder === levelOrder - 1
   );
   
-  return previousLevel && previousLevel.completedSections.exercise;
+  // Level is unlocked only if previous level exists AND its exercise section is completed
+  return previousLevel && previousLevel.completedSections && previousLevel.completedSections.exercise === true;
 };
 
 // Method to mark level as completed

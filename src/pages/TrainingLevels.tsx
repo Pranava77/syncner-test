@@ -112,9 +112,13 @@ const TrainingLevels: React.FC = () => {
           const statusData = statusResponse.data;
           levelsData = uniqueLevels.map((level: Level) => {
             const levelStatus = statusData.find((status: any) => status.levelId === level.id);
+            // Level 1 is always unlocked, others need proper unlock status
+            const isUnlocked = level.order === 1 ? true : (levelStatus?.isUnlocked ?? false);
+            console.log(`TrainingLevels: Level ${level.order} isUnlocked:`, isUnlocked);
+            
             return {
               ...level,
-              isUnlocked: levelStatus?.isUnlocked ?? (level.order === 1), // First level is always unlocked
+              isUnlocked: isUnlocked,
               isCompleted: levelStatus?.isCompleted ?? false,
               completedSections: levelStatus?.completedSections ?? {
                 learn: false,

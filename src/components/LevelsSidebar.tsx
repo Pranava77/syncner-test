@@ -93,8 +93,10 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
             const levelStatus = statusData.find((status: any) => status.id === level.id);
             console.log(`Sidebar: Level ${level.order} status:`, levelStatus);
             
-            // Once a level is unlocked, it should stay unlocked
-            const isUnlocked = levelStatus?.isUnlocked ?? (level.order === 1);
+            // Level 1 is always unlocked, others need proper unlock status
+            const isUnlocked = level.order === 1 ? true : (levelStatus?.isUnlocked ?? false);
+            console.log(`Sidebar: Level ${level.order} isUnlocked:`, isUnlocked);
+            
             return {
               ...level,
               isUnlocked: isUnlocked,
@@ -105,22 +107,30 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
         } else {
           console.log('Sidebar: No status data found, using fallback');
           // If no status data, set first level as unlocked and others as locked
-          levelsData = levelsData.map((level: Level) => ({
-            ...level,
-            isUnlocked: level.order === 1,
-            isCompleted: false,
-            completedSections: []
-          }));
+          levelsData = levelsData.map((level: Level) => {
+            const isUnlocked = level.order === 1;
+            console.log(`Sidebar: Fallback - Level ${level.order} isUnlocked:`, isUnlocked);
+            return {
+              ...level,
+              isUnlocked: isUnlocked,
+              isCompleted: false,
+              completedSections: []
+            };
+          });
         }
       } catch (statusError) {
         console.error('Error fetching level status:', statusError);
         // If status fetch fails, set first level as unlocked and others as locked
-        levelsData = levelsData.map((level: Level) => ({
-          ...level,
-          isUnlocked: level.order === 1,
-          isCompleted: false,
-          completedSections: []
-        }));
+        levelsData = levelsData.map((level: Level) => {
+          const isUnlocked = level.order === 1;
+          console.log(`Sidebar: Error fallback - Level ${level.order} isUnlocked:`, isUnlocked);
+          return {
+            ...level,
+            isUnlocked: isUnlocked,
+            isCompleted: false,
+            completedSections: []
+          };
+        });
       }
       
       console.log('Sidebar: Final filtered unique levels with status:', levelsData);
