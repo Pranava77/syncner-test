@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../redux/store';
-import { ChevronRightIcon, ReaderIcon, ClipboardIcon, Pencil2Icon, LayersIcon } from '@radix-ui/react-icons';
+import { ChevronRightIcon, ReaderIcon, ClipboardIcon, Pencil2Icon, LayersIcon, LockClosedIcon } from '@radix-ui/react-icons';
 import apiService from '../services/api';
 
 interface Level {
@@ -13,6 +13,9 @@ interface Level {
   learn: any[];
   test: any[];
   exercise: any[];
+  isUnlocked?: boolean;
+  isCompleted?: boolean;
+  completedSections?: string[];
 }
 
 interface LevelsSidebarProps {
@@ -75,7 +78,33 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
         .filter((level: Level) => level.isActive)
         .sort((a: Level, b: Level) => a.order - b.order);
       
-      console.log('Sidebar: Final filtered unique levels:', levelsData);
+      // Fetch level status to determine locked/unlocked state
+      try {
+        const statusResponse = await apiService.getLevelsStatus(levelsData);
+        if (statusResponse && statusResponse.data) {
+          const statusData = statusResponse.data;
+          levelsData = levelsData.map((level: Level) => {
+            const levelStatus = statusData.find((status: any) => status.levelId === level.id);
+            return {
+              ...level,
+              isUnlocked: levelStatus?.isUnlocked ?? (level.order === 1), // First level is always unlocked
+              isCompleted: levelStatus?.isCompleted ?? false,
+              completedSections: levelStatus?.completedSections ?? []
+            };
+          });
+        }
+      } catch (statusError) {
+        console.error('Error fetching level status:', statusError);
+        // If status fetch fails, set first level as unlocked and others as locked
+        levelsData = levelsData.map((level: Level) => ({
+          ...level,
+          isUnlocked: level.order === 1,
+          isCompleted: false,
+          completedSections: []
+        }));
+      }
+      
+      console.log('Sidebar: Final filtered unique levels with status:', levelsData);
       setLevels(levelsData);
     } catch (error) {
       console.error('Error fetching levels for sidebar:', error);
@@ -138,16 +167,31 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
             levels.map((level) => (
               <div key={level.id}>
               <button
-                  onClick={() => navigate(`/student/training/${level.id}/learn`)}
+                  onClick={() => {
+                    if (level.isUnlocked) {
+                      navigate(`/student/training/${level.id}/learn`);
+                    } else {
+                      alert('This level is locked. Complete the previous level\'s exercise to unlock it.');
+                    }
+                  }}
                   className={`w-full flex items-center py-2 transition-colors text-sm font-${currentLevel === level.id ? 'semibold' : 'normal'} text-left
-                    ${currentLevel === level.id ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'} ${!sidebarOpen ? 'justify-center' : ''}`}
+                    ${currentLevel === level.id ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 
+                      level.isUnlocked ? 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise' : 
+                      'text-teallight/50 cursor-not-allowed'} ${!sidebarOpen ? 'justify-center' : ''}`}
                 style={{ borderRadius: 0 }}
-                disabled={!sidebarOpen}
+                disabled={!sidebarOpen || !level.isUnlocked}
               >
-                  <LayersIcon className={`h-5 w-5 mr-2 ${currentLevel === level.id ? 'text-trueturquoise' : 'text-paperwhite'}`} />
+                  {level.isUnlocked ? (
+                    <LayersIcon className={`h-5 w-5 mr-2 ${currentLevel === level.id ? 'text-trueturquoise' : 'text-paperwhite'}`} />
+                  ) : (
+                    <LockClosedIcon className="h-5 w-5 mr-2 text-teallight/50" />
+                  )}
                   {sidebarOpen && (
                     <div className="flex-1 text-left">
-                      <div className="font-medium">Level {level.order}</div>
+                      <div className="font-medium flex items-center gap-2">
+                        Level {level.order}
+                        {!level.isUnlocked && <LockClosedIcon className="h-3 w-3 text-teallight/50" />}
+                      </div>
                       <div className="text-xs text-teallight truncate">{level.title}</div>
                       <div className="text-xs text-teallight/60 flex items-center gap-2 mt-1">
                         <span>{level.learn?.length || 0} learn</span>
@@ -157,7 +201,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                     </div>
                   )}
               </button>
-                {sidebarOpen && currentLevel === level.id && (
+                {sidebarOpen && currentLevel === level.id && level.isUnlocked && (
                 <div className="ml-2 mt-2 flex flex-col space-y-1">
                   <button
                     className={`w-full flex items-center gap-2 text-left py-2 transition-colors text-xs font-${currentSection === 'learn' ? 'semibold' : 'normal'}

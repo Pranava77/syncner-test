@@ -107,13 +107,47 @@ const TrainingLevels: React.FC = () => {
       // Get levels status with unlock information
       try {
         const statusResponse = await apiService.getLevelsStatus(uniqueLevels);
-        if (statusResponse && statusResponse.data && statusResponse.data.levels) {
-          levelsData = statusResponse.data.levels;
+        if (statusResponse && statusResponse.data) {
+          const statusData = statusResponse.data;
+          levelsData = uniqueLevels.map((level: Level) => {
+            const levelStatus = statusData.find((status: any) => status.levelId === level.id);
+            return {
+              ...level,
+              isUnlocked: levelStatus?.isUnlocked ?? (level.order === 1), // First level is always unlocked
+              isCompleted: levelStatus?.isCompleted ?? false,
+              completedSections: levelStatus?.completedSections ?? {
+                learn: false,
+                exercise: false,
+                test: false
+              }
+            };
+          });
+        } else {
+          // If no status data, set first level as unlocked and others as locked
+          levelsData = uniqueLevels.map((level: Level) => ({
+            ...level,
+            isUnlocked: level.order === 1,
+            isCompleted: false,
+            completedSections: {
+              learn: false,
+              exercise: false,
+              test: false
+            }
+          }));
         }
       } catch (statusError) {
         console.error('Error fetching levels status:', statusError);
-        // Continue with basic levels data if status fetch fails
-        levelsData = uniqueLevels;
+        // If status fetch fails, set first level as unlocked and others as locked
+        levelsData = uniqueLevels.map((level: Level) => ({
+          ...level,
+          isUnlocked: level.order === 1,
+          isCompleted: false,
+          completedSections: {
+            learn: false,
+            exercise: false,
+            test: false
+          }
+        }));
       }
       
       setLevels(levelsData);
