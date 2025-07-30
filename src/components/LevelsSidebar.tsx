@@ -176,15 +176,6 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
       <div className={`flex-1 flex flex-col py-24 pl-2 transition-opacity duration-200 ${sidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none select-none'}`}
         style={{ transitionProperty: 'opacity' }}
       >
-        
-        {/* Closed Sidebar Gradient Line */}
-        {!sidebarOpen && (
-          <div className="absolute inset-y-0 left-1/2 transform -translate-x-1/2 w-1 bg-gradient-to-b from-trueturquoise via-teallight to-trueturquoise flex items-center justify-center">
-            <div className="transform -rotate-90 text-trueturquoise font-semibold text-sm py-4">
-              Levels
-            </div>
-          </div>
-        )}
         {/* Header */}
         <div className={`flex items-center justify-between mb-4 ${!sidebarOpen ? 'invisible' : ''}`}>
           <h2 className="text-lg font-semibold text-paperwhite flex items-center gap-2">
@@ -192,6 +183,47 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
             {loading ? 'Loading...' : `Levels (${levels.length})`}
           </h2>
         </div>
+        
+        {/* Closed Sidebar Modern Design */}
+        {!sidebarOpen && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            {/* Vertical Level Indicators */}
+            <div className="flex flex-col items-center space-y-3">
+              {levels.slice(0, 6).map((level, index) => (
+                <div
+                  key={level.id}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${
+                    currentLevel === level.id
+                      ? 'bg-trueturquoise text-offblack shadow-lg shadow-trueturquoise/30'
+                      : level.isUnlocked
+                      ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+                      : 'bg-paperwhite/10 text-teallight/50 border border-paperwhite/20'
+                  }`}
+                  title={`Level ${level.order}: ${level.title}`}
+                >
+                  {level.order}
+                </div>
+              ))}
+              {levels.length > 6 && (
+                <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-paperwhite/10 text-teallight/50 border border-paperwhite/20">
+                  +{levels.length - 6}
+                </div>
+              )}
+            </div>
+            
+            {/* Progress Indicator */}
+            <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+              <div className="w-1 h-16 bg-paperwhite/10 rounded-full overflow-hidden">
+                <div 
+                  className="bg-gradient-to-t from-trueturquoise to-teallight transition-all duration-500"
+                  style={{ 
+                    height: `${Math.min((levels.filter(l => l.isUnlocked).length / levels.length) * 100, 100)}%` 
+                  }}
+                ></div>
+              </div>
+            </div>
+          </div>
+        )}
         
         {/* Levels Navigation */}
         <nav className="flex-1 space-y-4 overflow-y-auto">
