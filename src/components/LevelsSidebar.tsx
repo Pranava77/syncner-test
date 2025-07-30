@@ -173,7 +173,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
         </button>
       )}
       {/* Sidebar Content */}
-      <div className="flex-1 flex flex-col py-24 pl-2 relative">
+      <div className={`flex-1 flex flex-col relative ${sidebarOpen ? 'py-24 pl-2' : 'py-2'}`}>
         {/* Header - Only visible when open */}
         {sidebarOpen && (
           <div className="flex items-center justify-between mb-4 transition-opacity duration-200">
