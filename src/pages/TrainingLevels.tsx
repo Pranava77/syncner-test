@@ -4,7 +4,7 @@ import { useAppSelector } from '../redux/store';
 import LevelsSidebar from '../components/LevelsSidebar';
 import apiService from '../services/api';
 import { motion } from 'framer-motion';
-import { StarIcon, ClockIcon, CheckCircledIcon, Cross1Icon, ReaderIcon, ClipboardIcon, PlayIcon } from '@radix-ui/react-icons';
+import { StarIcon, ClockIcon, CheckCircledIcon, Cross1Icon, ReaderIcon, ClipboardIcon, PlayIcon, LockClosedIcon } from '@radix-ui/react-icons';
 
 interface LearnItem {
   type: 'video' | 'reading' | 'slide' | 'other';
@@ -45,6 +45,13 @@ interface Level {
   estimatedHours: number;
   progress?: number;
   status?: string;
+  isUnlocked?: boolean;
+  isCompleted?: boolean;
+  completedSections?: {
+    learn: boolean;
+    exercise: boolean;
+    test: boolean;
+  };
 }
 
 const TrainingLevels: React.FC = () => {
@@ -97,7 +104,17 @@ const TrainingLevels: React.FC = () => {
       uniqueLevels.sort((a: Level, b: Level) => a.order - b.order);
       console.log('Final unique levels data:', uniqueLevels);
       
-      levelsData = uniqueLevels;
+      // Get levels status with unlock information
+      try {
+        const statusResponse = await apiService.getLevelsStatus(uniqueLevels);
+        if (statusResponse && statusResponse.data && statusResponse.data.levels) {
+          levelsData = statusResponse.data.levels;
+        }
+      } catch (statusError) {
+        console.error('Error fetching levels status:', statusError);
+        // Continue with basic levels data if status fetch fails
+        levelsData = uniqueLevels;
+      }
       
       setLevels(levelsData);
       setError(null); // Clear any errors on success
@@ -144,7 +161,12 @@ const TrainingLevels: React.FC = () => {
   };
 
   const handleLevelClick = (level: Level) => {
-    navigate(`/student/training/${level.id}/learn`);
+    if (level.isUnlocked) {
+      navigate(`/student/training/${level.id}/learn`);
+    } else {
+      // Show message that level is locked
+      alert('This level is locked. Complete the previous level\'s exercises to unlock it.');
+    }
   };
 
   if (loading) {
@@ -238,12 +260,23 @@ const TrainingLevels: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                   onClick={() => handleLevelClick(level)}
-                  className="bg-offblack border border-paperwhite/20 rounded-lg p-6 cursor-pointer hover:border-trueturquoise/50 hover:bg-paperwhite/5 transition-all duration-300 relative"
+                  className={`bg-offblack border rounded-lg p-6 transition-all duration-300 relative ${
+                    level.isUnlocked 
+                      ? 'border-paperwhite/20 cursor-pointer hover:border-trueturquoise/50 hover:bg-paperwhite/5' 
+                      : 'border-paperwhite/10 cursor-not-allowed opacity-60'
+                  }`}
                 >
                   {/* Level Order Indicator */}
                   <div className="absolute top-2 right-2 bg-paperwhite/10 text-paperwhite/60 text-xs px-2 py-1 rounded-full">
                     #{level.order}
                   </div>
+                  
+                  {/* Lock Icon for locked levels */}
+                  {!level.isUnlocked && (
+                    <div className="absolute top-2 left-2 bg-red-500/20 text-red-400 p-2 rounded-full">
+                      <LockClosedIcon className="h-4 w-4" />
+                    </div>
+                  )}
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                       {/* Level Number Badge */}

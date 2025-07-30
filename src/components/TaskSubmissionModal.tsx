@@ -7,16 +7,19 @@ import {
   CheckCircledIcon,
   Cross1Icon 
 } from '@radix-ui/react-icons';
+import apiService from '../services/api';
 
 interface TaskSubmissionModalProps {
   isOpen: boolean;
   onClose: () => void;
   exercise: {
+    id?: string;
     title: string;
     description: string;
     resources: string[];
     difficulty?: string;
     creditPoints?: number;
+    order?: number;
   };
 }
 
@@ -45,10 +48,22 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
     }));
   };
 
-  const handleSubmit = () => {
-    // Handle form submission logic here
-    console.log('Form submitted:', formData);
-    onClose();
+  const handleSubmit = async () => {
+    try {
+      // Submit exercise to progress tracking
+      await apiService.submitExercise(exercise.id || '', exercise.title);
+      
+      // Mark exercise section as completed
+      if (exercise.id && exercise.order) {
+        await apiService.markLevelCompleted(exercise.id, exercise.order, 'exercise');
+      }
+      
+      console.log('Exercise submitted successfully:', formData);
+      onClose();
+    } catch (error) {
+      console.error('Error submitting exercise:', error);
+      // You could add error handling UI here
+    }
   };
 
   if (!isOpen) return null;

@@ -32,6 +32,7 @@ import settingsRoutes from './routes/settingsRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
 import attendanceRoutes from './routes/attendanceRoutes.js';
 import curriculumRoutes from './routes/curriculumRoutes.js';
+import progressRoutes from './routes/progressRoutes.js';
 
 // Import middleware
 import { errorHandler } from './middleware/errorHandler.js';
@@ -44,6 +45,7 @@ import './models/Track.js';
 import './models/Curriculum.js';
 import './models/Attendance.js';
 import './models/Settings.js';
+import './models/UserProgress.js';
 
 // Import geminiService
 import geminiService from './services/geminiService.js';
@@ -128,6 +130,7 @@ app.use('/api/admin/settings', settingsRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api/curriculum', curriculumRoutes);
+app.use('/api/progress', progressRoutes);
 
 // Health check endpoint
 const serverStartTime = Date.now();

@@ -283,7 +283,11 @@ const LevelExercisePage: React.FC = () => {
         <TaskSubmissionModal
           isOpen={isModalOpen}
           onClose={handleCloseModal}
-          exercise={selectedExercise}
+          exercise={{
+            ...selectedExercise,
+            id: level?.id,
+            order: level?.order
+          }}
         />
       )}
     </div>

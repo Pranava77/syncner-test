@@ -203,6 +203,51 @@ class ApiService {
     return this.handleResponse(response);
   }
 
+  // Progress endpoints
+  async getUserProgress(careerTrack: string) {
+    const response = await fetch(`${this.baseURL}/progress/${careerTrack}`, {
+      headers: this.getHeaders(),
+      credentials: 'include',
+    });
+    return this.handleResponse(response);
+  }
+
+  async markLevelCompleted(levelId: string, levelOrder: number, section: string) {
+    const response = await fetch(`${this.baseURL}/progress/complete`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      credentials: 'include',
+      body: JSON.stringify({ levelId, levelOrder, section }),
+    });
+    return this.handleResponse(response);
+  }
+
+  async submitExercise(levelId: string, exerciseTitle: string) {
+    const response = await fetch(`${this.baseURL}/progress/submit-exercise`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      credentials: 'include',
+      body: JSON.stringify({ levelId, exerciseTitle }),
+    });
+    return this.handleResponse(response);
+  }
+
+  async checkLevelUnlocked(levelOrder: number) {
+    const response = await fetch(`${this.baseURL}/progress/unlocked/${levelOrder}`, {
+      headers: this.getHeaders(),
+      credentials: 'include',
+    });
+    return this.handleResponse(response);
+  }
+
+  async getLevelsStatus(levels: any[]) {
+    const response = await fetch(`${this.baseURL}/progress/levels-status?levels=${encodeURIComponent(JSON.stringify(levels))}`, {
+      headers: this.getHeaders(),
+      credentials: 'include',
+    });
+    return this.handleResponse(response);
+  }
+
   // Admin endpoints
   async getStudents(filters?: any) {
     let url = `${this.baseURL}/admin/users`;
