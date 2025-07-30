@@ -60,6 +60,7 @@ const TrainingLevels: React.FC = () => {
   const [levels, setLevels] = useState<Level[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   const navigate = useNavigate();
 
   const fetchLevels = async () => {
@@ -245,7 +246,11 @@ const TrainingLevels: React.FC = () => {
 
   return (
     <div className="flex h-screen bg-offblack w-full">
-      <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      <LevelsSidebar 
+        sidebarOpen={sidebarOpen} 
+        setSidebarOpen={setSidebarOpen} 
+        refreshTrigger={refreshTrigger}
+      />
       <main className="flex-1 overflow-y-auto p-6 lg:p-12">
         <div className="max-w-6xl mx-auto">
           <div className="mb-8">

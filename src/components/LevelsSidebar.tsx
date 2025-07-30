@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../redux/store';
-import { ChevronRightIcon, ReaderIcon, ClipboardIcon, Pencil2Icon, LayersIcon, LockClosedIcon } from '@radix-ui/react-icons';
+import { ChevronRightIcon, ReaderIcon, ClipboardIcon, Pencil2Icon, LayersIcon, LockClosedIcon, LockOpen1Icon } from '@radix-ui/react-icons';
 import apiService from '../services/api';
 
 interface Level {
@@ -23,13 +23,15 @@ interface LevelsSidebarProps {
   setSidebarOpen?: (open: boolean) => void;
   currentLevel?: string;
   currentSection?: string;
+  refreshTrigger?: number; // Add this to trigger refresh from parent
 }
 
 const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
   sidebarOpen = true,
   setSidebarOpen,
   currentLevel,
-  currentSection
+  currentSection,
+  refreshTrigger
 }) => {
   const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.auth);
@@ -85,9 +87,11 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
           const statusData = statusResponse.data;
           levelsData = levelsData.map((level: Level) => {
             const levelStatus = statusData.find((status: any) => status.levelId === level.id);
+            // Once a level is unlocked, it should stay unlocked
+            const isUnlocked = levelStatus?.isUnlocked ?? (level.order === 1);
             return {
               ...level,
-              isUnlocked: levelStatus?.isUnlocked ?? (level.order === 1), // First level is always unlocked
+              isUnlocked: isUnlocked,
               isCompleted: levelStatus?.isCompleted ?? false,
               completedSections: levelStatus?.completedSections ?? []
             };
@@ -118,6 +122,14 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
     console.log('LevelsSidebar: User data changed:', user);
     fetchLevels();
   }, [fetchLevels]);
+
+  // Refresh levels when refreshTrigger changes
+  useEffect(() => {
+    if (refreshTrigger) {
+      console.log('LevelsSidebar: Refresh triggered');
+      fetchLevels();
+    }
+  }, [refreshTrigger, fetchLevels]);
 
   return (
     <aside
@@ -182,7 +194,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                 disabled={!sidebarOpen || !level.isUnlocked}
               >
                   {level.isUnlocked ? (
-                    <LayersIcon className={`h-5 w-5 mr-2 ${currentLevel === level.id ? 'text-trueturquoise' : 'text-paperwhite'}`} />
+                    <LockOpen1Icon className={`h-5 w-5 mr-2 ${currentLevel === level.id ? 'text-trueturquoise' : 'text-green-400'}`} />
                   ) : (
                     <LockClosedIcon className="h-5 w-5 mr-2 text-teallight/50" />
                   )}
@@ -190,7 +202,11 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                     <div className="flex-1 text-left">
                       <div className="font-medium flex items-center gap-2">
                         Level {level.order}
-                        {!level.isUnlocked && <LockClosedIcon className="h-3 w-3 text-teallight/50" />}
+                        {level.isUnlocked ? (
+                          <LockOpen1Icon className="h-3 w-3 text-green-400" />
+                        ) : (
+                          <LockClosedIcon className="h-3 w-3 text-teallight/50" />
+                        )}
                       </div>
                       <div className="text-xs text-teallight truncate">{level.title}</div>
                       <div className="text-xs text-teallight/60 flex items-center gap-2 mt-1">

@@ -33,6 +33,7 @@ const LevelTestPage: React.FC = () => {
   const [level, setLevel] = useState<Level | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [answers, setAnswers] = useState<{ [qIdx: number]: boolean[] }>({});
   const [timeLeft, setTimeLeft] = useState(TEST_DURATION);
   const [submitted, setSubmitted] = useState(false);
@@ -131,7 +132,7 @@ const LevelTestPage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex h-screen bg-offblack overflow-x-hidden">
-        <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" />
+        <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-trueturquoise mx-auto mb-4"></div>
@@ -145,7 +146,7 @@ const LevelTestPage: React.FC = () => {
   if (error || !level) {
     return (
       <div className="flex h-screen bg-offblack overflow-x-hidden">
-        <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" />
+        <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
           <div className="text-center">
             <p className="text-rust text-lg mb-4">{error || 'Level not found'}</p>
@@ -166,7 +167,7 @@ const LevelTestPage: React.FC = () => {
   if (!level.test || level.test.length === 0 || validQuestions.length === 0) {
     return (
       <div className="flex h-screen bg-offblack overflow-x-hidden">
-        <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" />
+        <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
           <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 text-center">
             <div className="text-paperwhite/30 text-6xl mb-4">📝</div>
@@ -186,7 +187,7 @@ const LevelTestPage: React.FC = () => {
 
   return (
     <div className="flex h-screen bg-offblack overflow-x-hidden">
-      <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" />
+      <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
       <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center" ref={scrollContainerRef}>
           {/* Test Header */}
           <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">

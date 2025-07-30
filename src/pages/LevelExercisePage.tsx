@@ -37,6 +37,7 @@ const LevelExercisePage: React.FC = () => {
   const [selectedExercise, setSelectedExercise] = useState<ExerciseItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [allLevels, setAllLevels] = useState<Level[]>([]);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const fetchLevel = useCallback(async () => {
     try {
@@ -105,6 +106,8 @@ const LevelExercisePage: React.FC = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedExercise(null);
+    // Trigger sidebar refresh when modal is closed (exercise might have been completed)
+    setRefreshTrigger(prev => prev + 1);
   };
 
   const handleUnlockNextLevel = () => {
@@ -126,7 +129,7 @@ const LevelExercisePage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex h-screen bg-offblack overflow-x-hidden">
-        <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="exercise" />
+        <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="exercise" refreshTrigger={refreshTrigger} />
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-trueturquoise mx-auto mb-4"></div>
@@ -140,7 +143,7 @@ const LevelExercisePage: React.FC = () => {
   if (error || !level) {
     return (
       <div className="flex h-screen bg-offblack overflow-x-hidden">
-        <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="exercise" />
+        <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="exercise" refreshTrigger={refreshTrigger} />
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
           <div className="text-center">
             <p className="text-red-400 text-lg mb-4">{error || 'Level not found'}</p>
@@ -161,7 +164,7 @@ const LevelExercisePage: React.FC = () => {
   if (!level.exercise || level.exercise.length === 0 || validExercises.length === 0) {
     return (
       <div className="flex h-screen bg-offblack overflow-x-hidden">
-        <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="exercise" />
+        <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="exercise" refreshTrigger={refreshTrigger} />
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
           <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 text-center">
             <div className="text-paperwhite/30 text-6xl mb-4">💪</div>
@@ -243,7 +246,7 @@ const LevelExercisePage: React.FC = () => {
 
   return (
     <div className="flex h-screen bg-offblack overflow-x-hidden">
-      <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="exercise" />
+      <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="exercise" refreshTrigger={refreshTrigger} />
       <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
         {/* Exercise Header */}
         <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
