@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import LevelsSidebar from '../components/LevelsSidebar';
+import TaskSubmissionModal from '../components/TaskSubmissionModal';
 import apiService from '../services/api';
 
 interface Level {
@@ -33,6 +34,8 @@ const LevelExercisePage: React.FC = () => {
   const [level, setLevel] = useState<Level | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedExercise, setSelectedExercise] = useState<ExerciseItem | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchLevel = useCallback(async () => {
     try {
@@ -77,6 +80,16 @@ const LevelExercisePage: React.FC = () => {
 
   const statusColor = (status: string) =>
     status === 'Completed' ? 'bg-trueturquoise/20 text-trueturquoise' : 'bg-paperwhite/10 text-teallight';
+
+  const handleViewExercise = (exercise: ExerciseItem) => {
+    setSelectedExercise(exercise);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedExercise(null);
+  };
 
   if (loading) {
     return (
@@ -180,7 +193,10 @@ const LevelExercisePage: React.FC = () => {
                 <td className="py-3 px-4">
                   <div className="flex items-center gap-2">
                     <div className="w-4 h-4 bg-paperwhite/20 rounded"></div>
-                    <button className="bg-paperwhite/10 text-paperwhite px-3 py-1 rounded text-sm hover:bg-paperwhite/20 transition-colors">
+                    <button 
+                      onClick={() => handleViewExercise(exercise)}
+                      className="bg-paperwhite/10 text-paperwhite px-3 py-1 rounded text-sm hover:bg-paperwhite/20 transition-colors"
+                    >
                       View
                     </button>
                   </div>
@@ -235,6 +251,15 @@ const LevelExercisePage: React.FC = () => {
           </button>
         </div>
       </main>
+
+      {/* Task Submission Modal */}
+      {selectedExercise && (
+        <TaskSubmissionModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          exercise={selectedExercise}
+        />
+      )}
     </div>
   );
 };
