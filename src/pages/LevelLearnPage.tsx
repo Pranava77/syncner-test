@@ -331,10 +331,7 @@ const LevelLearnPage: React.FC = () => {
         </div>
 
         {/* Action Buttons */}
-        <div className="w-full max-w-5xl flex flex-col sm:flex-row items-center justify-between gap-4 mt-4 mb-8">
-          <button className="w-full sm:w-auto bg-paperwhite text-offblack px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-trueturquoise hover:text-offblack transition-colors mb-2 sm:mb-0">
-            Mark as Completed ▼
-          </button>
+        <div className="w-full max-w-5xl flex flex-col sm:flex-row items-center justify-center gap-4 mt-4 mb-8">
           <button 
             onClick={handleTakeTest}
             disabled={level.test.length === 0}

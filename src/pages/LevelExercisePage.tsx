@@ -320,22 +320,6 @@ const LevelExercisePage: React.FC = () => {
               'Unlock Next Level'
             )}
           </button>
-          
-          {/* Debug button to check current level status */}
-          <button 
-            onClick={async () => {
-              try {
-                console.log('Checking level status for:', level?.id);
-                const response = await apiService.checkLevelUnlocked(level?.order || 1);
-                console.log('Level unlock status:', response);
-              } catch (error) {
-                console.error('Error checking level status:', error);
-              }
-            }}
-            className="w-full sm:w-auto bg-paperwhite/10 text-paperwhite px-4 py-2 rounded-lg text-sm hover:bg-paperwhite/20 transition-colors"
-          >
-            Debug: Check Level Status
-          </button>
         </div>
       </main>
 

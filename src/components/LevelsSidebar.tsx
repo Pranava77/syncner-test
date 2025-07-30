@@ -225,13 +225,8 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                   )}
                   {sidebarOpen && (
                     <div className="flex-1 text-left">
-                      <div className="font-medium flex items-center gap-2">
+                      <div className="font-medium">
                         Level {level.order}
-                        {level.isUnlocked ? (
-                          <LockOpen1Icon className="h-3 w-3 text-green-400" />
-                        ) : (
-                          <LockClosedIcon className="h-3 w-3 text-teallight/50" />
-                        )}
                       </div>
                       <div className="text-xs text-teallight truncate">{level.title}</div>
                       <div className="text-xs text-teallight/60 flex items-center gap-2 mt-1">
