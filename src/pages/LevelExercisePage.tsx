@@ -91,6 +91,12 @@ const LevelExercisePage: React.FC = () => {
     setSelectedExercise(null);
   };
 
+  const handleUnlockNextLevel = () => {
+    // Navigate to the next level (Level 2)
+    const nextLevelId = '2'; // Assuming Level 2 has ID '2'
+    navigate(`/student/training/${nextLevelId}/learn`);
+  };
+
   if (loading) {
     return (
       <div className="flex h-screen bg-offblack overflow-x-hidden">
@@ -238,7 +244,7 @@ const LevelExercisePage: React.FC = () => {
         {/* Action Buttons */}
         <div className="w-full max-w-5xl flex flex-col sm:flex-row items-center justify-center gap-4 mt-8 mb-8">
           <button 
-            onClick={() => navigate(`/student/training/${levelId}/test`)}
+            onClick={handleUnlockNextLevel}
             className="w-full sm:w-auto bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-teallight transition-colors"
           >
             Unlock Next Level
