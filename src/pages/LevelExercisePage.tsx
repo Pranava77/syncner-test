@@ -38,6 +38,7 @@ const LevelExercisePage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [allLevels, setAllLevels] = useState<Level[]>([]);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [unlockingLevel, setUnlockingLevel] = useState(false);
 
   const fetchLevel = useCallback(async () => {
     try {
@@ -110,19 +111,51 @@ const LevelExercisePage: React.FC = () => {
     setRefreshTrigger(prev => prev + 1);
   };
 
-  const handleUnlockNextLevel = () => {
-    if (level && level.order && allLevels.length > 0) {
-      // Find the next level by order
-      const nextLevel = allLevels.find(l => l.order === level.order + 1);
-      if (nextLevel) {
-        navigate(`/student/training/${nextLevel.id}/learn`);
+  const handleUnlockNextLevel = async () => {
+    try {
+      setUnlockingLevel(true);
+      
+      // Mark the current level as completed (exercise section)
+      if (level && level.id && level.order) {
+        await apiService.markLevelCompleted(level.id, level.order, 'exercise');
+        console.log('Level marked as completed:', level.id);
+      }
+      
+      // Trigger sidebar refresh to update unlock status
+      setRefreshTrigger(prev => prev + 1);
+      
+      // Small delay to ensure sidebar refresh completes
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Navigate to next level
+      if (level && level.order && allLevels.length > 0) {
+        // Find the next level by order
+        const nextLevel = allLevels.find(l => l.order === level.order + 1);
+        if (nextLevel) {
+          navigate(`/student/training/${nextLevel.id}/learn`);
+        } else {
+          // If no next level, go to training levels page
+          navigate('/student/training');
+        }
       } else {
-        // If no next level, go to training levels page
+        // Fallback to training levels page
         navigate('/student/training');
       }
-    } else {
-      // Fallback to training levels page
-      navigate('/student/training');
+    } catch (error) {
+      console.error('Error marking level as completed:', error);
+      // Still navigate even if marking as completed fails
+      if (level && level.order && allLevels.length > 0) {
+        const nextLevel = allLevels.find(l => l.order === level.order + 1);
+        if (nextLevel) {
+          navigate(`/student/training/${nextLevel.id}/learn`);
+        } else {
+          navigate('/student/training');
+        }
+      } else {
+        navigate('/student/training');
+      }
+    } finally {
+      setUnlockingLevel(false);
     }
   };
 
@@ -274,9 +307,17 @@ const LevelExercisePage: React.FC = () => {
         <div className="w-full max-w-5xl flex flex-col sm:flex-row items-center justify-center gap-4 mt-8 mb-8">
           <button 
             onClick={handleUnlockNextLevel}
-            className="w-full sm:w-auto bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-teallight transition-colors"
+            disabled={unlockingLevel}
+            className="w-full sm:w-auto bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-teallight transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           >
-            Unlock Next Level
+            {unlockingLevel ? (
+              <>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-offblack"></div>
+                Unlocking...
+              </>
+            ) : (
+              'Unlock Next Level'
+            )}
           </button>
         </div>
       </main>
