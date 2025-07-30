@@ -173,16 +173,16 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
         </button>
       )}
       {/* Sidebar Content */}
-      <div className={`flex-1 flex flex-col py-24 pl-2 transition-opacity duration-200 ${sidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none select-none'}`}
-        style={{ transitionProperty: 'opacity' }}
-      >
-        {/* Header */}
-        <div className={`flex items-center justify-between mb-4 ${!sidebarOpen ? 'invisible' : ''}`}>
-          <h2 className="text-lg font-semibold text-paperwhite flex items-center gap-2">
-            <LayersIcon className="h-5 w-5 text-trueturquoise" /> 
-            {loading ? 'Loading...' : `Levels (${levels.length})`}
-          </h2>
-        </div>
+      <div className="flex-1 flex flex-col py-24 pl-2 relative">
+        {/* Header - Only visible when open */}
+        {sidebarOpen && (
+          <div className="flex items-center justify-between mb-4 transition-opacity duration-200">
+            <h2 className="text-lg font-semibold text-paperwhite flex items-center gap-2">
+              <LayersIcon className="h-5 w-5 text-trueturquoise" /> 
+              {loading ? 'Loading...' : `Levels (${levels.length})`}
+            </h2>
+          </div>
+        )}
         
         {/* Closed Sidebar Modern Design */}
         {!sidebarOpen && (
@@ -225,8 +225,9 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
           </div>
         )}
         
-        {/* Levels Navigation */}
-        <nav className="flex-1 space-y-4 overflow-y-auto">
+        {/* Levels Navigation - Only visible when open */}
+        {sidebarOpen && (
+          <nav className="flex-1 space-y-4 overflow-y-auto">
           {loading ? (
             <div className="text-center py-8">
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-trueturquoise mx-auto mb-2"></div>
@@ -313,6 +314,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
             ))
           )}
         </nav>
+        )}
       </div>
     </aside>
   );
