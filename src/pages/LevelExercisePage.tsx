@@ -36,6 +36,7 @@ const LevelExercisePage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedExercise, setSelectedExercise] = useState<ExerciseItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [allLevels, setAllLevels] = useState<Level[]>([]);
 
   const fetchLevel = useCallback(async () => {
     try {
@@ -78,6 +79,21 @@ const LevelExercisePage: React.FC = () => {
     }
   }, [levelId, fetchLevel]);
 
+  const fetchAllLevels = useCallback(async () => {
+    try {
+      const response = await apiService.getLevels();
+      if (response && response.data) {
+        setAllLevels(Array.isArray(response.data) ? response.data : [response.data]);
+      }
+    } catch (error) {
+      console.error('Error fetching all levels:', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchAllLevels();
+  }, [fetchAllLevels]);
+
   const statusColor = (status: string) =>
     status === 'Completed' ? 'bg-trueturquoise/20 text-trueturquoise' : 'bg-paperwhite/10 text-teallight';
 
@@ -92,9 +108,19 @@ const LevelExercisePage: React.FC = () => {
   };
 
   const handleUnlockNextLevel = () => {
-    // Navigate to the next level (Level 2)
-    const nextLevelId = '2'; // Assuming Level 2 has ID '2'
-    navigate(`/student/training/${nextLevelId}/learn`);
+    if (level && level.order && allLevels.length > 0) {
+      // Find the next level by order
+      const nextLevel = allLevels.find(l => l.order === level.order + 1);
+      if (nextLevel) {
+        navigate(`/student/training/${nextLevel.id}/learn`);
+      } else {
+        // If no next level, go to training levels page
+        navigate('/student/training');
+      }
+    } else {
+      // Fallback to training levels page
+      navigate('/student/training');
+    }
   };
 
   if (loading) {
