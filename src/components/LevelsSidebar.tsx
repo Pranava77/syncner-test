@@ -82,31 +82,17 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
       
       // Fetch level status to determine locked/unlocked state
       try {
-        console.log('Sidebar: Fetching level status for levels:', levelsData.map((l: Level) => ({ id: l.id, order: l.order })));
         const statusResponse = await apiService.getLevelsStatus(levelsData);
         console.log('Sidebar: Status response:', statusResponse);
+        
         if (statusResponse && statusResponse.data && statusResponse.data.levels) {
-          const levelsWithStatus = statusResponse.data.levels;
-          levelsData = levelsWithStatus.map((levelWithStatus: any) => ({
-            ...levelWithStatus,
-            // Ensure the level data is properly merged
-            id: levelWithStatus.id,
-            title: levelWithStatus.title,
-            order: levelWithStatus.order,
-            isActive: levelWithStatus.isActive,
-            careerTrack: levelWithStatus.careerTrack,
-            learn: levelWithStatus.learn || [],
-            test: levelWithStatus.test || [],
-            exercise: levelWithStatus.exercise || [],
-            isUnlocked: levelWithStatus.isUnlocked,
-            isCompleted: levelWithStatus.isCompleted,
-            completedSections: levelWithStatus.completedSections || []
-          }));
-        } else if (statusResponse && statusResponse.data) {
-          // Fallback: if levels array is not available, use the data directly
-          const statusData = statusResponse.data;
+          const statusData = statusResponse.data.levels;
+          console.log('Sidebar: Status data:', statusData);
+          
           levelsData = levelsData.map((level: Level) => {
-            const levelStatus = statusData.find((status: any) => status.levelId === level.id);
+            const levelStatus = statusData.find((status: any) => status.id === level.id);
+            console.log(`Sidebar: Level ${level.order} status:`, levelStatus);
+            
             // Once a level is unlocked, it should stay unlocked
             const isUnlocked = levelStatus?.isUnlocked ?? (level.order === 1);
             return {
@@ -116,6 +102,15 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
               completedSections: levelStatus?.completedSections ?? []
             };
           });
+        } else {
+          console.log('Sidebar: No status data found, using fallback');
+          // If no status data, set first level as unlocked and others as locked
+          levelsData = levelsData.map((level: Level) => ({
+            ...level,
+            isUnlocked: level.order === 1,
+            isCompleted: false,
+            completedSections: []
+          }));
         }
       } catch (statusError) {
         console.error('Error fetching level status:', statusError);
@@ -129,10 +124,6 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
       }
       
       console.log('Sidebar: Final filtered unique levels with status:', levelsData);
-      console.log('Sidebar: Unlock status for each level:');
-      levelsData.forEach((level: Level) => {
-        console.log(`Level ${level.order}: isUnlocked = ${level.isUnlocked}, isCompleted = ${level.isCompleted}`);
-      });
       setLevels(levelsData);
     } catch (error) {
       console.error('Error fetching levels for sidebar:', error);
@@ -181,6 +172,16 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
             <LayersIcon className="h-5 w-5 text-trueturquoise" /> 
             {loading ? 'Loading...' : `Levels (${levels.length})`}
           </h2>
+          <button
+            onClick={() => {
+              console.log('Manual refresh triggered');
+              fetchLevels();
+            }}
+            className="text-trueturquoise hover:text-teallight text-xs"
+            title="Refresh levels"
+          >
+            🔄
+          </button>
         </div>
         
         {/* Levels Navigation */}
@@ -223,6 +224,11 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                     <LockClosedIcon className="h-5 w-5 mr-2 text-teallight/50" />
                   )}
                   {sidebarOpen && (
+                    <div className="text-xs text-teallight/60 ml-1">
+                      {level.isUnlocked ? '🔓' : '🔒'}
+                    </div>
+                  )}
+                  {sidebarOpen && (
                     <div className="flex-1 text-left">
                       <div className="font-medium flex items-center gap-2">
                         Level {level.order}
@@ -237,6 +243,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                         <span>{level.learn?.length || 0} learn</span>
                         <span>{level.test?.length || 0} test</span>
                         <span>{level.exercise?.length || 0} exercise</span>
+                        <span className="text-green-400">Unlocked: {level.isUnlocked ? 'Yes' : 'No'}</span>
                       </div>
                     </div>
                   )}
