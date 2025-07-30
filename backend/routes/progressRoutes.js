@@ -13,8 +13,11 @@ const router = express.Router();
 // All routes are protected
 router.use(protect);
 
-// Get user progress for a career track
-router.get('/:careerTrack', getUserProgress);
+// Get all levels with unlock status (must come before /:careerTrack)
+router.get('/levels-status', getLevelsStatus);
+
+// Check if level is unlocked
+router.get('/unlocked/:levelOrder', checkLevelUnlocked);
 
 // Mark level section as completed
 router.post('/complete', markLevelCompleted);
@@ -22,10 +25,7 @@ router.post('/complete', markLevelCompleted);
 // Submit exercise
 router.post('/submit-exercise', submitExercise);
 
-// Check if level is unlocked
-router.get('/unlocked/:levelOrder', checkLevelUnlocked);
-
-// Get all levels with unlock status
-router.get('/levels-status', getLevelsStatus);
+// Get user progress for a career track (must come last to avoid catching other routes)
+router.get('/:careerTrack', getUserProgress);
 
 export default router; 
