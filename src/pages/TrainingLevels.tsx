@@ -4,7 +4,7 @@ import { useAppSelector } from '../redux/store';
 import LevelsSidebar from '../components/LevelsSidebar';
 import apiService from '../services/api';
 import { motion } from 'framer-motion';
-import { StarIcon, ClockIcon, CheckCircledIcon, Cross1Icon, ReaderIcon, ClipboardIcon, PlayIcon, LockClosedIcon } from '@radix-ui/react-icons';
+import {  ClockIcon, CheckCircledIcon, Cross1Icon, ReaderIcon, ClipboardIcon, PlayIcon, LockClosedIcon } from '@radix-ui/react-icons';
 
 interface LearnItem {
   type: 'video' | 'reading' | 'slide' | 'other';
