@@ -179,7 +179,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
         
         {/* Closed Sidebar Gradient Line */}
         {!sidebarOpen && (
-          <div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-trueturquoise via-teallight to-trueturquoise flex items-center justify-center">
+          <div className="absolute inset-y-0 left-1/2 transform -translate-x-1/2 w-1 bg-gradient-to-b from-trueturquoise via-teallight to-trueturquoise flex items-center justify-center">
             <div className="transform -rotate-90 text-trueturquoise font-semibold text-sm py-4">
               Levels
             </div>
