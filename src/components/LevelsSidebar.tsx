@@ -182,16 +182,6 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
             <LayersIcon className="h-5 w-5 text-trueturquoise" /> 
             {loading ? 'Loading...' : `Levels (${levels.length})`}
           </h2>
-          <button
-            onClick={() => {
-              console.log('Manual refresh triggered');
-              fetchLevels();
-            }}
-            className="text-trueturquoise hover:text-teallight text-xs"
-            title="Refresh levels"
-          >
-            🔄
-          </button>
         </div>
         
         {/* Levels Navigation */}
@@ -234,11 +224,6 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                     <LockClosedIcon className="h-5 w-5 mr-2 text-teallight/50" />
                   )}
                   {sidebarOpen && (
-                    <div className="text-xs text-teallight/60 ml-1">
-                      {level.isUnlocked ? '🔓' : '🔒'}
-                    </div>
-                  )}
-                  {sidebarOpen && (
                     <div className="flex-1 text-left">
                       <div className="font-medium flex items-center gap-2">
                         Level {level.order}
@@ -253,7 +238,6 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                         <span>{level.learn?.length || 0} learn</span>
                         <span>{level.test?.length || 0} test</span>
                         <span>{level.exercise?.length || 0} exercise</span>
-                        <span className="text-green-400">Unlocked: {level.isUnlocked ? 'Yes' : 'No'}</span>
                       </div>
                     </div>
                   )}
