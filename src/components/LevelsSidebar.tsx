@@ -176,6 +176,15 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
       <div className={`flex-1 flex flex-col py-24 pl-2 transition-opacity duration-200 ${sidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none select-none'}`}
         style={{ transitionProperty: 'opacity' }}
       >
+        
+        {/* Closed Sidebar Gradient Line */}
+        {!sidebarOpen && (
+          <div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-trueturquoise via-teallight to-trueturquoise flex items-center justify-center">
+            <div className="transform -rotate-90 text-trueturquoise font-semibold text-sm py-4">
+              Levels
+            </div>
+          </div>
+        )}
         {/* Header */}
         <div className={`flex items-center justify-between mb-4 ${!sidebarOpen ? 'invisible' : ''}`}>
           <h2 className="text-lg font-semibold text-paperwhite flex items-center gap-2">
