@@ -21,6 +21,9 @@ interface ExerciseItem {
   description: string;
   resources: string[];
   order: number;
+  difficulty?: string;
+  creditPoints?: number;
+  isMandatory?: boolean;
 }
 
 const LevelExercisePage: React.FC = () => {
@@ -131,6 +134,65 @@ const LevelExercisePage: React.FC = () => {
     );
   }
 
+  // Process exercises to add default values and categorize them
+  const processedExercises = validExercises.map((exercise, index) => ({
+    ...exercise,
+    difficulty: exercise.difficulty || ['Easy', 'Medium', 'Hard', 'Extreme'][index % 4],
+    creditPoints: exercise.creditPoints || [5, 10, 15, 20][index % 4],
+    isMandatory: exercise.isMandatory !== false // Default to mandatory
+  }));
+
+  const mandatoryExercises = processedExercises.filter(ex => ex.isMandatory);
+  const optionalExercises = processedExercises.filter(ex => !ex.isMandatory);
+
+  const renderExerciseTable = (exercises: any[], title: string, startIndex: number = 0) => (
+    <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-6">
+      <h2 className="text-xl font-bold text-paperwhite mb-4">{title}</h2>
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead>
+            <tr className="border-b border-paperwhite/20">
+              <th className="text-left py-3 px-4 text-paperwhite font-semibold">S.No</th>
+              <th className="text-left py-3 px-4 text-paperwhite font-semibold">Task name</th>
+              <th className="text-left py-3 px-4 text-paperwhite font-semibold">Brief</th>
+              <th className="text-left py-3 px-4 text-paperwhite font-semibold">Difficulty Level</th>
+              <th className="text-left py-3 px-4 text-paperwhite font-semibold">Credit Points</th>
+              <th className="text-left py-3 px-4 text-paperwhite font-semibold">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {exercises.map((exercise, index) => (
+              <tr key={index} className="border-b border-paperwhite/10 hover:bg-paperwhite/5">
+                <td className="py-3 px-4 text-paperwhite">{startIndex + index + 1}</td>
+                <td className="py-3 px-4 text-paperwhite font-medium">{exercise.title}</td>
+                <td className="py-3 px-4 text-paperwhite text-sm">{exercise.description}</td>
+                <td className="py-3 px-4">
+                  <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                    exercise.difficulty === 'Easy' ? 'bg-green-500/20 text-green-400' :
+                    exercise.difficulty === 'Medium' ? 'bg-yellow-500/20 text-yellow-400' :
+                    exercise.difficulty === 'Hard' ? 'bg-orange-500/20 text-orange-400' :
+                    'bg-red-500/20 text-red-400'
+                  }`}>
+                    {exercise.difficulty}
+                  </span>
+                </td>
+                <td className="py-3 px-4 text-paperwhite">{exercise.creditPoints}</td>
+                <td className="py-3 px-4">
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 bg-paperwhite/20 rounded"></div>
+                    <button className="bg-paperwhite/10 text-paperwhite px-3 py-1 rounded text-sm hover:bg-paperwhite/20 transition-colors">
+                      View
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+
   return (
     <div className="flex h-screen bg-offblack overflow-x-hidden">
       <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="exercise" />
@@ -153,54 +215,9 @@ const LevelExercisePage: React.FC = () => {
           </div>
         </div>
 
-        {/* Exercise Content */}
-        <div className="w-full max-w-5xl space-y-6">
-          {validExercises.map((exercise, index) => (
-            <div key={index} className="bg-paperwhite/5 rounded-xl border border-paperwhite/20 shadow-lg p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 rounded-lg bg-green-500">
-                  <span className="text-white text-lg">💪</span>
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-paperwhite">{exercise.title}</h3>
-                  <span className="text-xs text-teallight">Exercise {index + 1}</span>
-                </div>
-              </div>
-              
-              <div className="mb-6">
-                <p className="text-paperwhite text-sm leading-relaxed">{exercise.description}</p>
-              </div>
-
-              {exercise.resources && exercise.resources.length > 0 && (
-                <div className="mb-6">
-                  <h4 className="text-md font-semibold text-paperwhite mb-3">Resources:</h4>
-                  <div className="space-y-2">
-                    {exercise.resources.map((resource, resIndex) => (
-                      <div key={resIndex} className="flex items-center gap-2 text-sm">
-                        <span className="text-trueturquoise">•</span>
-                        <span className="text-paperwhite">{resource}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <button className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg font-semibold hover:bg-teallight transition-colors">
-                    Start Exercise
-                  </button>
-                  <button className="bg-paperwhite/10 text-paperwhite px-4 py-2 rounded-lg font-semibold hover:bg-paperwhite/20 transition-colors">
-                    View Instructions
-                  </button>
-                </div>
-                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${statusColor('Not Started')}`}>
-                  Not Started
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
+        {/* Exercise Tables */}
+        {mandatoryExercises.length > 0 && renderExerciseTable(mandatoryExercises, "Mandatory Task")}
+        {optionalExercises.length > 0 && renderExerciseTable(optionalExercises, "Optional", mandatoryExercises.length)}
 
         {/* Action Buttons */}
         <div className="w-full max-w-5xl flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 mb-8">
