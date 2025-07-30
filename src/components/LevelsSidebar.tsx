@@ -82,8 +82,28 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
       
       // Fetch level status to determine locked/unlocked state
       try {
+        console.log('Sidebar: Fetching level status for levels:', levelsData.map((l: Level) => ({ id: l.id, order: l.order })));
         const statusResponse = await apiService.getLevelsStatus(levelsData);
-        if (statusResponse && statusResponse.data) {
+        console.log('Sidebar: Status response:', statusResponse);
+        if (statusResponse && statusResponse.data && statusResponse.data.levels) {
+          const levelsWithStatus = statusResponse.data.levels;
+          levelsData = levelsWithStatus.map((levelWithStatus: any) => ({
+            ...levelWithStatus,
+            // Ensure the level data is properly merged
+            id: levelWithStatus.id,
+            title: levelWithStatus.title,
+            order: levelWithStatus.order,
+            isActive: levelWithStatus.isActive,
+            careerTrack: levelWithStatus.careerTrack,
+            learn: levelWithStatus.learn || [],
+            test: levelWithStatus.test || [],
+            exercise: levelWithStatus.exercise || [],
+            isUnlocked: levelWithStatus.isUnlocked,
+            isCompleted: levelWithStatus.isCompleted,
+            completedSections: levelWithStatus.completedSections || []
+          }));
+        } else if (statusResponse && statusResponse.data) {
+          // Fallback: if levels array is not available, use the data directly
           const statusData = statusResponse.data;
           levelsData = levelsData.map((level: Level) => {
             const levelStatus = statusData.find((status: any) => status.levelId === level.id);
@@ -109,6 +129,10 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
       }
       
       console.log('Sidebar: Final filtered unique levels with status:', levelsData);
+      console.log('Sidebar: Unlock status for each level:');
+      levelsData.forEach((level: Level) => {
+        console.log(`Level ${level.order}: isUnlocked = ${level.isUnlocked}, isCompleted = ${level.isCompleted}`);
+      });
       setLevels(levelsData);
     } catch (error) {
       console.error('Error fetching levels for sidebar:', error);

@@ -117,8 +117,9 @@ const LevelExercisePage: React.FC = () => {
       
       // Mark the current level as completed (exercise section)
       if (level && level.id && level.order) {
-        await apiService.markLevelCompleted(level.id, level.order, 'exercise');
-        console.log('Level marked as completed:', level.id);
+        console.log('Marking level as completed:', { levelId: level.id, levelOrder: level.order, section: 'exercise' });
+        const result = await apiService.markLevelCompleted(level.id, level.order, 'exercise');
+        console.log('Level marked as completed result:', result);
       }
       
       // Trigger sidebar refresh to update unlock status
@@ -318,6 +319,28 @@ const LevelExercisePage: React.FC = () => {
             ) : (
               'Unlock Next Level'
             )}
+          </button>
+          
+          {/* Debug button - temporary */}
+          <button 
+            onClick={async () => {
+              try {
+                console.log('=== DEBUG: Checking unlock status ===');
+                const response = await apiService.getLevelsStatus(allLevels);
+                console.log('Debug response:', response);
+                if (response && response.data && response.data.levels) {
+                  response.data.levels.forEach((level: any) => {
+                    console.log(`Level ${level.order}: isUnlocked = ${level.isUnlocked}, isCompleted = ${level.isCompleted}`);
+                  });
+                }
+                setRefreshTrigger(prev => prev + 1);
+              } catch (error) {
+                console.error('Debug error:', error);
+              }
+            }}
+            className="w-full sm:w-auto bg-red-500 text-white px-4 py-2 rounded-lg text-sm"
+          >
+            Debug Unlock Status
           </button>
         </div>
       </main>
