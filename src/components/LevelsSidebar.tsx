@@ -230,7 +230,20 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
           <nav className="flex-1 space-y-4 overflow-y-auto">
           {loading ? (
             <div className="text-center py-8">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-trueturquoise mx-auto mb-2"></div>
+              <div className="w-full max-w-xs mx-auto mb-4">
+                <div className="w-full bg-paperwhite/20 rounded-full h-2 mb-2">
+                  <div 
+                    className="bg-trueturquoise h-2 rounded-full transition-all duration-300 ease-out animate-pulse"
+                    style={{ width: '60%' }}
+                  ></div>
+                </div>
+                <div className="w-full bg-paperwhite/10 rounded-full h-1">
+                  <div 
+                    className="bg-teallight/50 h-1 rounded-full transition-all duration-500 ease-out animate-pulse"
+                    style={{ width: '40%' }}
+                  ></div>
+                </div>
+              </div>
               <p className="text-xs text-teallight">Loading levels...</p>
             </div>
           ) : levels.length === 0 ? (
