@@ -71,6 +71,14 @@ const createUser = async (req, res) => {
       return res.status(400).json({ success: false, errors: errors.array() });
     }
     const { name, email, password, role = 'student', college, department, careerTrack, isActive = true } = req.body;
+    
+    // Validate careerTrack for students and staff
+    if ((role === 'student' || role === 'staff') && !careerTrack) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Career track is required for students and staff' 
+      });
+    }
     if (await User.findOne({ email })) {
       return res.status(409).json({ success: false, message: 'User already exists with this email' });
     }

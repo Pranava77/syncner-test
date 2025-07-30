@@ -22,6 +22,7 @@ const defaultUserForm = {
   email: '',
   college: '',
   role: 'student',
+  careerTrack: 'full-stack',
   isActive: true,
   password: '',
 };
@@ -76,6 +77,7 @@ const AdminUsers: React.FC = () => {
       email: user.email || '',
       college: user.college || '',
       role: user.role || 'student',
+      careerTrack: user.careerTrack || 'full-stack',
       isActive: user.isActive !== false,
       password: '',
     });
@@ -103,6 +105,10 @@ const AdminUsers: React.FC = () => {
       setError(null);
       if (!userForm.name || !userForm.email || !userForm.role || !userForm.college) {
         setFormError('Name, Email, Role, and College are required.');
+        return;
+      }
+      if ((userForm.role === 'student' || userForm.role === 'staff') && !userForm.careerTrack) {
+        setFormError('Career Track is required for students and staff.');
         return;
       }
       if (!editingUser && !userForm.password) {
@@ -253,6 +259,14 @@ const AdminUsers: React.FC = () => {
               <select value={userForm.role} onChange={e => setUserForm(f => ({ ...f, role: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition">
                 <option value="student">Student</option>
               </select>
+              {(userForm.role === 'student' || userForm.role === 'staff') && (
+                <select value={userForm.careerTrack} onChange={e => setUserForm(f => ({ ...f, careerTrack: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition">
+                  <option value="full-stack">Full Stack Development</option>
+                  <option value="ai-ml">AI/ML</option>
+                  <option value="ui-ux">UI/UX Design</option>
+                  <option value="data-science">Data Science</option>
+                </select>
+              )}
               {/* Password field only for new users */}
               {!editingUser && (
                 <input

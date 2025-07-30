@@ -3,6 +3,7 @@ import { getAllUsers, getAnalytics, createUser, updateUser, deleteUser, resetPas
 import { protect } from '../middleware/auth.js';
 import { authorize } from '../middleware/auth.js';
 import { body } from 'express-validator';
+import { validateRequest } from '../middleware/errorHandler.js';
 import User from '../models/User.js';
 import fetch from 'node-fetch';
 
@@ -25,6 +26,7 @@ router.post(
       .if((value, { req }) => req.body.role === 'student' || req.body.role === 'staff')
       .notEmpty()
       .withMessage('College required'),
+    validateRequest
   ],
   createUser
 );

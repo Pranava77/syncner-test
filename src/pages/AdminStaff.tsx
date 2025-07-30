@@ -23,6 +23,7 @@ const defaultStaffForm = {
   department: '',
   college: '',
   role: 'staff',
+  careerTrack: 'full-stack',
   isActive: true,
   password: '', // Add password field
 };
@@ -80,6 +81,7 @@ const AdminStaff: React.FC = () => {
       department: staff.department || '',
       college: staff.college || '',
       role: staff.role || 'staff',
+      careerTrack: staff.careerTrack || 'full-stack',
       isActive: staff.isActive !== false,
       password: '', // Always blank for editing
     });
