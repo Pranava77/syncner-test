@@ -236,18 +236,12 @@ const LevelExercisePage: React.FC = () => {
         {optionalExercises.length > 0 && renderExerciseTable(optionalExercises, "Optional", mandatoryExercises.length)}
 
         {/* Action Buttons */}
-        <div className="w-full max-w-5xl flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 mb-8">
-          <button 
-            onClick={() => navigate(`/student/training/${levelId}/learn`)}
-            className="w-full sm:w-auto bg-paperwhite text-offblack px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-trueturquoise hover:text-offblack transition-colors mb-2 sm:mb-0"
-          >
-            Back to Learning
-          </button>
+        <div className="w-full max-w-5xl flex flex-col sm:flex-row items-center justify-center gap-4 mt-8 mb-8">
           <button 
             onClick={() => navigate(`/student/training/${levelId}/test`)}
             className="w-full sm:w-auto bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-teallight transition-colors"
           >
-            Take Test
+            Unlock Next Level
           </button>
         </div>
       </main>

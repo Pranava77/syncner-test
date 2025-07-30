@@ -1,4 +1,12 @@
 import React, { useState } from 'react';
+import { 
+  FileTextIcon, 
+  ReaderIcon, 
+  Link1Icon, 
+  ClipboardIcon, 
+  CheckCircledIcon,
+  Cross1Icon 
+} from '@radix-ui/react-icons';
 
 interface TaskSubmissionModalProps {
   isOpen: boolean;
@@ -51,6 +59,9 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-paperwhite/20">
           <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-trueturquoise/20 rounded-lg flex items-center justify-center">
+              <FileTextIcon className="w-4 h-4 text-trueturquoise" />
+            </div>
             <div>
               <div className="font-semibold text-paperwhite">{exercise.title}</div>
             </div>
@@ -67,7 +78,8 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
         <div className="p-6 space-y-6">
           {/* Brief Section */}
           <div>
-            <label className="block text-sm font-medium text-paperwhite mb-2">
+            <label className="flex items-center gap-2 text-sm font-medium text-paperwhite mb-2">
+              <ClipboardIcon className="w-4 h-4 text-trueturquoise" />
               Brief - What you should do:
             </label>
             <textarea
@@ -80,7 +92,8 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
 
           {/* Instruction Section */}
           <div>
-            <label className="block text-sm font-medium text-paperwhite mb-2">
+            <label className="flex items-center gap-2 text-sm font-medium text-paperwhite mb-2">
+              <ReaderIcon className="w-4 h-4 text-trueturquoise" />
               Instruction/Helper Guide:
             </label>
             <textarea
@@ -93,7 +106,8 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
 
           {/* Reference Materials Section */}
           <div>
-            <label className="block text-sm font-medium text-paperwhite mb-2">
+            <label className="flex items-center gap-2 text-sm font-medium text-paperwhite mb-2">
+              <FileTextIcon className="w-4 h-4 text-trueturquoise" />
               Reference Materials:
             </label>
             <div className="space-y-3">
@@ -112,7 +126,8 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
 
           {/* Expected Output Section */}
           <div>
-            <label className="block text-sm font-medium text-paperwhite mb-2">
+            <label className="flex items-center gap-2 text-sm font-medium text-paperwhite mb-2">
+              <CheckCircledIcon className="w-4 h-4 text-trueturquoise" />
               Expected output:
             </label>
             <textarea
@@ -125,7 +140,8 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
 
           {/* Submission Link Section */}
           <div>
-            <label className="block text-sm font-medium text-paperwhite mb-2">
+            <label className="flex items-center gap-2 text-sm font-medium text-paperwhite mb-2">
+              <Link1Icon className="w-4 h-4 text-trueturquoise" />
               Submission Link:
             </label>
             <input
@@ -142,14 +158,16 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
         <div className="flex justify-end gap-3 p-6 border-t border-paperwhite/20">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-paperwhite border border-paperwhite/20 rounded-lg hover:bg-paperwhite/10 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 text-paperwhite border border-paperwhite/20 rounded-lg hover:bg-paperwhite/10 transition-colors"
           >
+            <Cross1Icon className="w-4 h-4" />
             Cancel
           </button>
           <button
             onClick={handleSubmit}
-            className="px-6 py-2 bg-trueturquoise text-offblack rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold"
+            className="flex items-center gap-2 px-6 py-2 bg-trueturquoise text-offblack rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold"
           >
+            <CheckCircledIcon className="w-4 h-4" />
             Submit Task
           </button>
         </div>
