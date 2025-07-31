@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { loginUser, clearError, logoutUser } from '../redux/slices/authSlice';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import LoadingScreen from '../components/LoadingScreen';
@@ -121,14 +120,7 @@ const LoginPage: React.FC = () => {
             </button>
           </form>
 
-          <div className="mt-4 lg:mt-6 text-center">
-            <p className="text-teallight text-sm">
-              Don't have an account?{' '}
-              <Link to="/register" className="text-trueturquoise hover:text-teallight font-medium transition-colors">
-                Create one here
-              </Link>
-            </p>
-          </div>
+
         </div>
       </div>
     </div>
