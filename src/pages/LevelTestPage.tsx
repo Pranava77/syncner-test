@@ -37,6 +37,7 @@ const LevelTestPage: React.FC = () => {
   const [answers, setAnswers] = useState<{ [qIdx: number]: boolean[] }>({});
   const [timeLeft, setTimeLeft] = useState(TEST_DURATION);
   const [submitted, setSubmitted] = useState(false);
+  const [attempts, setAttempts] = useState(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -108,6 +109,7 @@ const LevelTestPage: React.FC = () => {
 
   const handleSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
+    setAttempts(prev => prev + 1);
     setSubmitted(true);
   };
 
@@ -197,7 +199,10 @@ const LevelTestPage: React.FC = () => {
                   <ReaderIcon className="h-8 w-8" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-paperwhite mb-2">Level {level.order}: {level.title} - Test</h1>
+                  <h1 className="text-2xl font-bold text-paperwhite mb-2">
+                    Level {level.order}: {level.title} - Test
+                    <span className="text-lg font-normal text-teallight ml-3">(Attempts: {attempts}/3)</span>
+                  </h1>
                   <p className="text-teallight text-lg">Test your knowledge with {validQuestions.length} questions</p>
                 </div>
               </div>
