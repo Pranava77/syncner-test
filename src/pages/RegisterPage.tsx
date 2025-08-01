@@ -19,6 +19,7 @@ const RegisterPage: React.FC = () => {
     password: '',
     confirmPassword: '',
     college: '',
+    careerTrack: '',
     role: 'student'
   });
   
@@ -75,6 +76,11 @@ const RegisterPage: React.FC = () => {
       newErrors.college = 'College name must be at least 2 characters';
     }
 
+    // Career Track validation
+    if (!formData.careerTrack) {
+      newErrors.careerTrack = 'Career track is required';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -110,6 +116,7 @@ const RegisterPage: React.FC = () => {
       email: formData.email.trim(),
       password: formData.password,
       college: formData.college.trim(),
+      careerTrack: formData.careerTrack,
       role: formData.role
     }));
 
@@ -345,6 +352,41 @@ const RegisterPage: React.FC = () => {
                 )}
               </div>
               {errors.college && <p className="text-rust text-xs mt-1 font-label">{errors.college}</p>}
+            </div>
+
+            {/* Career Track Selection */}
+            <div>
+              <label htmlFor="careerTrack" className="block text-sm text-paperwhite mb-2 font-label">
+                Career Track
+              </label>
+              <div className="relative">
+                <select
+                  id="careerTrack"
+                  name="careerTrack"
+                  value={formData.careerTrack}
+                  onChange={handleInputChange}
+                  className={`w-full pl-10 pr-4 py-3 bg-offblack/60 border rounded-lg focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors text-paperwhite appearance-none ${
+                    errors.careerTrack ? 'border-rust' : 'border-paperwhite/20'
+                  }`}
+                >
+                  <option value="" className="bg-offblack text-paperwhite">Select a career track</option>
+                  <option value="full-stack" className="bg-offblack text-paperwhite">Full Stack Development</option>
+                  <option value="ai-ml" className="bg-offblack text-paperwhite">AI/ML Engineering</option>
+                  <option value="ui-ux" className="bg-offblack text-paperwhite">UI/UX Design</option>
+                  <option value="data-science" className="bg-offblack text-paperwhite">Data Science</option>
+                </select>
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                  <svg className="h-5 w-5 text-teallight" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+                {errors.careerTrack && (
+                  <div className="absolute right-10 top-1/2 transform -translate-y-1/2">
+                    <CrossCircledIcon className="h-5 w-5 text-rust" />
+                  </div>
+                )}
+              </div>
+              {errors.careerTrack && <p className="text-rust text-xs mt-1 font-label">{errors.careerTrack}</p>}
             </div>
 
             {/* Role Selection */}
