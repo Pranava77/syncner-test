@@ -60,6 +60,16 @@ class ApiService {
     return this.handleResponse(response);
   }
 
+  async updateProfile(profileData: any) {
+    const response = await fetch(`${this.baseURL}/auth/profile`, {
+      method: 'PUT',
+      headers: this.getHeaders(),
+      credentials: 'include',
+      body: JSON.stringify(profileData),
+    });
+    return this.handleResponse(response);
+  }
+
   async forgotPassword(email: string) {
     const response = await fetch(`${this.baseURL}/auth/forgot-password`, {
       method: 'POST',

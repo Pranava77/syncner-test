@@ -51,10 +51,10 @@ export const loginUser = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await apiService.login(email, password);
+      const response = await apiService.login({ email, password });
       if (response.success && response.data.token) {
         // Fetch the full user profile using the new token
-        const profileResponse = await apiService.getMe();
+        const profileResponse = await apiService.getCurrentUser();
         if (profileResponse.success && profileResponse.data.user) {
           return { user: profileResponse.data.user, token: response.data.token };
         } else {
@@ -76,6 +76,7 @@ export const registerUser = createAsyncThunk(
     email: string;
     password: string;
     college: string;
+    careerTrack: string;
     role?: string;
   }, { rejectWithValue }) => {
     try {
@@ -91,7 +92,7 @@ export const fetchCurrentUser = createAsyncThunk(
   'auth/fetchCurrentUser',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await apiService.getMe();
+      const response = await apiService.getCurrentUser();
       return response.data;
     } catch (error: unknown) {
       return rejectWithValue((error as Error).message || 'Failed to fetch user');
