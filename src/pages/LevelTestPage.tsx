@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import LevelsSidebar from '../components/LevelsSidebar';
-import { CheckCircledIcon, ClockIcon, ReaderIcon } from '@radix-ui/react-icons';
+import { CheckCircledIcon, ClockIcon, ReaderIcon, LockClosedIcon, ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import apiService from '../services/api';
 
 interface Level {
@@ -24,6 +24,11 @@ interface TestItem {
   order: number;
 }
 
+interface TestProgress {
+  attempts: any[];
+  isCompleted: boolean;
+}
+
 const TEST_DURATION = 10 * 60; // 10 minutes in seconds
 
 const LevelTestPage: React.FC = () => {
@@ -37,9 +42,22 @@ const LevelTestPage: React.FC = () => {
   const [answers, setAnswers] = useState<{ [qIdx: number]: boolean[] }>({});
   const [timeLeft, setTimeLeft] = useState(TEST_DURATION);
   const [submitted, setSubmitted] = useState(false);
-  const [attempts, setAttempts] = useState(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  
+  // New state for test progress tracking
+  const [isTestUnlocked, setIsTestUnlocked] = useState(false);
+  const [testProgress, setTestProgress] = useState<TestProgress>({
+    attempts: [],
+    isCompleted: false
+  });
+  const [currentAttempt, setCurrentAttempt] = useState(0);
+  const [canRetake, setCanRetake] = useState(true);
+  const [retakeTimer, setRetakeTimer] = useState<number | null>(null);
+  const [randomizedQuestions, setRandomizedQuestions] = useState<TestItem[]>([]);
+  const [testScore, setTestScore] = useState<number | null>(null);
+  const [testPassed, setTestPassed] = useState<boolean | null>(null);
+  const [showRetakePopup, setShowRetakePopup] = useState(false);
 
   const fetchLevel = useCallback(async () => {
     try {
@@ -57,13 +75,18 @@ const LevelTestPage: React.FC = () => {
       
       setLevel(levelData);
       
-      // Initialize answers for all questions
-      if (levelData && levelData.test) {
+      // Randomize questions if test data exists
+      if (levelData && levelData.test && levelData.test.length > 0) {
         console.log('LevelTestPage: Test data:', levelData.test);
         console.log('LevelTestPage: Test data length:', levelData.test.length);
         
+        // Randomize the order of questions
+        const shuffled = [...levelData.test].sort(() => Math.random() - 0.5);
+        setRandomizedQuestions(shuffled);
+        
+        // Initialize answers for all questions
         const initialAnswers = Object.fromEntries(
-          levelData.test.map((testItem: any, i: number) => {
+          shuffled.map((testItem: any, i: number) => {
             const optionsLength = testItem.options ? testItem.options.length : 0;
             console.log(`LevelTestPage: Question ${i} has ${optionsLength} options:`, testItem);
             console.log(`LevelTestPage: Question ${i} options:`, testItem.options);
@@ -83,11 +106,56 @@ const LevelTestPage: React.FC = () => {
     }
   }, [levelId]);
 
+  // Fetch test unlock status and progress
+  const fetchTestProgress = useCallback(async () => {
+    if (!levelId) return;
+    
+    try {
+      const response = await apiService.checkExerciseUnlocked(levelId);
+      if (response.success) {
+        setIsTestUnlocked(response.data.isUnlocked);
+        setTestProgress(response.data.testProgress || { attempts: [], isCompleted: false });
+        setCurrentAttempt(response.data.attempts || 0);
+        setCanRetake(response.data.canRetake);
+        
+        // Calculate retake timer if needed
+        if (response.data.testProgress && response.data.testProgress.lastAttemptAt) {
+          const lastAttempt = new Date(response.data.testProgress.lastAttemptAt);
+          const hoursSinceLastAttempt = (Date.now() - lastAttempt.getTime()) / (1000 * 60 * 60);
+          if (hoursSinceLastAttempt < 24) {
+            const remainingHours = 24 - hoursSinceLastAttempt;
+            setRetakeTimer(Math.ceil(remainingHours * 60 * 60)); // Convert to seconds
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching test progress:', error);
+    }
+  }, [levelId]);
+
   useEffect(() => {
     if (levelId) {
       fetchLevel();
+      fetchTestProgress();
     }
-  }, [levelId, fetchLevel]);
+  }, [levelId, fetchLevel, fetchTestProgress]);
+
+  // Timer effect for retake countdown
+  useEffect(() => {
+    if (retakeTimer === null || retakeTimer <= 0) return;
+
+    const interval = setInterval(() => {
+      setRetakeTimer(prev => {
+        if (prev === null || prev <= 1) {
+          setCanRetake(true);
+          return null;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [retakeTimer]);
 
   useEffect(() => {
     if (submitted) return;
@@ -107,16 +175,70 @@ const LevelTestPage: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e?: React.FormEvent) => {
+  const calculateScore = (): number => {
+    let correctAnswers = 0;
+    let totalQuestions = randomizedQuestions.length;
+
+    randomizedQuestions.forEach((question, qIdx) => {
+      const userAnswer = answers[qIdx]?.findIndex(a => a);
+      const correctAnswerIndex = question.options.findIndex(option => 
+        option.trim().toLowerCase() === question.answer.trim().toLowerCase()
+      );
+      
+      if (userAnswer === correctAnswerIndex) {
+        correctAnswers++;
+      }
+    });
+
+    return totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+  };
+
+  const handleSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    setAttempts(prev => prev + 1);
-    setSubmitted(true);
+    
+    if (!levelId) return;
+    
+    const score = calculateScore();
+    const passed = score >= 60;
+    
+    // Prepare answers for submission
+    const answersForSubmission = randomizedQuestions.map((question, qIdx) => ({
+      questionIndex: qIdx,
+      selectedOption: answers[qIdx]?.findIndex(a => a) || -1
+    }));
+    
+    try {
+      const response = await apiService.submitTestAttempt(levelId, score, answersForSubmission);
+      
+      if (response.success) {
+        setTestScore(score);
+        setTestPassed(passed);
+        setCurrentAttempt(response.data.attempts);
+        setCanRetake(response.data.canRetake);
+        
+        if (!passed && response.data.attempts >= 3) {
+          setShowRetakePopup(true);
+        }
+        
+        setSubmitted(true);
+      } else {
+        // Handle cooldown or max attempts
+        if (response.data && !response.data.canRetake) {
+          setShowRetakePopup(true);
+        }
+      }
+    } catch (error) {
+      console.error('Error submitting test attempt:', error);
+      // Still show results even if submission fails
+      setTestScore(score);
+      setTestPassed(passed);
+      setSubmitted(true);
+    }
   };
 
   // Scroll to top when test is submitted
   useEffect(() => {
     if (submitted && scrollContainerRef.current) {
-      // Small delay to ensure DOM has updated
       setTimeout(() => {
         if (scrollContainerRef.current) {
           scrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
@@ -129,6 +251,12 @@ const LevelTestPage: React.FC = () => {
     const m = Math.floor(seconds / 60).toString().padStart(2, '0');
     const s = (seconds % 60).toString().padStart(2, '0');
     return `${m}:${s}`;
+  };
+
+  const formatRetakeTime = (seconds: number) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    return `${hours}h ${minutes}m`;
   };
 
   if (loading) {
@@ -164,7 +292,100 @@ const LevelTestPage: React.FC = () => {
     );
   }
 
-  const validQuestions = level.test ? level.test.filter(q => q && q.question && q.options && q.options.length > 0) : [];
+  // Check if test is unlocked
+  if (!isTestUnlocked) {
+    return (
+      <div className="flex h-screen bg-offblack overflow-x-hidden">
+        <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
+          <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 text-center">
+            <div className="text-paperwhite/30 text-6xl mb-4">
+              <LockClosedIcon className="h-16 w-16 mx-auto" />
+            </div>
+            <h2 className="text-2xl font-bold text-paperwhite mb-2">Test Locked</h2>
+            <p className="text-teallight mb-6 text-lg">Complete the learning section first to unlock this test.</p>
+            <button 
+              onClick={() => navigate(`/student/training/${levelId}/learn`)}
+              className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold hover:bg-trueturquoise/90 transition-colors text-lg shadow-sm"
+            >
+              Go to Learning
+            </button>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  // Check if test is already completed
+  if (testProgress.isCompleted) {
+    return (
+      <div className="flex h-screen bg-offblack overflow-x-hidden">
+        <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
+          <div className="w-full max-w-5xl bg-gradient-to-r from-green-500/10 to-teallight/10 rounded-xl border border-green-500/30 shadow-lg p-6 text-center">
+            <div className="text-green-400 text-6xl mb-4">✓</div>
+            <h2 className="text-2xl font-bold text-paperwhite mb-2">Test Already Completed!</h2>
+            <p className="text-teallight mb-6 text-lg">You have successfully passed this test. You can now proceed to the exercise.</p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button 
+                onClick={() => navigate(`/student/training/${levelId}/learn`)}
+                className="bg-paperwhite text-offblack px-8 py-3 rounded-lg font-bold hover:bg-trueturquoise hover:text-offblack transition-colors text-lg shadow-sm"
+              >
+                Back to Learning
+              </button>
+              <button 
+                onClick={() => navigate(`/student/training/${levelId}/exercise`)}
+                className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold hover:bg-trueturquoise/90 transition-colors text-lg shadow-sm"
+              >
+                Go to Exercise
+              </button>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  // Check if max attempts reached or cooldown active
+  if (currentAttempt >= 3 || !canRetake) {
+    return (
+      <div className="flex h-screen bg-offblack overflow-x-hidden">
+        <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
+          <div className="w-full max-w-5xl bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-xl border border-orange-500/30 shadow-lg p-6 text-center">
+            <div className="text-orange-400 text-6xl mb-4">
+              <ExclamationTriangleIcon className="h-16 w-16 mx-auto" />
+            </div>
+            <h2 className="text-2xl font-bold text-paperwhite mb-2">
+              {currentAttempt >= 3 ? 'Maximum Attempts Reached' : 'Test Cooldown Active'}
+            </h2>
+            <p className="text-teallight mb-6 text-lg">
+              {currentAttempt >= 3 
+                ? 'You have used all 3 attempts for this test. Please wait 24 hours before retaking.'
+                : 'Please wait before retaking the test.'
+              }
+            </p>
+            {retakeTimer && (
+              <div className="bg-paperwhite/5 rounded-lg p-4 mb-6">
+                <div className="text-trueturquoise font-semibold mb-2">Time until you can retake:</div>
+                <div className="text-2xl font-bold text-paperwhite">{formatRetakeTime(retakeTimer)}</div>
+              </div>
+            )}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button 
+                onClick={() => navigate(`/student/training/${levelId}/learn`)}
+                className="bg-paperwhite text-offblack px-8 py-3 rounded-lg font-bold hover:bg-trueturquoise hover:text-offblack transition-colors text-lg shadow-sm"
+              >
+                Back to Learning
+              </button>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  const validQuestions = randomizedQuestions.filter(q => q && q.question && q.options && q.options.length > 0);
   
   if (!level.test || level.test.length === 0 || validQuestions.length === 0) {
     return (
@@ -201,9 +422,10 @@ const LevelTestPage: React.FC = () => {
                 <div>
                   <h1 className="text-2xl font-bold text-paperwhite mb-2">
                     Level {level.order}: {level.title} - Test
-                    <span className="text-lg font-normal text-teallight ml-3">(Attempts: {attempts}/3)</span>
+                    <span className="text-lg font-normal text-teallight ml-3">(Attempt {currentAttempt + 1}/3)</span>
                   </h1>
                   <p className="text-teallight text-lg">Test your knowledge with {validQuestions.length} questions</p>
+                  <p className="text-orange-400 text-sm mt-1">Passing score: 60% or higher</p>
                 </div>
               </div>
               <div className="flex items-center gap-6">
@@ -280,9 +502,34 @@ const LevelTestPage: React.FC = () => {
             /* Results View */
             <div className="w-full max-w-5xl space-y-6 pb-8">
               {/* Results Header */}
-              <div className="bg-gradient-to-r from-trueturquoise/10 to-teallight/10 rounded-xl border border-trueturquoise/30 shadow-lg p-6 text-center">
-                <h2 className="text-2xl font-bold text-paperwhite mb-4">Test Completed!</h2>
-                <p className="text-teallight mb-6 text-lg">You've completed the test for this level.</p>
+              <div className={`rounded-xl border shadow-lg p-6 text-center ${
+                testPassed 
+                  ? 'bg-gradient-to-r from-green-500/10 to-teallight/10 border-green-500/30' 
+                  : 'bg-gradient-to-r from-red-500/10 to-orange-500/10 border-red-500/30'
+              }`}>
+                <h2 className="text-2xl font-bold text-paperwhite mb-4">
+                  {testPassed ? 'Test Passed! 🎉' : 'Test Failed'}
+                </h2>
+                <div className="text-4xl font-bold mb-4">
+                  <span className={testPassed ? 'text-green-400' : 'text-red-400'}>
+                    {testScore}%
+                  </span>
+                </div>
+                <p className="text-teallight mb-6 text-lg">
+                  {testPassed 
+                    ? 'Congratulations! You can now proceed to the exercise.'
+                    : `You need 60% to pass. You scored ${testScore}%.`
+                  }
+                </p>
+                
+                {!testPassed && currentAttempt < 3 && (
+                  <div className="bg-paperwhite/5 rounded-lg p-4 mb-6">
+                    <div className="text-orange-400 font-semibold mb-2">Attempts Remaining</div>
+                    <div className="text-2xl font-bold text-paperwhite">{3 - currentAttempt}</div>
+                    <div className="text-sm text-teallight mt-1">You can retry after 24 hours</div>
+                  </div>
+                )}
+                
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <button 
                     onClick={() => navigate(`/student/training/${levelId}/learn`)}
@@ -290,12 +537,14 @@ const LevelTestPage: React.FC = () => {
                   >
                     Back to Learning
                   </button>
-                  <button 
-                    onClick={() => navigate(`/student/training/${levelId}/exercise`)}
-                    className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold hover:bg-trueturquoise/90 transition-colors text-lg shadow-sm"
-                  >
-                    Go to Exercise
-                  </button>
+                  {testPassed && (
+                    <button 
+                      onClick={() => navigate(`/student/training/${levelId}/exercise`)}
+                      className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold hover:bg-trueturquoise/90 transition-colors text-lg shadow-sm"
+                    >
+                      Go to Exercise
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -303,52 +552,91 @@ const LevelTestPage: React.FC = () => {
               <div className="bg-paperwhite/5 rounded-xl border border-paperwhite/20 shadow-lg p-6">
                 <h3 className="text-xl font-bold text-paperwhite mb-6 text-center">Review Your Answers</h3>
                 <div className="space-y-6">
-                  {validQuestions.map((question, qIdx) => (
-                    <div key={qIdx} className="bg-paperwhite/5 rounded-lg border border-paperwhite/10 p-4">
-                      <h4 className="text-lg font-semibold text-paperwhite mb-3">
-                        Question {qIdx + 1}: {question.question}
-                      </h4>
-                      
-                      <div className="space-y-2 mb-3">
-                        {question.options.map((option, optIdx) => (
-                          <div 
-                            key={optIdx} 
-                            className={`flex items-center p-3 rounded-lg border ${
-                              answers[qIdx]?.[optIdx] 
-                                ? 'bg-trueturquoise/20 border-trueturquoise/30' 
-                                : 'bg-paperwhite/5 border-paperwhite/10'
-                            }`}
-                          >
-                            <div className={`w-5 h-5 rounded border-2 flex items-center justify-center mr-3 ${
-                              answers[qIdx]?.[optIdx]
-                                ? 'bg-trueturquoise border-trueturquoise'
-                                : 'border-paperwhite/20'
-                            }`}>
-                              {answers[qIdx]?.[optIdx] && (
-                                <CheckCircledIcon className="h-3 w-3 text-offblack" aria-hidden="true" />
-                              )}
+                  {validQuestions.map((question, qIdx) => {
+                    const userAnswerIndex = answers[qIdx]?.findIndex(a => a);
+                    const correctAnswerIndex = question.options.findIndex(option => 
+                      option.trim().toLowerCase() === question.answer.trim().toLowerCase()
+                    );
+                    const isCorrect = userAnswerIndex === correctAnswerIndex;
+                    
+                    return (
+                      <div key={qIdx} className="bg-paperwhite/5 rounded-lg border border-paperwhite/10 p-4">
+                        <h4 className="text-lg font-semibold text-paperwhite mb-3">
+                          Question {qIdx + 1}: {question.question}
+                        </h4>
+                        
+                        <div className="space-y-2 mb-3">
+                          {question.options.map((option, optIdx) => (
+                            <div 
+                              key={optIdx} 
+                              className={`flex items-center p-3 rounded-lg border ${
+                                optIdx === userAnswerIndex 
+                                  ? isCorrect 
+                                    ? 'bg-green-500/20 border-green-500/30' 
+                                    : 'bg-red-500/20 border-red-500/30'
+                                  : optIdx === correctAnswerIndex
+                                    ? 'bg-green-500/20 border-green-500/30'
+                                    : 'bg-paperwhite/5 border-paperwhite/10'
+                              }`}
+                            >
+                              <div className={`w-5 h-5 rounded border-2 flex items-center justify-center mr-3 ${
+                                optIdx === userAnswerIndex
+                                  ? isCorrect
+                                    ? 'bg-green-500 border-green-500'
+                                    : 'bg-red-500 border-red-500'
+                                  : optIdx === correctAnswerIndex
+                                    ? 'bg-green-500 border-green-500'
+                                    : 'border-paperwhite/20'
+                              }`}>
+                                {optIdx === userAnswerIndex && (
+                                  <CheckCircledIcon className="h-3 w-3 text-white" aria-hidden="true" />
+                                )}
+                                {optIdx === correctAnswerIndex && optIdx !== userAnswerIndex && (
+                                  <span className="text-white text-xs">✓</span>
+                                )}
+                              </div>
+                              <span className={`text-sm ${
+                                optIdx === userAnswerIndex 
+                                  ? isCorrect 
+                                    ? 'text-green-400 font-semibold' 
+                                    : 'text-red-400 font-semibold'
+                                  : optIdx === correctAnswerIndex
+                                    ? 'text-green-400 font-semibold'
+                                    : 'text-paperwhite'
+                              }`}>
+                                {option}
+                              </span>
                             </div>
-                            <span className={`text-sm ${
-                              answers[qIdx]?.[optIdx] ? 'text-trueturquoise font-semibold' : 'text-paperwhite'
-                            }`}>
-                              {option}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
+                          ))}
+                        </div>
 
-                      <div className="bg-gradient-to-r from-trueturquoise/10 to-teallight/10 rounded-lg p-3 border border-trueturquoise/20">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-sm font-semibold text-paperwhite">Correct Answer:</span>
-                          <span className="text-sm text-trueturquoise font-bold">{question.answer}</span>
-                        </div>
-                        <div className="text-xs text-teallight">
-                          Your answer: {answers[qIdx]?.findIndex(a => a) !== -1 ? 
-                            question.options[answers[qIdx]?.findIndex(a => a) || 0] : 'Not answered'}
+                        <div className={`rounded-lg p-3 border ${
+                          isCorrect 
+                            ? 'bg-green-500/10 border-green-500/20' 
+                            : 'bg-red-500/10 border-red-500/20'
+                        }`}>
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-sm font-semibold text-paperwhite">
+                              {isCorrect ? 'Correct!' : 'Incorrect'}
+                            </span>
+                            {isCorrect ? (
+                              <span className="text-green-400">✓</span>
+                            ) : (
+                              <span className="text-red-400">✗</span>
+                            )}
+                          </div>
+                          <div className="text-xs text-teallight">
+                            Your answer: {userAnswerIndex !== -1 ? question.options[userAnswerIndex] : 'Not answered'}
+                          </div>
+                          {!isCorrect && (
+                            <div className="text-xs text-green-400 mt-1">
+                              Correct answer: {question.answer}
+                            </div>
+                          )}
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </div>

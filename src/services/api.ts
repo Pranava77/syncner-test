@@ -1,202 +1,101 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://syncner-test.onrender.com/api';
+const API_BASE_URL =  'https://syncner-test.onrender.com/api';
 
 class ApiService {
-  private baseURL: string;
+  private baseURL: string
 
   constructor() {
     this.baseURL = API_BASE_URL;
   }
 
   private getHeaders(): HeadersInit {
-    const headers: HeadersInit = {
+    return {
       'Content-Type': 'application/json',
     };
-
-    // Always get the latest token from localStorage
-    const currentToken = localStorage.getItem('token');
-    if (currentToken) {
-      headers.Authorization = `Bearer ${currentToken}`;
-    }
-
-    return headers;
   }
 
   private async handleResponse(response: Response) {
-    const data = await response.json();
-
     if (!response.ok) {
-      // Handle authentication errors
-      if (response.status === 401) {
-        this.clearToken();
-        // Redirect to login page
-        if (typeof window !== 'undefined') {
-          window.location.href = '/login';
-        }
-        throw new Error('Authentication failed. Please log in again.');
-      }
-      
-      // Handle authorization errors
-      if (response.status === 403) {
-        throw new Error('Access denied. You do not have permission to perform this action.');
-      }
-      
-      // Handle not found errors
-      if (response.status === 404) {
-        throw new Error('Resource not found.');
-      }
-      
-      // Handle validation errors
-      if (response.status === 400) {
-        const errorMessage = data.message || 'Invalid request data';
-        if (data.errors && Array.isArray(data.errors)) {
-          const validationErrors = data.errors.map((err: any) => err.message).join(', ');
-          throw new Error(`Validation failed: ${validationErrors}`);
-        }
-        throw new Error(errorMessage);
-      }
-      
-      // Handle server errors
-      if (response.status >= 500) {
-        throw new Error('Server error. Please try again later.');
-      }
-      
-      throw new Error(data.message || `HTTP ${response.status}: ${response.statusText}`);
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
     }
-
-    return data;
-  }
-
-  setToken(token: string) {
-    localStorage.setItem('token', token);
-  }
-
-  clearToken() {
-    localStorage.removeItem('token');
-  }
-
-  getToken(): string | null {
-    return localStorage.getItem('token');
+    return response.json();
   }
 
   // Auth endpoints
-  async login(email: string, password: string) {
+  async login(credentials: { email: string; password: string }) {
     const response = await fetch(`${this.baseURL}/auth/login`, {
       method: 'POST',
       headers: this.getHeaders(),
-      body: JSON.stringify({ email, password }),
       credentials: 'include',
+      body: JSON.stringify(credentials),
     });
-
-    const data = await this.handleResponse(response);
-    if (data.success && data.data.token) {
-      this.setToken(data.data.token);
-    }
-    return data;
+    return this.handleResponse(response);
   }
 
-  async register(userData: {
-    name: string;
-    email: string;
-    password: string;
-    college: string;
-    role?: string;
-  }) {
+  async register(userData: { name: string; email: string; password: string; careerTrack: string }) {
     const response = await fetch(`${this.baseURL}/auth/register`, {
       method: 'POST',
       headers: this.getHeaders(),
+      credentials: 'include',
       body: JSON.stringify(userData),
-      credentials: 'include',
     });
-
-    const data = await this.handleResponse(response);
-    if (data.success && data.data.token) {
-      this.setToken(data.data.token);
-    }
-    return data;
-  }
-
-  async getMe() {
-    const response = await fetch(`${this.baseURL}/auth/profile`, {
-      headers: this.getHeaders(),
-      credentials: 'include',
-    });
-
     return this.handleResponse(response);
   }
 
   async logout() {
-    try {
-      const response = await fetch(`${this.baseURL}/auth/logout`, {
-        method: 'POST',
-        headers: this.getHeaders(),
-        credentials: 'include',
-      });
-      
-      if (!response.ok) {
-        throw new Error('Logout request failed');
-      }
-    } catch (error) {
-      console.error('ApiService: Logout error:', error);
-      // Don't throw error, just log it
-    } finally {
-      this.clearToken();
-    }
-  }
-
-  // User endpoints
-  async updateProfile(profileData: any) {
-    const response = await fetch(`${this.baseURL}/auth/profile`, {
-      method: 'PUT',
-      headers: this.getHeaders(),
-      body: JSON.stringify(profileData),
-      credentials: 'include',
-    });
-
-    const data = await this.handleResponse(response);
-    return data;
-  }
-
-  // Remove getUserProgress method
-
-  // Career tracks endpoints
-  async getCareerTracks() {
-    const response = await fetch(`${this.baseURL}/tracks`, {
+    const response = await fetch(`${this.baseURL}/auth/logout`, {
+      method: 'POST',
       headers: this.getHeaders(),
       credentials: 'include',
     });
-
     return this.handleResponse(response);
   }
 
-  async getCareerTrack(trackId: string) {
-    const response = await fetch(`${this.baseURL}/tracks/${trackId}`, {
+  async getCurrentUser() {
+    const response = await fetch(`${this.baseURL}/auth/me`, {
+      method: 'GET',
       headers: this.getHeaders(),
       credentials: 'include',
     });
-
     return this.handleResponse(response);
   }
 
-  // Training endpoints for levels
+  async forgotPassword(email: string) {
+    const response = await fetch(`${this.baseURL}/auth/forgot-password`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      credentials: 'include',
+      body: JSON.stringify({ email }),
+    });
+    return this.handleResponse(response);
+  }
+
+  async resetPassword(token: string, password: string) {
+    const response = await fetch(`${this.baseURL}/auth/reset-password`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      credentials: 'include',
+      body: JSON.stringify({ token, password }),
+    });
+    return this.handleResponse(response);
+  }
+
+  // Training endpoints
   async getLevels(trackId?: string) {
     const url = trackId 
       ? `${this.baseURL}/training/levels?track=${trackId}`
       : `${this.baseURL}/training/levels`;
-    console.log('=== API DEBUG ===');
-    console.log('API: trackId parameter:', trackId);
-    console.log('API: trackId type:', typeof trackId);
-    console.log('API: Fetching levels from:', url);
     const response = await fetch(url, {
+      method: 'GET',
       headers: this.getHeaders(),
       credentials: 'include',
     });
-    const result = await this.handleResponse(response);
-    console.log('API: Levels response:', result);
-    return result;
+    return this.handleResponse(response);
   }
 
   async getLevel(levelId: string) {
     const response = await fetch(`${this.baseURL}/training/levels/${levelId}`, {
+      method: 'GET',
       headers: this.getHeaders(),
       credentials: 'include',
     });
@@ -206,6 +105,7 @@ class ApiService {
   // Progress endpoints
   async getUserProgress(careerTrack: string) {
     const response = await fetch(`${this.baseURL}/progress/${careerTrack}`, {
+      method: 'GET',
       headers: this.getHeaders(),
       credentials: 'include',
     });
@@ -222,26 +122,75 @@ class ApiService {
     return this.handleResponse(response);
   }
 
-  async submitExercise(levelId: string, exerciseTitle: string) {
+  async updateLearnProgress(levelId: string, timeSpent: number, linksAccessed: string[]) {
+    const response = await fetch(`${this.baseURL}/progress/learn-progress`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      credentials: 'include',
+      body: JSON.stringify({ levelId, timeSpent, linksAccessed }),
+    });
+    return this.handleResponse(response);
+  }
+
+  async submitTestAttempt(levelId: string, score: number, answers: any[]) {
+    const response = await fetch(`${this.baseURL}/progress/test-attempt`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      credentials: 'include',
+      body: JSON.stringify({ levelId, score, answers }),
+    });
+    return this.handleResponse(response);
+  }
+
+  async checkTestUnlocked(levelId: string) {
+    const response = await fetch(`${this.baseURL}/progress/test-unlocked/${levelId}`, {
+      method: 'GET',
+      headers: this.getHeaders(),
+      credentials: 'include',
+    });
+    return this.handleResponse(response);
+  }
+
+  async checkExerciseUnlocked(levelId: string) {
+    const response = await fetch(`${this.baseURL}/progress/exercise-unlocked/${levelId}`, {
+      method: 'GET',
+      headers: this.getHeaders(),
+      credentials: 'include',
+    });
+    return this.handleResponse(response);
+  }
+
+  async checkExerciseLinks(levelId: string) {
+    const response = await fetch(`${this.baseURL}/progress/exercise-links/${levelId}`, {
+      method: 'GET',
+      headers: this.getHeaders(),
+      credentials: 'include',
+    });
+    return this.handleResponse(response);
+  }
+
+  async submitExercise(levelId: string, exerciseTitle: string, links?: string[]) {
     const response = await fetch(`${this.baseURL}/progress/submit-exercise`, {
       method: 'POST',
       headers: this.getHeaders(),
       credentials: 'include',
-      body: JSON.stringify({ levelId, exerciseTitle }),
+      body: JSON.stringify({ levelId, exerciseTitle, links }),
+    });
+    return this.handleResponse(response);
+  }
+
+  async getLevelsStatus() {
+    const response = await fetch(`${this.baseURL}/progress/levels-status`, {
+      method: 'GET',
+      headers: this.getHeaders(),
+      credentials: 'include',
     });
     return this.handleResponse(response);
   }
 
   async checkLevelUnlocked(levelOrder: number) {
     const response = await fetch(`${this.baseURL}/progress/unlocked/${levelOrder}`, {
-      headers: this.getHeaders(),
-      credentials: 'include',
-    });
-    return this.handleResponse(response);
-  }
-
-  async getLevelsStatus(levels: any[]) {
-    const response = await fetch(`${this.baseURL}/progress/levels-status?levels=${encodeURIComponent(JSON.stringify(levels))}`, {
+      method: 'GET',
       headers: this.getHeaders(),
       credentials: 'include',
     });
@@ -249,207 +198,39 @@ class ApiService {
   }
 
   // Admin endpoints
-  async getStudents(filters?: any) {
-    let url = `${this.baseURL}/admin/users`;
-    if (filters) {
-      const params = new URLSearchParams(filters).toString();
-      if (params) url += `?${params}`;
-    }
-    const response = await fetch(url, {
-      headers: this.getHeaders(),
-    });
-    return this.handleResponse(response);
-  }
-
-  async updateStudent(studentId: string, studentData: any) {
-    const response = await fetch(`${this.baseURL}/admin/users/${studentId}`, {
-      method: 'PUT',
-      headers: this.getHeaders(),
-      body: JSON.stringify(studentData),
-    });
-    return this.handleResponse(response);
-  }
-
-  async deleteStudent(studentId: string) {
-    const response = await fetch(`${this.baseURL}/admin/users/${studentId}`, {
-      method: 'DELETE',
-      headers: this.getHeaders(),
-    });
-    return this.handleResponse(response);
-  }
-
-  async getAnalytics(dateRange?: string) {
-    let url = `${this.baseURL}/admin/analytics`;
-    if (dateRange) {
-      url += `?range=${dateRange}`;
-    }
-
-    const response = await fetch(url, {
-      headers: this.getHeaders(),
-    });
-
-    return this.handleResponse(response);
-  }
-
-  // AI Chat Mentor
-  async chatWithAI(message: string, context?: string) {
-    const response = await fetch(`${this.baseURL}/ai/chat`, {
-      method: 'POST',
-      headers: this.getHeaders(),
-      body: JSON.stringify({ message, context })
-    });
-    return this.handleResponse(response);
-  }
-
-  async addStudent(studentData: any) {
-    const response = await fetch(`${this.baseURL}/admin/users`, {
-      method: 'POST',
-      headers: this.getHeaders(),
-      body: JSON.stringify(studentData),
-    });
-    return this.handleResponse(response);
-  }
-
-  // Add a method to create a staff user using the User model
-  async addStaffUser(staffData: { name: string; email: string; password: string; department?: string; role?: string }) {
-    const response = await fetch(`${this.baseURL}/admin/users`, {
-      method: 'POST',
-      headers: this.getHeaders(),
-      body: JSON.stringify({ ...staffData, role: 'staff' }),
-    });
-    return this.handleResponse(response);
-  }
-
-  // Add a method to fetch all users with role=staff
-  async getAllStaffUsers() {
-    const response = await fetch(`${this.baseURL}/admin/users?role=staff`, {
-      headers: this.getHeaders(),
-    });
-    return this.handleResponse(response);
-  }
-
-  async getAllUsers(filters?: any) {
-    let url = `${this.baseURL}/admin/users`;
-    if (filters) {
-      const params = new URLSearchParams(filters).toString();
-      if (params) url += `?${params}`;
-    }
-    const response = await fetch(url, {
-      headers: this.getHeaders(),
-    });
-    return this.handleResponse(response);
-  }
-
-  async getAllAdmins() {
-    const response = await fetch(`${this.baseURL}/admin/users?role=admin`, {
-      headers: this.getHeaders(),
-    });
-    return this.handleResponse(response);
-  }
-
-  async updateAdmin(adminId: string, adminData: any) {
-    const response = await fetch(`${this.baseURL}/admin/users/${adminId}`, {
-      method: 'PUT',
-      headers: this.getHeaders(),
-      body: JSON.stringify(adminData),
-    });
-    return this.handleResponse(response);
-  }
-
-  async deleteAdmin(adminId: string) {
-    const response = await fetch(`${this.baseURL}/admin/users/${adminId}`, {
-      method: 'DELETE',
-      headers: this.getHeaders(),
-    });
-    return this.handleResponse(response);
-  }
-
-  async addAdmin(adminData: any) {
-    // Ensure role is always 'admin' when creating
-    const response = await fetch(`${this.baseURL}/admin/users`, {
-      method: 'POST',
-      headers: this.getHeaders(),
-      body: JSON.stringify({ ...adminData, role: 'admin' }),
-    });
-    return this.handleResponse(response);
-  }
-
-  // Add a generic addUser method for admin UI
-  async addUser(userData: any) {
-    const response = await fetch(`${this.baseURL}/admin/users`, {
-      method: 'POST',
-      headers: this.getHeaders(),
-      body: JSON.stringify(userData),
-    });
-    return this.handleResponse(response);
-  }
-
-  // Admin settings endpoints
-  async getPlatformSettings() {
-    const response = await fetch(`${this.baseURL}/admin/settings`, {
-      headers: this.getHeaders(),
-    });
-    return this.handleResponse(response);
-  }
-
-  async updatePlatformSettings(settings: any) {
-    const response = await fetch(`${this.baseURL}/admin/settings`, {
-      method: 'PUT',
-      headers: this.getHeaders(),
-      body: JSON.stringify(settings),
-    });
-    return this.handleResponse(response);
-  }
-
-  // Staff endpoints
-  async getAllStaff() {
-    const response = await fetch(`${this.baseURL}/staff`, {
+  async getAdminStats() {
+    const response = await fetch(`${this.baseURL}/admin/stats`, {
+      method: 'GET',
       headers: this.getHeaders(),
       credentials: 'include',
     });
     return this.handleResponse(response);
   }
 
-  async getStaffById(staffId: string) {
-    const response = await fetch(`${this.baseURL}/staff/${staffId}`, {
+  async getLevelProgress() {
+    const response = await fetch(`${this.baseURL}/admin/level-progress`, {
+      method: 'GET',
       headers: this.getHeaders(),
       credentials: 'include',
     });
     return this.handleResponse(response);
   }
 
-  async createStaff(staffData: any) {
-    const response = await fetch(`${this.baseURL}/staff`, {
-      method: 'POST',
+  async getUsers() {
+    const response = await fetch(`${this.baseURL}/admin/users`, {
+      method: 'GET',
       headers: this.getHeaders(),
-      body: JSON.stringify(staffData),
       credentials: 'include',
     });
     return this.handleResponse(response);
   }
 
-  async updateStaff(staffId: string, staffData: any) {
-    const response = await fetch(`${this.baseURL}/admin/users/${staffId}`, {
+  async updateUserRole(userId: string, role: string) {
+    const response = await fetch(`${this.baseURL}/admin/users/${userId}/role`, {
       method: 'PUT',
       headers: this.getHeaders(),
-      body: JSON.stringify(staffData),
-    });
-    return this.handleResponse(response);
-  }
-
-  async deleteStaff(staffId: string) {
-    const response = await fetch(`${this.baseURL}/admin/users/${staffId}`, {
-      method: 'DELETE',
-      headers: this.getHeaders(),
-    });
-    return this.handleResponse(response);
-  }
-
-  async updateUser(userId: string, userData: any) {
-    const response = await fetch(`${this.baseURL}/admin/users/${userId}`, {
-      method: 'PUT',
-      headers: this.getHeaders(),
-      body: JSON.stringify(userData),
+      credentials: 'include',
+      body: JSON.stringify({ role }),
     });
     return this.handleResponse(response);
   }
@@ -458,85 +239,109 @@ class ApiService {
     const response = await fetch(`${this.baseURL}/admin/users/${userId}`, {
       method: 'DELETE',
       headers: this.getHeaders(),
-    });
-    return this.handleResponse(response);
-  }
-
-  async getAttendance(userId: string) {
-    const response = await fetch(`${this.baseURL}/attendance/${userId}`, {
-      headers: this.getHeaders(),
-    });
-    return this.handleResponse(response);
-  }
-
-  /**
-   * Mark attendance for a specific user and date
-   * @param userId - The user's ID
-   * @param date - The date to mark attendance for
-   * @param status - The attendance status ('present' or 'absent')
-   */
-  async markAttendance(userId: string, date: string, status: 'present' | 'absent' = 'present') {
-    const response = await fetch(`${this.baseURL}/attendance/mark`, {
-      method: 'POST',
-      headers: this.getHeaders(),
-      body: JSON.stringify({ userId, date, status }),
-    });
-    return this.handleResponse(response);
-  }
-
-  /**
-   * Admin: Reset a user's password
-   * @param userId - The user's ID
-   * @param newPassword - The new password to set
-   */
-  async resetUserPassword(userId: string, newPassword: string) {
-    const response = await fetch(`${this.baseURL}/admin/users/${userId}/reset-password`, {
-      method: 'POST',
-      headers: this.getHeaders(),
-      body: JSON.stringify({ password: newPassword }),
       credentials: 'include',
     });
     return this.handleResponse(response);
   }
 
-  // Generic HTTP methods for flexible API calls
-  async get(endpoint: string) {
-    const url = `${this.baseURL}${endpoint}`;
-    console.log('API: Generic GET request to:', url);
-    const response = await fetch(url, {
+  // Curriculum endpoints
+  async getCurriculum() {
+    const response = await fetch(`${this.baseURL}/curriculum`, {
+      method: 'GET',
       headers: this.getHeaders(),
-      credentials: 'include',
-    });
-    const result = await this.handleResponse(response);
-    console.log('API: Generic GET response:', result);
-    return result;
-  }
-
-  async post(endpoint: string, data?: any) {
-    const response = await fetch(`${this.baseURL}${endpoint}`, {
-      method: 'POST',
-      headers: this.getHeaders(),
-      body: data ? JSON.stringify(data) : undefined,
       credentials: 'include',
     });
     return this.handleResponse(response);
   }
 
-  async put(endpoint: string, data?: any) {
-    const response = await fetch(`${this.baseURL}${endpoint}`, {
+  async createCurriculumItem(itemData: any) {
+    const response = await fetch(`${this.baseURL}/curriculum`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      credentials: 'include',
+      body: JSON.stringify(itemData),
+    });
+    return this.handleResponse(response);
+  }
+
+  async updateCurriculumItem(itemId: string, itemData: any) {
+    const response = await fetch(`${this.baseURL}/curriculum/${itemId}`, {
       method: 'PUT',
       headers: this.getHeaders(),
-      body: data ? JSON.stringify(data) : undefined,
       credentials: 'include',
+      body: JSON.stringify(itemData),
     });
     return this.handleResponse(response);
   }
 
-  async delete(endpoint: string) {
-    const response = await fetch(`${this.baseURL}${endpoint}`, {
+  async deleteCurriculumItem(itemId: string) {
+    const response = await fetch(`${this.baseURL}/curriculum/${itemId}`, {
       method: 'DELETE',
       headers: this.getHeaders(),
       credentials: 'include',
+    });
+    return this.handleResponse(response);
+  }
+
+  // Settings endpoints
+  async getSettings() {
+    const response = await fetch(`${this.baseURL}/settings`, {
+      method: 'GET',
+      headers: this.getHeaders(),
+      credentials: 'include',
+    });
+    return this.handleResponse(response);
+  }
+
+  async updateSettings(settings: any) {
+    const response = await fetch(`${this.baseURL}/settings`, {
+      method: 'PUT',
+      headers: this.getHeaders(),
+      credentials: 'include',
+      body: JSON.stringify(settings),
+    });
+    return this.handleResponse(response);
+  }
+
+  // Attendance endpoints
+  async markAttendance() {
+    const response = await fetch(`${this.baseURL}/attendance/mark`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      credentials: 'include',
+    });
+    return this.handleResponse(response);
+  }
+
+  async getAttendanceStats() {
+    const response = await fetch(`${this.baseURL}/attendance/stats`, {
+      method: 'GET',
+      headers: this.getHeaders(),
+      credentials: 'include',
+    });
+    return this.handleResponse(response);
+  }
+
+  // AI endpoints
+  async chatWithAI(message: string) {
+    const response = await fetch(`${this.baseURL}/ai/chat`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      credentials: 'include',
+      body: JSON.stringify({ message }),
+    });
+    return this.handleResponse(response);
+  }
+
+  // File upload endpoints
+  async uploadFile(file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await fetch(`${this.baseURL}/upload`, {
+      method: 'POST',
+      credentials: 'include',
+      body: formData,
     });
     return this.handleResponse(response);
   }

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import LevelsSidebar from '../components/LevelsSidebar';
 import TaskSubmissionModal from '../components/TaskSubmissionModal';
+import { LockClosedIcon, CheckCircledIcon } from '@radix-ui/react-icons';
 import apiService from '../services/api';
 
 interface Level {
@@ -39,6 +40,11 @@ const LevelExercisePage: React.FC = () => {
   const [allLevels, setAllLevels] = useState<Level[]>([]);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [unlockingLevel, setUnlockingLevel] = useState(false);
+  
+  // New state for exercise validation
+  const [isExerciseUnlocked, setIsExerciseUnlocked] = useState(false);
+  const [hasExerciseLinks, setHasExerciseLinks] = useState(false);
+  const [exerciseSubmissions, setExerciseSubmissions] = useState<any[]>([]);
 
   const fetchLevel = useCallback(async () => {
     try {
@@ -75,11 +81,34 @@ const LevelExercisePage: React.FC = () => {
     }
   }, [levelId]);
 
+  // Fetch exercise unlock status and link validation
+  const fetchExerciseStatus = useCallback(async () => {
+    if (!levelId) return;
+    
+    try {
+      // Check if exercise is unlocked (test must be passed)
+      const unlockResponse = await apiService.checkExerciseUnlocked(levelId);
+      if (unlockResponse.success) {
+        setIsExerciseUnlocked(unlockResponse.data.isUnlocked);
+      }
+      
+      // Check if exercise links are submitted
+      const linksResponse = await apiService.checkExerciseLinks(levelId);
+      if (linksResponse.success) {
+        setHasExerciseLinks(linksResponse.data.hasLinks);
+        setExerciseSubmissions(linksResponse.data.exerciseSubmissions || []);
+      }
+    } catch (error) {
+      console.error('Error fetching exercise status:', error);
+    }
+  }, [levelId]);
+
   useEffect(() => {
     if (levelId) {
       fetchLevel();
+      fetchExerciseStatus();
     }
-  }, [levelId, fetchLevel]);
+  }, [levelId, fetchLevel, fetchExerciseStatus]);
 
   const fetchAllLevels = useCallback(async () => {
     try {
@@ -109,9 +138,15 @@ const LevelExercisePage: React.FC = () => {
     setSelectedExercise(null);
     // Trigger sidebar refresh when modal is closed (exercise might have been completed)
     setRefreshTrigger(prev => prev + 1);
+    // Refresh exercise status after modal closes
+    fetchExerciseStatus();
   };
 
   const handleUnlockNextLevel = async () => {
+    if (!hasExerciseLinks) {
+      return; // Don't proceed if no links are submitted
+    }
+    
     try {
       setUnlockingLevel(true);
       
@@ -193,6 +228,30 @@ const LevelExercisePage: React.FC = () => {
     );
   }
 
+  // Check if exercise is unlocked (test must be passed)
+  if (!isExerciseUnlocked) {
+    return (
+      <div className="flex h-screen bg-offblack overflow-x-hidden">
+        <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="exercise" refreshTrigger={refreshTrigger} />
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
+          <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 text-center">
+            <div className="text-paperwhite/30 text-6xl mb-4">
+              <LockClosedIcon className="h-16 w-16 mx-auto" />
+            </div>
+            <h2 className="text-2xl font-bold text-paperwhite mb-2">Exercise Locked</h2>
+            <p className="text-teallight mb-6 text-lg">Pass the test first to unlock this exercise section.</p>
+            <button 
+              onClick={() => navigate(`/student/training/${levelId}/test`)}
+              className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold hover:bg-trueturquoise/90 transition-colors text-lg shadow-sm"
+            >
+              Take Test First
+            </button>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   const validExercises = level.exercise ? level.exercise.filter(e => e && e.title && e.description) : [];
   
   if (!level.exercise || level.exercise.length === 0 || validExercises.length === 0) {
@@ -243,35 +302,45 @@ const LevelExercisePage: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {exercises.map((exercise, index) => (
-              <tr key={index} className="border-b border-paperwhite/10 hover:bg-paperwhite/5">
-                <td className="py-3 px-4 text-paperwhite">{startIndex + index + 1}</td>
-                <td className="py-3 px-4 text-paperwhite font-medium">{exercise.title}</td>
-                <td className="py-3 px-4 text-paperwhite text-sm">{exercise.description}</td>
-                <td className="py-3 px-4">
-                  <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                    exercise.difficulty === 'Easy' ? 'bg-green-500/20 text-green-400' :
-                    exercise.difficulty === 'Medium' ? 'bg-yellow-500/20 text-yellow-400' :
-                    exercise.difficulty === 'Hard' ? 'bg-orange-500/20 text-orange-400' :
-                    'bg-red-500/20 text-red-400'
-                  }`}>
-                    {exercise.difficulty}
-                  </span>
-                </td>
-                <td className="py-3 px-4 text-paperwhite">{exercise.creditPoints}</td>
-                <td className="py-3 px-4">
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 bg-paperwhite/20 rounded"></div>
-                    <button 
-                      onClick={() => handleViewExercise(exercise)}
-                      className="bg-paperwhite/10 text-paperwhite px-3 py-1 rounded text-sm hover:bg-paperwhite/20 transition-colors"
-                    >
-                      View
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+            {exercises.map((exercise, index) => {
+              const isSubmitted = exerciseSubmissions.some(sub => sub.exerciseTitle === exercise.title);
+              
+              return (
+                <tr key={index} className="border-b border-paperwhite/10 hover:bg-paperwhite/5">
+                  <td className="py-3 px-4 text-paperwhite">{startIndex + index + 1}</td>
+                  <td className="py-3 px-4 text-paperwhite font-medium">{exercise.title}</td>
+                  <td className="py-3 px-4 text-paperwhite text-sm">{exercise.description}</td>
+                  <td className="py-3 px-4">
+                    <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                      exercise.difficulty === 'Easy' ? 'bg-green-500/20 text-green-400' :
+                      exercise.difficulty === 'Medium' ? 'bg-yellow-500/20 text-yellow-400' :
+                      exercise.difficulty === 'Hard' ? 'bg-orange-500/20 text-orange-400' :
+                      'bg-red-500/20 text-red-400'
+                    }`}>
+                      {exercise.difficulty}
+                    </span>
+                  </td>
+                  <td className="py-3 px-4 text-paperwhite">{exercise.creditPoints}</td>
+                  <td className="py-3 px-4">
+                    <div className="flex items-center gap-2">
+                      {isSubmitted ? (
+                        <div className="w-4 h-4 bg-green-500 rounded flex items-center justify-center">
+                          <CheckCircledIcon className="h-3 w-3 text-white" />
+                        </div>
+                      ) : (
+                        <div className="w-4 h-4 bg-paperwhite/20 rounded"></div>
+                      )}
+                      <button 
+                        onClick={() => handleViewExercise(exercise)}
+                        className="bg-paperwhite/10 text-paperwhite px-3 py-1 rounded text-sm hover:bg-paperwhite/20 transition-colors"
+                      >
+                        {isSubmitted ? 'View' : 'Submit'}
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -300,26 +369,85 @@ const LevelExercisePage: React.FC = () => {
           </div>
         </div>
 
+        {/* Exercise Progress Status */}
+        <div className="w-full max-w-5xl bg-gradient-to-r from-trueturquoise/10 to-teallight/10 rounded-xl border border-trueturquoise/30 shadow-lg p-6 mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="bg-trueturquoise text-offblack p-2 rounded-lg">
+                <CheckCircledIcon className="h-6 w-6" />
+              </div>
+              <h2 className="text-xl font-bold text-paperwhite">Exercise Progress</h2>
+            </div>
+            <div className="text-right">
+              <div className="text-2xl font-bold text-trueturquoise">{exerciseSubmissions.length}</div>
+              <div className="text-xs text-teallight">Submissions</div>
+            </div>
+          </div>
+          
+          <div className="mb-4">
+            <div className="flex justify-between text-sm text-teallight mb-1">
+              <span>Progress</span>
+              <span>{Math.round((exerciseSubmissions.length / Math.max(validExercises.length, 1)) * 100)}%</span>
+            </div>
+            <div className="w-full bg-paperwhite/20 rounded-full h-3">
+              <div 
+                className="bg-trueturquoise h-3 rounded-full transition-all duration-500"
+                style={{ width: `${(exerciseSubmissions.length / Math.max(validExercises.length, 1)) * 100}%` }}
+              ></div>
+            </div>
+          </div>
+          
+          {hasExerciseLinks ? (
+            <div className="bg-green-500/20 border border-green-500/30 rounded-lg p-3">
+              <div className="flex items-center gap-2 text-green-400">
+                <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-xs">✓</span>
+                </div>
+                <span className="font-semibold">Exercise links submitted! You can now unlock the next level.</span>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-orange-500/20 border border-orange-500/30 rounded-lg p-3">
+              <div className="flex items-center gap-2 text-orange-400">
+                <div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-xs">!</span>
+                </div>
+                <span className="font-semibold">Submit exercise links to unlock the next level.</span>
+              </div>
+            </div>
+          )}
+        </div>
+
         {/* Exercise Tables */}
         {mandatoryExercises.length > 0 && renderExerciseTable(mandatoryExercises, "Mandatory Task")}
         {optionalExercises.length > 0 && renderExerciseTable(optionalExercises, "Optional", mandatoryExercises.length)}
 
         {/* Action Buttons */}
         <div className="w-full max-w-5xl flex flex-col sm:flex-row items-center justify-center gap-4 mt-8 mb-8">
-          <button 
-            onClick={handleUnlockNextLevel}
-            disabled={unlockingLevel}
-            className="w-full sm:w-auto bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-teallight transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-          >
-            {unlockingLevel ? (
-              <>
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-offblack"></div>
-                Unlocking...
-              </>
-            ) : (
-              'Unlock Next Level'
-            )}
-          </button>
+          {hasExerciseLinks ? (
+            <button 
+              onClick={handleUnlockNextLevel}
+              disabled={unlockingLevel}
+              className="w-full sm:w-auto bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-teallight transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            >
+              {unlockingLevel ? (
+                <>
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-offblack"></div>
+                  Unlocking...
+                </>
+              ) : (
+                'Unlock Next Level'
+              )}
+            </button>
+          ) : (
+            <button 
+              disabled
+              className="w-full sm:w-auto bg-paperwhite/20 text-paperwhite/50 px-8 py-3 rounded-lg font-bold text-lg cursor-not-allowed flex items-center gap-2"
+            >
+              <LockClosedIcon className="h-5 w-5" />
+              Submit Exercise Links First
+            </button>
+          )}
         </div>
       </main>
 

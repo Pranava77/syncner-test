@@ -5,7 +5,8 @@ import {
   Link1Icon, 
   ClipboardIcon, 
   CheckCircledIcon,
-  Cross1Icon 
+  Cross1Icon,
+  ExclamationTriangleIcon
 } from '@radix-ui/react-icons';
 import apiService from '../services/api';
 
@@ -31,12 +32,16 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
     expectedOutput: '',
     submissionLink: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleInputChange = (field: string, value: string | string[]) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
+    // Clear error when user starts typing
+    if (error) setError(null);
   };
 
   const handleReferenceMaterialChange = (index: number, value: string) => {
@@ -48,21 +53,46 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
     }));
   };
 
-  const handleSubmit = async () => {
+  const validateForm = () => {
+    if (!formData.submissionLink.trim()) {
+      setError('Submission link is required to complete this exercise.');
+      return false;
+    }
+    
+    // Basic URL validation
     try {
-      // Submit exercise to progress tracking
-      await apiService.submitExercise(exercise.id || '', exercise.title);
+      new URL(formData.submissionLink);
+    } catch {
+      setError('Please enter a valid URL for your submission link.');
+      return false;
+    }
+    
+    return true;
+  };
+
+  const handleSubmit = async () => {
+    if (!validateForm()) return;
+    
+    setIsSubmitting(true);
+    setError(null);
+    
+    try {
+      // Extract links from form data
+      const links = [
+        formData.submissionLink,
+        ...formData.referenceMaterials.filter(link => link.trim() !== '')
+      ].filter(link => link.trim() !== '');
       
-      // Mark exercise section as completed
-      if (exercise.id && exercise.order) {
-        await apiService.markLevelCompleted(exercise.id, exercise.order, 'exercise');
-      }
+      // Submit exercise with links
+      await apiService.submitExercise(exercise.id || '', exercise.title, links);
       
       console.log('Exercise submitted successfully:', formData);
       onClose();
     } catch (error) {
       console.error('Error submitting exercise:', error);
-      // You could add error handling UI here
+      setError('Failed to submit exercise. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -79,15 +109,25 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
             </div>
             <div>
               <div className="font-semibold text-paperwhite">{exercise.title}</div>
+              <div className="text-sm text-teallight">{exercise.description}</div>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <select className="px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition">
-              <option>Not Completed</option>
-              <option>Completed</option>
-            </select>
+            <span className="px-3 py-1 rounded-full bg-paperwhite/10 text-trueturquoise font-semibold text-sm">
+              {exercise.difficulty || 'Medium'}
+            </span>
           </div>
         </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="mx-6 mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+            <div className="flex items-center gap-2 text-red-400">
+              <ExclamationTriangleIcon className="w-4 h-4" />
+              <span className="text-sm">{error}</span>
+            </div>
+          </div>
+        )}
 
         {/* Form Content */}
         <div className="p-6 space-y-6">
@@ -123,7 +163,7 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-paperwhite mb-2">
               <FileTextIcon className="w-4 h-4 text-trueturquoise" />
-              Reference Materials:
+              Reference Materials (Optional):
             </label>
             <div className="space-y-3">
               {formData.referenceMaterials.map((material, index) => (
@@ -133,7 +173,7 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
                   value={material}
                   onChange={(e) => handleReferenceMaterialChange(index, e.target.value)}
                   className="w-full p-3 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight"
-                  placeholder={`Reference material ${index + 1}`}
+                  placeholder={`Reference material ${index + 1} (optional)`}
                 />
               ))}
             </div>
@@ -157,15 +197,19 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-paperwhite mb-2">
               <Link1Icon className="w-4 h-4 text-trueturquoise" />
-              Submission Link:
+              Submission Link: <span className="text-red-400">*</span>
             </label>
             <input
-              type="text"
+              type="url"
               value={formData.submissionLink}
               onChange={(e) => handleInputChange('submissionLink', e.target.value)}
               className="w-full p-3 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight"
-              placeholder="Paste your link here"
+              placeholder="https://your-project-link.com"
+              required
             />
+            <p className="text-xs text-teallight mt-1">
+              This link is required to unlock the next level. Please provide a valid URL to your completed work.
+            </p>
           </div>
         </div>
 
@@ -173,17 +217,28 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
         <div className="flex justify-end gap-3 p-6 border-t border-paperwhite/20">
           <button
             onClick={onClose}
-            className="flex items-center gap-2 px-4 py-2 text-paperwhite border border-paperwhite/20 rounded-lg hover:bg-paperwhite/10 transition-colors"
+            disabled={isSubmitting}
+            className="flex items-center gap-2 px-4 py-2 text-paperwhite border border-paperwhite/20 rounded-lg hover:bg-paperwhite/10 transition-colors disabled:opacity-50"
           >
             <Cross1Icon className="w-4 h-4" />
             Cancel
           </button>
           <button
             onClick={handleSubmit}
-            className="flex items-center gap-2 px-6 py-2 bg-trueturquoise text-offblack rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold"
+            disabled={isSubmitting || !formData.submissionLink.trim()}
+            className="flex items-center gap-2 px-6 py-2 bg-trueturquoise text-offblack rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <CheckCircledIcon className="w-4 h-4" />
-            Submit Task
+            {isSubmitting ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-offblack"></div>
+                Submitting...
+              </>
+            ) : (
+              <>
+                <CheckCircledIcon className="w-4 h-4" />
+                Submit Task
+              </>
+            )}
           </button>
         </div>
       </div>

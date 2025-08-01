@@ -1,4 +1,5 @@
 import User from '../models/User.js';
+import UserProgress from '../models/UserProgress.js';
 import bcrypt from 'bcryptjs';
 import { validationResult } from 'express-validator';
 import { normalizeCareerTrack } from '../utils/careerTrackUtils.js';
@@ -43,13 +44,17 @@ const getAnalytics = async (req, res) => {
     ]);
     const trackDistribution = trackDistributionAgg.map(t => ({ track: t._id || 'Unassigned', count: t.count }));
 
+    // Level Progress Analytics
+    const levelProgressData = await getLevelProgressAnalytics();
+
     res.status(200).json({
       success: true,
       data: {
         totalStudents,
         activeStudents,
         completionRate,
-        trackDistribution
+        trackDistribution,
+        levelProgress: levelProgressData
       }
     });
   } catch (error) {
@@ -58,6 +63,95 @@ const getAnalytics = async (req, res) => {
       success: false,
       message: 'Server error'
     });
+  }
+};
+
+// @desc    Get level progress analytics
+// @route   GET /api/admin/level-progress
+// @access  Private/Admin
+const getLevelProgress = async (req, res) => {
+  try {
+    const levelProgressData = await getLevelProgressAnalytics();
+    
+    res.status(200).json({
+      success: true,
+      data: levelProgressData
+    });
+  } catch (error) {
+    console.error('Get level progress error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+};
+
+// Helper function to get level progress analytics
+const getLevelProgressAnalytics = async () => {
+  try {
+    // Get all user progress data
+    const allProgress = await UserProgress.find({});
+    
+    // Get total number of students
+    const totalStudents = allProgress.length;
+    
+    // Get total number of levels (assuming max level is the highest level number)
+    const maxLevel = totalStudents > 0 ? Math.max(...allProgress.map(p => p.currentLevel), 1) : 1;
+    
+    // Calculate progress for each level
+    const levelProgress = [];
+    
+    for (let level = 1; level <= maxLevel; level++) {
+      // Count students who have reached this level
+      const studentsAtLevel = allProgress.filter(p => p.currentLevel >= level).length;
+      
+      // Count students who have completed this level (exercise section completed)
+      const studentsCompletedLevel = allProgress.filter(p => 
+        p.completedLevels.some(cl => 
+          cl.levelOrder === level && 
+          cl.completedSections && 
+          cl.completedSections.exercise === true
+        )
+      ).length;
+      
+      // Calculate completion percentage
+      const completionPercentage = totalStudents > 0 ? 
+        Math.round((studentsCompletedLevel / totalStudents) * 100) : 0;
+      
+      levelProgress.push({
+        level: level,
+        totalStudents: totalStudents,
+        studentsAtLevel: studentsAtLevel,
+        studentsCompletedLevel: studentsCompletedLevel,
+        completionPercentage: completionPercentage
+      });
+    }
+    
+    // Calculate overall progress metrics
+    const averageLevelReached = totalStudents > 0 ? 
+      Math.round(allProgress.reduce((sum, p) => sum + p.currentLevel, 0) / totalStudents * 10) / 10 : 0;
+    
+    const overallCompletionRate = totalStudents > 0 ? 
+      Math.round((allProgress.filter(p => p.completedLevels.length > 0).length / totalStudents) * 100) : 0;
+    
+    return {
+      levelProgress,
+      overallMetrics: {
+        totalStudents,
+        averageLevelReached,
+        overallCompletionRate
+      }
+    };
+  } catch (error) {
+    console.error('Error getting level progress analytics:', error);
+    return {
+      levelProgress: [],
+      overallMetrics: {
+        totalStudents: 0,
+        averageLevelReached: 0,
+        overallCompletionRate: 0
+      }
+    };
   }
 };
 
@@ -153,6 +247,7 @@ const resetPassword = async (req, res) => {
 export {
   getAllUsers,
   getAnalytics,
+  getLevelProgress,
   createUser,
   updateUser,
   deleteUser,

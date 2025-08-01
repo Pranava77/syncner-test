@@ -59,12 +59,236 @@ export const markLevelCompleted = async (req, res) => {
   }
 };
 
+// @desc    Update learn progress
+// @route   POST /api/progress/learn-progress
+// @access  Private
+export const updateLearnProgress = async (req, res) => {
+  try {
+    const { levelId, timeSpent, linksAccessed } = req.body;
+    const userId = req.user._id;
+    const { careerTrack } = req.user;
+
+    if (!levelId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Level ID is required'
+      });
+    }
+
+    const progress = await UserProgress.getOrCreate(userId, careerTrack);
+    progress.updateLearnProgress(levelId, timeSpent || 0, linksAccessed || []);
+    await progress.save();
+
+    // Get the updated level progress
+    const level = progress.completedLevels.find(l => l.levelId === levelId);
+    const learnProgress = level ? level.learnProgress : null;
+
+    res.status(200).json({
+      success: true,
+      data: {
+        learnProgress,
+        isCompleted: learnProgress ? learnProgress.isCompleted : false
+      },
+      message: 'Learn progress updated successfully'
+    });
+  } catch (error) {
+    console.error('Update learn progress error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error while updating learn progress',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
+
+// @desc    Submit test attempt
+// @route   POST /api/progress/test-attempt
+// @access  Private
+export const submitTestAttempt = async (req, res) => {
+  try {
+    const { levelId, score, answers } = req.body;
+    const userId = req.user._id;
+    const { careerTrack } = req.user;
+
+    if (!levelId || score === undefined || !answers) {
+      return res.status(400).json({
+        success: false,
+        message: 'Level ID, score, and answers are required'
+      });
+    }
+
+    const progress = await UserProgress.getOrCreate(userId, careerTrack);
+    
+    // Check if user can retake test
+    if (!progress.canRetakeTest(levelId)) {
+      const level = progress.completedLevels.find(l => l.levelId === levelId);
+      const attempts = level ? level.testProgress.attempts.length : 0;
+      
+      if (attempts >= 3) {
+        return res.status(400).json({
+          success: false,
+          message: 'Maximum attempts reached. Please wait 24 hours before retaking.',
+          data: {
+            attempts: attempts,
+            maxAttempts: 3,
+            canRetake: false
+          }
+        });
+      } else {
+        return res.status(400).json({
+          success: false,
+          message: 'Please wait 24 hours before retaking the test.',
+          data: {
+            attempts: attempts,
+            maxAttempts: 3,
+            canRetake: false
+          }
+        });
+      }
+    }
+
+    progress.submitTestAttempt(levelId, score, answers);
+    await progress.save();
+
+    // Get the updated test progress
+    const level = progress.completedLevels.find(l => l.levelId === levelId);
+    const testProgress = level ? level.testProgress : null;
+    const passed = score >= 60;
+
+    res.status(200).json({
+      success: true,
+      data: {
+        score,
+        passed,
+        attempts: testProgress ? testProgress.attempts.length : 1,
+        maxAttempts: 3,
+        canRetake: progress.canRetakeTest(levelId)
+      },
+      message: passed ? 'Test passed! Exercise unlocked.' : 'Test failed. You can retry after 24 hours.'
+    });
+  } catch (error) {
+    console.error('Submit test attempt error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error while submitting test attempt',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
+
+// @desc    Check test unlock status
+// @route   GET /api/progress/test-unlocked/:levelId
+// @access  Private
+export const checkTestUnlocked = async (req, res) => {
+  try {
+    const { levelId } = req.params;
+    const userId = req.user._id;
+    const { careerTrack } = req.user;
+
+    const progress = await UserProgress.getOrCreate(userId, careerTrack);
+    const isUnlocked = progress.isTestUnlocked(levelId);
+    
+    // Get learn progress details
+    const level = progress.completedLevels.find(l => l.levelId === levelId);
+    const learnProgress = level ? level.learnProgress : null;
+
+    res.status(200).json({
+      success: true,
+      data: {
+        isUnlocked,
+        learnProgress,
+        timeRequired: 300, // 5 minutes in seconds
+        timeSpent: learnProgress ? learnProgress.timeSpent : 0,
+        linksRequired: 1,
+        linksAccessed: learnProgress ? learnProgress.linksAccessed.length : 0
+      }
+    });
+  } catch (error) {
+    console.error('Check test unlocked error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error while checking test unlock status',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
+
+// @desc    Check exercise unlock status
+// @route   GET /api/progress/exercise-unlocked/:levelId
+// @access  Private
+export const checkExerciseUnlocked = async (req, res) => {
+  try {
+    const { levelId } = req.params;
+    const userId = req.user._id;
+    const { careerTrack } = req.user;
+
+    const progress = await UserProgress.getOrCreate(userId, careerTrack);
+    const isUnlocked = progress.isExerciseUnlocked(levelId);
+    
+    // Get test progress details
+    const level = progress.completedLevels.find(l => l.levelId === levelId);
+    const testProgress = level ? level.testProgress : null;
+
+    res.status(200).json({
+      success: true,
+      data: {
+        isUnlocked,
+        testProgress,
+        attempts: testProgress ? testProgress.attempts.length : 0,
+        maxAttempts: 3,
+        canRetake: progress.canRetakeTest(levelId)
+      }
+    });
+  } catch (error) {
+    console.error('Check exercise unlocked error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error while checking exercise unlock status',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
+
+// @desc    Check exercise links status
+// @route   GET /api/progress/exercise-links/:levelId
+// @access  Private
+export const checkExerciseLinks = async (req, res) => {
+  try {
+    const { levelId } = req.params;
+    const userId = req.user._id;
+    const { careerTrack } = req.user;
+
+    const progress = await UserProgress.getOrCreate(userId, careerTrack);
+    const hasLinks = progress.hasExerciseLinks(levelId);
+    
+    // Get exercise submissions
+    const level = progress.completedLevels.find(l => l.levelId === levelId);
+    const exerciseSubmissions = level ? level.exerciseSubmissions : [];
+
+    res.status(200).json({
+      success: true,
+      data: {
+        hasLinks,
+        exerciseSubmissions,
+        canUnlockNextLevel: hasLinks
+      }
+    });
+  } catch (error) {
+    console.error('Check exercise links error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error while checking exercise links',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
+
 // @desc    Submit exercise
 // @route   POST /api/progress/submit-exercise
 // @access  Private
 export const submitExercise = async (req, res) => {
   try {
-    const { levelId, exerciseTitle } = req.body;
+    const { levelId, exerciseTitle, links } = req.body;
     const userId = req.user._id;
     const { careerTrack } = req.user;
 
@@ -76,7 +300,7 @@ export const submitExercise = async (req, res) => {
     }
 
     const progress = await UserProgress.getOrCreate(userId, careerTrack);
-    progress.submitExercise(levelId, exerciseTitle);
+    progress.submitExercise(levelId, exerciseTitle, links);
     await progress.save();
 
     res.status(200).json({

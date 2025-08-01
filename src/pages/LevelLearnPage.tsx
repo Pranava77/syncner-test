@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import LevelsSidebar from '../components/LevelsSidebar';
-import { PlayIcon, ReaderIcon, FileTextIcon, ChevronUpIcon, ChevronDownIcon, ExternalLinkIcon } from '@radix-ui/react-icons';
+import { PlayIcon, ReaderIcon, FileTextIcon, ChevronUpIcon, ChevronDownIcon, ExternalLinkIcon, ClockIcon, LockClosedIcon } from '@radix-ui/react-icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import apiService from '../services/api';
 
@@ -34,6 +34,12 @@ interface LearnItem {
   order: number;
 }
 
+interface LearnProgress {
+  timeSpent: number;
+  linksAccessed: string[];
+  isCompleted: boolean;
+}
+
 const LevelLearnPage: React.FC = () => {
   const { levelId } = useParams<{ levelId: string }>();
   const navigate = useNavigate();
@@ -43,6 +49,17 @@ const LevelLearnPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [readFirstExpanded, setReadFirstExpanded] = useState(true);
+  
+  // New state for learn progress tracking
+  const [learnProgress, setLearnProgress] = useState<LearnProgress>({
+    timeSpent: 0,
+    linksAccessed: [],
+    isCompleted: false
+  });
+  const [isTestUnlocked, setIsTestUnlocked] = useState(false);
+  const [timeSpent, setTimeSpent] = useState(0);
+  const [accessedLinks, setAccessedLinks] = useState<string[]>([]);
+  const [isTracking, setIsTracking] = useState(false);
 
   const fetchLevel = useCallback(async () => {
     try {
@@ -78,11 +95,77 @@ const LevelLearnPage: React.FC = () => {
     }
   }, [levelId]);
 
+  // Fetch learn progress and test unlock status
+  const fetchLearnProgress = useCallback(async () => {
+    if (!levelId) return;
+    
+    try {
+      const response = await apiService.checkTestUnlocked(levelId);
+      if (response.success) {
+        setLearnProgress(response.data.learnProgress || {
+          timeSpent: 0,
+          linksAccessed: [],
+          isCompleted: false
+        });
+        setIsTestUnlocked(response.data.isUnlocked);
+        setTimeSpent(response.data.timeSpent || 0);
+        setAccessedLinks(response.data.linksAccessed || []);
+      }
+    } catch (error) {
+      console.error('Error fetching learn progress:', error);
+    }
+  }, [levelId]);
+
   useEffect(() => {
     if (levelId) {
       fetchLevel();
+      fetchLearnProgress();
     }
-  }, [levelId, fetchLevel]);
+  }, [levelId, fetchLevel, fetchLearnProgress]);
+
+  // Timer effect for tracking time spent
+  useEffect(() => {
+    if (!isTracking || learnProgress.isCompleted) return;
+
+    const interval = setInterval(() => {
+      setTimeSpent(prev => {
+        const newTime = prev + 1;
+        
+        // Update progress every 30 seconds
+        if (newTime % 30 === 0) {
+          updateLearnProgress(newTime, accessedLinks);
+        }
+        
+        return newTime;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isTracking, learnProgress.isCompleted, accessedLinks]);
+
+  // Start tracking when component mounts
+  useEffect(() => {
+    setIsTracking(true);
+    return () => setIsTracking(false);
+  }, []);
+
+  const updateLearnProgress = async (timeSpent: number, linksAccessed: string[]) => {
+    if (!levelId) return;
+    
+    try {
+      const response = await apiService.updateLearnProgress(levelId, timeSpent, linksAccessed);
+      if (response.success) {
+        setLearnProgress(response.data.learnProgress);
+        setIsTestUnlocked(response.data.isCompleted);
+        
+        if (response.data.isCompleted) {
+          setIsTracking(false);
+        }
+      }
+    } catch (error) {
+      console.error('Error updating learn progress:', error);
+    }
+  };
 
   const getContentIcon = (type: string) => {
     switch (type) {
@@ -110,18 +193,37 @@ const LevelLearnPage: React.FC = () => {
   };
 
   const handleLearningCardClick = (item: LearnItem) => {
-    // If there's already a videoUrl, use that
-    if (item.type === 'video' && item.videoUrl) {
-      window.open(item.videoUrl, '_blank', 'noopener,noreferrer');
-    } else {
-      // Otherwise, search YouTube for related content
-      const youtubeUrl = generateYouTubeSearchUrl(item.title, level?.title || '');
-      window.open(youtubeUrl, '_blank', 'noopener,noreferrer');
+    const linkUrl = item.type === 'video' && item.videoUrl 
+      ? item.videoUrl 
+      : generateYouTubeSearchUrl(item.title, level?.title || '');
+    
+    // Track accessed link
+    if (!accessedLinks.includes(linkUrl)) {
+      const newLinks = [...accessedLinks, linkUrl];
+      setAccessedLinks(newLinks);
+      updateLearnProgress(timeSpent, newLinks);
     }
+    
+    // Open link
+    window.open(linkUrl, '_blank', 'noopener,noreferrer');
   };
 
   const handleTakeTest = () => {
-    navigate(`/student/training/${levelId}/test`);
+    if (isTestUnlocked) {
+      navigate(`/student/training/${levelId}/test`);
+    }
+  };
+
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
+
+  const getProgressPercentage = () => {
+    const timeProgress = Math.min((timeSpent / 300) * 50, 50); // 50% for time (5 minutes)
+    const linkProgress = Math.min((accessedLinks.length / 1) * 50, 50); // 50% for links (1 link minimum)
+    return Math.min(timeProgress + linkProgress, 100);
   };
 
   if (loading) {
@@ -177,6 +279,57 @@ const LevelLearnPage: React.FC = () => {
               </span>
             </div>
           </div>
+        </div>
+
+        {/* Learn Progress Tracker */}
+        <div className="w-full max-w-5xl bg-gradient-to-r from-trueturquoise/10 to-teallight/10 rounded-xl border border-trueturquoise/30 shadow-lg p-6 mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="bg-trueturquoise text-offblack p-2 rounded-lg">
+                <ClockIcon className="h-6 w-6" />
+              </div>
+              <h2 className="text-xl font-bold text-paperwhite">Learning Progress</h2>
+            </div>
+            <div className="text-right">
+              <div className="text-2xl font-bold text-trueturquoise">{formatTime(timeSpent)}</div>
+              <div className="text-xs text-teallight">Time Spent</div>
+            </div>
+          </div>
+          
+          <div className="mb-4">
+            <div className="flex justify-between text-sm text-teallight mb-1">
+              <span>Progress</span>
+              <span>{Math.round(getProgressPercentage())}%</span>
+            </div>
+            <div className="w-full bg-paperwhite/20 rounded-full h-3">
+              <div 
+                className="bg-trueturquoise h-3 rounded-full transition-all duration-500"
+                style={{ width: `${getProgressPercentage()}%` }}
+              ></div>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <div className="bg-paperwhite/5 rounded-lg p-3">
+              <div className="text-trueturquoise font-semibold">Time Requirement</div>
+              <div className="text-paperwhite">{formatTime(timeSpent)} / 5:00</div>
+            </div>
+            <div className="bg-paperwhite/5 rounded-lg p-3">
+              <div className="text-trueturquoise font-semibold">Links Accessed</div>
+              <div className="text-paperwhite">{accessedLinks.length} / 1</div>
+            </div>
+          </div>
+          
+          {learnProgress.isCompleted && (
+            <div className="mt-4 bg-green-500/20 border border-green-500/30 rounded-lg p-3">
+              <div className="flex items-center gap-2 text-green-400">
+                <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-xs">✓</span>
+                </div>
+                <span className="font-semibold">Learning Complete! Test is now unlocked.</span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Read This First! Section */}
@@ -332,13 +485,23 @@ const LevelLearnPage: React.FC = () => {
 
         {/* Action Buttons */}
         <div className="w-full max-w-5xl flex flex-col sm:flex-row items-center justify-center gap-4 mt-4 mb-8">
-          <button 
-            onClick={handleTakeTest}
-            disabled={level.test.length === 0}
-            className="w-full sm:w-auto bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-teallight transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Take Test ► {level.test.length > 0 && `(${level.test.length} questions)`}
-          </button>
+          {isTestUnlocked ? (
+            <button 
+              onClick={handleTakeTest}
+              disabled={level.test.length === 0}
+              className="w-full sm:w-auto bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-teallight transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            >
+              Take Test ► {level.test.length > 0 && `(${level.test.length} questions)`}
+            </button>
+          ) : (
+            <button 
+              disabled
+              className="w-full sm:w-auto bg-paperwhite/20 text-paperwhite/50 px-8 py-3 rounded-lg font-bold text-lg cursor-not-allowed flex items-center gap-2"
+            >
+              <LockClosedIcon className="h-5 w-5" />
+              Test Locked - Complete Learning First
+            </button>
+          )}
         </div>
       </main>
     </div>

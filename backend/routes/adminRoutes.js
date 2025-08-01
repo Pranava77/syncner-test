@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllUsers, getAnalytics, createUser, updateUser, deleteUser, resetPassword } from '../controllers/adminController.js';
+import { getAllUsers, getAnalytics, getLevelProgress, createUser, updateUser, deleteUser, resetPassword } from '../controllers/adminController.js';
 import { protect } from '../middleware/auth.js';
 import { authorize } from '../middleware/auth.js';
 import { body } from 'express-validator';
@@ -42,6 +42,9 @@ router.post('/users/:id/reset-password', protect, authorize('admin'), resetPassw
 
 // Get analytics (admin only)
 router.get('/analytics', protect, authorize('admin'), getAnalytics);
+
+// Get level progress analytics (admin only)
+router.get('/level-progress', protect, authorize('admin'), getLevelProgress);
 
 // Health check for admin module
 router.get('/health', async (req, res) => {
