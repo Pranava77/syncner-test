@@ -30,7 +30,12 @@ interface LearnItem {
   type: 'video' | 'reading' | 'slide' | 'other' | 'learn';
   title: string;
   content: string;
-  videoUrl?: string;
+  resources?: Array<{
+    title: string;
+    url: string;
+    type: string;
+    description: string;
+  }>;
   order: number;
 }
 
@@ -193,9 +198,15 @@ const LevelLearnPage: React.FC = () => {
   };
 
   const handleLearningCardClick = (item: LearnItem) => {
-    const linkUrl = item.type === 'video' && item.videoUrl 
-      ? item.videoUrl 
-      : generateYouTubeSearchUrl(item.title, level?.title || '');
+    let linkUrl = '';
+    
+    // Check if item has resources with URLs
+    if (item.resources && item.resources.length > 0 && item.resources[0].url) {
+      linkUrl = item.resources[0].url;
+    } else {
+      // Fallback to YouTube search
+      linkUrl = generateYouTubeSearchUrl(item.title, level?.title || '');
+    }
     
     // Track accessed link
     if (!accessedLinks.includes(linkUrl)) {
@@ -465,7 +476,7 @@ const LevelLearnPage: React.FC = () => {
                     <p className="text-paperwhite text-sm leading-relaxed">{item.content}</p>
                   </div>
                   
-                  {item.type === 'video' && item.videoUrl && (
+                  {item.type === 'video' && item.resources && item.resources.length > 0 && item.resources[0].url && (
                     <div className="mb-4">
                       <div className="inline-flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg">
                         <PlayIcon className="h-4 w-4" />
@@ -475,7 +486,7 @@ const LevelLearnPage: React.FC = () => {
                   )}
                   
                   <div className="text-xs text-trueturquoise/70 mt-2">
-                    Click to {item.type === 'video' && item.videoUrl ? 'watch video' : 'search YouTube for related content'}
+                    Click to {item.type === 'video' && item.resources && item.resources.length > 0 && item.resources[0].url ? 'watch video' : 'search YouTube for related content'}
                   </div>
                 </div>
               ))}
