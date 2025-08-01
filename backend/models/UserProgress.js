@@ -208,15 +208,11 @@ userProgressSchema.methods.updateLearnProgress = function(levelId, timeSpent, li
     level.learnProgress = { timeSpent: 0, linksAccessed: [], isCompleted: false };
   }
   
-  level.learnProgress.timeSpent += timeSpent;
+  level.learnProgress.timeSpent = timeSpent;
   
-  // Add new links if not already present
+  // Set links accessed (frontend sends complete array)
   if (linksAccessed && Array.isArray(linksAccessed)) {
-    linksAccessed.forEach(link => {
-      if (!level.learnProgress.linksAccessed.includes(link)) {
-        level.learnProgress.linksAccessed.push(link);
-      }
-    });
+    level.learnProgress.linksAccessed = linksAccessed;
   }
   
   // Mark as completed if time spent >= 5 minutes (300 seconds) and at least one link accessed
