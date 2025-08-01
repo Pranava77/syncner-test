@@ -5,7 +5,7 @@ export const fetchAllUsers = createAsyncThunk(
   'users/fetchAllUsers',
   async (filters: any = undefined, { rejectWithValue }) => {
     try {
-      const response = await apiService.getAllUsers(filters);
+      const response = await apiService.getUsers(filters);
       if (!response.success) throw new Error(response.message || 'Failed to fetch users');
       return response.data;
     } catch (error: any) {
