@@ -13,6 +13,7 @@ const registerValidation = [
   body('email').isEmail().normalizeEmail().withMessage('Please provide a valid email'),
   body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
   body('college').trim().notEmpty().withMessage('College is required'),
+  body('careerTrack').isIn(['ai-ml', 'full-stack', 'fullstack', 'ui-ux', 'data-science']).withMessage('Invalid career track. Must be one of: full-stack, fullstack, ai-ml, ui-ux, data-science'),
   body('role').isIn(['student', 'admin', 'staff']).withMessage('Invalid role'),
   validateRequest
 ];
@@ -29,7 +30,7 @@ const updateProfileValidation = [
   body('department').optional().trim().isLength({ max: 50 }).withMessage('Department cannot exceed 50 characters'),
   body('phone').optional().trim().isLength({ max: 20 }).withMessage('Phone cannot exceed 20 characters'),
   body('location').optional().trim().isLength({ max: 100 }).withMessage('Location cannot exceed 100 characters'),
-  body('careerTrack').optional().isIn(['ai-ml', 'full-stack', 'ui-ux', 'data-science']).withMessage('Invalid career track'),
+  body('careerTrack').optional().isIn(['ai-ml', 'full-stack', 'fullstack', 'ui-ux', 'data-science']).withMessage('Invalid career track'),
   body('interests').optional().isArray().withMessage('Interests must be an array'),
   body('profileComplete').optional().isBoolean().withMessage('Profile complete must be a boolean'),
   body('gpa').optional().trim().isLength({ max: 10 }).withMessage('GPA cannot exceed 10 characters'),
