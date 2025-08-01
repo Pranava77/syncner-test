@@ -7,10 +7,17 @@ class ApiService {
     this.baseURL = API_BASE_URL;
   }
 
-  private getHeaders(): HeadersInit {
-    return {
+  private getHeaders(token?: string): HeadersInit {
+    const authToken = token || localStorage.getItem('token');
+    const headers: HeadersInit = {
       'Content-Type': 'application/json',
     };
+    
+    if (authToken) {
+      headers['Authorization'] = `Bearer ${authToken}`;
+    }
+    
+    return headers;
   }
 
   private async handleResponse(response: Response) {
@@ -51,10 +58,10 @@ class ApiService {
     return this.handleResponse(response);
   }
 
-  async getCurrentUser() {
-    const response = await fetch(`${this.baseURL}/auth/me`, {
+  async getCurrentUser(token?: string) {
+    const response = await fetch(`${this.baseURL}/auth/profile`, {
       method: 'GET',
-      headers: this.getHeaders(),
+      headers: this.getHeaders(token),
       credentials: 'include',
     });
     return this.handleResponse(response);

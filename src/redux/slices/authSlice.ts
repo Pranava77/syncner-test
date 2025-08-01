@@ -54,7 +54,7 @@ export const loginUser = createAsyncThunk(
       const response = await apiService.login({ email, password });
       if (response.success && response.data.token) {
         // Fetch the full user profile using the new token
-        const profileResponse = await apiService.getCurrentUser();
+        const profileResponse = await apiService.getCurrentUser(response.data.token);
         if (profileResponse.success && profileResponse.data.user) {
           return { user: profileResponse.data.user, token: response.data.token };
         } else {
