@@ -232,8 +232,11 @@ const LevelLearnPage: React.FC = () => {
   };
 
   const getProgressPercentage = () => {
-    const timeProgress = Math.min((timeSpent / 300) * 50, 50); // 50% for time (5 minutes)
-    const linkProgress = Math.min((accessedLinks.length / 1) * 50, 50); // 50% for links (1 link minimum)
+    const safeTimeSpent = timeSpent || 0;
+    const safeLinksLength = accessedLinks?.length || 0;
+    
+    const timeProgress = Math.min((safeTimeSpent / 300) * 50, 50); // 50% for time (5 minutes)
+    const linkProgress = Math.min((safeLinksLength / 2) * 50, 50); // 50% for links (2 links minimum)
     return Math.min(timeProgress + linkProgress, 100);
   };
 
@@ -310,12 +313,12 @@ const LevelLearnPage: React.FC = () => {
           <div className="mb-4">
             <div className="flex justify-between text-sm text-teallight mb-1">
               <span>Progress</span>
-              <span>{Math.round(getProgressPercentage())}%</span>
+              <span>{Math.round(getProgressPercentage()) || 0}%</span>
             </div>
             <div className="w-full bg-paperwhite/20 rounded-full h-3">
               <div 
                 className="bg-trueturquoise h-3 rounded-full transition-all duration-500"
-                style={{ width: `${getProgressPercentage()}%` }}
+                style={{ width: `${getProgressPercentage() || 0}%` }}
               ></div>
             </div>
           </div>
