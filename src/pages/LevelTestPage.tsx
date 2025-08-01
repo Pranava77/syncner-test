@@ -111,11 +111,11 @@ const LevelTestPage: React.FC = () => {
     if (!levelId) return;
     
     try {
-      const response = await apiService.checkExerciseUnlocked(levelId);
+      const response = await apiService.checkTestUnlocked(levelId);
       if (response.success) {
         setIsTestUnlocked(response.data.isUnlocked);
         setTestProgress(response.data.testProgress || { attempts: [], isCompleted: false });
-        setCurrentAttempt(response.data.attempts || 0);
+        setCurrentAttempt(response.data.testProgress?.attempts?.length || 0);
         setCanRetake(response.data.canRetake);
         
         // Calculate retake timer if needed
