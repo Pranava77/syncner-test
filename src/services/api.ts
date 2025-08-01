@@ -233,8 +233,10 @@ class ApiService {
     return this.handleResponse(response);
   }
 
-  async getUsers() {
-    const response = await fetch(`${this.baseURL}/admin/users`, {
+  async getUsers(filters?: any) {
+    const queryParams = filters ? new URLSearchParams(filters).toString() : '';
+    const url = queryParams ? `${this.baseURL}/admin/users?${queryParams}` : `${this.baseURL}/admin/users`;
+    const response = await fetch(url, {
       method: 'GET',
       headers: this.getHeaders(),
       credentials: 'include',
@@ -330,6 +332,15 @@ class ApiService {
     return this.handleResponse(response);
   }
 
+  async getAttendance(userId: string) {
+    const response = await fetch(`${this.baseURL}/attendance/${userId}`, {
+      method: 'GET',
+      headers: this.getHeaders(),
+      credentials: 'include',
+    });
+    return this.handleResponse(response);
+  }
+
   async getAttendanceStats() {
     const response = await fetch(`${this.baseURL}/attendance/stats`, {
       method: 'GET',
@@ -340,12 +351,168 @@ class ApiService {
   }
 
   // AI endpoints
-  async chatWithAI(message: string) {
+  async chatWithAI(message: string, context?: string) {
     const response = await fetch(`${this.baseURL}/ai/chat`, {
       method: 'POST',
       headers: this.getHeaders(),
       credentials: 'include',
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ message, context }),
+    });
+    return this.handleResponse(response);
+  }
+
+  async getMe() {
+    const response = await fetch(`${this.baseURL}/auth/profile`, {
+      method: 'GET',
+      headers: this.getHeaders(),
+      credentials: 'include',
+    });
+    return this.handleResponse(response);
+  }
+
+  async getCareerTrack(trackId: string) {
+    const response = await fetch(`${this.baseURL}/tracks/${trackId}`, {
+      method: 'GET',
+      headers: this.getHeaders(),
+      credentials: 'include',
+    });
+    return this.handleResponse(response);
+  }
+
+  async resetUserPassword(userId: string, password: string) {
+    const response = await fetch(`${this.baseURL}/admin/users/${userId}/reset-password`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      credentials: 'include',
+      body: JSON.stringify({ password }),
+    });
+    return this.handleResponse(response);
+  }
+
+  async getStudents(filters?: any) {
+    const queryParams = filters ? new URLSearchParams(filters).toString() : '';
+    const url = queryParams ? `${this.baseURL}/admin/users?${queryParams}` : `${this.baseURL}/admin/users`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: this.getHeaders(),
+      credentials: 'include',
+    });
+    return this.handleResponse(response);
+  }
+
+  async updateStudent(studentId: string, studentData: any) {
+    const response = await fetch(`${this.baseURL}/admin/users/${studentId}`, {
+      method: 'PUT',
+      headers: this.getHeaders(),
+      credentials: 'include',
+      body: JSON.stringify(studentData),
+    });
+    return this.handleResponse(response);
+  }
+
+  async deleteStudent(studentId: string) {
+    const response = await fetch(`${this.baseURL}/admin/users/${studentId}`, {
+      method: 'DELETE',
+      headers: this.getHeaders(),
+      credentials: 'include',
+    });
+    return this.handleResponse(response);
+  }
+
+  async addStudent(studentData: any) {
+    const response = await fetch(`${this.baseURL}/admin/users`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      credentials: 'include',
+      body: JSON.stringify(studentData),
+    });
+    return this.handleResponse(response);
+  }
+
+  async getAnalytics(dateRange?: string) {
+    const url = dateRange ? `${this.baseURL}/admin/analytics?dateRange=${dateRange}` : `${this.baseURL}/admin/analytics`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: this.getHeaders(),
+      credentials: 'include',
+    });
+    return this.handleResponse(response);
+  }
+
+  async getPlatformSettings() {
+    const response = await fetch(`${this.baseURL}/admin/settings`, {
+      method: 'GET',
+      headers: this.getHeaders(),
+      credentials: 'include',
+    });
+    return this.handleResponse(response);
+  }
+
+  async updatePlatformSettings(settings: any) {
+    const response = await fetch(`${this.baseURL}/admin/settings`, {
+      method: 'PUT',
+      headers: this.getHeaders(),
+      credentials: 'include',
+      body: JSON.stringify(settings),
+    });
+    return this.handleResponse(response);
+  }
+
+  async addUser(userData: any) {
+    const response = await fetch(`${this.baseURL}/admin/users`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      credentials: 'include',
+      body: JSON.stringify(userData),
+    });
+    return this.handleResponse(response);
+  }
+
+  async updateUser(id: string, userData: any) {
+    const response = await fetch(`${this.baseURL}/admin/users/${id}`, {
+      method: 'PUT',
+      headers: this.getHeaders(),
+      credentials: 'include',
+      body: JSON.stringify(userData),
+    });
+    return this.handleResponse(response);
+  }
+
+  // Generic HTTP methods for AdminCurriculum
+  async get(url: string) {
+    const response = await fetch(`${this.baseURL}${url}`, {
+      method: 'GET',
+      headers: this.getHeaders(),
+      credentials: 'include',
+    });
+    return this.handleResponse(response);
+  }
+
+  async post(url: string, data?: any) {
+    const response = await fetch(`${this.baseURL}${url}`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      credentials: 'include',
+      body: data ? JSON.stringify(data) : undefined,
+    });
+    return this.handleResponse(response);
+  }
+
+  async put(url: string, data?: any) {
+    const response = await fetch(`${this.baseURL}${url}`, {
+      method: 'PUT',
+      headers: this.getHeaders(),
+      credentials: 'include',
+      body: data ? JSON.stringify(data) : undefined,
+    });
+    return this.handleResponse(response);
+  }
+
+  async delete(url: string) {
+    const response = await fetch(`${this.baseURL}${url}`, {
+      method: 'DELETE',
+      headers: this.getHeaders(),
+      credentials: 'include',
     });
     return this.handleResponse(response);
   }
