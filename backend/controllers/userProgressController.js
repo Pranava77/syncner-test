@@ -191,16 +191,21 @@ export const checkTestUnlocked = async (req, res) => {
     // Get learn progress details
     const level = progress.completedLevels.find(l => l.levelId === levelId);
     const learnProgress = level ? level.learnProgress : null;
+    const testProgress = level ? level.testProgress : null;
 
     res.status(200).json({
       success: true,
       data: {
         isUnlocked,
         learnProgress,
+        testProgress,
         timeRequired: 300, // 5 minutes in seconds
         timeSpent: learnProgress ? learnProgress.timeSpent : 0,
         linksRequired: 1,
-        linksAccessed: learnProgress ? learnProgress.linksAccessed.length : 0
+        linksAccessed: learnProgress ? learnProgress.linksAccessed.length : 0,
+        attempts: testProgress ? testProgress.attempts.length : 0,
+        maxAttempts: 3,
+        canRetake: progress.canRetakeTest(levelId)
       }
     });
   } catch (error) {
