@@ -82,7 +82,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
       
       // Fetch level status to determine locked/unlocked state
       try {
-        const statusResponse = await apiService.getLevelsStatus(levelsData);
+        const statusResponse = await apiService.getLevelsStatus();
         console.log('Sidebar: Status response:', statusResponse);
         
         if (statusResponse && statusResponse.data && statusResponse.data.levels) {

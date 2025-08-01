@@ -107,7 +107,7 @@ const TrainingLevels: React.FC = () => {
       
       // Get levels status with unlock information
       try {
-        const statusResponse = await apiService.getLevelsStatus(uniqueLevels);
+        const statusResponse = await apiService.getLevelsStatus();
         if (statusResponse && statusResponse.data) {
           const statusData = statusResponse.data;
           levelsData = uniqueLevels.map((level: Level) => {

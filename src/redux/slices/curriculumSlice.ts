@@ -7,7 +7,7 @@ export const fetchCurriculum = createAsyncThunk(
     if (!trackId) {
       return [];
     }
-    const response = await apiService.getLevels(type, trackId);
+    const response = await apiService.getLevels(trackId);
     if (!response.success) throw new Error(response.message || 'Failed to fetch curriculum');
     return response.data || [];
   }
