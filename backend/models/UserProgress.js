@@ -250,8 +250,8 @@ userProgressSchema.methods.updateLearnProgress = function(levelId, timeSpent, li
     level.learnProgress.linksAccessed = linksAccessed;
   }
   
-  // Mark as completed if time spent >= 5 minutes (300 seconds) and at least 2 links accessed
-  if (level.learnProgress.timeSpent >= 300 && level.learnProgress.linksAccessed.length >= 2) {
+  // Mark as completed if at least 2 links accessed (no time requirement)
+  if (level.learnProgress.linksAccessed.length >= 2) {
     level.learnProgress.isCompleted = true;
     level.completedSections.learn = true;
   }

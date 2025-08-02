@@ -63,9 +63,7 @@ const LevelLearnPage: React.FC = () => {
   });
   const [isTestUnlocked, setIsTestUnlocked] = useState(false);
   const [isLearnUnlocked, setIsLearnUnlocked] = useState(true);
-  const [timeSpent, setTimeSpent] = useState(0);
   const [accessedLinks, setAccessedLinks] = useState<string[]>([]);
-  const [isTracking, setIsTracking] = useState(false);
 
   const fetchLevel = useCallback(async () => {
     try {
@@ -120,7 +118,6 @@ const LevelLearnPage: React.FC = () => {
         setLearnProgress(learnProgress);
         setIsLearnUnlocked(learn?.isUnlocked ?? true); // Default to true for first level
         setIsTestUnlocked(test?.isUnlocked ?? false);
-        setTimeSpent(learnProgress.timeSpent || 0);
         setAccessedLinks(learnProgress.linksAccessed || []);
       }
     } catch (error) {
@@ -133,7 +130,6 @@ const LevelLearnPage: React.FC = () => {
       });
       setIsLearnUnlocked(true); // Default to unlocked
       setIsTestUnlocked(false);
-      setTimeSpent(0);
       setAccessedLinks([]);
     }
   }, [levelId]);
@@ -145,51 +141,21 @@ const LevelLearnPage: React.FC = () => {
     }
   }, [levelId, fetchLevel, fetchLearnProgress]);
 
-  // Timer effect for tracking time spent
-  useEffect(() => {
-    if (!isTracking || learnProgress.isCompleted) return;
-
-    const interval = setInterval(() => {
-      setTimeSpent(prev => {
-        const newTime = prev + 1;
-        
-        // Update progress every 30 seconds
-        if (newTime % 30 === 0) {
-          updateLearnProgress(newTime, accessedLinks);
-        }
-        
-        return newTime;
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [isTracking, learnProgress.isCompleted, accessedLinks]);
-
-  // Start tracking when component mounts
-  useEffect(() => {
-    setIsTracking(true);
-    return () => setIsTracking(false);
-  }, []);
-
-  const updateLearnProgress = async (timeSpent: number, linksAccessed: string[]) => {
+  const updateLearnProgress = async (linksAccessed: string[]) => {
     if (!levelId) return;
     
     try {
-      const response = await apiService.updateLearnProgress(levelId, timeSpent, linksAccessed);
+      const response = await apiService.updateLearnProgress(levelId, 0, linksAccessed);
       if (response.success) {
         // Update local state with new progress
         const newLearnProgress = {
-          timeSpent,
+          timeSpent: 0,
           linksAccessed,
           isCompleted: response.data.isCompleted || false
         };
         
         setLearnProgress(newLearnProgress);
         setIsTestUnlocked(response.data.isCompleted || false);
-        
-        if (response.data.isCompleted) {
-          setIsTracking(false);
-        }
       }
     } catch (error) {
       console.error('Error updating learn progress:', error);
@@ -236,7 +202,7 @@ const LevelLearnPage: React.FC = () => {
     if (!accessedLinks.includes(linkUrl)) {
       const newLinks = [...accessedLinks, linkUrl];
       setAccessedLinks(newLinks);
-      updateLearnProgress(timeSpent, newLinks);
+      updateLearnProgress(newLinks);
     }
     
     // Always open link (allow multiple clicks for access)
@@ -249,19 +215,11 @@ const LevelLearnPage: React.FC = () => {
     }
   };
 
-  const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-  };
-
   const getProgressPercentage = () => {
-    const safeTimeSpent = timeSpent || 0;
     const safeLinksLength = accessedLinks?.length || 0;
     
-    const timeProgress = Math.min((safeTimeSpent / 300) * 50, 50); // 50% for time (5 minutes)
-    const linkProgress = Math.min((safeLinksLength / 2) * 50, 50); // 50% for links (2 links minimum)
-    return Math.min(timeProgress + linkProgress, 100);
+    // Progress is now based only on links (100% for 2 links minimum)
+    return Math.min((safeLinksLength / 2) * 100, 100);
   };
 
   if (loading) {
@@ -353,8 +311,8 @@ const LevelLearnPage: React.FC = () => {
               <h2 className="text-xl font-bold text-paperwhite">Learning Progress</h2>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold text-trueturquoise">{formatTime(timeSpent)}</div>
-              <div className="text-xs text-teallight">Time Spent</div>
+              <div className="text-2xl font-bold text-trueturquoise">{Math.round(getProgressPercentage()) || 0}%</div>
+              <div className="text-xs text-teallight">Progress</div>
             </div>
           </div>
           
@@ -371,11 +329,7 @@ const LevelLearnPage: React.FC = () => {
             </div>
           </div>
           
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div className="bg-paperwhite/5 rounded-lg p-3">
-              <div className="text-trueturquoise font-semibold">Time Requirement</div>
-              <div className="text-paperwhite">{formatTime(timeSpent)} / 5:00</div>
-            </div>
+          <div className="grid grid-cols-1 gap-4 text-sm">
             <div className="bg-paperwhite/5 rounded-lg p-3">
               <div className="text-trueturquoise font-semibold">Links Accessed</div>
               <div className="text-paperwhite">{accessedLinks.length} / 2</div>
