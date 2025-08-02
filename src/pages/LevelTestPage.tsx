@@ -219,16 +219,17 @@ const LevelTestPage: React.FC = () => {
         // Show results
         setSubmitted(true);
         
-        // Handle different scenarios based on result
+        // Always show results first, then handle navigation based on score
         if (passed) {
           // Test passed - user can proceed to exercise
           // The "Go to Exercise" button will be shown in the results
-        } else if (response.data.attempts >= 3) {
-          // All attempts exhausted - show retake popup
-          setShowRetakePopup(true);
         } else {
-          // Failed but has attempts left - can retry after cooldown
+          // Test failed - show attempts remaining and cooldown info
           // The retry information is shown in the results
+          // Only show retake popup if all attempts are exhausted
+          if (response.data.attempts >= 3) {
+            setShowRetakePopup(true);
+          }
         }
       } else {
         // Handle API errors
@@ -356,8 +357,8 @@ const LevelTestPage: React.FC = () => {
     );
   }
 
-  // Check if max attempts reached or cooldown active
-  if (currentAttempt >= 3 || (currentAttempt > 0 && !canRetake)) {
+  // Check if max attempts reached or cooldown active (only before taking test)
+  if (!submitted && (currentAttempt >= 3 || (currentAttempt > 0 && !canRetake))) {
     return (
       <div className="flex h-screen bg-offblack overflow-x-hidden">
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
