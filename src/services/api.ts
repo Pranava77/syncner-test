@@ -205,6 +205,15 @@ class ApiService {
     return this.handleResponse(response);
   }
 
+  async getLevelSectionStatus(levelId: string) {
+    const response = await fetch(`${this.baseURL}/progress/level-sections/${levelId}`, {
+      method: 'GET',
+      headers: this.getHeaders(),
+      credentials: 'include',
+    });
+    return this.handleResponse(response);
+  }
+
   async checkLevelUnlocked(levelOrder: number) {
     const response = await fetch(`${this.baseURL}/progress/unlocked/${levelOrder}`, {
       method: 'GET',

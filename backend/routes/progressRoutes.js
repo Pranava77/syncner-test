@@ -10,7 +10,8 @@ import {
   submitTestAttempt,
   checkTestUnlocked,
   checkExerciseUnlocked,
-  checkExerciseLinks
+  checkExerciseLinks,
+  getLevelSectionStatus
 } from '../controllers/userProgressController.js';
 
 const router = express.Router();
@@ -32,6 +33,9 @@ router.get('/exercise-unlocked/:levelId', checkExerciseUnlocked);
 
 // Check exercise links status
 router.get('/exercise-links/:levelId', checkExerciseLinks);
+
+// Get level section status
+router.get('/level-sections/:levelId', getLevelSectionStatus);
 
 // Mark level section as completed
 router.post('/complete', markLevelCompleted);

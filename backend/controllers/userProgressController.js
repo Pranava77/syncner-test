@@ -406,4 +406,40 @@ export const getLevelsStatus = async (req, res) => {
       error: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
+};
+
+// @desc    Get level section status
+// @route   GET /api/progress/level-sections/:levelId
+// @access  Private
+export const getLevelSectionStatus = async (req, res) => {
+  try {
+    const { levelId } = req.params;
+    const userId = req.user._id;
+    const { careerTrack } = req.user;
+
+    const progress = await UserProgress.getOrCreate(userId, careerTrack);
+    
+    // Get level details to get the order
+    const level = await Curriculum.findById(levelId);
+    if (!level) {
+      return res.status(404).json({
+        success: false,
+        message: 'Level not found'
+      });
+    }
+
+    const sectionStatus = progress.getLevelSectionStatus(levelId, level.order);
+
+    res.status(200).json({
+      success: true,
+      data: sectionStatus
+    });
+  } catch (error) {
+    console.error('Get level section status error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error while fetching level section status',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
 }; 

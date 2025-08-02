@@ -62,6 +62,7 @@ const LevelLearnPage: React.FC = () => {
     isCompleted: false
   });
   const [isTestUnlocked, setIsTestUnlocked] = useState(false);
+  const [isLearnUnlocked, setIsLearnUnlocked] = useState(true);
   const [timeSpent, setTimeSpent] = useState(0);
   const [accessedLinks, setAccessedLinks] = useState<string[]>([]);
   const [isTracking, setIsTracking] = useState(false);
@@ -100,23 +101,24 @@ const LevelLearnPage: React.FC = () => {
     }
   }, [levelId]);
 
-  // Fetch learn progress and test unlock status
+  // Fetch learn progress and section unlock status
   const fetchLearnProgress = useCallback(async () => {
     if (!levelId) return;
     
     try {
-      const response = await apiService.checkTestUnlocked(levelId);
+      const response = await apiService.getLevelSectionStatus(levelId);
       if (response.success) {
-        const learnProgress = response.data.learnProgress || {
+        const { learn, test } = response.data;
+        
+        setLearnProgress(learn.progress || {
           timeSpent: 0,
           linksAccessed: [],
           isCompleted: false
-        };
-        
-        setLearnProgress(learnProgress);
-        setIsTestUnlocked(response.data.isUnlocked);
-        setTimeSpent(learnProgress.timeSpent || 0);
-        setAccessedLinks(learnProgress.linksAccessed || []);
+        });
+        setIsLearnUnlocked(learn.isUnlocked);
+        setIsTestUnlocked(test.isUnlocked);
+        setTimeSpent(learn.progress?.timeSpent || 0);
+        setAccessedLinks(learn.progress?.linksAccessed || []);
       }
     } catch (error) {
       console.error('Error fetching learn progress:', error);
@@ -268,6 +270,30 @@ const LevelLearnPage: React.FC = () => {
               className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors"
             >
               Retry
+            </button>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  // Check if learn section is unlocked
+  if (!isLearnUnlocked) {
+    return (
+      <div className="flex h-screen bg-offblack overflow-x-hidden">
+        <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="learn" refreshTrigger={refreshTrigger} />
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
+          <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 text-center">
+            <div className="text-paperwhite/30 text-6xl mb-4">
+              <LockClosedIcon className="h-16 w-16 mx-auto" />
+            </div>
+            <h2 className="text-2xl font-bold text-paperwhite mb-2">Learning Section Locked</h2>
+            <p className="text-teallight mb-6 text-lg">Complete the previous level's exercise to unlock this learning section.</p>
+            <button 
+              onClick={() => navigate('/student/training')}
+              className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold hover:bg-trueturquoise/90 transition-colors text-lg shadow-sm"
+            >
+              Back to Training
             </button>
           </div>
         </main>

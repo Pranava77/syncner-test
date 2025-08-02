@@ -86,17 +86,14 @@ const LevelExercisePage: React.FC = () => {
     if (!levelId) return;
     
     try {
-      // Check if exercise is unlocked (test must be passed)
-      const unlockResponse = await apiService.checkExerciseUnlocked(levelId);
-      if (unlockResponse.success) {
-        setIsExerciseUnlocked(unlockResponse.data.isUnlocked);
-      }
-      
-      // Check if exercise links are submitted
-      const linksResponse = await apiService.checkExerciseLinks(levelId);
-      if (linksResponse.success) {
-        setHasExerciseLinks(linksResponse.data.hasLinks);
-        setExerciseSubmissions(linksResponse.data.exerciseSubmissions || []);
+      // Get all section status for this level
+      const response = await apiService.getLevelSectionStatus(levelId);
+      if (response.success) {
+        const { exercise } = response.data;
+        
+        setIsExerciseUnlocked(exercise.isUnlocked);
+        setHasExerciseLinks(exercise.submissions && exercise.submissions.length > 0);
+        setExerciseSubmissions(exercise.submissions || []);
       }
     } catch (error) {
       console.error('Error fetching exercise status:', error);

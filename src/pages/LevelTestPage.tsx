@@ -111,16 +111,18 @@ const LevelTestPage: React.FC = () => {
     if (!levelId) return;
     
     try {
-      const response = await apiService.checkTestUnlocked(levelId);
+      const response = await apiService.getLevelSectionStatus(levelId);
       if (response.success) {
-        setIsTestUnlocked(response.data.isUnlocked);
-        setTestProgress(response.data.testProgress || { attempts: [], isCompleted: false });
-        setCurrentAttempt(response.data.testProgress?.attempts?.length || 0);
-        setCanRetake(response.data.canRetake);
+        const { test } = response.data;
+        
+        setIsTestUnlocked(test.isUnlocked);
+        setTestProgress(test.progress || { attempts: [], isCompleted: false });
+        setCurrentAttempt(test.progress?.attempts?.length || 0);
+        setCanRetake(test.progress ? (test.progress.attempts.length < 3) : true);
         
         // Calculate retake timer if needed
-        if (response.data.testProgress && response.data.testProgress.lastAttemptAt) {
-          const lastAttempt = new Date(response.data.testProgress.lastAttemptAt);
+        if (test.progress && test.progress.lastAttemptAt) {
+          const lastAttempt = new Date(test.progress.lastAttemptAt);
           const minutesSinceLastAttempt = (Date.now() - lastAttempt.getTime()) / (1000 * 60);
           if (minutesSinceLastAttempt < 1) {
             const remainingMinutes = 1 - minutesSinceLastAttempt;

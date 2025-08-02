@@ -130,6 +130,18 @@ userProgressSchema.methods.isLevelUnlocked = function(levelOrder) {
   return previousLevel && previousLevel.completedSections && previousLevel.completedSections.exercise === true;
 };
 
+// Method to check if learn section is unlocked (always unlocked for first level, or previous level exercise completed)
+userProgressSchema.methods.isLearnUnlocked = function(levelId, levelOrder) {
+  if (levelOrder === 1) return true; // First level learn is always unlocked
+  
+  // Check if previous level exists and has exercise completed
+  const previousLevel = this.completedLevels.find(
+    level => level.levelOrder === levelOrder - 1
+  );
+  
+  return previousLevel && previousLevel.completedSections && previousLevel.completedSections.exercise === true;
+};
+
 // Method to check if test is unlocked (learn must be completed)
 userProgressSchema.methods.isTestUnlocked = function(levelId) {
   const level = this.completedLevels.find(l => l.levelId === levelId);
@@ -140,6 +152,29 @@ userProgressSchema.methods.isTestUnlocked = function(levelId) {
 userProgressSchema.methods.isExerciseUnlocked = function(levelId) {
   const level = this.completedLevels.find(l => l.levelId === levelId);
   return level && level.testProgress && level.testProgress.isCompleted;
+};
+
+// Method to get unlock status for all sections of a level
+userProgressSchema.methods.getLevelSectionStatus = function(levelId, levelOrder) {
+  const level = this.completedLevels.find(l => l.levelId === levelId);
+  
+  return {
+    learn: {
+      isUnlocked: this.isLearnUnlocked(levelId, levelOrder),
+      isCompleted: level ? level.completedSections.learn : false,
+      progress: level ? level.learnProgress : null
+    },
+    test: {
+      isUnlocked: this.isTestUnlocked(levelId),
+      isCompleted: level ? level.completedSections.test : false,
+      progress: level ? level.testProgress : null
+    },
+    exercise: {
+      isUnlocked: this.isExerciseUnlocked(levelId),
+      isCompleted: level ? level.completedSections.exercise : false,
+      submissions: level ? level.exerciseSubmissions : []
+    }
+  };
 };
 
 // Method to check if user can retake test (1-minute cooldown)
