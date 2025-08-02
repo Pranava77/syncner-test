@@ -107,21 +107,34 @@ const LevelLearnPage: React.FC = () => {
     
     try {
       const response = await apiService.getLevelSectionStatus(levelId);
-      if (response.success) {
+      if (response.success && response.data) {
         const { learn, test } = response.data;
         
-        setLearnProgress(learn.progress || {
+        // Safely handle learn data
+        const learnProgress = learn?.progress || {
           timeSpent: 0,
           linksAccessed: [],
           isCompleted: false
-        });
-        setIsLearnUnlocked(learn.isUnlocked);
-        setIsTestUnlocked(test.isUnlocked);
-        setTimeSpent(learn.progress?.timeSpent || 0);
-        setAccessedLinks(learn.progress?.linksAccessed || []);
+        };
+        
+        setLearnProgress(learnProgress);
+        setIsLearnUnlocked(learn?.isUnlocked ?? true); // Default to true for first level
+        setIsTestUnlocked(test?.isUnlocked ?? false);
+        setTimeSpent(learnProgress.timeSpent || 0);
+        setAccessedLinks(learnProgress.linksAccessed || []);
       }
     } catch (error) {
       console.error('Error fetching learn progress:', error);
+      // Set default values on error
+      setLearnProgress({
+        timeSpent: 0,
+        linksAccessed: [],
+        isCompleted: false
+      });
+      setIsLearnUnlocked(true); // Default to unlocked
+      setIsTestUnlocked(false);
+      setTimeSpent(0);
+      setAccessedLinks([]);
     }
   }, [levelId]);
 
@@ -164,8 +177,15 @@ const LevelLearnPage: React.FC = () => {
     try {
       const response = await apiService.updateLearnProgress(levelId, timeSpent, linksAccessed);
       if (response.success) {
-        setLearnProgress(response.data.learnProgress);
-        setIsTestUnlocked(response.data.isCompleted);
+        // Update local state with new progress
+        const newLearnProgress = {
+          timeSpent,
+          linksAccessed,
+          isCompleted: response.data.isCompleted || false
+        };
+        
+        setLearnProgress(newLearnProgress);
+        setIsTestUnlocked(response.data.isCompleted || false);
         
         if (response.data.isCompleted) {
           setIsTracking(false);

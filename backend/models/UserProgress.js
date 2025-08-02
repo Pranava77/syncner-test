@@ -161,18 +161,18 @@ userProgressSchema.methods.getLevelSectionStatus = function(levelId, levelOrder)
   return {
     learn: {
       isUnlocked: this.isLearnUnlocked(levelId, levelOrder),
-      isCompleted: level ? level.completedSections.learn : false,
-      progress: level ? level.learnProgress : null
+      isCompleted: level && level.completedSections ? level.completedSections.learn : false,
+      progress: level && level.learnProgress ? level.learnProgress : { timeSpent: 0, linksAccessed: [], isCompleted: false }
     },
     test: {
       isUnlocked: this.isTestUnlocked(levelId),
-      isCompleted: level ? level.completedSections.test : false,
-      progress: level ? level.testProgress : null
+      isCompleted: level && level.completedSections ? level.completedSections.test : false,
+      progress: level && level.testProgress ? level.testProgress : { attempts: [], isCompleted: false }
     },
     exercise: {
       isUnlocked: this.isExerciseUnlocked(levelId),
-      isCompleted: level ? level.completedSections.exercise : false,
-      submissions: level ? level.exerciseSubmissions : []
+      isCompleted: level && level.completedSections ? level.completedSections.exercise : false,
+      submissions: level && level.exerciseSubmissions ? level.exerciseSubmissions : []
     }
   };
 };
