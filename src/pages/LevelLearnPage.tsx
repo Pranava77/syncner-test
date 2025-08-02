@@ -208,12 +208,10 @@ const LevelLearnPage: React.FC = () => {
       linkUrl = generateYouTubeSearchUrl(item.title, level?.title || '');
     }
     
-    // Track accessed link
-    if (!accessedLinks.includes(linkUrl)) {
-      const newLinks = [...accessedLinks, linkUrl];
-      setAccessedLinks(newLinks);
-      updateLearnProgress(timeSpent, newLinks);
-    }
+    // Always track accessed link (allow multiple clicks)
+    const newLinks = [...accessedLinks, linkUrl];
+    setAccessedLinks(newLinks);
+    updateLearnProgress(timeSpent, newLinks);
     
     // Open link
     window.open(linkUrl, '_blank', 'noopener,noreferrer');
@@ -330,7 +328,7 @@ const LevelLearnPage: React.FC = () => {
             </div>
             <div className="bg-paperwhite/5 rounded-lg p-3">
               <div className="text-trueturquoise font-semibold">Links Accessed</div>
-              <div className="text-paperwhite">{accessedLinks.length} / 1</div>
+              <div className="text-paperwhite">{accessedLinks.length} / 2</div>
             </div>
           </div>
           
