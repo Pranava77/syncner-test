@@ -216,16 +216,26 @@ const LevelTestPage: React.FC = () => {
         setCurrentAttempt(response.data.attempts);
         setCanRetake(response.data.canRetake);
         
-        if (!passed && response.data.attempts >= 3) {
-          setShowRetakePopup(true);
-        }
-        
+        // Show results
         setSubmitted(true);
-      } else {
-        // Handle cooldown or max attempts
-        if (response.data && !response.data.canRetake) {
+        
+        // Handle different scenarios based on result
+        if (passed) {
+          // Test passed - user can proceed to exercise
+          // The "Go to Exercise" button will be shown in the results
+        } else if (response.data.attempts >= 3) {
+          // All attempts exhausted - show retake popup
           setShowRetakePopup(true);
+        } else {
+          // Failed but has attempts left - can retry after cooldown
+          // The retry information is shown in the results
         }
+      } else {
+        // Handle API errors
+        console.error('Test submission failed:', response.message);
+        setTestScore(score);
+        setTestPassed(passed);
+        setSubmitted(true);
       }
     } catch (error) {
       console.error('Error submitting test attempt:', error);
@@ -522,11 +532,21 @@ const LevelTestPage: React.FC = () => {
                   }
                 </p>
                 
-                {!testPassed && currentAttempt < 3 && (
+                {!testPassed && (
                   <div className="bg-paperwhite/5 rounded-lg p-4 mb-6">
-                    <div className="text-orange-400 font-semibold mb-2">Attempts Remaining</div>
-                    <div className="text-2xl font-bold text-paperwhite">{3 - currentAttempt}</div>
-                    <div className="text-sm text-teallight mt-1">You can retry after 24 hours</div>
+                    {currentAttempt < 3 ? (
+                      <>
+                        <div className="text-orange-400 font-semibold mb-2">Attempts Remaining</div>
+                        <div className="text-2xl font-bold text-paperwhite">{3 - currentAttempt}</div>
+                        <div className="text-sm text-teallight mt-1">You can retry after 24 hours</div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="text-red-400 font-semibold mb-2">Maximum Attempts Reached</div>
+                        <div className="text-2xl font-bold text-paperwhite">0</div>
+                        <div className="text-sm text-teallight mt-1">Please wait 24 hours before retaking</div>
+                      </>
+                    )}
                   </div>
                 )}
                 
@@ -637,6 +657,48 @@ const LevelTestPage: React.FC = () => {
                       </div>
                     );
                   })}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Retake Popup */}
+          {showRetakePopup && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+              <div className="bg-paperwhite/95 rounded-xl border border-paperwhite/20 shadow-lg p-6 max-w-md w-full">
+                <div className="text-center">
+                  <div className="text-orange-400 text-6xl mb-4">
+                    <ExclamationTriangleIcon className="h-16 w-16 mx-auto" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-paperwhite mb-2">
+                    {currentAttempt >= 3 ? 'Maximum Attempts Reached' : 'Test Cooldown Active'}
+                  </h2>
+                  <p className="text-teallight mb-6 text-lg">
+                    {currentAttempt >= 3 
+                      ? 'You have used all 3 attempts for this test. Please wait 24 hours before retaking.'
+                      : 'Please wait before retaking the test.'
+                    }
+                  </p>
+                  {retakeTimer && (
+                    <div className="bg-paperwhite/5 rounded-lg p-4 mb-6">
+                      <div className="text-trueturquoise font-semibold mb-2">Time until you can retake:</div>
+                      <div className="text-2xl font-bold text-paperwhite">{formatRetakeTime(retakeTimer)}</div>
+                    </div>
+                  )}
+                  <div className="flex flex-col gap-3">
+                    <button 
+                      onClick={() => setShowRetakePopup(false)}
+                      className="bg-trueturquoise text-offblack px-6 py-3 rounded-lg font-bold hover:bg-trueturquoise/90 transition-colors"
+                    >
+                      Close
+                    </button>
+                    <button 
+                      onClick={() => navigate(`/student/training/${levelId}/learn`)}
+                      className="bg-paperwhite text-offblack px-6 py-3 rounded-lg font-bold hover:bg-trueturquoise hover:text-offblack transition-colors"
+                    >
+                      Back to Learning
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
