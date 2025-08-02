@@ -142,7 +142,7 @@ userProgressSchema.methods.isExerciseUnlocked = function(levelId) {
   return level && level.testProgress && level.testProgress.isCompleted;
 };
 
-// Method to check if user can retake test (24-hour cooldown)
+// Method to check if user can retake test (1-minute cooldown)
 userProgressSchema.methods.canRetakeTest = function(levelId) {
   const level = this.completedLevels.find(l => l.levelId === levelId);
   if (!level || !level.testProgress || level.testProgress.attempts.length >= 3) {
@@ -150,8 +150,8 @@ userProgressSchema.methods.canRetakeTest = function(levelId) {
   }
   
   if (level.testProgress.lastAttemptAt) {
-    const hoursSinceLastAttempt = (Date.now() - level.testProgress.lastAttemptAt.getTime()) / (1000 * 60 * 60);
-    return hoursSinceLastAttempt >= 24;
+    const minutesSinceLastAttempt = (Date.now() - level.testProgress.lastAttemptAt.getTime()) / (1000 * 60);
+    return minutesSinceLastAttempt >= 1;
   }
   
   return true;

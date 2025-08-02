@@ -127,7 +127,7 @@ export const submitTestAttempt = async (req, res) => {
       if (attempts >= 3) {
         return res.status(400).json({
           success: false,
-          message: 'Maximum attempts reached. Please wait 24 hours before retaking.',
+          message: 'Maximum attempts reached. Please wait 1 minute before retaking.',
           data: {
             attempts: attempts,
             maxAttempts: 3,
@@ -137,7 +137,7 @@ export const submitTestAttempt = async (req, res) => {
       } else {
         return res.status(400).json({
           success: false,
-          message: 'Please wait 24 hours before retaking the test.',
+          message: 'Please wait 1 minute before retaking the test.',
           data: {
             attempts: attempts,
             maxAttempts: 3,
@@ -164,7 +164,7 @@ export const submitTestAttempt = async (req, res) => {
         maxAttempts: 3,
         canRetake: progress.canRetakeTest(levelId)
       },
-      message: passed ? 'Test passed! Exercise unlocked.' : 'Test failed. You can retry after 24 hours.'
+      message: passed ? 'Test passed! Exercise unlocked.' : 'Test failed. You can retry after 1 minute.'
     });
   } catch (error) {
     console.error('Submit test attempt error:', error);

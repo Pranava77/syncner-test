@@ -121,10 +121,10 @@ const LevelTestPage: React.FC = () => {
         // Calculate retake timer if needed
         if (response.data.testProgress && response.data.testProgress.lastAttemptAt) {
           const lastAttempt = new Date(response.data.testProgress.lastAttemptAt);
-          const hoursSinceLastAttempt = (Date.now() - lastAttempt.getTime()) / (1000 * 60 * 60);
-          if (hoursSinceLastAttempt < 24) {
-            const remainingHours = 24 - hoursSinceLastAttempt;
-            setRetakeTimer(Math.ceil(remainingHours * 60 * 60)); // Convert to seconds
+          const minutesSinceLastAttempt = (Date.now() - lastAttempt.getTime()) / (1000 * 60);
+          if (minutesSinceLastAttempt < 1) {
+            const remainingMinutes = 1 - minutesSinceLastAttempt;
+            setRetakeTimer(Math.ceil(remainingMinutes * 60)); // Convert to seconds
           }
         }
       }
@@ -357,7 +357,7 @@ const LevelTestPage: React.FC = () => {
   }
 
   // Check if max attempts reached or cooldown active
-  if (currentAttempt >= 3 || !canRetake) {
+  if (currentAttempt >= 3 || (currentAttempt > 0 && !canRetake)) {
     return (
       <div className="flex h-screen bg-offblack overflow-x-hidden">
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
@@ -371,7 +371,7 @@ const LevelTestPage: React.FC = () => {
             </h2>
             <p className="text-teallight mb-6 text-lg">
               {currentAttempt >= 3 
-                ? 'You have used all 3 attempts for this test. Please wait 24 hours before retaking.'
+                ? 'You have used all 3 attempts for this test. Please wait 1 minute before retaking.'
                 : 'Please wait before retaking the test.'
               }
             </p>
@@ -538,13 +538,13 @@ const LevelTestPage: React.FC = () => {
                       <>
                         <div className="text-orange-400 font-semibold mb-2">Attempts Remaining</div>
                         <div className="text-2xl font-bold text-paperwhite">{3 - currentAttempt}</div>
-                        <div className="text-sm text-teallight mt-1">You can retry after 24 hours</div>
+                        <div className="text-sm text-teallight mt-1">You can retry after 1 minute</div>
                       </>
                     ) : (
                       <>
                         <div className="text-red-400 font-semibold mb-2">Maximum Attempts Reached</div>
                         <div className="text-2xl font-bold text-paperwhite">0</div>
-                        <div className="text-sm text-teallight mt-1">Please wait 24 hours before retaking</div>
+                        <div className="text-sm text-teallight mt-1">Please wait 1 minute before retaking</div>
                       </>
                     )}
                   </div>
