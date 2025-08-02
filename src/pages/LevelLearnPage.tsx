@@ -107,14 +107,16 @@ const LevelLearnPage: React.FC = () => {
     try {
       const response = await apiService.checkTestUnlocked(levelId);
       if (response.success) {
-        setLearnProgress(response.data.learnProgress || {
+        const learnProgress = response.data.learnProgress || {
           timeSpent: 0,
           linksAccessed: [],
           isCompleted: false
-        });
+        };
+        
+        setLearnProgress(learnProgress);
         setIsTestUnlocked(response.data.isUnlocked);
-        setTimeSpent(response.data.timeSpent || 0);
-        setAccessedLinks(response.data.linksAccessed || []);
+        setTimeSpent(learnProgress.timeSpent || 0);
+        setAccessedLinks(learnProgress.linksAccessed || []);
       }
     } catch (error) {
       console.error('Error fetching learn progress:', error);
