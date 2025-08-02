@@ -208,12 +208,14 @@ const LevelLearnPage: React.FC = () => {
       linkUrl = generateYouTubeSearchUrl(item.title, level?.title || '');
     }
     
-    // Always track accessed link (allow multiple clicks)
-    const newLinks = [...accessedLinks, linkUrl];
-    setAccessedLinks(newLinks);
-    updateLearnProgress(timeSpent, newLinks);
+    // Track accessed link only if not already tracked (unique links only)
+    if (!accessedLinks.includes(linkUrl)) {
+      const newLinks = [...accessedLinks, linkUrl];
+      setAccessedLinks(newLinks);
+      updateLearnProgress(timeSpent, newLinks);
+    }
     
-    // Open link
+    // Always open link (allow multiple clicks for access)
     window.open(linkUrl, '_blank', 'noopener,noreferrer');
   };
 
