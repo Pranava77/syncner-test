@@ -1,4 +1,5 @@
 import UserProgress from '../models/UserProgress.js';
+import Curriculum from '../models/Curriculum.js';
 
 // @desc    Get user progress for a career track
 // @route   GET /api/progress/:careerTrack
@@ -68,6 +69,8 @@ export const updateLearnProgress = async (req, res) => {
     const userId = req.user._id;
     const { careerTrack } = req.user;
 
+    console.log('UpdateLearnProgress - Request:', { levelId, timeSpent, linksAccessed, userId, careerTrack });
+
     if (!levelId) {
       return res.status(400).json({
         success: false,
@@ -76,12 +79,18 @@ export const updateLearnProgress = async (req, res) => {
     }
 
     const progress = await UserProgress.getOrCreate(userId, careerTrack);
+    console.log('Before update - Progress:', JSON.stringify(progress.completedLevels, null, 2));
+    
     progress.updateLearnProgress(levelId, timeSpent || 0, linksAccessed || []);
     await progress.save();
+    
+    console.log('After update - Progress:', JSON.stringify(progress.completedLevels, null, 2));
 
     // Get the updated level progress
     const level = progress.completedLevels.find(l => l.levelId === levelId);
     const learnProgress = level ? level.learnProgress : null;
+    
+    console.log('Updated learn progress:', learnProgress);
 
     res.status(200).json({
       success: true,
@@ -417,7 +426,10 @@ export const getLevelSectionStatus = async (req, res) => {
     const userId = req.user._id;
     const { careerTrack } = req.user;
 
+    console.log('GetLevelSectionStatus - Request:', { levelId, userId, careerTrack });
+
     const progress = await UserProgress.getOrCreate(userId, careerTrack);
+    console.log('User progress:', JSON.stringify(progress.completedLevels, null, 2));
     
     // Get level details to get the order
     const level = await Curriculum.findById(levelId);
@@ -428,7 +440,10 @@ export const getLevelSectionStatus = async (req, res) => {
       });
     }
 
+    console.log('Curriculum level:', { id: level._id, order: level.order });
+
     const sectionStatus = progress.getLevelSectionStatus(levelId, level.order);
+    console.log('Section status:', JSON.stringify(sectionStatus, null, 2));
 
     res.status(200).json({
       success: true,

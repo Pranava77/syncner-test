@@ -150,9 +150,11 @@ const LevelLearnPage: React.FC = () => {
     if (!levelId) return;
     
     try {
-      console.log('Updating learn progress with links:', linksAccessed);
+      console.log('Frontend: Updating learn progress with links:', linksAccessed);
+      console.log('Frontend: Level ID:', levelId);
+      
       const response = await apiService.updateLearnProgress(levelId, 0, linksAccessed);
-      console.log('Update learn progress response:', response);
+      console.log('Frontend: Update learn progress response:', response);
       
       if (response.success) {
         // Update local state with new progress
@@ -162,15 +164,16 @@ const LevelLearnPage: React.FC = () => {
           isCompleted: response.data.isCompleted || false
         };
         
-        console.log('Setting new learn progress:', newLearnProgress);
+        console.log('Frontend: Setting new learn progress:', newLearnProgress);
         setLearnProgress(newLearnProgress);
         setIsTestUnlocked(response.data.isCompleted || false);
         
         // Force refresh of learn progress to ensure state is updated
+        console.log('Frontend: Refreshing learn progress...');
         fetchLearnProgress();
       }
     } catch (error) {
-      console.error('Error updating learn progress:', error);
+      console.error('Frontend: Error updating learn progress:', error);
     }
   };
 
