@@ -78,6 +78,7 @@ const groupCurriculumIntoLevels = (items) => {
 
     // For test items, parse the content to extract options and answer
     if (item.type === 'test') {
+      console.log('Parsing test content:', item.content);
       const lines = item.content.split('\n');
       const question = lines[0];
       const options = [];
@@ -95,6 +96,12 @@ const groupCurriculumIntoLevels = (items) => {
       contentItem.question = question;
       contentItem.options = options;
       contentItem.answer = answer || 'A'; // Default to A if no answer specified
+      
+      console.log('Parsed test item:', {
+        question: contentItem.question,
+        options: contentItem.options,
+        answer: contentItem.answer
+      });
     }
 
     switch (item.type) {

@@ -88,9 +88,12 @@ const LevelTestPage: React.FC = () => {
         const initialAnswers = Object.fromEntries(
           shuffled.map((testItem: any, i: number) => {
             const optionsLength = testItem.options ? testItem.options.length : 0;
-            console.log(`LevelTestPage: Question ${i} has ${optionsLength} options:`, testItem);
-            console.log(`LevelTestPage: Question ${i} options:`, testItem.options);
-            console.log(`LevelTestPage: Question ${i} answer:`, testItem.answer);
+            console.log(`LevelTestPage: Question ${i} parsed data:`, {
+              question: testItem.question,
+              options: testItem.options,
+              answer: testItem.answer,
+              answerType: typeof testItem.answer
+            });
             return [i, new Array(optionsLength).fill(false)];
           })
         );
@@ -183,16 +186,27 @@ const LevelTestPage: React.FC = () => {
 
     randomizedQuestions.forEach((question, qIdx) => {
       const userAnswer = answers[qIdx]?.findIndex(a => a);
-      const correctAnswerIndex = question.options.findIndex(option => 
-        option.trim().toLowerCase() === question.answer.trim().toLowerCase()
-      );
+      
+      // Convert answer letter (A, B, C, D) to index (0, 1, 2, 3)
+      const answerLetter = question.answer.trim().toUpperCase();
+      const correctAnswerIndex = answerLetter === 'A' ? 0 : 
+                                answerLetter === 'B' ? 1 : 
+                                answerLetter === 'C' ? 2 : 
+                                answerLetter === 'D' ? 3 : -1;
+      
+      console.log(`Question ${qIdx}: User selected index ${userAnswer}, Correct answer is ${answerLetter} (index ${correctAnswerIndex})`);
       
       if (userAnswer === correctAnswerIndex) {
         correctAnswers++;
+        console.log(`Question ${qIdx}: CORRECT!`);
+      } else {
+        console.log(`Question ${qIdx}: INCORRECT!`);
       }
     });
 
-    return totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+    const score = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+    console.log(`Final score: ${correctAnswers}/${totalQuestions} = ${score}%`);
+    return score;
   };
 
   const handleSubmit = async (e?: React.FormEvent) => {
