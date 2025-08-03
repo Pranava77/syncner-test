@@ -591,10 +591,25 @@ const LevelTestPage: React.FC = () => {
                 <div className="space-y-6">
                   {validQuestions.map((question, qIdx) => {
                     const userAnswerIndex = answers[qIdx]?.findIndex(a => a);
-                    const correctAnswerIndex = question.options.findIndex(option => 
-                      option.trim().toLowerCase() === question.answer.trim().toLowerCase()
-                    );
+                    
+                    // Convert answer letter (A, B, C, D) to index (0, 1, 2, 3) - same logic as calculateScore
+                    const answerLetter = question.answer.trim().toUpperCase();
+                    const correctAnswerIndex = answerLetter === 'A' ? 0 : 
+                                            answerLetter === 'B' ? 1 : 
+                                            answerLetter === 'C' ? 2 : 
+                                            answerLetter === 'D' ? 3 : -1;
+                    
                     const isCorrect = userAnswerIndex === correctAnswerIndex;
+                    
+                    console.log(`Results display - Question ${qIdx}:`, {
+                      question: question.question,
+                      userAnswerIndex,
+                      correctAnswerIndex,
+                      answerLetter,
+                      isCorrect,
+                      userAnswerText: userAnswerIndex !== -1 ? question.options[userAnswerIndex] : 'Not answered',
+                      correctAnswerText: correctAnswerIndex !== -1 ? question.options[correctAnswerIndex] : question.answer
+                    });
                     
                     return (
                       <div key={qIdx} className="bg-paperwhite/5 rounded-lg border border-paperwhite/10 p-4">
@@ -667,7 +682,7 @@ const LevelTestPage: React.FC = () => {
                           </div>
                           {!isCorrect && (
                             <div className="text-xs text-green-400 mt-1">
-                              Correct answer: {question.answer}
+                              Correct answer: {correctAnswerIndex !== -1 ? question.options[correctAnswerIndex] : question.answer}
                             </div>
                           )}
                         </div>
