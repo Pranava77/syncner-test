@@ -105,8 +105,12 @@ const LevelLearnPage: React.FC = () => {
     
     try {
       const response = await apiService.getLevelSectionStatus(levelId);
+      console.log('Fetch learn progress response:', response);
+      
       if (response.success && response.data) {
         const { learn, test } = response.data;
+        console.log('Learn data:', learn);
+        console.log('Test data:', test);
         
         // Safely handle learn data
         const learnProgress = learn?.progress || {
@@ -115,9 +119,10 @@ const LevelLearnPage: React.FC = () => {
           isCompleted: false
         };
         
+        console.log('Setting learn progress:', learnProgress);
         setLearnProgress(learnProgress);
         setIsLearnUnlocked(learn?.isUnlocked ?? true); // Default to true for first level
-        setIsTestUnlocked(test?.isUnlocked ?? false);
+        setIsTestUnlocked(learnProgress.isCompleted || false); // Test is unlocked when learn is completed
         setAccessedLinks(learnProgress.linksAccessed || []);
       }
     } catch (error) {
@@ -145,7 +150,10 @@ const LevelLearnPage: React.FC = () => {
     if (!levelId) return;
     
     try {
+      console.log('Updating learn progress with links:', linksAccessed);
       const response = await apiService.updateLearnProgress(levelId, 0, linksAccessed);
+      console.log('Update learn progress response:', response);
+      
       if (response.success) {
         // Update local state with new progress
         const newLearnProgress = {
@@ -154,8 +162,12 @@ const LevelLearnPage: React.FC = () => {
           isCompleted: response.data.isCompleted || false
         };
         
+        console.log('Setting new learn progress:', newLearnProgress);
         setLearnProgress(newLearnProgress);
         setIsTestUnlocked(response.data.isCompleted || false);
+        
+        // Force refresh of learn progress to ensure state is updated
+        fetchLearnProgress();
       }
     } catch (error) {
       console.error('Error updating learn progress:', error);
@@ -210,8 +222,12 @@ const LevelLearnPage: React.FC = () => {
   };
 
   const handleTakeTest = () => {
-    if (isTestUnlocked) {
+    console.log('Take Test clicked - learnProgress.isCompleted:', learnProgress.isCompleted, 'isTestUnlocked:', isTestUnlocked);
+    if (learnProgress.isCompleted && isTestUnlocked) {
+      console.log('Navigating to test page');
       navigate(`/student/training/${levelId}/test`);
+    } else {
+      console.log('Test not unlocked - learn completed:', learnProgress.isCompleted, 'test unlocked:', isTestUnlocked);
     }
   };
 
@@ -501,7 +517,7 @@ const LevelLearnPage: React.FC = () => {
 
         {/* Action Buttons */}
         <div className="w-full max-w-5xl flex flex-col sm:flex-row items-center justify-center gap-4 mt-4 mb-8">
-          {isTestUnlocked ? (
+          {learnProgress.isCompleted && isTestUnlocked ? (
             <button 
               onClick={handleTakeTest}
               disabled={level.test.length === 0}
@@ -515,7 +531,7 @@ const LevelLearnPage: React.FC = () => {
               className="w-full sm:w-auto bg-paperwhite/20 text-paperwhite/50 px-8 py-3 rounded-lg font-bold text-lg cursor-not-allowed flex items-center gap-2"
             >
               <LockClosedIcon className="h-5 w-5" />
-              Test Locked - Complete Learning First
+              {!learnProgress.isCompleted ? 'Test Locked - Complete Learning First' : 'Test Locked'}
             </button>
           )}
         </div>
