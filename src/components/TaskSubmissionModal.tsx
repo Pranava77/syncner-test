@@ -26,8 +26,8 @@ interface TaskSubmissionModalProps {
 
 const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClose, exercise }) => {
   const [formData, setFormData] = useState({
-    brief: '',
-    instruction: '',
+    brief: exercise.description || '',
+    instruction: exercise.resources?.join('\n') || '',
     referenceMaterials: ['', '', ''],
     expectedOutput: '',
     submissionLink: ''
@@ -59,12 +59,23 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
       return false;
     }
     
-    // Basic URL validation
+    // Basic URL validation for main submission link
     try {
       new URL(formData.submissionLink);
     } catch {
       setError('Please enter a valid URL for your submission link.');
       return false;
+    }
+    
+    // Validate additional links if provided
+    const additionalLinks = formData.referenceMaterials.filter(link => link.trim() !== '');
+    for (const link of additionalLinks) {
+      try {
+        new URL(link);
+      } catch {
+        setError('Please enter valid URLs for all additional submission links.');
+        return false;
+      }
     }
     
     return true;
@@ -131,69 +142,63 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
 
         {/* Form Content */}
         <div className="p-6 space-y-6">
-          {/* Brief Section */}
+          {/* Brief Section - Read Only */}
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-paperwhite mb-2">
               <ClipboardIcon className="w-4 h-4 text-trueturquoise" />
               Brief - What you should do:
             </label>
-            <textarea
-              value={formData.brief}
-              onChange={(e) => handleInputChange('brief', e.target.value)}
-              className="w-full h-32 p-3 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg resize-none focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight"
-              placeholder="Enter your brief here..."
-            />
+            <div className="w-full h-32 p-3 border border-paperwhite/20 bg-paperwhite/5 text-paperwhite rounded-lg overflow-y-auto">
+              <p className="text-sm leading-relaxed">{formData.brief}</p>
+            </div>
           </div>
 
-          {/* Instruction Section */}
+          {/* Instruction Section - Read Only */}
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-paperwhite mb-2">
               <ReaderIcon className="w-4 h-4 text-trueturquoise" />
               Instruction/Helper Guide:
             </label>
-            <textarea
-              value={formData.instruction}
-              onChange={(e) => handleInputChange('instruction', e.target.value)}
-              className="w-full h-32 p-3 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg resize-none focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight"
-              placeholder="Enter instructions here..."
-            />
-          </div>
-
-          {/* Reference Materials Section */}
-          <div>
-            <label className="flex items-center gap-2 text-sm font-medium text-paperwhite mb-2">
-              <FileTextIcon className="w-4 h-4 text-trueturquoise" />
-              Reference Materials (Optional):
-            </label>
-            <div className="space-y-3">
-              {formData.referenceMaterials.map((material, index) => (
-                <input
-                  key={index}
-                  type="text"
-                  value={material}
-                  onChange={(e) => handleReferenceMaterialChange(index, e.target.value)}
-                  className="w-full p-3 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight"
-                  placeholder={`Reference material ${index + 1} (optional)`}
-                />
-              ))}
+            <div className="w-full h-32 p-3 border border-paperwhite/20 bg-paperwhite/5 text-paperwhite rounded-lg overflow-y-auto">
+              <p className="text-sm leading-relaxed whitespace-pre-line">{formData.instruction}</p>
             </div>
           </div>
 
-          {/* Expected Output Section */}
+          {/* Reference Materials Section - Read Only */}
+          <div>
+            <label className="flex items-center gap-2 text-sm font-medium text-paperwhite mb-2">
+              <FileTextIcon className="w-4 h-4 text-trueturquoise" />
+              Reference Materials:
+            </label>
+            <div className="w-full p-3 border border-paperwhite/20 bg-paperwhite/5 text-paperwhite rounded-lg">
+              {exercise.resources && exercise.resources.length > 0 ? (
+                <div className="space-y-2">
+                  {exercise.resources.map((resource, index) => (
+                    <div key={index} className="text-sm text-teallight">
+                      • {resource}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-teallight">No reference materials provided</p>
+              )}
+            </div>
+          </div>
+
+          {/* Expected Output Section - Read Only */}
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-paperwhite mb-2">
               <CheckCircledIcon className="w-4 h-4 text-trueturquoise" />
               Expected output:
             </label>
-            <textarea
-              value={formData.expectedOutput}
-              onChange={(e) => handleInputChange('expectedOutput', e.target.value)}
-              className="w-full h-32 p-3 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg resize-none focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight"
-              placeholder="Describe expected output..."
-            />
+            <div className="w-full h-32 p-3 border border-paperwhite/20 bg-paperwhite/5 text-paperwhite rounded-lg overflow-y-auto">
+              <p className="text-sm leading-relaxed text-teallight">
+                Complete the exercise according to the brief and instructions above. Submit your work through the link below.
+              </p>
+            </div>
           </div>
 
-          {/* Submission Link Section */}
+          {/* Submission Link Section - Editable */}
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-paperwhite mb-2">
               <Link1Icon className="w-4 h-4 text-trueturquoise" />
@@ -209,6 +214,29 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
             />
             <p className="text-xs text-teallight mt-1">
               This link is required to unlock the next level. Please provide a valid URL to your completed work.
+            </p>
+          </div>
+
+          {/* Additional Submission Links - Editable */}
+          <div>
+            <label className="flex items-center gap-2 text-sm font-medium text-paperwhite mb-2">
+              <Link1Icon className="w-4 h-4 text-trueturquoise" />
+              Additional Submission Links (Optional):
+            </label>
+            <div className="space-y-3">
+              {formData.referenceMaterials.map((material, index) => (
+                <input
+                  key={index}
+                  type="url"
+                  value={material}
+                  onChange={(e) => handleReferenceMaterialChange(index, e.target.value)}
+                  className="w-full p-3 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight"
+                  placeholder={`Additional submission link ${index + 1} (optional)`}
+                />
+              ))}
+            </div>
+            <p className="text-xs text-teallight mt-1">
+              You can add additional links to your work (e.g., GitHub repository, live demo, documentation).
             </p>
           </div>
         </div>
