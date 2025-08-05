@@ -111,163 +111,177 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-      <div className="bg-offblack rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-paperwhite/20">
+      <div className="bg-offblack rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto border border-paperwhite/20">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-paperwhite/20">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-trueturquoise/20 rounded-lg flex items-center justify-center">
-              <FileTextIcon className="w-4 h-4 text-trueturquoise" />
+        <div className="sticky top-0 bg-offblack/95 backdrop-blur-sm border-b border-paperwhite/20 p-6 rounded-t-2xl">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-trueturquoise/20 to-blue-500/20 rounded-xl flex items-center justify-center">
+                <FileTextIcon className="w-6 h-6 text-trueturquoise" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-paperwhite">{exercise.title}</h2>
+                <p className="text-sm text-teallight max-w-md">{exercise.description}</p>
+              </div>
             </div>
-            <div>
-              <div className="font-semibold text-paperwhite">{exercise.title}</div>
-              <div className="text-sm text-teallight">{exercise.description}</div>
+            <div className="flex items-center gap-3">
+              <span className="px-4 py-2 rounded-full bg-gradient-to-r from-trueturquoise/20 to-blue-500/20 text-trueturquoise font-semibold text-sm border border-trueturquoise/30">
+                {exercise.difficulty || 'Medium'}
+              </span>
+              <button
+                onClick={onClose}
+                className="w-8 h-8 rounded-lg bg-paperwhite/10 hover:bg-paperwhite/20 flex items-center justify-center transition-colors"
+              >
+                <Cross1Icon className="w-4 h-4 text-paperwhite" />
+              </button>
             </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="px-3 py-1 rounded-full bg-paperwhite/10 text-trueturquoise font-semibold text-sm">
-              {exercise.difficulty || 'Medium'}
-            </span>
           </div>
         </div>
 
         {/* Error Message */}
         {error && (
-          <div className="mx-6 mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
-            <div className="flex items-center gap-2 text-red-400">
-              <ExclamationTriangleIcon className="w-4 h-4" />
-              <span className="text-sm">{error}</span>
+          <div className="mx-6 mt-4 p-4 bg-red-500/10 border border-red-500/30 rounded-xl">
+            <div className="flex items-center gap-3 text-red-400">
+              <ExclamationTriangleIcon className="w-5 h-5 flex-shrink-0" />
+              <span className="text-sm font-medium">{error}</span>
             </div>
           </div>
         )}
 
-        {/* Form Content */}
-        <div className="p-6 space-y-6">
-          {/* Brief Section - Read Only */}
-          <div>
-            <label className="flex items-center gap-2 text-sm font-medium text-paperwhite mb-2">
-              <ClipboardIcon className="w-4 h-4 text-trueturquoise" />
-              Brief - What you should do:
-            </label>
-            <div className="w-full h-32 p-3 border border-paperwhite/20 bg-paperwhite/5 text-paperwhite rounded-lg overflow-y-auto">
-              <p className="text-sm leading-relaxed">{formData.brief}</p>
+        {/* Content Sections */}
+        <div className="p-6 space-y-8">
+          {/* Exercise Overview Card */}
+          <div className="bg-gradient-to-r from-paperwhite/5 to-paperwhite/10 rounded-2xl p-6 border border-paperwhite/20">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-gradient-to-br from-trueturquoise/20 to-blue-500/20 rounded-xl flex items-center justify-center">
+                <ClipboardIcon className="w-5 h-5 text-trueturquoise" />
+              </div>
+              <h3 className="text-lg font-semibold text-paperwhite">Exercise Overview</h3>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <h4 className="text-sm font-medium text-trueturquoise mb-2">What you need to do:</h4>
+                <div className="bg-offblack/50 rounded-xl p-4 border border-paperwhite/10">
+                  <p className="text-sm leading-relaxed text-paperwhite">{formData.brief}</p>
+                </div>
+              </div>
+              <div>
+                <h4 className="text-sm font-medium text-trueturquoise mb-2">Instructions & Guidelines:</h4>
+                <div className="bg-offblack/50 rounded-xl p-4 border border-paperwhite/10">
+                  <p className="text-sm leading-relaxed text-paperwhite whitespace-pre-line">{formData.instruction}</p>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Instruction Section - Read Only */}
-          <div>
-            <label className="flex items-center gap-2 text-sm font-medium text-paperwhite mb-2">
-              <ReaderIcon className="w-4 h-4 text-trueturquoise" />
-              Instruction/Helper Guide:
-            </label>
-            <div className="w-full h-32 p-3 border border-paperwhite/20 bg-paperwhite/5 text-paperwhite rounded-lg overflow-y-auto">
-              <p className="text-sm leading-relaxed whitespace-pre-line">{formData.instruction}</p>
+          {/* Resources Card */}
+          <div className="bg-gradient-to-r from-paperwhite/5 to-paperwhite/10 rounded-2xl p-6 border border-paperwhite/20">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-xl flex items-center justify-center">
+                <FileTextIcon className="w-5 h-5 text-orange-400" />
+              </div>
+              <h3 className="text-lg font-semibold text-paperwhite">Reference Materials</h3>
             </div>
-          </div>
-
-          {/* Reference Materials Section - Read Only */}
-          <div>
-            <label className="flex items-center gap-2 text-sm font-medium text-paperwhite mb-2">
-              <FileTextIcon className="w-4 h-4 text-trueturquoise" />
-              Reference Materials:
-            </label>
-            <div className="w-full p-3 border border-paperwhite/20 bg-paperwhite/5 text-paperwhite rounded-lg">
+            <div className="bg-offblack/50 rounded-xl p-4 border border-paperwhite/10">
               {exercise.resources && exercise.resources.length > 0 ? (
                 <div className="space-y-2">
                   {exercise.resources.map((resource, index) => (
-                    <div key={index} className="text-sm text-teallight">
-                      • {resource}
+                    <div key={index} className="flex items-center gap-2 text-sm text-teallight">
+                      <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+                      <span>{resource}</span>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-teallight">No reference materials provided</p>
+                <p className="text-sm text-teallight">No reference materials provided for this exercise.</p>
               )}
             </div>
           </div>
 
-          {/* Expected Output Section - Read Only */}
-          <div>
-            <label className="flex items-center gap-2 text-sm font-medium text-paperwhite mb-2">
-              <CheckCircledIcon className="w-4 h-4 text-trueturquoise" />
-              Expected output:
-            </label>
-            <div className="w-full h-32 p-3 border border-paperwhite/20 bg-paperwhite/5 text-paperwhite rounded-lg overflow-y-auto">
-              <p className="text-sm leading-relaxed text-teallight">
-                Complete the exercise according to the brief and instructions above. Submit your work through the link below.
-              </p>
+          {/* Submission Section Card */}
+          <div className="bg-gradient-to-r from-green-500/5 to-teallight/10 rounded-2xl p-6 border border-green-500/20">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-gradient-to-br from-green-500/20 to-teallight/20 rounded-xl flex items-center justify-center">
+                <Link1Icon className="w-5 h-5 text-green-400" />
+              </div>
+              <h3 className="text-lg font-semibold text-paperwhite">Submit Your Work</h3>
             </div>
-          </div>
-
-          {/* Submission Link Section - Editable */}
-          <div>
-            <label className="flex items-center gap-2 text-sm font-medium text-paperwhite mb-2">
-              <Link1Icon className="w-4 h-4 text-trueturquoise" />
-              Submission Link: <span className="text-red-400">*</span>
-            </label>
-            <input
-              type="url"
-              value={formData.submissionLink}
-              onChange={(e) => handleInputChange('submissionLink', e.target.value)}
-              className="w-full p-3 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight"
-              placeholder="https://your-project-link.com"
-              required
-            />
-            <p className="text-xs text-teallight mt-1">
-              This link is required to unlock the next level. Please provide a valid URL to your completed work.
-            </p>
-          </div>
-
-          {/* Additional Submission Links - Editable */}
-          <div>
-            <label className="flex items-center gap-2 text-sm font-medium text-paperwhite mb-2">
-              <Link1Icon className="w-4 h-4 text-trueturquoise" />
-              Additional Submission Links (Optional):
-            </label>
-            <div className="space-y-3">
-              {formData.referenceMaterials.map((material, index) => (
+            <div className="space-y-4">
+              <div>
+                <label className="flex items-center gap-2 text-sm font-medium text-green-400 mb-2">
+                  Main Submission Link <span className="text-red-400">*</span>
+                </label>
                 <input
-                  key={index}
                   type="url"
-                  value={material}
-                  onChange={(e) => handleReferenceMaterialChange(index, e.target.value)}
-                  className="w-full p-3 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight"
-                  placeholder={`Additional submission link ${index + 1} (optional)`}
+                  value={formData.submissionLink}
+                  onChange={(e) => handleInputChange('submissionLink', e.target.value)}
+                  className="w-full p-4 border border-green-500/30 bg-offblack/50 text-paperwhite rounded-xl focus:ring-2 focus:ring-green-500/40 focus:border-green-500 transition placeholder:text-teallight"
+                  placeholder="https://your-project-link.com"
+                  required
                 />
-              ))}
+                <p className="text-xs text-teallight mt-2">
+                  This link is required to unlock the next level. Please provide a valid URL to your completed work.
+                </p>
+              </div>
+              
+              <div>
+                <label className="flex items-center gap-2 text-sm font-medium text-green-400 mb-2">
+                  Additional Links (Optional)
+                </label>
+                <div className="space-y-3">
+                  {formData.referenceMaterials.map((material, index) => (
+                    <input
+                      key={index}
+                      type="url"
+                      value={material}
+                      onChange={(e) => handleReferenceMaterialChange(index, e.target.value)}
+                      className="w-full p-4 border border-green-500/30 bg-offblack/50 text-paperwhite rounded-xl focus:ring-2 focus:ring-green-500/40 focus:border-green-500 transition placeholder:text-teallight"
+                      placeholder={`Additional link ${index + 1} (GitHub, demo, docs, etc.)`}
+                    />
+                  ))}
+                </div>
+                <p className="text-xs text-teallight mt-2">
+                  You can add additional links to your work (e.g., GitHub repository, live demo, documentation).
+                </p>
+              </div>
             </div>
-            <p className="text-xs text-teallight mt-1">
-              You can add additional links to your work (e.g., GitHub repository, live demo, documentation).
-            </p>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end gap-3 p-6 border-t border-paperwhite/20">
-          <button
-            onClick={onClose}
-            disabled={isSubmitting}
-            className="flex items-center gap-2 px-4 py-2 text-paperwhite border border-paperwhite/20 rounded-lg hover:bg-paperwhite/10 transition-colors disabled:opacity-50"
-          >
-            <Cross1Icon className="w-4 h-4" />
-            Cancel
-          </button>
-          <button
-            onClick={handleSubmit}
-            disabled={isSubmitting || !formData.submissionLink.trim()}
-            className="flex items-center gap-2 px-6 py-2 bg-trueturquoise text-offblack rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isSubmitting ? (
-              <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-offblack"></div>
-                Submitting...
-              </>
-            ) : (
-              <>
-                <CheckCircledIcon className="w-4 h-4" />
-                Submit Task
-              </>
-            )}
-          </button>
+        <div className="sticky bottom-0 bg-offblack/95 backdrop-blur-sm border-t border-paperwhite/20 p-6 rounded-b-2xl">
+          <div className="flex justify-between items-center">
+            <div className="text-sm text-teallight">
+              <span className="text-red-400">*</span> Required field
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={onClose}
+                disabled={isSubmitting}
+                className="flex items-center gap-2 px-6 py-3 text-paperwhite border border-paperwhite/20 rounded-xl hover:bg-paperwhite/10 transition-colors disabled:opacity-50 font-medium"
+              >
+                <Cross1Icon className="w-4 h-4" />
+                Cancel
+              </button>
+              <button
+                onClick={handleSubmit}
+                disabled={isSubmitting || !formData.submissionLink.trim()}
+                className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-green-500 to-teallight text-offblack rounded-xl hover:from-green-600 hover:to-teallight/90 transition-all font-semibold disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+              >
+                {isSubmitting ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-offblack"></div>
+                    Submitting...
+                  </>
+                ) : (
+                  <>
+                    <CheckCircledIcon className="w-4 h-4" />
+                    Submit Exercise
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
