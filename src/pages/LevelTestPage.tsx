@@ -176,7 +176,7 @@ const LevelTestPage: React.FC = () => {
     if (submitted) return;
     setAnswers((prev) => ({
       ...prev,
-      [qIdx]: prev[qIdx].map((checked, i) => (i === optIdx ? !checked : checked)),
+      [qIdx]: prev[qIdx].map((checked, i) => (i === optIdx ? !checked : false)), // Only allow one selection
     }));
   };
 
@@ -273,6 +273,24 @@ const LevelTestPage: React.FC = () => {
       }, 100);
     }
   }, [submitted]);
+
+  // Retake timer countdown
+  useEffect(() => {
+    if (retakeTimer && retakeTimer > 0) {
+      const interval = setInterval(() => {
+        setRetakeTimer(prev => {
+          if (prev && prev > 0) {
+            return prev - 1;
+          } else {
+            setCanRetake(true);
+            return null;
+          }
+        });
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [retakeTimer]);
 
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60).toString().padStart(2, '0');
@@ -707,8 +725,8 @@ const LevelTestPage: React.FC = () => {
                   </h2>
                   <p className="text-teallight mb-6 text-lg">
                     {currentAttempt >= 3 
-                      ? 'You have used all 3 attempts for this test. Please wait 24 hours before retaking.'
-                      : 'Please wait before retaking the test.'
+                      ? 'You have used all 3 attempts for this test. Please wait 1 minute before retaking.'
+                      : 'Please wait 1 minute before retaking the test.'
                     }
                   </p>
                   {retakeTimer && (

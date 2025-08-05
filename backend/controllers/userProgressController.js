@@ -372,17 +372,45 @@ export const getLevelsStatus = async (req, res) => {
 
     const progress = await UserProgress.getOrCreate(userId, careerTrack);
     
-    // Get all levels for the career track (this would need to be passed or fetched)
-    const { levels } = req.query;
-    let allLevels = [];
+    // Fetch all levels for the career track directly from Curriculum
+    const curriculumItems = await Curriculum.find({
+      careerTrack: careerTrack,
+      isActive: true
+    }).sort({ order: 'asc' });
+
+    // Group curriculum items into levels (similar to trainingController)
+    const levelsMap = new Map();
     
-    if (levels) {
-      try {
-        allLevels = JSON.parse(levels);
-      } catch (e) {
-        console.error('Error parsing levels:', e);
+    curriculumItems.forEach(item => {
+      const key = `${item.careerTrack}_${item.order}`;
+      
+      if (!levelsMap.has(key)) {
+        const syllabusItem = curriculumItems.find(i => 
+          i.careerTrack === item.careerTrack && 
+          i.order === item.order && 
+          i.type === 'syllabus'
+        );
+        
+        const baseItem = syllabusItem || item;
+        
+        levelsMap.set(key, {
+          id: baseItem._id.toString(),
+          title: baseItem.title,
+          description: baseItem.description,
+          difficulty: baseItem.difficulty,
+          careerTrack: baseItem.careerTrack,
+          order: baseItem.order,
+          isActive: baseItem.isActive,
+          learn: [],
+          test: [],
+          exercise: []
+        });
       }
-    }
+    });
+
+    const allLevels = Array.from(levelsMap.values())
+      .filter(level => level.isActive)
+      .sort((a, b) => a.order - b.order);
 
     const levelsWithStatus = allLevels.map(level => ({
       ...level,
