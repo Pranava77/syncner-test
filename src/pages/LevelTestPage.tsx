@@ -361,34 +361,37 @@ const LevelTestPage: React.FC = () => {
     );
   }
 
-  // Check if test is already completed
+  // Check if test is already completed - show results instead of just completion message
   if (testProgress.isCompleted) {
-    return (
-      <div className="flex h-screen bg-offblack overflow-x-hidden">
-        <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
-          <div className="w-full max-w-5xl bg-gradient-to-r from-green-500/10 to-teallight/10 rounded-xl border border-green-500/30 shadow-lg p-6 text-center">
-            <div className="text-green-400 text-6xl mb-4">✓</div>
-            <h2 className="text-2xl font-bold text-paperwhite mb-2">Test Already Completed!</h2>
-            <p className="text-teallight mb-6 text-lg">You have successfully passed this test. You can now proceed to the exercise.</p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button 
-                onClick={() => navigate(`/student/training/${levelId}/learn`)}
-                className="bg-paperwhite text-offblack px-8 py-3 rounded-lg font-bold hover:bg-trueturquoise hover:text-offblack transition-colors text-lg shadow-sm"
-              >
-                Back to Learning
-              </button>
-              <button 
-                onClick={() => navigate(`/student/training/${levelId}/exercise`)}
-                className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold hover:bg-trueturquoise/90 transition-colors text-lg shadow-sm"
-              >
-                Go to Exercise
-              </button>
-            </div>
-          </div>
-        </main>
-      </div>
-    );
+    // Set submitted to true to show results
+    setSubmitted(true);
+    
+    // Get the last attempt to show results
+    const lastAttempt = testProgress.attempts && testProgress.attempts.length > 0 
+      ? testProgress.attempts[testProgress.attempts.length - 1] 
+      : null;
+    
+    if (lastAttempt) {
+      setTestScore(lastAttempt.score);
+      setTestPassed(lastAttempt.passed);
+      
+      // Set the answers from the last attempt
+      if (lastAttempt.answers && randomizedQuestions.length > 0) {
+        const previousAnswers: { [qIdx: number]: boolean[] } = {};
+        lastAttempt.answers.forEach((answer: any) => {
+          const questionIndex = answer.questionIndex;
+          if (questionIndex >= 0 && questionIndex < randomizedQuestions.length) {
+            const optionsLength = randomizedQuestions[questionIndex].options.length;
+            const answerArray = new Array(optionsLength).fill(false);
+            if (answer.selectedOption >= 0 && answer.selectedOption < optionsLength) {
+              answerArray[answer.selectedOption] = true;
+            }
+            previousAnswers[questionIndex] = answerArray;
+          }
+        });
+        setAnswers(previousAnswers);
+      }
+    }
   }
 
   // Check if max attempts reached or cooldown active (only before taking test)
