@@ -151,7 +151,12 @@ userProgressSchema.methods.isTestUnlocked = function(levelId) {
 // Method to check if exercise is unlocked (test must be passed)
 userProgressSchema.methods.isExerciseUnlocked = function(levelId) {
   const level = this.completedLevels.find(l => l.levelId === levelId);
-  return level && level.testProgress && level.testProgress.isCompleted;
+  
+  // Check both testProgress.isCompleted and completedSections.test
+  return level && (
+    (level.testProgress && level.testProgress.isCompleted) || 
+    (level.completedSections && level.completedSections.test)
+  );
 };
 
 // Method to get unlock status for all sections of a level

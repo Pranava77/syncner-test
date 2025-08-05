@@ -88,6 +88,7 @@ const LevelExercisePage: React.FC = () => {
     try {
       // Get all section status for this level
       const response = await apiService.getLevelSectionStatus(levelId);
+      
       if (response.success) {
         const { exercise } = response.data;
         
