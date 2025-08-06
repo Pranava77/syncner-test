@@ -196,6 +196,16 @@ class ApiService {
     return this.handleResponse(response);
   }
 
+  async updateExercise(levelId: string, exerciseTitle: string, links?: string[]) {
+    const response = await fetch(`${this.baseURL}/progress/update-exercise`, {
+      method: 'PUT',
+      headers: this.getHeaders(),
+      credentials: 'include',
+      body: JSON.stringify({ levelId, exerciseTitle, links }),
+    });
+    return this.handleResponse(response);
+  }
+
   async getLevelsStatus() {
     const response = await fetch(`${this.baseURL}/progress/levels-status`, {
       method: 'GET',

@@ -22,10 +22,17 @@ interface TaskSubmissionModalProps {
     creditPoints?: number;
     order?: number;
   };
+  existingSubmission?: {
+    links: string[];
+    submittedAt: Date;
+    status: string;
+  };
   onExerciseSubmitted?: () => void; // Callback to trigger refresh
 }
 
-const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClose, exercise, onExerciseSubmitted }) => {
+const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClose, exercise, existingSubmission, onExerciseSubmitted }) => {
+  const isEditMode = !!existingSubmission;
+  
   const [formData, setFormData] = useState({
     brief: exercise.description || '',
     instruction: exercise.resources?.join('\n') || '',
@@ -35,6 +42,22 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Populate form with existing submission data when editing
+  React.useEffect(() => {
+    if (existingSubmission && existingSubmission.links.length > 0) {
+      const links = [...existingSubmission.links];
+      setFormData(prev => ({
+        ...prev,
+        submissionLink: links[0] || '',
+        referenceMaterials: [
+          links[1] || '',
+          links[2] || '',
+          links[3] || ''
+        ]
+      }));
+    }
+  }, [existingSubmission]);
 
   const handleInputChange = (field: string, value: string | string[]) => {
     setFormData(prev => ({
@@ -95,10 +118,14 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
         ...formData.referenceMaterials.filter(link => link.trim() !== '')
       ].filter(link => link.trim() !== '');
       
-      // Submit exercise with links
-      await apiService.submitExercise(exercise.id || '', exercise.title, links);
-      
-      console.log('Exercise submitted successfully:', formData);
+      // Submit or update exercise with links
+      if (isEditMode) {
+        await apiService.updateExercise(exercise.id || '', exercise.title, links);
+        console.log('Exercise updated successfully:', formData);
+      } else {
+        await apiService.submitExercise(exercise.id || '', exercise.title, links);
+        console.log('Exercise submitted successfully:', formData);
+      }
       
       // Trigger refresh callback if provided
       if (onExerciseSubmitted) {
@@ -108,7 +135,7 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
       onClose();
     } catch (error) {
       console.error('Error submitting exercise:', error);
-      setError('Failed to submit exercise. Please try again.');
+      setError(`Failed to ${isEditMode ? 'update' : 'submit'} exercise. Please try again.`);
     } finally {
       setIsSubmitting(false);
     }
@@ -127,8 +154,12 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
                 <FileTextIcon className="w-6 h-6 text-trueturquoise" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-paperwhite">{exercise.title}</h2>
-                <p className="text-sm text-teallight max-w-md">{exercise.description}</p>
+                <h2 className="text-xl font-bold text-paperwhite">
+                  {isEditMode ? 'Edit Submission' : exercise.title}
+                </h2>
+                <p className="text-sm text-teallight max-w-md">
+                  {isEditMode ? `Update your submission for: ${exercise.title}` : exercise.description}
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -278,12 +309,12 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
                 {isSubmitting ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-offblack"></div>
-                    Submitting...
+                    {isEditMode ? 'Updating...' : 'Submitting...'}
                   </>
                 ) : (
                   <>
                     <CheckCircledIcon className="w-4 h-4" />
-                    Submit Exercise
+                    {isEditMode ? 'Update Submission' : 'Submit Exercise'}
                   </>
                 )}
               </button>

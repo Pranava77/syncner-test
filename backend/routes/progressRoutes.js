@@ -4,6 +4,7 @@ import {
   getUserProgress,
   markLevelCompleted,
   submitExercise,
+  updateExercise,
   checkLevelUnlocked,
   getLevelsStatus,
   updateLearnProgress,
@@ -48,6 +49,9 @@ router.post('/test-attempt', submitTestAttempt);
 
 // Submit exercise
 router.post('/submit-exercise', submitExercise);
+
+// Update exercise
+router.put('/update-exercise', updateExercise);
 
 // Get user progress for a career track (must come last to avoid catching other routes)
 router.get('/:careerTrack', getUserProgress);

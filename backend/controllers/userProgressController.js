@@ -332,6 +332,41 @@ export const submitExercise = async (req, res) => {
   }
 };
 
+// @desc    Update exercise submission
+// @route   PUT /api/progress/update-exercise
+// @access  Private
+export const updateExercise = async (req, res) => {
+  try {
+    const { levelId, exerciseTitle, links } = req.body;
+    const userId = req.user._id;
+    const { careerTrack } = req.user;
+
+    if (!levelId || !exerciseTitle) {
+      return res.status(400).json({
+        success: false,
+        message: 'Level ID and exercise title are required'
+      });
+    }
+
+    const progress = await UserProgress.getOrCreate(userId, careerTrack);
+    progress.updateExercise(levelId, exerciseTitle, links);
+    await progress.save();
+
+    res.status(200).json({
+      success: true,
+      data: progress,
+      message: 'Exercise updated successfully'
+    });
+  } catch (error) {
+    console.error('Update exercise error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error while updating exercise',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
+
 // @desc    Check if level is unlocked
 // @route   GET /api/progress/unlocked/:levelOrder
 // @access  Private

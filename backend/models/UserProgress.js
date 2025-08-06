@@ -319,6 +319,19 @@ userProgressSchema.methods.submitExercise = function(levelId, exerciseTitle, lin
   }
 };
 
+// Method to update exercise submission
+userProgressSchema.methods.updateExercise = function(levelId, exerciseTitle, links) {
+  const level = this.completedLevels.find(l => l.levelId === levelId);
+  if (level && level.exerciseSubmissions) {
+    const submission = level.exerciseSubmissions.find(sub => sub.exerciseTitle === exerciseTitle);
+    if (submission) {
+      submission.links = links || [];
+      submission.submittedAt = new Date();
+      submission.status = 'updated';
+    }
+  }
+};
+
 // Method to check if exercise links are submitted
 userProgressSchema.methods.hasExerciseLinks = function(levelId) {
   const level = this.completedLevels.find(l => l.levelId === levelId);

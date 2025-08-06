@@ -127,6 +127,8 @@ const LevelExercisePage: React.FC = () => {
     status === 'Completed' ? 'bg-trueturquoise/20 text-trueturquoise' : 'bg-paperwhite/10 text-teallight';
 
   const handleViewExercise = (exercise: ExerciseItem) => {
+    // Find existing submission for this exercise
+    const existingSubmission = exerciseSubmissions.find(sub => sub.exerciseTitle === exercise.title);
     setSelectedExercise(exercise);
     setIsModalOpen(true);
   };
@@ -332,7 +334,7 @@ const LevelExercisePage: React.FC = () => {
                         onClick={() => handleViewExercise(exercise)}
                         className="bg-paperwhite/10 text-paperwhite px-3 py-1 rounded text-sm hover:bg-paperwhite/20 transition-colors"
                       >
-                        {isSubmitted ? 'View' : 'Submit'}
+                        {isSubmitted ? 'Edit' : 'Submit'}
                       </button>
                     </div>
                   </td>
@@ -459,6 +461,7 @@ const LevelExercisePage: React.FC = () => {
             id: level?.id,
             order: level?.order
           }}
+          existingSubmission={exerciseSubmissions.find(sub => sub.exerciseTitle === selectedExercise.title)}
           onExerciseSubmitted={() => {
             // Trigger sidebar refresh when exercise is submitted
             setRefreshTrigger(prev => prev + 1);
