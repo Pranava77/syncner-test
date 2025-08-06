@@ -70,10 +70,6 @@ const TrainingLevels: React.FC = () => {
       
       // Get user's career track
       const userCareerTrack = user?.careerTrack;
-      console.log('=== TRAINING LEVELS DEBUG ===');
-      console.log('User object:', user);
-      console.log('User career track:', userCareerTrack);
-      console.log('User career track type:', typeof userCareerTrack);
       
       if (!userCareerTrack) {
         setError('No career track assigned to user');
@@ -81,9 +77,7 @@ const TrainingLevels: React.FC = () => {
         return;
       }
       
-      console.log('Fetching training levels for track:', userCareerTrack);
       const response = await apiService.getLevels(userCareerTrack);
-      console.log('Training levels API response:', response);
       
       let levelsData = [];
       if (response && response.data) {
@@ -91,8 +85,6 @@ const TrainingLevels: React.FC = () => {
       } else if (Array.isArray(response)) {
         levelsData = response;
       }
-      
-      console.log('Processed levels data:', levelsData);
       
       // Ensure we have unique levels by order and career track
       const uniqueLevels = levelsData.filter((level: Level, index: number, self: Level[]) => 
@@ -103,18 +95,32 @@ const TrainingLevels: React.FC = () => {
       
       // Sort by order
       uniqueLevels.sort((a: Level, b: Level) => a.order - b.order);
-      console.log('Final unique levels data:', uniqueLevels);
       
       // Get levels status with unlock information
       try {
         const statusResponse = await apiService.getLevelsStatus();
-        if (statusResponse && statusResponse.data) {
-          const statusData = statusResponse.data;
+        if (statusResponse && statusResponse.data && statusResponse.data.levels) {
+          const statusData = statusResponse.data.levels;
           levelsData = uniqueLevels.map((level: Level) => {
-            const levelStatus = statusData.find((status: any) => status.levelId === level.id);
+            const levelStatus = statusData.find((status: any) => status.id === level.id);
+            
             // Level 1 is always unlocked, others need proper unlock status
-            const isUnlocked = level.order === 1 ? true : (levelStatus?.isUnlocked ?? false);
-            console.log(`TrainingLevels: Level ${level.order} isUnlocked:`, isUnlocked);
+            let isUnlocked = false;
+            if (level.order === 1) {
+              isUnlocked = true;
+            } else if (level.order === 2) {
+              // Temporarily unlock Level 2 for testing
+              isUnlocked = true;
+            } else if (levelStatus) {
+              isUnlocked = levelStatus.isUnlocked === true;
+            } else {
+              // If no status found, check if previous level exists and is completed
+              const previousLevel = uniqueLevels.find((l: Level) => l.order === level.order - 1);
+              if (previousLevel) {
+                const previousStatus = statusData.find((status: any) => status.id === previousLevel.id);
+                isUnlocked = previousStatus?.completedSections?.exercise === true;
+              }
+            }
             
             return {
               ...level,
@@ -131,7 +137,7 @@ const TrainingLevels: React.FC = () => {
           // If no status data, set first level as unlocked and others as locked
           levelsData = uniqueLevels.map((level: Level) => ({
             ...level,
-            isUnlocked: level.order === 1,
+            isUnlocked: level.order === 1 || level.order === 2, // Temporarily unlock Level 2
             isCompleted: false,
             completedSections: {
               learn: false,
@@ -145,7 +151,7 @@ const TrainingLevels: React.FC = () => {
         // If status fetch fails, set first level as unlocked and others as locked
         levelsData = uniqueLevels.map((level: Level) => ({
           ...level,
-          isUnlocked: level.order === 1,
+          isUnlocked: level.order === 1 || level.order === 2, // Temporarily unlock Level 2
           isCompleted: false,
           completedSections: {
             learn: false,
@@ -166,9 +172,15 @@ const TrainingLevels: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log('TrainingLevels: User data changed:', user);
     fetchLevels();
   }, [user]);
+
+  // Refresh levels when refreshTrigger changes
+  useEffect(() => {
+    if (refreshTrigger) {
+      fetchLevels();
+    }
+  }, [refreshTrigger]);
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty.toLowerCase()) {
