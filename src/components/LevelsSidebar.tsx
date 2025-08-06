@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../redux/store';
-import { ChevronRightIcon, ReaderIcon, ClipboardIcon, Pencil2Icon, LayersIcon, LockClosedIcon, LockOpen1Icon } from '@radix-ui/react-icons';
+import { ChevronRightIcon, ChevronDownIcon, ReaderIcon, ClipboardIcon, Pencil2Icon, LayersIcon, LockClosedIcon, LockOpen1Icon } from '@radix-ui/react-icons';
 import apiService from '../services/api';
 
 interface Level {
@@ -39,6 +39,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
   const { user } = useAppSelector((state) => state.auth);
   const [levels, setLevels] = useState<Level[]>([]);
   const [loading, setLoading] = useState(true);
+  const [expandedLevels, setExpandedLevels] = useState<Set<string>>(new Set());
 
   const fetchLevels = useCallback(async () => {
     try {
@@ -156,6 +157,13 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
     fetchLevels();
   }, [fetchLevels]);
 
+  // Auto-expand current level
+  useEffect(() => {
+    if (currentLevel && !expandedLevels.has(currentLevel)) {
+      setExpandedLevels(prev => new Set([...prev, currentLevel]));
+    }
+  }, [currentLevel, expandedLevels]);
+
   // Refresh levels when refreshTrigger changes
   useEffect(() => {
     if (refreshTrigger) {
@@ -174,7 +182,19 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
     return () => clearInterval(interval);
   }, [fetchLevels, loading, levels.length]);
 
+  const toggleLevelExpansion = (levelId: string) => {
+    setExpandedLevels(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(levelId)) {
+        newSet.delete(levelId);
+      } else {
+        newSet.add(levelId);
+      }
+      return newSet;
+    });
+  };
 
+  const isLevelExpanded = (levelId: string) => expandedLevels.has(levelId);
 
   return (
     <aside
@@ -274,28 +294,28 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
             </div>
           ) : (
                         levels.map((level) => (
-              <div key={level.id}>
-              <button
-                  onClick={() => {
-                    if (level.isUnlocked) {
-                      navigate(`/student/training/${level.id}/learn`);
-                    } else {
-                      alert('This level is locked. Complete the previous level\'s exercise to unlock it.');
-                    }
-                  }}
-                  className={`w-full flex items-center py-2 transition-colors text-sm font-${currentLevel === level.id ? 'semibold' : 'normal'} text-left
-                    ${currentLevel === level.id ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 
-                      level.isUnlocked ? 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise' : 
-                      'text-teallight/50 cursor-not-allowed'} ${!sidebarOpen ? 'justify-center' : ''}`}
-                style={{ borderRadius: 0 }}
-                disabled={!sidebarOpen || !level.isUnlocked}
-              >
-                  {level.isUnlocked ? (
-                    <LockOpen1Icon className={`h-5 w-5 mr-2 ${currentLevel === level.id ? 'text-trueturquoise' : 'text-green-400'}`} />
-                  ) : (
-                    <LockClosedIcon className="h-5 w-5 mr-2 text-teallight/50" />
-                  )}
-                  {sidebarOpen && (
+              <div key={level.id} className="border-b border-paperwhite/10 last:border-b-0">
+                <div className="flex items-center">
+                  <button
+                    onClick={() => {
+                      if (level.isUnlocked) {
+                        toggleLevelExpansion(level.id);
+                      } else {
+                        alert('This level is locked. Complete the previous level\'s exercise to unlock it.');
+                      }
+                    }}
+                    className={`flex-1 flex items-center py-2 transition-colors text-sm font-${currentLevel === level.id ? 'semibold' : 'normal'} text-left
+                      ${currentLevel === level.id ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 
+                        level.isUnlocked ? 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise' : 
+                        'text-teallight/50 cursor-not-allowed'}`}
+                    style={{ borderRadius: 0 }}
+                    disabled={!level.isUnlocked}
+                  >
+                    {level.isUnlocked ? (
+                      <LockOpen1Icon className={`h-5 w-5 mr-2 ${currentLevel === level.id ? 'text-trueturquoise' : 'text-green-400'}`} />
+                    ) : (
+                      <LockClosedIcon className="h-5 w-5 mr-2 text-teallight/50" />
+                    )}
                     <div className="flex-1 text-left">
                       <div className="font-medium">
                         Level {level.order}
@@ -307,10 +327,22 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                         <span>{level.exercise?.length || 0} exercise</span>
                       </div>
                     </div>
+                  </button>
+                  {level.isUnlocked && (
+                    <button
+                      onClick={() => toggleLevelExpansion(level.id)}
+                      className="p-2 hover:bg-paperwhite/10 transition-colors"
+                    >
+                      <ChevronDownIcon 
+                        className={`h-4 w-4 text-teallight transition-transform duration-200 ${
+                          isLevelExpanded(level.id) ? 'rotate-180' : ''
+                        }`} 
+                      />
+                    </button>
                   )}
-              </button>
-                {sidebarOpen && level.isUnlocked && (
-                <div className="ml-2 mt-2 flex flex-col space-y-1">
+                </div>
+                {sidebarOpen && level.isUnlocked && isLevelExpanded(level.id) && (
+                <div className="ml-2 mt-2 flex flex-col space-y-1 border-l border-paperwhite/10 pl-2">
                   <button
                     className={`w-full flex items-center gap-2 text-left py-2 transition-colors text-xs font-${currentSection === 'learn' ? 'semibold' : 'normal'}
                       ${currentSection === 'learn' ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'}`}
