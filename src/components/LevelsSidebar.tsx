@@ -24,6 +24,7 @@ interface LevelsSidebarProps {
   currentLevel?: string;
   currentSection?: string;
   refreshTrigger?: number; // Add this to trigger refresh from parent
+  onRefresh?: () => void; // Callback to notify parent of refresh
 }
 
 const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
@@ -31,7 +32,8 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
   setSidebarOpen,
   currentLevel,
   currentSection,
-  refreshTrigger
+  refreshTrigger,
+  onRefresh
 }) => {
   const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.auth);
@@ -59,7 +61,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
       console.log('Sidebar: Fetching levels for track:', userCareerTrack);
       const response = await apiService.getLevels(userCareerTrack);
       
-      let levelsData = [];
+      let levelsData: Level[] = [];
       if (response && response.data) {
         levelsData = Array.isArray(response.data) ? response.data : [response.data];
       } else if (Array.isArray(response)) {
@@ -92,9 +94,24 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
           levelsData = levelsData.map((level: Level) => {
             const levelStatus = statusData.find((status: any) => status.id === level.id);
             console.log(`Sidebar: Level ${level.order} status:`, levelStatus);
+            console.log(`Sidebar: Level ${level.order} ID:`, level.id);
+            console.log(`Sidebar: Looking for status with ID:`, level.id);
+            console.log(`Sidebar: Available status IDs:`, statusData.map((s: any) => s.id));
             
             // Level 1 is always unlocked, others need proper unlock status
-            const isUnlocked = level.order === 1 ? true : (levelStatus?.isUnlocked ?? false);
+            let isUnlocked = false;
+            if (level.order === 1) {
+              isUnlocked = true;
+            } else if (levelStatus) {
+              isUnlocked = levelStatus.isUnlocked === true;
+            } else {
+              // If no status found, check if previous level exists and is completed
+              const previousLevel = levelsData.find((l: Level) => l.order === level.order - 1);
+              if (previousLevel) {
+                const previousStatus = statusData.find((status: any) => status.id === previousLevel.id);
+                isUnlocked = previousStatus?.completedSections?.exercise === true;
+              }
+            }
             console.log(`Sidebar: Level ${level.order} isUnlocked:`, isUnlocked);
             
             return {
@@ -135,6 +152,11 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
       
       console.log('Sidebar: Final filtered unique levels with status:', levelsData);
       setLevels(levelsData);
+      
+      // Notify parent component that refresh is complete
+      if (onRefresh) {
+        onRefresh();
+      }
     } catch (error) {
       console.error('Error fetching levels for sidebar:', error);
       setLevels([]);
@@ -155,6 +177,38 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
       fetchLevels();
     }
   }, [refreshTrigger, fetchLevels]);
+
+  // Auto-refresh levels every 30 seconds to catch completion updates
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!loading && levels.length > 0) {
+        console.log('LevelsSidebar: Auto-refreshing levels');
+        fetchLevels();
+      }
+    }, 30000); // 30 seconds
+
+    return () => clearInterval(interval);
+  }, [fetchLevels, loading, levels.length]);
+
+  // Add a more frequent refresh for the first few minutes after component mounts
+  useEffect(() => {
+    const frequentInterval = setInterval(() => {
+      if (!loading && levels.length > 0) {
+        console.log('LevelsSidebar: Frequent refresh for immediate updates');
+        fetchLevels();
+      }
+    }, 5000); // 5 seconds
+
+    // Clear the frequent interval after 2 minutes
+    const timeout = setTimeout(() => {
+      clearInterval(frequentInterval);
+    }, 120000); // 2 minutes
+
+    return () => {
+      clearInterval(frequentInterval);
+      clearTimeout(timeout);
+    };
+  }, [fetchLevels, loading, levels.length]);
 
   return (
     <aside
@@ -181,6 +235,16 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
               <LayersIcon className="h-5 w-5 text-trueturquoise" /> 
               {loading ? 'Loading...' : `Levels (${levels.length})`}
             </h2>
+            <button
+              onClick={fetchLevels}
+              disabled={loading}
+              className="p-1 rounded-lg bg-paperwhite/10 hover:bg-paperwhite/20 transition-colors disabled:opacity-50"
+              title="Refresh levels"
+            >
+              <svg className="w-4 h-4 text-trueturquoise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+            </button>
           </div>
         )}
         
@@ -227,7 +291,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
         
         {/* Levels Navigation - Only visible when open */}
         {sidebarOpen && (
-          <nav className="flex-1 space-y-4 overflow-y-auto">
+          <nav className="flex-1 space-y-4 overflow-y-auto scroll-smooth">
           {loading ? (
             <div className="text-center py-8">
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-trueturquoise mx-auto mb-2"></div>

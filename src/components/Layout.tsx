@@ -324,7 +324,7 @@ const Layout: React.FC = () => {
       )}
 
       {/* Mobile Sidebar */}
-      <div className={`lg:hidden fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-offblack shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${
+      <div className={`lg:hidden fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-offblack shadow-xl z-50 transform transition-transform duration-300 ease-in-out scroll-smooth ${
         isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
       }`}>
         <div className="p-6 border-b border-gray-200 dark:border-gray-700">
@@ -424,7 +424,7 @@ const Layout: React.FC = () => {
 
       {/* Main Content */}
       <div className="flex-1 overflow-hidden">
-        <main className="h-full overflow-y-auto bg-black">
+        <main className="h-full overflow-y-auto bg-black scroll-smooth">
           <Outlet />
         </main>
       </div>

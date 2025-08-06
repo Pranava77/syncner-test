@@ -18,6 +18,44 @@
 
 html {
   @apply scroll-smooth;
+  scroll-behavior: smooth;
+}
+
+/* Global smooth scrolling for all scrollable elements */
+* {
+  scroll-behavior: smooth;
+}
+
+/* Ensure all scrollable containers have smooth scrolling */
+.scroll-smooth {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar styling for webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 184, 217, 0.5);
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 184, 217, 0.8);
+}
+
+/* Firefox scrollbar styling */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 184, 217, 0.5) rgba(255, 255, 255, 0.1);
 }
 body {
   font-family: 'FK Grotesk', 'Inter', 'Helvetica Neue', Arial, sans-serif;

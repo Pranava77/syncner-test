@@ -22,9 +22,10 @@ interface TaskSubmissionModalProps {
     creditPoints?: number;
     order?: number;
   };
+  onExerciseSubmitted?: () => void; // Callback to trigger refresh
 }
 
-const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClose, exercise }) => {
+const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClose, exercise, onExerciseSubmitted }) => {
   const [formData, setFormData] = useState({
     brief: exercise.description || '',
     instruction: exercise.resources?.join('\n') || '',
@@ -98,6 +99,12 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
       await apiService.submitExercise(exercise.id || '', exercise.title, links);
       
       console.log('Exercise submitted successfully:', formData);
+      
+      // Trigger refresh callback if provided
+      if (onExerciseSubmitted) {
+        onExerciseSubmitted();
+      }
+      
       onClose();
     } catch (error) {
       console.error('Error submitting exercise:', error);
@@ -111,7 +118,7 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-      <div className="bg-offblack rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto border border-paperwhite/20">
+      <div className="bg-offblack rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto scroll-smooth border border-paperwhite/20">
         {/* Header */}
         <div className="sticky top-0 bg-offblack/95 backdrop-blur-sm border-b border-paperwhite/20 p-6 rounded-t-2xl">
           <div className="flex items-center justify-between">

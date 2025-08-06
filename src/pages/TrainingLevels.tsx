@@ -255,7 +255,7 @@ const TrainingLevels: React.FC = () => {
         setSidebarOpen={setSidebarOpen} 
         refreshTrigger={refreshTrigger}
       />
-      <main className="flex-1 overflow-y-auto p-6 lg:p-12">
+      <main className="flex-1 overflow-y-auto scroll-smooth p-6 lg:p-12">
         <div className="max-w-6xl mx-auto">
           <div className="mb-8">
             <h1 className="text-3xl font-heading text-paperwhite mb-2">Training Levels</h1>

@@ -341,7 +341,7 @@ const LevelTestPage: React.FC = () => {
     return (
       <div className="flex h-screen bg-offblack overflow-x-hidden">
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
+        <main className="flex-1 overflow-y-auto scroll-smooth p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-trueturquoise mx-auto mb-4"></div>
             <p className="text-paperwhite text-lg">Loading test content...</p>
@@ -355,7 +355,7 @@ const LevelTestPage: React.FC = () => {
     return (
       <div className="flex h-screen bg-offblack overflow-x-hidden">
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
+        <main className="flex-1 overflow-y-auto scroll-smooth p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
           <div className="text-center">
             <p className="text-rust text-lg mb-4">{error || 'Level not found'}</p>
             <button 
@@ -399,7 +399,7 @@ const LevelTestPage: React.FC = () => {
     return (
       <div className="flex h-screen bg-offblack overflow-x-hidden">
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
+        <main className="flex-1 overflow-y-auto scroll-smooth p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
           <div className="w-full max-w-5xl bg-gradient-to-r from-green-500/10 to-teallight/10 rounded-xl border border-green-500/30 shadow-lg p-6 text-center">
             <div className="text-green-400 text-6xl mb-4">✓</div>
             <h2 className="text-2xl font-bold text-paperwhite mb-2">Test Already Completed!</h2>
@@ -489,7 +489,7 @@ const LevelTestPage: React.FC = () => {
   return (
     <div className="flex h-screen bg-offblack overflow-x-hidden">
       <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
-      <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center" ref={scrollContainerRef}>
+      <main className="flex-1 overflow-y-auto overflow-x-hidden scroll-smooth p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center" ref={scrollContainerRef}>
           {/* Test Header */}
           <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
             <div className="flex items-center justify-between mb-4">
