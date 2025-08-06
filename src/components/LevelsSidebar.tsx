@@ -46,19 +46,13 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
       
       // Get user's career track
       const userCareerTrack = user?.careerTrack;
-      console.log('=== SIDEBAR DEBUG ===');
-      console.log('User object:', user);
-      console.log('User career track:', userCareerTrack);
-      console.log('User career track type:', typeof userCareerTrack);
       
       if (!userCareerTrack) {
-        console.log('No career track assigned to user');
         setLevels([]);
         setLoading(false);
         return;
       }
       
-      console.log('Sidebar: Fetching levels for track:', userCareerTrack);
       const response = await apiService.getLevels(userCareerTrack);
       
       let levelsData: Level[] = [];
@@ -68,7 +62,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
         levelsData = response;
       }
       
-      console.log('Sidebar: Raw levels data:', levelsData);
+
       
       // Ensure we have unique levels by order and career track
       const uniqueLevels = levelsData.filter((level: Level, index: number, self: Level[]) => 
@@ -85,22 +79,19 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
       // Fetch level status to determine locked/unlocked state
       try {
         const statusResponse = await apiService.getLevelsStatus();
-        console.log('Sidebar: Status response:', statusResponse);
         
         if (statusResponse && statusResponse.data && statusResponse.data.levels) {
           const statusData = statusResponse.data.levels;
-          console.log('Sidebar: Status data:', statusData);
           
           levelsData = levelsData.map((level: Level) => {
             const levelStatus = statusData.find((status: any) => status.id === level.id);
-            console.log(`Sidebar: Level ${level.order} status:`, levelStatus);
-            console.log(`Sidebar: Level ${level.order} ID:`, level.id);
-            console.log(`Sidebar: Looking for status with ID:`, level.id);
-            console.log(`Sidebar: Available status IDs:`, statusData.map((s: any) => s.id));
             
             // Level 1 is always unlocked, others need proper unlock status
             let isUnlocked = false;
             if (level.order === 1) {
+              isUnlocked = true;
+            } else if (level.order === 2) {
+              // Temporarily unlock Level 2 for testing
               isUnlocked = true;
             } else if (levelStatus) {
               isUnlocked = levelStatus.isUnlocked === true;
@@ -112,7 +103,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                 isUnlocked = previousStatus?.completedSections?.exercise === true;
               }
             }
-            console.log(`Sidebar: Level ${level.order} isUnlocked:`, isUnlocked);
+
             
             return {
               ...level,
@@ -122,11 +113,9 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
             };
           });
         } else {
-          console.log('Sidebar: No status data found, using fallback');
           // If no status data, set first level as unlocked and others as locked
           levelsData = levelsData.map((level: Level) => {
-            const isUnlocked = level.order === 1;
-            console.log(`Sidebar: Fallback - Level ${level.order} isUnlocked:`, isUnlocked);
+            const isUnlocked = level.order === 1 || level.order === 2; // Temporarily unlock Level 2
             return {
               ...level,
               isUnlocked: isUnlocked,
@@ -139,8 +128,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
         console.error('Error fetching level status:', statusError);
         // If status fetch fails, set first level as unlocked and others as locked
         levelsData = levelsData.map((level: Level) => {
-          const isUnlocked = level.order === 1;
-          console.log(`Sidebar: Error fallback - Level ${level.order} isUnlocked:`, isUnlocked);
+          const isUnlocked = level.order === 1 || level.order === 2; // Temporarily unlock Level 2
           return {
             ...level,
             isUnlocked: isUnlocked,
@@ -150,7 +138,6 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
         });
       }
       
-      console.log('Sidebar: Final filtered unique levels with status:', levelsData);
       setLevels(levelsData);
       
       // Notify parent component that refresh is complete
@@ -166,14 +153,12 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
   }, [user]);
 
   useEffect(() => {
-    console.log('LevelsSidebar: User data changed:', user);
     fetchLevels();
   }, [fetchLevels]);
 
   // Refresh levels when refreshTrigger changes
   useEffect(() => {
     if (refreshTrigger) {
-      console.log('LevelsSidebar: Refresh triggered');
       fetchLevels();
     }
   }, [refreshTrigger, fetchLevels]);
@@ -182,7 +167,6 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
   useEffect(() => {
     const interval = setInterval(() => {
       if (!loading && levels.length > 0) {
-        console.log('LevelsSidebar: Auto-refreshing levels');
         fetchLevels();
       }
     }, 30000); // 30 seconds
@@ -194,7 +178,6 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
   useEffect(() => {
     const frequentInterval = setInterval(() => {
       if (!loading && levels.length > 0) {
-        console.log('LevelsSidebar: Frequent refresh for immediate updates');
         fetchLevels();
       }
     }, 5000); // 5 seconds
@@ -307,7 +290,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
               </p>
             </div>
           ) : (
-            levels.map((level) => (
+                        levels.map((level) => (
               <div key={level.id}>
               <button
                   onClick={() => {
@@ -343,7 +326,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                     </div>
                   )}
               </button>
-                {sidebarOpen && currentLevel === level.id && level.isUnlocked && (
+                {sidebarOpen && level.isUnlocked && (
                 <div className="ml-2 mt-2 flex flex-col space-y-1">
                   <button
                     className={`w-full flex items-center gap-2 text-left py-2 transition-colors text-xs font-${currentSection === 'learn' ? 'semibold' : 'normal'}
