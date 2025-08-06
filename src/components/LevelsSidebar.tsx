@@ -198,8 +198,8 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
 
   return (
     <aside
-      className={`relative h-full flex flex-col border-r border-paperwhite/20 bg-offblack transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-16'}`}
-      style={{ minWidth: sidebarOpen ? '16rem' : '4rem' }}
+      className={`relative h-full flex flex-col border-r border-paperwhite/20 bg-offblack transition-all duration-300 ${sidebarOpen ? 'w-72' : 'w-16'}`}
+      style={{ minWidth: sidebarOpen ? '18rem' : '4rem' }}
     >
       {/* Toggle Button - vertical center, right edge */}
       {setSidebarOpen && (
