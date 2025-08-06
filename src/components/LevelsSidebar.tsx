@@ -174,24 +174,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
     return () => clearInterval(interval);
   }, [fetchLevels, loading, levels.length]);
 
-  // Add a more frequent refresh for the first few minutes after component mounts
-  useEffect(() => {
-    const frequentInterval = setInterval(() => {
-      if (!loading && levels.length > 0) {
-        fetchLevels();
-      }
-    }, 5000); // 5 seconds
 
-    // Clear the frequent interval after 2 minutes
-    const timeout = setTimeout(() => {
-      clearInterval(frequentInterval);
-    }, 120000); // 2 minutes
-
-    return () => {
-      clearInterval(frequentInterval);
-      clearTimeout(timeout);
-    };
-  }, [fetchLevels, loading, levels.length]);
 
   return (
     <aside
