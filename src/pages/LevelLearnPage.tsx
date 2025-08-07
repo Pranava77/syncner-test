@@ -168,6 +168,20 @@ const LevelLearnPage: React.FC = () => {
         setLearnProgress(newLearnProgress);
         setIsTestUnlocked(response.data.isCompleted || false);
         
+        // If learn is completed, mark the learn section as completed
+        if (response.data.isCompleted && level) {
+          try {
+            console.log('Marking learn section as completed:', { levelId: level.id, levelOrder: level.order, section: 'learn' });
+            const completionResult = await apiService.markLevelCompleted(level.id, level.order, 'learn');
+            console.log('Learn section completion result:', completionResult);
+            
+            // Trigger sidebar refresh to update unlock status
+            setRefreshTrigger(prev => prev + 1);
+          } catch (completionError) {
+            console.error('Error marking learn section as completed:', completionError);
+          }
+        }
+        
         // Force refresh of learn progress to ensure state is updated
         console.log('Frontend: Refreshing learn progress...');
         fetchLearnProgress();

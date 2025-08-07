@@ -104,6 +104,14 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                                                previousCompletedSections.test === true && 
                                                previousCompletedSections.exercise === true;
                 isUnlocked = isPreviousFullyCompleted;
+                
+                console.log(`Level ${level.order} unlock check:`, {
+                  levelId: level.id,
+                  previousLevelId: previousLevel.id,
+                  previousCompletedSections,
+                  isPreviousFullyCompleted,
+                  isUnlocked
+                });
               }
             }
 

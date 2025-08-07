@@ -121,6 +121,14 @@ const TrainingLevels: React.FC = () => {
                                                previousCompletedSections.test === true && 
                                                previousCompletedSections.exercise === true;
                 isUnlocked = isPreviousFullyCompleted;
+                
+                console.log(`TrainingLevels - Level ${level.order} unlock check:`, {
+                  levelId: level.id,
+                  previousLevelId: previousLevel.id,
+                  previousCompletedSections,
+                  isPreviousFullyCompleted,
+                  isUnlocked
+                });
               }
             }
             
