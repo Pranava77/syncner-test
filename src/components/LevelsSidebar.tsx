@@ -91,17 +91,19 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
             let isUnlocked = false;
             if (level.order === 1) {
               isUnlocked = true;
-            } else if (level.order === 2) {
-              // Temporarily unlock Level 2 for testing
-              isUnlocked = true;
             } else if (levelStatus) {
               isUnlocked = levelStatus.isUnlocked === true;
             } else {
-              // If no status found, check if previous level exists and is completed
+              // If no status found, check if previous level exists and is fully completed
               const previousLevel = levelsData.find((l: Level) => l.order === level.order - 1);
               if (previousLevel) {
                 const previousStatus = statusData.find((status: any) => status.id === previousLevel.id);
-                isUnlocked = previousStatus?.completedSections?.exercise === true;
+                // Check if previous level has all sections completed (learn, test, exercise)
+                const previousCompletedSections = previousStatus?.completedSections || {};
+                const isPreviousFullyCompleted = previousCompletedSections.learn === true && 
+                                               previousCompletedSections.test === true && 
+                                               previousCompletedSections.exercise === true;
+                isUnlocked = isPreviousFullyCompleted;
               }
             }
 
@@ -116,7 +118,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
         } else {
           // If no status data, set first level as unlocked and others as locked
           levelsData = levelsData.map((level: Level) => {
-            const isUnlocked = level.order === 1 || level.order === 2; // Temporarily unlock Level 2
+            const isUnlocked = level.order === 1; // Only Level 1 unlocked by default
             return {
               ...level,
               isUnlocked: isUnlocked,
@@ -129,7 +131,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
         console.error('Error fetching level status:', statusError);
         // If status fetch fails, set first level as unlocked and others as locked
         levelsData = levelsData.map((level: Level) => {
-          const isUnlocked = level.order === 1 || level.order === 2; // Temporarily unlock Level 2
+          const isUnlocked = level.order === 1; // Only Level 1 unlocked by default
           return {
             ...level,
             isUnlocked: isUnlocked,
