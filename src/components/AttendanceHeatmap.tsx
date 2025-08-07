@@ -69,37 +69,35 @@ const AttendanceHeatmap: React.FC = () => {
         <div className="bg-paperwhite/10 rounded-xl shadow-lg border border-paperwhite/20 w-full flex flex-col items-center p-2 sm:p-4">
           {loading ? (
             <div className="flex flex-col items-center w-full relative gap-6">
-              {/* Multiple month skeletons to match the actual structure */}
-              {[1, 2, 3].map((monthIndex) => (
-                <div key={monthIndex} className="w-full flex items-center justify-between">
-                  {/* Hexagonal grid skeleton */}
-                  <div className="w-full max-w-[98vw] h-[80px] sm:h-[90px] md:h-[100px] lg:h-[110px] mx-auto flex justify-center items-center">
-                    <div className="grid grid-cols-8 gap-1">
-                      {Array.from({ length: 16 }).map((_, i) => {
-                        // Create varied opacity for more realistic appearance
-                        const opacityVariants = ['10', '20', '30', '40'];
-                        const randomOpacity = opacityVariants[Math.floor(Math.random() * opacityVariants.length)];
-                        
-                        return (
-                          <div
-                            key={i}
-                            className={`w-4 h-4 bg-paperwhite/${randomOpacity} rounded-sm animate-pulse`}
-                            style={{
-                              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
-                            }}
-                          />
-                        );
-                      })}
-                    </div>
-                  </div>
-                  
-                  {/* Month label skeleton */}
-                  <div className="text-sm font-label mb-2 ml-4 whitespace-nowrap min-w-[90px] text-right">
-                    <div className="h-4 bg-paperwhite/20 rounded w-20 animate-pulse mb-1" />
-                    <div className="h-3 bg-paperwhite/10 rounded w-16 animate-pulse" />
+              {/* Single month skeleton to match the actual structure */}
+              <div className="w-full flex items-center justify-between">
+                {/* Hexagonal grid skeleton */}
+                <div className="w-full max-w-[98vw] h-[80px] sm:h-[90px] md:h-[100px] lg:h-[110px] mx-auto flex justify-center items-center">
+                  <div className="grid grid-cols-8 gap-1">
+                    {Array.from({ length: 16 }).map((_, i) => {
+                      // Create varied opacity for more realistic appearance
+                      const opacityVariants = ['10', '20', '30', '40'];
+                      const randomOpacity = opacityVariants[Math.floor(Math.random() * opacityVariants.length)];
+                      
+                      return (
+                        <div
+                          key={i}
+                          className={`w-4 h-4 bg-paperwhite/${randomOpacity} rounded-sm animate-pulse`}
+                          style={{
+                            clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+                          }}
+                        />
+                      );
+                    })}
                   </div>
                 </div>
-              ))}
+                
+                {/* Month label skeleton */}
+                <div className="text-sm font-label mb-2 ml-4 whitespace-nowrap min-w-[90px] text-right">
+                  <div className="h-4 bg-paperwhite/20 rounded w-20 animate-pulse mb-1" />
+                  <div className="h-3 bg-paperwhite/10 rounded w-16 animate-pulse" />
+                </div>
+              </div>
             </div>
           ) : (
             <div className="flex flex-col items-center w-full relative gap-6">
