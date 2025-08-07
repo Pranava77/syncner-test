@@ -4,6 +4,7 @@ import LevelsSidebar from '../components/LevelsSidebar';
 import { PlayIcon, ReaderIcon, FileTextIcon, ChevronUpIcon, ChevronDownIcon, ExternalLinkIcon, ClockIcon, LockClosedIcon, CheckCircledIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import apiService from '../services/api';
+import syncnerLogo from '../assets/syncner-logo.png';
 
 interface ReadFirst {
   brief?: string;
@@ -265,7 +266,17 @@ const LevelLearnPage: React.FC = () => {
       <main className="flex-1 overflow-y-auto scroll-smooth p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
         {loading ? (
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-trueturquoise mx-auto mb-4"></div>
+            <motion.img
+              src={syncnerLogo}
+              alt="Syncner Logo"
+              className="w-16 h-16 mx-auto mb-4"
+              animate={{
+                scale: [1, 1.1, 1],
+              }}
+              transition={{
+                scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+              }}
+            />
             <p className="text-paperwhite text-lg">Loading level content...</p>
           </div>
         ) : error || !level ? (

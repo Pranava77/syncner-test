@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAppSelector } from '../redux/store';
 import { useLevels } from '../hooks/useLevels';
 import AttendanceHeatmap from '../components/AttendanceHeatmap';
+import { motion } from 'framer-motion';
 import {
   ReaderIcon, 
   ArrowTopRightIcon as TrendingUp, 
@@ -16,6 +17,7 @@ import {
   LayersIcon as Brain,
   ArrowRightIcon as ArrowRight
 } from '@radix-ui/react-icons';
+import syncnerLogo from '../assets/syncner-logo.png';
 
 interface Level {
   id: string;
@@ -386,102 +388,39 @@ const StudentDashboard: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="space-y-6 lg:space-y-8 p-4 lg:p-8 bg-black">
-        <div className={`bg-trueturquoise/10 rounded-xl p-6 lg:p-8 text-paperwhite`}>
-          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
-            <div className="flex-1 mb-6 lg:mb-0">
-              <h1 className="text-2xl lg:text-3xl mb-2 text-paperwhite font-heading">
-                Loading your dashboard...
-              </h1>
-              <p className="text-teallight mb-4 lg:mb-6 text-sm lg:text-base font-label">
-                Please wait while we fetch your training data.
-              </p>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-                <div className="text-center">
-                  <div className="text-xl lg:text-2xl text-paperwhite font-heading">Loading...</div>
-                  <div className="text-teallight text-xs lg:text-sm font-label">Current Module</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-xl lg:text-2xl text-paperwhite font-heading">0</div>
-                  <div className="text-teallight text-xs lg:text-sm font-label">Completed</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-xl lg:text-2xl text-paperwhite font-heading">{levels?.length || 0}</div>
-                  <div className="text-teallight text-xs lg:text-sm font-label">Total Levels</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-xl lg:text-2xl text-paperwhite font-heading">0%</div>
-                  <div className="text-teallight text-xs lg:text-sm font-label">Progress</div>
-                </div>
-              </div>
-            </div>
-            <div className="bg-paperwhite/10 p-3 lg:p-4 rounded-lg w-fit mx-auto lg:mx-0">
-              {/* Placeholder for track icon */}
-            </div>
-          </div>
+      <div className="min-h-screen flex items-center justify-center bg-offblack p-4">
+        <div className="text-center">
+          <motion.img
+            src={syncnerLogo}
+            alt="Syncner Logo"
+            className="w-24 h-24 mx-auto mb-6"
+            animate={{
+              scale: [1, 1.1, 1],
+            }}
+            transition={{
+              scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+            }}
+          />
+          <motion.h1
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="text-2xl lg:text-3xl mb-2 text-paperwhite font-heading"
+          >
+            Loading your dashboard...
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="text-teallight text-lg"
+          >
+            Please wait while we fetch your training data.
+          </motion.p>
         </div>
-        <div className="flex justify-center my-4">
-          {/* AttendanceHeatmap */}
-        </div>
-        <div className="grid lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
-            {/* Current Learning */}
-            <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg lg:text-xl font-semibold text-paperwhite">Continue Learning</h2>
-                <span className="bg-trueturquoise/20 text-trueturquoise px-2 lg:px-3 py-1 rounded-full text-xs lg:text-sm font-medium">
-                  Loading...
-                </span>
-              </div>
-              
-              <div className="bg-paperwhite/10 rounded-lg p-4 lg:p-6">
-                <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-4">
-                  <div className="mb-4 lg:mb-0">
-                    <h3 className="text-lg font-semibold text-paperwhite mb-1">
-                      Loading Level
-                    </h3>
-                    <p className="text-teallight text-sm lg:text-base">Please wait while we load the current level.</p>
-                  </div>
-                  <div className="bg-trueturquoise/10 p-2 rounded-lg w-fit">
-                    <ReaderIcon className="h-5 w-5 lg:h-6 lg:w-6 text-trueturquoise" />
-                  </div>
-                </div>
-                
-                {/* Section Progress */}
-                <div className="mb-4">
-                  <div className="flex justify-between text-sm text-teallight mb-2">
-                    <span>Level Progress</span>
-                    <span>0%</span>
-                  </div>
-                  <div className="w-full bg-paperwhite/20 rounded-full h-2">
-                    <div 
-                      className="bg-trueturquoise h-2 rounded-full transition-all"
-                      style={{ width: '0%' }}
-                    ></div>
-                  </div>
-                  
-                  {/* Section Status */}
-                  <div className="flex justify-between mt-3 text-xs text-teallight">
-                    <div className={`flex items-center text-teallight`}>
-                      <span className={`w-2 h-2 rounded-full mr-1 bg-paperwhite/30`}></span>
-                      Learn
-                    </div>
-                    <div className={`flex items-center text-teallight`}>
-                      <span className={`w-2 h-2 rounded-full mr-1 bg-paperwhite/30`}></span>
-                      Test
-                    </div>
-                    <div className={`flex items-center text-teallight`}>
-                      <span className={`w-2 h-2 rounded-full mr-1 bg-paperwhite/30`}></span>
-                      Exercise
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                  <div className="flex items-center text-teallight text-sm">
-                    <Clock className="h-4 w-4 mr-1 text-trueturquoise" />
-                    No Duration
-                  </div>
+      </div>
+    );
+  }
                   <Link
                     to="/student/training"
                     className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-teallight transition-colors font-medium flex items-center justify-center w-full sm:w-auto"

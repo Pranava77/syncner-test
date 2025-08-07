@@ -8,7 +8,9 @@ import {
   Cross1Icon,
   ExclamationTriangleIcon
 } from '@radix-ui/react-icons';
+import { motion } from 'framer-motion';
 import apiService from '../services/api';
+import syncnerLogo from '../assets/syncner-logo.png';
 
 interface TaskSubmissionModalProps {
   isOpen: boolean;
@@ -308,7 +310,17 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
               >
                 {isSubmitting ? (
                   <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-offblack"></div>
+                    <motion.img
+                      src={syncnerLogo}
+                      alt="Syncner Logo"
+                      className="w-4 h-4"
+                      animate={{
+                        scale: [1, 1.1, 1],
+                      }}
+                      transition={{
+                        scale: { duration: 1, repeat: Infinity, ease: "easeInOut" }
+                      }}
+                    />
                     {isEditMode ? 'Updating...' : 'Submitting...'}
                   </>
                 ) : (

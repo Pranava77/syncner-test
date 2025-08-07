@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../redux/store';
 import { ChevronRightIcon, ChevronDownIcon, ReaderIcon, ClipboardIcon, Pencil2Icon, LayersIcon, LockClosedIcon, LockOpen1Icon } from '@radix-ui/react-icons';
 import { useLevels } from '../hooks/useLevels';
+import { motion } from 'framer-motion';
+import syncnerLogo from '../assets/syncner-logo.png';
 
 interface Level {
   id: string;
@@ -282,7 +284,17 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
           <nav className="flex-1 space-y-4 overflow-y-auto scroll-smooth">
           {loading ? (
             <div className="text-center py-8">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-trueturquoise mx-auto mb-2"></div>
+              <motion.img
+                src={syncnerLogo}
+                alt="Syncner Logo"
+                className="w-8 h-8 mx-auto mb-2"
+                animate={{
+                  scale: [1, 1.1, 1],
+                }}
+                transition={{
+                  scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+                }}
+              />
               <p className="text-xs text-teallight">Loading levels...</p>
             </div>
           ) : levelsWithUnlockLogic.length === 0 ? (

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { registerUser, clearError } from '../redux/slices/authSlice';
 import { getDefaultRoute } from '../utils/routing';
+import { motion } from 'framer-motion';
 import { 
   EnvelopeClosedIcon,
   LockClosedIcon, 
@@ -421,7 +422,17 @@ const RegisterPage: React.FC = () => {
             >
               {isLoading || isSubmitting ? (
                 <div className="flex items-center justify-center space-x-2">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-offblack"></div>
+                  <motion.img
+                    src={logo}
+                    alt="Syncner Logo"
+                    className="w-4 h-4"
+                    animate={{
+                      scale: [1, 1.1, 1],
+                    }}
+                    transition={{
+                      scale: { duration: 1, repeat: Infinity, ease: "easeInOut" }
+                    }}
+                  />
                   <span>Creating Account...</span>
                 </div>
               ) : (

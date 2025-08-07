@@ -191,11 +191,9 @@ const TrainingLevels: React.FC = () => {
                   alt="Syncner Logo"
                   className="w-32 h-32 mx-auto mb-6"
                   animate={{
-                    rotate: [0, 360],
                     scale: [1, 1.1, 1],
                   }}
                   transition={{
-                    rotate: { duration: 3, repeat: Infinity, ease: "linear" },
                     scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
                   }}
                 />
