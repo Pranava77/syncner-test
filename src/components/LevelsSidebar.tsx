@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../redux/store';
 import { ChevronRightIcon, ChevronDownIcon, ReaderIcon, ClipboardIcon, Pencil2Icon, LayersIcon, LockClosedIcon, LockOpen1Icon } from '@radix-ui/react-icons';
-import apiService from '../services/api';
+import { useLevels } from '../hooks/useLevels';
 
 interface Level {
   id: string;
@@ -15,7 +15,11 @@ interface Level {
   exercise: any[];
   isUnlocked?: boolean;
   isCompleted?: boolean;
-  completedSections?: string[];
+  completedSections?: {
+    learn?: boolean;
+    test?: boolean;
+    exercise?: boolean;
+  };
 }
 
 interface LevelsSidebarProps {
@@ -23,8 +27,8 @@ interface LevelsSidebarProps {
   setSidebarOpen?: (open: boolean) => void;
   currentLevel?: string;
   currentSection?: string;
-  refreshTrigger?: number; // Add this to trigger refresh from parent
-  onRefresh?: () => void; // Callback to notify parent of refresh
+  refreshTrigger?: number;
+  onRefresh?: () => void;
 }
 
 const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
@@ -37,173 +41,80 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
 }) => {
   const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.auth);
-  const [levels, setLevels] = useState<Level[]>([]);
-  const [loading, setLoading] = useState(true);
   const [expandedLevels, setExpandedLevels] = useState<Set<string>>(new Set());
+  
+  // Use the optimized hook
+  const { levels, loading, error, refetch, updateLevelSectionStatus } = useLevels(user?.careerTrack);
 
-  const fetchLevels = useCallback(async () => {
-    try {
-      setLoading(true);
-      
-      // Get user's career track
-      const userCareerTrack = user?.careerTrack;
-      
-      if (!userCareerTrack) {
-        setLevels([]);
-        setLoading(false);
-        return;
-      }
-      
-      const response = await apiService.getLevels(userCareerTrack);
-      
-      let levelsData: Level[] = [];
-      if (response && response.data) {
-        levelsData = Array.isArray(response.data) ? response.data : [response.data];
-      } else if (Array.isArray(response)) {
-        levelsData = response;
-      }
-      
+  // Memoized level completion map for efficient lookups
+  const levelCompletionMap = useMemo(() => {
+    const map = new Map();
+    levels.forEach((level: Level) => {
+      map.set(level.order, {
+        id: level.id,
+        completedSections: level.completedSections || {},
+        isCompleted: level.isCompleted || false,
+        isUnlocked: level.isUnlocked || false
+      });
+    });
+    return map;
+  }, [levels]);
 
-      
-      // Ensure we have unique levels by order and career track
-      const uniqueLevels = levelsData.filter((level: Level, index: number, self: Level[]) => 
-        index === self.findIndex((l: Level) => 
-          l.order === level.order && l.careerTrack === level.careerTrack
-        )
-      );
-      
-      // Sort by order and filter active levels
-      levelsData = uniqueLevels
-        .filter((level: Level) => level.isActive)
-        .sort((a: Level, b: Level) => a.order - b.order);
-      
-      // Fetch level status to determine locked/unlocked state
-      try {
-        const statusResponse = await apiService.getLevelsStatus();
-        
-        if (statusResponse && statusResponse.data && statusResponse.data.levels) {
-          const statusData = statusResponse.data.levels;
-          
-          // First, create a map of level completion status for easier lookup
-          const levelCompletionMap = new Map();
-          levelsData.forEach((level: Level) => {
-            const levelStatus = statusData.find((status: any) => status.id === level.id);
-            levelCompletionMap.set(level.order, {
-              id: level.id,
-              completedSections: levelStatus?.completedSections || {},
-              isCompleted: levelStatus?.isCompleted || false,
-              isUnlocked: levelStatus?.isUnlocked || false
-            });
-          });
-          
-          levelsData = levelsData.map((level: Level) => {
-            // Level 1 is always unlocked
-            let isUnlocked = false;
-            if (level.order === 1) {
-              isUnlocked = true;
-            } else {
-              // Check if previous level is fully completed
-              const previousLevelCompletion = levelCompletionMap.get(level.order - 1);
-              if (previousLevelCompletion) {
-                const { completedSections } = previousLevelCompletion;
-                const isPreviousFullyCompleted = completedSections.learn === true && 
-                                               completedSections.test === true && 
-                                               completedSections.exercise === true;
-                isUnlocked = isPreviousFullyCompleted;
-              }
-            }
+  // Memoized levels with unlock logic
+  const levelsWithUnlockLogic = useMemo(() => {
+    return levels.map((level: Level) => {
+      // Level 1 is always unlocked
+      if (level.order === 1) {
+        return {
+          ...level,
+          isUnlocked: true
+        };
+      }
 
-            const levelStatus = statusData.find((status: any) => status.id === level.id);
-            
-            return {
-              ...level,
-              isUnlocked: isUnlocked,
-              isCompleted: levelStatus?.isCompleted ?? false,
-              completedSections: levelStatus?.completedSections ?? []
-            };
-          });
-        } else {
-          // If no status data, set first level as unlocked and others as locked
-          levelsData = levelsData.map((level: Level) => {
-            const isUnlocked = level.order === 1; // Only Level 1 unlocked by default
-            return {
-              ...level,
-              isUnlocked: isUnlocked,
-              isCompleted: false,
-              completedSections: []
-            };
-          });
-        }
-      } catch (statusError) {
-        console.error('Error fetching level status:', statusError);
-        // If status fetch fails, set first level as unlocked and others as locked
-        levelsData = levelsData.map((level: Level) => {
-          const isUnlocked = level.order === 1; // Only Level 1 unlocked by default
-          return {
-            ...level,
-            isUnlocked: isUnlocked,
-            isCompleted: false,
-            completedSections: []
-          };
-        });
-      }
+      // Check if previous level is fully completed
+      const previousLevel = levelCompletionMap.get(level.order - 1);
+      const previousCompletedSections = previousLevel?.completedSections || {};
       
-      setLevels(levelsData);
-      
-      // Notify parent component that refresh is complete
-      if (onRefresh) {
-        onRefresh();
-      }
-    } catch (error) {
-      console.error('Error fetching levels for sidebar:', error);
-      setLevels([]);
-    } finally {
-      setLoading(false);
+      const isPreviousFullyCompleted = 
+        previousCompletedSections.learn === true && 
+        previousCompletedSections.test === true && 
+        previousCompletedSections.exercise === true;
+
+      return {
+        ...level,
+        isUnlocked: isPreviousFullyCompleted
+      };
+    });
+  }, [levels, levelCompletionMap]);
+
+  // Handle progress updates from other components
+  const handleProgressUpdate = useCallback(() => {
+    refetch();
+    if (onRefresh) onRefresh();
+  }, [refetch, onRefresh]);
+
+  const handleStorageChange = useCallback((e: StorageEvent) => {
+    if (e.key === 'level-progress-updated') {
+      handleProgressUpdate();
     }
-  }, [user]);
+  }, [handleProgressUpdate]);
 
-  // Refresh levels when refreshTrigger changes
   useEffect(() => {
-    if (refreshTrigger) {
-      fetchLevels();
-    }
-  }, [refreshTrigger, fetchLevels]);
-
-  // Listen for completion events to refresh levels
-  useEffect(() => {
-    const handleProgressUpdate = () => {
-      fetchLevels();
-    };
-
-    // Listen for custom progress update events
     window.addEventListener('progress-updated', handleProgressUpdate);
-    
-    // Listen for storage changes (if other components update localStorage)
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'level-progress-updated') {
-        fetchLevels();
-      }
-    };
-    
     window.addEventListener('storage', handleStorageChange);
-
+    
     return () => {
       window.removeEventListener('progress-updated', handleProgressUpdate);
       window.removeEventListener('storage', handleStorageChange);
     };
-  }, [fetchLevels]);
-
-  // Force refresh when component mounts or when user changes
-  useEffect(() => {
-    fetchLevels();
-  }, [fetchLevels]);
+  }, [handleProgressUpdate, handleStorageChange]);
 
   // Auto-expand current level
   useEffect(() => {
-    if (currentLevel && !expandedLevels.has(currentLevel)) {
+    if (currentLevel) {
       setExpandedLevels(prev => new Set([...prev, currentLevel]));
     }
-  }, [currentLevel, expandedLevels]);
+  }, [currentLevel]);
 
   const toggleLevelExpansion = (levelId: string) => {
     setExpandedLevels(prev => {
@@ -218,6 +129,68 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
   };
 
   const isLevelExpanded = (levelId: string) => expandedLevels.has(levelId);
+
+  const handleLevelClick = (level: Level, section: string) => {
+    if (!level.isUnlocked) return;
+    
+    navigate(`/student/level/${level.id}/${section}`);
+    if (setSidebarOpen) setSidebarOpen(false);
+  };
+
+  const getSectionIcon = (section: string) => {
+    switch (section) {
+      case 'learn': return <ReaderIcon className="h-4 w-4" />;
+      case 'test': return <ClipboardIcon className="h-4 w-4" />;
+      case 'exercise': return <Pencil2Icon className="h-4 w-4" />;
+      default: return <LayersIcon className="h-4 w-4" />;
+    }
+  };
+
+  const getSectionStatus = (level: Level, section: string) => {
+    const completedSections = level.completedSections || {};
+    return completedSections[section as keyof typeof completedSections] === true;
+  };
+
+  if (loading) {
+    return (
+      <div className={`bg-offblack border-r border-paperwhite/10 transition-all duration-300 ${
+        sidebarOpen ? 'w-80' : 'w-0'
+      } overflow-hidden`}>
+        <div className="p-4">
+          <div className="animate-pulse space-y-4">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="space-y-2">
+                <div className="h-6 bg-paperwhite/10 rounded"></div>
+                <div className="space-y-1 ml-4">
+                  <div className="h-4 bg-paperwhite/5 rounded"></div>
+                  <div className="h-4 bg-paperwhite/5 rounded"></div>
+                  <div className="h-4 bg-paperwhite/5 rounded"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={`bg-offblack border-r border-paperwhite/10 transition-all duration-300 ${
+        sidebarOpen ? 'w-80' : 'w-0'
+      } overflow-hidden`}>
+        <div className="p-4">
+          <div className="text-red-400 text-sm">Error loading levels: {error}</div>
+          <button 
+            onClick={refetch}
+            className="mt-2 text-trueturquoise hover:text-teallight text-sm"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <aside
@@ -246,7 +219,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
             </h2>
             <div className="flex gap-2">
               <button
-                onClick={fetchLevels}
+                onClick={refetch}
                 disabled={loading}
                 className="p-1 rounded-lg bg-paperwhite/10 hover:bg-paperwhite/20 transition-colors disabled:opacity-50"
                 title="Refresh levels"
@@ -372,7 +345,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                     className={`w-full flex items-center gap-2 text-left py-2 transition-colors text-xs font-${currentSection === 'learn' ? 'semibold' : 'normal'}
                       ${currentSection === 'learn' ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'}`}
                     style={{ borderRadius: 0 }}
-                      onClick={() => navigate(`/student/training/${level.id}/learn`)}
+                      onClick={() => handleLevelClick(level, 'learn')}
                   >
                     <ReaderIcon className={`h-4 w-4 ${currentSection === 'learn' ? 'text-trueturquoise' : 'text-paperwhite'}`} />
                     Learn ({level.learn?.length || 0})
@@ -381,7 +354,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                     className={`w-full flex items-center gap-2 text-left py-2 transition-colors text-xs font-${currentSection === 'test' ? 'semibold' : 'normal'}
                       ${currentSection === 'test' ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'}`}
                     style={{ borderRadius: 0 }}
-                      onClick={() => navigate(`/student/training/${level.id}/test`)}
+                      onClick={() => handleLevelClick(level, 'test')}
                   >
                     <ClipboardIcon className={`h-4 w-4 ${currentSection === 'test' ? 'text-trueturquoise' : 'text-paperwhite'}`} />
                     Test ({level.test?.length || 0})
@@ -390,7 +363,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                     className={`w-full flex items-center gap-2 text-left py-2 transition-colors text-xs font-${currentSection === 'exercise' ? 'semibold' : 'normal'}
                       ${currentSection === 'exercise' ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'}`}
                     style={{ borderRadius: 0 }}
-                      onClick={() => navigate(`/student/training/${level.id}/exercise`)}
+                      onClick={() => handleLevelClick(level, 'exercise')}
                   >
                     <Pencil2Icon className={`h-4 w-4 ${currentSection === 'exercise' ? 'text-trueturquoise' : 'text-paperwhite'}`} />
                     Exercise ({level.exercise?.length || 0})

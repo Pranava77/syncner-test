@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../redux/store';
 import LevelsSidebar from '../components/LevelsSidebar';
-import apiService from '../services/api';
+import { useLevels } from '../hooks/useLevels';
 import { motion } from 'framer-motion';
 import {  ClockIcon, CheckCircledIcon, Cross1Icon, ReaderIcon, ClipboardIcon, PlayIcon, LockClosedIcon } from '@radix-ui/react-icons';
 
@@ -48,174 +48,81 @@ interface Level {
   isUnlocked?: boolean;
   isCompleted?: boolean;
   completedSections?: {
-    learn: boolean;
-    exercise: boolean;
-    test: boolean;
+    learn?: boolean;
+    exercise?: boolean;
+    test?: boolean;
   };
 }
 
 const TrainingLevels: React.FC = () => {
   const { user } = useAppSelector((state) => state.auth);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [levels, setLevels] = useState<Level[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
   const navigate = useNavigate();
 
-  const fetchLevels = async () => {
-    try {
-      setLoading(true);
-      setError(null); // Clear any previous errors
-      
-      // Get user's career track
-      const userCareerTrack = user?.careerTrack;
-      
-      if (!userCareerTrack) {
-        setError('No career track assigned to user');
-        setLoading(false);
-        return;
-      }
-      
-      const response = await apiService.getLevels(userCareerTrack);
-      
-      let levelsData = [];
-      if (response && response.data) {
-        levelsData = Array.isArray(response.data) ? response.data : [response.data];
-      } else if (Array.isArray(response)) {
-        levelsData = response;
-      }
-      
-      // Ensure we have unique levels by order and career track
-      const uniqueLevels = levelsData.filter((level: Level, index: number, self: Level[]) => 
-        index === self.findIndex((l: Level) => 
-          l.order === level.order && l.careerTrack === level.careerTrack
-        )
-      );
-      
-      // Sort by order
-      uniqueLevels.sort((a: Level, b: Level) => a.order - b.order);
-      
-      // Get levels status with unlock information
-      try {
-        const statusResponse = await apiService.getLevelsStatus();
-        if (statusResponse && statusResponse.data && statusResponse.data.levels) {
-          const statusData = statusResponse.data.levels;
-          
-          // First, create a map of level completion status for easier lookup
-          const levelCompletionMap = new Map();
-          uniqueLevels.forEach((level: Level) => {
-            const levelStatus = statusData.find((status: any) => status.id === level.id);
-            levelCompletionMap.set(level.order, {
-              id: level.id,
-              completedSections: levelStatus?.completedSections || {},
-              isCompleted: levelStatus?.isCompleted || false,
-              isUnlocked: levelStatus?.isUnlocked || false
-            });
-          });
-          
-          levelsData = uniqueLevels.map((level: Level) => {
-            // Level 1 is always unlocked
-            let isUnlocked = false;
-            if (level.order === 1) {
-              isUnlocked = true;
-            } else {
-              // Check if previous level is fully completed
-              const previousLevelCompletion = levelCompletionMap.get(level.order - 1);
-              if (previousLevelCompletion) {
-                const { completedSections } = previousLevelCompletion;
-                const isPreviousFullyCompleted = completedSections.learn === true && 
-                                               completedSections.test === true && 
-                                               completedSections.exercise === true;
-                isUnlocked = isPreviousFullyCompleted;
-              }
-            }
-            
-            const levelStatus = statusData.find((status: any) => status.id === level.id);
-            
-            return {
-              ...level,
-              isUnlocked: isUnlocked,
-              isCompleted: levelStatus?.isCompleted ?? false,
-              completedSections: levelStatus?.completedSections ?? {
-                learn: false,
-                exercise: false,
-                test: false
-              }
-            };
-          });
-        } else {
-          // If no status data, set first level as unlocked and others as locked
-          levelsData = uniqueLevels.map((level: Level) => ({
-            ...level,
-            isUnlocked: level.order === 1, // Only Level 1 unlocked by default
-            isCompleted: false,
-            completedSections: {
-              learn: false,
-              exercise: false,
-              test: false
-            }
-          }));
-        }
-      } catch (statusError) {
-        console.error('Error fetching levels status:', statusError);
-        // If status fetch fails, set first level as unlocked and others as locked
-        levelsData = uniqueLevels.map((level: Level) => ({
+  // Use the optimized hook
+  const { levels, loading, error, refetch } = useLevels(user?.careerTrack);
+
+  // Memoized level completion map for efficient lookups
+  const levelCompletionMap = useMemo(() => {
+    const map = new Map();
+    levels.forEach((level: Level) => {
+      map.set(level.order, {
+        id: level.id,
+        completedSections: level.completedSections || {},
+        isCompleted: level.isCompleted || false,
+        isUnlocked: level.isUnlocked || false
+      });
+    });
+    return map;
+  }, [levels]);
+
+  // Memoized levels with unlock logic
+  const levelsWithUnlockLogic = useMemo(() => {
+    return levels.map((level: Level) => {
+      // Level 1 is always unlocked
+      if (level.order === 1) {
+        return {
           ...level,
-          isUnlocked: level.order === 1, // Only Level 1 unlocked by default
-          isCompleted: false,
-          completedSections: {
-            learn: false,
-            exercise: false,
-            test: false
-          }
-        }));
+          isUnlocked: true
+        };
       }
+
+      // Check if previous level is fully completed
+      const previousLevel = levelCompletionMap.get(level.order - 1);
+      const previousCompletedSections = previousLevel?.completedSections || {};
       
-      setLevels(levelsData);
-      setError(null); // Clear any errors on success
-    } catch (error) {
-      console.error('Error fetching levels:', error);
-      setError(`Failed to load training levels: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    } finally {
-      setLoading(false);
+      const isPreviousFullyCompleted = 
+        previousCompletedSections.learn === true && 
+        previousCompletedSections.test === true && 
+        previousCompletedSections.exercise === true;
+
+      return {
+        ...level,
+        isUnlocked: isPreviousFullyCompleted
+      };
+    });
+  }, [levels, levelCompletionMap]);
+
+  // Handle progress updates
+  const handleProgressUpdate = () => {
+    refetch();
+  };
+
+  const handleStorageChange = (e: StorageEvent) => {
+    if (e.key === 'level-progress-updated') {
+      handleProgressUpdate();
     }
   };
 
   useEffect(() => {
-    fetchLevels();
-  }, [user]);
-
-  // Refresh levels when refreshTrigger changes
-  useEffect(() => {
-    if (refreshTrigger) {
-      fetchLevels();
-    }
-  }, [refreshTrigger]);
-
-  // Listen for completion events to refresh levels
-  useEffect(() => {
-    const handleProgressUpdate = () => {
-      fetchLevels();
-    };
-
-    // Listen for custom progress update events
     window.addEventListener('progress-updated', handleProgressUpdate);
-    
-    // Listen for storage changes (if other components update localStorage)
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'level-progress-updated') {
-        fetchLevels();
-      }
-    };
-    
     window.addEventListener('storage', handleStorageChange);
-
+    
     return () => {
       window.removeEventListener('progress-updated', handleProgressUpdate);
       window.removeEventListener('storage', handleStorageChange);
     };
-  }, [fetchLevels]);
+  }, [handleProgressUpdate, handleStorageChange]);
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty.toLowerCase()) {
@@ -257,12 +164,37 @@ const TrainingLevels: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex h-screen bg-offblack w-full">
-        <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-        <main className="flex-1 p-6 lg:p-12 flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-trueturquoise mx-auto mb-4"></div>
-            <p className="text-paperwhite text-lg">Loading training levels...</p>
+      <div className="flex h-screen bg-offblack">
+        <LevelsSidebar 
+          sidebarOpen={sidebarOpen} 
+          setSidebarOpen={setSidebarOpen} 
+          refreshTrigger={0}
+        />
+        <main className="flex-1 overflow-y-auto scroll-smooth p-6 lg:p-12">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-8">
+              <h1 className="text-3xl lg:text-4xl font-bold text-paperwhite mb-4">Training Levels</h1>
+              <p className="text-teallight text-lg">Master your skills through structured learning paths</p>
+            </div>
+            
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} className="bg-paperwhite/5 rounded-xl p-6 animate-pulse">
+                  <div className="space-y-4">
+                    <div className="h-6 bg-paperwhite/10 rounded"></div>
+                    <div className="h-4 bg-paperwhite/5 rounded w-3/4"></div>
+                    <div className="space-y-2">
+                      <div className="h-3 bg-paperwhite/5 rounded"></div>
+                      <div className="h-3 bg-paperwhite/5 rounded w-2/3"></div>
+                    </div>
+                    <div className="flex gap-2">
+                      <div className="h-8 bg-paperwhite/10 rounded w-16"></div>
+                      <div className="h-8 bg-paperwhite/10 rounded w-20"></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </main>
       </div>
@@ -280,7 +212,7 @@ const TrainingLevels: React.FC = () => {
             <p className="text-teallight text-sm mb-6">{error}</p>
             <div className="space-y-3">
               <button 
-                onClick={fetchLevels}
+                onClick={refetch}
                 className="w-full bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium"
               >
                 Try Again
@@ -300,7 +232,7 @@ const TrainingLevels: React.FC = () => {
       <LevelsSidebar 
         sidebarOpen={sidebarOpen} 
         setSidebarOpen={setSidebarOpen} 
-        refreshTrigger={refreshTrigger}
+        refreshTrigger={0} // No longer needed as refetch is handled by useLevels
       />
       <main className="flex-1 overflow-y-auto scroll-smooth p-6 lg:p-12">
         <div className="max-w-6xl mx-auto">
@@ -314,7 +246,7 @@ const TrainingLevels: React.FC = () => {
             </p>
           </div>
 
-          {levels.length === 0 ? (
+          {levelsWithUnlockLogic.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-paperwhite/30 text-6xl mb-4">📚</div>
               <h3 className="text-xl font-heading text-paperwhite mb-2">
@@ -332,9 +264,9 @@ const TrainingLevels: React.FC = () => {
               <div className="space-y-2 text-sm text-teallight">
                 <p>Debug Info:</p>
                 <p>User Career Track: {user?.careerTrack || 'Not set'}</p>
-                <p>Total Levels Found: {levels.length}</p>
+                <p>Total Levels Found: {levelsWithUnlockLogic.length}</p>
                 <button 
-                  onClick={fetchLevels}
+                  onClick={refetch}
                   className="mt-4 bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors text-sm"
                 >
                   Refresh Data
@@ -343,7 +275,7 @@ const TrainingLevels: React.FC = () => {
             </div>
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {levels.map((level, index) => (
+              {levelsWithUnlockLogic.map((level, index) => (
                 <motion.div
                   key={level.id}
                   initial={{ opacity: 0, y: 20 }}

@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
-import apiService from '../services/api';
+import {  useEffect, useCallback, useMemo } from 'react';
+import { useAppSelector, useAppDispatch } from '../redux/store';
+import { fetchLevelsWithStatus, updateLevelStatus } from '../redux/slices/curriculumSlice';
 
 interface LearnItem {
   type: 'video' | 'reading' | 'slide' | 'other';
@@ -40,40 +41,69 @@ export interface Level {
   estimatedHours: number;
   progress?: number;
   status?: string;
+  isUnlocked?: boolean;
+  isCompleted?: boolean;
+  completedSections?: {
+    learn?: boolean;
+    test?: boolean;
+    exercise?: boolean;
+  };
 }
 
 export const useLevels = (trackId?: string) => {
-  const [levels, setLevels] = useState<Level[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
+  const { levelsWithStatus, loading, error, lastFetched, cacheExpiry } = useAppSelector((state) => state.curriculum);
+  
+  // Check if cache is still valid
+  const isCacheValid = useMemo(() => {
+    if (!lastFetched) return false;
+    return Date.now() - lastFetched < cacheExpiry;
+  }, [lastFetched, cacheExpiry]);
 
   const fetchLevels = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await apiService.getLevels(trackId);
-      if (response.success) {
-        // Handle both array and object with data property
-        const levelsData = Array.isArray(response.data) ? response.data : response.data.levels || response.data;
-        setLevels(levelsData || []);
-      } else {
-        setError(response.message || 'Failed to fetch levels');
+    if (!trackId) return;
+    
+    // Only fetch if cache is invalid or no data exists
+    if (!isCacheValid || levelsWithStatus.length === 0) {
+      try {
+        await dispatch(fetchLevelsWithStatus({ trackId })).unwrap();
+      } catch (err) {
+        console.error('Failed to fetch levels:', err);
       }
-    } catch (err: unknown) {
-      setError((err as Error).message || 'Failed to fetch levels');
-    } finally {
-      setLoading(false);
     }
-  }, [trackId]);
+  }, [trackId, dispatch, isCacheValid, levelsWithStatus.length]);
+
+  const refetch = useCallback(async () => {
+    if (!trackId) return;
+    try {
+      await dispatch(fetchLevelsWithStatus({ trackId })).unwrap();
+    } catch (err) {
+      console.error('Failed to refetch levels:', err);
+    }
+  }, [trackId, dispatch]);
+
+  const updateLevelSectionStatus = useCallback((levelId: string, section: string, completed: boolean) => {
+    dispatch(updateLevelStatus({ levelId, section, completed }));
+  }, [dispatch]);
 
   useEffect(() => {
     fetchLevels();
-  }, [trackId, fetchLevels]);
+  }, [fetchLevels]);
+
+  // Filter levels for the specific track
+  const filteredLevels = useMemo(() => {
+    if (!trackId) return [];
+    return levelsWithStatus
+      .filter((level: Level) => level.careerTrack === trackId && level.isActive)
+      .sort((a: Level, b: Level) => a.order - b.order);
+  }, [levelsWithStatus, trackId]);
 
   return {
-    levels,
+    levels: filteredLevels,
     loading,
     error,
-    refetch: fetchLevels
+    refetch,
+    updateLevelSectionStatus,
+    isCacheValid
   };
 }; 

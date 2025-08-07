@@ -13,24 +13,64 @@ export const fetchCurriculum = createAsyncThunk(
   }
 );
 
+export const fetchLevelsWithStatus = createAsyncThunk(
+  'curriculum/fetchLevelsWithStatus',
+  async ({ trackId }: { trackId: string }) => {
+    if (!trackId) {
+      return { levels: [], status: [] };
+    }
+    
+    // Fetch both levels and status in parallel
+    const [levelsResponse, statusResponse] = await Promise.all([
+      apiService.getLevels(trackId),
+      apiService.getLevelsStatus()
+    ]);
+    
+    if (!levelsResponse.success) throw new Error(levelsResponse.message || 'Failed to fetch levels');
+    
+    const levelsData = Array.isArray(levelsResponse.data) ? levelsResponse.data : [levelsResponse.data];
+    const statusData = statusResponse?.data?.levels || [];
+    
+    return { levels: levelsData, status: statusData };
+  }
+);
+
 interface CurriculumState {
   data: any[];
+  levelsWithStatus: any[];
   loading: boolean;
   error: string | null;
   lastFetched: number | null;
+  cacheExpiry: number; // 5 minutes cache
 }
 
 const initialState: CurriculumState = {
   data: [],
+  levelsWithStatus: [],
   loading: false,
   error: null,
   lastFetched: null,
+  cacheExpiry: 5 * 60 * 1000, // 5 minutes
 };
 
 const curriculumSlice = createSlice({
   name: 'curriculum',
   initialState,
-  reducers: {},
+  reducers: {
+    clearCache: (state) => {
+      state.lastFetched = null;
+    },
+    updateLevelStatus: (state, action) => {
+      const { levelId, section, completed } = action.payload;
+      const levelIndex = state.levelsWithStatus.findIndex(level => level.id === levelId);
+      if (levelIndex !== -1) {
+        if (!state.levelsWithStatus[levelIndex].completedSections) {
+          state.levelsWithStatus[levelIndex].completedSections = {};
+        }
+        state.levelsWithStatus[levelIndex].completedSections[section] = completed;
+      }
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchCurriculum.pending, (state) => {
@@ -45,8 +85,35 @@ const curriculumSlice = createSlice({
       .addCase(fetchCurriculum.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Failed to fetch curriculum';
+      })
+      .addCase(fetchLevelsWithStatus.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchLevelsWithStatus.fulfilled, (state, action) => {
+        const { levels, status } = action.payload;
+        
+        // Merge levels with their status
+        const levelsWithStatus = levels.map((level: any) => {
+          const levelStatus = status.find((s: any) => s.id === level.id);
+          return {
+            ...level,
+            isUnlocked: levelStatus?.isUnlocked || level.order === 1,
+            isCompleted: levelStatus?.isCompleted || false,
+            completedSections: levelStatus?.completedSections || {}
+          };
+        });
+        
+        state.levelsWithStatus = levelsWithStatus;
+        state.loading = false;
+        state.lastFetched = Date.now();
+      })
+      .addCase(fetchLevelsWithStatus.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to fetch levels with status';
       });
   },
 });
 
+export const { clearCache, updateLevelStatus } = curriculumSlice.actions;
 export default curriculumSlice.reducer; 
