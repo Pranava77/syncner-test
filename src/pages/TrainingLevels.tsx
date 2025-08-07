@@ -101,36 +101,37 @@ const TrainingLevels: React.FC = () => {
         const statusResponse = await apiService.getLevelsStatus();
         if (statusResponse && statusResponse.data && statusResponse.data.levels) {
           const statusData = statusResponse.data.levels;
-          levelsData = uniqueLevels.map((level: Level) => {
+          
+          // First, create a map of level completion status for easier lookup
+          const levelCompletionMap = new Map();
+          uniqueLevels.forEach((level: Level) => {
             const levelStatus = statusData.find((status: any) => status.id === level.id);
-            
-            // Level 1 is always unlocked, others need proper unlock status
+            levelCompletionMap.set(level.order, {
+              id: level.id,
+              completedSections: levelStatus?.completedSections || {},
+              isCompleted: levelStatus?.isCompleted || false,
+              isUnlocked: levelStatus?.isUnlocked || false
+            });
+          });
+          
+          levelsData = uniqueLevels.map((level: Level) => {
+            // Level 1 is always unlocked
             let isUnlocked = false;
             if (level.order === 1) {
               isUnlocked = true;
-            } else if (levelStatus) {
-              isUnlocked = levelStatus.isUnlocked === true;
             } else {
-              // If no status found, check if previous level exists and is fully completed
-              const previousLevel = uniqueLevels.find((l: Level) => l.order === level.order - 1);
-              if (previousLevel) {
-                const previousStatus = statusData.find((status: any) => status.id === previousLevel.id);
-                // Check if previous level has all sections completed (learn, test, exercise)
-                const previousCompletedSections = previousStatus?.completedSections || {};
-                const isPreviousFullyCompleted = previousCompletedSections.learn === true && 
-                                               previousCompletedSections.test === true && 
-                                               previousCompletedSections.exercise === true;
+              // Check if previous level is fully completed
+              const previousLevelCompletion = levelCompletionMap.get(level.order - 1);
+              if (previousLevelCompletion) {
+                const { completedSections } = previousLevelCompletion;
+                const isPreviousFullyCompleted = completedSections.learn === true && 
+                                               completedSections.test === true && 
+                                               completedSections.exercise === true;
                 isUnlocked = isPreviousFullyCompleted;
-                
-                console.log(`TrainingLevels - Level ${level.order} unlock check:`, {
-                  levelId: level.id,
-                  previousLevelId: previousLevel.id,
-                  previousCompletedSections,
-                  isPreviousFullyCompleted,
-                  isUnlocked
-                });
               }
             }
+            
+            const levelStatus = statusData.find((status: any) => status.id === level.id);
             
             return {
               ...level,
@@ -191,6 +192,17 @@ const TrainingLevels: React.FC = () => {
       fetchLevels();
     }
   }, [refreshTrigger]);
+
+  // Auto-refresh levels every 10 seconds to catch completion updates
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!loading && levels.length > 0) {
+        fetchLevels();
+      }
+    }, 10000); // 10 seconds
+
+    return () => clearInterval(interval);
+  }, [fetchLevels, loading, levels.length]);
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty.toLowerCase()) {
