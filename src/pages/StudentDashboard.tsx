@@ -18,12 +18,35 @@ import {
   StarIcon as Star
 } from '@radix-ui/react-icons';
 
+interface Level {
+  id: string;
+  title: string;
+  order: number;
+  description: string;
+  isUnlocked: boolean;
+  isCompleted: boolean;
+  completedSections?: {
+    learn?: boolean;
+    test?: boolean;
+    exercise?: boolean;
+  };
+  duration?: string;
+}
+
+interface Task {
+  id: number;
+  title: string;
+  difficulty: string;
+  points: number;
+  dueDate: Date;
+}
+
 const StudentDashboard: React.FC = () => {
   const { user } = useAppSelector((state) => state.auth);
-  const [currentLevel, setCurrentLevel] = useState<any>(null);
+  const [currentLevel, setCurrentLevel] = useState<Level | null>(null);
   const [overallProgress, setOverallProgress] = useState(0);
   const [completedLevels, setCompletedLevels] = useState(0);
-  const [upcomingTasks, setUpcomingTasks] = useState<any[]>([
+  const [upcomingTasks, setUpcomingTasks] = useState<Task[]>([
     {
       id: 1,
       title: "Complete Level 1 Test",
@@ -44,6 +67,35 @@ const StudentDashboard: React.FC = () => {
   // Use the optimized hook
   const { levels, loading, error, refetch } = useLevels(user?.careerTrack);
 
+  // Helper functions
+  const getTrackIcon = () => {
+    const track = user?.careerTrack?.toLowerCase();
+    switch (track) {
+      case 'full-stack': return <Code className="h-5 w-5 lg:h-6 lg:w-6" />;
+      case 'ui-ux': return <Palette className="h-5 w-5 lg:h-6 lg:w-6" />;
+      case 'data-science': return <BarChart3 className="h-5 w-5 lg:h-6 lg:w-6" />;
+      case 'ai-ml': return <Brain className="h-5 w-5 lg:h-6 lg:w-6" />;
+      default: return <Code className="h-5 w-5 lg:h-6 lg:w-6" />;
+    }
+  };
+
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty?.toLowerCase()) {
+      case 'easy': return 'bg-green-500/20 text-green-400';
+      case 'medium': return 'bg-yellow-500/20 text-yellow-400';
+      case 'hard': return 'bg-red-500/20 text-red-400';
+      default: return 'bg-paperwhite/20 text-teallight';
+    }
+  };
+
+  const getCurrentLevelProgress = () => {
+    if (!currentLevel) return 0;
+    
+    const { learn, test, exercise } = currentLevel.completedSections || {};
+    const completedSections = [learn, test, exercise].filter(Boolean).length;
+    return Math.round((completedSections / 3) * 100);
+  };
+
   // Memoized calculations for better performance
   const dashboardData = useMemo(() => {
     if (!levels || levels.length === 0) {
@@ -56,7 +108,7 @@ const StudentDashboard: React.FC = () => {
     }
 
     // Find current level (first unlocked level that's not fully completed)
-    const nextLevel = levels.find((level: any) => {
+    const nextLevel = levels.find((level: Level) => {
       if (!level.isUnlocked) return false;
       
       // Check if all three sections are completed
@@ -68,7 +120,7 @@ const StudentDashboard: React.FC = () => {
 
     // Calculate overall progress based on fully completed levels
     const totalLevels = levels.length;
-    const completed = levels.filter((level: any) => {
+    const completed = levels.filter((level: Level) => {
       const { learn, test, exercise } = level.completedSections || {};
       return learn === true && test === true && exercise === true;
     }).length;
@@ -270,7 +322,7 @@ const StudentDashboard: React.FC = () => {
               
               <div className="space-y-4">
                 {upcomingTasks.length > 0 ? (
-                  upcomingTasks.map((task: any, index: number) => (
+                  upcomingTasks.map((task: Task, index: number) => (
                     <div key={task.id} className="border border-paperwhite/20 dark:border-offblack rounded-lg p-4 hover:shadow-md transition-shadow">
                       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
                         <div className="mb-2 lg:mb-0">
@@ -310,7 +362,7 @@ const StudentDashboard: React.FC = () => {
             <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
               <div className="text-center">
                 <div className="bg-trueturquoise/10 p-3 rounded-full w-fit mx-auto mb-4">
-                  {/* Placeholder for Brain icon */}
+                  <Brain className="h-6 w-6 text-trueturquoise" />
                 </div>
                 <h3 className="font-semibold text-paperwhite mb-2">Need Help?</h3>
                 <p className="text-teallight text-sm mb-4">
@@ -320,7 +372,6 @@ const StudentDashboard: React.FC = () => {
                   className="w-full bg-trueturquoise text-offblack py-2 rounded-lg hover:bg-teallight transition-all font-medium flex items-center justify-center"
                   onClick={() => setShowAIModal(true)}
                 >
-                  {/* Placeholder for MessageCircle icon */}
                   Chat with AI
                 </button>
               </div>
@@ -403,9 +454,6 @@ const StudentDashboard: React.FC = () => {
                 </div>
               </div>
             </div>
-
-         
-
           </div>
         </div>
       </div>
@@ -571,32 +619,39 @@ const StudentDashboard: React.FC = () => {
               </div>
               
               <div className="space-y-4">
-                {upcomingTasks.map((task: any, index: number) => (
-                  <div key={task.id} className="border border-paperwhite/20 dark:border-offblack rounded-lg p-4 hover:shadow-md transition-shadow">
-                    
-                      <div className="mb-2 lg:mb-0">
-                        <h3 className="font-semibold text-paperwhite">{task.title}</h3>
-                        <div className="flex flex-wrap items-center gap-2 lg:gap-4 mt-1">
-                          <span className={`px-2 py-1 rounded text-xs font-medium ${getDifficultyColor(task.difficulty)}`}>
-                            {task.difficulty}
-                          </span>
-                          {task.dueDate && (
-                            <span className="text-teallight text-sm">Due {new Date(task.dueDate).toLocaleDateString()}</span>
-                          )}
+                {upcomingTasks.length > 0 ? (
+                  upcomingTasks.map((task: any, index: number) => (
+                    <div key={task.id} className="border border-paperwhite/20 dark:border-offblack rounded-lg p-4 hover:shadow-md transition-shadow">
+                      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+                        <div className="mb-2 lg:mb-0">
+                          <h3 className="font-semibold text-paperwhite">{task.title}</h3>
+                          <div className="flex flex-wrap items-center gap-2 lg:gap-4 mt-1">
+                            <span className={`px-2 py-1 rounded text-xs font-medium ${getDifficultyColor(task.difficulty)}`}>
+                              {task.difficulty}
+                            </span>
+                            {task.dueDate && (
+                              <span className="text-teallight text-sm">Due {new Date(task.dueDate).toLocaleDateString()}</span>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                      <div className="text-left lg:text-right">
-                        <div className="flex items-center text-trueturquoise font-medium">
-                          <Star className="h-4 w-4 mr-1" />
-                          {task.points}
+                        <div className="text-left lg:text-right">
+                          <div className="flex items-center text-trueturquoise font-medium">
+                            <Star className="h-4 w-4 mr-1" />
+                            {task.points}
+                          </div>
                         </div>
                       </div>
                     </div>
+                  ))
+                ) : (
+                  <div className="text-center py-6 text-teallight">
+                    <div className="text-2xl mb-2">📋</div>
+                    <p className="text-sm">No upcoming tasks</p>
+                    <p className="text-xs">Focus on your current learning!</p>
                   </div>
-                ))}
+                )}
               </div>
             </div>
-            */}
           </div>
 
           {/* Sidebar */}
@@ -613,16 +668,14 @@ const StudentDashboard: React.FC = () => {
                 </p>
                 <button
                   className="w-full bg-trueturquoise text-offblack py-2 rounded-lg hover:bg-teallight transition-all font-medium flex items-center justify-center"
-                  onClick={() => {}} // Placeholder for AI chat modal
+                  onClick={() => setShowAIModal(true)}
                 >
-                  {/* Placeholder for MessageCircle icon */}
                   Chat with AI
                 </button>
               </div>
             </div>
 
             {/* AI Chat Coming Soon Modal */}
-            {/* This block was removed as per the edit hint:
             {showAIModal && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
                 <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-2xl p-8 max-w-sm w-full text-center relative border border-trueturquoise/30">
@@ -649,7 +702,6 @@ const StudentDashboard: React.FC = () => {
                 </div>
               </div>
             )}
-            */}
 
             {/* Progress Stats */}
             <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
@@ -700,44 +752,13 @@ const StudentDashboard: React.FC = () => {
                 </div>
               </div>
             </div>
-
-         
-
           </div>
         </div>
       </div>
     );
   }
 
-  const userTrack = user.careerTrack;
-
-  const getTrackIcon = () => {
-    const track = user?.careerTrack?.toLowerCase();
-    switch (track) {
-      case 'full-stack': return <Code className="h-5 w-5 lg:h-6 lg:w-6" />;
-      case 'ui-ux': return <Palette className="h-5 w-5 lg:h-6 lg:w-6" />;
-      case 'data-science': return <BarChart3 className="h-5 w-5 lg:h-6 lg:w-6" />;
-      case 'ai-ml': return <Brain className="h-5 w-5 lg:h-6 lg:w-6" />;
-      default: return <Code className="h-5 w-5 lg:h-6 lg:w-6" />;
-    }
-  };
-
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty?.toLowerCase()) {
-      case 'easy': return 'bg-green-500/20 text-green-400';
-      case 'medium': return 'bg-yellow-500/20 text-yellow-400';
-      case 'hard': return 'bg-red-500/20 text-red-400';
-      default: return 'bg-paperwhite/20 text-teallight';
-    }
-  };
-
-  const getCurrentLevelProgress = () => {
-    if (!currentLevel) return 0;
-    
-    const { learn, test, exercise } = currentLevel.completedSections || {};
-    const completedSections = [learn, test, exercise].filter(Boolean).length;
-    return Math.round((completedSections / 3) * 100);
-  };
+  const userTrack = user?.careerTrack || 'Unknown';
 
   const currentLevelProgress = getCurrentLevelProgress();
 
@@ -1011,29 +1032,37 @@ const StudentDashboard: React.FC = () => {
             </div>
             
             <div className="space-y-4">
-              {upcomingTasks.map((task: any, index: number) => (
-                <div key={task.id} className="border border-paperwhite/20 dark:border-offblack rounded-lg p-4 hover:shadow-md transition-shadow">
-                  
-                    <div className="mb-2 lg:mb-0">
-                      <h3 className="font-semibold text-paperwhite">{task.title}</h3>
-                      <div className="flex flex-wrap items-center gap-2 lg:gap-4 mt-1">
-                        <span className={`px-2 py-1 rounded text-xs font-medium ${getDifficultyColor(task.difficulty)}`}>
-                          {task.difficulty}
-                        </span>
-                        {task.dueDate && (
-                          <span className="text-teallight text-sm">Due {new Date(task.dueDate).toLocaleDateString()}</span>
-                        )}
+              {upcomingTasks.length > 0 ? (
+                upcomingTasks.map((task: any, index: number) => (
+                  <div key={task.id} className="border border-paperwhite/20 dark:border-offblack rounded-lg p-4 hover:shadow-md transition-shadow">
+                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+                      <div className="mb-2 lg:mb-0">
+                        <h3 className="font-semibold text-paperwhite">{task.title}</h3>
+                        <div className="flex flex-wrap items-center gap-2 lg:gap-4 mt-1">
+                          <span className={`px-2 py-1 rounded text-xs font-medium ${getDifficultyColor(task.difficulty)}`}>
+                            {task.difficulty}
+                          </span>
+                          {task.dueDate && (
+                            <span className="text-teallight text-sm">Due {new Date(task.dueDate).toLocaleDateString()}</span>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                    <div className="text-left lg:text-right">
-                      <div className="flex items-center text-trueturquoise font-medium">
-                        <Star className="h-4 w-4 mr-1" />
-                        {task.points}
+                      <div className="text-left lg:text-right">
+                        <div className="flex items-center text-trueturquoise font-medium">
+                          <Star className="h-4 w-4 mr-1" />
+                          {task.points}
+                        </div>
                       </div>
                     </div>
                   </div>
+                ))
+              ) : (
+                <div className="text-center py-6 text-teallight">
+                  <div className="text-2xl mb-2">📋</div>
+                  <p className="text-sm">No upcoming tasks</p>
+                  <p className="text-xs">Focus on your current learning!</p>
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </div>
@@ -1044,7 +1073,7 @@ const StudentDashboard: React.FC = () => {
           <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
             <div className="text-center">
               <div className="bg-trueturquoise/10 p-3 rounded-full w-fit mx-auto mb-4">
-                {/* Placeholder for Brain icon */}
+                <Brain className="h-6 w-6 text-trueturquoise" />
               </div>
               <h3 className="font-semibold text-paperwhite mb-2">Need Help?</h3>
               <p className="text-teallight text-sm mb-4">
@@ -1052,16 +1081,14 @@ const StudentDashboard: React.FC = () => {
               </p>
               <button
                 className="w-full bg-trueturquoise text-offblack py-2 rounded-lg hover:bg-teallight transition-all font-medium flex items-center justify-center"
-                onClick={() => {}} // Placeholder for AI chat modal
+                onClick={() => setShowAIModal(true)}
               >
-                {/* Placeholder for MessageCircle icon */}
                 Chat with AI
               </button>
             </div>
           </div>
 
           {/* AI Chat Coming Soon Modal */}
-          {/* This block was removed as per the edit hint:
           {showAIModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
               <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-2xl p-8 max-w-sm w-full text-center relative border border-trueturquoise/30">
@@ -1088,7 +1115,6 @@ const StudentDashboard: React.FC = () => {
               </div>
             </div>
           )}
-          */}
 
           {/* Progress Stats */}
           <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
