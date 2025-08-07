@@ -313,7 +313,7 @@ const StudentDashboard: React.FC = () => {
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg lg:text-xl font-semibold text-paperwhite">Continue Learning</h2>
                 <span className="bg-trueturquoise/20 text-trueturquoise px-2 lg:px-3 py-1 rounded-full text-xs lg:text-sm font-medium">
-                  {currentLevelProgress === 100 ? 'Completed' : 'In Progress'}
+                  {currentLevelProgress === 100 ? 'Level Complete' : 'In Progress'}
                 </span>
               </div>
               
@@ -330,9 +330,10 @@ const StudentDashboard: React.FC = () => {
                   </div>
                 </div>
                 
+                {/* Section Progress */}
                 <div className="mb-4">
-                  <div className="flex justify-between text-sm text-teallight mb-1">
-                    <span>Progress</span>
+                  <div className="flex justify-between text-sm text-teallight mb-2">
+                    <span>Level Progress</span>
                     <span>{currentLevelProgress}%</span>
                   </div>
                   <div className="w-full bg-paperwhite/20 rounded-full h-2">
@@ -340,6 +341,22 @@ const StudentDashboard: React.FC = () => {
                       className="bg-trueturquoise h-2 rounded-full transition-all"
                       style={{ width: `${currentLevelProgress}%` }}
                     ></div>
+                  </div>
+                  
+                  {/* Section Status */}
+                  <div className="flex justify-between mt-3 text-xs text-teallight">
+                    <div className={`flex items-center ${currentLevel.completedSections?.learn ? 'text-green-400' : 'text-teallight'}`}>
+                      <span className={`w-2 h-2 rounded-full mr-1 ${currentLevel.completedSections?.learn ? 'bg-green-400' : 'bg-paperwhite/30'}`}></span>
+                      Learn
+                    </div>
+                    <div className={`flex items-center ${currentLevel.completedSections?.test ? 'text-green-400' : 'text-teallight'}`}>
+                      <span className={`w-2 h-2 rounded-full mr-1 ${currentLevel.completedSections?.test ? 'bg-green-400' : 'bg-paperwhite/30'}`}></span>
+                      Test
+                    </div>
+                    <div className={`flex items-center ${currentLevel.completedSections?.exercise ? 'text-green-400' : 'text-teallight'}`}>
+                      <span className={`w-2 h-2 rounded-full mr-1 ${currentLevel.completedSections?.exercise ? 'bg-green-400' : 'bg-paperwhite/30'}`}></span>
+                      Exercise
+                    </div>
                   </div>
                 </div>
                 
@@ -476,7 +493,7 @@ const StudentDashboard: React.FC = () => {
             <h3 className=" text-paperwhite mb-4 font-heading">Your Progress</h3>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-teallight text-sm lg:text-base">Overall Progress</span>
+                <span className="text-teallight text-sm lg:text-base">Level Completion</span>
                 <span className="font-semibold text-paperwhite">{overallProgress}%</span>
               </div>
               <div className="w-full bg-paperwhite/20 rounded-full h-2">
@@ -497,19 +514,27 @@ const StudentDashboard: React.FC = () => {
                 </div>
               </div>
               
-              {currentLevel && (
-                <div className="pt-4 border-t border-paperwhite/10">
-                  <div className="text-center">
-                    <div className="text-sm text-teallight mb-2">Current Level Progress</div>
-                    <div className="text-lg font-bold text-trueturquoise">{currentLevelProgress}%</div>
-                    <div className="text-xs text-teallight">
-                      {currentLevel.completedSections?.learn ? '✓ Learn' : '○ Learn'} • 
-                      {currentLevel.completedSections?.test ? ' ✓ Test' : ' ○ Test'} • 
-                      {currentLevel.completedSections?.exercise ? ' ✓ Exercise' : ' ○ Exercise'}
+              <div className="pt-4 border-t border-paperwhite/10">
+                <div className="text-center">
+                  <div className="text-sm text-teallight mb-2">Levels Status</div>
+                  <div className="text-xs text-teallight space-y-1">
+                    <div className="flex justify-between">
+                      <span>Completed Levels:</span>
+                      <span className="text-green-400">{completedLevels}</span>
                     </div>
+                    <div className="flex justify-between">
+                      <span>Remaining Levels:</span>
+                      <span className="text-orange-400">{levels.length - completedLevels}</span>
+                    </div>
+                    {currentLevel && (
+                      <div className="flex justify-between">
+                        <span>Current Level:</span>
+                        <span className="text-trueturquoise">Level {currentLevel.order}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
-              )}
+              </div>
             </div>
           </div>
 
