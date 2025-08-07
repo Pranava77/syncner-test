@@ -834,6 +834,87 @@ const StudentDashboard: React.FC = () => {
             </div>
           )}
 
+          {/* Your Learning */}
+          <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg lg:text-xl font-semibold text-paperwhite">Your Learning</h2>
+              <Link 
+                to="/student/training"
+                className="text-trueturquoise hover:text-teallight transition-colors font-medium text-sm"
+              >
+                View All
+              </Link>
+            </div>
+            
+            <div className="space-y-4">
+              {/* Learning Stats */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div className="text-center p-3 bg-paperwhite/5 rounded-lg">
+                  <div className="text-2xl font-bold text-trueturquoise">{completedLevels}</div>
+                  <div className="text-xs text-teallight">Levels Completed</div>
+                </div>
+                <div className="text-center p-3 bg-paperwhite/5 rounded-lg">
+                  <div className="text-2xl font-bold text-trueturquoise">
+                    {levels?.filter(level => level.completedSections?.learn).length || 0}
+                  </div>
+                  <div className="text-xs text-teallight">Learn Sections</div>
+                </div>
+                <div className="text-center p-3 bg-paperwhite/5 rounded-lg">
+                  <div className="text-2xl font-bold text-trueturquoise">
+                    {levels?.filter(level => level.completedSections?.test).length || 0}
+                  </div>
+                  <div className="text-xs text-teallight">Tests Passed</div>
+                </div>
+                <div className="text-center p-3 bg-paperwhite/5 rounded-lg">
+                  <div className="text-2xl font-bold text-trueturquoise">
+                    {levels?.filter(level => level.completedSections?.exercise).length || 0}
+                  </div>
+                  <div className="text-xs text-teallight">Exercises Done</div>
+                </div>
+              </div>
+
+              {/* Recent Activity */}
+              <div className="space-y-3">
+                <h3 className="text-md font-semibold text-paperwhite">Recent Activity</h3>
+                {levels?.filter(level => level.isCompleted).slice(0, 3).map((level, index) => (
+                  <div key={level.id} className="flex items-center p-3 bg-paperwhite/5 rounded-lg">
+                    <div className="bg-trueturquoise/20 p-2 rounded-lg mr-3">
+                      <CheckCircle className="h-4 w-4 text-trueturquoise" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-sm font-medium text-paperwhite">Completed {level.title}</div>
+                      <div className="text-xs text-teallight">Level {level.order}</div>
+                    </div>
+                  </div>
+                ))}
+                
+                {(!levels || levels.filter(level => level.isCompleted).length === 0) && (
+                  <div className="text-center py-6 text-teallight">
+                    <div className="text-2xl mb-2">📚</div>
+                    <p className="text-sm">No recent activity</p>
+                    <p className="text-xs">Start your learning journey!</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Learning Streak */}
+              <div className="mt-6 p-4 bg-gradient-to-r from-trueturquoise/10 to-teallight/10 rounded-lg border border-trueturquoise/20">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-sm font-semibold text-paperwhite">Learning Streak</h3>
+                    <p className="text-xs text-teallight">Keep the momentum going!</p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-trueturquoise">
+                      {completedLevels > 0 ? Math.min(completedLevels, 7) : 0}
+                    </div>
+                    <div className="text-xs text-teallight">days</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* No current level message - only show when ALL levels are completed */}
           {!currentLevel && levels?.length > 0 && completedLevels === levels.length && (
             <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
