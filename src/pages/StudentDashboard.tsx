@@ -77,14 +77,14 @@ const StudentDashboard: React.FC = () => {
       };
     }
 
-    // Find current level (first unlocked level that's not fully completed)
+    // Find current level (first level that's not fully completed)
     const nextLevel = levels.find((level: Level) => {
-      if (!level.isUnlocked) return false;
-      
       // Check if all three sections are completed
       const { learn, test, exercise } = level.completedSections || {};
       const isFullyCompleted = learn === true && test === true && exercise === true;
       
+      // Return the first level that's not fully completed (regardless of unlock status)
+      // If completedSections is undefined/null, consider it not completed
       return !isFullyCompleted;
     });
 
@@ -693,6 +693,7 @@ const StudentDashboard: React.FC = () => {
                 {currentLevel ? (currentLevelProgress === 100 ? 'Level Complete' : 'In Progress') : 'All Levels Complete'}
               </span>
             </div>
+
             
             {currentLevel ? (
               <div className="bg-paperwhite/10 rounded-lg p-4 lg:p-6">
