@@ -5,6 +5,7 @@ import LevelsSidebar from '../components/LevelsSidebar';
 import { useLevels } from '../hooks/useLevels';
 import { motion } from 'framer-motion';
 import {  ClockIcon, CheckCircledIcon, Cross1Icon, ReaderIcon, ClipboardIcon, PlayIcon, LockClosedIcon } from '@radix-ui/react-icons';
+import syncnerLogo from '../assets/syncner-logo.png';
 
 interface LearnItem {
   type: 'video' | 'reading' | 'slide' | 'other';
@@ -177,23 +178,36 @@ const TrainingLevels: React.FC = () => {
               <p className="text-teallight text-lg">Master your skills through structured learning paths</p>
             </div>
             
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="bg-paperwhite/5 rounded-xl p-6 animate-pulse">
-                  <div className="space-y-4">
-                    <div className="h-6 bg-paperwhite/10 rounded"></div>
-                    <div className="h-4 bg-paperwhite/5 rounded w-3/4"></div>
-                    <div className="space-y-2">
-                      <div className="h-3 bg-paperwhite/5 rounded"></div>
-                      <div className="h-3 bg-paperwhite/5 rounded w-2/3"></div>
-                    </div>
-                    <div className="flex gap-2">
-                      <div className="h-8 bg-paperwhite/10 rounded w-16"></div>
-                      <div className="h-8 bg-paperwhite/10 rounded w-20"></div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+            {/* Logo Loading Animation */}
+            <div className="flex items-center justify-center py-20">
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="text-center"
+              >
+                <motion.img
+                  src={syncnerLogo}
+                  alt="Syncner Logo"
+                  className="w-32 h-32 mx-auto mb-6"
+                  animate={{
+                    rotate: [0, 360],
+                    scale: [1, 1.1, 1],
+                  }}
+                  transition={{
+                    rotate: { duration: 3, repeat: Infinity, ease: "linear" },
+                    scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+                  }}
+                />
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                  className="text-trueturquoise text-lg font-medium"
+                >
+                  Loading your training levels...
+                </motion.p>
+              </motion.div>
             </div>
           </div>
         </main>
