@@ -167,6 +167,10 @@ const LevelExercisePage: React.FC = () => {
       // Trigger sidebar refresh to update unlock status
       setRefreshTrigger(prev => prev + 1);
       
+      // Trigger dashboard progress update
+      window.dispatchEvent(new CustomEvent('progress-updated'));
+      localStorage.setItem('level-progress-updated', Date.now().toString());
+      
       // Small delay to ensure sidebar refresh completes
       await new Promise(resolve => setTimeout(resolve, 500));
       
@@ -223,6 +227,10 @@ const LevelExercisePage: React.FC = () => {
       
       // Trigger sidebar refresh to update unlock status
       setRefreshTrigger(prev => prev + 1);
+      
+      // Trigger dashboard progress update
+      window.dispatchEvent(new CustomEvent('progress-updated'));
+      localStorage.setItem('level-progress-updated', Date.now().toString());
       
       // Navigate to training levels page or dashboard
       navigate('/student/training');

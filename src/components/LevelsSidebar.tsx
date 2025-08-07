@@ -169,16 +169,29 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
     }
   }, [refreshTrigger, fetchLevels]);
 
-  // Auto-refresh levels every 10 seconds to catch completion updates (more frequent)
+  // Listen for completion events to refresh levels
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (!loading && levels.length > 0) {
+    const handleProgressUpdate = () => {
+      fetchLevels();
+    };
+
+    // Listen for custom progress update events
+    window.addEventListener('progress-updated', handleProgressUpdate);
+    
+    // Listen for storage changes (if other components update localStorage)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'level-progress-updated') {
         fetchLevels();
       }
-    }, 10000); // 10 seconds instead of 30
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
 
-    return () => clearInterval(interval);
-  }, [fetchLevels, loading, levels.length]);
+    return () => {
+      window.removeEventListener('progress-updated', handleProgressUpdate);
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [fetchLevels]);
 
   // Force refresh when component mounts or when user changes
   useEffect(() => {

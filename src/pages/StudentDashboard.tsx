@@ -16,6 +16,24 @@ import LoadingScreen from '../components/LoadingScreen';
 import AttendanceHeatmap from '../components/AttendanceHeatmap';
 import apiService from '../services/api';
 
+interface Level {
+  id: string;
+  title: string;
+  description: string;
+  difficulty: string;
+  duration: string;
+  careerTrack: string;
+  order: number;
+  isActive: boolean;
+  isUnlocked?: boolean;
+  isCompleted?: boolean;
+  completedSections?: {
+    learn: boolean;
+    test: boolean;
+    exercise: boolean;
+  };
+}
+
 const StudentDashboard: React.FC = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
@@ -23,6 +41,13 @@ const StudentDashboard: React.FC = () => {
 
   // Modal state for AI Chat 'Coming Soon'
   const [showAIModal, setShowAIModal] = useState(false);
+  
+  // Level progress state
+  const [levels, setLevels] = useState<Level[]>([]);
+  const [levelsLoading, setLevelsLoading] = useState(true);
+  const [currentLevel, setCurrentLevel] = useState<Level | null>(null);
+  const [overallProgress, setOverallProgress] = useState(0);
+  const [completedLevels, setCompletedLevels] = useState(0);
 
   // Attendance ping effect
   React.useEffect(() => {
@@ -60,12 +85,130 @@ const StudentDashboard: React.FC = () => {
     };
   }, [user]);
 
+  // Fetch levels and progress
+  const fetchLevelsAndProgress = async () => {
+    if (!user?.careerTrack) return;
+    
+    try {
+      setLevelsLoading(true);
+      
+      // Fetch levels
+      const levelsResponse = await apiService.getLevels(user.careerTrack);
+      let levelsData: Level[] = [];
+      
+      if (levelsResponse && levelsResponse.data) {
+        levelsData = Array.isArray(levelsResponse.data) ? levelsResponse.data : [levelsResponse.data];
+      } else if (Array.isArray(levelsResponse)) {
+        levelsData = levelsResponse;
+      }
+      
+      // Sort by order and filter active levels
+      levelsData = levelsData
+        .filter((level: Level) => level.isActive)
+        .sort((a: Level, b: Level) => a.order - b.order);
+      
+      // Fetch level status
+      const statusResponse = await apiService.getLevelsStatus();
+      if (statusResponse && statusResponse.data && statusResponse.data.levels) {
+        const statusData = statusResponse.data.levels;
+        
+        // Create completion map
+        const levelCompletionMap = new Map();
+        levelsData.forEach((level: Level) => {
+          const levelStatus = statusData.find((status: any) => status.id === level.id);
+          levelCompletionMap.set(level.order, {
+            id: level.id,
+            completedSections: levelStatus?.completedSections || {},
+            isCompleted: levelStatus?.isCompleted || false,
+            isUnlocked: levelStatus?.isUnlocked || false
+          });
+        });
+        
+        // Process levels with unlock status
+        levelsData = levelsData.map((level: Level) => {
+          let isUnlocked = false;
+          if (level.order === 1) {
+            isUnlocked = true;
+          } else {
+            const previousLevelCompletion = levelCompletionMap.get(level.order - 1);
+            if (previousLevelCompletion) {
+              const { completedSections } = previousLevelCompletion;
+              const isPreviousFullyCompleted = completedSections.learn === true && 
+                                             completedSections.test === true && 
+                                             completedSections.exercise === true;
+              isUnlocked = isPreviousFullyCompleted;
+            }
+          }
+          
+          const levelStatus = statusData.find((status: any) => status.id === level.id);
+          
+          return {
+            ...level,
+            isUnlocked: isUnlocked,
+            isCompleted: levelStatus?.isCompleted ?? false,
+            completedSections: levelStatus?.completedSections ?? {
+              learn: false,
+              test: false,
+              exercise: false
+            }
+          };
+        });
+      }
+      
+      setLevels(levelsData);
+      
+      // Find current level (first unlocked level that's not completed)
+      const nextLevel = levelsData.find(level => level.isUnlocked && !level.isCompleted);
+      setCurrentLevel(nextLevel || null);
+      
+      // Calculate overall progress
+      const totalLevels = levelsData.length;
+      const completed = levelsData.filter(level => level.isCompleted).length;
+      const progress = totalLevels > 0 ? Math.round((completed / totalLevels) * 100) : 0;
+      
+      setCompletedLevels(completed);
+      setOverallProgress(progress);
+      
+    } catch (error) {
+      console.error('Error fetching levels and progress:', error);
+    } finally {
+      setLevelsLoading(false);
+    }
+  };
+
   useEffect(() => {
     console.log('StudentDashboard: user.careerTrack on useEffect:', user?.careerTrack);
     if (user?.careerTrack && curriculumState.lastFetched === null) {
       dispatch(fetchCurriculum({ type: 'learn', trackId: user.careerTrack }));
     }
+    
+    // Fetch levels and progress
+    fetchLevelsAndProgress();
   }, [dispatch, user?.careerTrack, curriculumState.lastFetched]);
+
+  // Listen for completion events from localStorage or custom events
+  useEffect(() => {
+    const handleProgressUpdate = () => {
+      fetchLevelsAndProgress();
+    };
+
+    // Listen for custom progress update events
+    window.addEventListener('progress-updated', handleProgressUpdate);
+    
+    // Listen for storage changes (if other components update localStorage)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'level-progress-updated') {
+        fetchLevelsAndProgress();
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('progress-updated', handleProgressUpdate);
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
 
   if (!user || !user.careerTrack) {
     return (
@@ -76,12 +219,18 @@ const StudentDashboard: React.FC = () => {
       />
     );
   }
-  const userTrack = user.careerTrack;
-  const levels = curriculumState.data || [];
-  const levelsLoading = curriculumState.loading;
 
-  // Get current level (first in the list)
-  const currentLevel = levels[0];
+  if (levelsLoading) {
+    return (
+      <LoadingScreen 
+        message="Loading your dashboard..."
+        showProgress={true}
+        progressDuration={1800}
+      />
+    );
+  }
+
+  const userTrack = user.careerTrack;
 
   const getTrackIcon = () => {
     switch (userTrack) {
@@ -93,7 +242,16 @@ const StudentDashboard: React.FC = () => {
     }
   };
 
+  // Calculate current level progress
+  const getCurrentLevelProgress = () => {
+    if (!currentLevel || !currentLevel.completedSections) return 0;
+    
+    const { learn, test, exercise } = currentLevel.completedSections;
+    const completedSections = [learn, test, exercise].filter(Boolean).length;
+    return Math.round((completedSections / 3) * 100);
+  };
 
+  const currentLevelProgress = getCurrentLevelProgress();
 
   // const getDifficultyColor = (difficulty: string) => {
   //   switch (difficulty) {
@@ -103,16 +261,6 @@ const StudentDashboard: React.FC = () => {
   //     default: return 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-400';
   //   }
   // };
-
-  if (levelsLoading) {
-    return (
-      <LoadingScreen 
-        message="Loading your dashboard..."
-        showProgress={true}
-        progressDuration={1800}
-      />
-    );
-  }
 
   return (
     <div className="space-y-6 lg:space-y-8 p-4 lg:p-8 bg-black">
@@ -128,8 +276,20 @@ const StudentDashboard: React.FC = () => {
             </p>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
               <div className="text-center">
-                <div className="text-xl lg:text-2xl text-paperwhite font-heading">{currentLevel ? 'Available' : 0}</div>
+                <div className="text-xl lg:text-2xl text-paperwhite font-heading">{currentLevel ? `Level ${currentLevel.order}` : 'No Level'}</div>
                 <div className="text-teallight text-xs lg:text-sm font-label">Current Module</div>
+              </div>
+              <div className="text-center">
+                <div className="text-xl lg:text-2xl text-paperwhite font-heading">{completedLevels}</div>
+                <div className="text-teallight text-xs lg:text-sm font-label">Completed</div>
+              </div>
+              <div className="text-center">
+                <div className="text-xl lg:text-2xl text-paperwhite font-heading">{levels.length}</div>
+                <div className="text-teallight text-xs lg:text-sm font-label">Total Levels</div>
+              </div>
+              <div className="text-center">
+                <div className="text-xl lg:text-2xl text-paperwhite font-heading">{overallProgress}%</div>
+                <div className="text-teallight text-xs lg:text-sm font-label">Progress</div>
               </div>
             </div>
           </div>
@@ -153,7 +313,7 @@ const StudentDashboard: React.FC = () => {
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg lg:text-xl font-semibold text-paperwhite">Continue Learning</h2>
                 <span className="bg-trueturquoise/20 text-trueturquoise px-2 lg:px-3 py-1 rounded-full text-xs lg:text-sm font-medium">
-                  {currentLevel ? 'Available' : ''}
+                  {currentLevelProgress === 100 ? 'Completed' : 'In Progress'}
                 </span>
               </div>
               
@@ -161,7 +321,7 @@ const StudentDashboard: React.FC = () => {
                 <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-4">
                   <div className="mb-4 lg:mb-0">
                     <h3 className="text-lg font-semibold text-paperwhite mb-1">
-                      {currentLevel.title}
+                      Level {currentLevel.order}: {currentLevel.title}
                     </h3>
                     <p className="text-teallight text-sm lg:text-base">{currentLevel.description}</p>
                   </div>
@@ -173,12 +333,12 @@ const StudentDashboard: React.FC = () => {
                 <div className="mb-4">
                   <div className="flex justify-between text-sm text-teallight mb-1">
                     <span>Progress</span>
-                    <span>100%</span>
+                    <span>{currentLevelProgress}%</span>
                   </div>
                   <div className="w-full bg-paperwhite/20 rounded-full h-2">
                     <div 
                       className="bg-trueturquoise h-2 rounded-full transition-all"
-                      style={{ width: '100%' }}
+                      style={{ width: `${currentLevelProgress}%` }}
                     ></div>
                   </div>
                 </div>
@@ -186,16 +346,34 @@ const StudentDashboard: React.FC = () => {
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                   <div className="flex items-center text-teallight text-sm">
                     <Clock className="h-4 w-4 mr-1 text-trueturquoise" />
-                    {currentLevel.duration}
+                    {currentLevel.duration || 'Estimated time'}
                   </div>
                   <Link
-                    to={`/student/training/${currentLevel.id}`}
+                    to={`/student/training/${currentLevel.id}/learn`}
                     className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-teallight transition-colors font-medium flex items-center justify-center w-full sm:w-auto"
                   >
                     <Play className="h-4 w-4 mr-2 text-offblack" />
-                    Continue
+                    {currentLevelProgress === 0 ? 'Start Learning' : 'Continue'}
                   </Link>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* No current level message */}
+          {!currentLevel && levels.length > 0 && (
+            <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
+              <div className="text-center">
+                <div className="text-4xl mb-4">🎉</div>
+                <h2 className="text-lg lg:text-xl font-semibold text-paperwhite mb-2">Congratulations!</h2>
+                <p className="text-teallight mb-4">You've completed all available levels in your track.</p>
+                <Link
+                  to="/student/training"
+                  className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-teallight transition-colors font-medium inline-flex items-center"
+                >
+                  <BookOpen className="h-4 w-4 mr-2 text-offblack" />
+                  View All Levels
+                </Link>
               </div>
             </div>
           )}
@@ -299,25 +477,39 @@ const StudentDashboard: React.FC = () => {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-teallight text-sm lg:text-base">Overall Progress</span>
-                <span className="font-semibold text-paperwhite">100%</span>
+                <span className="font-semibold text-paperwhite">{overallProgress}%</span>
               </div>
               <div className="w-full bg-paperwhite/20 rounded-full h-2">
                 <div 
                   className="bg-trueturquoise h-2 rounded-full transition-all"
-                  style={{ width: '100%' }}
+                  style={{ width: `${overallProgress}%` }}
                 ></div>
               </div>
               
               <div className="grid grid-cols-2 gap-4 pt-4">
                 <div className="text-center">
                   <div className="text-lg font-bold text-trueturquoise">{levels.length}</div>
-                  <div className="text-xs text-teallight">Total Modules</div>
+                  <div className="text-xs text-teallight">Total Levels</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-lg font-bold text-trueturquoise">0</div>
+                  <div className="text-lg font-bold text-trueturquoise">{completedLevels}</div>
                   <div className="text-xs text-teallight">Completed</div>
                 </div>
               </div>
+              
+              {currentLevel && (
+                <div className="pt-4 border-t border-paperwhite/10">
+                  <div className="text-center">
+                    <div className="text-sm text-teallight mb-2">Current Level Progress</div>
+                    <div className="text-lg font-bold text-trueturquoise">{currentLevelProgress}%</div>
+                    <div className="text-xs text-teallight">
+                      {currentLevel.completedSections?.learn ? '✓ Learn' : '○ Learn'} • 
+                      {currentLevel.completedSections?.test ? ' ✓ Test' : ' ○ Test'} • 
+                      {currentLevel.completedSections?.exercise ? ' ✓ Exercise' : ' ○ Exercise'}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

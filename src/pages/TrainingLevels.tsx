@@ -193,16 +193,29 @@ const TrainingLevels: React.FC = () => {
     }
   }, [refreshTrigger]);
 
-  // Auto-refresh levels every 10 seconds to catch completion updates
+  // Listen for completion events to refresh levels
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (!loading && levels.length > 0) {
+    const handleProgressUpdate = () => {
+      fetchLevels();
+    };
+
+    // Listen for custom progress update events
+    window.addEventListener('progress-updated', handleProgressUpdate);
+    
+    // Listen for storage changes (if other components update localStorage)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'level-progress-updated') {
         fetchLevels();
       }
-    }, 10000); // 10 seconds
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
 
-    return () => clearInterval(interval);
-  }, [fetchLevels, loading, levels.length]);
+    return () => {
+      window.removeEventListener('progress-updated', handleProgressUpdate);
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [fetchLevels]);
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty.toLowerCase()) {

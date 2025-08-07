@@ -177,6 +177,10 @@ const LevelLearnPage: React.FC = () => {
             
             // Trigger sidebar refresh to update unlock status
             setRefreshTrigger(prev => prev + 1);
+            
+            // Trigger dashboard progress update
+            window.dispatchEvent(new CustomEvent('progress-updated'));
+            localStorage.setItem('level-progress-updated', Date.now().toString());
           } catch (completionError) {
             console.error('Error marking learn section as completed:', completionError);
           }
