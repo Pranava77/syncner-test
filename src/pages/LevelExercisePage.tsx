@@ -458,20 +458,8 @@ const LevelExercisePage: React.FC = () => {
         <div className="w-full max-w-5xl flex flex-col sm:flex-row items-center justify-center gap-4 mt-8 mb-8">
           {hasExerciseLinks ? (
             isLastLevel ? (
-              <button 
-                onClick={handleBootcampCompletion}
-                disabled={unlockingLevel}
-                className="w-full sm:w-auto bg-gradient-to-r from-trueturquoise to-teallight text-offblack px-8 py-3 rounded-lg font-bold text-lg shadow hover:from-teallight hover:to-trueturquoise transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-              >
-                {unlockingLevel ? (
-                  <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-offblack"></div>
-                    Completing...
-                  </>
-                ) : (
-                  'Complete Bootcamp'
-                )}
-              </button>
+              // No button for last level - just show the celebration card
+              null
             ) : (
               <button 
                 onClick={handleUnlockNextLevel}
