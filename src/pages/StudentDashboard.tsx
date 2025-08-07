@@ -686,15 +686,15 @@ const StudentDashboard: React.FC = () => {
       <div className="grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
           {/* Current Learning */}
-          {currentLevel && (
-            <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg lg:text-xl font-semibold text-paperwhite">Continue Learning</h2>
-                <span className="bg-trueturquoise/20 text-trueturquoise px-2 lg:px-3 py-1 rounded-full text-xs lg:text-sm font-medium">
-                  {currentLevelProgress === 100 ? 'Level Complete' : 'In Progress'}
-                </span>
-              </div>
-              
+          <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg lg:text-xl font-semibold text-paperwhite">Continue Learning</h2>
+              <span className="bg-trueturquoise/20 text-trueturquoise px-2 lg:px-3 py-1 rounded-full text-xs lg:text-sm font-medium">
+                {currentLevel ? (currentLevelProgress === 100 ? 'Level Complete' : 'In Progress') : 'All Levels Complete'}
+              </span>
+            </div>
+            
+            {currentLevel ? (
               <div className="bg-paperwhite/10 rounded-lg p-4 lg:p-6">
                 <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-4">
                   <div className="mb-4 lg:mb-0">
@@ -752,26 +752,25 @@ const StudentDashboard: React.FC = () => {
                   </Link>
                 </div>
               </div>
-            </div>
-          )}
-
-          {/* No current level message - only show when ALL levels are completed */}
-          {!currentLevel && levels?.length > 0 && completedLevels === levels.length && (
-            <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
-              <div className="text-center">
+            ) : (
+              <div className="bg-paperwhite/10 rounded-lg p-4 lg:p-6 text-center">
                 <div className="text-4xl mb-4">🎉</div>
-                <h2 className="text-lg lg:text-xl font-semibold text-paperwhite mb-2">Congratulations!</h2>
-                <p className="text-teallight mb-4">You've completed all {levels.length} levels in your track!</p>
+                <h3 className="text-lg font-semibold text-paperwhite mb-2">Congratulations!</h3>
+                <p className="text-teallight text-sm lg:text-base mb-4">
+                  You've completed all {levels?.length || 0} levels in your track!
+                </p>
                 <Link
                   to="/student/training"
-                  className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-teallight transition-colors font-medium inline-flex items-center"
+                  className="bg-trueturquoise text-offblack px-6 py-3 rounded-lg hover:bg-teallight transition-colors font-medium inline-flex items-center"
                 >
                   <ReaderIcon className="h-4 w-4 mr-2 text-offblack" />
                   View All Levels
                 </Link>
               </div>
-            </div>
-          )}
+            )}
+          </div>
+
+
 
           {/* No levels available message */}
           {!currentLevel && levels?.length === 0 && (
