@@ -195,6 +195,38 @@ const LevelExercisePage: React.FC = () => {
     }
   };
 
+  // Check if this is the last level
+  const isLastLevel = level && allLevels.length > 0 && level.order === Math.max(...allLevels.map(l => l.order));
+
+  // Handle bootcamp completion
+  const handleBootcampCompletion = async () => {
+    if (!hasExerciseLinks) {
+      return;
+    }
+    
+    try {
+      setUnlockingLevel(true);
+      
+      // Mark the current level as completed (exercise section)
+      if (level && level.id && level.order) {
+        console.log('Marking final level as completed:', { levelId: level.id, levelOrder: level.order, section: 'exercise' });
+        const result = await apiService.markLevelCompleted(level.id, level.order, 'exercise');
+        console.log('Final level completion result:', result);
+      }
+      
+      // Trigger sidebar refresh to update unlock status
+      setRefreshTrigger(prev => prev + 1);
+      
+      // Navigate to training levels page or dashboard
+      navigate('/student/training');
+    } catch (error) {
+      console.error('Error marking final level as completed:', error);
+      navigate('/student/training');
+    } finally {
+      setUnlockingLevel(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex h-screen bg-offblack overflow-x-hidden">
@@ -425,20 +457,37 @@ const LevelExercisePage: React.FC = () => {
         {/* Action Buttons */}
         <div className="w-full max-w-5xl flex flex-col sm:flex-row items-center justify-center gap-4 mt-8 mb-8">
           {hasExerciseLinks ? (
-            <button 
-              onClick={handleUnlockNextLevel}
-              disabled={unlockingLevel}
-              className="w-full sm:w-auto bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-teallight transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-            >
-              {unlockingLevel ? (
-                <>
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-offblack"></div>
-                  Unlocking...
-                </>
-              ) : (
-                'Unlock Next Level'
-              )}
-            </button>
+            isLastLevel ? (
+              <button 
+                onClick={handleBootcampCompletion}
+                disabled={unlockingLevel}
+                className="w-full sm:w-auto bg-gradient-to-r from-trueturquoise to-teallight text-offblack px-8 py-3 rounded-lg font-bold text-lg shadow hover:from-teallight hover:to-trueturquoise transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              >
+                {unlockingLevel ? (
+                  <>
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-offblack"></div>
+                    Completing...
+                  </>
+                ) : (
+                  'Complete Bootcamp'
+                )}
+              </button>
+            ) : (
+              <button 
+                onClick={handleUnlockNextLevel}
+                disabled={unlockingLevel}
+                className="w-full sm:w-auto bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-teallight transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              >
+                {unlockingLevel ? (
+                  <>
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-offblack"></div>
+                    Unlocking...
+                  </>
+                ) : (
+                  'Unlock Next Level'
+                )}
+              </button>
+            )
           ) : (
             <button 
               disabled
@@ -449,6 +498,39 @@ const LevelExercisePage: React.FC = () => {
             </button>
           )}
         </div>
+
+        {/* Bootcamp Completion Celebration */}
+        {isLastLevel && hasExerciseLinks && (
+          <div className="w-full max-w-5xl bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-xl border border-green-500/30 shadow-lg p-8 mb-8 text-center">
+            <div className="text-6xl mb-4">🎉</div>
+            <h2 className="text-3xl font-bold text-green-400 mb-4">Congratulations!</h2>
+            <p className="text-teallight text-lg mb-6">
+              You've completed all levels in this bootcamp! You've successfully mastered the concepts and completed all exercises.
+            </p>
+            <div className="bg-green-500/20 border border-green-500/30 rounded-lg p-4 mb-6">
+              <div className="flex items-center justify-center gap-2 text-green-400">
+                <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-sm">✓</span>
+                </div>
+                <span className="font-semibold text-lg">Bootcamp Completed Successfully!</span>
+              </div>
+            </div>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <button 
+                onClick={() => navigate('/student/dashboard')}
+                className="bg-paperwhite/10 text-paperwhite px-6 py-3 rounded-lg font-semibold hover:bg-paperwhite/20 transition-colors"
+              >
+                Go to Dashboard
+              </button>
+              <button 
+                onClick={() => navigate('/student/training')}
+                className="bg-paperwhite/10 text-paperwhite px-6 py-3 rounded-lg font-semibold hover:bg-paperwhite/20 transition-colors"
+              >
+                View All Levels
+              </button>
+            </div>
+          </div>
+        )}
       </main>
 
       {/* Task Submission Modal */}
