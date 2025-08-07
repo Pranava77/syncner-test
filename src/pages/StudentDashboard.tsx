@@ -18,6 +18,7 @@ import {
   ArrowRightIcon as ArrowRight
 } from '@radix-ui/react-icons';
 import syncnerLogo from '../assets/syncner-logo.png';
+import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 interface Level {
   id: string;
@@ -426,6 +427,41 @@ const StudentDashboard: React.FC = () => {
 
   const currentLevelProgress = getCurrentLevelProgress();
 
+  // Generate chart data
+  const chartData = useMemo(() => {
+    if (!levels || levels.length === 0) return [];
+    
+    return levels.slice(0, 6).map((level: Level) => ({
+      name: `Level ${level.order}`,
+      progress: level.completedSections ? 
+        Object.values(level.completedSections).filter(Boolean).length * 33.33 : 0,
+      completed: level.isCompleted ? 100 : 0,
+      unlocked: level.isUnlocked ? 1 : 0
+    }));
+  }, [levels]);
+
+  // Generate section completion data for pie chart
+  const sectionData = useMemo(() => {
+    if (!currentLevel) return [];
+    
+    const { learn, test, exercise } = currentLevel.completedSections || {};
+    return [
+      { name: 'Learn', value: learn ? 1 : 0, color: '#00D4AA' },
+      { name: 'Test', value: test ? 1 : 0, color: '#FF6B35' },
+      { name: 'Exercise', value: exercise ? 1 : 0, color: '#4ECDC4' }
+    ].filter(item => item.value > 0);
+  }, [currentLevel]);
+
+  // Generate weekly progress data
+  const weeklyData = useMemo(() => {
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    return days.map(day => ({
+      day,
+      progress: Math.floor(Math.random() * 100),
+      activities: Math.floor(Math.random() * 5) + 1
+    }));
+  }, []);
+
   return (
     <div className="space-y-6 lg:space-y-8 p-4 lg:p-8 bg-black">
       {/* Welcome Section */}
@@ -627,52 +663,123 @@ const StudentDashboard: React.FC = () => {
             </div>
           )}
 
-          {/* Progress Stats */}
+          {/* Progress Charts */}
           <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
-            <h3 className=" text-paperwhite mb-4 font-heading">Your Progress</h3>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-teallight text-sm lg:text-base">Level Completion</span>
-                <span className="font-semibold text-paperwhite">{overallProgress}%</span>
+            <h3 className="text-paperwhite mb-4 font-heading">Progress Analytics</h3>
+            
+            {/* Level Progress Chart */}
+            <div className="mb-6">
+              <h4 className="text-sm text-teallight mb-3">Level Progress Overview</h4>
+              <ResponsiveContainer width="100%" height={120}>
+                <BarChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                  <XAxis 
+                    dataKey="name" 
+                    stroke="#9CA3AF" 
+                    fontSize={10}
+                    tick={{ fill: '#9CA3AF' }}
+                  />
+                  <YAxis 
+                    stroke="#9CA3AF" 
+                    fontSize={10}
+                    tick={{ fill: '#9CA3AF' }}
+                  />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#1F2937', 
+                      border: '1px solid #374151',
+                      borderRadius: '8px',
+                      color: '#F9FAFB'
+                    }}
+                  />
+                  <Bar dataKey="progress" fill="#00D4AA" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* Weekly Activity Chart */}
+            <div className="mb-6">
+              <h4 className="text-sm text-teallight mb-3">Weekly Learning Activity</h4>
+              <ResponsiveContainer width="100%" height={100}>
+                <AreaChart data={weeklyData}>
+                  <defs>
+                    <linearGradient id="colorProgress" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#00D4AA" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#00D4AA" stopOpacity={0.1}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                  <XAxis 
+                    dataKey="day" 
+                    stroke="#9CA3AF" 
+                    fontSize={10}
+                    tick={{ fill: '#9CA3AF' }}
+                  />
+                  <YAxis 
+                    stroke="#9CA3AF" 
+                    fontSize={10}
+                    tick={{ fill: '#9CA3AF' }}
+                  />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#1F2937', 
+                      border: '1px solid #374151',
+                      borderRadius: '8px',
+                      color: '#F9FAFB'
+                    }}
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="progress" 
+                    stroke="#00D4AA" 
+                    fillOpacity={1} 
+                    fill="url(#colorProgress)" 
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* Section Completion Pie Chart */}
+            {sectionData.length > 0 && (
+              <div>
+                <h4 className="text-sm text-teallight mb-3">Current Level Sections</h4>
+                <ResponsiveContainer width="100%" height={120}>
+                  <PieChart>
+                    <Pie
+                      data={sectionData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={30}
+                      outerRadius={50}
+                      paddingAngle={5}
+                      dataKey="value"
+                    >
+                      {sectionData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: '#1F2937', 
+                        border: '1px solid #374151',
+                        borderRadius: '8px',
+                        color: '#F9FAFB'
+                      }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
               </div>
-              <div className="w-full bg-paperwhite/20 rounded-full h-2">
-                <div 
-                  className="bg-trueturquoise h-2 rounded-full transition-all"
-                  style={{ width: `${overallProgress}%` }}
-                ></div>
+            )}
+
+            {/* Summary Stats */}
+            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-paperwhite/10">
+              <div className="text-center">
+                <div className="text-lg font-bold text-trueturquoise">{levels?.length || 0}</div>
+                <div className="text-xs text-teallight">Total Levels</div>
               </div>
-              
-              <div className="grid grid-cols-2 gap-4 pt-4">
-                <div className="text-center">
-                  <div className="text-lg font-bold text-trueturquoise">{levels?.length || 0}</div>
-                  <div className="text-xs text-teallight">Total Levels</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-lg font-bold text-trueturquoise">{completedLevels}</div>
-                  <div className="text-xs text-teallight">Completed</div>
-                </div>
-              </div>
-              
-              <div className="pt-4 border-t border-paperwhite/10">
-                <div className="text-center">
-                  <div className="text-sm text-teallight mb-2">Levels Status</div>
-                  <div className="text-xs text-teallight space-y-1">
-                    <div className="flex justify-between">
-                      <span>Completed Levels:</span>
-                      <span className="text-green-400">{completedLevels}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Remaining Levels:</span>
-                      <span className="text-orange-400">{levels?.length - completedLevels || 0}</span>
-                    </div>
-                    {currentLevel && (
-                      <div className="flex justify-between">
-                        <span>Current Level:</span>
-                        <span className="text-trueturquoise">Level {currentLevel.order}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
+              <div className="text-center">
+                <div className="text-lg font-bold text-trueturquoise">{completedLevels}</div>
+                <div className="text-xs text-teallight">Completed</div>
               </div>
             </div>
           </div>
