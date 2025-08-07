@@ -401,31 +401,19 @@ const LevelLearnPage: React.FC = () => {
                 Back to Training
               </button>
               
-              <div className="flex gap-4">
-                <button
-                  onClick={handleTakeTest}
-                  disabled={!learnProgress.isCompleted}
-                  className={`px-6 py-3 rounded-lg font-medium transition-colors ${
-                    learnProgress.isCompleted 
-                      ? 'bg-trueturquoise text-offblack hover:bg-trueturquoise/90' 
-                      : 'bg-paperwhite/10 text-teallight/50 cursor-not-allowed'
-                  }`}
-                >
-                  Take Test
-                </button>
-                
-                <button
-                  onClick={() => navigate(`/student/level/${levelId}/exercise`)}
-                  disabled={!learnProgress.isCompleted}
-                  className={`px-6 py-3 rounded-lg font-medium transition-colors ${
-                    learnProgress.isCompleted 
-                      ? 'bg-teallight text-offblack hover:bg-teallight/90' 
-                      : 'bg-paperwhite/10 text-teallight/50 cursor-not-allowed'
-                  }`}
-                >
-                  Go to Exercise
-                </button>
-              </div>
+                             <div className="flex gap-4">
+                 <button
+                   onClick={handleTakeTest}
+                   disabled={!learnProgress.isCompleted}
+                   className={`px-6 py-3 rounded-lg font-medium transition-colors ${
+                     learnProgress.isCompleted 
+                       ? 'bg-trueturquoise text-offblack hover:bg-trueturquoise/90' 
+                       : 'bg-paperwhite/10 text-teallight/50 cursor-not-allowed'
+                   }`}
+                 >
+                   Take Test
+                 </button>
+               </div>
             </div>
           </>
         )}
