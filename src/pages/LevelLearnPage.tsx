@@ -265,7 +265,7 @@ const LevelLearnPage: React.FC = () => {
       <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="learn" refreshTrigger={refreshTrigger} />
       <main className="flex-1 overflow-y-auto scroll-smooth p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
         {loading ? (
-          <div className="text-center flex flex-col items-center justify-center h-full">
+          <div className="text-center">
             <motion.img
               src={syncnerLogo}
               alt="Syncner Logo"

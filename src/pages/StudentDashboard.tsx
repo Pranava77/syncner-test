@@ -17,7 +17,6 @@ import {
   LayersIcon as Brain,
   ArrowRightIcon as ArrowRight
 } from '@radix-ui/react-icons';
-import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, AreaChart, Area } from 'recharts';
 import syncnerLogo from '../assets/syncner-logo.png';
 
 interface Level {
@@ -427,40 +426,6 @@ const StudentDashboard: React.FC = () => {
 
   const currentLevelProgress = getCurrentLevelProgress();
 
-  // Chart data preparation
-  const chartData = useMemo(() => {
-    if (!levels || levels.length === 0) return { pieData: [], barData: [], areaData: [] };
-
-    // Pie chart data for section completion
-    const pieData = [
-      { name: 'Learn', value: levels.filter(l => l.completedSections?.learn).length, color: '#00D4AA' },
-      { name: 'Test', value: levels.filter(l => l.completedSections?.test).length, color: '#FF6B35' },
-      { name: 'Exercise', value: levels.filter(l => l.completedSections?.exercise).length, color: '#4F46E5' }
-    ];
-
-    // Bar chart data for level progress
-    const barData = levels.slice(0, 6).map(level => ({
-      name: `Level ${level.order}`,
-      completed: level.isCompleted ? 100 : 
-        level.completedSections ? 
-          Object.values(level.completedSections).filter(Boolean).length * 33.33 : 0,
-      unlocked: level.isUnlocked ? 100 : 0
-    }));
-
-    // Area chart data for learning progress over time (simulated)
-    const areaData = [
-      { day: 'Mon', progress: 20 },
-      { day: 'Tue', progress: 35 },
-      { day: 'Wed', progress: 45 },
-      { day: 'Thu', progress: 60 },
-      { day: 'Fri', progress: 75 },
-      { day: 'Sat', progress: 85 },
-      { day: 'Sun', progress: overallProgress }
-    ];
-
-    return { pieData, barData, areaData };
-  }, [levels, overallProgress]);
-
   return (
     <div className="space-y-6 lg:space-y-8 p-4 lg:p-8 bg-black">
       {/* Welcome Section */}
@@ -662,120 +627,52 @@ const StudentDashboard: React.FC = () => {
             </div>
           )}
 
-          {/* Progress Analytics Charts */}
-          <div className="space-y-6">
-            {/* Section Completion Pie Chart */}
-            <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
-              <h3 className="text-paperwhite mb-4 font-heading">Section Completion</h3>
-              <div className="h-48">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={chartData.pieData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={40}
-                      outerRadius={80}
-                      paddingAngle={5}
-                      dataKey="value"
-                    >
-                      {chartData.pieData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: '#1a1a1a', 
-                        border: '1px solid #333',
-                        borderRadius: '8px',
-                        color: '#fff'
-                      }}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
+          {/* Progress Stats */}
+          <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
+            <h3 className=" text-paperwhite mb-4 font-heading">Your Progress</h3>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-teallight text-sm lg:text-base">Level Completion</span>
+                <span className="font-semibold text-paperwhite">{overallProgress}%</span>
               </div>
-              <div className="flex justify-center gap-4 mt-2">
-                {chartData.pieData.map((item, index) => (
-                  <div key={index} className="flex items-center gap-1">
-                    <div 
-                      className="w-3 h-3 rounded-full" 
-                      style={{ backgroundColor: item.color }}
-                    />
-                    <span className="text-xs text-teallight">{item.name}: {item.value}</span>
+              <div className="w-full bg-paperwhite/20 rounded-full h-2">
+                <div 
+                  className="bg-trueturquoise h-2 rounded-full transition-all"
+                  style={{ width: `${overallProgress}%` }}
+                ></div>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4 pt-4">
+                <div className="text-center">
+                  <div className="text-lg font-bold text-trueturquoise">{levels?.length || 0}</div>
+                  <div className="text-xs text-teallight">Total Levels</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-lg font-bold text-trueturquoise">{completedLevels}</div>
+                  <div className="text-xs text-teallight">Completed</div>
+                </div>
+              </div>
+              
+              <div className="pt-4 border-t border-paperwhite/10">
+                <div className="text-center">
+                  <div className="text-sm text-teallight mb-2">Levels Status</div>
+                  <div className="text-xs text-teallight space-y-1">
+                    <div className="flex justify-between">
+                      <span>Completed Levels:</span>
+                      <span className="text-green-400">{completedLevels}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Remaining Levels:</span>
+                      <span className="text-orange-400">{levels?.length - completedLevels || 0}</span>
+                    </div>
+                    {currentLevel && (
+                      <div className="flex justify-between">
+                        <span>Current Level:</span>
+                        <span className="text-trueturquoise">Level {currentLevel.order}</span>
+                      </div>
+                    )}
                   </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Level Progress Bar Chart */}
-            <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
-              <h3 className="text-paperwhite mb-4 font-heading">Level Progress</h3>
-              <div className="h-48">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={chartData.barData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-                    <XAxis 
-                      dataKey="name" 
-                      tick={{ fill: '#9ca3af', fontSize: 12 }}
-                      axisLine={{ stroke: '#333' }}
-                    />
-                    <YAxis 
-                      tick={{ fill: '#9ca3af', fontSize: 12 }}
-                      axisLine={{ stroke: '#333' }}
-                    />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: '#1a1a1a', 
-                        border: '1px solid #333',
-                        borderRadius: '8px',
-                        color: '#fff'
-                      }}
-                    />
-                    <Bar dataKey="completed" fill="#00D4AA" radius={[4, 4, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            {/* Weekly Progress Area Chart */}
-            <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
-              <h3 className="text-paperwhite mb-4 font-heading">Weekly Progress</h3>
-              <div className="h-48">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={chartData.areaData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-                    <XAxis 
-                      dataKey="day" 
-                      tick={{ fill: '#9ca3af', fontSize: 12 }}
-                      axisLine={{ stroke: '#333' }}
-                    />
-                    <YAxis 
-                      tick={{ fill: '#9ca3af', fontSize: 12 }}
-                      axisLine={{ stroke: '#333' }}
-                    />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: '#1a1a1a', 
-                        border: '1px solid #333',
-                        borderRadius: '8px',
-                        color: '#fff'
-                      }}
-                    />
-                    <Area 
-                      type="monotone" 
-                      dataKey="progress" 
-                      stroke="#00D4AA" 
-                      fill="url(#colorGradient)" 
-                      strokeWidth={2}
-                    />
-                    <defs>
-                      <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#00D4AA" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="#00D4AA" stopOpacity={0.1}/>
-                      </linearGradient>
-                    </defs>
-                  </AreaChart>
-                </ResponsiveContainer>
+                </div>
               </div>
             </div>
           </div>
