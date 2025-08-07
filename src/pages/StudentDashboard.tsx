@@ -388,257 +388,35 @@ const StudentDashboard: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="space-y-6 lg:space-y-8 p-4 lg:p-8 bg-black">
-        {/* Welcome Section Skeleton */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="bg-trueturquoise/10 rounded-xl p-6 lg:p-8"
-        >
-          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
-            <div className="flex-1 mb-6 lg:mb-0">
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2, duration: 0.5 }}
-                className="h-8 bg-paperwhite/20 rounded-lg mb-4 w-3/4"
-              />
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3, duration: 0.5 }}
-                className="h-4 bg-paperwhite/10 rounded-lg mb-6 w-1/2"
-              />
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-                {[1, 2, 3, 4].map((i) => (
-                  <motion.div 
-                    key={i}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.4 + (i * 0.1), duration: 0.5, ease: "easeOut" }}
-                    className="text-center"
-                  >
-                    <div className="h-6 bg-paperwhite/20 rounded-lg mb-2 animate-pulse" />
-                    <div className="h-3 bg-paperwhite/10 rounded-lg w-3/4 mx-auto animate-pulse" />
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.6, duration: 0.5 }}
-              className="bg-paperwhite/10 p-3 lg:p-4 rounded-lg w-fit mx-auto lg:mx-0"
-            >
-              <div className="w-6 h-6 bg-paperwhite/20 rounded animate-pulse" />
-            </motion.div>
-          </div>
-        </motion.div>
-
-        {/* Attendance Heatmap Skeleton */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7, duration: 0.6, ease: "easeOut" }}
-          className="flex justify-center my-4"
-        >
-          <div className="bg-paperwhite/10 rounded-xl p-6 w-full max-w-4xl">
-            <div className="flex items-center justify-between mb-6">
-              <div className="h-6 bg-paperwhite/20 rounded-lg w-48 animate-pulse" />
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-paperwhite/10 rounded animate-pulse" />
-                  <div className="h-3 bg-paperwhite/10 rounded w-16 animate-pulse" />
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-paperwhite/20 rounded animate-pulse" />
-                  <div className="h-3 bg-paperwhite/10 rounded w-20 animate-pulse" />
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-paperwhite/30 rounded animate-pulse" />
-                  <div className="h-3 bg-paperwhite/10 rounded w-24 animate-pulse" />
-                </div>
-              </div>
-            </div>
-            
-            {/* Month labels */}
-            <div className="grid grid-cols-7 gap-2 mb-2">
-              {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'].map((month, i) => (
-                <motion.div
-                  key={month}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.8 + (i * 0.05), duration: 0.3 }}
-                  className="h-4 bg-paperwhite/10 rounded text-center text-xs animate-pulse"
-                />
-              ))}
-            </div>
-            
-            {/* Heatmap grid */}
-            <div className="grid grid-cols-7 gap-1">
-              {Array.from({ length: 35 }).map((_, i) => {
-                // Create varied opacity for more realistic heatmap appearance
-                const opacityVariants = ['10', '20', '30', '40'];
-                const randomOpacity = opacityVariants[Math.floor(Math.random() * opacityVariants.length)];
-                
-                return (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ 
-                      delay: 0.9 + (i * 0.02), 
-                      duration: 0.4,
-                      ease: "easeOut"
-                    }}
-                    className={`h-6 bg-paperwhite/${randomOpacity} rounded-sm animate-pulse`}
-                  />
-                );
-              })}
-            </div>
-            
-            {/* Week day labels */}
-            <div className="flex justify-between mt-2">
-              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, i) => (
-                <motion.div
-                  key={day}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 1.0 + (i * 0.05), duration: 0.3 }}
-                  className="h-3 bg-paperwhite/10 rounded w-8 animate-pulse"
-                />
-              ))}
-            </div>
-          </div>
-        </motion.div>
-
-        <div className="grid lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
-            {/* Current Learning Skeleton */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9, duration: 0.6, ease: "easeOut" }}
-              className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6"
-            >
-              <div className="flex items-center justify-between mb-4">
-                <div className="h-6 bg-paperwhite/20 rounded-lg w-1/3 animate-pulse" />
-                <div className="h-6 bg-trueturquoise/20 rounded-full w-20 animate-pulse" />
-              </div>
-              
-              <div className="bg-paperwhite/10 rounded-lg p-4 lg:p-6">
-                <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-4">
-                  <div className="mb-4 lg:mb-0">
-                    <div className="h-6 bg-paperwhite/20 rounded-lg mb-2 w-2/3 animate-pulse" />
-                    <div className="h-4 bg-paperwhite/10 rounded-lg w-full animate-pulse" />
-                  </div>
-                  <div className="bg-trueturquoise/10 p-2 rounded-lg w-fit">
-                    <div className="w-6 h-6 bg-paperwhite/20 rounded animate-pulse" />
-                  </div>
-                </div>
-                
-                {/* Section Progress Skeleton */}
-                <div className="mb-4">
-                  <div className="flex justify-between text-sm mb-2">
-                    <div className="h-4 bg-paperwhite/10 rounded w-20 animate-pulse" />
-                    <div className="h-4 bg-paperwhite/10 rounded w-8 animate-pulse" />
-                  </div>
-                  <div className="w-full bg-paperwhite/20 rounded-full h-2">
-                    <motion.div 
-                      initial={{ width: 0 }}
-                      animate={{ width: "45%" }}
-                      transition={{ delay: 1.2, duration: 1, ease: "easeOut" }}
-                      className="bg-trueturquoise h-2 rounded-full"
-                    />
-                  </div>
-                  
-                  {/* Section Status Skeleton */}
-                  <div className="flex justify-between mt-3">
-                    {['Learn', 'Test', 'Exercise'].map((section, i) => (
-                      <motion.div 
-                        key={section}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 1.3 + (i * 0.1), duration: 0.5 }}
-                        className="flex items-center"
-                      >
-                        <div className="w-2 h-2 rounded-full bg-paperwhite/30 mr-1" />
-                        <div className="h-3 bg-paperwhite/10 rounded w-8 animate-pulse" />
-                      </motion.div>
-                    ))}
-                  </div>
-                </div>
-                
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                  <div className="flex items-center">
-                    <div className="w-4 h-4 bg-paperwhite/20 rounded mr-2 animate-pulse" />
-                    <div className="h-4 bg-paperwhite/10 rounded w-24 animate-pulse" />
-                  </div>
-                  <div className="h-10 bg-trueturquoise/20 rounded-lg w-32 animate-pulse" />
-                </div>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Sidebar Skeleton */}
-          <div className="space-y-6">
-            {/* AI Helper Skeleton */}
-            <motion.div 
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 1.0, duration: 0.6, ease: "easeOut" }}
-              className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6"
-            >
-              <div className="text-center">
-                <div className="bg-trueturquoise/10 p-3 rounded-full w-fit mx-auto mb-4">
-                  <div className="w-6 h-6 bg-paperwhite/20 rounded animate-pulse" />
-                </div>
-                <div className="h-5 bg-paperwhite/20 rounded-lg mb-2 w-2/3 mx-auto animate-pulse" />
-                <div className="h-4 bg-paperwhite/10 rounded-lg mb-4 w-full animate-pulse" />
-                <div className="h-10 bg-trueturquoise/20 rounded-lg w-full animate-pulse" />
-              </div>
-            </motion.div>
-
-            {/* Progress Stats Skeleton */}
-            <motion.div 
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 1.1, duration: 0.6, ease: "easeOut" }}
-              className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6"
-            >
-              <div className="h-5 bg-paperwhite/20 rounded-lg mb-4 w-1/2 animate-pulse" />
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="h-4 bg-paperwhite/10 rounded w-24 animate-pulse" />
-                  <div className="h-4 bg-paperwhite/10 rounded w-8 animate-pulse" />
-                </div>
-                <div className="w-full bg-paperwhite/20 rounded-full h-2">
-                  <motion.div 
-                    initial={{ width: 0 }}
-                    animate={{ width: "30%" }}
-                    transition={{ delay: 1.4, duration: 1, ease: "easeOut" }}
-                    className="bg-trueturquoise h-2 rounded-full"
-                  />
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4 pt-4">
-                  {[1, 2].map((i) => (
-                    <motion.div 
-                      key={i}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 1.5 + (i * 0.1), duration: 0.5 }}
-                      className="text-center"
-                    >
-                      <div className="h-5 bg-paperwhite/20 rounded-lg mb-1 animate-pulse" />
-                      <div className="h-3 bg-paperwhite/10 rounded w-3/4 mx-auto animate-pulse" />
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          </div>
+      <div className="min-h-screen flex items-center justify-center bg-offblack p-4">
+        <div className="text-center">
+          <motion.img
+            src={syncnerLogo}
+            alt="Syncner Logo"
+            className="w-24 h-24 mx-auto mb-6"
+            animate={{
+              scale: [1, 1.1, 1],
+            }}
+            transition={{
+              scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+            }}
+          />
+          <motion.h1
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="text-2xl lg:text-3xl mb-2 text-paperwhite font-heading"
+          >
+            Loading your dashboard...
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="text-teallight text-lg"
+          >
+            Please wait while we fetch your training data.
+          </motion.p>
         </div>
       </div>
     );
