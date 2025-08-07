@@ -2,7 +2,9 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import LevelsSidebar from '../components/LevelsSidebar';
 import { CheckCircledIcon, ClockIcon, ReaderIcon, LockClosedIcon, ExclamationTriangleIcon } from '@radix-ui/react-icons';
+import { motion } from 'framer-motion';
 import apiService from '../services/api';
+import syncnerLogo from '../assets/syncner-logo.png';
 
 interface Level {
   id: string;
@@ -359,9 +361,19 @@ const LevelTestPage: React.FC = () => {
     return (
       <div className="flex h-screen bg-offblack overflow-x-hidden">
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
-        <main className="flex-1 overflow-y-auto scroll-smooth p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
+        <main className="flex-1 overflow-y-auto scroll-smooth p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-trueturquoise mx-auto mb-4"></div>
+            <motion.img
+              src={syncnerLogo}
+              alt="Syncner Logo"
+              className="w-16 h-16 mx-auto mb-4"
+              animate={{
+                scale: [1, 1.1, 1],
+              }}
+              transition={{
+                scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+              }}
+            />
             <p className="text-paperwhite text-lg">Loading test content...</p>
           </div>
         </main>
