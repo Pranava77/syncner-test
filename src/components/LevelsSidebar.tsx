@@ -131,9 +131,13 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
   const isLevelExpanded = (levelId: string) => expandedLevels.has(levelId);
 
   const handleLevelClick = (level: Level, section: string) => {
-    if (!level.isUnlocked) return;
+    if (!level.isUnlocked) {
+      console.log('Level is locked:', level.order);
+      return;
+    }
     
-    navigate(`/student/level/${level.id}/${section}`);
+    console.log('Navigating to:', `/student/training/${level.id}/${section}`);
+    navigate(`/student/training/${level.id}/${section}`);
     if (setSidebarOpen) setSidebarOpen(false);
   };
 
@@ -215,7 +219,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
           <div className="flex items-center justify-between mb-4 transition-opacity duration-200">
             <h2 className="text-lg font-semibold text-paperwhite flex items-center gap-2">
               <LayersIcon className="h-5 w-5 text-trueturquoise" /> 
-              {loading ? 'Loading...' : `Levels (${levels.length})`}
+              {loading ? 'Loading...' : `Levels (${levelsWithUnlockLogic.length})`}
             </h2>
             <div className="flex gap-2">
               <button
@@ -237,7 +241,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             {/* Vertical Level Indicators */}
             <div className="flex flex-col items-center space-y-3">
-              {levels.slice(0, 6).map((level, index) => (
+              {levelsWithUnlockLogic.slice(0, 6).map((level, index) => (
                 <div
                   key={level.id}
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${
@@ -252,9 +256,9 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                   {level.order}
                 </div>
               ))}
-              {levels.length > 6 && (
+              {levelsWithUnlockLogic.length > 6 && (
                 <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-paperwhite/10 text-teallight/50 border border-paperwhite/20">
-                  +{levels.length - 6}
+                  +{levelsWithUnlockLogic.length - 6}
                 </div>
               )}
             </div>
@@ -265,7 +269,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                 <div 
                   className="bg-gradient-to-t from-trueturquoise to-teallight transition-all duration-500"
                   style={{ 
-                    height: `${Math.min((levels.filter(l => l.isUnlocked).length / levels.length) * 100, 100)}%` 
+                    height: `${Math.min((levelsWithUnlockLogic.filter(l => l.isUnlocked).length / levelsWithUnlockLogic.length) * 100, 100)}%` 
                   }}
                 ></div>
               </div>
@@ -281,7 +285,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-trueturquoise mx-auto mb-2"></div>
               <p className="text-xs text-teallight">Loading levels...</p>
             </div>
-          ) : levels.length === 0 ? (
+          ) : levelsWithUnlockLogic.length === 0 ? (
             <div className="text-center py-8">
               <p className="text-xs text-teallight">
                 {user?.careerTrack ? 
@@ -291,7 +295,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
               </p>
             </div>
           ) : (
-                        levels.map((level) => (
+                        levelsWithUnlockLogic.map((level) => (
               <div key={level.id} className="border-b border-paperwhite/10 last:border-b-0">
                 <div className="flex items-center">
                   <button
