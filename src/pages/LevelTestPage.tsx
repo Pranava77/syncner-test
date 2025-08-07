@@ -232,6 +232,20 @@ const LevelTestPage: React.FC = () => {
         setCurrentAttempt(response.data.attempts);
         setCanRetake(response.data.canRetake);
         
+        // If test is passed, mark the test section as completed
+        if (passed && level) {
+          try {
+            console.log('Marking test section as completed:', { levelId: level.id, levelOrder: level.order, section: 'test' });
+            const completionResult = await apiService.markLevelCompleted(level.id, level.order, 'test');
+            console.log('Test section completion result:', completionResult);
+            
+            // Trigger sidebar refresh to update unlock status
+            setRefreshTrigger(prev => prev + 1);
+          } catch (completionError) {
+            console.error('Error marking test section as completed:', completionError);
+          }
+        }
+        
         // Show results
         setSubmitted(true);
         

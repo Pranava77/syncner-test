@@ -108,6 +108,13 @@ const LevelExercisePage: React.FC = () => {
     }
   }, [levelId, fetchLevel, fetchExerciseStatus]);
 
+  // Refresh exercise status when refreshTrigger changes (e.g., after test completion)
+  useEffect(() => {
+    if (refreshTrigger > 0) {
+      fetchExerciseStatus();
+    }
+  }, [refreshTrigger, fetchExerciseStatus]);
+
   const fetchAllLevels = useCallback(async () => {
     try {
       const response = await apiService.getLevels();
