@@ -444,15 +444,69 @@ const StudentDashboard: React.FC = () => {
           className="flex justify-center my-4"
         >
           <div className="bg-paperwhite/10 rounded-xl p-6 w-full max-w-4xl">
-            <div className="h-6 bg-paperwhite/20 rounded-lg mb-4 w-1/3 animate-pulse" />
-            <div className="grid grid-cols-7 gap-2">
-              {Array.from({ length: 35 }).map((_, i) => (
+            <div className="flex items-center justify-between mb-6">
+              <div className="h-6 bg-paperwhite/20 rounded-lg w-48 animate-pulse" />
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-paperwhite/10 rounded animate-pulse" />
+                  <div className="h-3 bg-paperwhite/10 rounded w-16 animate-pulse" />
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-paperwhite/20 rounded animate-pulse" />
+                  <div className="h-3 bg-paperwhite/10 rounded w-20 animate-pulse" />
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-paperwhite/30 rounded animate-pulse" />
+                  <div className="h-3 bg-paperwhite/10 rounded w-24 animate-pulse" />
+                </div>
+              </div>
+            </div>
+            
+            {/* Month labels */}
+            <div className="grid grid-cols-7 gap-2 mb-2">
+              {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'].map((month, i) => (
                 <motion.div
-                  key={i}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.8 + (i * 0.01), duration: 0.3 }}
-                  className="h-8 bg-paperwhite/10 rounded animate-pulse"
+                  key={month}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.8 + (i * 0.05), duration: 0.3 }}
+                  className="h-4 bg-paperwhite/10 rounded text-center text-xs animate-pulse"
+                />
+              ))}
+            </div>
+            
+            {/* Heatmap grid */}
+            <div className="grid grid-cols-7 gap-1">
+              {Array.from({ length: 35 }).map((_, i) => {
+                // Create varied opacity for more realistic heatmap appearance
+                const opacityVariants = ['10', '20', '30', '40'];
+                const randomOpacity = opacityVariants[Math.floor(Math.random() * opacityVariants.length)];
+                
+                return (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ 
+                      delay: 0.9 + (i * 0.02), 
+                      duration: 0.4,
+                      ease: "easeOut"
+                    }}
+                    className={`h-6 bg-paperwhite/${randomOpacity} rounded-sm animate-pulse`}
+                  />
+                );
+              })}
+            </div>
+            
+            {/* Week day labels */}
+            <div className="flex justify-between mt-2">
+              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, i) => (
+                <motion.div
+                  key={day}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 1.0 + (i * 0.05), duration: 0.3 }}
+                  className="h-3 bg-paperwhite/10 rounded w-8 animate-pulse"
                 />
               ))}
             </div>
