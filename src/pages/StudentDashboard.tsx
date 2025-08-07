@@ -13,7 +13,9 @@ import {
   CodeIcon as Code,
   ColorWheelIcon as Palette,
   BarChartIcon as BarChart3,
-  LayersIcon as Brain
+  LayersIcon as Brain,
+  ArrowRightIcon as ArrowRight,
+  StarIcon as Star
 } from '@radix-ui/react-icons';
 
 const StudentDashboard: React.FC = () => {
@@ -21,6 +23,23 @@ const StudentDashboard: React.FC = () => {
   const [currentLevel, setCurrentLevel] = useState<any>(null);
   const [overallProgress, setOverallProgress] = useState(0);
   const [completedLevels, setCompletedLevels] = useState(0);
+  const [upcomingTasks, setUpcomingTasks] = useState<any[]>([
+    {
+      id: 1,
+      title: "Complete Level 1 Test",
+      difficulty: "Easy",
+      points: 50,
+      dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000) // 2 days from now
+    },
+    {
+      id: 2,
+      title: "Finish Exercise Assignment",
+      difficulty: "Medium", 
+      points: 75,
+      dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000) // 5 days from now
+    }
+  ]);
+  const [showAIModal, setShowAIModal] = useState(false);
 
   // Use the optimized hook
   const { levels, loading, error, refetch } = useLevels(user?.careerTrack);
@@ -237,12 +256,11 @@ const StudentDashboard: React.FC = () => {
             )}
 
             {/* Upcoming Tasks */}
-            {/* The following block was removed as per the edit hint:
             <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
               <div className="flex items-center justify-between mb-4 lg:mb-6">
                 <h2 className="text-lg lg:text-xl font-semibold text-paperwhite">Upcoming Tasks</h2>
                 <Link 
-                  to="/student/tasks"
+                  to="/student/training"
                   className="text-trueturquoise dark:text-trueturquoise/50 hover:text-teallight dark:hover:text-trueturquoise transition-colors font-medium flex items-center text-sm lg:text-base"
                 >
                   View All
@@ -251,32 +269,39 @@ const StudentDashboard: React.FC = () => {
               </div>
               
               <div className="space-y-4">
-                {upcomingTasks.map((task: any, index: number) => (
-                  <div key={task.id} className="border border-paperwhite/20 dark:border-offblack rounded-lg p-4 hover:shadow-md transition-shadow">
-                    
-                      <div className="mb-2 lg:mb-0">
-                        <h3 className="font-semibold text-paperwhite">{task.title}</h3>
-                        <div className="flex flex-wrap items-center gap-2 lg:gap-4 mt-1">
-                          <span className={`px-2 py-1 rounded text-xs font-medium ${getDifficultyColor(task.difficulty)}`}>
-                            {task.difficulty}
-                          </span>
-                          {task.dueDate && (
-                            <span className="text-teallight text-sm">Due {new Date(task.dueDate).toLocaleDateString()}</span>
-                          )}
+                {upcomingTasks.length > 0 ? (
+                  upcomingTasks.map((task: any, index: number) => (
+                    <div key={task.id} className="border border-paperwhite/20 dark:border-offblack rounded-lg p-4 hover:shadow-md transition-shadow">
+                      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+                        <div className="mb-2 lg:mb-0">
+                          <h3 className="font-semibold text-paperwhite">{task.title}</h3>
+                          <div className="flex flex-wrap items-center gap-2 lg:gap-4 mt-1">
+                            <span className={`px-2 py-1 rounded text-xs font-medium ${getDifficultyColor(task.difficulty)}`}>
+                              {task.difficulty}
+                            </span>
+                            {task.dueDate && (
+                              <span className="text-teallight text-sm">Due {new Date(task.dueDate).toLocaleDateString()}</span>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                      <div className="text-left lg:text-right">
-                        <div className="flex items-center text-trueturquoise font-medium">
-                          <Star className="h-4 w-4 mr-1" />
-                          {task.points}
+                        <div className="text-left lg:text-right">
+                          <div className="flex items-center text-trueturquoise font-medium">
+                            <Star className="h-4 w-4 mr-1" />
+                            {task.points}
+                          </div>
                         </div>
                       </div>
                     </div>
+                  ))
+                ) : (
+                  <div className="text-center py-6 text-teallight">
+                    <div className="text-2xl mb-2">📋</div>
+                    <p className="text-sm">No upcoming tasks</p>
+                    <p className="text-xs">Focus on your current learning!</p>
                   </div>
-                ))}
+                )}
               </div>
             </div>
-            */}
           </div>
 
           {/* Sidebar */}
@@ -293,7 +318,7 @@ const StudentDashboard: React.FC = () => {
                 </p>
                 <button
                   className="w-full bg-trueturquoise text-offblack py-2 rounded-lg hover:bg-teallight transition-all font-medium flex items-center justify-center"
-                  onClick={() => {}} // Placeholder for AI chat modal
+                  onClick={() => setShowAIModal(true)}
                 >
                   {/* Placeholder for MessageCircle icon */}
                   Chat with AI
@@ -302,7 +327,6 @@ const StudentDashboard: React.FC = () => {
             </div>
 
             {/* AI Chat Coming Soon Modal */}
-            {/* This block was removed as per the edit hint:
             {showAIModal && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
                 <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-2xl p-8 max-w-sm w-full text-center relative border border-trueturquoise/30">
@@ -329,7 +353,6 @@ const StudentDashboard: React.FC = () => {
                 </div>
               </div>
             )}
-            */}
 
             {/* Progress Stats */}
             <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
@@ -535,7 +558,6 @@ const StudentDashboard: React.FC = () => {
             )}
 
             {/* Upcoming Tasks */}
-            {/* The following block was removed as per the edit hint:
             <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
               <div className="flex items-center justify-between mb-4 lg:mb-6">
                 <h2 className="text-lg lg:text-xl font-semibold text-paperwhite">Upcoming Tasks</h2>
@@ -690,7 +712,8 @@ const StudentDashboard: React.FC = () => {
   const userTrack = user.careerTrack;
 
   const getTrackIcon = () => {
-    switch (userTrack) {
+    const track = user?.careerTrack?.toLowerCase();
+    switch (track) {
       case 'full-stack': return <Code className="h-5 w-5 lg:h-6 lg:w-6" />;
       case 'ui-ux': return <Palette className="h-5 w-5 lg:h-6 lg:w-6" />;
       case 'data-science': return <BarChart3 className="h-5 w-5 lg:h-6 lg:w-6" />;
@@ -699,25 +722,24 @@ const StudentDashboard: React.FC = () => {
     }
   };
 
-  // Calculate current level progress
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty?.toLowerCase()) {
+      case 'easy': return 'bg-green-500/20 text-green-400';
+      case 'medium': return 'bg-yellow-500/20 text-yellow-400';
+      case 'hard': return 'bg-red-500/20 text-red-400';
+      default: return 'bg-paperwhite/20 text-teallight';
+    }
+  };
+
   const getCurrentLevelProgress = () => {
-    if (!currentLevel || !currentLevel.completedSections) return 0;
+    if (!currentLevel) return 0;
     
-    const { learn, test, exercise } = currentLevel.completedSections;
+    const { learn, test, exercise } = currentLevel.completedSections || {};
     const completedSections = [learn, test, exercise].filter(Boolean).length;
     return Math.round((completedSections / 3) * 100);
   };
 
   const currentLevelProgress = getCurrentLevelProgress();
-
-  // const getDifficultyColor = (difficulty: string) => {
-  //   switch (difficulty) {
-  //     case 'Beginner': return 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400';
-  //     case 'Intermediate': return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-400';
-  //     case 'Advanced': return 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-400';
-  //     default: return 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-400';
-  //   }
-  // };
 
   return (
     <div className="space-y-6 lg:space-y-8 p-4 lg:p-8 bg-black">
@@ -846,6 +868,24 @@ const StudentDashboard: React.FC = () => {
               </Link>
             </div>
             
+            {/* Learning Progress Bar */}
+            <div className="mb-6">
+              <div className="flex items-center justify-between text-sm text-teallight mb-2">
+                <span>Overall Learning Progress</span>
+                <span>{overallProgress}%</span>
+              </div>
+              <div className="w-full bg-paperwhite/20 rounded-full h-3">
+                <div 
+                  className="bg-gradient-to-r from-trueturquoise to-teallight h-3 rounded-full transition-all duration-500"
+                  style={{ width: `${overallProgress}%` }}
+                ></div>
+              </div>
+              <div className="flex justify-between mt-2 text-xs text-teallight">
+                <span>{completedLevels} of {levels?.length || 0} levels completed</span>
+                <span>{levels?.length ? Math.round((completedLevels / levels.length) * 100) : 0}%</span>
+              </div>
+            </div>
+            
             <div className="space-y-4">
               {/* Learning Stats */}
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -876,7 +916,10 @@ const StudentDashboard: React.FC = () => {
               {/* Recent Activity */}
               <div className="space-y-3">
                 <h3 className="text-md font-semibold text-paperwhite">Recent Activity</h3>
-                {levels?.filter(level => level.isCompleted).slice(0, 3).map((level, index) => (
+                {levels?.filter(level => {
+                  const { learn, test, exercise } = level.completedSections || {};
+                  return learn === true && test === true && exercise === true;
+                }).slice(0, 3).map((level, index) => (
                   <div key={level.id} className="flex items-center p-3 bg-paperwhite/5 rounded-lg">
                     <div className="bg-trueturquoise/20 p-2 rounded-lg mr-3">
                       <CheckCircle className="h-4 w-4 text-trueturquoise" />
@@ -888,7 +931,10 @@ const StudentDashboard: React.FC = () => {
                   </div>
                 ))}
                 
-                {(!levels || levels.filter(level => level.isCompleted).length === 0) && (
+                {(!levels || levels.filter(level => {
+                  const { learn, test, exercise } = level.completedSections || {};
+                  return learn === true && test === true && exercise === true;
+                }).length === 0) && (
                   <div className="text-center py-6 text-teallight">
                     <div className="text-2xl mb-2">📚</div>
                     <p className="text-sm">No recent activity</p>
@@ -952,7 +998,6 @@ const StudentDashboard: React.FC = () => {
           )}
 
           {/* Upcoming Tasks */}
-          {/* The following block was removed as per the edit hint:
           <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
             <div className="flex items-center justify-between mb-4 lg:mb-6">
               <h2 className="text-lg lg:text-xl font-semibold text-paperwhite">Upcoming Tasks</h2>
@@ -991,7 +1036,6 @@ const StudentDashboard: React.FC = () => {
               ))}
             </div>
           </div>
-          */}
         </div>
 
         {/* Sidebar */}

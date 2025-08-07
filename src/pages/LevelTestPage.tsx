@@ -277,7 +277,7 @@ const LevelTestPage: React.FC = () => {
       // Still show results even if submission fails
       setTestScore(score);
       setTestPassed(passed);
-      setSubmitted(true);
+    setSubmitted(true);
     }
   };
 
@@ -508,21 +508,21 @@ const LevelTestPage: React.FC = () => {
     <div className="flex h-screen bg-offblack overflow-x-hidden">
       <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
       <main className="flex-1 overflow-y-auto overflow-x-hidden scroll-smooth p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center" ref={scrollContainerRef}>
-          {/* Test Header */}
-          <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
-            <div className="flex items-center justify-between mb-4">
+        {/* Test Header */}
+        <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
+          <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-4">
                 <div className="bg-trueturquoise text-offblack p-3 rounded-lg">
                   <ReaderIcon className="h-8 w-8" />
                 </div>
-                <div>
+            <div>
                   <h1 className="text-2xl font-bold text-paperwhite mb-2">
                     Level {level.order}: {level.title} - Test
                     <span className="text-lg font-normal text-teallight ml-3">(Attempt {currentAttempt + 1}/3)</span>
                   </h1>
                   <p className="text-teallight text-lg">Test your knowledge with {validQuestions.length} questions</p>
                   <p className="text-orange-400 text-sm mt-1">Passing score: 60% or higher</p>
-                </div>
+            </div>
               </div>
               <div className="flex items-center gap-6">
                 <div className="text-center bg-paperwhite/5 rounded-lg p-4 border border-paperwhite/10">
@@ -536,23 +536,23 @@ const LevelTestPage: React.FC = () => {
                   <div className="text-2xl font-bold text-paperwhite mb-2">{validQuestions.length}</div>
                   <div className="text-xs text-teallight font-label">Questions</div>
                 </div>
-              </div>
             </div>
           </div>
+        </div>
 
           {!submitted ? (
             <>
-              {/* Test Questions */}
+        {/* Test Questions */}
               <div className="w-full max-w-5xl space-y-6 pb-8">
                 <form onSubmit={handleSubmit} className="space-y-6">
-                  {validQuestions.map((question, qIdx) => (
-                    <div key={qIdx} className="bg-paperwhite/5 rounded-xl border border-paperwhite/20 shadow-lg p-6">
-                      <h3 className="text-lg font-semibold text-paperwhite mb-4">
-                        Question {qIdx + 1}: {question.question}
-                      </h3>
-                      
+          {validQuestions.map((question, qIdx) => (
+            <div key={qIdx} className="bg-paperwhite/5 rounded-xl border border-paperwhite/20 shadow-lg p-6">
+              <h3 className="text-lg font-semibold text-paperwhite mb-4">
+                Question {qIdx + 1}: {question.question}
+              </h3>
+              
                       <div className="space-y-4">
-                        {question.options.map((option, optIdx) => (
+                {question.options.map((option, optIdx) => (
                           <div 
                             key={optIdx} 
                             className={`flex items-center p-4 border rounded-lg cursor-pointer hover:bg-paperwhite/5 transition-colors ${
@@ -729,8 +729,8 @@ const LevelTestPage: React.FC = () => {
                               }`}>
                                 {option}
                               </span>
-                            </div>
-                          ))}
+            </div>
+          ))}
                         </div>
 
                         <div className={`rounded-lg p-3 border ${
@@ -795,12 +795,12 @@ const LevelTestPage: React.FC = () => {
                     >
                       Close
                     </button>
-                    <button 
-                      onClick={() => navigate(`/student/training/${levelId}/learn`)}
-                      className="bg-paperwhite text-offblack px-6 py-3 rounded-lg font-bold hover:bg-trueturquoise hover:text-offblack transition-colors"
-                    >
-                      Back to Learning
-                    </button>
+                <button 
+                  onClick={() => navigate(`/student/training/${levelId}/learn`)}
+                  className="bg-paperwhite text-offblack px-6 py-3 rounded-lg font-bold hover:bg-trueturquoise hover:text-offblack transition-colors"
+                >
+                  Back to Learning
+                </button>
                   </div>
                 </div>
               </div>
