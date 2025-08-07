@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAppSelector } from '../redux/store';
 import { useLevels } from '../hooks/useLevels';
 import AttendanceHeatmap from '../components/AttendanceHeatmap';
-import { 
+import {
   ReaderIcon, 
   ArrowTopRightIcon as TrendingUp, 
   TargetIcon as Target, 
@@ -14,8 +14,7 @@ import {
   ColorWheelIcon as Palette,
   BarChartIcon as BarChart3,
   LayersIcon as Brain,
-  ArrowRightIcon as ArrowRight,
-  StarIcon as Star
+  ArrowRightIcon as ArrowRight
 } from '@radix-ui/react-icons';
 
 interface Level {
@@ -33,35 +32,13 @@ interface Level {
   duration?: string;
 }
 
-interface Task {
-  id: number;
-  title: string;
-  difficulty: string;
-  points: number;
-  dueDate: Date;
-}
+
 
 const StudentDashboard: React.FC = () => {
   const { user } = useAppSelector((state) => state.auth);
   const [currentLevel, setCurrentLevel] = useState<Level | null>(null);
   const [overallProgress, setOverallProgress] = useState(0);
   const [completedLevels, setCompletedLevels] = useState(0);
-  const [upcomingTasks, setUpcomingTasks] = useState<Task[]>([
-    {
-      id: 1,
-      title: "Complete Level 1 Test",
-      difficulty: "Easy",
-      points: 50,
-      dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000) // 2 days from now
-    },
-    {
-      id: 2,
-      title: "Finish Exercise Assignment",
-      difficulty: "Medium", 
-      points: 75,
-      dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000) // 5 days from now
-    }
-  ]);
   const [showAIModal, setShowAIModal] = useState(false);
 
   // Use the optimized hook
@@ -79,14 +56,7 @@ const StudentDashboard: React.FC = () => {
     }
   };
 
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty?.toLowerCase()) {
-      case 'easy': return 'bg-green-500/20 text-green-400';
-      case 'medium': return 'bg-yellow-500/20 text-yellow-400';
-      case 'hard': return 'bg-red-500/20 text-red-400';
-      default: return 'bg-paperwhite/20 text-teallight';
-    }
-  };
+
 
   const getCurrentLevelProgress = () => {
     if (!currentLevel) return 0;
@@ -307,53 +277,7 @@ const StudentDashboard: React.FC = () => {
               </div>
             )}
 
-            {/* Upcoming Tasks */}
-            <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
-              <div className="flex items-center justify-between mb-4 lg:mb-6">
-                <h2 className="text-lg lg:text-xl font-semibold text-paperwhite">Upcoming Tasks</h2>
-                <Link 
-                  to="/student/training"
-                  className="text-trueturquoise dark:text-trueturquoise/50 hover:text-teallight dark:hover:text-trueturquoise transition-colors font-medium flex items-center text-sm lg:text-base"
-                >
-                  View All
-                  <ArrowRight className="h-3 w-3 lg:h-4 lg:w-4 ml-1" />
-                </Link>
-              </div>
-              
-              <div className="space-y-4">
-                {upcomingTasks.length > 0 ? (
-                  upcomingTasks.map((task: Task, index: number) => (
-                    <div key={task.id} className="border border-paperwhite/20 dark:border-offblack rounded-lg p-4 hover:shadow-md transition-shadow">
-                      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-                        <div className="mb-2 lg:mb-0">
-                          <h3 className="font-semibold text-paperwhite">{task.title}</h3>
-                          <div className="flex flex-wrap items-center gap-2 lg:gap-4 mt-1">
-                            <span className={`px-2 py-1 rounded text-xs font-medium ${getDifficultyColor(task.difficulty)}`}>
-                              {task.difficulty}
-                            </span>
-                            {task.dueDate && (
-                              <span className="text-teallight text-sm">Due {new Date(task.dueDate).toLocaleDateString()}</span>
-                            )}
-                          </div>
-                        </div>
-                        <div className="text-left lg:text-right">
-                          <div className="flex items-center text-trueturquoise font-medium">
-                            <Star className="h-4 w-4 mr-1" />
-                            {task.points}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-center py-6 text-teallight">
-                    <div className="text-2xl mb-2">📋</div>
-                    <p className="text-sm">No upcoming tasks</p>
-                    <p className="text-xs">Focus on your current learning!</p>
-                  </div>
-                )}
-              </div>
-            </div>
+
           </div>
 
           {/* Sidebar */}
@@ -605,53 +529,7 @@ const StudentDashboard: React.FC = () => {
               </div>
             )}
 
-            {/* Upcoming Tasks */}
-            <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
-              <div className="flex items-center justify-between mb-4 lg:mb-6">
-                <h2 className="text-lg lg:text-xl font-semibold text-paperwhite">Upcoming Tasks</h2>
-                <Link 
-                  to="/student/tasks"
-                  className="text-trueturquoise dark:text-trueturquoise/50 hover:text-teallight dark:hover:text-trueturquoise transition-colors font-medium flex items-center text-sm lg:text-base"
-                >
-                  View All
-                  <ArrowRight className="h-3 w-3 lg:h-4 lg:w-4 ml-1" />
-                </Link>
-              </div>
-              
-              <div className="space-y-4">
-                {upcomingTasks.length > 0 ? (
-                  upcomingTasks.map((task: any, index: number) => (
-                    <div key={task.id} className="border border-paperwhite/20 dark:border-offblack rounded-lg p-4 hover:shadow-md transition-shadow">
-                      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-                        <div className="mb-2 lg:mb-0">
-                          <h3 className="font-semibold text-paperwhite">{task.title}</h3>
-                          <div className="flex flex-wrap items-center gap-2 lg:gap-4 mt-1">
-                            <span className={`px-2 py-1 rounded text-xs font-medium ${getDifficultyColor(task.difficulty)}`}>
-                              {task.difficulty}
-                            </span>
-                            {task.dueDate && (
-                              <span className="text-teallight text-sm">Due {new Date(task.dueDate).toLocaleDateString()}</span>
-                            )}
-                          </div>
-                        </div>
-                        <div className="text-left lg:text-right">
-                          <div className="flex items-center text-trueturquoise font-medium">
-                            <Star className="h-4 w-4 mr-1" />
-                            {task.points}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-center py-6 text-teallight">
-                    <div className="text-2xl mb-2">📋</div>
-                    <p className="text-sm">No upcoming tasks</p>
-                    <p className="text-xs">Focus on your current learning!</p>
-                  </div>
-                )}
-              </div>
-            </div>
+
           </div>
 
           {/* Sidebar */}
@@ -877,111 +755,6 @@ const StudentDashboard: React.FC = () => {
             </div>
           )}
 
-          {/* Your Learning */}
-          <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg lg:text-xl font-semibold text-paperwhite">Your Learning</h2>
-              <Link 
-                to="/student/training"
-                className="text-trueturquoise hover:text-teallight transition-colors font-medium text-sm"
-              >
-                View All
-              </Link>
-            </div>
-            
-            {/* Learning Progress Bar */}
-            <div className="mb-6">
-              <div className="flex items-center justify-between text-sm text-teallight mb-2">
-                <span>Overall Learning Progress</span>
-                <span>{overallProgress}%</span>
-              </div>
-              <div className="w-full bg-paperwhite/20 rounded-full h-3">
-                <div 
-                  className="bg-gradient-to-r from-trueturquoise to-teallight h-3 rounded-full transition-all duration-500"
-                  style={{ width: `${overallProgress}%` }}
-                ></div>
-              </div>
-              <div className="flex justify-between mt-2 text-xs text-teallight">
-                <span>{completedLevels} of {levels?.length || 0} levels completed</span>
-                <span>{levels?.length ? Math.round((completedLevels / levels.length) * 100) : 0}%</span>
-              </div>
-            </div>
-            
-            <div className="space-y-4">
-              {/* Learning Stats */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                <div className="text-center p-3 bg-paperwhite/5 rounded-lg">
-                  <div className="text-2xl font-bold text-trueturquoise">{completedLevels}</div>
-                  <div className="text-xs text-teallight">Levels Completed</div>
-                </div>
-                <div className="text-center p-3 bg-paperwhite/5 rounded-lg">
-                  <div className="text-2xl font-bold text-trueturquoise">
-                    {levels?.filter(level => level.completedSections?.learn).length || 0}
-                  </div>
-                  <div className="text-xs text-teallight">Learn Sections</div>
-                </div>
-                <div className="text-center p-3 bg-paperwhite/5 rounded-lg">
-                  <div className="text-2xl font-bold text-trueturquoise">
-                    {levels?.filter(level => level.completedSections?.test).length || 0}
-                  </div>
-                  <div className="text-xs text-teallight">Tests Passed</div>
-                </div>
-                <div className="text-center p-3 bg-paperwhite/5 rounded-lg">
-                  <div className="text-2xl font-bold text-trueturquoise">
-                    {levels?.filter(level => level.completedSections?.exercise).length || 0}
-                  </div>
-                  <div className="text-xs text-teallight">Exercises Done</div>
-                </div>
-              </div>
-
-              {/* Recent Activity */}
-              <div className="space-y-3">
-                <h3 className="text-md font-semibold text-paperwhite">Recent Activity</h3>
-                {levels?.filter(level => {
-                  const { learn, test, exercise } = level.completedSections || {};
-                  return learn === true && test === true && exercise === true;
-                }).slice(0, 3).map((level, index) => (
-                  <div key={level.id} className="flex items-center p-3 bg-paperwhite/5 rounded-lg">
-                    <div className="bg-trueturquoise/20 p-2 rounded-lg mr-3">
-                      <CheckCircle className="h-4 w-4 text-trueturquoise" />
-                    </div>
-                    <div className="flex-1">
-                      <div className="text-sm font-medium text-paperwhite">Completed {level.title}</div>
-                      <div className="text-xs text-teallight">Level {level.order}</div>
-                    </div>
-                  </div>
-                ))}
-                
-                {(!levels || levels.filter(level => {
-                  const { learn, test, exercise } = level.completedSections || {};
-                  return learn === true && test === true && exercise === true;
-                }).length === 0) && (
-                  <div className="text-center py-6 text-teallight">
-                    <div className="text-2xl mb-2">📚</div>
-                    <p className="text-sm">No recent activity</p>
-                    <p className="text-xs">Start your learning journey!</p>
-                  </div>
-                )}
-              </div>
-
-              {/* Learning Streak */}
-              <div className="mt-6 p-4 bg-gradient-to-r from-trueturquoise/10 to-teallight/10 rounded-lg border border-trueturquoise/20">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-sm font-semibold text-paperwhite">Learning Streak</h3>
-                    <p className="text-xs text-teallight">Keep the momentum going!</p>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-trueturquoise">
-                      {completedLevels > 0 ? Math.min(completedLevels, 7) : 0}
-                    </div>
-                    <div className="text-xs text-teallight">days</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
           {/* No current level message - only show when ALL levels are completed */}
           {!currentLevel && levels?.length > 0 && completedLevels === levels.length && (
             <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
@@ -1017,54 +790,6 @@ const StudentDashboard: React.FC = () => {
               </div>
             </div>
           )}
-
-          {/* Upcoming Tasks */}
-          <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
-            <div className="flex items-center justify-between mb-4 lg:mb-6">
-              <h2 className="text-lg lg:text-xl font-semibold text-paperwhite">Upcoming Tasks</h2>
-              <Link 
-                to="/student/tasks"
-                className="text-trueturquoise dark:text-trueturquoise/50 hover:text-teallight dark:hover:text-trueturquoise transition-colors font-medium flex items-center text-sm lg:text-base"
-              >
-                View All
-                <ArrowRight className="h-3 w-3 lg:h-4 lg:w-4 ml-1" />
-              </Link>
-            </div>
-            
-            <div className="space-y-4">
-              {upcomingTasks.length > 0 ? (
-                upcomingTasks.map((task: any, index: number) => (
-                  <div key={task.id} className="border border-paperwhite/20 dark:border-offblack rounded-lg p-4 hover:shadow-md transition-shadow">
-                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-                      <div className="mb-2 lg:mb-0">
-                        <h3 className="font-semibold text-paperwhite">{task.title}</h3>
-                        <div className="flex flex-wrap items-center gap-2 lg:gap-4 mt-1">
-                          <span className={`px-2 py-1 rounded text-xs font-medium ${getDifficultyColor(task.difficulty)}`}>
-                            {task.difficulty}
-                          </span>
-                          {task.dueDate && (
-                            <span className="text-teallight text-sm">Due {new Date(task.dueDate).toLocaleDateString()}</span>
-                          )}
-                        </div>
-                      </div>
-                      <div className="text-left lg:text-right">
-                        <div className="flex items-center text-trueturquoise font-medium">
-                          <Star className="h-4 w-4 mr-1" />
-                          {task.points}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="text-center py-6 text-teallight">
-                  <div className="text-2xl mb-2">📋</div>
-                  <p className="text-sm">No upcoming tasks</p>
-                  <p className="text-xs">Focus on your current learning!</p>
-                </div>
-              )}
-            </div>
-          </div>
         </div>
 
         {/* Sidebar */}
@@ -1165,9 +890,6 @@ const StudentDashboard: React.FC = () => {
               </div>
             </div>
           </div>
-
-     
-
         </div>
       </div>
     </div>
