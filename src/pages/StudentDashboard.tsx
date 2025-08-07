@@ -157,13 +157,24 @@ const StudentDashboard: React.FC = () => {
       
       setLevels(levelsData);
       
-      // Find current level (first unlocked level that's not completed)
-      const nextLevel = levelsData.find(level => level.isUnlocked && !level.isCompleted);
+      // Find current level (first unlocked level that's not fully completed)
+      const nextLevel = levelsData.find(level => {
+        if (!level.isUnlocked) return false;
+        
+        // Check if all three sections are completed
+        const { learn, test, exercise } = level.completedSections || {};
+        const isFullyCompleted = learn === true && test === true && exercise === true;
+        
+        return !isFullyCompleted;
+      });
       setCurrentLevel(nextLevel || null);
       
-      // Calculate overall progress
+      // Calculate overall progress based on fully completed levels
       const totalLevels = levelsData.length;
-      const completed = levelsData.filter(level => level.isCompleted).length;
+      const completed = levelsData.filter(level => {
+        const { learn, test, exercise } = level.completedSections || {};
+        return learn === true && test === true && exercise === true;
+      }).length;
       const progress = totalLevels > 0 ? Math.round((completed / totalLevels) * 100) : 0;
       
       setCompletedLevels(completed);
@@ -377,19 +388,37 @@ const StudentDashboard: React.FC = () => {
             </div>
           )}
 
-          {/* No current level message */}
-          {!currentLevel && levels.length > 0 && (
+          {/* No current level message - only show when ALL levels are completed */}
+          {!currentLevel && levels.length > 0 && completedLevels === levels.length && (
             <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
               <div className="text-center">
                 <div className="text-4xl mb-4">🎉</div>
                 <h2 className="text-lg lg:text-xl font-semibold text-paperwhite mb-2">Congratulations!</h2>
-                <p className="text-teallight mb-4">You've completed all available levels in your track.</p>
+                <p className="text-teallight mb-4">You've completed all {levels.length} levels in your track!</p>
                 <Link
                   to="/student/training"
                   className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-teallight transition-colors font-medium inline-flex items-center"
                 >
                   <BookOpen className="h-4 w-4 mr-2 text-offblack" />
                   View All Levels
+                </Link>
+              </div>
+            </div>
+          )}
+
+          {/* No levels available message */}
+          {!currentLevel && levels.length === 0 && (
+            <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
+              <div className="text-center">
+                <div className="text-4xl mb-4">📚</div>
+                <h2 className="text-lg lg:text-xl font-semibold text-paperwhite mb-2">No Levels Available</h2>
+                <p className="text-teallight mb-4">No training levels are currently available for your track.</p>
+                <Link
+                  to="/student/training"
+                  className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-teallight transition-colors font-medium inline-flex items-center"
+                >
+                  <BookOpen className="h-4 w-4 mr-2 text-offblack" />
+                  Check Training
                 </Link>
               </div>
             </div>
