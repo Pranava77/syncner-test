@@ -651,6 +651,7 @@ const LevelTestPage: React.FC = () => {
                                             answerLetter === 'D' ? 3 : -1;
                     
                     const isCorrect = userAnswerIndex === correctAnswerIndex;
+                    const hasAnswered = userAnswerIndex !== undefined && userAnswerIndex !== -1;
                     
                     console.log(`Results display - Question ${qIdx}:`, {
                       question: question.question,
@@ -658,7 +659,8 @@ const LevelTestPage: React.FC = () => {
                       correctAnswerIndex,
                       answerLetter,
                       isCorrect,
-                      userAnswerText: userAnswerIndex !== -1 ? question.options[userAnswerIndex] : 'Not answered',
+                      hasAnswered,
+                      userAnswerText: hasAnswered ? question.options[userAnswerIndex] : 'Not answered',
                       correctAnswerText: correctAnswerIndex !== -1 ? question.options[correctAnswerIndex] : question.answer
                     });
                     
@@ -729,9 +731,9 @@ const LevelTestPage: React.FC = () => {
                             )}
                           </div>
                           <div className="text-xs text-teallight">
-                            Your answer: {userAnswerIndex !== -1 ? question.options[userAnswerIndex] : 'Not answered'}
+                            Your answer: {hasAnswered ? question.options[userAnswerIndex] : 'Not answered'}
                           </div>
-                          {!isCorrect && (
+                          {!isCorrect && hasAnswered && (
                             <div className="text-xs text-green-400 mt-1">
                               Correct answer: {correctAnswerIndex !== -1 ? question.options[correctAnswerIndex] : question.answer}
                             </div>
