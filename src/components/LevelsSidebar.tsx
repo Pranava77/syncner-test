@@ -84,37 +84,36 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
         if (statusResponse && statusResponse.data && statusResponse.data.levels) {
           const statusData = statusResponse.data.levels;
           
-          levelsData = levelsData.map((level: Level) => {
+          // First, create a map of level completion status for easier lookup
+          const levelCompletionMap = new Map();
+          levelsData.forEach((level: Level) => {
             const levelStatus = statusData.find((status: any) => status.id === level.id);
-            
-            // Level 1 is always unlocked, others need proper unlock status
+            levelCompletionMap.set(level.order, {
+              id: level.id,
+              completedSections: levelStatus?.completedSections || {},
+              isCompleted: levelStatus?.isCompleted || false,
+              isUnlocked: levelStatus?.isUnlocked || false
+            });
+          });
+          
+          levelsData = levelsData.map((level: Level) => {
+            // Level 1 is always unlocked
             let isUnlocked = false;
             if (level.order === 1) {
               isUnlocked = true;
-            } else if (levelStatus) {
-              isUnlocked = levelStatus.isUnlocked === true;
             } else {
-              // If no status found, check if previous level exists and is fully completed
-              const previousLevel = levelsData.find((l: Level) => l.order === level.order - 1);
-              if (previousLevel) {
-                const previousStatus = statusData.find((status: any) => status.id === previousLevel.id);
-                // Check if previous level has all sections completed (learn, test, exercise)
-                const previousCompletedSections = previousStatus?.completedSections || {};
-                const isPreviousFullyCompleted = previousCompletedSections.learn === true && 
-                                               previousCompletedSections.test === true && 
-                                               previousCompletedSections.exercise === true;
+              // Check if previous level is fully completed
+              const previousLevelCompletion = levelCompletionMap.get(level.order - 1);
+              if (previousLevelCompletion) {
+                const { completedSections } = previousLevelCompletion;
+                const isPreviousFullyCompleted = completedSections.learn === true && 
+                                               completedSections.test === true && 
+                                               completedSections.exercise === true;
                 isUnlocked = isPreviousFullyCompleted;
-                
-                console.log(`Level ${level.order} unlock check:`, {
-                  levelId: level.id,
-                  previousLevelId: previousLevel.id,
-                  previousCompletedSections,
-                  isPreviousFullyCompleted,
-                  isUnlocked
-                });
               }
             }
 
+            const levelStatus = statusData.find((status: any) => status.id === level.id);
             
             return {
               ...level,
@@ -163,6 +162,25 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
     }
   }, [user]);
 
+  // Refresh levels when refreshTrigger changes
+  useEffect(() => {
+    if (refreshTrigger) {
+      fetchLevels();
+    }
+  }, [refreshTrigger, fetchLevels]);
+
+  // Auto-refresh levels every 10 seconds to catch completion updates (more frequent)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!loading && levels.length > 0) {
+        fetchLevels();
+      }
+    }, 10000); // 10 seconds instead of 30
+
+    return () => clearInterval(interval);
+  }, [fetchLevels, loading, levels.length]);
+
+  // Force refresh when component mounts or when user changes
   useEffect(() => {
     fetchLevels();
   }, [fetchLevels]);
@@ -173,24 +191,6 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
       setExpandedLevels(prev => new Set([...prev, currentLevel]));
     }
   }, [currentLevel, expandedLevels]);
-
-  // Refresh levels when refreshTrigger changes
-  useEffect(() => {
-    if (refreshTrigger) {
-      fetchLevels();
-    }
-  }, [refreshTrigger, fetchLevels]);
-
-  // Auto-refresh levels every 30 seconds to catch completion updates
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (!loading && levels.length > 0) {
-        fetchLevels();
-      }
-    }, 30000); // 30 seconds
-
-    return () => clearInterval(interval);
-  }, [fetchLevels, loading, levels.length]);
 
   const toggleLevelExpansion = (levelId: string) => {
     setExpandedLevels(prev => {
@@ -231,16 +231,18 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
               <LayersIcon className="h-5 w-5 text-trueturquoise" /> 
               {loading ? 'Loading...' : `Levels (${levels.length})`}
             </h2>
-            <button
-              onClick={fetchLevels}
-              disabled={loading}
-              className="p-1 rounded-lg bg-paperwhite/10 hover:bg-paperwhite/20 transition-colors disabled:opacity-50"
-              title="Refresh levels"
-            >
-              <svg className="w-4 h-4 text-trueturquoise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={fetchLevels}
+                disabled={loading}
+                className="p-1 rounded-lg bg-paperwhite/10 hover:bg-paperwhite/20 transition-colors disabled:opacity-50"
+                title="Refresh levels"
+              >
+                <svg className="w-4 h-4 text-trueturquoise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+              </button>
+            </div>
           </div>
         )}
         
