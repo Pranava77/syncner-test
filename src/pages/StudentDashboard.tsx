@@ -2,7 +2,19 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppSelector } from '../redux/store';
 import { useLevels } from '../hooks/useLevels';
-import { BookOpen, TrendingUp, Target, Clock, CheckCircle, PlayCircle } from '@radix-ui/react-icons';
+import AttendanceHeatmap from '../components/AttendanceHeatmap';
+import { 
+  ReaderIcon, 
+  ArrowTopRightIcon as TrendingUp, 
+  TargetIcon as Target, 
+  ClockIcon as Clock, 
+  CheckCircledIcon as CheckCircle, 
+  PlayIcon as PlayCircle,
+  CodeIcon as Code,
+  ColorWheelIcon as Palette,
+  BarChartIcon as BarChart3,
+  LayersIcon as Brain
+} from '@radix-ui/react-icons';
 
 const StudentDashboard: React.FC = () => {
   const { user } = useAppSelector((state) => state.auth);
@@ -138,7 +150,7 @@ const StudentDashboard: React.FC = () => {
                     <p className="text-teallight text-sm lg:text-base">No training levels are currently available for your track.</p>
                   </div>
                   <div className="bg-trueturquoise/10 p-2 rounded-lg w-fit">
-                    <BookOpen className="h-5 w-5 lg:h-6 lg:w-6 text-trueturquoise" />
+                    <ReaderIcon className="h-5 w-5 lg:h-6 lg:w-6 text-trueturquoise" />
                   </div>
                 </div>
                 
@@ -199,7 +211,7 @@ const StudentDashboard: React.FC = () => {
                     to="/student/training"
                     className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-teallight transition-colors font-medium inline-flex items-center"
                   >
-                    <BookOpen className="h-4 w-4 mr-2 text-offblack" />
+                    <ReaderIcon className="h-4 w-4 mr-2 text-offblack" />
                     View All Levels
                   </Link>
                 </div>
@@ -217,7 +229,7 @@ const StudentDashboard: React.FC = () => {
                     to="/student/training"
                     className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-teallight transition-colors font-medium inline-flex items-center"
                   >
-                    <BookOpen className="h-4 w-4 mr-2 text-offblack" />
+                    <ReaderIcon className="h-4 w-4 mr-2 text-offblack" />
                     Check Training
                   </Link>
                 </div>
@@ -436,7 +448,7 @@ const StudentDashboard: React.FC = () => {
                     <p className="text-teallight text-sm lg:text-base">Please wait while we load the current level.</p>
                   </div>
                   <div className="bg-trueturquoise/10 p-2 rounded-lg w-fit">
-                    <BookOpen className="h-5 w-5 lg:h-6 lg:w-6 text-trueturquoise" />
+                    <ReaderIcon className="h-5 w-5 lg:h-6 lg:w-6 text-trueturquoise" />
                   </div>
                 </div>
                 
@@ -497,7 +509,7 @@ const StudentDashboard: React.FC = () => {
                     to="/student/training"
                     className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-teallight transition-colors font-medium inline-flex items-center"
                   >
-                    <BookOpen className="h-4 w-4 mr-2 text-offblack" />
+                    <ReaderIcon className="h-4 w-4 mr-2 text-offblack" />
                     View All Levels
                   </Link>
                 </div>
@@ -515,7 +527,7 @@ const StudentDashboard: React.FC = () => {
                     to="/student/training"
                     className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-teallight transition-colors font-medium inline-flex items-center"
                   >
-                    <BookOpen className="h-4 w-4 mr-2 text-offblack" />
+                    <ReaderIcon className="h-4 w-4 mr-2 text-offblack" />
                     Check Training
                   </Link>
                 </div>
@@ -771,7 +783,7 @@ const StudentDashboard: React.FC = () => {
                     <p className="text-teallight text-sm lg:text-base">{currentLevel.description}</p>
                   </div>
                   <div className="bg-trueturquoise/10 p-2 rounded-lg w-fit">
-                    <BookOpen className="h-5 w-5 lg:h-6 lg:w-6 text-trueturquoise" />
+                    <ReaderIcon className="h-5 w-5 lg:h-6 lg:w-6 text-trueturquoise" />
                   </div>
                 </div>
                 
@@ -814,7 +826,7 @@ const StudentDashboard: React.FC = () => {
                     to={`/student/training/${currentLevel.id}/learn`}
                     className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-teallight transition-colors font-medium flex items-center justify-center w-full sm:w-auto"
                   >
-                    <Play className="h-4 w-4 mr-2 text-offblack" />
+                    <PlayCircle className="h-4 w-4 mr-2 text-offblack" />
                     {currentLevelProgress === 0 ? 'Start Learning' : 'Continue'}
                   </Link>
                 </div>
@@ -833,7 +845,7 @@ const StudentDashboard: React.FC = () => {
                   to="/student/training"
                   className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-teallight transition-colors font-medium inline-flex items-center"
                 >
-                  <BookOpen className="h-4 w-4 mr-2 text-offblack" />
+                  <ReaderIcon className="h-4 w-4 mr-2 text-offblack" />
                   View All Levels
                 </Link>
               </div>
@@ -851,7 +863,7 @@ const StudentDashboard: React.FC = () => {
                   to="/student/training"
                   className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-teallight transition-colors font-medium inline-flex items-center"
                 >
-                  <BookOpen className="h-4 w-4 mr-2 text-offblack" />
+                  <ReaderIcon className="h-4 w-4 mr-2 text-offblack" />
                   Check Training
                 </Link>
               </div>
