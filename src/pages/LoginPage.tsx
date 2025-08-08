@@ -12,6 +12,8 @@ import {
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const dispatch = useAppDispatch();
   const { isLoading, error, isAuthenticated, user } = useAppSelector((state) => state.auth);
 
@@ -20,12 +22,48 @@ const LoginPage: React.FC = () => {
     dispatch(clearError());
   }, [dispatch]);
 
+  const validateForm = () => {
+    let isValid = true;
+    
+    // Clear previous errors
+    setEmailError('');
+    setPasswordError('');
+    
+    // Email validation
+    if (!email.trim()) {
+      setEmailError('Email is required');
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(email.trim())) {
+      setEmailError('Please enter a valid email address');
+      isValid = false;
+    }
+    
+    // Password validation
+    if (!password) {
+      setPasswordError('Password is required');
+      isValid = false;
+    } else if (password.length < 6) {
+      setPasswordError('Password must be at least 6 characters');
+      isValid = false;
+    }
+    
+    return isValid;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Clear previous errors
     dispatch(clearError());
+    setEmailError('');
+    setPasswordError('');
+    
+    // Validate form
+    if (!validateForm()) {
+      return;
+    }
 
-     dispatch(loginUser({
+    dispatch(loginUser({
       email: email.trim(),
       password: password
     }));
@@ -86,11 +124,16 @@ const LoginPage: React.FC = () => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 lg:pl-12 pr-4 py-2.5 lg:py-3 bg-offblack/60 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors text-paperwhite placeholder-teallight text-sm lg:text-base"
+                  className={`w-full pl-10 lg:pl-12 pr-4 py-2.5 lg:py-3 bg-offblack/60 border rounded-lg focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors text-paperwhite placeholder-teallight text-sm lg:text-base ${
+                    emailError ? 'border-rust' : 'border-paperwhite/20'
+                  }`}
                   placeholder="Enter your email"
                   required
                 />
               </div>
+              {emailError && (
+                <p className="mt-1 text-rust text-xs">{emailError}</p>
+              )}
             </div>
 
             <div>
@@ -104,11 +147,16 @@ const LoginPage: React.FC = () => {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 lg:pl-12 pr-4 py-2.5 lg:py-3 bg-offblack/60 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors text-paperwhite placeholder-teallight text-sm lg:text-base"
+                  className={`w-full pl-10 lg:pl-12 pr-4 py-2.5 lg:py-3 bg-offblack/60 border rounded-lg focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors text-paperwhite placeholder-teallight text-sm lg:text-base ${
+                    passwordError ? 'border-rust' : 'border-paperwhite/20'
+                  }`}
                   placeholder="Enter your password"
                   required
                 />
               </div>
+              {passwordError && (
+                <p className="mt-1 text-rust text-xs">{passwordError}</p>
+              )}
             </div>
 
             <button

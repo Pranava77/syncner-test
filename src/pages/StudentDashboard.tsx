@@ -655,14 +655,6 @@ const StudentDashboard: React.FC = () => {
                       <ReaderIcon className="h-4 w-4 mr-2 text-offblack" />
                       Review All Levels
                     </Link>
-                    
-              <Link 
-                      to="/student/profile"
-                      className="bg-paperwhite/10 text-paperwhite px-4 py-3 rounded-lg hover:bg-paperwhite/20 transition-colors font-medium inline-flex items-center justify-center border border-paperwhite/20"
-              >
-                      <Target className="h-4 w-4 mr-2 text-teallight" />
-                      View Certificate
-              </Link>
             </div>
                   
                   <div className="mt-4 p-3 bg-paperwhite/5 rounded-lg border border-paperwhite/10">

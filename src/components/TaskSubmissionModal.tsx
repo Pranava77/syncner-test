@@ -79,15 +79,30 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
     }));
   };
 
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      // You could add a toast notification here
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  };
+
   const validateForm = () => {
     if (!formData.submissionLink.trim()) {
       setError('Submission link is required to complete this exercise.');
       return false;
     }
     
-    // Basic URL validation for main submission link
+    // Enhanced URL validation for main submission link
+    const urlRegex = /^https?:\/\/.+/;
+    if (!urlRegex.test(formData.submissionLink.trim())) {
+      setError('Please enter a valid URL starting with http:// or https:// for your submission link.');
+      return false;
+    }
+    
     try {
-      new URL(formData.submissionLink);
+      new URL(formData.submissionLink.trim());
     } catch {
       setError('Please enter a valid URL for your submission link.');
       return false;
@@ -96,8 +111,12 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
     // Validate additional links if provided
     const additionalLinks = formData.referenceMaterials.filter(link => link.trim() !== '');
     for (const link of additionalLinks) {
+      if (!urlRegex.test(link.trim())) {
+        setError('Please enter valid URLs starting with http:// or https:// for all additional submission links.');
+        return false;
+      }
       try {
-        new URL(link);
+        new URL(link.trim());
       } catch {
         setError('Please enter valid URLs for all additional submission links.');
         return false;
@@ -224,11 +243,20 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
             </div>
             <div className="bg-offblack/50 rounded-xl p-4 border border-paperwhite/10">
               {exercise.resources && exercise.resources.length > 0 ? (
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {exercise.resources.map((resource, index) => (
-                    <div key={index} className="flex items-center gap-2 text-sm text-teallight">
-                      <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
-                      <span>{resource}</span>
+                    <div key={index} className="flex items-center justify-between p-2 bg-paperwhite/5 rounded-lg">
+                      <div className="flex items-center gap-2 text-sm text-teallight flex-1">
+                        <div className="w-2 h-2 bg-orange-400 rounded-full flex-shrink-0"></div>
+                        <span className="break-all">{resource}</span>
+                      </div>
+                      <button
+                        onClick={() => copyToClipboard(resource)}
+                        className="ml-2 p-1.5 bg-paperwhite/10 hover:bg-paperwhite/20 rounded-lg transition-colors flex-shrink-0"
+                        title="Copy link"
+                      >
+                        <ClipboardIcon className="w-4 h-4 text-teallight" />
+                      </button>
                     </div>
                   ))}
                 </div>
