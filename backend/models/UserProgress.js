@@ -319,8 +319,12 @@ userProgressSchema.methods.submitExercise = function(levelId, exerciseTitle, lin
       links: links || []
     });
     
-    // Mark exercise section as completed
-    level.completedSections.exercise = true;
+    // Mark exercise section as completed with at least 1 submission
+    // For levels with only 1 exercise, completion requires 1 submission
+    // For levels with multiple exercises, completion requires at least 1 submission (can be adjusted)
+    if (level.exerciseSubmissions.length >= 1) {
+      level.completedSections.exercise = true;
+    }
   }
 };
 
@@ -335,15 +339,18 @@ userProgressSchema.methods.updateExercise = function(levelId, exerciseTitle, lin
       submission.status = 'updated';
     }
     
-    // Mark exercise section as completed
-    level.completedSections.exercise = true;
+    // Mark exercise section as completed with at least 1 submission
+    if (level.exerciseSubmissions.length >= 1) {
+      level.completedSections.exercise = true;
+    }
   }
 };
 
 // Method to check if exercise links are submitted
 userProgressSchema.methods.hasExerciseLinks = function(levelId) {
   const level = this.completedLevels.find(l => l.levelId === levelId);
-  return level && level.exerciseSubmissions && level.exerciseSubmissions.length > 0;
+  // Return true if at least 1 exercise submission exists
+  return level && level.exerciseSubmissions && level.exerciseSubmissions.length >= 1;
 };
 
 // Static method to get or create user progress
