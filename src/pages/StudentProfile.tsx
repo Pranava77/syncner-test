@@ -59,11 +59,26 @@ const StudentProfile: React.FC = () => {
     setProfileData({ ...profileData, [e.target.name]: e.target.value });
   };
 
+  const formatCareerTrack = (track: string) => {
+    switch (track) {
+      case 'full-stack':
+        return 'Full Stack Development';
+      case 'ai-ml':
+        return 'AI & Machine Learning';
+      case 'ui-ux':
+        return 'UI/UX Design';
+      case 'data-science':
+        return 'Data Science';
+      default:
+        return track || 'Not assigned';
+    }
+  };
+
   const handleSave = async () => {
     setIsLoading(true);
     setMessage('');
     try {
-      const allowedFields = ['name', 'phone', 'location', 'college', 'department', 'careerTrack', 'gpa', 'graduationYear'];
+      const allowedFields = ['name', 'phone', 'location', 'college', 'department', 'gpa', 'graduationYear'];
       const updateData: any = {};
       allowedFields.forEach(field => {
         if (profileData[field as keyof StudentProfileData] !== undefined) {
@@ -153,18 +168,13 @@ const StudentProfile: React.FC = () => {
           
           <div>
             <label className="block text-sm font-label mb-2">Career Track</label>
-            <select
+            <input
+              type="text"
               name="careerTrack"
-              value={profileData.careerTrack}
-              onChange={handleChange}
-              className="w-full bg-paperwhite/10 border border-paperwhite/20 rounded px-3 py-2 text-paperwhite"
-            >
-              <option value="">Select Career Track</option>
-              <option value="full-stack">Full Stack Development</option>
-              <option value="ai-ml">AI & Machine Learning</option>
-              <option value="ui-ux">UI/UX Design</option>
-              <option value="data-science">Data Science</option>
-            </select>
+              value={formatCareerTrack(profileData.careerTrack || '')}
+              disabled
+              className="w-full bg-paperwhite/10 border border-paperwhite/20 rounded px-3 py-2 text-paperwhite/50"
+            />
           </div>
           
           <div>
