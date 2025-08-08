@@ -451,10 +451,10 @@ export const getLevelsStatus = async (req, res) => {
       ...level,
       isUnlocked: progress.isLevelUnlocked(level.order),
       isCompleted: progress.completedLevels.some(
-        completed => completed.levelId === level.id
+        completed => completed.levelId === level.id || completed.levelId === level.id.toString()
       ),
       completedSections: progress.completedLevels.find(
-        completed => completed.levelId === level.id
+        completed => completed.levelId === level.id || completed.levelId === level.id.toString()
       )?.completedSections || {
         learn: false,
         exercise: false,
