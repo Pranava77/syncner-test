@@ -187,9 +187,7 @@ const LevelLearnPage: React.FC = () => {
           }
         }
         
-        // Force refresh of learn progress to ensure state is updated
-        console.log('Frontend: Refreshing learn progress...');
-        fetchLearnProgress();
+
       }
     } catch (error) {
       console.error('Frontend: Error updating learn progress:', error);
