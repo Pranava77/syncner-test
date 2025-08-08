@@ -266,7 +266,7 @@ const LevelTestPage: React.FC = () => {
       // Still show results even if submission fails
       setTestScore(score);
       setTestPassed(passed);
-      setSubmitted(true);
+    setSubmitted(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -561,7 +561,7 @@ const LevelTestPage: React.FC = () => {
                 <div className="text-center bg-paperwhite/5 rounded-lg p-4 border border-paperwhite/10">
                   <div className="text-2xl font-bold text-paperwhite mb-2">{validQuestions.length}</div>
                   <div className="text-xs text-teallight font-label">Questions</div>
-                </div>
+              </div>
             </div>
           </div>
         </div>
