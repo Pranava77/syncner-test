@@ -256,8 +256,11 @@ const LevelLearnPage: React.FC = () => {
   const getProgressPercentage = () => {
     const safeLinksLength = accessedLinks?.length || 0;
     
-    // Progress is now based only on links (100% for 2 links minimum)
-    return Math.min((safeLinksLength / 2) * 100, 100);
+    // Dynamic progress based on available links in the level
+    const totalAvailableLinks = level?.learn?.length || 1; // At least 1 to avoid division by zero
+    
+    // Progress is based on accessed links vs total available links
+    return Math.min((safeLinksLength / totalAvailableLinks) * 100, 100);
   };
 
   return (
@@ -353,7 +356,7 @@ const LevelLearnPage: React.FC = () => {
               
               <div className="flex items-center justify-between text-sm text-teallight">
                 <span>Time spent: {Math.floor(learnProgress.timeSpent / 60)}m {learnProgress.timeSpent % 60}s</span>
-                <span>{learnProgress.linksAccessed.length} resources accessed</span>
+                <span>{learnProgress.linksAccessed.length} of {level?.learn?.length || 1} resources accessed</span>
               </div>
             </div>
 

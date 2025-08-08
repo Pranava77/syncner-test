@@ -553,7 +553,7 @@ const StudentDashboard: React.FC = () => {
         <div className="lg:col-span-2 space-y-6">
           {/* Current Learning */}
             <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
-                            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg lg:text-xl font-semibold text-paperwhite">Continue Learning</h2>
                 <span className="bg-trueturquoise/20 text-trueturquoise px-2 lg:px-3 py-1 rounded-full text-xs lg:text-sm font-medium">
                 {currentLevel ? (currentLevelProgress === 100 && currentLevel.order === levels?.length ? 'Bootcamp Complete' : currentLevelProgress === 100 ? 'Level Complete' : 'In Progress') : 'All Levels Complete'}

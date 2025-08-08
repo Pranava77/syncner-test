@@ -255,8 +255,10 @@ userProgressSchema.methods.updateLearnProgress = function(levelId, timeSpent, li
     level.learnProgress.linksAccessed = linksAccessed;
   }
   
-  // Mark as completed if at least 2 links accessed (no time requirement)
-  if (level.learnProgress.linksAccessed.length >= 2) {
+  // Mark as completed if at least 1 link accessed (dynamic requirement)
+  // For levels with only 1 link, completion requires 1 link
+  // For levels with multiple links, completion requires at least 1 link (can be adjusted)
+  if (level.learnProgress.linksAccessed.length >= 1) {
     level.learnProgress.isCompleted = true;
     level.completedSections.learn = true;
   }
