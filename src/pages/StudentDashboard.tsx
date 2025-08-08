@@ -130,6 +130,16 @@ const StudentDashboard: React.FC = () => {
     setCompletedLevels(dashboardData.completedLevels);
   }, [dashboardData]);
 
+  // Force initial refresh when component mounts
+  useEffect(() => {
+    if (user?.careerTrack) {
+      dispatch(clearCache());
+      setTimeout(() => {
+        refetch();
+      }, 100);
+    }
+  }, [user?.careerTrack, dispatch, refetch]);
+
   // Handle progress updates
   const handleProgressUpdate = () => {
     // Clear cache and force fresh fetch
@@ -153,6 +163,11 @@ const StudentDashboard: React.FC = () => {
       setTimeout(() => {
         refetch();
       }, 200);
+      // Additional refresh to ensure exercise completion is captured
+      setTimeout(() => {
+        dispatch(clearCache());
+        refetch();
+      }, 1000);
     }
   }, [levels.length, dispatch, refetch]);
 
@@ -173,16 +188,30 @@ const StudentDashboard: React.FC = () => {
       setTimeout(() => {
         refetch();
       }, 1000);
+      // Additional refresh after 2 seconds to ensure backend has processed
+      setTimeout(() => {
+        dispatch(clearCache());
+        refetch();
+      }, 2000);
     };
     
     window.addEventListener('exercise-completed', handleCustomProgressUpdate);
     window.addEventListener('level-completed', handleCustomProgressUpdate);
+    
+    // Force refresh when component mounts to ensure latest data
+    const handlePageFocus = () => {
+      dispatch(clearCache());
+      refetch();
+    };
+    
+    window.addEventListener('focus', handlePageFocus);
     
     return () => {
       window.removeEventListener('progress-updated', handleProgressUpdate);
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('exercise-completed', handleCustomProgressUpdate);
       window.removeEventListener('level-completed', handleCustomProgressUpdate);
+      window.removeEventListener('focus', handlePageFocus);
     };
   }, [handleProgressUpdate, handleStorageChange, refetch]);
 
