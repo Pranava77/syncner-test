@@ -1,6 +1,5 @@
 import Attendance from '../models/Attendance.js';
 import User from '../models/User.js';
-import cronService from '../services/cronService.js';
 
 // POST /api/attendance/mark
 export const markAttendance = async (req, res) => {
@@ -9,16 +8,63 @@ export const markAttendance = async (req, res) => {
     if (!userId || !date) {
       return res.status(400).json({ success: false, message: 'userId and date are required' });
     }
+    
     // Normalize date to midnight UTC
     const normalizedDate = new Date(date);
     normalizedDate.setUTCHours(0, 0, 0, 0);
-    const record = await Attendance.findOneAndUpdate(
-      { user: userId, date: normalizedDate },
-      { status: status || 'present' },
-      { upsert: true, new: true, setDefaultsOnInsert: true }
-    );
-    res.json({ success: true, data: record });
+    
+    // Check if attendance already exists for this user and date
+    const existingAttendance = await Attendance.findOne({
+      user: userId,
+      date: normalizedDate
+    });
+    
+    let record;
+    try {
+      if (existingAttendance) {
+        // Update existing record
+        record = await Attendance.findByIdAndUpdate(
+          existingAttendance._id,
+          { status: status || 'present' },
+          { new: true }
+        );
+      } else {
+        // Create new record
+        record = await Attendance.create({
+          user: userId,
+          date: normalizedDate,
+          status: status || 'present'
+        });
+      }
+      
+      res.json({ success: true, data: record });
+    } catch (createError) {
+      // Handle any remaining duplicate key errors
+      if (createError.code === 11000) {
+        console.log('[ATTENDANCE DEBUG] Duplicate key error, attempting to find existing record');
+        // Try to find the existing record that was created by another request
+        const existingRecord = await Attendance.findOne({
+          user: userId,
+          date: normalizedDate
+        });
+        
+        if (existingRecord) {
+          // Update the existing record
+          record = await Attendance.findByIdAndUpdate(
+            existingRecord._id,
+            { status: status || 'present' },
+            { new: true }
+          );
+          res.json({ success: true, data: record });
+        } else {
+          throw createError;
+        }
+      } else {
+        throw createError;
+      }
+    }
   } catch (error) {
+    console.error('[ATTENDANCE ERROR]', error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
@@ -36,168 +82,7 @@ export const getAttendance = async (req, res) => {
   }
 };
 
-// POST /api/attendance/trigger-marking (Admin only - for testing)
-export const triggerAttendanceMarking = async (req, res) => {
-  try {
-    // Check if user is admin
-    if (req.user.role !== 'admin') {
-      return res.status(403).json({ success: false, message: 'Admin access required' });
-    }
 
-    const result = await cronService.triggerAttendanceMarking();
-    res.json({ 
-      success: true, 
-      message: `Successfully marked ${result.markedAbsences} absences, skipped ${result.skipped} existing records`,
-      data: result
-    });
-  } catch (error) {
-    console.error('[ATTENDANCE ERROR]', error);
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
-
-// GET /api/attendance/cron-status (Admin only)
-export const getCronStatus = async (req, res) => {
-  try {
-    // Check if user is admin
-    if (req.user.role !== 'admin') {
-      return res.status(403).json({ success: false, message: 'Admin access required' });
-    }
-
-    const status = cronService.getStatus();
-    res.json({ success: true, data: status });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
-
-// POST /api/attendance/mark-absences
-export const markAbsences = async (req, res) => {
-  try {
-    const { date } = req.body;
-    const targetDate = date ? new Date(date) : new Date();
-    targetDate.setUTCHours(0, 0, 0, 0);
-    
-    console.log(`[ATTENDANCE DEBUG] Marking absences for date: ${targetDate.toISOString()}`);
-    
-    // Get all students
-    const students = await User.find({ role: 'student' });
-    console.log(`[ATTENDANCE DEBUG] Found ${students.length} students`);
-    
-    let markedAbsences = 0;
-    let skipped = 0;
-    
-    for (const student of students) {
-      // Check if attendance already exists for this date
-      const existingAttendance = await Attendance.findOne({
-        user: student._id,
-        date: targetDate
-      });
-      
-      if (existingAttendance) {
-        console.log(`[ATTENDANCE DEBUG] Attendance already exists for student ${student.name} on ${targetDate.toISOString()}`);
-        skipped++;
-        continue;
-      }
-      
-      // Mark as absent
-      await Attendance.create({
-        user: student._id,
-        date: targetDate,
-        status: 'absent'
-      });
-      
-      console.log(`[ATTENDANCE DEBUG] Marked absent for student ${student.name} on ${targetDate.toISOString()}`);
-      markedAbsences++;
-    }
-    
-    res.json({ 
-      success: true, 
-      message: `Marked ${markedAbsences} absences, skipped ${skipped} existing records`,
-      data: { markedAbsences, skipped, date: targetDate }
-    });
-  } catch (error) {
-    console.error('[ATTENDANCE ERROR]', error);
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
-
-// POST /api/attendance/mark-absences-range
-export const markAbsencesForRange = async (req, res) => {
-  try {
-    const { startDate, endDate } = req.body;
-    
-    if (!startDate || !endDate) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'startDate and endDate are required in YYYY-MM-DD format' 
-      });
-    }
-    
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    start.setUTCHours(0, 0, 0, 0);
-    end.setUTCHours(0, 0, 0, 0);
-    
-    console.log(`[ATTENDANCE DEBUG] Marking absences for date range: ${start.toISOString()} to ${end.toISOString()}`);
-    
-    // Get all students
-    const students = await User.find({ role: 'student' });
-    console.log(`[ATTENDANCE DEBUG] Found ${students.length} students`);
-    
-    let totalMarked = 0;
-    let totalSkipped = 0;
-    
-    // Generate all dates in the range
-    const dates = [];
-    const current = new Date(start);
-    while (current <= end) {
-      dates.push(new Date(current));
-      current.setDate(current.getDate() + 1);
-    }
-    
-    for (const date of dates) {
-      let markedForDate = 0;
-      let skippedForDate = 0;
-      
-      for (const student of students) {
-        // Check if attendance already exists for this date
-        const existingAttendance = await Attendance.findOne({
-          user: student._id,
-          date: date
-        });
-        
-        if (existingAttendance) {
-          skippedForDate++;
-          continue;
-        }
-        
-        // Mark as absent
-        await Attendance.create({
-          user: student._id,
-          date: date,
-          status: 'absent'
-        });
-        
-        markedForDate++;
-      }
-      
-      totalMarked += markedForDate;
-      totalSkipped += skippedForDate;
-      
-      console.log(`[ATTENDANCE DEBUG] Date ${date.toISOString()}: marked ${markedForDate}, skipped ${skippedForDate}`);
-    }
-    
-    res.json({ 
-      success: true, 
-      message: `Marked ${totalMarked} absences across ${dates.length} days, skipped ${totalSkipped} existing records`,
-      data: { totalMarked, totalSkipped, dateRange: { start, end }, daysProcessed: dates.length }
-    });
-  } catch (error) {
-    console.error('[ATTENDANCE ERROR]', error);
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
 
 // GET /api/attendance/stats/:userId
 export const getAttendanceStats = async (req, res) => {
