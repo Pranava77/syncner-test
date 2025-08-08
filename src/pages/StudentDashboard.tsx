@@ -607,16 +607,16 @@ const StudentDashboard: React.FC = () => {
                   
                   {/* Section Status */}
                   <div className="flex justify-between mt-3 text-xs text-teallight">
-                    <div className={`flex items-center ${currentLevel.completedSections?.learn ? 'text-green-400' : 'text-teallight'}`}>
-                      <span className={`w-2 h-2 rounded-full mr-1 ${currentLevel.completedSections?.learn ? 'bg-green-400' : 'bg-paperwhite/30'}`}></span>
+                    <div className={`flex items-center ${(currentLevel.completedSections?.learn === true || currentLevel.completedSections?.learn === "true") ? 'text-green-400' : 'text-teallight'}`}>
+                      <span className={`w-2 h-2 rounded-full mr-1 ${(currentLevel.completedSections?.learn === true || currentLevel.completedSections?.learn === "true") ? 'bg-green-400' : 'bg-paperwhite/30'}`}></span>
                       Learn
                     </div>
-                    <div className={`flex items-center ${currentLevel.completedSections?.test ? 'text-green-400' : 'text-teallight'}`}>
-                      <span className={`w-2 h-2 rounded-full mr-1 ${currentLevel.completedSections?.test ? 'bg-green-400' : 'bg-paperwhite/30'}`}></span>
+                    <div className={`flex items-center ${(currentLevel.completedSections?.test === true || currentLevel.completedSections?.test === "true") ? 'text-green-400' : 'text-teallight'}`}>
+                      <span className={`w-2 h-2 rounded-full mr-1 ${(currentLevel.completedSections?.test === true || currentLevel.completedSections?.test === "true") ? 'bg-green-400' : 'bg-paperwhite/30'}`}></span>
                       Test
                     </div>
-                    <div className={`flex items-center ${currentLevel.completedSections?.exercise ? 'text-green-400' : 'text-teallight'}`}>
-                      <span className={`w-2 h-2 rounded-full mr-1 ${currentLevel.completedSections?.exercise ? 'bg-green-400' : 'bg-paperwhite/30'}`}></span>
+                    <div className={`flex items-center ${(currentLevel.completedSections?.exercise === true || currentLevel.completedSections?.exercise === "true") ? 'text-green-400' : 'text-teallight'}`}>
+                      <span className={`w-2 h-2 rounded-full mr-1 ${(currentLevel.completedSections?.exercise === true || currentLevel.completedSections?.exercise === "true") ? 'bg-green-400' : 'bg-paperwhite/30'}`}></span>
                       Exercise
                     </div>
                   </div>
