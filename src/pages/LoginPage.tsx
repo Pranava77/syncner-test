@@ -22,6 +22,26 @@ const LoginPage: React.FC = () => {
     dispatch(clearError());
   }, [dispatch]);
 
+  // Handle errors from Redux state
+  useEffect(() => {
+    if (error) {
+      const errorMessage = error.toLowerCase();
+      
+      // Handle specific error cases
+      if (errorMessage.includes('email') || errorMessage.includes('user not found') || errorMessage.includes('user does not exist')) {
+        setEmailError('Email address not found. Please check your email or register.');
+      } else if (errorMessage.includes('password') || errorMessage.includes('invalid password') || errorMessage.includes('incorrect password')) {
+        setPasswordError('Incorrect password. Please try again.');
+      } else if (errorMessage.includes('invalid credentials') || errorMessage.includes('wrong credentials')) {
+        setPasswordError('Invalid email or password. Please check your credentials.');
+      } else if (errorMessage.includes('account locked') || errorMessage.includes('account suspended')) {
+        setEmailError('Account is locked. Please contact support.');
+      } else if (errorMessage.includes('too many attempts') || errorMessage.includes('rate limit')) {
+        setPasswordError('Too many login attempts. Please try again later.');
+      }
+    }
+  }, [error]);
+
   const validateForm = () => {
     let isValid = true;
     
@@ -63,10 +83,29 @@ const LoginPage: React.FC = () => {
       return;
     }
 
-    dispatch(loginUser({
-      email: email.trim(),
-      password: password
-    }));
+    try {
+      const result = await dispatch(loginUser({
+        email: email.trim(),
+        password: password
+      }));
+      
+      // Check if login failed and handle specific errors
+      if (loginUser.rejected.match(result)) {
+        const errorMessage = result.payload as string;
+        
+        // Handle specific error cases
+        if (errorMessage.toLowerCase().includes('email') || errorMessage.toLowerCase().includes('user not found')) {
+          setEmailError('Email address not found. Please check your email or register.');
+        } else if (errorMessage.toLowerCase().includes('password') || errorMessage.toLowerCase().includes('invalid password')) {
+          setPasswordError('Incorrect password. Please try again.');
+        } else if (errorMessage.toLowerCase().includes('invalid credentials')) {
+          setPasswordError('Invalid email or password. Please check your credentials.');
+        }
+        // Generic error will still show in the main error area
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+    }
 
     // No redirect here; App.tsx will handle it
   };
@@ -105,7 +144,7 @@ const LoginPage: React.FC = () => {
 
         {/* Login Form */}
         <div className="bg-paperwhite/10 backdrop-blur-sm rounded-xl p-6 lg:p-8 border border-paperwhite/10 shadow-xl">
-          {error && (
+          {error && !emailError && !passwordError && (
             <div className="mb-4 p-3 bg-rust/10 border border-rust/20 rounded-lg flex items-center space-x-2">
               <ExclamationTriangleIcon className="h-4 w-4 text-rust flex-shrink-0" />
               <span className="text-rust text-sm">{error}</span>
@@ -123,7 +162,10 @@ const LoginPage: React.FC = () => {
                   id="email"
                   type="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (emailError) setEmailError('');
+                  }}
                   className={`w-full pl-10 lg:pl-12 pr-4 py-2.5 lg:py-3 bg-offblack/60 border rounded-lg focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors text-paperwhite placeholder-teallight text-sm lg:text-base ${
                     emailError ? 'border-rust' : 'border-paperwhite/20'
                   }`}
@@ -146,7 +188,10 @@ const LoginPage: React.FC = () => {
                   id="password"
                   type="password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (passwordError) setPasswordError('');
+                  }}
                   className={`w-full pl-10 lg:pl-12 pr-4 py-2.5 lg:py-3 bg-offblack/60 border rounded-lg focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors text-paperwhite placeholder-teallight text-sm lg:text-base ${
                     passwordError ? 'border-rust' : 'border-paperwhite/20'
                   }`}
