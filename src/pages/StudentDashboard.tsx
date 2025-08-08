@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { useAppSelector } from '../redux/store';
+import { useAppSelector, useAppDispatch } from '../redux/store';
 import { useLevels } from '../hooks/useLevels';
+import { clearCache } from '../redux/slices/curriculumSlice';
 import AttendanceHeatmap from '../components/AttendanceHeatmap';
 import { motion } from 'framer-motion';
 import {
@@ -38,6 +39,7 @@ interface Level {
 
 const StudentDashboard: React.FC = () => {
   const { user } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
   const [currentLevel, setCurrentLevel] = useState<Level | null>(null);
   const [overallProgress, setOverallProgress] = useState(0);
   const [completedLevels, setCompletedLevels] = useState(0);
@@ -121,7 +123,8 @@ const StudentDashboard: React.FC = () => {
 
   // Handle progress updates
   const handleProgressUpdate = () => {
-    // Add a small delay to ensure backend has processed the update
+    // Clear cache and force fresh fetch
+    dispatch(clearCache());
     setTimeout(() => {
       refetch();
     }, 100);
