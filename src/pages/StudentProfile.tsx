@@ -95,125 +95,164 @@ const StudentProfile: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-offblack text-paperwhite p-4">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-heading mb-8">Student Profile</h1>
-        
-        <div className="bg-paperwhite/5 border border-paperwhite/20 rounded-lg p-6 space-y-4">
-          <div>
-            <label className="block text-sm font-label mb-2">Name</label>
-            <input
-              type="text"
-              name="name"
-              value={profileData.name}
-              onChange={handleChange}
-              className="w-full bg-paperwhite/10 border border-paperwhite/20 rounded px-3 py-2 text-paperwhite"
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-label mb-2">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={profileData.email}
-              disabled
-              className="w-full bg-paperwhite/10 border border-paperwhite/20 rounded px-3 py-2 text-paperwhite/50"
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-label mb-2">Phone</label>
-            <input
-              type="tel"
-              name="phone"
-              value={profileData.phone}
-              onChange={handleChange}
-              className="w-full bg-paperwhite/10 border border-paperwhite/20 rounded px-3 py-2 text-paperwhite"
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-label mb-2">Location</label>
-            <input
-              type="text"
-              name="location"
-              value={profileData.location}
-              onChange={handleChange}
-              className="w-full bg-paperwhite/10 border border-paperwhite/20 rounded px-3 py-2 text-paperwhite"
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-label mb-2">College</label>
-            <input
-              type="text"
-              name="college"
-              value={profileData.college}
-              onChange={handleChange}
-              className="w-full bg-paperwhite/10 border border-paperwhite/20 rounded px-3 py-2 text-paperwhite"
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-label mb-2">Department</label>
-            <input
-              type="text"
-              name="department"
-              value={profileData.department}
-              onChange={handleChange}
-              className="w-full bg-paperwhite/10 border border-paperwhite/20 rounded px-3 py-2 text-paperwhite"
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-label mb-2">Career Track</label>
-            <input
-              type="text"
-              name="careerTrack"
-              value={formatCareerTrack(profileData.careerTrack || '')}
-              disabled
-              className="w-full bg-paperwhite/10 border border-paperwhite/20 rounded px-3 py-2 text-paperwhite/50"
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-label mb-2">GPA</label>
-            <input
-              type="text"
-              name="gpa"
-              value={profileData.gpa}
-              onChange={handleChange}
-              className="w-full bg-paperwhite/10 border border-paperwhite/20 rounded px-3 py-2 text-paperwhite"
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-label mb-2">Graduation Year</label>
-            <input
-              type="text"
-              name="graduationYear"
-              value={profileData.graduationYear}
-              onChange={handleChange}
-              className="w-full bg-paperwhite/10 border border-paperwhite/20 rounded px-3 py-2 text-paperwhite"
-            />
-          </div>
-          
-          {message && (
-            <div className={`p-3 rounded ${message.includes('success') ? 'bg-trueturquoise/20 text-trueturquoise' : 'bg-rust/20 text-rust'}`}>
-              {message}
+    <div className="flex h-screen bg-offblack overflow-x-hidden">
+      {/* Main Content */}
+      <main className="flex-1 overflow-y-auto">
+        <div className="max-w-5xl mx-auto p-6">
+          {/* Page Header */}
+          <div className="w-full bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h1 className="text-2xl font-bold text-paperwhite mb-2">Student Profile</h1>
+                <p className="text-teallight">Manage your personal information and account settings</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="px-3 py-1 rounded-full bg-paperwhite/10 text-trueturquoise font-semibold text-sm">
+                  {user?.role || 'Student'}
+                </span>
+                <span className="px-3 py-1 rounded-full bg-paperwhite/10 text-trueturquoise font-semibold text-sm">
+                  {formatCareerTrack(user?.careerTrack || '')}
+                </span>
+              </div>
             </div>
-          )}
-          
-          <button
-            onClick={handleSave}
-            disabled={isLoading}
-            className="w-full bg-trueturquoise text-offblack py-2 px-4 rounded hover:bg-trueturquoise/90 transition-colors disabled:opacity-50"
-          >
-            {isLoading ? 'Saving...' : 'Save Changes'}
-          </button>
+          </div>
+
+          {/* Profile Form */}
+          <div className="w-full bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-semibold text-paperwhite mb-2">Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={profileData.name}
+                  onChange={handleChange}
+                  className="w-full bg-offblack/60 border border-paperwhite/20 rounded-lg px-4 py-3 text-paperwhite focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors"
+                  placeholder="Enter your full name"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-semibold text-paperwhite mb-2">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={profileData.email}
+                  disabled
+                  className="w-full bg-offblack/60 border border-paperwhite/20 rounded-lg px-4 py-3 text-paperwhite/50 cursor-not-allowed"
+                  placeholder="Email address"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-semibold text-paperwhite mb-2">Phone</label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={profileData.phone}
+                  onChange={handleChange}
+                  className="w-full bg-offblack/60 border border-paperwhite/20 rounded-lg px-4 py-3 text-paperwhite focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors"
+                  placeholder="Enter your phone number"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-semibold text-paperwhite mb-2">Location</label>
+                <input
+                  type="text"
+                  name="location"
+                  value={profileData.location}
+                  onChange={handleChange}
+                  className="w-full bg-offblack/60 border border-paperwhite/20 rounded-lg px-4 py-3 text-paperwhite focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors"
+                  placeholder="Enter your location"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-semibold text-paperwhite mb-2">College</label>
+                <input
+                  type="text"
+                  name="college"
+                  value={profileData.college}
+                  onChange={handleChange}
+                  className="w-full bg-offblack/60 border border-paperwhite/20 rounded-lg px-4 py-3 text-paperwhite focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors"
+                  placeholder="Enter your college name"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-semibold text-paperwhite mb-2">Department</label>
+                <input
+                  type="text"
+                  name="department"
+                  value={profileData.department}
+                  onChange={handleChange}
+                  className="w-full bg-offblack/60 border border-paperwhite/20 rounded-lg px-4 py-3 text-paperwhite focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors"
+                  placeholder="Enter your department"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-semibold text-paperwhite mb-2">Career Track</label>
+                <input
+                  type="text"
+                  name="careerTrack"
+                  value={formatCareerTrack(profileData.careerTrack || '')}
+                  disabled
+                  className="w-full bg-offblack/60 border border-paperwhite/20 rounded-lg px-4 py-3 text-paperwhite/50 cursor-not-allowed"
+                  placeholder="Career track"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-semibold text-paperwhite mb-2">GPA</label>
+                <input
+                  type="text"
+                  name="gpa"
+                  value={profileData.gpa}
+                  onChange={handleChange}
+                  className="w-full bg-offblack/60 border border-paperwhite/20 rounded-lg px-4 py-3 text-paperwhite focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors"
+                  placeholder="Enter your GPA"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-semibold text-paperwhite mb-2">Graduation Year</label>
+                <input
+                  type="text"
+                  name="graduationYear"
+                  value={profileData.graduationYear}
+                  onChange={handleChange}
+                  className="w-full bg-offblack/60 border border-paperwhite/20 rounded-lg px-4 py-3 text-paperwhite focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors"
+                  placeholder="Enter graduation year"
+                />
+              </div>
+            </div>
+            
+            {message && (
+              <div className={`p-4 rounded-lg border ${
+                message.includes('success') 
+                  ? 'bg-trueturquoise/10 border-trueturquoise/20 text-trueturquoise' 
+                  : 'bg-rust/10 border-rust/20 text-rust'
+              }`}>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">{message}</span>
+                </div>
+              </div>
+            )}
+            
+            <div className="flex justify-end pt-4">
+              <button
+                onClick={handleSave}
+                disabled={isLoading}
+                className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-semibold hover:bg-teallight transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+              >
+                {isLoading ? 'Saving...' : 'Save Changes'}
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 };
