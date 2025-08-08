@@ -38,7 +38,6 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
   setSidebarOpen,
   currentLevel,
   currentSection,
-  refreshTrigger,
   onRefresh
 }) => {
   const navigate = useNavigate();
@@ -322,7 +321,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                         alert('This level is locked. Complete the previous level\'s exercise to unlock it.');
                       }
                     }}
-                    className={`flex-1 flex items-center py-2 transition-colors text-sm font-${currentLevel === level.id ? 'semibold' : 'normal'} text-left
+                    className={`w-full flex items-center py-2 transition-colors text-sm font-${currentLevel === level.id ? 'semibold' : 'normal'} text-left
                       ${currentLevel === level.id ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 
                         level.isUnlocked ? 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise' : 
                         'text-teallight/50 cursor-not-allowed'}`}
@@ -345,19 +344,14 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                         <span>{level.exercise?.length || 0} exercise</span>
                       </div>
                     </div>
-                  </button>
-                  {level.isUnlocked && (
-                    <button
-                      onClick={() => toggleLevelExpansion(level.id)}
-                      className="p-2 hover:bg-paperwhite/10 transition-colors"
-                    >
+                    {level.isUnlocked && (
                       <ChevronDownIcon 
-                        className={`h-4 w-4 text-teallight transition-transform duration-200 ${
+                        className={`h-4 w-4 text-teallight transition-transform duration-200 mr-2 ${
                           isLevelExpanded(level.id) ? 'rotate-180' : ''
                         }`} 
                       />
-                    </button>
-                  )}
+                    )}
+                  </button>
                 </div>
                 {sidebarOpen && level.isUnlocked && isLevelExpanded(level.id) && (
                 <div className="ml-2 mt-2 flex flex-col space-y-1 border-l border-paperwhite/10 pl-2">
