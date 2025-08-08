@@ -44,7 +44,6 @@ const StudentDashboard: React.FC = () => {
   const [overallProgress, setOverallProgress] = useState(0);
   const [completedLevels, setCompletedLevels] = useState(0);
   const [showAIModal, setShowAIModal] = useState(false);
-  const [isUpdatingProgress, setIsUpdatingProgress] = useState(false);
 
   // Use the optimized hook
   const { levels, loading, error, refetch } = useLevels(user?.careerTrack);
@@ -145,19 +144,11 @@ const StudentDashboard: React.FC = () => {
 
   // Handle progress updates
   const handleProgressUpdate = () => {
-    // Set loading state
-    setIsUpdatingProgress(true);
-    
-    // Clear cache and force fresh fetch
+    // Clear cache and force fresh fetch in background
     dispatch(clearCache());
     setTimeout(() => {
       refetch();
     }, 100);
-    
-    // Clear loading state after data is fetched
-    setTimeout(() => {
-      setIsUpdatingProgress(false);
-    }, 800);
   };
 
 
@@ -567,25 +558,7 @@ const StudentDashboard: React.FC = () => {
                 </span>
               </div>
               
-              {/* Loading Screen for Progress Updates */}
-              {isUpdatingProgress && (
-                <div className="bg-paperwhite/10 rounded-lg p-4 lg:p-6 flex items-center justify-center">
-                  <div className="flex flex-col items-center space-y-3">
-                    <div className="w-12 h-12 relative">
-                      <img 
-                        src="/src/assets/syncner-logo.png" 
-                        alt="Syncner Logo" 
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-                    <p className="text-teallight text-sm">Updating progress...</p>
-                  </div>
-                </div>
-              )}
-              
-              {/* Content - Only show when not updating */}
-              {!isUpdatingProgress && (
-                <>
+
                 {currentLevel && completedLevels < levels?.length && !(currentLevel.order === levels?.length && currentLevelProgress === 100) ? (
               <div className="bg-paperwhite/10 rounded-lg p-4 lg:p-6">
                 <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-4">
@@ -713,8 +686,6 @@ const StudentDashboard: React.FC = () => {
                   Check Training
                 </Link>
             </div>
-            )}
-            </>
             )}
           </div>
 
