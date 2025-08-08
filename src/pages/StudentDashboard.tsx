@@ -521,7 +521,7 @@ const StudentDashboard: React.FC = () => {
               </div>
               
             
-            {currentLevel && completedLevels < (levels?.length || 0) ? (
+            {currentLevel && completedLevels < levels?.length ? (
               <div className="bg-paperwhite/10 rounded-lg p-4 lg:p-6">
                 <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-4">
                   <div className="mb-4 lg:mb-0">
@@ -579,7 +579,7 @@ const StudentDashboard: React.FC = () => {
                   </Link>
                 </div>
               </div>
-            ) : (completedLevels === (levels?.length || 0) && levels?.length > 0) ? (
+            ) : (completedLevels === levels?.length && levels?.length > 0) ? (
               <div className="bg-gradient-to-r from-green-500/10 to-teallight/10 rounded-lg p-4 lg:p-6 text-center border border-green-500/30">
                 <div className="text-4xl mb-4">🎉</div>
                 <h3 className="text-lg font-semibold text-paperwhite mb-2">Congratulations!</h3>
