@@ -95,7 +95,7 @@ const LevelExercisePage: React.FC = () => {
         const { exercise } = response.data;
         
         setIsExerciseUnlocked(exercise.isUnlocked);
-        setHasExerciseLinks(exercise.submissions && exercise.submissions.length > 0);
+        setHasExerciseLinks(exercise.submissions && exercise.submissions.length >= 2);
         setExerciseSubmissions(exercise.submissions || []);
       }
     } catch (error) {

@@ -136,15 +136,34 @@ const StudentDashboard: React.FC = () => {
     }
   };
 
+  // Force refresh on component mount and when levels change
+  useEffect(() => {
+    if (levels && levels.length > 0) {
+      // Force a fresh fetch every time levels are loaded
+      dispatch(clearCache());
+      setTimeout(() => {
+        refetch();
+      }, 200);
+    }
+  }, [levels.length, dispatch, refetch]);
+
   useEffect(() => {
     window.addEventListener('progress-updated', handleProgressUpdate);
     window.addEventListener('storage', handleStorageChange);
     
     // Also listen for custom events that might be triggered from exercise completion
     const handleCustomProgressUpdate = () => {
+      // Clear cache and force multiple refreshes to ensure data is updated
+      dispatch(clearCache());
       setTimeout(() => {
         refetch();
       }, 200);
+      setTimeout(() => {
+        refetch();
+      }, 500);
+      setTimeout(() => {
+        refetch();
+      }, 1000);
     };
     
     window.addEventListener('exercise-completed', handleCustomProgressUpdate);
@@ -515,8 +534,19 @@ const StudentDashboard: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="bg-paperwhite/10 p-3 lg:p-4 rounded-lg w-fit mx-auto lg:mx-0">
-            {getTrackIcon()}
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => {
+                dispatch(clearCache());
+                refetch();
+              }}
+              className="bg-paperwhite/10 text-paperwhite px-3 py-2 rounded-lg text-sm hover:bg-paperwhite/20 transition-colors"
+            >
+              Refresh
+            </button>
+            <div className="bg-paperwhite/10 p-3 lg:p-4 rounded-lg w-fit">
+              {getTrackIcon()}
+            </div>
           </div>
         </div>
       </div>
