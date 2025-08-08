@@ -15,8 +15,10 @@ const AttendanceHeatmap: React.FC = () => {
     const userId = user?._id || user?.id;
     if (!userId) return;
     setLoading(true);
+    console.log('AttendanceHeatmap: Fetching attendance for userId:', userId);
     apiService.getAttendance(userId)
       .then(res => {
+        console.log('AttendanceHeatmap: API response:', res);
         // Deduplicate by date, prefer 'present' if multiple records for the same day
         const attendanceMap: Record<string, number> = {};
         (res.data || []).forEach((rec: { date: string, status: string }) => {
@@ -27,13 +29,23 @@ const AttendanceHeatmap: React.FC = () => {
           }
         });
         const attendance = Object.entries(attendanceMap).map(([date, count]) => ({ date, count }));
+        console.log('AttendanceHeatmap: Processed attendance data:', attendance);
         setData(attendance);
+      })
+      .catch(error => {
+        console.error('AttendanceHeatmap: Error fetching attendance:', error);
       })
       .finally(() => setLoading(false));
   }, [user?._id, user?.id]);
 
-  if (!user?._id && !user?.id) return null;
+  console.log('AttendanceHeatmap: User data:', user);
+  if (!user?._id && !user?.id) {
+    console.log('AttendanceHeatmap: No user ID found, returning null');
+    return null;
+  }
 
+  console.log('AttendanceHeatmap: Raw data:', data);
+  
   // Group attendance data by month and year
   const attendanceByMonth: Record<string, { date: string; count: number }[]> = {};
   data.forEach((rec) => {
@@ -42,6 +54,8 @@ const AttendanceHeatmap: React.FC = () => {
     if (!attendanceByMonth[key]) attendanceByMonth[key] = [];
     attendanceByMonth[key].push(rec);
   });
+  
+  console.log('AttendanceHeatmap: Grouped by month:', attendanceByMonth);
 
   // Get the range of months to display
   const monthRange: string[] = [];

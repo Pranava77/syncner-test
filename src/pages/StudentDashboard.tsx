@@ -518,7 +518,7 @@ const StudentDashboard: React.FC = () => {
               </div>
               
             
-            {currentLevel ? (
+            {currentLevel && completedLevels < (levels?.length || 0) ? (
               <div className="bg-paperwhite/10 rounded-lg p-4 lg:p-6">
                 <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-4">
                   <div className="mb-4 lg:mb-0">
@@ -576,7 +576,7 @@ const StudentDashboard: React.FC = () => {
                   </Link>
                 </div>
               </div>
-            ) : (
+            ) : (completedLevels === (levels?.length || 0) && levels?.length > 0) ? (
               <div className="bg-gradient-to-r from-green-500/10 to-teallight/10 rounded-lg p-4 lg:p-6 text-center border border-green-500/30">
                 <div className="text-4xl mb-4">🎉</div>
                 <h3 className="text-lg font-semibold text-paperwhite mb-2">Congratulations!</h3>
@@ -630,28 +630,27 @@ const StudentDashboard: React.FC = () => {
                   </div>
                 </div>
               </div>
+            ) : (
+              <div className="bg-paperwhite/10 rounded-lg p-4 lg:p-6 text-center">
+                <div className="text-4xl mb-4">📚</div>
+                <h3 className="text-lg font-semibold text-paperwhite mb-2">No Levels Available</h3>
+                <p className="text-teallight text-sm lg:text-base mb-4">
+                  No training levels are currently available for your track.
+                </p>
+                <Link
+                  to="/student/training"
+                  className="bg-trueturquoise text-offblack px-6 py-3 rounded-lg hover:bg-teallight transition-colors font-medium inline-flex items-center"
+                >
+                  <ReaderIcon className="h-4 w-4 mr-2 text-offblack" />
+                  Check Training
+                </Link>
+              </div>
             )}
           </div>
 
 
 
-          {/* No levels available message */}
-          {!currentLevel && levels?.length === 0 && (
-          <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
-              <div className="text-center">
-                <div className="text-4xl mb-4">📚</div>
-                <h2 className="text-lg lg:text-xl font-semibold text-paperwhite mb-2">No Levels Available</h2>
-                <p className="text-teallight mb-4">No training levels are currently available for your track.</p>
-              <Link 
-                  to="/student/training"
-                  className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-teallight transition-colors font-medium inline-flex items-center"
-              >
-                  <ReaderIcon className="h-4 w-4 mr-2 text-offblack" />
-                  Check Training
-              </Link>
-            </div>
-            </div>
-          )}
+
         </div>
 
         {/* Sidebar */}
