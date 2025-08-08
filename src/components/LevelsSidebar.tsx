@@ -346,30 +346,30 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                 {sidebarOpen && level.isUnlocked && isLevelExpanded(level.id) && (
                 <div className="ml-2 mt-2 flex flex-col space-y-1 border-l border-paperwhite/10 pl-2">
                   <button
-                    className={`w-full flex items-center gap-2 text-left py-2 transition-colors text-xs font-${currentSection === 'learn' ? 'semibold' : 'normal'}
-                      ${currentSection === 'learn' ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'}`}
+                    className={`w-full flex items-center gap-2 text-left py-2 transition-colors text-xs font-${currentLevel === level.id && currentSection === 'learn' ? 'semibold' : 'normal'}
+                      ${currentLevel === level.id && currentSection === 'learn' ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'}`}
                     style={{ borderRadius: 0 }}
                       onClick={() => handleLevelClick(level, 'learn')}
                   >
-                    <ReaderIcon className={`h-4 w-4 ${currentSection === 'learn' ? 'text-trueturquoise' : 'text-paperwhite'}`} />
+                    <ReaderIcon className={`h-4 w-4 ${currentLevel === level.id && currentSection === 'learn' ? 'text-trueturquoise' : 'text-paperwhite'}`} />
                     Learn ({level.learn?.length || 0})
                   </button>
                   <button
-                    className={`w-full flex items-center gap-2 text-left py-2 transition-colors text-xs font-${currentSection === 'test' ? 'semibold' : 'normal'}
-                      ${currentSection === 'test' ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'}`}
+                    className={`w-full flex items-center gap-2 text-left py-2 transition-colors text-xs font-${currentLevel === level.id && currentSection === 'test' ? 'semibold' : 'normal'}
+                      ${currentLevel === level.id && currentSection === 'test' ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'}`}
                     style={{ borderRadius: 0 }}
                       onClick={() => handleLevelClick(level, 'test')}
                   >
-                    <ClipboardIcon className={`h-4 w-4 ${currentSection === 'test' ? 'text-trueturquoise' : 'text-paperwhite'}`} />
+                    <ClipboardIcon className={`h-4 w-4 ${currentLevel === level.id && currentSection === 'test' ? 'text-trueturquoise' : 'text-paperwhite'}`} />
                     Test ({level.test?.length || 0})
                   </button>
                   <button
-                    className={`w-full flex items-center gap-2 text-left py-2 transition-colors text-xs font-${currentSection === 'exercise' ? 'semibold' : 'normal'}
-                      ${currentSection === 'exercise' ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'}`}
+                    className={`w-full flex items-center gap-2 text-left py-2 transition-colors text-xs font-${currentLevel === level.id && currentSection === 'exercise' ? 'semibold' : 'normal'}
+                      ${currentLevel === level.id && currentSection === 'exercise' ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'}`}
                     style={{ borderRadius: 0 }}
                       onClick={() => handleLevelClick(level, 'exercise')}
                   >
-                    <Pencil2Icon className={`h-4 w-4 ${currentSection === 'exercise' ? 'text-trueturquoise' : 'text-paperwhite'}`} />
+                    <Pencil2Icon className={`h-4 w-4 ${currentLevel === level.id && currentSection === 'exercise' ? 'text-trueturquoise' : 'text-paperwhite'}`} />
                     Exercise ({level.exercise?.length || 0})
                   </button>
                 </div>
