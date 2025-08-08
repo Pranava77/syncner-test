@@ -556,12 +556,12 @@ const StudentDashboard: React.FC = () => {
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg lg:text-xl font-semibold text-paperwhite">Continue Learning</h2>
                 <span className="bg-trueturquoise/20 text-trueturquoise px-2 lg:px-3 py-1 rounded-full text-xs lg:text-sm font-medium">
-                {currentLevel ? (currentLevelProgress === 100 ? 'Level Complete' : 'In Progress') : 'All Levels Complete'}
+                {currentLevel ? (currentLevelProgress === 100 && currentLevel.order === levels?.length ? 'Bootcamp Complete' : currentLevelProgress === 100 ? 'Level Complete' : 'In Progress') : 'All Levels Complete'}
                 </span>
               </div>
               
             
-            {currentLevel && completedLevels < levels?.length ? (
+            {currentLevel && completedLevels < levels?.length && !(currentLevel.order === levels?.length && currentLevelProgress === 100) ? (
               <div className="bg-paperwhite/10 rounded-lg p-4 lg:p-6">
                 <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-4">
                   <div className="mb-4 lg:mb-0">
@@ -619,7 +619,7 @@ const StudentDashboard: React.FC = () => {
                   </Link>
                 </div>
               </div>
-            ) : (completedLevels === levels?.length && levels?.length > 0) ? (
+            ) : ((completedLevels === levels?.length && levels?.length > 0) || (currentLevel?.order === levels?.length && currentLevelProgress === 100)) ? (
               <div className="bg-gradient-to-r from-green-500/10 to-teallight/10 rounded-lg p-4 lg:p-6 text-center border border-green-500/30">
                 <div className="text-4xl mb-4">🎉</div>
                 <h3 className="text-lg font-semibold text-paperwhite mb-2">Congratulations!</h3>
