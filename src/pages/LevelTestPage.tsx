@@ -60,6 +60,7 @@ const LevelTestPage: React.FC = () => {
   const [testScore, setTestScore] = useState<number | null>(null);
   const [testPassed, setTestPassed] = useState<boolean | null>(null);
   const [showRetakePopup, setShowRetakePopup] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchLevel = useCallback(async () => {
     try {
@@ -120,6 +121,9 @@ const LevelTestPage: React.FC = () => {
       if (response.success) {
         const { test } = response.data;
         
+        console.log('Test progress data:', test);
+        console.log('Test attempts array:', test.progress?.attempts);
+        console.log('Attempts length:', test.progress?.attempts?.length);
         setIsTestUnlocked(test.isUnlocked);
         setTestProgress(test.progress || { attempts: [], isCompleted: false });
         setCurrentAttempt(test.progress?.attempts?.length || 0);
@@ -216,6 +220,8 @@ const LevelTestPage: React.FC = () => {
     
     if (!levelId) return;
     
+    setIsSubmitting(true);
+    
     const score = calculateScore();
     const passed = score >= 60;
     
@@ -229,9 +235,14 @@ const LevelTestPage: React.FC = () => {
       const response = await apiService.submitTestAttempt(levelId, score, answersForSubmission);
       
       if (response.success) {
+        console.log('Test submission response:', response.data);
+        console.log('Attempts from API:', response.data.attempts);
         setTestScore(score);
         setTestPassed(passed);
-        setCurrentAttempt(response.data.attempts);
+        // Update current attempt count - this should be the total attempts after this submission
+        const totalAttempts = response.data.attempts || 0;
+        console.log('Setting currentAttempt to:', totalAttempts);
+        setCurrentAttempt(totalAttempts);
         setCanRetake(response.data.canRetake);
         
         // If test is passed, mark the test section as completed
@@ -279,7 +290,9 @@ const LevelTestPage: React.FC = () => {
       // Still show results even if submission fails
       setTestScore(score);
       setTestPassed(passed);
-    setSubmitted(true);
+      setSubmitted(true);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -454,8 +467,33 @@ const LevelTestPage: React.FC = () => {
     );
   }
 
-  // Check if max attempts reached or cooldown active (only before taking test)
-  if (!submitted && (currentAttempt >= 3 || (currentAttempt > 0 && !canRetake))) {
+  // Show loading state during submission
+  if (isSubmitting) {
+    return (
+      <div className="flex h-screen bg-offblack overflow-x-hidden">
+        <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
+        <main className="flex-1 overflow-y-auto scroll-smooth p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center justify-center">
+          <div className="text-center">
+            <motion.img
+              src={syncnerLogo}
+              alt="Syncner Logo"
+              className="w-16 h-16 mx-auto mb-4"
+              animate={{
+                scale: [1, 1.1, 1],
+              }}
+              transition={{
+                scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+              }}
+            />
+            <p className="text-paperwhite text-lg">Submitting your test...</p>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  // Check if max attempts reached or cooldown active (only before taking test and not after passing)
+  if (!submitted && !testPassed && (currentAttempt >= 3 || (currentAttempt > 0 && !canRetake))) {
     return (
       <div className="flex h-screen bg-offblack overflow-x-hidden">
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
@@ -530,7 +568,7 @@ const LevelTestPage: React.FC = () => {
             <div>
                   <h1 className="text-2xl font-bold text-paperwhite mb-2">
                     Level {level.order}: {level.title} - Test
-                    <span className="text-lg font-normal text-teallight ml-3">(Attempt {currentAttempt + 1}/3)</span>
+                    <span className="text-lg font-normal text-teallight ml-3">(Attempt {currentAttempt}/3)</span>
                   </h1>
                   <p className="text-teallight text-lg">Test your knowledge with {validQuestions.length} questions</p>
                   <p className="text-orange-400 text-sm mt-1">Passing score: 60% or higher</p>
