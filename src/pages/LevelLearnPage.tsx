@@ -406,6 +406,8 @@ const LevelLearnPage: React.FC = () => {
               ))}
             </div>
 
+      
+
             {/* Action Buttons */}
             <div className="w-full max-w-5xl flex justify-between items-center mt-8">
               <button
@@ -425,7 +427,7 @@ const LevelLearnPage: React.FC = () => {
                        : 'bg-paperwhite/10 text-teallight/50 cursor-not-allowed'
                    }`}
                  >
-                   Take Test
+                   Take Test {learnProgress.isCompleted ? '(Ready)' : '(Complete Learn First)'}
                  </button>
                </div>
             </div>
