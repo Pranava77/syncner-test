@@ -65,9 +65,7 @@ const LevelTestPage: React.FC = () => {
   const fetchLevel = useCallback(async () => {
     try {
       setLoading(true);
-      console.log('LevelTestPage: Fetching level with ID:', levelId);
       const response = await apiService.getLevel(levelId!);
-      console.log('LevelTestPage: Level data response:', response);
       
       let levelData = null;
       if (response && response.data) {
@@ -80,8 +78,6 @@ const LevelTestPage: React.FC = () => {
       
       // Randomize questions if test data exists
       if (levelData && levelData.test && levelData.test.length > 0) {
-        console.log('LevelTestPage: Test data:', levelData.test);
-        console.log('LevelTestPage: Test data length:', levelData.test.length);
         
         // Randomize the order of questions
         const shuffled = [...levelData.test].sort(() => Math.random() - 0.5);
@@ -91,21 +87,12 @@ const LevelTestPage: React.FC = () => {
         const initialAnswers = Object.fromEntries(
           shuffled.map((testItem: any, i: number) => {
             const optionsLength = testItem.options ? testItem.options.length : 0;
-            console.log(`LevelTestPage: Question ${i} parsed data:`, {
-              question: testItem.question,
-              options: testItem.options,
-              answer: testItem.answer,
-              answerType: typeof testItem.answer
-            });
             return [i, new Array(optionsLength).fill(false)];
           })
         );
         setAnswers(initialAnswers);
-      } else {
-        console.log('LevelTestPage: No test data found in level:', levelData);
       }
     } catch (error) {
-      console.error('LevelTestPage: Error fetching level:', error);
       setError(`Failed to load test content: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setLoading(false);
@@ -140,7 +127,7 @@ const LevelTestPage: React.FC = () => {
         }
       }
     } catch (error) {
-      console.error('Error fetching test progress:', error);
+      // Handle error silently
     }
   }, [levelId]);
 
@@ -182,7 +169,7 @@ const LevelTestPage: React.FC = () => {
     if (submitted) return;
     setAnswers((prev) => ({
       ...prev,
-      [qIdx]: prev[qIdx].map((checked, i) => (i === optIdx ? !checked : false)), // Only allow one selection
+      [qIdx]: prev[qIdx].map((checked, i) => (i === optIdx ? true : false)), // Set selected option to true, others to false
     }));
   };
 
@@ -193,25 +180,21 @@ const LevelTestPage: React.FC = () => {
     randomizedQuestions.forEach((question, qIdx) => {
       const userAnswer = answers[qIdx]?.findIndex(a => a);
       
+
+      
       // Convert answer letter (A, B, C, D) to index (0, 1, 2, 3)
-      const answerLetter = question.answer.trim().toUpperCase();
+      const answerLetter = question.answer?.trim().toUpperCase();
       const correctAnswerIndex = answerLetter === 'A' ? 0 : 
                                 answerLetter === 'B' ? 1 : 
                                 answerLetter === 'C' ? 2 : 
                                 answerLetter === 'D' ? 3 : -1;
       
-      console.log(`Question ${qIdx}: User selected index ${userAnswer}, Correct answer is ${answerLetter} (index ${correctAnswerIndex})`);
-      
       if (userAnswer === correctAnswerIndex) {
         correctAnswers++;
-        console.log(`Question ${qIdx}: CORRECT!`);
-      } else {
-        console.log(`Question ${qIdx}: INCORRECT!`);
       }
     });
 
     const score = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
-    console.log(`Final score: ${correctAnswers}/${totalQuestions} = ${score}%`);
     return score;
   };
 
@@ -235,22 +218,17 @@ const LevelTestPage: React.FC = () => {
       const response = await apiService.submitTestAttempt(levelId, score, answersForSubmission);
       
       if (response.success) {
-        console.log('Test submission response:', response.data);
-        console.log('Attempts from API:', response.data.attempts);
         setTestScore(score);
         setTestPassed(passed);
         // Update current attempt count - this should be the total attempts after this submission
         const totalAttempts = response.data.attempts || 0;
-        console.log('Setting currentAttempt to:', totalAttempts);
         setCurrentAttempt(totalAttempts);
         setCanRetake(response.data.canRetake);
         
         // If test is passed, mark the test section as completed
         if (passed && level) {
           try {
-            console.log('Marking test section as completed:', { levelId: level.id, levelOrder: level.order, section: 'test' });
             const completionResult = await apiService.markLevelCompleted(level.id, level.order, 'test');
-            console.log('Test section completion result:', completionResult);
             
             // Trigger sidebar refresh to update unlock status
             setRefreshTrigger(prev => prev + 1);
@@ -280,13 +258,11 @@ const LevelTestPage: React.FC = () => {
         }
       } else {
         // Handle API errors
-        console.error('Test submission failed:', response.message);
         setTestScore(score);
         setTestPassed(passed);
         setSubmitted(true);
       }
     } catch (error) {
-      console.error('Error submitting test attempt:', error);
       // Still show results even if submission fails
       setTestScore(score);
       setTestPassed(passed);
@@ -712,7 +688,7 @@ const LevelTestPage: React.FC = () => {
                     const userAnswerIndex = answers[qIdx]?.findIndex(a => a);
                     
                     // Convert answer letter (A, B, C, D) to index (0, 1, 2, 3) - same logic as calculateScore
-                    const answerLetter = question.answer.trim().toUpperCase();
+                    const answerLetter = question.answer?.trim().toUpperCase();
                     const correctAnswerIndex = answerLetter === 'A' ? 0 : 
                                             answerLetter === 'B' ? 1 : 
                                             answerLetter === 'C' ? 2 : 
@@ -721,16 +697,7 @@ const LevelTestPage: React.FC = () => {
                     const isCorrect = userAnswerIndex === correctAnswerIndex;
                     const hasAnswered = userAnswerIndex !== undefined && userAnswerIndex !== -1;
                     
-                    console.log(`Results display - Question ${qIdx}:`, {
-                      question: question.question,
-                      userAnswerIndex,
-                      correctAnswerIndex,
-                      answerLetter,
-                      isCorrect,
-                      hasAnswered,
-                      userAnswerText: hasAnswered ? question.options[userAnswerIndex] : 'Not answered',
-                      correctAnswerText: correctAnswerIndex !== -1 ? question.options[correctAnswerIndex] : question.answer
-                    });
+
                     
                     return (
                       <div key={qIdx} className="bg-paperwhite/5 rounded-lg border border-paperwhite/10 p-4">
