@@ -28,9 +28,9 @@ interface Level {
   isUnlocked: boolean;
   isCompleted: boolean;
   completedSections?: {
-    learn?: boolean;
-    test?: boolean;
-    exercise?: boolean;
+    learn?: boolean | string;
+    test?: boolean | string;
+    exercise?: boolean | string;
   };
   duration?: string;
 }
@@ -69,7 +69,10 @@ const StudentDashboard: React.FC = () => {
     if (!currentLevel) return 0;
     
     const { learn, test, exercise } = currentLevel.completedSections || {};
-    const completedSections = [learn, test, exercise].filter(Boolean).length;
+    const isLearnCompleted = learn === true || learn === "true";
+    const isTestCompleted = test === true || test === "true";
+    const isExerciseCompleted = exercise === true || exercise === "true";
+    const completedSections = [isLearnCompleted, isTestCompleted, isExerciseCompleted].filter(Boolean).length;
     return Math.round((completedSections / 3) * 100);
   };
 
@@ -86,9 +89,12 @@ const StudentDashboard: React.FC = () => {
 
     // Find current level (first level that's not fully completed)
     const nextLevel = levels.find((level: Level) => {
-      // Check if all three sections are completed
+      // Check if all three sections are completed - handle both boolean and string values
       const { learn, test, exercise } = level.completedSections || {};
-      const isFullyCompleted = learn === true && test === true && exercise === true;
+      const isLearnCompleted = learn === true || learn === "true";
+      const isTestCompleted = test === true || test === "true";
+      const isExerciseCompleted = exercise === true || exercise === "true";
+      const isFullyCompleted = isLearnCompleted && isTestCompleted && isExerciseCompleted;
       
       // Return the first level that's not fully completed (regardless of unlock status)
       // If completedSections is undefined/null, consider it not completed
@@ -102,7 +108,10 @@ const StudentDashboard: React.FC = () => {
     const totalLevels = levels.length;
     const completed = levels.filter((level: Level) => {
       const { learn, test, exercise } = level.completedSections || {};
-      return learn === true && test === true && exercise === true;
+      const isLearnCompleted = learn === true || learn === "true";
+      const isTestCompleted = test === true || test === "true";
+      const isExerciseCompleted = exercise === true || exercise === "true";
+      return isLearnCompleted && isTestCompleted && isExerciseCompleted;
     }).length;
     const progress = totalLevels > 0 ? Math.round((completed / totalLevels) * 100) : 0;
 
@@ -545,7 +554,7 @@ const StudentDashboard: React.FC = () => {
               Refresh
             </button>
             <div className="bg-paperwhite/10 p-3 lg:p-4 rounded-lg w-fit">
-              {getTrackIcon()}
+            {getTrackIcon()}
             </div>
           </div>
         </div>
