@@ -44,6 +44,7 @@ const StudentDashboard: React.FC = () => {
   const [overallProgress, setOverallProgress] = useState(0);
   const [completedLevels, setCompletedLevels] = useState(0);
   const [showAIModal, setShowAIModal] = useState(false);
+  const [isUpdatingProgress, setIsUpdatingProgress] = useState(false);
 
   // Use the optimized hook
   const { levels, loading, error, refetch } = useLevels(user?.careerTrack);
@@ -144,19 +145,22 @@ const StudentDashboard: React.FC = () => {
 
   // Handle progress updates
   const handleProgressUpdate = () => {
+    // Set loading state
+    setIsUpdatingProgress(true);
+    
     // Clear cache and force fresh fetch
     dispatch(clearCache());
     setTimeout(() => {
       refetch();
     }, 100);
+    
+    // Clear loading state after data is fetched
+    setTimeout(() => {
+      setIsUpdatingProgress(false);
+    }, 800);
   };
 
-  const forceRefresh = () => {
-    dispatch(clearCache());
-    setTimeout(() => {
-      refetch();
-    }, 100);
-  };
+
 
   const handleStorageChange = (e: StorageEvent) => {
     if (e.key === 'level-progress-updated') {
@@ -168,12 +172,14 @@ const StudentDashboard: React.FC = () => {
 
   useEffect(() => {
     window.addEventListener('progress-updated', handleProgressUpdate);
+    window.addEventListener('exercise-completed', handleProgressUpdate);
+    window.addEventListener('level-completed', handleProgressUpdate);
     window.addEventListener('storage', handleStorageChange);
-    
-
     
     return () => {
       window.removeEventListener('progress-updated', handleProgressUpdate);
+      window.removeEventListener('exercise-completed', handleProgressUpdate);
+      window.removeEventListener('level-completed', handleProgressUpdate);
       window.removeEventListener('storage', handleStorageChange);
     };
   }, [handleProgressUpdate, handleStorageChange, refetch]);
@@ -562,23 +568,33 @@ const StudentDashboard: React.FC = () => {
         <div className="lg:col-span-2 space-y-6">
           {/* Current Learning */}
             <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
-              <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg lg:text-xl font-semibold text-paperwhite">Continue Learning</h2>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={forceRefresh}
-                    className="bg-paperwhite/10 text-paperwhite px-3 py-1 rounded-lg text-xs hover:bg-paperwhite/20 transition-colors"
-                  >
-                    Refresh
-                  </button>
                 <span className="bg-trueturquoise/20 text-trueturquoise px-2 lg:px-3 py-1 rounded-full text-xs lg:text-sm font-medium">
-                  {currentLevel ? (currentLevelProgress === 100 && currentLevel.order === levels?.length ? 'Bootcamp Complete' : currentLevelProgress === 100 ? 'Level Complete' : 'In Progress') : 'All Levels Complete'}
+                {currentLevel ? (currentLevelProgress === 100 && currentLevel.order === levels?.length ? 'Bootcamp Complete' : currentLevelProgress === 100 ? 'Level Complete' : 'In Progress') : 'All Levels Complete'}
                 </span>
-                </div>
               </div>
               
-            
-            {currentLevel && completedLevels < levels?.length && !(currentLevel.order === levels?.length && currentLevelProgress === 100) ? (
+              {/* Loading Screen for Progress Updates */}
+              {isUpdatingProgress && (
+                <div className="bg-paperwhite/10 rounded-lg p-4 lg:p-6 flex items-center justify-center">
+                  <div className="flex flex-col items-center space-y-3">
+                    <div className="w-12 h-12 relative">
+                      <img 
+                        src="/src/assets/syncner-logo.png" 
+                        alt="Syncner Logo" 
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                    <p className="text-teallight text-sm">Updating progress...</p>
+                  </div>
+                </div>
+              )}
+              
+              {/* Content - Only show when not updating */}
+              {!isUpdatingProgress && (
+                <>
+                {currentLevel && completedLevels < levels?.length && !(currentLevel.order === levels?.length && currentLevelProgress === 100) ? (
               <div className="bg-paperwhite/10 rounded-lg p-4 lg:p-6">
                 <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-4">
                   <div className="mb-4 lg:mb-0">
@@ -705,6 +721,8 @@ const StudentDashboard: React.FC = () => {
                   Check Training
                 </Link>
             </div>
+            )}
+            </>
             )}
           </div>
 
