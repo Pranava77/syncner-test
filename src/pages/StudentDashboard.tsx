@@ -45,6 +45,9 @@ const StudentDashboard: React.FC = () => {
 
   // Use the optimized hook
   const { levels, loading, error, refetch } = useLevels(user?.careerTrack);
+  
+  // Define userTrack early to avoid linter errors
+  const userTrack = user?.careerTrack || 'Unknown';
 
   // Helper functions
   const getTrackIcon = () => {
@@ -331,55 +334,91 @@ const StudentDashboard: React.FC = () => {
               </div>
             )}
 
-            {/* Progress Stats */}
-            <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
-              <h3 className=" text-paperwhite mb-4 font-heading">Your Progress</h3>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-teallight text-sm lg:text-base">Level Completion</span>
-                  <span className="font-semibold text-paperwhite">{overallProgress}%</span>
+                      {/* Progress Stats */}
+          <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
+            <h3 className="text-paperwhite mb-4 font-heading">
+              {completedLevels === levels?.length && levels?.length > 0 ? 'Track Completion' : 'Your Progress'}
+            </h3>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-teallight text-sm lg:text-base">
+                  {completedLevels === levels?.length && levels?.length > 0 ? 'Track Progress' : 'Level Completion'}
+                </span>
+                <span className="font-semibold text-paperwhite">{overallProgress}%</span>
+              </div>
+              <div className="w-full bg-paperwhite/20 rounded-full h-2">
+                <div 
+                  className={`h-2 rounded-full transition-all ${
+                    completedLevels === levels?.length && levels?.length > 0 
+                      ? 'bg-gradient-to-r from-green-400 to-teallight' 
+                      : 'bg-trueturquoise'
+                  }`}
+                  style={{ width: `${overallProgress}%` }}
+                ></div>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4 pt-4">
+                <div className="text-center">
+                  <div className="text-lg font-bold text-trueturquoise">{levels?.length || 0}</div>
+                  <div className="text-xs text-teallight">Total Levels</div>
                 </div>
-                <div className="w-full bg-paperwhite/20 rounded-full h-2">
-                  <div 
-                    className="bg-trueturquoise h-2 rounded-full transition-all"
-                    style={{ width: `${overallProgress}%` }}
-                  ></div>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4 pt-4">
-                  <div className="text-center">
-                    <div className="text-lg font-bold text-trueturquoise">{levels?.length || 0}</div>
-                    <div className="text-xs text-teallight">Total Levels</div>
+                <div className="text-center">
+                  <div className={`text-lg font-bold ${
+                    completedLevels === levels?.length && levels?.length > 0 
+                      ? 'text-green-400' 
+                      : 'text-trueturquoise'
+                  }`}>
+                    {completedLevels}
                   </div>
-                  <div className="text-center">
-                    <div className="text-lg font-bold text-trueturquoise">{completedLevels}</div>
-                    <div className="text-xs text-teallight">Completed</div>
-                  </div>
+                  <div className="text-xs text-teallight">Completed</div>
                 </div>
-                
-                <div className="pt-4 border-t border-paperwhite/10">
-                  <div className="text-center">
-                    <div className="text-sm text-teallight mb-2">Levels Status</div>
-                    <div className="text-xs text-teallight space-y-1">
-                      <div className="flex justify-between">
-                        <span>Completed Levels:</span>
-                        <span className="text-green-400">{completedLevels}</span>
-                      </div>
+              </div>
+              
+              <div className="pt-4 border-t border-paperwhite/10">
+                <div className="text-center">
+                  <div className="text-sm text-teallight mb-2">
+                    {completedLevels === levels?.length && levels?.length > 0 ? 'Track Status' : 'Levels Status'}
+                  </div>
+                  <div className="text-xs text-teallight space-y-1">
+                    <div className="flex justify-between">
+                      <span>Completed Levels:</span>
+                      <span className="text-green-400">{completedLevels}</span>
+                    </div>
+                    {completedLevels < (levels?.length || 0) && (
                       <div className="flex justify-between">
                         <span>Remaining Levels:</span>
                         <span className="text-orange-400">{levels?.length - completedLevels || 0}</span>
                       </div>
-                      {currentLevel && (
-                        <div className="flex justify-between">
-                          <span>Current Level:</span>
-                          <span className="text-trueturquoise">Level {currentLevel.order}</span>
-                        </div>
-                      )}
-                    </div>
+                    )}
+                    {currentLevel && completedLevels < (levels?.length || 0) && (
+                      <div className="flex justify-between">
+                        <span>Current Level:</span>
+                        <span className="text-trueturquoise">Level {currentLevel.order}</span>
+                      </div>
+                    )}
+                    {completedLevels === levels?.length && levels?.length > 0 && (
+                      <div className="flex justify-between">
+                        <span>Track Status:</span>
+                        <span className="text-green-400">🏆 Mastered</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
+              
+              {/* Special completion message */}
+              {completedLevels === levels?.length && levels?.length > 0 && (
+                <div className="mt-4 p-3 bg-green-500/10 rounded-lg border border-green-500/20">
+                  <div className="text-center">
+                    <div className="text-2xl mb-2">🎉</div>
+                    <p className="text-xs text-green-400 font-medium">
+                      Congratulations! You've mastered the {userTrack} track!
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
+          </div>
           </div>
         </div>
       </div>
@@ -421,8 +460,6 @@ const StudentDashboard: React.FC = () => {
       </div>
     );
   }
-
-  const userTrack = user?.careerTrack || 'Unknown';
 
   const currentLevelProgress = getCurrentLevelProgress();
 
@@ -540,21 +577,60 @@ const StudentDashboard: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="bg-paperwhite/10 rounded-lg p-4 lg:p-6 text-center">
+              <div className="bg-gradient-to-r from-green-500/10 to-teallight/10 rounded-lg p-4 lg:p-6 text-center border border-green-500/30">
                 <div className="text-4xl mb-4">🎉</div>
                 <h3 className="text-lg font-semibold text-paperwhite mb-2">Congratulations!</h3>
                 <p className="text-teallight text-sm lg:text-base mb-4">
-                  You've completed all {levels?.length || 0} levels in your track!
+                  You've completed all {levels?.length || 0} levels in your {userTrack} track!
                 </p>
-                <Link
-                  to="/student/training"
-                  className="bg-trueturquoise text-offblack px-6 py-3 rounded-lg hover:bg-teallight transition-colors font-medium inline-flex items-center"
-                >
-                  <ReaderIcon className="h-4 w-4 mr-2 text-offblack" />
-                  View All Levels
-                </Link>
-            </div>
-          )}
+                
+                {/* Completion Stats */}
+                <div className="grid grid-cols-3 gap-4 mb-6">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-green-400">{levels?.length || 0}</div>
+                    <div className="text-xs text-teallight">Levels Completed</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-green-400">100%</div>
+                    <div className="text-xs text-teallight">Track Progress</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-green-400">🏆</div>
+                    <div className="text-xs text-teallight">Track Mastered</div>
+                  </div>
+                </div>
+
+                {/* Next Steps Configuration */}
+                <div className="space-y-3">
+                  <h4 className="text-md font-semibold text-paperwhite mb-3">What's Next?</h4>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <Link
+                      to="/student/training"
+                      className="bg-trueturquoise text-offblack px-4 py-3 rounded-lg hover:bg-teallight transition-colors font-medium inline-flex items-center justify-center"
+                    >
+                      <ReaderIcon className="h-4 w-4 mr-2 text-offblack" />
+                      Review All Levels
+                    </Link>
+                    
+                    <Link
+                      to="/student/profile"
+                      className="bg-paperwhite/10 text-paperwhite px-4 py-3 rounded-lg hover:bg-paperwhite/20 transition-colors font-medium inline-flex items-center justify-center border border-paperwhite/20"
+                    >
+                      <Target className="h-4 w-4 mr-2 text-teallight" />
+                      View Certificate
+                    </Link>
+                  </div>
+                  
+                  <div className="mt-4 p-3 bg-paperwhite/5 rounded-lg border border-paperwhite/10">
+                    <p className="text-xs text-teallight">
+                      🎯 <strong>Track Mastered:</strong> You've successfully completed the {userTrack} track. 
+                      Consider exploring other tracks or advanced topics to continue your learning journey.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
 
