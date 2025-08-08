@@ -316,6 +316,9 @@ userProgressSchema.methods.submitExercise = function(levelId, exerciseTitle, lin
       status: 'submitted',
       links: links || []
     });
+    
+    // Mark exercise section as completed
+    level.completedSections.exercise = true;
   }
 };
 
@@ -329,6 +332,9 @@ userProgressSchema.methods.updateExercise = function(levelId, exerciseTitle, lin
       submission.submittedAt = new Date();
       submission.status = 'updated';
     }
+    
+    // Mark exercise section as completed
+    level.completedSections.exercise = true;
   }
 };
 

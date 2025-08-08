@@ -73,26 +73,7 @@ const StudentDashboard: React.FC = () => {
     const isTestCompleted = test === true || test === "true";
     const isExerciseCompleted = exercise === true || exercise === "true";
     const completedSections = [isLearnCompleted, isTestCompleted, isExerciseCompleted].filter(Boolean).length;
-    const progress = Math.round((completedSections / 3) * 100);
-
-    // Debug logging for the last level
-    if (currentLevel.order === levels?.length) {
-      console.log('🔍 Last Level Progress Debug:', {
-        levelOrder: currentLevel.order,
-        levelTitle: currentLevel.title,
-        completedSections: currentLevel.completedSections,
-        learn: learn,
-        test: test,
-        exercise: exercise,
-        isLearnCompleted,
-        isTestCompleted,
-        isExerciseCompleted,
-        completedSectionsCount: completedSections,
-        progress
-      });
-    }
-
-    return progress;
+    return Math.round((completedSections / 3) * 100);
   };
 
   // Memoized calculations for better performance
@@ -134,20 +115,7 @@ const StudentDashboard: React.FC = () => {
     }).length;
     const progress = totalLevels > 0 ? Math.round((completed / totalLevels) * 100) : 0;
 
-    // Debug logging for the last level
-    if (currentLevel?.order === levels.length) {
-      console.log('🔍 Dashboard Data Debug - Last Level:', {
-        levelOrder: currentLevel.order,
-        levelTitle: currentLevel.title,
-        completedSections: currentLevel.completedSections,
-        learn: currentLevel.completedSections?.learn,
-        test: currentLevel.completedSections?.test,
-        exercise: currentLevel.completedSections?.exercise,
-        isLearnCompleted: currentLevel.completedSections?.learn === true || currentLevel.completedSections?.learn === "true",
-        isTestCompleted: currentLevel.completedSections?.test === true || currentLevel.completedSections?.test === "true",
-        isExerciseCompleted: currentLevel.completedSections?.exercise === true || currentLevel.completedSections?.exercise === "true"
-      });
-    }
+
 
     return {
       currentLevel: currentLevel,
@@ -184,7 +152,6 @@ const StudentDashboard: React.FC = () => {
   };
 
   const forceRefresh = () => {
-    console.log('🔄 Force refreshing dashboard data...');
     dispatch(clearCache());
     setTimeout(() => {
       refetch();
@@ -604,9 +571,9 @@ const StudentDashboard: React.FC = () => {
                   >
                     Refresh
                   </button>
-                  <span className="bg-trueturquoise/20 text-trueturquoise px-2 lg:px-3 py-1 rounded-full text-xs lg:text-sm font-medium">
+                <span className="bg-trueturquoise/20 text-trueturquoise px-2 lg:px-3 py-1 rounded-full text-xs lg:text-sm font-medium">
                   {currentLevel ? (currentLevelProgress === 100 && currentLevel.order === levels?.length ? 'Bootcamp Complete' : currentLevelProgress === 100 ? 'Level Complete' : 'In Progress') : 'All Levels Complete'}
-                  </span>
+                </span>
                 </div>
               </div>
               
