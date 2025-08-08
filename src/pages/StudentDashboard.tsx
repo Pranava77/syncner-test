@@ -155,63 +155,17 @@ const StudentDashboard: React.FC = () => {
     }
   };
 
-  // Force refresh on component mount and when levels change
-  useEffect(() => {
-    if (levels && levels.length > 0) {
-      // Force a fresh fetch every time levels are loaded
-      dispatch(clearCache());
-      setTimeout(() => {
-        refetch();
-      }, 200);
-      // Additional refresh to ensure exercise completion is captured
-      setTimeout(() => {
-        dispatch(clearCache());
-        refetch();
-      }, 1000);
-    }
-  }, [levels.length, dispatch, refetch]);
+
 
   useEffect(() => {
     window.addEventListener('progress-updated', handleProgressUpdate);
     window.addEventListener('storage', handleStorageChange);
     
-    // Also listen for custom events that might be triggered from exercise completion
-    const handleCustomProgressUpdate = () => {
-      // Clear cache and force multiple refreshes to ensure data is updated
-      dispatch(clearCache());
-      setTimeout(() => {
-        refetch();
-      }, 200);
-      setTimeout(() => {
-        refetch();
-      }, 500);
-      setTimeout(() => {
-        refetch();
-      }, 1000);
-      // Additional refresh after 2 seconds to ensure backend has processed
-      setTimeout(() => {
-        dispatch(clearCache());
-        refetch();
-      }, 2000);
-    };
-    
-    window.addEventListener('exercise-completed', handleCustomProgressUpdate);
-    window.addEventListener('level-completed', handleCustomProgressUpdate);
-    
-    // Force refresh when component mounts to ensure latest data
-    const handlePageFocus = () => {
-      dispatch(clearCache());
-      refetch();
-    };
-    
-    window.addEventListener('focus', handlePageFocus);
+
     
     return () => {
       window.removeEventListener('progress-updated', handleProgressUpdate);
       window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('exercise-completed', handleCustomProgressUpdate);
-      window.removeEventListener('level-completed', handleCustomProgressUpdate);
-      window.removeEventListener('focus', handlePageFocus);
     };
   }, [handleProgressUpdate, handleStorageChange, refetch]);
 
