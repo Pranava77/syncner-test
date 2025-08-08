@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../redux/store';
 import { useLevels } from '../hooks/useLevels';
 import { clearCache } from '../redux/slices/curriculumSlice';
@@ -40,6 +40,7 @@ interface Level {
 const StudentDashboard: React.FC = () => {
   const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
+  const location = useLocation();
   const [currentLevel, setCurrentLevel] = useState<Level | null>(null);
   const [overallProgress, setOverallProgress] = useState(0);
   const [completedLevels, setCompletedLevels] = useState(0);
@@ -132,15 +133,16 @@ const StudentDashboard: React.FC = () => {
     setCompletedLevels(dashboardData.completedLevels);
   }, [dashboardData]);
 
-  // Force initial refresh when component mounts
+  // Force fresh data fetch when component mounts or user navigates to dashboard
   useEffect(() => {
     if (user?.careerTrack) {
+      // Clear cache and fetch fresh data
       dispatch(clearCache());
       setTimeout(() => {
         refetch();
       }, 100);
     }
-  }, [user?.careerTrack, dispatch, refetch]);
+  }, [user?.careerTrack, location.pathname, dispatch, refetch]);
 
   // Handle progress updates
   const handleProgressUpdate = () => {
