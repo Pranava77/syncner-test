@@ -162,7 +162,15 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
       <div className={`bg-offblack border-r border-paperwhite/10 transition-all duration-300 ${
         sidebarOpen ? 'w-80' : 'w-0'
       } overflow-hidden`}>
-        <div className="p-4">
+        <div className={`flex-1 flex flex-col relative ${sidebarOpen ? 'py-24 pl-2' : 'py-2'}`}>
+          {sidebarOpen && (
+            <div className="flex items-center justify-between mb-4 transition-opacity duration-200">
+              <h2 className="text-lg font-semibold text-paperwhite flex items-center gap-2">
+                <LayersIcon className="h-5 w-5 text-trueturquoise" /> 
+                Loading...
+              </h2>
+            </div>
+          )}
           <div className="animate-pulse space-y-4">
             {[1, 2, 3].map((i) => (
               <div key={i} className="space-y-2">
@@ -185,7 +193,15 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
       <div className={`bg-offblack border-r border-paperwhite/10 transition-all duration-300 ${
         sidebarOpen ? 'w-80' : 'w-0'
       } overflow-hidden`}>
-        <div className="p-4">
+        <div className={`flex-1 flex flex-col relative ${sidebarOpen ? 'py-24 pl-2' : 'py-2'}`}>
+          {sidebarOpen && (
+            <div className="flex items-center justify-between mb-4 transition-opacity duration-200">
+              <h2 className="text-lg font-semibold text-paperwhite flex items-center gap-2">
+                <LayersIcon className="h-5 w-5 text-trueturquoise" /> 
+                Error
+              </h2>
+            </div>
+          )}
           <div className="text-red-400 text-sm">Error loading levels: {error}</div>
           <button 
             onClick={refetch}
