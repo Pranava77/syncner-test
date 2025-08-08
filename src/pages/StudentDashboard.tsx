@@ -542,15 +542,7 @@ const StudentDashboard: React.FC = () => {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <button 
-              onClick={() => {
-                dispatch(clearCache());
-                refetch();
-              }}
-              className="bg-paperwhite/10 text-paperwhite px-3 py-2 rounded-lg text-sm hover:bg-paperwhite/20 transition-colors"
-            >
-              Refresh
-            </button>
+
             <div className="bg-paperwhite/10 p-3 lg:p-4 rounded-lg w-fit">
             {getTrackIcon()}
             </div>
