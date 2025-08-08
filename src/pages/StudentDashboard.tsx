@@ -121,7 +121,10 @@ const StudentDashboard: React.FC = () => {
 
   // Handle progress updates
   const handleProgressUpdate = () => {
-    refetch();
+    // Add a small delay to ensure backend has processed the update
+    setTimeout(() => {
+      refetch();
+    }, 100);
   };
 
   const handleStorageChange = (e: StorageEvent) => {
@@ -134,11 +137,23 @@ const StudentDashboard: React.FC = () => {
     window.addEventListener('progress-updated', handleProgressUpdate);
     window.addEventListener('storage', handleStorageChange);
     
+    // Also listen for custom events that might be triggered from exercise completion
+    const handleCustomProgressUpdate = () => {
+      setTimeout(() => {
+        refetch();
+      }, 200);
+    };
+    
+    window.addEventListener('exercise-completed', handleCustomProgressUpdate);
+    window.addEventListener('level-completed', handleCustomProgressUpdate);
+    
     return () => {
       window.removeEventListener('progress-updated', handleProgressUpdate);
       window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('exercise-completed', handleCustomProgressUpdate);
+      window.removeEventListener('level-completed', handleCustomProgressUpdate);
     };
-  }, [handleProgressUpdate, handleStorageChange]);
+  }, [handleProgressUpdate, handleStorageChange, refetch]);
 
   if (!user || !user.careerTrack) {
     return (
