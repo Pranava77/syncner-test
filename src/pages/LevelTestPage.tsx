@@ -113,7 +113,6 @@ const LevelTestPage: React.FC = () => {
         console.log('Attempts length:', test.progress?.attempts?.length);
         setIsTestUnlocked(test.isUnlocked);
         setTestProgress(test.progress || { attempts: [], isCompleted: false });
-        setCurrentAttempt(test.progress?.attempts?.length || 0);
         
         // Check if user can retake test based on attempts and cooldown
         const attempts = test.progress?.attempts?.length || 0;
@@ -130,7 +129,16 @@ const LevelTestPage: React.FC = () => {
             const remainingHours = 5 - hoursSinceLastAttempt;
             const remainingSeconds = Math.ceil(remainingHours * 60 * 60);
             setRetakeTimer(remainingSeconds);
+            // If still in cooldown, show current attempts
+            setCurrentAttempt(attempts);
+          } else {
+            // Cooldown expired, reset attempts to 0 for fresh start
+            setCurrentAttempt(0);
+            setRetakeTimer(null);
           }
+        } else {
+          // Less than 3 attempts, show current attempts
+          setCurrentAttempt(attempts);
         }
         
         setCanRetake(canRetake);
@@ -155,6 +163,8 @@ const LevelTestPage: React.FC = () => {
       setRetakeTimer(prev => {
         if (prev === null || prev <= 1) {
           setCanRetake(true);
+          // Reset attempts to 0 when cooldown expires for fresh start
+          setCurrentAttempt(0);
           return null;
         }
         return prev - 1;
@@ -163,6 +173,14 @@ const LevelTestPage: React.FC = () => {
 
     return () => clearInterval(interval);
   }, [retakeTimer]);
+
+  // Refresh test progress when cooldown expires
+  useEffect(() => {
+    if (canRetake && currentAttempt >= 3) {
+      // Cooldown has expired, refresh the test progress to get updated state
+      fetchTestProgress();
+    }
+  }, [canRetake, currentAttempt, fetchTestProgress]);
 
   useEffect(() => {
     if (submitted) return;
@@ -231,7 +249,14 @@ const LevelTestPage: React.FC = () => {
         setTestPassed(passed);
         // Update current attempt count - this should be the total attempts after this submission
         const totalAttempts = response.data.attempts || 0;
-        setCurrentAttempt(totalAttempts);
+        
+        // If this is a fresh start after cooldown (currentAttempt was 0), start counting from 1
+        if (currentAttempt === 0 && canRetake) {
+          setCurrentAttempt(1);
+        } else {
+          setCurrentAttempt(totalAttempts);
+        }
+        
         setCanRetake(response.data.canRetake);
         
         // If test is passed, mark the test section as completed
@@ -264,7 +289,7 @@ const LevelTestPage: React.FC = () => {
           // Test failed - show attempts remaining and cooldown info
           // The retry information is shown in the results
           // Only show retake popup if all attempts are exhausted
-          if (response.data.attempts >= 3) {
+          if (response.data.attempts >= 3 && !canRetake) {
             setShowRetakePopup(true);
           }
         }
@@ -272,7 +297,7 @@ const LevelTestPage: React.FC = () => {
         // Handle API errors
         setTestScore(score);
         setTestPassed(passed);
-        setSubmitted(true);
+      setSubmitted(true);
       }
     } catch (error) {
       // Still show results even if submission fails
@@ -481,7 +506,7 @@ const LevelTestPage: React.FC = () => {
   }
 
   // Check if max attempts reached or cooldown active (only before taking test and not after passing)
-  if (!submitted && !testPassed && (currentAttempt >= 3 || (currentAttempt > 0 && !canRetake))) {
+  if (!submitted && !testPassed && (currentAttempt >= 3 && !canRetake)) {
     return (
       <div className="flex h-screen bg-offblack overflow-x-hidden">
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
@@ -491,13 +516,10 @@ const LevelTestPage: React.FC = () => {
               <ExclamationTriangleIcon className="h-10 w-10 text-orange-400" />
             </div>
             <h2 className="text-3xl font-bold text-paperwhite mb-3">
-              {currentAttempt >= 3 ? 'Maximum Attempts Reached' : 'Test Cooldown Active'}
+              Maximum Attempts Reached
             </h2>
             <p className="text-teallight mb-6 text-lg leading-relaxed">
-              {currentAttempt >= 3 
-                ? 'You have used all 3 attempts for this test. Please wait 5 hours before retaking.'
-                : 'Please wait before retaking the test.'
-              }
+              You have used all 3 attempts for this test. Please wait 5 hours before retaking.
             </p>
             {retakeTimer && (
               <div className="bg-gradient-to-r from-paperwhite/5 to-paperwhite/10 rounded-xl p-6 mb-6 border border-paperwhite/20">
@@ -556,7 +578,7 @@ const LevelTestPage: React.FC = () => {
             <div>
                   <h1 className="text-2xl font-bold text-paperwhite mb-2">
                     Level {level.order}: {level.title} - Test
-                    <span className="text-lg font-normal text-teallight ml-3">(Attempt {currentAttempt}/3)</span>
+                    <span className="text-lg font-normal text-teallight ml-3">(Attempt {currentAttempt === 0 && canRetake ? 1 : currentAttempt}/3)</span>
                   </h1>
                   <p className="text-teallight text-lg">Test your knowledge with {validQuestions.length} questions</p>
                   <p className="text-orange-400 text-sm mt-1">Passing score: 60% or higher</p>
@@ -658,10 +680,10 @@ const LevelTestPage: React.FC = () => {
                 
                 {!testPassed && (
                   <div className="bg-gradient-to-r from-paperwhite/5 to-paperwhite/10 rounded-xl p-6 mb-6 border border-paperwhite/20">
-                    {currentAttempt < 3 ? (
+                    {(currentAttempt < 3 || (currentAttempt === 0 && canRetake)) ? (
                       <>
                         <div className="text-trueturquoise font-semibold mb-2 text-sm">Attempts Remaining</div>
-                        <div className="text-3xl font-bold text-paperwhite">{3 - currentAttempt}</div>
+                        <div className="text-3xl font-bold text-paperwhite">{currentAttempt === 0 && canRetake ? 3 : 3 - currentAttempt}</div>
                         <div className="text-sm text-teallight mt-1">You can retry immediately</div>
                       </>
                     ) : (
@@ -809,13 +831,10 @@ const LevelTestPage: React.FC = () => {
                     <ExclamationTriangleIcon className="h-8 w-8 text-orange-400" />
                   </div>
                   <h2 className="text-2xl font-bold text-paperwhite mb-3">
-                    {currentAttempt >= 3 ? 'Maximum Attempts Reached' : 'Test Cooldown Active'}
+                    Maximum Attempts Reached
                   </h2>
                   <p className="text-teallight mb-6 text-base leading-relaxed">
-                    {currentAttempt >= 3 
-                      ? 'You have used all 3 attempts for this test. Please wait 5 hours before retaking.'
-                      : 'Please wait before retaking the test.'
-                    }
+                    You have used all 3 attempts for this test. Please wait 5 hours before retaking.
                   </p>
                   {retakeTimer && (
                     <div className="bg-gradient-to-r from-paperwhite/5 to-paperwhite/10 rounded-xl p-6 mb-6 border border-paperwhite/20">
