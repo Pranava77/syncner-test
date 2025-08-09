@@ -95,19 +95,34 @@ const LevelExercisePage: React.FC = () => {
       const response = await apiService.getLevelSectionStatus(levelId);
       
       if (response.success) {
-        const { exercise } = response.data;
+        const { exercise, test } = response.data;
         
-        setIsExerciseUnlocked(exercise.isUnlocked);
+        console.log('Exercise status response:', response.data);
+        console.log('Exercise data:', exercise);
+        console.log('Test data:', test);
+        
+        // Check if test is completed (either through test.isCompleted or test.progress.isCompleted)
+        const isTestCompleted = test?.isCompleted || test?.progress?.isCompleted || false;
+        console.log('Is test completed:', isTestCompleted);
+        
+        // Exercise is unlocked if test is completed OR if exercise.isUnlocked is true
+        const exerciseUnlocked = exercise?.isUnlocked || isTestCompleted;
+        console.log('Exercise unlocked:', exerciseUnlocked);
+        
+        setIsExerciseUnlocked(exerciseUnlocked);
+        
         // Dynamic exercise completion based on available exercises
         const totalExercises = level?.exercise?.length || 1; // At least 1 to avoid division by zero
         const submittedExercises = exercise.submissions?.length || 0;
         setHasExerciseLinks(submittedExercises >= 1); // Complete with at least 1 exercise
         setExerciseSubmissions(exercise.submissions || []);
+      } else {
+        console.error('Failed to fetch exercise status:', response);
       }
     } catch (error) {
       console.error('Error fetching exercise status:', error);
     }
-  }, [levelId]);
+  }, [levelId, level?.exercise?.length]);
 
   useEffect(() => {
     if (levelId) {
