@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useAppSelector } from '../redux/store';
 import LevelsSidebar from '../components/LevelsSidebar';
 import TaskSubmissionModal from '../components/TaskSubmissionModal';
 import { LockClosedIcon, CheckCircledIcon } from '@radix-ui/react-icons';
@@ -33,6 +34,7 @@ interface ExerciseItem {
 const LevelExercisePage: React.FC = () => {
   const { levelId } = useParams<{ levelId: string }>();
   const navigate = useNavigate();
+  const { user } = useAppSelector((state) => state.auth);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [level, setLevel] = useState<Level | null>(null);
   const [loading, setLoading] = useState(true);
@@ -122,14 +124,22 @@ const LevelExercisePage: React.FC = () => {
 
   const fetchAllLevels = useCallback(async () => {
     try {
-      const response = await apiService.getLevels();
+      if (!user?.careerTrack) {
+        console.error('No career track found for user');
+        return;
+      }
+      
+      const response = await apiService.getLevels(user.careerTrack);
       if (response && response.data) {
-        setAllLevels(Array.isArray(response.data) ? response.data : [response.data]);
+        const levelsData = Array.isArray(response.data) ? response.data : [response.data];
+        // Filter levels to only include the current user's track
+        const currentTrackLevels = levelsData.filter((level: Level) => level.careerTrack === user.careerTrack);
+        setAllLevels(currentTrackLevels);
       }
     } catch (error) {
       console.error('Error fetching all levels:', error);
     }
-  }, []);
+  }, [user?.careerTrack]);
 
   useEffect(() => {
     fetchAllLevels();
@@ -181,25 +191,31 @@ const LevelExercisePage: React.FC = () => {
       // Small delay to ensure sidebar refresh completes
       await new Promise(resolve => setTimeout(resolve, 500));
       
-      // Navigate to next level
+      // Navigate to next level (only within the same track)
       if (level && level.order && allLevels.length > 0) {
-        // Find the next level by order
-        const nextLevel = allLevels.find(l => l.order === level.order + 1);
+        // Find the next level by order within the same track
+        const currentTrackLevels = allLevels.filter(l => l.careerTrack === user?.careerTrack);
+        const nextLevel = currentTrackLevels.find(l => l.order === level.order + 1);
+        
         if (nextLevel) {
+          // There is a next level, navigate to it
           navigate(`/student/training/${nextLevel.id}/learn`);
         } else {
-          // If no next level, go to training levels page
+          // No next level found - this is the last level or no more levels
+          console.log('No next level found - bootcamp completed or no more levels available');
           navigate('/student/training');
         }
       } else {
         // Fallback to training levels page
+        console.log('No levels data available - navigating to training page');
         navigate('/student/training');
       }
     } catch (error) {
       console.error('Error marking level as completed:', error);
       // Still navigate even if marking as completed fails
       if (level && level.order && allLevels.length > 0) {
-        const nextLevel = allLevels.find(l => l.order === level.order + 1);
+        const currentTrackLevels = allLevels.filter(l => l.careerTrack === user?.careerTrack);
+        const nextLevel = currentTrackLevels.find(l => l.order === level.order + 1);
         if (nextLevel) {
           navigate(`/student/training/${nextLevel.id}/learn`);
         } else {
@@ -213,8 +229,23 @@ const LevelExercisePage: React.FC = () => {
     }
   };
 
-  // Check if this is the last level
-  const isLastLevel = level && allLevels.length > 0 && level.order === Math.max(...allLevels.map(l => l.order));
+  // Check if this is the last level (only within the current track)
+  const isLastLevel = useMemo(() => {
+    if (!level || !allLevels.length || !user?.careerTrack) return false;
+    
+    const currentTrackLevels = allLevels.filter(l => l.careerTrack === user.careerTrack);
+    if (currentTrackLevels.length === 0) return true; // No levels in this track
+    
+    const maxOrder = Math.max(...currentTrackLevels.map(l => l.order));
+    return level.order === maxOrder;
+  }, [level, allLevels, user?.careerTrack]);
+
+  // Check if there are any levels in the current track
+  const hasLevelsInTrack = useMemo(() => {
+    if (!allLevels.length || !user?.careerTrack) return false;
+    const currentTrackLevels = allLevels.filter(l => l.careerTrack === user.careerTrack);
+    return currentTrackLevels.length > 0;
+  }, [allLevels, user?.careerTrack]);
 
   // Handle bootcamp completion
   const handleBootcampCompletion = async () => {
@@ -242,6 +273,7 @@ const LevelExercisePage: React.FC = () => {
       localStorage.setItem('level-progress-updated', Date.now().toString());
       
       // Navigate to training levels page or dashboard
+      console.log('Bootcamp completed - navigating to training page');
       navigate('/student/training');
     } catch (error) {
       console.error('Error marking final level as completed:', error);
@@ -287,6 +319,28 @@ const LevelExercisePage: React.FC = () => {
               className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors"
             >
               Retry
+            </button>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  // Check if there are any levels in the current track
+  if (!hasLevelsInTrack) {
+    return (
+      <div className="flex h-screen bg-offblack overflow-x-hidden">
+        <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="exercise" refreshTrigger={refreshTrigger} />
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
+          <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 text-center">
+            <div className="text-paperwhite/30 text-6xl mb-4">📚</div>
+            <h2 className="text-2xl font-bold text-paperwhite mb-2">No Levels Available</h2>
+            <p className="text-teallight mb-6">There are no levels available for your current career track ({user?.careerTrack || 'Unknown'}).</p>
+            <button 
+              onClick={() => navigate('/student/training')}
+              className="bg-trueturquoise text-offblack px-6 py-3 rounded-lg font-bold hover:bg-trueturquoise/90 transition-colors"
+            >
+              Back to Training
             </button>
           </div>
         </main>
