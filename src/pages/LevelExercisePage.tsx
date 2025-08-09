@@ -44,6 +44,7 @@ const LevelExercisePage: React.FC = () => {
   const [allLevels, setAllLevels] = useState<Level[]>([]);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [unlockingLevel, setUnlockingLevel] = useState(false);
+  const [levelsLoading, setLevelsLoading] = useState(true);
   
   // New state for exercise validation
   const [isExerciseUnlocked, setIsExerciseUnlocked] = useState(false);
@@ -124,6 +125,7 @@ const LevelExercisePage: React.FC = () => {
 
   const fetchAllLevels = useCallback(async () => {
     try {
+      setLevelsLoading(true);
       if (!user?.careerTrack) {
         console.error('No career track found for user');
         return;
@@ -138,6 +140,8 @@ const LevelExercisePage: React.FC = () => {
       }
     } catch (error) {
       console.error('Error fetching all levels:', error);
+    } finally {
+      setLevelsLoading(false);
     }
   }, [user?.careerTrack]);
 
@@ -240,12 +244,13 @@ const LevelExercisePage: React.FC = () => {
     return level.order === maxOrder;
   }, [level, allLevels, user?.careerTrack]);
 
-  // Check if there are any levels in the current track
+  // Check if there are any levels in the current track (only after loading and level data are available)
   const hasLevelsInTrack = useMemo(() => {
-    if (!allLevels.length || !user?.careerTrack) return false;
+    // Only check if levels loading is complete and we have the necessary data
+    if (levelsLoading || !allLevels.length || !user?.careerTrack) return true; // Return true during loading to avoid showing "No Levels"
     const currentTrackLevels = allLevels.filter(l => l.careerTrack === user.careerTrack);
     return currentTrackLevels.length > 0;
-  }, [allLevels, user?.careerTrack]);
+  }, [allLevels, user?.careerTrack, levelsLoading]);
 
   // Handle bootcamp completion
   const handleBootcampCompletion = async () => {
@@ -283,7 +288,7 @@ const LevelExercisePage: React.FC = () => {
     }
   };
 
-  if (loading) {
+  if (loading || levelsLoading) {
     return (
       <div className="flex h-screen bg-offblack overflow-x-hidden">
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="exercise" refreshTrigger={refreshTrigger} />
@@ -326,8 +331,8 @@ const LevelExercisePage: React.FC = () => {
     );
   }
 
-  // Check if there are any levels in the current track
-  if (!hasLevelsInTrack) {
+  // Check if there are any levels in the current track (only after all loading is complete)
+  if (!levelsLoading && allLevels.length > 0 && !hasLevelsInTrack) {
     return (
       <div className="flex h-screen bg-offblack overflow-x-hidden">
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="exercise" refreshTrigger={refreshTrigger} />
