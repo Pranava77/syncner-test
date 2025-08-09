@@ -47,24 +47,35 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
   // Use the optimized hook
   const { levels, loading, error, refetch, updateLevelSectionStatus } = useLevels(user?.careerTrack);
 
-  // Memoized level completion map for efficient lookups
+  // Memoized level completion map for efficient lookups (only for current user's track)
   const levelCompletionMap = useMemo(() => {
     const map = new Map();
     levels.forEach((level: Level) => {
-      map.set(level.order, {
-        id: level.id,
-        completedSections: level.completedSections || {},
-        isCompleted: level.isCompleted || false,
-        isUnlocked: level.isUnlocked || false
-      });
+      // Only include levels from the current user's career track
+      if (level.careerTrack === user?.careerTrack) {
+        map.set(level.order, {
+          id: level.id,
+          completedSections: level.completedSections || {},
+          isCompleted: level.isCompleted || false,
+          isUnlocked: level.isUnlocked || false
+        });
+      }
     });
     return map;
-  }, [levels]);
+  }, [levels, user?.careerTrack]);
 
   // Memoized levels with unlock logic
   const levelsWithUnlockLogic = useMemo(() => {
     return levels.map((level: Level) => {
-      // Level 1 is always unlocked
+      // Only process levels that belong to the current user's career track
+      if (level.careerTrack !== user?.careerTrack) {
+        return {
+          ...level,
+          isUnlocked: false
+        };
+      }
+
+      // Level 1 is always unlocked for the correct track
       if (level.order === 1) {
         return {
           ...level,
@@ -72,7 +83,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
         };
       }
 
-      // Check if previous level is fully completed
+      // Check if previous level is fully completed (only for the same track)
       const previousLevel = levelCompletionMap.get(level.order - 1);
       const previousCompletedSections = previousLevel?.completedSections || {};
       
@@ -86,7 +97,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
         isUnlocked: isPreviousFullyCompleted
       };
     });
-  }, [levels, levelCompletionMap]);
+  }, [levels, levelCompletionMap, user?.careerTrack]);
 
   // Handle progress updates from other components
   const handleProgressUpdate = useCallback(() => {
@@ -118,6 +129,13 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
   }, [currentLevel]);
 
   const toggleLevelExpansion = (levelId: string) => {
+    // Find the level to check if it belongs to the current user's track
+    const level = levels.find(l => l.id === levelId);
+    if (level && level.careerTrack !== user?.careerTrack) {
+      console.error('Cannot expand level from different track:', { levelTrack: level.careerTrack, userTrack: user?.careerTrack });
+      return;
+    }
+
     setExpandedLevels(prev => {
       const newSet = new Set(prev);
       if (newSet.has(levelId)) {
@@ -136,8 +154,14 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
       console.log('Level is locked:', level.order);
       return;
     }
+
+    // Ensure the level belongs to the current user's track
+    if (level.careerTrack !== user?.careerTrack) {
+      console.error('Level track mismatch:', { levelTrack: level.careerTrack, userTrack: user?.careerTrack });
+      return;
+    }
     
-    console.log('Navigating to:', `/student/training/${level.id}/${section}`);
+    console.log('Navigating to:', `/student/training/${level.id}/${section}`, { levelTrack: level.careerTrack, userTrack: user?.careerTrack });
     navigate(`/student/training/${level.id}/${section}`);
     if (setSidebarOpen) setSidebarOpen(false);
   };

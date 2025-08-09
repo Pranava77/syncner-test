@@ -648,13 +648,13 @@ const StudentDashboard: React.FC = () => {
                   <h4 className="text-md font-semibold text-paperwhite mb-3">What's Next?</h4>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <Link
+              <Link 
                       to="/student/training"
                       className="bg-trueturquoise text-offblack px-4 py-3 rounded-lg hover:bg-teallight transition-colors font-medium inline-flex items-center justify-center"
-                    >
+              >
                       <ReaderIcon className="h-4 w-4 mr-2 text-offblack" />
                       Review All Levels
-                    </Link>
+              </Link>
             </div>
                   
                   <div className="mt-4 p-3 bg-paperwhite/5 rounded-lg border border-paperwhite/10">
