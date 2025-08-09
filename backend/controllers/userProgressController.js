@@ -134,19 +134,29 @@ export const submitTestAttempt = async (req, res) => {
       const attempts = level ? level.testProgress.attempts.length : 0;
       
       if (attempts >= 3) {
+        // Calculate remaining time for 5-hour cooldown
+        const lastAttempt = level?.testProgress?.lastAttemptAt;
+        let remainingHours = 5;
+        
+        if (lastAttempt) {
+          const hoursSinceLastAttempt = (Date.now() - lastAttempt.getTime()) / (1000 * 60 * 60);
+          remainingHours = Math.max(0, 5 - hoursSinceLastAttempt);
+        }
+        
         return res.status(400).json({
           success: false,
-          message: 'Maximum attempts reached. Please wait 1 minute before retaking.',
+          message: `Maximum attempts reached. Please wait ${Math.ceil(remainingHours)} hours before retaking.`,
           data: {
             attempts: attempts,
             maxAttempts: 3,
-            canRetake: false
+            canRetake: false,
+            remainingHours: Math.ceil(remainingHours)
           }
         });
       } else {
         return res.status(400).json({
           success: false,
-          message: 'Please wait 1 minute before retaking the test.',
+          message: 'You cannot retake the test at this time.',
           data: {
             attempts: attempts,
             maxAttempts: 3,
@@ -173,7 +183,7 @@ export const submitTestAttempt = async (req, res) => {
         maxAttempts: 3,
         canRetake: progress.canRetakeTest(levelId)
       },
-      message: passed ? 'Test passed! Exercise unlocked.' : 'Test failed. You can retry after 1 minute.'
+      message: passed ? 'Test passed! Exercise unlocked.' : 'Test failed. You can retry immediately if you have attempts remaining.'
     });
   } catch (error) {
     console.error('Submit test attempt error:', error);

@@ -114,17 +114,26 @@ const LevelTestPage: React.FC = () => {
         setIsTestUnlocked(test.isUnlocked);
         setTestProgress(test.progress || { attempts: [], isCompleted: false });
         setCurrentAttempt(test.progress?.attempts?.length || 0);
-        setCanRetake(test.progress ? (test.progress.attempts.length < 3) : true);
         
-        // Calculate retake timer if needed
-        if (test.progress && test.progress.lastAttemptAt) {
+        // Check if user can retake test based on attempts and cooldown
+        const attempts = test.progress?.attempts?.length || 0;
+        let canRetake = attempts < 3;
+        
+        // If 3 attempts reached, check 5-hour cooldown
+        if (attempts >= 3 && test.progress?.lastAttemptAt) {
           const lastAttempt = new Date(test.progress.lastAttemptAt);
-          const minutesSinceLastAttempt = (Date.now() - lastAttempt.getTime()) / (1000 * 60);
-          if (minutesSinceLastAttempt < 1) {
-            const remainingMinutes = 1 - minutesSinceLastAttempt;
-            setRetakeTimer(Math.ceil(remainingMinutes * 60)); // Convert to seconds
+          const hoursSinceLastAttempt = (Date.now() - lastAttempt.getTime()) / (1000 * 60 * 60);
+          canRetake = hoursSinceLastAttempt >= 5; // 5-hour cooldown
+          
+          // Set retake timer if still in cooldown
+          if (!canRetake) {
+            const remainingHours = 5 - hoursSinceLastAttempt;
+            const remainingSeconds = Math.ceil(remainingHours * 60 * 60);
+            setRetakeTimer(remainingSeconds);
           }
         }
+        
+        setCanRetake(canRetake);
       }
     } catch (error) {
       // Handle error silently
@@ -138,7 +147,7 @@ const LevelTestPage: React.FC = () => {
     }
   }, [levelId, fetchLevel, fetchTestProgress]);
 
-  // Timer effect for retake countdown
+  // Timer effect for retake countdown (5-hour cooldown)
   useEffect(() => {
     if (retakeTimer === null || retakeTimer <= 0) return;
 
@@ -240,6 +249,9 @@ const LevelTestPage: React.FC = () => {
             console.error('Error marking test section as completed:', completionError);
           }
         }
+        
+        // Refresh test progress data to get updated attempts
+        await fetchTestProgress();
         
         // Show results
         setSubmitted(true);
@@ -483,7 +495,7 @@ const LevelTestPage: React.FC = () => {
             </h2>
             <p className="text-teallight mb-6 text-lg">
               {currentAttempt >= 3 
-                ? 'You have used all 3 attempts for this test. Please wait 1 minute before retaking.'
+                ? 'You have used all 3 attempts for this test. Please wait 5 hours before retaking.'
                 : 'Please wait before retaking the test.'
               }
             </p>
@@ -650,13 +662,19 @@ const LevelTestPage: React.FC = () => {
                       <>
                         <div className="text-orange-400 font-semibold mb-2">Attempts Remaining</div>
                         <div className="text-2xl font-bold text-paperwhite">{3 - currentAttempt}</div>
-                        <div className="text-sm text-teallight mt-1">You can retry after 1 minute</div>
+                        <div className="text-sm text-teallight mt-1">You can retry immediately</div>
                       </>
                     ) : (
                       <>
                         <div className="text-red-400 font-semibold mb-2">Maximum Attempts Reached</div>
                         <div className="text-2xl font-bold text-paperwhite">0</div>
-                        <div className="text-sm text-teallight mt-1">Please wait 1 minute before retaking</div>
+                        <div className="text-sm text-teallight mt-1">
+                          {retakeTimer && retakeTimer > 0 ? (
+                            <>Please wait {formatRetakeTime(retakeTimer)} before retaking</>
+                          ) : (
+                            <>Please wait 5 hours before retaking</>
+                          )}
+                        </div>
                       </>
                     )}
                   </div>
@@ -795,8 +813,8 @@ const LevelTestPage: React.FC = () => {
                   </h2>
                   <p className="text-teallight mb-6 text-lg">
                     {currentAttempt >= 3 
-                      ? 'You have used all 3 attempts for this test. Please wait 1 minute before retaking.'
-                      : 'Please wait 1 minute before retaking the test.'
+                      ? 'You have used all 3 attempts for this test. Please wait 5 hours before retaking.'
+                      : 'Please wait before retaking the test.'
                     }
                   </p>
                   {retakeTimer && (

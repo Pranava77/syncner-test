@@ -182,19 +182,27 @@ userProgressSchema.methods.getLevelSectionStatus = function(levelId, levelOrder)
   };
 };
 
-// Method to check if user can retake test (1-minute cooldown)
+// Method to check if user can retake test (5-hour cooldown only when all attempts are exhausted)
 userProgressSchema.methods.canRetakeTest = function(levelId) {
   const level = this.completedLevels.find(l => l.levelId === levelId);
-  if (!level || !level.testProgress || level.testProgress.attempts.length >= 3) {
-    return false;
+  if (!level || !level.testProgress) {
+    return true; // No attempts yet, can take test
   }
   
-  if (level.testProgress.lastAttemptAt) {
-    const minutesSinceLastAttempt = (Date.now() - level.testProgress.lastAttemptAt.getTime()) / (1000 * 60);
-    return minutesSinceLastAttempt >= 1;
+  const attempts = level.testProgress.attempts.length;
+  
+  // If less than 3 attempts, allow retake immediately
+  if (attempts < 3) {
+    return true;
   }
   
-  return true;
+  // If 3 attempts reached, check 5-hour cooldown
+  if (attempts >= 3 && level.testProgress.lastAttemptAt) {
+    const hoursSinceLastAttempt = (Date.now() - level.testProgress.lastAttemptAt.getTime()) / (1000 * 60 * 60);
+    return hoursSinceLastAttempt >= 5; // 5-hour cooldown
+  }
+  
+  return false;
 };
 
 // Method to mark level as completed
