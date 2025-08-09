@@ -66,15 +66,11 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
 
   // Memoized levels with unlock logic
   const levelsWithUnlockLogic = useMemo(() => {
-    return levels.map((level: Level) => {
-      // Only process levels that belong to the current user's career track
-      if (level.careerTrack !== user?.careerTrack) {
-        return {
-          ...level,
-          isUnlocked: false
-        };
-      }
-
+    // Filter levels for current user's track only
+    const currentTrackLevels = levels.filter((level: Level) => level.careerTrack === user?.careerTrack);
+    
+    // Only process levels for the current user's track
+    return currentTrackLevels.map((level: Level) => {
       // Level 1 is always unlocked for the correct track
       if (level.order === 1) {
         return {
@@ -84,8 +80,18 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
       }
 
       // Check if previous level is fully completed (only for the same track)
-      const previousLevel = levelCompletionMap.get(level.order - 1);
-      const previousCompletedSections = previousLevel?.completedSections || {};
+      // Find the previous level within the same track
+      const previousLevelInTrack = currentTrackLevels.find(l => l.order === level.order - 1);
+      
+      if (!previousLevelInTrack) {
+        // If there's no previous level in this track, this level should be unlocked
+        return {
+          ...level,
+          isUnlocked: true
+        };
+      }
+
+      const previousCompletedSections = previousLevelInTrack.completedSections || {};
       
       const isPreviousFullyCompleted = 
         previousCompletedSections.learn === true && 
@@ -97,7 +103,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
         isUnlocked: isPreviousFullyCompleted
       };
     });
-  }, [levels, levelCompletionMap, user?.careerTrack]);
+  }, [levels, user?.careerTrack]);
 
   // Handle progress updates from other components
   const handleProgressUpdate = useCallback(() => {
@@ -130,9 +136,9 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
 
   const toggleLevelExpansion = (levelId: string) => {
     // Find the level to check if it belongs to the current user's track
-    const level = levels.find(l => l.id === levelId);
-    if (level && level.careerTrack !== user?.careerTrack) {
-      console.error('Cannot expand level from different track:', { levelTrack: level.careerTrack, userTrack: user?.careerTrack });
+    const level = levelsWithUnlockLogic.find(l => l.id === levelId);
+    if (!level) {
+      console.error('Level not found or not from current track:', levelId);
       return;
     }
 
@@ -155,7 +161,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
       return;
     }
 
-    // Ensure the level belongs to the current user's track
+    // Since we're only processing levels from the current track, this check is redundant but kept for safety
     if (level.careerTrack !== user?.careerTrack) {
       console.error('Level track mismatch:', { levelTrack: level.careerTrack, userTrack: user?.careerTrack });
       return;
