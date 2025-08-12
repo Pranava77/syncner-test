@@ -30,6 +30,7 @@ import LevelLearnPage from './pages/LevelLearnPage';
 import LevelTestPage from './pages/LevelTestPage';
 import LevelExercisePage from './pages/LevelExercisePage';
 import ProjectsPage from './pages/ProjectsPage';
+import { applyThemeToDOM } from './utils/theme';
 
 function AdminWrapper() {
   return (
@@ -42,7 +43,7 @@ function AdminWrapper() {
 function App() {
   const dispatch = useAppDispatch();
   const { isAuthenticated, user, isLoading, isRestoringSession } = useAppSelector((state) => state.auth);
-  const { isDarkMode } = useAppSelector((state) => state.theme);
+  const { mode: themeMode } = useAppSelector((state) => state.theme);
   
   const location = useLocation();
 
@@ -65,16 +66,10 @@ function App() {
     });
   }, [isAuthenticated, user, isLoading, isRestoringSession]);
 
+  // Apply theme to DOM whenever theme changes
   useEffect(() => {
-    // Apply theme on mount and whenever isDarkMode changes
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-      document.documentElement.style.backgroundColor = '#111827'; // Tailwind dark:bg-gray-900
-    } else {
-      document.documentElement.classList.remove('dark');
-      document.documentElement.style.backgroundColor = '#f9fafb'; // Tailwind bg-gray-50
-    }
-  }, [isDarkMode]);
+    applyThemeToDOM(themeMode);
+  }, [themeMode]);
 
   // Show loading while initializing authentication or restoring session
   if (isLoading || isRestoringSession) {
