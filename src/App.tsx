@@ -1,35 +1,35 @@
-import  { useEffect } from 'react';
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './redux/store';
-import { getDefaultRoute } from './utils/routing';
+import { restoreSession, fetchCurrentUser } from './redux/slices/authSlice';
+import { setDarkMode } from './redux/slices/themeSlice';
+import ErrorBoundary from './components/ErrorBoundary';
+import LoadingScreen from './components/LoadingScreen';
 import Layout from './components/Layout';
+import StudentLayout from './components/StudentLayout';
+import ProtectedRoute from './components/ProtectedRoute';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import StudentDashboard from './pages/StudentDashboard';
-import AdminDashboard from './pages/AdminDashboard';
-import AdminAnalytics from './pages/AdminAnalytics';
-import AdminSettings from './pages/AdminSettings';
 import OnboardingFlow from './pages/OnboardingFlow';
-import ProtectedRoute from './components/ProtectedRoute';
-import StudentLayout from './components/StudentLayout';
-import LoadingScreen from './components/LoadingScreen';
-import ErrorBoundary from './components/ErrorBoundary';
-import { KeepAlive } from 'react-activation';
-import StudentProfile from './pages/StudentProfile';
-import AdminProfile from './pages/AdminProfile';
-import { AnimatePresence, motion } from 'framer-motion';
-import { fetchCurrentUser, restoreSession } from './redux/slices/authSlice';
-import AdminStaff from './pages/AdminStaff';
-import TrainingLevels from './pages/TrainingLevels';
+import StudentDashboard from './pages/StudentDashboard';
 import StaffDashboard from './pages/StaffDashboard';
-import AdminUsers from './pages/AdminUsers';
+import AdminDashboard from './pages/AdminDashboard';
 import AdminAdmin from './pages/AdminAdmin';
+import AdminAnalytics from './pages/AdminAnalytics';
 import AdminCurriculum from './pages/AdminCurriculum';
+import AdminProfile from './pages/AdminProfile';
+import AdminSettings from './pages/AdminSettings';
+import AdminStaff from './pages/AdminStaff';
+import AdminUsers from './pages/AdminUsers';
+import StudentProfile from './pages/StudentProfile';
+import TrainingLevels from './pages/TrainingLevels';
+import TrainingLevelDetail from './pages/TrainingLevelDetail';
 import LevelLearnPage from './pages/LevelLearnPage';
 import LevelTestPage from './pages/LevelTestPage';
 import LevelExercisePage from './pages/LevelExercisePage';
 import ProjectsPage from './pages/ProjectsPage';
+import './index.css';
 
 function AdminWrapper() {
   return (
@@ -44,8 +44,6 @@ function App() {
   const { isAuthenticated, user, isLoading, isRestoringSession } = useAppSelector((state) => state.auth);
   const { isDarkMode } = useAppSelector((state) => state.theme);
   
-  const location = useLocation();
-
   useEffect(() => {
     dispatch(restoreSession());
     const token = localStorage.getItem('token');
@@ -67,14 +65,40 @@ function App() {
 
   useEffect(() => {
     // Apply theme on mount and whenever isDarkMode changes
+    const root = document.documentElement;
+    
     if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-      document.documentElement.style.backgroundColor = '#111827'; // Tailwind dark:bg-gray-900
+      root.classList.add('dark');
+      root.classList.remove('light');
+      document.body.style.backgroundColor = '#0f172a'; // Dark background
     } else {
-      document.documentElement.classList.remove('dark');
-      document.documentElement.style.backgroundColor = '#f9fafb'; // Tailwind bg-gray-50
+      root.classList.remove('dark');
+      root.classList.add('light');
+      document.body.style.backgroundColor = '#ffffff'; // Light background
     }
+    
+    // Add theme transition class to body
+    document.body.classList.add('theme-transition');
   }, [isDarkMode]);
+
+  // Listen for system theme changes when in system mode
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    const handleSystemThemeChange = (e: MediaQueryListEvent) => {
+      // Only update if current theme is set to 'system'
+      const currentTheme = localStorage.getItem('theme');
+      if (currentTheme === 'system') {
+        dispatch(setDarkMode(e.matches));
+      }
+    };
+
+    mediaQuery.addEventListener('change', handleSystemThemeChange);
+    
+    return () => {
+      mediaQuery.removeEventListener('change', handleSystemThemeChange);
+    };
+  }, [dispatch]);
 
   // Show loading while initializing authentication or restoring session
   if (isLoading || isRestoringSession) {
@@ -91,76 +115,71 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <AnimatePresence mode="wait">
-        <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={
-            isAuthenticated && user && !isLoading && !isRestoringSession ? (
-              <Navigate to={getDefaultRoute(user)} replace />
-            ) : (
-              <LoginPage />
-            )
-          } />
-          <Route path="/register" element={
-            isAuthenticated && user && !isLoading && !isRestoringSession ? (
-              <Navigate to={getDefaultRoute(user)} replace />
-            ) : (
-              <RegisterPage />
-            )
-          } />
-          <Route path="/onboarding" element={
-            <ProtectedRoute>
-              <OnboardingFlow />
-            </ProtectedRoute>
-          } />
-          {/* Student main pages with Layout sidebar */}
-          <Route path="/student/*" element={<StudentLayout />}>
-            <Route path="dashboard" element={<KeepAlive id="student-dashboard"><StudentDashboard /></KeepAlive>} />
-            <Route path="training" element={<TrainingLevels />} />
-            <Route path="training/:levelId" element={<TrainingLevels />} />
-            <Route path="training/:levelId/learn" element={<LevelLearnPage />} />
-            <Route path="training/:levelId/test" element={<LevelTestPage />} />
-            <Route path="training/:levelId/exercise" element={<LevelExercisePage />} />
-            <Route path="projects" element={<ProjectsPage />} />
-            <Route path="profile" element={
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3 }}
-              >
-                <StudentProfile />
-              </motion.div>
+      <Router>
+        <div className={`min-h-screen transition-colors duration-300 ${
+          isDarkMode 
+            ? 'bg-offblack text-paperwhite' 
+            : 'bg-paperwhite-light text-offblack-light'
+        }`}>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            
+            {/* Protected Routes */}
+            <Route path="/onboarding" element={
+              <ProtectedRoute>
+                <OnboardingFlow />
+              </ProtectedRoute>
             } />
-            <Route index element={<Navigate to="dashboard" replace />} />
-          </Route>
-          {/* Admin routes */}
-          <Route path="/admin/*" element={<AdminWrapper />}>
-            <Route index element={<AdminDashboard />} />
-            <Route path="users" element={<AdminUsers />} />
-            <Route path="admins" element={<AdminAdmin />} />
-            <Route path="staff" element={<AdminStaff />} />
-            <Route path="curriculum" element={<AdminCurriculum />} />
-            <Route path="analytics" element={<AdminAnalytics />} />
-            <Route path="settings" element={<AdminSettings />} />
-            <Route path="profile" element={
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3 }}
-              >
-                <AdminProfile />
-              </motion.div>
-            } />
-          </Route>
-          <Route path="/staff/dashboard" element={
-            <ProtectedRoute>
-              <StaffDashboard />
-            </ProtectedRoute>
-          } />
-        </Routes>
-      </AnimatePresence>
+            
+            {/* Student Routes */}
+            <Route path="/student" element={
+              <ProtectedRoute>
+                <StudentLayout />
+              </ProtectedRoute>
+            }>
+              <Route path="dashboard" element={<StudentDashboard />} />
+              <Route path="profile" element={<StudentProfile />} />
+              <Route path="training" element={<TrainingLevels />} />
+              <Route path="training/:levelId" element={<TrainingLevelDetail />} />
+              <Route path="training/:levelId/learn" element={<LevelLearnPage />} />
+              <Route path="training/:levelId/test" element={<LevelTestPage />} />
+              <Route path="training/:levelId/exercise" element={<LevelExercisePage />} />
+              <Route path="projects" element={<ProjectsPage />} />
+            </Route>
+            
+            {/* Staff Routes */}
+            <Route path="/staff" element={
+              <ProtectedRoute>
+                <Layout />
+              </ProtectedRoute>
+            }>
+              <Route path="dashboard" element={<StaffDashboard />} />
+            </Route>
+            
+            {/* Admin Routes */}
+            <Route path="/admin" element={
+              <ProtectedRoute requireAdmin={true}>
+                <Layout />
+              </ProtectedRoute>
+            }>
+              <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="admin" element={<AdminAdmin />} />
+              <Route path="analytics" element={<AdminAnalytics />} />
+              <Route path="curriculum" element={<AdminCurriculum />} />
+              <Route path="profile" element={<AdminProfile />} />
+              <Route path="settings" element={<AdminSettings />} />
+              <Route path="staff" element={<AdminStaff />} />
+              <Route path="users" element={<AdminUsers />} />
+            </Route>
+            
+            {/* Fallback Route */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </div>
+      </Router>
     </ErrorBoundary>
   );
 }

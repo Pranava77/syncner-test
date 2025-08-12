@@ -24,6 +24,7 @@ import {
 } from '@radix-ui/react-icons';
 import logo from '../assets/syncner-logo.png';
 import LoadingScreen from './LoadingScreen';
+import ThemeToggle from './ThemeToggle';
 import { motion, useAnimation } from 'framer-motion';
 import { useRef } from 'react';
 
@@ -246,16 +247,17 @@ const Layout: React.FC = () => {
         </nav>
         {isSidebarCollapsed ? (
           <div className="flex flex-col items-center gap-4 pb-6">
-          <Link
+            <Link
               to={user?.role === 'admin' ? '/admin/profile' : '/student/profile'}
               className="flex items-center justify-center w-10 h-10 rounded-md bg-trueturquoise mb-2"
               title="Profile"
-            aria-label="View profile"
-          >
+              aria-label="View profile"
+            >
               <span className="text-offblack text-base font-heading">
                 {user?.name?.charAt(0) || 'U'}
               </span>
             </Link>
+            <ThemeToggle />
             <button
               onClick={handleLogout}
               disabled={isLoggingOut}
@@ -286,8 +288,9 @@ const Layout: React.FC = () => {
                 <span className="text-xs text-teallight capitalize truncate font-label">{user?.role}</span>
             </div>
               <PersonIcon className="h-5 w-5 text-trueturquoise opacity-80 group-hover:scale-110 transition-transform" />
-          </Link>
-          <button
+            </Link>
+            <ThemeToggle />
+            <button
             onClick={handleLogout}
             disabled={isLoggingOut}
               className="flex items-center w-full px-3 py-2 text-sm text-paperwhite hover:bg-trueturquoise/10 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-1"
@@ -407,6 +410,7 @@ const Layout: React.FC = () => {
             </div>
             <PersonIcon className="h-5 w-5 text-blue-500 dark:text-blue-400 opacity-80 group-hover:scale-110 transition-transform" />
           </Link>
+          <ThemeToggle />
           <button
             onClick={() => {
               handleLogout();
