@@ -144,11 +144,24 @@ const AdminStaff: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-offblack p-4 lg:p-8">
+    <div 
+      className="min-h-screen p-4 lg:p-8"
+      style={{ backgroundColor: 'var(--color-primary-bg)' }}
+    >
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl text-paperwhite font-heading">Staff Management</h1>
-          <p className="text-teallight mt-1 font-label">Manage staff members, roles, and departments</p>
+          <h1 
+            className="text-3xl font-heading"
+            style={{ color: 'var(--color-text-primary)' }}
+          >
+            Staff Management
+          </h1>
+          <p 
+            className="mt-1 font-label"
+            style={{ color: 'var(--color-text-tertiary)' }}
+          >
+            Manage staff members, roles, and departments
+          </p>
           {successMessage && (
             <div className="mt-2 p-2 bg-green-500/20 border border-green-500/30 rounded-lg text-green-400 text-sm">
               {successMessage}
@@ -168,7 +181,13 @@ const AdminStaff: React.FC = () => {
           Add Staff
         </button>
       </div>
-      <div className="bg-paperwhite/10 rounded-xl shadow-lg p-8">
+      <div 
+        className="rounded-xl shadow-lg p-8"
+        style={{
+          backgroundColor: 'var(--color-surface)',
+          boxShadow: 'var(--shadow-lg)'
+        }}
+      >
         <div className="flex items-center justify-between mb-4">
           <div className="relative flex-1">
             <input

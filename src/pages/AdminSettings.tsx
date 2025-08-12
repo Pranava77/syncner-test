@@ -132,14 +132,30 @@ const AdminSettings: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6 lg:space-y-8 p-4 lg:p-8 bg-offblack min-h-screen">
+    <div 
+      className="space-y-6 lg:space-y-8 p-4 lg:p-8 min-h-screen"
+      style={{ backgroundColor: 'var(--color-primary-bg)' }}
+    >
       <div className="mb-8">
-        <h1 className="text-3xl  text-paperwhite font-heading">Admin Settings</h1>
-        <p className="text-teallight font-label">Manage your platform settings and content</p>
+        <h1 
+          className="text-3xl font-heading"
+          style={{ color: 'var(--color-text-primary)' }}
+        >
+          Admin Settings
+        </h1>
+        <p 
+          className="font-label"
+          style={{ color: 'var(--color-text-tertiary)' }}
+        >
+          Manage your platform settings and content
+        </p>
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-paperwhite/10 mb-8">
+      <div 
+        className="border-b mb-8"
+        style={{ borderColor: 'var(--color-border-subtle)' }}
+      >
         <nav className="-mb-px flex space-x-8">
           {tabs.map((tab) => {
             const Icon = tab.icon;

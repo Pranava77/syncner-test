@@ -663,7 +663,10 @@ const AdminCurriculum: React.FC = () => {
 
   if (loading && levels.length === 0) {
     return (
-      <div className="flex h-screen bg-offblack w-full">
+      <div 
+        className="flex h-screen w-full"
+        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+      >
         <main className="flex-1 p-6 lg:p-12 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-trueturquoise mx-auto mb-4"></div>
@@ -687,7 +690,10 @@ const AdminCurriculum: React.FC = () => {
   }
 
   return (
-    <div className="flex h-screen bg-offblack w-full">
+    <div 
+      className="flex h-screen w-full"
+      style={{ backgroundColor: 'var(--color-primary-bg)' }}
+    >
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto p-6 lg:p-12">
         <div className="max-w-6xl mx-auto">
@@ -745,7 +751,11 @@ const AdminCurriculum: React.FC = () => {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
                       onClick={() => handleTrackSelect(track.id)}
-                      className="bg-offblack border border-paperwhite/20 rounded-xl p-6 cursor-pointer hover:border-trueturquoise/50 hover:bg-paperwhite/5 transition-all duration-300 group"
+                      className="border rounded-xl p-6 cursor-pointer hover:border-trueturquoise/50 transition-all duration-300 group"
+                      style={{
+                        backgroundColor: 'var(--color-surface)',
+                        borderColor: 'var(--color-border)'
+                      }}
                     >
                       <div className="text-center">
                         <div className={`w-16 h-16 ${track.bgColor} ${track.borderColor} border-2 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
@@ -898,7 +908,11 @@ const AdminCurriculum: React.FC = () => {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      className="bg-offblack border border-paperwhite/20 rounded-xl p-6 hover:border-trueturquoise/50 hover:bg-paperwhite/5 transition-all duration-300 group relative"
+                      className="border rounded-xl p-6 hover:border-trueturquoise/50 transition-all duration-300 group relative"
+                      style={{
+                        backgroundColor: 'var(--color-surface)',
+                        borderColor: 'var(--color-border)'
+                      }}
                     >
                       {/* Level Order Indicator */}
                       <div className="absolute top-2 right-2 bg-paperwhite/10 text-paperwhite/60 text-xs px-2 py-1 rounded-full">
