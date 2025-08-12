@@ -97,7 +97,12 @@ const AdminProfile: React.FC = () => {
               name="name"
               value={profileData.name}
               onChange={handleChange}
-              className="w-full bg-paperwhite/10 border border-paperwhite/20 rounded px-3 py-2 text-paperwhite"
+              className="w-full border rounded px-3 py-2"
+              style={{ 
+                backgroundColor: 'var(--color-secondary-bg)',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-text-primary)'
+              }}
             />
           </div>
           
@@ -108,7 +113,12 @@ const AdminProfile: React.FC = () => {
               name="email"
               value={profileData.email}
               disabled
-              className="w-full bg-paperwhite/10 border border-paperwhite/20 rounded px-3 py-2 text-paperwhite/50"
+              className="w-full border rounded px-3 py-2"
+              style={{ 
+                backgroundColor: 'var(--color-secondary-bg)',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-text-muted)'
+              }}
             />
           </div>
           
@@ -119,7 +129,12 @@ const AdminProfile: React.FC = () => {
               name="role"
               value={profileData.role}
               disabled
-              className="w-full bg-paperwhite/10 border border-paperwhite/20 rounded px-3 py-2 text-paperwhite/50"
+              className="w-full border rounded px-3 py-2"
+              style={{ 
+                backgroundColor: 'var(--color-secondary-bg)',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-text-muted)'
+              }}
             />
           </div>
           
@@ -130,7 +145,12 @@ const AdminProfile: React.FC = () => {
               name="phone"
               value={profileData.phone}
               onChange={handleChange}
-              className="w-full bg-paperwhite/10 border border-paperwhite/20 rounded px-3 py-2 text-paperwhite"
+              className="w-full border rounded px-3 py-2"
+              style={{ 
+                backgroundColor: 'var(--color-secondary-bg)',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-text-primary)'
+              }}
             />
           </div>
           
@@ -141,7 +161,12 @@ const AdminProfile: React.FC = () => {
               name="location"
               value={profileData.location}
               onChange={handleChange}
-              className="w-full bg-paperwhite/10 border border-paperwhite/20 rounded px-3 py-2 text-paperwhite"
+              className="w-full border rounded px-3 py-2"
+              style={{ 
+                backgroundColor: 'var(--color-secondary-bg)',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-text-primary)'
+              }}
             />
           </div>
           

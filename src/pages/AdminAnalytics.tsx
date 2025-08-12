@@ -109,14 +109,23 @@ const AdminAnalytics: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl  text-paperwhite font-heading">Analytics Dashboard</h1>
+          <h1 
+          className="text-3xl font-heading"
+          style={{ color: 'var(--color-text-primary)' }}
+        >
+          Analytics Dashboard
+        </h1>
           <p className="text-teallight mt-1 font-label">Comprehensive insights into platform performance</p>
         </div>
         <div className="flex items-center space-x-3">
           <select
             value={dateRange}
             onChange={(e) => setDateRange(e.target.value)}
-            className="border border-teallight rounded-lg px-3 py-2 focus:ring-2 focus:ring-trueturquoise focus:border-transparent bg-offblack text-paperwhite placeholder-teallight"
+            className="border border-teallight rounded-lg px-3 py-2 focus:ring-2 focus:ring-trueturquoise focus:border-transparent"
+            style={{ 
+              backgroundColor: 'var(--color-secondary-bg)',
+              color: 'var(--color-text-primary)'
+            }}
           >
             <option value="7">Last 7 days</option>
             <option value="30">Last 30 days</option>
@@ -146,7 +155,12 @@ const AdminAnalytics: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-teallight text-sm">Total Students</p>
-              <p className="text-3xl font-bold text-paperwhite">{analytics.totalStudents}</p>
+              <p 
+                className="text-3xl font-bold"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                {analytics.totalStudents}
+              </p>
               <p className="text-trueturquoise text-sm flex items-center mt-1">
                 <TrendingUp className="h-3 w-3 mr-1" />
                 +5.1% from last month
@@ -161,7 +175,12 @@ const AdminAnalytics: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-teallight text-sm">Active Students</p>
-              <p className="text-3xl font-bold text-paperwhite">{analytics.activeStudents}</p>
+              <p 
+                className="text-3xl font-bold"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                {analytics.activeStudents}
+              </p>
               <p className="text-trueturquoise text-sm flex items-center mt-1">
                 <TrendingUp className="h-3 w-3 mr-1" />
                 +1.2% from last month
@@ -176,7 +195,12 @@ const AdminAnalytics: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-teallight text-sm">Completion Rate</p>
-              <p className="text-3xl font-bold text-paperwhite">{performanceMetrics.completionRate}%</p>
+              <p 
+                className="text-3xl font-bold"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                {performanceMetrics.completionRate}%
+              </p>
               <p className="text-trueturquoise text-sm flex items-center mt-1">
                 <TrendingUp className="h-3 w-3 mr-1" />
                 +5.1% from last month
@@ -192,7 +216,12 @@ const AdminAnalytics: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-teallight text-sm">Student Retention</p>
-                <p className="text-3xl font-bold text-paperwhite">{performanceMetrics.studentRetention}%</p>
+                <p 
+                  className="text-3xl font-bold"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  {performanceMetrics.studentRetention}%
+                </p>
                 <p className="text-trueturquoise text-sm flex items-center mt-1">
                   <TrendingUp className="h-3 w-3 mr-1" />
                   +1.2% from last month
@@ -208,7 +237,12 @@ const AdminAnalytics: React.FC = () => {
 
       {/* Students by Track Pie Chart */}
       <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6">
-        <h2 className="text-lg font-semibold text-paperwhite mb-4">Students by Track</h2>
+        <h2 
+          className="text-lg font-semibold mb-4"
+          style={{ color: 'var(--color-text-primary)' }}
+        >
+          Students by Track
+        </h2>
         <ResponsiveContainer width="100%" height={250}>
           <PieChart>
             <Pie

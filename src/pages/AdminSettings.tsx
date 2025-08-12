@@ -165,8 +165,12 @@ const AdminSettings: React.FC = () => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`py-2 px-1 border-b-2 font-medium text-lg flex items-center space-x-2 transition-colors duration-200
                   ${activeTab === tab.id
-                    ? 'text-[#00B8D9] border-b-2 border-[#00B8D9] bg-offblack'
-                    : 'text-paperwhite/60 hover:text-[#00B8D9] border-b-2 border-transparent bg-offblack/80'}`}
+                    ? 'text-[#00B8D9] border-b-2 border-[#00B8D9]'
+                    : 'hover:text-[#00B8D9] border-b-2 border-transparent'}`}
+                style={{
+                  backgroundColor: activeTab === tab.id ? 'var(--color-secondary-bg)' : 'var(--color-surface)',
+                  color: activeTab === tab.id ? 'var(--color-accent-primary)' : 'var(--color-text-muted)'
+                }}
               >
                 <Icon className="h-5 w-5" />
                 <span>{tab.label}</span>
@@ -181,9 +185,14 @@ const AdminSettings: React.FC = () => {
         {/* General Settings */}
         {activeTab === 'general' && (
           <div className="bg-paperwhite/10 rounded-xl shadow-lg p-6">
-            <h2 className="text-xl text-paperwhite mb-6 font-heading">General Settings</h2>
+            <h2 
+              className="text-xl mb-6 font-heading"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              General Settings
+            </h2>
             <div className="grid md:grid-cols-2 gap-6">
-              {/* All inputs use bg-offblack, border-paperwhite/20, text-paperwhite */}
+              {/* All inputs now use theme-aware styling */}
               <div>
                 <label 
                   className="block text-sm mb-2 font-label"
