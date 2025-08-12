@@ -385,9 +385,15 @@ const LevelTestPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex h-screen bg-offblack overflow-x-hidden">
+      <div 
+        className="flex h-screen overflow-x-hidden"
+        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+      >
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
-        <main className="flex-1 overflow-y-auto scroll-smooth p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center justify-center">
+        <main 
+          className="flex-1 overflow-y-auto scroll-smooth p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center justify-center"
+          style={{ backgroundColor: 'var(--color-primary-bg)' }}
+        >
           <div className="text-center">
             <motion.img
               src={syncnerLogo}
@@ -400,7 +406,12 @@ const LevelTestPage: React.FC = () => {
                 scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
               }}
             />
-            <p className="text-paperwhite text-lg">Loading test content...</p>
+            <p 
+              className="text-lg"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              Loading test content...
+            </p>
           </div>
         </main>
       </div>

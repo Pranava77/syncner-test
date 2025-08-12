@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { updateUserProfile, fetchCurrentUser } from '../redux/slices/authSlice';
+import ThemeSwitcher from '../components/ThemeSwitcher';
 import { 
   LightningBoltIcon, 
   CodeIcon, 
@@ -120,7 +121,14 @@ const OnboardingFlow: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-offblack py-12 px-4 font-sans">
+    <div 
+      className="min-h-screen py-12 px-4 font-sans relative"
+      style={{ backgroundColor: 'var(--color-primary-bg)' }}
+    >
+      {/* Theme Switcher */}
+      <div className="absolute top-4 right-4">
+        <ThemeSwitcher variant="button" size="sm" />
+      </div>
       <div className="max-w-4xl mx-auto">
         {/* Logo */}
         <div className="flex justify-center mb-8">

@@ -90,14 +90,26 @@ const ProjectsPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-offblack w-full flex flex-col items-center justify-center p-6 lg:p-12">
+    <div 
+      className="min-h-screen w-full flex flex-col items-center justify-center p-6 lg:p-12"
+      style={{ backgroundColor: 'var(--color-primary-bg)' }}
+    >
       <div className="w-full max-w-6xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mx-auto">
         {projects.map((project) => (
           <div
             key={project.id}
-            className={`bg-paperwhite/5 rounded-xl border transition-all shadow-lg flex flex-col justify-between p-6 group
-              ${project.selected ? 'border-2 border-trueturquoise bg-trueturquoise/5' : 'border border-paperwhite/20 hover:scale-[1.025] hover:shadow-xl'}
+            className={`rounded-xl border transition-all shadow-lg flex flex-col justify-between p-6 group
+              ${project.selected ? 'border-2 border-trueturquoise' : 'hover:scale-[1.025] hover:shadow-xl'}
             `}
+            style={{
+              backgroundColor: project.selected 
+                ? 'var(--color-accent-tertiary)' 
+                : 'var(--color-surface)',
+              borderColor: project.selected 
+                ? 'var(--color-accent-primary)' 
+                : 'var(--color-border)',
+              boxShadow: 'var(--shadow-md)'
+            }}
           >
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs text-teallight font-medium">
@@ -105,8 +117,18 @@ const ProjectsPage: React.FC = () => {
               </span>
               <span className={`text-xs font-semibold uppercase tracking-wide ${statusColor(project.status)}`}>{project.status}</span>
             </div>
-            <h2 className="text-xl font-bold text-paperwhite mb-1 leading-tight">{project.title}</h2>
-            <p className="text-teallight text-sm mb-4 leading-relaxed">{project.description}</p>
+            <h2 
+              className="text-xl font-bold mb-1 leading-tight"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              {project.title}
+            </h2>
+            <p 
+              className="text-sm mb-4 leading-relaxed"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
+              {project.description}
+            </p>
             <div className="flex items-center justify-between text-sm mb-6">
               <span className="font-semibold text-trueturquoise">Points: {project.points}</span>
               <span className="text-xs px-3 py-1 rounded-full bg-paperwhite/10 text-trueturquoise font-semibold uppercase tracking-wide">{project.difficulty}</span>

@@ -262,9 +262,15 @@ const LevelLearnPage: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen bg-offblack overflow-x-hidden">
+    <div 
+      className="flex h-screen overflow-x-hidden"
+      style={{ backgroundColor: 'var(--color-primary-bg)' }}
+    >
       <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="learn" refreshTrigger={refreshTrigger} />
-      <main className="flex-1 overflow-y-auto scroll-smooth p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
+      <main 
+        className="flex-1 overflow-y-auto scroll-smooth p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center"
+        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+      >
         {loading ? (
           <div className="text-center flex flex-col items-center justify-center min-h-screen">
             <motion.img
@@ -278,7 +284,12 @@ const LevelLearnPage: React.FC = () => {
                 scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
               }}
             />
-            <p className="text-paperwhite text-lg">Loading level content...</p>
+            <p 
+              className="text-lg"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              Loading level content...
+            </p>
           </div>
         ) : error || !level ? (
           <div className="text-center">
@@ -291,12 +302,29 @@ const LevelLearnPage: React.FC = () => {
             </button>
           </div>
         ) : !isLearnUnlocked ? (
-          <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 text-center">
+          <div 
+            className="w-full max-w-5xl rounded-xl border shadow-lg p-6 text-center"
+            style={{
+              backgroundColor: 'var(--color-surface)',
+              borderColor: 'var(--color-border)',
+              boxShadow: 'var(--shadow-lg)'
+            }}
+          >
             <div className="text-paperwhite/30 text-6xl mb-4">
               <LockClosedIcon className="h-16 w-16 mx-auto" />
             </div>
-            <h2 className="text-2xl font-bold text-paperwhite mb-2">Learning Section Locked</h2>
-            <p className="text-teallight mb-6 text-lg">Complete the previous level's exercise to unlock this learning section.</p>
+            <h2 
+              className="text-2xl font-bold mb-2"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              Learning Section Locked
+            </h2>
+            <p 
+              className="mb-6 text-lg"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
+              Complete the previous level's exercise to unlock this learning section.
+            </p>
             <button 
               onClick={() => navigate('/student/training')}
               className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold hover:bg-trueturquoise/90 transition-colors text-lg shadow-sm"
