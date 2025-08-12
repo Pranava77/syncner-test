@@ -198,16 +198,46 @@ const StudentDashboard: React.FC = () => {
                   <div className="text-teallight text-xs lg:text-sm font-label">Current Module</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-xl lg:text-2xl text-paperwhite font-heading">0</div>
-                  <div className="text-teallight text-xs lg:text-sm font-label">Completed</div>
+                  <div 
+                    className="text-xl lg:text-2xl font-heading"
+                    style={{ color: 'var(--color-text-primary)' }}
+                  >
+                    0
+                  </div>
+                  <div 
+                    className="text-xs lg:text-sm font-label"
+                    style={{ color: 'var(--color-text-tertiary)' }}
+                  >
+                    Completed
+                  </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-xl lg:text-2xl text-paperwhite font-heading">{levels?.length || 0}</div>
-                  <div className="text-teallight text-xs lg:text-sm font-label">Total Levels</div>
+                  <div 
+                    className="text-xl lg:text-2xl font-heading"
+                    style={{ color: 'var(--color-text-primary)' }}
+                  >
+                    {levels?.length || 0}
+                  </div>
+                  <div 
+                    className="text-xs lg:text-sm font-label"
+                    style={{ color: 'var(--color-text-tertiary)' }}
+                  >
+                    Total Levels
+                  </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-xl lg:text-2xl text-paperwhite font-heading">0%</div>
-                  <div className="text-teallight text-xs lg:text-sm font-label">Progress</div>
+                  <div 
+                    className="text-xl lg:text-2xl font-heading"
+                    style={{ color: 'var(--color-text-primary)' }}
+                  >
+                    0%
+                  </div>
+                  <div 
+                    className="text-xs lg:text-sm font-label"
+                    style={{ color: 'var(--color-text-tertiary)' }}
+                  >
+                    Progress
+                  </div>
                 </div>
               </div>
             </div>
@@ -222,9 +252,20 @@ const StudentDashboard: React.FC = () => {
         <div className="grid lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             {/* Current Learning */}
-            <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
+            <div 
+              className="rounded-xl shadow-lg p-4 lg:p-6"
+              style={{
+                backgroundColor: 'var(--color-surface)',
+                boxShadow: 'var(--shadow-lg)'
+              }}
+            >
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg lg:text-xl font-semibold text-paperwhite">Continue Learning</h2>
+                <h2 
+                  className="text-lg lg:text-xl font-semibold"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  Continue Learning
+                </h2>
                 <span className="bg-trueturquoise/20 text-trueturquoise px-2 lg:px-3 py-1 rounded-full text-xs lg:text-sm font-medium">
                   No Level Available
                 </span>

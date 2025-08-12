@@ -68,11 +68,28 @@ const AdminProfile: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-offblack text-paperwhite p-4">
+    <div 
+      className="min-h-screen p-4"
+      style={{ 
+        backgroundColor: 'var(--color-primary-bg)',
+        color: 'var(--color-text-primary)'
+      }}
+    >
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-heading mb-8">Admin Profile</h1>
+        <h1 
+          className="text-3xl font-heading mb-8"
+          style={{ color: 'var(--color-text-primary)' }}
+        >
+          Admin Profile
+        </h1>
         
-        <div className="bg-paperwhite/5 border border-paperwhite/20 rounded-lg p-6 space-y-4">
+        <div 
+          className="border rounded-lg p-6 space-y-4"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            borderColor: 'var(--color-border)'
+          }}
+        >
           <div>
             <label className="block text-sm font-label mb-2">Name</label>
             <input

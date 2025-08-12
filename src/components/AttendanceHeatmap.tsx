@@ -66,7 +66,14 @@ const AttendanceHeatmap: React.FC = () => {
   return (
     <div className="flex flex-col items-center w-full font-primary">
       <div className="w-full flex flex-col items-center">
-        <div className="bg-paperwhite/10 rounded-xl shadow-lg border border-paperwhite/20 w-full flex flex-col items-center p-2 sm:p-4">
+        <div 
+          className="rounded-xl shadow-lg border w-full flex flex-col items-center p-2 sm:p-4"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            borderColor: 'var(--color-border)',
+            boxShadow: 'var(--shadow-lg)'
+          }}
+        >
           {loading ? (
             <div className="flex flex-col items-center w-full relative gap-6">
               {/* Single month skeleton to match the actual structure */}
@@ -82,8 +89,10 @@ const AttendanceHeatmap: React.FC = () => {
                       return (
                         <div
                           key={i}
-                          className={`w-4 h-4 bg-paperwhite/${randomOpacity} rounded-sm animate-pulse`}
+                          className={`w-4 h-4 rounded-sm animate-pulse`}
                           style={{
+                            backgroundColor: `var(--color-border)`,
+                            opacity: Math.random() * 0.3 + 0.1,
                             clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
                           }}
                         />
@@ -94,8 +103,14 @@ const AttendanceHeatmap: React.FC = () => {
                 
                 {/* Month label skeleton */}
                 <div className="text-sm font-label mb-2 ml-4 whitespace-nowrap min-w-[90px] text-right">
-                  <div className="h-4 bg-paperwhite/20 rounded w-20 animate-pulse mb-1" />
-                  <div className="h-3 bg-paperwhite/10 rounded w-16 animate-pulse" />
+                  <div 
+                    className="h-4 rounded w-20 animate-pulse mb-1"
+                    style={{ backgroundColor: 'var(--color-border)' }}
+                  />
+                  <div 
+                    className="h-3 rounded w-16 animate-pulse"
+                    style={{ backgroundColor: 'var(--color-border-subtle)' }}
+                  />
                 </div>
               </div>
             </div>

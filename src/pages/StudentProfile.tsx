@@ -95,16 +95,35 @@ const StudentProfile: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen bg-offblack overflow-x-hidden">
+    <div 
+      className="flex h-screen overflow-x-hidden"
+      style={{ backgroundColor: 'var(--color-primary-bg)' }}
+    >
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-5xl mx-auto p-6">
           {/* Page Header */}
-          <div className="w-full bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
+          <div 
+            className="w-full rounded-xl border shadow-lg p-6 mb-8"
+            style={{
+              backgroundColor: 'var(--color-surface)',
+              borderColor: 'var(--color-border)',
+              boxShadow: 'var(--shadow-lg)'
+            }}
+          >
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h1 className="text-2xl font-bold text-paperwhite mb-2">Student Profile</h1>
-                <p className="text-teallight">Manage your personal information and account settings</p>
+                <h1 
+                  className="text-2xl font-bold mb-2"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  Student Profile
+                </h1>
+                <p 
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                >
+                  Manage your personal information and account settings
+                </p>
               </div>
               <div className="flex items-center gap-2">
                 <span className="px-3 py-1 rounded-full bg-paperwhite/10 text-trueturquoise font-semibold text-sm">
