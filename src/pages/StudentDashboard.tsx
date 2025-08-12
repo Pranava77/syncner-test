@@ -206,7 +206,12 @@ const StudentDashboard: React.FC = () => {
               </p>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
                 <div className="text-center">
-                  <div className="text-xl lg:text-2xl text-paperwhite font-heading">No Level</div>
+                  <div 
+                  className="text-xl lg:text-2xl font-heading"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  No Level
+                </div>
                   <div className="text-teallight text-xs lg:text-sm font-label">Current Module</div>
                 </div>
                 <div className="text-center">
@@ -494,7 +499,8 @@ const StudentDashboard: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="text-2xl lg:text-3xl mb-2 text-paperwhite font-heading"
+                            className="text-2xl lg:text-3xl mb-2 font-heading"
+                style={{ color: 'var(--color-text-primary)' }}
           >
             Loading your dashboard...
           </motion.h1>
@@ -542,19 +548,39 @@ const StudentDashboard: React.FC = () => {
             </p>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
               <div className="text-center">
-                <div className="text-xl lg:text-2xl text-paperwhite font-heading">{currentLevel ? `Level ${currentLevel.order}` : 'No Level'}</div>
+                <div 
+                  className="text-xl lg:text-2xl font-heading"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  {currentLevel ? `Level ${currentLevel.order}` : 'No Level'}
+                </div>
                 <div className="text-teallight text-xs lg:text-sm font-label">Current Module</div>
               </div>
               <div className="text-center">
-                <div className="text-xl lg:text-2xl text-paperwhite font-heading">{completedLevels}</div>
+                <div 
+                  className="text-xl lg:text-2xl font-heading"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  {completedLevels}
+                </div>
                 <div className="text-teallight text-xs lg:text-sm font-label">Completed</div>
               </div>
               <div className="text-center">
-                <div className="text-xl lg:text-2xl text-paperwhite font-heading">{levels?.length || 0}</div>
+                <div 
+                  className="text-xl lg:text-2xl font-heading"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  {levels?.length || 0}
+                </div>
                 <div className="text-teallight text-xs lg:text-sm font-label">Total Levels</div>
               </div>
               <div className="text-center">
-                <div className="text-xl lg:text-2xl text-paperwhite font-heading">{overallProgress}%</div>
+                <div 
+                  className="text-xl lg:text-2xl font-heading"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  {overallProgress}%
+                </div>
                 <div className="text-teallight text-xs lg:text-sm font-label">Progress</div>
               </div>
             </div>
@@ -594,7 +620,12 @@ const StudentDashboard: React.FC = () => {
                   <ReaderIcon className="h-6 w-6 text-trueturquoise" />
                 </div>
                 <div>
-                  <h2 className="text-xl lg:text-2xl font-bold text-paperwhite">Continue Learning</h2>
+                  <h2 
+              className="text-xl lg:text-2xl font-bold"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              Continue Learning
+            </h2>
                   <p className="text-teallight text-sm">Pick up where you left off</p>
                 </div>
               </div>
@@ -618,7 +649,10 @@ const StudentDashboard: React.FC = () => {
                       <div className="w-8 h-8 bg-gradient-to-br from-trueturquoise/20 to-blue-500/20 rounded-lg flex items-center justify-center">
                         <span className="text-trueturquoise font-bold text-sm">{currentLevel.order}</span>
                       </div>
-                      <h3 className="text-lg font-bold text-paperwhite">
+                      <h3 
+              className="text-lg font-bold"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
                         {currentLevel.title}
                       </h3>
                     </div>
@@ -706,7 +740,12 @@ const StudentDashboard: React.FC = () => {
                 <div className="w-16 h-16 bg-gradient-to-br from-green-500/20 to-teallight/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <span className="text-3xl">🎉</span>
                 </div>
-                <h3 className="text-xl font-bold text-paperwhite mb-2">Congratulations!</h3>
+                <h3 
+              className="text-xl font-bold mb-2"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              Congratulations!
+            </h3>
                 <p className="text-teallight text-base mb-6">
                   You've completed all {levels?.length || 0} levels in your {userTrack} track!
                 </p>
@@ -729,12 +768,18 @@ const StudentDashboard: React.FC = () => {
 
                 {/* Next Steps Configuration */}
                 <div className="space-y-4">
-                  <h4 className="text-lg font-semibold text-paperwhite mb-4">What's Next?</h4>
+                  <h4 
+              className="text-lg font-semibold mb-4"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              What's Next?
+            </h4>
                   
                   <div className="flex justify-center">
                     <Link 
                       to="/student/training"
-                      className="bg-gradient-to-r from-trueturquoise to-teallight text-offblack px-6 py-3 rounded-xl hover:from-trueturquoise/90 hover:to-teallight/90 transition-all font-semibold inline-flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
+                      className="bg-gradient-to-r from-trueturquoise to-teallight px-6 py-3 rounded-xl hover:from-trueturquoise/90 hover:to-teallight/90 transition-all font-semibold inline-flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
+                style={{ color: 'var(--color-text-inverse)' }}
                     >
                       <ReaderIcon 
                         className="h-4 w-4 mr-2"
@@ -766,15 +811,24 @@ const StudentDashboard: React.FC = () => {
                 <div className="w-16 h-16 bg-gradient-to-br from-trueturquoise/20 to-blue-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <span className="text-3xl">📚</span>
                 </div>
-                <h3 className="text-xl font-bold text-paperwhite mb-2">No Levels Available</h3>
+                <h3 
+              className="text-xl font-bold mb-2"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              No Levels Available
+            </h3>
                 <p className="text-teallight text-base mb-6">
                   No training levels are currently available for your track.
                 </p>
                 <Link
                   to="/student/training"
-                  className="bg-gradient-to-r from-trueturquoise to-teallight text-offblack px-6 py-3 rounded-xl hover:from-trueturquoise/90 hover:to-teallight/90 transition-all font-semibold inline-flex items-center shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
+                  className="bg-gradient-to-r from-trueturquoise to-teallight px-6 py-3 rounded-xl hover:from-trueturquoise/90 hover:to-teallight/90 transition-all font-semibold inline-flex items-center shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
+                style={{ color: 'var(--color-text-inverse)' }}
                 >
-                  <ReaderIcon className="h-4 w-4 mr-2 text-offblack" />
+                                          <ReaderIcon 
+                          className="h-4 w-4 mr-2" 
+                          style={{ color: 'var(--color-text-inverse)' }}
+                        />
                   Check Training
                 </Link>
               </div>

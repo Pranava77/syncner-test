@@ -140,25 +140,45 @@ const StudentProfile: React.FC = () => {
           <div className="w-full bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-semibold text-paperwhite mb-2">Name</label>
+                <label 
+              className="block text-sm font-semibold mb-2"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              Name
+            </label>
                 <input
                   type="text"
                   name="name"
                   value={profileData.name}
                   onChange={handleChange}
-                  className="w-full bg-offblack/60 border border-paperwhite/20 rounded-lg px-4 py-3 text-paperwhite focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors"
+                  className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors"
+                  style={{ 
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    borderColor: 'var(--color-border)',
+                    color: 'var(--color-text-primary)'
+                  }}
                   placeholder="Enter your full name"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-semibold text-paperwhite mb-2">Email</label>
+                <label 
+                  className="block text-sm font-semibold mb-2"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  Email
+                </label>
                 <input
                   type="email"
                   name="email"
                   value={profileData.email}
                   disabled
-                  className="w-full bg-offblack/60 border border-paperwhite/20 rounded-lg px-4 py-3 text-paperwhite/50 cursor-not-allowed"
+                  className="w-full border rounded-lg px-4 py-3 cursor-not-allowed"
+                  style={{ 
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    borderColor: 'var(--color-border)',
+                    color: 'var(--color-text-muted)'
+                  }}
                   placeholder="Email address"
                 />
               </div>
