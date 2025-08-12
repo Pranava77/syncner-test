@@ -320,7 +320,12 @@ const LevelExercisePage: React.FC = () => {
                 scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
               }}
             />
-            <p className="text-paperwhite text-lg">Loading exercise content...</p>
+            <p 
+              className="text-lg"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              Loading exercise content...
+            </p>
           </div>
         </main>
       </div>
@@ -353,8 +358,18 @@ const LevelExercisePage: React.FC = () => {
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="exercise" refreshTrigger={refreshTrigger} />
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
           <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 text-center">
-            <div className="text-paperwhite/30 text-6xl mb-4">📚</div>
-            <h2 className="text-2xl font-bold text-paperwhite mb-2">No Levels Available</h2>
+            <div 
+              className="text-6xl mb-4"
+              style={{ color: 'var(--color-text-muted)' }}
+            >
+              📚
+            </div>
+            <h2 
+              className="text-2xl font-bold mb-2"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              No Levels Available
+            </h2>
             <p className="text-teallight mb-6">There are no levels available for your current career track ({user?.careerTrack || 'Unknown'}).</p>
             <button 
               onClick={() => navigate('/student/training')}
@@ -375,10 +390,18 @@ const LevelExercisePage: React.FC = () => {
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="exercise" refreshTrigger={refreshTrigger} />
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
           <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 text-center">
-            <div className="text-paperwhite/30 text-6xl mb-4">
+            <div 
+              className="text-6xl mb-4"
+              style={{ color: 'var(--color-text-muted)' }}
+            >
               <LockClosedIcon className="h-16 w-16 mx-auto" />
             </div>
-            <h2 className="text-2xl font-bold text-paperwhite mb-2">Exercise Locked</h2>
+            <h2 
+              className="text-2xl font-bold mb-2"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              Exercise Locked
+            </h2>
             <p className="text-teallight mb-6 text-lg">Pass the test first to unlock this exercise section.</p>
             <button 
               onClick={() => navigate(`/student/training/${levelId}/test`)}
@@ -400,8 +423,18 @@ const LevelExercisePage: React.FC = () => {
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="exercise" refreshTrigger={refreshTrigger} />
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
           <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 text-center">
-            <div className="text-paperwhite/30 text-6xl mb-4">💪</div>
-            <h2 className="text-xl font-bold text-paperwhite mb-2">No Exercise Available</h2>
+            <div 
+              className="text-6xl mb-4"
+              style={{ color: 'var(--color-text-muted)' }}
+            >
+              💪
+            </div>
+            <h2 
+              className="text-xl font-bold mb-2"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              No Exercise Available
+            </h2>
             <p className="text-teallight mb-6">This level doesn't have any exercises yet.</p>
             <button 
               onClick={() => navigate(`/student/training/${levelId}/learn`)}
@@ -428,17 +461,52 @@ const LevelExercisePage: React.FC = () => {
 
   const renderExerciseTable = (exercises: any[], title: string, startIndex: number = 0) => (
     <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-6">
-      <h2 className="text-xl font-bold text-paperwhite mb-4">{title}</h2>
+                  <h2 
+              className="text-xl font-bold mb-4"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              {title}
+            </h2>
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
             <tr className="border-b border-paperwhite/20">
-              <th className="text-left py-3 px-4 text-paperwhite font-semibold">S.No</th>
-              <th className="text-left py-3 px-4 text-paperwhite font-semibold">Task name</th>
-              <th className="text-left py-3 px-4 text-paperwhite font-semibold">Brief</th>
-              <th className="text-left py-3 px-4 text-paperwhite font-semibold">Difficulty Level</th>
-              <th className="text-left py-3 px-4 text-paperwhite font-semibold">Credit Points</th>
-              <th className="text-left py-3 px-4 text-paperwhite font-semibold">Status</th>
+                              <th 
+                  className="text-left py-3 px-4 font-semibold"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  S.No
+                </th>
+                <th 
+                  className="text-left py-3 px-4 font-semibold"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  Task name
+                </th>
+                <th 
+                  className="text-left py-3 px-4 font-semibold"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  Brief
+                </th>
+                <th 
+                  className="text-left py-3 px-4 font-semibold"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  Difficulty Level
+                </th>
+                <th 
+                  className="text-left py-3 px-4 font-semibold"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  Credit Points
+                </th>
+                <th 
+                  className="text-left py-3 px-4 font-semibold"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  Status
+                </th>
             </tr>
           </thead>
           <tbody>
@@ -447,9 +515,24 @@ const LevelExercisePage: React.FC = () => {
               
               return (
                 <tr key={index} className="border-b border-paperwhite/10 hover:bg-paperwhite/5">
-                  <td className="py-3 px-4 text-paperwhite">{startIndex + index + 1}</td>
-                  <td className="py-3 px-4 text-paperwhite font-medium">{exercise.title}</td>
-                  <td className="py-3 px-4 text-paperwhite text-sm">{exercise.description}</td>
+                                  <td 
+                  className="py-3 px-4"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  {startIndex + index + 1}
+                </td>
+                <td 
+                  className="py-3 px-4 font-medium"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  {exercise.title}
+                </td>
+                <td 
+                  className="py-3 px-4 text-sm"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  {exercise.description}
+                </td>
                   <td className="py-3 px-4">
                     <span className={`px-2 py-1 rounded text-xs font-semibold ${
                       exercise.difficulty === 'Easy' ? 'bg-green-500/20 text-green-400' :
@@ -460,7 +543,12 @@ const LevelExercisePage: React.FC = () => {
                       {exercise.difficulty}
                     </span>
                   </td>
-                  <td className="py-3 px-4 text-paperwhite">{exercise.creditPoints}</td>
+                  <td 
+                  className="py-3 px-4"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  {exercise.creditPoints}
+                </td>
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-2">
                       {isSubmitted ? (
@@ -472,7 +560,8 @@ const LevelExercisePage: React.FC = () => {
                       )}
                       <button 
                         onClick={() => handleViewExercise(exercise)}
-                        className="bg-paperwhite/10 text-paperwhite px-3 py-1 rounded text-sm hover:bg-paperwhite/20 transition-colors"
+                        className="bg-paperwhite/10 px-3 py-1 rounded text-sm hover:bg-paperwhite/20 transition-colors"
+                style={{ color: 'var(--color-text-primary)' }}
                       >
                         {isSubmitted ? 'Edit' : 'Submit'}
                       </button>
@@ -495,7 +584,12 @@ const LevelExercisePage: React.FC = () => {
         <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl font-bold text-paperwhite mb-2">Level {level.order}: {level.title} - Exercise</h1>
+              <h1 
+              className="text-2xl font-bold mb-2"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              Level {level.order}: {level.title} - Exercise
+            </h1>
               <p className="text-teallight">Practice what you've learned with hands-on exercises</p>
             </div>
             <div className="flex items-center gap-2">
@@ -516,7 +610,12 @@ const LevelExercisePage: React.FC = () => {
               <div className="bg-trueturquoise text-offblack p-2 rounded-lg">
                 <CheckCircledIcon className="h-6 w-6" />
               </div>
-              <h2 className="text-xl font-bold text-paperwhite">Exercise Progress</h2>
+              <h2 
+              className="text-xl font-bold"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              Exercise Progress
+            </h2>
             </div>
             <div className="text-right">
               <div className="text-2xl font-bold text-trueturquoise">{exerciseSubmissions.length}</div>
@@ -587,7 +686,8 @@ const LevelExercisePage: React.FC = () => {
           ) : (
             <button 
               disabled
-              className="w-full sm:w-auto bg-paperwhite/20 text-paperwhite/50 px-8 py-3 rounded-lg font-bold text-lg cursor-not-allowed flex items-center gap-2"
+                              className="w-full sm:w-auto bg-paperwhite/20 px-8 py-3 rounded-lg font-bold text-lg cursor-not-allowed flex items-center gap-2"
+                style={{ color: 'var(--color-text-muted)' }}
             >
               <LockClosedIcon className="h-5 w-5" />
               Submit Exercise Links First
@@ -614,13 +714,15 @@ const LevelExercisePage: React.FC = () => {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <button 
                 onClick={() => navigate('/student/dashboard')}
-                className="bg-paperwhite/10 text-paperwhite px-6 py-3 rounded-lg font-semibold hover:bg-paperwhite/20 transition-colors"
+                className="bg-paperwhite/10 px-6 py-3 rounded-lg font-semibold hover:bg-paperwhite/20 transition-colors"
+                style={{ color: 'var(--color-text-primary)' }}
               >
                 Go to Dashboard
               </button>
               <button 
                 onClick={() => navigate('/student/training')}
-                className="bg-paperwhite/10 text-paperwhite px-6 py-3 rounded-lg font-semibold hover:bg-paperwhite/20 transition-colors"
+                className="bg-paperwhite/10 px-6 py-3 rounded-lg font-semibold hover:bg-paperwhite/20 transition-colors"
+                style={{ color: 'var(--color-text-primary)' }}
               >
                 View All Levels
               </button>

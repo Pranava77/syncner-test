@@ -444,10 +444,18 @@ const LevelTestPage: React.FC = () => {
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
           <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 text-center">
-            <div className="text-paperwhite/30 text-6xl mb-4">
+            <div 
+              className="text-6xl mb-4"
+              style={{ color: 'var(--color-text-muted)' }}
+            >
               <LockClosedIcon className="h-16 w-16 mx-auto" />
             </div>
-            <h2 className="text-2xl font-bold text-paperwhite mb-2">Test Locked</h2>
+            <h2 
+              className="text-2xl font-bold mb-2"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              Test Locked
+            </h2>
             <p className="text-teallight mb-6 text-lg">Complete the learning section first to unlock this test.</p>
             <button 
               onClick={() => navigate(`/student/training/${levelId}/learn`)}
@@ -469,7 +477,12 @@ const LevelTestPage: React.FC = () => {
         <main className="flex-1 overflow-y-auto scroll-smooth p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
           <div className="w-full max-w-5xl bg-gradient-to-r from-green-500/10 to-teallight/10 rounded-xl border border-green-500/30 shadow-lg p-6 text-center">
             <div className="text-green-400 text-6xl mb-4">✓</div>
-            <h2 className="text-2xl font-bold text-paperwhite mb-2">Test Already Completed!</h2>
+            <h2 
+              className="text-2xl font-bold mb-2"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              Test Already Completed!
+            </h2>
             <p className="text-teallight mb-6 text-lg">You have successfully passed this test. You can now proceed to the exercise.</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button 
@@ -509,7 +522,12 @@ const LevelTestPage: React.FC = () => {
                 scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
               }}
             />
-            <p className="text-paperwhite text-lg">Submitting your test...</p>
+                            <p 
+                  className="text-lg"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  Submitting your test...
+                </p>
           </div>
         </main>
       </div>
@@ -535,7 +553,12 @@ const LevelTestPage: React.FC = () => {
             {retakeTimer && (
               <div className="bg-gradient-to-r from-paperwhite/5 to-paperwhite/10 rounded-xl p-6 mb-6 border border-paperwhite/20">
                 <div className="text-trueturquoise font-semibold mb-2 text-sm">Time until you can retake:</div>
-                <div className="text-3xl font-bold text-paperwhite">{formatRetakeTime(retakeTimer)}</div>
+                <div 
+                  className="text-3xl font-bold"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  {formatRetakeTime(retakeTimer)}
+                </div>
               </div>
             )}
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -560,8 +583,16 @@ const LevelTestPage: React.FC = () => {
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
           <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 text-center">
-            <div className="text-paperwhite/30 text-6xl mb-4">📝</div>
-            <h2 className="text-2xl font-heading text-paperwhite mb-2">No Test Available</h2>
+            <div 
+              className="text-6xl mb-4"
+              style={{ color: 'var(--color-text-muted)' }}
+            >📝</div>
+            <h2 
+              className="text-2xl font-heading mb-2"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              No Test Available
+            </h2>
             <p className="text-teallight mb-6 text-lg">This level doesn't have any test questions yet.</p>
             <button 
               onClick={() => navigate(`/student/training/${levelId}/learn`)}
@@ -587,7 +618,10 @@ const LevelTestPage: React.FC = () => {
                   <ReaderIcon className="h-8 w-8" />
                 </div>
             <div>
-                  <h1 className="text-2xl font-bold text-paperwhite mb-2">
+                  <h1 
+                    className="text-2xl font-bold mb-2"
+                    style={{ color: 'var(--color-text-primary)' }}
+                  >
                     Level {level.order}: {level.title} - Test
                     <span className="text-lg font-normal text-teallight ml-3">(Attempt {currentAttempt === 0 && canRetake ? 1 : currentAttempt}/3)</span>
                   </h1>
@@ -604,7 +638,12 @@ const LevelTestPage: React.FC = () => {
                   <div className="text-xs text-teallight font-label">Time Remaining</div>
                 </div>
                 <div className="text-center bg-paperwhite/5 rounded-lg p-4 border border-paperwhite/10">
-                  <div className="text-2xl font-bold text-paperwhite mb-2">{validQuestions.length}</div>
+                  <div 
+                    className="text-2xl font-bold mb-2"
+                    style={{ color: 'var(--color-text-primary)' }}
+                  >
+                    {validQuestions.length}
+                  </div>
                   <div className="text-xs text-teallight font-label">Questions</div>
               </div>
             </div>
@@ -618,7 +657,10 @@ const LevelTestPage: React.FC = () => {
                 <form onSubmit={handleSubmit} className="space-y-6">
           {validQuestions.map((question, qIdx) => (
             <div key={qIdx} className="bg-paperwhite/5 rounded-xl border border-paperwhite/20 shadow-lg p-6">
-              <h3 className="text-lg font-semibold text-paperwhite mb-4">
+              <h3 
+                className="text-lg font-semibold mb-4"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
                 Question {qIdx + 1}: {question.question}
               </h3>
               
@@ -642,9 +684,14 @@ const LevelTestPage: React.FC = () => {
                                 <CheckCircledIcon className="h-4 w-4 text-offblack" aria-hidden="true" />
                               )}
                             </div>
-                            <span className={`text-lg ${
-                              answers[qIdx]?.[optIdx] ? 'text-trueturquoise font-semibold' : 'text-paperwhite'
-                            }`}>
+                            <span 
+                              className={`text-lg ${
+                                answers[qIdx]?.[optIdx] ? 'text-trueturquoise font-semibold' : ''
+                              }`}
+                              style={{ 
+                                color: answers[qIdx]?.[optIdx] ? undefined : 'var(--color-text-primary)'
+                              }}
+                            >
                               {option}
                             </span>
                           </div>
@@ -674,7 +721,10 @@ const LevelTestPage: React.FC = () => {
                   ? 'bg-gradient-to-r from-green-500/10 to-teallight/10 border-green-500/30' 
                   : 'bg-gradient-to-r from-red-500/10 to-orange-500/10 border-red-500/30'
               }`}>
-                <h2 className="text-2xl font-bold text-paperwhite mb-4">
+                <h2 
+                  className="text-2xl font-bold mb-4"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
                   {testPassed ? 'Test Passed! 🎉' : 'Test Failed'}
                 </h2>
                 <div className="text-4xl font-bold mb-4">
@@ -694,13 +744,23 @@ const LevelTestPage: React.FC = () => {
                     {(currentAttempt < 3 || (currentAttempt === 0 && canRetake)) ? (
                       <>
                         <div className="text-trueturquoise font-semibold mb-2 text-sm">Attempts Remaining</div>
-                        <div className="text-3xl font-bold text-paperwhite">{currentAttempt === 0 && canRetake ? 3 : 3 - currentAttempt}</div>
+                        <div 
+                    className="text-3xl font-bold"
+                    style={{ color: 'var(--color-text-primary)' }}
+                  >
+                    {currentAttempt === 0 && canRetake ? 3 : 3 - currentAttempt}
+                  </div>
                         <div className="text-sm text-teallight mt-1">You can retry immediately</div>
                       </>
                     ) : (
                       <>
                         <div className="text-red-400 font-semibold mb-2 text-sm">Maximum Attempts Reached</div>
-                        <div className="text-3xl font-bold text-paperwhite">0</div>
+                        <div 
+                    className="text-3xl font-bold"
+                    style={{ color: 'var(--color-text-primary)' }}
+                  >
+                    0
+                  </div>
                         <div className="text-sm text-teallight mt-1">
                           {retakeTimer && retakeTimer > 0 ? (
                             <>Please wait {formatRetakeTime(retakeTimer)} before retaking</>
@@ -716,7 +776,8 @@ const LevelTestPage: React.FC = () => {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <button 
                     onClick={() => navigate(`/student/training/${levelId}/learn`)}
-                    className="bg-paperwhite/10 text-paperwhite px-8 py-3 rounded-xl font-semibold hover:bg-paperwhite/20 transition-colors text-lg shadow-lg border border-paperwhite/20"
+                    className="bg-paperwhite/10 px-8 py-3 rounded-xl font-semibold hover:bg-paperwhite/20 transition-colors text-lg shadow-lg border border-paperwhite/20"
+                    style={{ color: 'var(--color-text-primary)' }}
                   >
                     Back to Learning
                   </button>
@@ -733,7 +794,12 @@ const LevelTestPage: React.FC = () => {
 
               {/* Answers Review Section */}
               <div className="bg-paperwhite/5 rounded-xl border border-paperwhite/20 shadow-lg p-6">
-                <h3 className="text-xl font-bold text-paperwhite mb-6 text-center">Review Your Answers</h3>
+                <h3 
+                className="text-xl font-bold mb-6 text-center"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                Review Your Answers
+              </h3>
                 <div className="space-y-6">
                   {validQuestions.map((question, qIdx) => {
                     const userAnswerIndex = answers[qIdx]?.findIndex(a => a);
@@ -752,9 +818,12 @@ const LevelTestPage: React.FC = () => {
                     
                     return (
                       <div key={qIdx} className="bg-paperwhite/5 rounded-lg border border-paperwhite/10 p-4">
-                        <h4 className="text-lg font-semibold text-paperwhite mb-3">
-                          Question {qIdx + 1}: {question.question}
-                        </h4>
+                                              <h4 
+                        className="text-lg font-semibold mb-3"
+                        style={{ color: 'var(--color-text-primary)' }}
+                      >
+                        Question {qIdx + 1}: {question.question}
+                      </h4>
                         
                         <div className="space-y-2 mb-3">
                           {question.options.map((option, optIdx) => (
@@ -786,15 +855,20 @@ const LevelTestPage: React.FC = () => {
                                   <span className="text-white text-xs">✓</span>
                                 )}
                               </div>
-                              <span className={`text-sm ${
-                                optIdx === userAnswerIndex 
-                                  ? isCorrect 
-                                    ? 'text-green-400 font-semibold' 
-                                    : 'text-red-400 font-semibold'
-                                  : optIdx === correctAnswerIndex
-                                    ? 'text-green-400 font-semibold'
-                                    : 'text-paperwhite'
-                              }`}>
+                              <span 
+                                className={`text-sm ${
+                                  optIdx === userAnswerIndex 
+                                    ? isCorrect 
+                                      ? 'text-green-400 font-semibold' 
+                                      : 'text-red-400 font-semibold'
+                                    : optIdx === correctAnswerIndex
+                                      ? 'text-green-400 font-semibold'
+                                      : ''
+                                }`}
+                                style={{ 
+                                  color: (optIdx === userAnswerIndex || optIdx === correctAnswerIndex) ? undefined : 'var(--color-text-primary)'
+                                }}
+                              >
                                 {option}
                               </span>
             </div>
@@ -807,7 +881,10 @@ const LevelTestPage: React.FC = () => {
                             : 'bg-red-500/10 border-red-500/20'
                         }`}>
                           <div className="flex items-center gap-2 mb-1">
-                            <span className="text-sm font-semibold text-paperwhite">
+                            <span 
+                              className="text-sm font-semibold"
+                              style={{ color: 'var(--color-text-primary)' }}
+                            >
                               {isCorrect ? 'Correct!' : 'Incorrect'}
                             </span>
                             {isCorrect ? (
@@ -841,16 +918,24 @@ const LevelTestPage: React.FC = () => {
                   <div className="w-16 h-16 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
                     <ExclamationTriangleIcon className="h-8 w-8 text-orange-400" />
                   </div>
-                  <h2 className="text-2xl font-bold text-paperwhite mb-3">
-                    Maximum Attempts Reached
-                  </h2>
+                                <h2 
+                className="text-2xl font-bold mb-3"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                Maximum Attempts Reached
+              </h2>
                   <p className="text-teallight mb-6 text-base leading-relaxed">
                     You have used all 3 attempts for this test. Please wait 5 hours before retaking.
                   </p>
                   {retakeTimer && (
                     <div className="bg-gradient-to-r from-paperwhite/5 to-paperwhite/10 rounded-xl p-6 mb-6 border border-paperwhite/20">
                       <div className="text-trueturquoise font-semibold mb-2 text-sm">Time until you can retake:</div>
-                      <div className="text-3xl font-bold text-paperwhite">{formatRetakeTime(retakeTimer)}</div>
+                      <div 
+                        className="text-3xl font-bold"
+                        style={{ color: 'var(--color-text-primary)' }}
+                      >
+                        {formatRetakeTime(retakeTimer)}
+                      </div>
                     </div>
                   )}
                   <div className="flex flex-col gap-3">
@@ -862,7 +947,8 @@ const LevelTestPage: React.FC = () => {
                     </button>
                     <button 
                       onClick={() => navigate(`/student/training/${levelId}/learn`)}
-                      className="bg-paperwhite/10 text-paperwhite px-6 py-3 rounded-xl font-semibold hover:bg-paperwhite/20 transition-colors border border-paperwhite/20"
+                      className="bg-paperwhite/10 px-6 py-3 rounded-xl font-semibold hover:bg-paperwhite/20 transition-colors border border-paperwhite/20"
+                      style={{ color: 'var(--color-text-primary)' }}
                     >
                       Back to Learning
                     </button>

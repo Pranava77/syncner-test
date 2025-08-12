@@ -184,85 +184,155 @@ const StudentProfile: React.FC = () => {
               </div>
               
               <div>
-                <label className="block text-sm font-semibold text-paperwhite mb-2">Phone</label>
+                <label 
+                  className="block text-sm font-semibold mb-2"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  Phone
+                </label>
                 <input
                   type="tel"
                   name="phone"
                   value={profileData.phone}
                   onChange={handleChange}
-                  className="w-full bg-offblack/60 border border-paperwhite/20 rounded-lg px-4 py-3 text-paperwhite focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors"
+                  className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors"
+                  style={{ 
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    borderColor: 'var(--color-border)',
+                    color: 'var(--color-text-primary)'
+                  }}
                   placeholder="Enter your phone number"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-semibold text-paperwhite mb-2">Location</label>
+                <label 
+                  className="block text-sm font-semibold mb-2"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  Location
+                </label>
                 <input
                   type="text"
                   name="location"
                   value={profileData.location}
                   onChange={handleChange}
-                  className="w-full bg-offblack/60 border border-paperwhite/20 rounded-lg px-4 py-3 text-paperwhite focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors"
+                  className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors"
+                  style={{ 
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    borderColor: 'var(--color-border)',
+                    color: 'var(--color-text-primary)'
+                  }}
                   placeholder="Enter your location"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-semibold text-paperwhite mb-2">College</label>
+                <label 
+                  className="block text-sm font-semibold mb-2"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  College
+                </label>
                 <input
                   type="text"
                   name="college"
                   value={profileData.college}
                   onChange={handleChange}
-                  className="w-full bg-offblack/60 border border-paperwhite/20 rounded-lg px-4 py-3 text-paperwhite focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors"
+                  className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors"
+                  style={{ 
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    borderColor: 'var(--color-border)',
+                    color: 'var(--color-text-primary)'
+                  }}
                   placeholder="Enter your college name"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-semibold text-paperwhite mb-2">Department</label>
+                <label 
+                  className="block text-sm font-semibold mb-2"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  Department
+                </label>
                 <input
                   type="text"
                   name="department"
                   value={profileData.department}
                   onChange={handleChange}
-                  className="w-full bg-offblack/60 border border-paperwhite/20 rounded-lg px-4 py-3 text-paperwhite focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors"
+                  className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors"
+                  style={{ 
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    borderColor: 'var(--color-border)',
+                    color: 'var(--color-text-primary)'
+                  }}
                   placeholder="Enter your department"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-semibold text-paperwhite mb-2">Career Track</label>
+                <label 
+                  className="block text-sm font-semibold mb-2"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  Career Track
+                </label>
                 <input
                   type="text"
                   name="careerTrack"
                   value={formatCareerTrack(profileData.careerTrack || '')}
                   disabled
-                  className="w-full bg-offblack/60 border border-paperwhite/20 rounded-lg px-4 py-3 text-paperwhite/50 cursor-not-allowed"
+                  className="w-full border rounded-lg px-4 py-3 cursor-not-allowed"
+                  style={{ 
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    borderColor: 'var(--color-border)',
+                    color: 'var(--color-text-muted)'
+                  }}
                   placeholder="Career track"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-semibold text-paperwhite mb-2">GPA</label>
+                <label 
+                  className="block text-sm font-semibold mb-2"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  GPA
+                </label>
                 <input
                   type="text"
                   name="gpa"
                   value={profileData.gpa}
                   onChange={handleChange}
-                  className="w-full bg-offblack/60 border border-paperwhite/20 rounded-lg px-4 py-3 text-paperwhite focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors"
+                  className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors"
+                  style={{ 
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    borderColor: 'var(--color-border)',
+                    color: 'var(--color-text-primary)'
+                  }}
                   placeholder="Enter your GPA"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-semibold text-paperwhite mb-2">Graduation Year</label>
+                <label 
+                  className="block text-sm font-semibold mb-2"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  Graduation Year
+                </label>
                 <input
                   type="text"
                   name="graduationYear"
                   value={profileData.graduationYear}
                   onChange={handleChange}
-                  className="w-full bg-offblack/60 border border-paperwhite/20 rounded-lg px-4 py-3 text-paperwhite focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors"
+                  className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors"
+                  style={{ 
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    borderColor: 'var(--color-border)',
+                    color: 'var(--color-text-primary)'
+                  }}
                   placeholder="Enter graduation year"
                 />
               </div>
@@ -284,7 +354,8 @@ const StudentProfile: React.FC = () => {
               <button
                 onClick={handleSave}
                 disabled={isLoading}
-                className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-semibold hover:bg-teallight transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                className="bg-trueturquoise px-8 py-3 rounded-lg font-semibold hover:bg-teallight transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+            style={{ color: 'var(--color-text-inverse)' }}
               >
                 {isLoading ? 'Saving...' : 'Save Changes'}
               </button>

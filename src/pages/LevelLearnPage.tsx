@@ -338,7 +338,12 @@ const LevelLearnPage: React.FC = () => {
             <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h1 className="text-2xl font-bold text-paperwhite mb-2">Level {level.order}: {level.title}</h1>
+                  <h1 
+              className="text-2xl font-bold mb-2"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              Level {level.order}: {level.title}
+            </h1>
                   <p className="text-teallight">{level.description}</p>
                 </div>
                 <div className="flex items-center gap-2">
@@ -359,7 +364,12 @@ const LevelLearnPage: React.FC = () => {
                   <div className="bg-trueturquoise text-offblack p-2 rounded-lg">
                     <ClockIcon className="h-6 w-6" />
                   </div>
-                  <h2 className="text-xl font-bold text-paperwhite">Learning Progress</h2>
+                  <h2 
+              className="text-xl font-bold"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              Learning Progress
+            </h2>
                 </div>
                 <div className="text-right">
                   <div className="text-2xl font-bold text-trueturquoise">{Math.round(getProgressPercentage()) || 0}%</div>
@@ -400,7 +410,12 @@ const LevelLearnPage: React.FC = () => {
                         {getContentIcon(item.type)}
                       </div>
                       <div>
-                        <h3 className="text-lg font-semibold text-paperwhite mb-1">{item.title}</h3>
+                        <h3 
+                  className="text-lg font-semibold mb-1"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  {item.title}
+                </h3>
                         <p className="text-teallight text-sm">Order: {item.order}</p>
                       </div>
                     </div>
@@ -418,7 +433,12 @@ const LevelLearnPage: React.FC = () => {
                   
                   {item.resources && item.resources.length > 0 && (
                     <div className="mt-4 pt-4 border-t border-paperwhite/10">
-                      <h4 className="text-sm font-semibold text-paperwhite mb-2">Resources:</h4>
+                      <h4 
+                  className="text-sm font-semibold mb-2"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  Resources:
+                </h4>
                       <div className="flex flex-wrap gap-2">
                         {item.resources.map((resource, idx) => (
                           <span key={idx} className="px-2 py-1 bg-paperwhite/5 rounded text-xs text-teallight">
@@ -438,7 +458,8 @@ const LevelLearnPage: React.FC = () => {
             <div className="w-full max-w-5xl flex justify-between items-center mt-8">
               <button
                 onClick={() => navigate('/student/training')}
-                className="bg-paperwhite/10 text-paperwhite px-6 py-3 rounded-lg hover:bg-paperwhite/20 transition-colors font-medium"
+                className="bg-paperwhite/10 px-6 py-3 rounded-lg hover:bg-paperwhite/20 transition-colors font-medium"
+                style={{ color: 'var(--color-text-primary)' }}
               >
                 Back to Training
               </button>
@@ -447,12 +468,15 @@ const LevelLearnPage: React.FC = () => {
                  <button
                    onClick={handleTakeTest}
                    disabled={!learnProgress.isCompleted}
-                   className={`px-6 py-3 rounded-lg font-medium transition-colors ${
-                     learnProgress.isCompleted 
-                       ? 'bg-trueturquoise text-offblack hover:bg-trueturquoise/90' 
-                       : 'bg-paperwhite/10 text-teallight/50 cursor-not-allowed'
-                   }`}
-                 >
+                                        className={`px-6 py-3 rounded-lg font-medium transition-colors ${
+                       learnProgress.isCompleted 
+                                        ? 'bg-trueturquoise hover:bg-trueturquoise/90' 
+                          : 'bg-paperwhite/10 text-teallight/50 cursor-not-allowed'
+                     }`}
+                     style={{ 
+                       color: learnProgress.isCompleted ? 'var(--color-text-inverse)' : 'var(--color-text-muted)'
+                     }}
+                   >
                    Take Test {learnProgress.isCompleted ? '(Ready)' : '(Complete Learn First)'}
                  </button>
                </div>

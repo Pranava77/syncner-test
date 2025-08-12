@@ -174,7 +174,12 @@ const TrainingLevels: React.FC = () => {
         <main className="flex-1 overflow-y-auto scroll-smooth p-6 lg:p-12">
           <div className="max-w-7xl mx-auto">
             <div className="mb-8">
-              <h1 className="text-3xl lg:text-4xl font-bold text-paperwhite mb-4">Training Levels</h1>
+              <h1 
+          className="text-3xl lg:text-4xl font-bold mb-4"
+          style={{ color: 'var(--color-text-primary)' }}
+        >
+          Training Levels
+        </h1>
               <p className="text-teallight text-lg">Master your skills through structured learning paths</p>
             </div>
             
@@ -223,12 +228,18 @@ const TrainingLevels: React.FC = () => {
         <main className="flex-1 p-6 lg:p-12 flex items-center justify-center">
           <div className="text-center max-w-md">
             <div className="text-red-400 text-4xl mb-4">⚠️</div>
-            <h3 className="text-xl font-heading text-paperwhite mb-2">Unable to Load Training Levels</h3>
+            <h3 
+              className="text-xl font-heading mb-2"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              Unable to Load Training Levels
+            </h3>
             <p className="text-teallight text-sm mb-6">{error}</p>
             <div className="space-y-3">
               <button 
                 onClick={refetch}
-                className="w-full bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium"
+                className="w-full bg-trueturquoise px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium"
+                style={{ color: 'var(--color-text-inverse)' }}
               >
                 Try Again
               </button>
@@ -252,7 +263,12 @@ const TrainingLevels: React.FC = () => {
       <main className="flex-1 overflow-y-auto scroll-smooth p-6 lg:p-12">
         <div className="max-w-6xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl font-heading text-paperwhite mb-2">Training Levels</h1>
+            <h1 
+              className="text-3xl font-heading mb-2"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              Training Levels
+            </h1>
             <p className="text-teallight">
               {user?.careerTrack ? 
                 `${getTrackLabel(user.careerTrack)} Track - Complete these levels to advance your skills` :
@@ -263,8 +279,16 @@ const TrainingLevels: React.FC = () => {
 
           {levelsWithUnlockLogic.length === 0 ? (
             <div className="text-center py-12">
-              <div className="text-paperwhite/30 text-6xl mb-4">📚</div>
-              <h3 className="text-xl font-heading text-paperwhite mb-2">
+                          <div 
+              className="text-6xl mb-4"
+              style={{ color: 'var(--color-text-muted)' }}
+            >
+              📚
+            </div>
+            <h3 
+              className="text-xl font-heading mb-2"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
                 {user?.careerTrack ? 
                   `No levels available for ${getTrackLabel(user.careerTrack)} track` :
                   'No levels available'
@@ -282,7 +306,8 @@ const TrainingLevels: React.FC = () => {
                 <p>Total Levels Found: {levelsWithUnlockLogic.length}</p>
                 <button 
                   onClick={refetch}
-                  className="mt-4 bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors text-sm"
+                  className="mt-4 bg-trueturquoise px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors text-sm"
+                style={{ color: 'var(--color-text-inverse)' }}
                 >
                   Refresh Data
                 </button>
@@ -330,14 +355,23 @@ const TrainingLevels: React.FC = () => {
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                       {/* Level Number Badge */}
-                      <div className="bg-trueturquoise text-offblack px-3 py-1 rounded-lg font-bold text-sm">
+                      <div 
+                  className="bg-trueturquoise px-3 py-1 rounded-lg font-bold text-sm"
+                  style={{ color: 'var(--color-text-inverse)' }}
+                >
                         Level {level.order}
                       </div>
-                      <div className={`px-2 py-1 rounded text-xs font-medium ${getDifficultyColor(level.difficulty)} text-white`}>
+                      <div 
+                  className={`px-2 py-1 rounded text-xs font-medium ${getDifficultyColor(level.difficulty)}`}
+                  style={{ color: 'var(--color-text-inverse)' }}
+                >
                         {level.difficulty}
                       </div>
                     </div>
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${getTrackColor(level.careerTrack)} text-white`}>
+                    <span 
+                  className={`px-2 py-1 rounded text-xs font-medium ${getTrackColor(level.careerTrack)}`}
+                  style={{ color: 'var(--color-text-inverse)' }}
+                >
                       {getTrackLabel(level.careerTrack)}
                     </span>
                   </div>
@@ -364,7 +398,10 @@ const TrainingLevels: React.FC = () => {
                       <span>{level.estimatedHours}h estimated</span>
                     </div>
                     <div className="flex items-center gap-2 text-xs text-teallight">
-                      <span className={`px-2 py-1 rounded ${getDifficultyColor(level.difficulty)} text-white`}>
+                      <span 
+                  className={`px-2 py-1 rounded ${getDifficultyColor(level.difficulty)}`}
+                  style={{ color: 'var(--color-text-inverse)' }}
+                >
                         {level.difficulty.charAt(0).toUpperCase() + level.difficulty.slice(1)}
                       </span>
                     </div>
@@ -412,7 +449,10 @@ const TrainingLevels: React.FC = () => {
                           </span>
                         ))}
                         {level.skills.length > 3 && (
-                          <span className="px-2 py-1 bg-paperwhite/20 text-paperwhite text-xs rounded">
+                          <span 
+                  className="px-2 py-1 bg-paperwhite/20 text-xs rounded"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
                             +{level.skills.length - 3} more
                           </span>
                         )}
