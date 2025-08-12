@@ -69,7 +69,8 @@ const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({ open, onClose, 
         }}
       >
         <button
-          className="absolute top-3 right-3 sm:top-4 sm:right-4 text-paperwhite hover:text-trueturquoise text-xl font-bold"
+                      className="absolute top-3 right-3 sm:top-4 sm:right-4 hover:text-trueturquoise text-xl font-bold"
+            style={{ color: 'var(--color-text-primary)' }}
           onClick={handleClose}
           aria-label="Close"
         >
@@ -94,28 +95,43 @@ const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({ open, onClose, 
         </p>
         {success ? (
           <div className="space-y-4 w-full flex flex-col items-center">
-            <div className="text-paperwhite text-center">
+            <div 
+              className="text-center"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
               <p className="mb-2">Password has been reset. Copy and share this password with the user. It will not be shown again.</p>
               <div className="bg-paperwhite/10 rounded-lg px-4 py-3 text-lg font-mono text-trueturquoise select-all break-all text-center">{password}</div>
             </div>
             <button
               onClick={handleCopy}
-              className="w-full bg-trueturquoise text-offblack py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold"
+              className="w-full bg-trueturquoise py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold"
+            style={{ color: 'var(--color-text-inverse)' }}
             >Copy Password</button>
             <button
               onClick={handleClose}
-              className="w-full bg-paperwhite/10 text-paperwhite py-2 rounded-lg hover:bg-paperwhite/20 transition-colors font-semibold mt-2"
+              className="w-full bg-paperwhite/10 py-2 rounded-lg hover:bg-paperwhite/20 transition-colors font-semibold mt-2"
+            style={{ color: 'var(--color-text-primary)' }}
             >Close</button>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4 w-full flex flex-col items-center">
-            <label className="block text-paperwhite mb-1 font-label w-full">New Password</label>
+            <label 
+              className="block mb-1 font-label w-full"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              New Password
+            </label>
             <div className="flex gap-2 w-full min-w-0 items-center">
               <input
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                className="flex-1 min-w-0 px-3 py-2 border border-paperwhite/20 rounded-lg bg-offblack text-paperwhite focus:ring-2 focus:ring-trueturquoise"
+                                  className="flex-1 min-w-0 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-trueturquoise"
+                  style={{ 
+                    borderColor: 'var(--color-border)',
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    color: 'var(--color-text-primary)'
+                  }}
                 placeholder="Enter or generate password"
                 required
                 minLength={6}
@@ -123,12 +139,14 @@ const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({ open, onClose, 
               <button
                 type="button"
                 onClick={handleGenerate}
-                className="flex-shrink-0 w-24 bg-trueturquoise text-offblack px-3 py-2 rounded-lg hover:bg-teallight transition-colors font-semibold"
+                className="flex-shrink-0 w-24 bg-trueturquoise px-3 py-2 rounded-lg hover:bg-teallight transition-colors font-semibold"
+            style={{ color: 'var(--color-text-inverse)' }}
               >Generate</button>
               <button
                 type="button"
                 onClick={() => setShowPassword(p => !p)}
-                className="flex-shrink-0 w-12 bg-paperwhite/10 text-paperwhite px-0 py-2 rounded-lg hover:bg-paperwhite/20 transition-colors font-semibold flex items-center justify-center"
+                className="flex-shrink-0 w-12 bg-paperwhite/10 px-0 py-2 rounded-lg hover:bg-paperwhite/20 transition-colors font-semibold flex items-center justify-center"
+            style={{ color: 'var(--color-text-primary)' }}
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
                 {showPassword ? <EyeClosedIcon className="w-5 h-5" /> : <EyeOpenIcon className="w-5 h-5" />}
@@ -139,7 +157,8 @@ const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({ open, onClose, 
             <button
               type="submit"
               disabled={loading || !password}
-              className="w-full bg-trueturquoise text-offblack py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-trueturquoise py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{ color: 'var(--color-text-inverse)' }}
             >{loading ? 'Resetting...' : 'Reset Password'}</button>
           </form>
         )}

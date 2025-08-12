@@ -210,7 +210,10 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
                 onClick={onClose}
                 className="w-8 h-8 rounded-lg bg-paperwhite/10 hover:bg-paperwhite/20 flex items-center justify-center transition-colors"
               >
-                <Cross1Icon className="w-4 h-4 text-paperwhite" />
+                <Cross1Icon 
+                  className="w-4 h-4" 
+                  style={{ color: 'var(--color-text-primary)' }}
+                />
               </button>
             </div>
           </div>
@@ -234,19 +237,34 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
               <div className="w-10 h-10 bg-gradient-to-br from-trueturquoise/20 to-blue-500/20 rounded-xl flex items-center justify-center">
                 <ClipboardIcon className="w-5 h-5 text-trueturquoise" />
               </div>
-              <h3 className="text-lg font-semibold text-paperwhite">Exercise Overview</h3>
+                              <h3 
+                  className="text-lg font-semibold"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  Exercise Overview
+                </h3>
             </div>
             <div className="space-y-4">
               <div>
                 <h4 className="text-sm font-medium text-trueturquoise mb-2">What you need to do:</h4>
                 <div className="bg-offblack/50 rounded-xl p-4 border border-paperwhite/10">
-                  <p className="text-sm leading-relaxed text-paperwhite">{formData.brief}</p>
+                  <p 
+                  className="text-sm leading-relaxed"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  {formData.brief}
+                </p>
                 </div>
               </div>
               <div>
                 <h4 className="text-sm font-medium text-trueturquoise mb-2">Instructions & Guidelines:</h4>
                 <div className="bg-offblack/50 rounded-xl p-4 border border-paperwhite/10">
-                  <p className="text-sm leading-relaxed text-paperwhite whitespace-pre-line">{formData.instruction}</p>
+                  <p 
+                  className="text-sm leading-relaxed whitespace-pre-line"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  {formData.instruction}
+                </p>
                 </div>
               </div>
             </div>
@@ -258,7 +276,12 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
               <div className="w-10 h-10 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-xl flex items-center justify-center">
                 <FileTextIcon className="w-5 h-5 text-orange-400" />
               </div>
-              <h3 className="text-lg font-semibold text-paperwhite">Reference Materials</h3>
+                              <h3 
+                  className="text-lg font-semibold"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  Reference Materials
+                </h3>
             </div>
             <div className="bg-offblack/50 rounded-xl p-4 border border-paperwhite/10">
               {exercise.resources && exercise.resources.length > 0 ? (
@@ -291,7 +314,12 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
               <div className="w-10 h-10 bg-gradient-to-br from-green-500/20 to-teallight/20 rounded-xl flex items-center justify-center">
                 <Link1Icon className="w-5 h-5 text-green-400" />
               </div>
-              <h3 className="text-lg font-semibold text-paperwhite">Submit Your Work</h3>
+                              <h3 
+                  className="text-lg font-semibold"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  Submit Your Work
+                </h3>
             </div>
             <div className="space-y-4">
               <div>
@@ -302,7 +330,11 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
                   type="url"
                   value={formData.submissionLink}
                   onChange={(e) => handleInputChange('submissionLink', e.target.value)}
-                  className="w-full p-4 border border-green-500/30 bg-offblack/50 text-paperwhite rounded-xl focus:ring-2 focus:ring-green-500/40 focus:border-green-500 transition placeholder:text-teallight"
+                  className="w-full p-4 border border-green-500/30 rounded-xl focus:ring-2 focus:ring-green-500/40 focus:border-green-500 transition placeholder:text-teallight"
+                  style={{ 
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    color: 'var(--color-text-primary)'
+                  }}
                   placeholder="https://your-project-link.com"
                   required
                 />
@@ -322,7 +354,11 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
                       type="url"
                       value={material}
                       onChange={(e) => handleReferenceMaterialChange(index, e.target.value)}
-                      className="w-full p-4 border border-green-500/30 bg-offblack/50 text-paperwhite rounded-xl focus:ring-2 focus:ring-green-500/40 focus:border-green-500 transition placeholder:text-teallight"
+                      className="w-full p-4 border border-green-500/30 rounded-xl focus:ring-2 focus:ring-green-500/40 focus:border-green-500 transition placeholder:text-teallight"
+                      style={{ 
+                        backgroundColor: 'var(--color-secondary-bg)',
+                        color: 'var(--color-text-primary)'
+                      }}
                       placeholder={`Additional link ${index + 1} (GitHub, demo, docs, etc.)`}
                     />
                   ))}
@@ -345,7 +381,12 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
               <button
                 onClick={onClose}
                 disabled={isSubmitting}
-                className="flex items-center gap-2 px-6 py-3 text-paperwhite border border-paperwhite/20 rounded-xl hover:bg-paperwhite/10 transition-colors disabled:opacity-50 font-medium"
+                className="flex items-center gap-2 px-6 py-3 border rounded-xl transition-colors disabled:opacity-50 font-medium"
+                style={{ 
+                  color: 'var(--color-text-primary)',
+                  borderColor: 'var(--color-border)',
+                  backgroundColor: 'transparent'
+                }}
               >
                 <Cross1Icon className="w-4 h-4" />
                 Cancel
@@ -353,7 +394,8 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
               <button
                 onClick={handleSubmit}
                 disabled={isSubmitting || !formData.submissionLink.trim()}
-                className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-green-500 to-teallight text-offblack rounded-xl hover:from-green-600 hover:to-teallight/90 transition-all font-semibold disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-green-500 to-teallight rounded-xl hover:from-green-600 hover:to-teallight/90 transition-all font-semibold disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                style={{ color: 'var(--color-text-inverse)' }}
               >
                 {isSubmitting ? (
                   <>

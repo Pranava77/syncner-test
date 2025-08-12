@@ -256,8 +256,12 @@ const AttendanceHeatmap: React.FC = () => {
             top: tooltip.y - 32, // slightly above the hex
             zIndex: 1000,
             pointerEvents: 'none',
+            backgroundColor: 'var(--color-surface-elevated)',
+            color: 'var(--color-text-primary)',
+            borderColor: 'var(--color-border)',
+            boxShadow: 'var(--shadow-lg)'
           }}
-          className="bg-offblack text-paperwhite px-4 py-2 rounded-lg shadow-lg border border-paperwhite/20 text-xs font-label whitespace-nowrap animate-fade-in"
+          className="px-4 py-2 rounded-lg shadow-lg border text-xs font-label whitespace-nowrap animate-fade-in"
         >
           {tooltip.content}
         </div>

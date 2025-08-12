@@ -49,7 +49,10 @@ const LevelStatus: React.FC<LevelStatusProps> = ({ onLevelsLoaded }) => {
           status === 'success' ? 'bg-green-400' : 
           status === 'error' ? 'bg-red-400' : 'bg-gray-400'
         }`} />
-        <span className="text-xs text-paperwhite">
+                        <span 
+                  className="text-xs"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
           Levels: {status === 'loading' ? 'Loading...' : 
                   status === 'success' ? `${levelCount} found` : 
                   status === 'error' ? 'Error' : 'Idle'}
@@ -61,7 +64,8 @@ const LevelStatus: React.FC<LevelStatusProps> = ({ onLevelsLoaded }) => {
       <button
         onClick={checkLevels}
         disabled={status === 'loading'}
-        className="text-xs bg-trueturquoise text-offblack px-2 py-1 rounded hover:bg-trueturquoise/90 transition-colors disabled:opacity-50"
+                    className="text-xs bg-trueturquoise px-2 py-1 rounded hover:bg-trueturquoise/90 transition-colors disabled:opacity-50"
+            style={{ color: 'var(--color-text-inverse)' }}
       >
         Refresh
       </button>

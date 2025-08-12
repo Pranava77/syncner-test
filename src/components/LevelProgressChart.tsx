@@ -31,7 +31,12 @@ const LevelProgressChart: React.FC<LevelProgressChartProps> = ({
       <div className="bg-paperwhite/10 rounded-xl shadow-sm p-8">
         <div className="flex items-center justify-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-trueturquoise"></div>
-          <span className="ml-3 text-paperwhite">Loading level progress...</span>
+                          <span 
+                  className="ml-3"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  Loading level progress...
+                </span>
         </div>
       </div>
     );
@@ -132,7 +137,12 @@ const LevelProgressChart: React.FC<LevelProgressChartProps> = ({
           ))
         ) : (
           <div className="text-center py-8">
-            <div className="text-paperwhite/30 text-4xl mb-4">📊</div>
+                            <div 
+                  className="text-4xl mb-4"
+                  style={{ color: 'var(--color-text-muted)' }}
+                >
+                  📊
+                </div>
             <p 
               style={{ color: 'var(--color-text-tertiary)' }}
             >
