@@ -16,49 +16,6 @@
 }
 */
 
-/* CSS Custom Properties for Theme Switching */
-:root {
-  /* Light Mode Colors */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8fafc;
-  --bg-tertiary: #f1f5f9;
-  --text-primary: #1e293b;
-  --text-secondary: #475569;
-  --text-tertiary: #64748b;
-  --border-primary: #e2e8f0;
-  --border-secondary: #cbd5e1;
-  --accent-primary: #0891b2;
-  --accent-secondary: #0ea5e9;
-  
-  /* Brand Colors */
-  --color-true-turquoise: #0891b2;
-  --color-rust: #dc2626;
-  --color-paper-white: #ffffff;
-  --color-black: #1e293b;
-  --color-grey-label: #64748b;
-}
-
-.dark {
-  /* Dark Mode Colors */
-  --bg-primary: #0f172a;
-  --bg-secondary: #1e293b;
-  --bg-tertiary: #334155;
-  --text-primary: #f8fafc;
-  --text-secondary: #cbd5e1;
-  --text-tertiary: #94a3b8;
-  --border-primary: #334155;
-  --border-secondary: #475569;
-  --accent-primary: #00b8d9;
-  --accent-secondary: #a0d8ef;
-  
-  /* Brand Colors */
-  --color-true-turquoise: #00b8d9;
-  --color-rust: #b7410e;
-  --color-paper-white: #fafafa;
-  --color-black: #000000;
-  --color-grey-label: #888;
-}
-
 html {
   @apply scroll-smooth;
   scroll-behavior: smooth;
@@ -81,45 +38,42 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--border-secondary);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--accent-primary);
+  background: rgba(0, 184, 217, 0.5);
   border-radius: 4px;
   transition: background 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-secondary);
+  background: rgba(0, 184, 217, 0.8);
 }
 
 /* Firefox scrollbar styling */
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--accent-primary) var(--border-secondary);
+  scrollbar-color: rgba(0, 184, 217, 0.5) rgba(255, 255, 255, 0.1);
 }
-
 body {
   font-family: 'FK Grotesk', 'Inter', 'Helvetica Neue', Arial, sans-serif;
   font-size: 1.125rem;
   line-height: 1.7;
-  color: var(--text-primary);
-  background: var(--bg-primary);
+  color: #121212;
+  background: #000000;
   @apply select-none;
-  transition: background-color 0.3s ease, color 0.3s ease;
+
 }
 
 /* Headings */
 h1 {
   @apply font-heading text-heading1;
 }
-
 h2 {
   @apply font-heading text-heading2;
 }
-
 h3 {
   @apply font-heading text-heading3;
 }
@@ -138,40 +92,14 @@ p, .body {
 .font-heading {
   font-weight: 700;
 }
-
 .font-label {
   font-weight: 600;
 }
 
-/* Theme transition utilities */
-.theme-transition {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-}
-
-/* Light mode specific overrides */
-.light {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8fafc;
-  --bg-tertiary: #f1f5f9;
-  --text-primary: #1e293b;
-  --text-secondary: #475569;
-  --text-tertiary: #64748b;
-  --border-primary: #e2e8f0;
-  --border-secondary: #cbd5e1;
-  --accent-primary: #0891b2;
-  --accent-secondary: #0ea5e9;
-}
-
-/* Dark mode specific overrides */
-.dark {
-  --bg-primary: #0f172a;
-  --bg-secondary: #1e293b;
-  --bg-tertiary: #334155;
-  --text-primary: #f8fafc;
-  --text-secondary: #cbd5e1;
-  --text-tertiary: #94a3b8;
-  --border-primary: #334155;
-  --border-secondary: #475569;
-  --accent-primary: #00b8d9;
-  --accent-secondary: #a0d8ef;
+:root {
+  --color-true-turquoise: #00B8D9;
+  --color-rust: #B7410E;
+  --color-paper-white: #FAFAFA;
+  --color-black: #000000;
+  --color-grey-label: #888;
 }

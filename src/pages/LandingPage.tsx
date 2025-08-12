@@ -7,12 +7,10 @@ import {
   TargetIcon,
   EnvelopeClosedIcon,
   PersonIcon,
-  CheckCircledIcon,
-  RocketIcon
+  CheckCircledIcon
 } from '@radix-ui/react-icons';
 import logo from '../assets/syncner-logo.png';
 import LoadingScreen from '../components/LoadingScreen';
-import { motion } from 'framer-motion';
 
 const LandingPage: React.FC = () => {
   const { isLoading } = useAppSelector((state) => state.auth);
@@ -30,7 +28,7 @@ const LandingPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-bg-primary text-text-primary transition-colors duration-300">
+    <div className="min-h-screen bg-offblack">
       {/* Header */}
       <header className="bg-paperwhite/5 backdrop-blur-md shadow-sm fixed w-full z-50 border-b border-paperwhite/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -87,105 +85,100 @@ const LandingPage: React.FC = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="relative py-20 lg:py-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 bg-gradient-to-br from-accent-primary/5 via-accent-secondary/5 to-accent-primary/5 transition-colors duration-300"></div>
-        
-        <div className="relative max-w-7xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="mb-8"
-          >
-            <img src={logo} alt="Syncner Logo" className="w-24 h-24 lg:w-32 lg:h-32 mx-auto mb-6" />
-          </motion.div>
-          
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-4xl lg:text-6xl mb-6 text-text-primary font-heading leading-tight transition-colors duration-300"
-          >
-            Transform Your Career with{' '}
-            <span className="bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text text-transparent">
-              AI-Powered Learning
+      <section className="pt-24 lg:pt-32 pb-12 lg:pb-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto text-center">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl text-paperwhite mb-4 lg:mb-6 font-heading">
+            Transform Students Into
+            <span className="bg-gradient-to-r from-trueturquoise to-teallight bg-clip-text text-transparent block lg:inline">
+              {' '}Industry-Ready{' '}
             </span>
-          </motion.h1>
-          
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-xl lg:text-2xl text-text-secondary mb-8 lg:mb-12 max-w-3xl mx-auto leading-relaxed transition-colors duration-300"
-          >
-            Master in-demand skills through personalized learning paths, interactive projects, 
-            and real-world applications. Your journey to career success starts here.
-          </motion.p>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-          >
-            <Link
-              to="/register"
-              className="bg-gradient-to-r from-accent-primary to-accent-secondary text-bg-primary px-8 lg:px-12 py-4 lg:py-5 rounded-xl hover:from-accent-primary/90 hover:to-accent-secondary/90 transition-all font-bold text-lg lg:text-xl shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
-            >
-              Get Started Free
-            </Link>
+            Professionals
+          </h1>
+          <p className="text-lg lg:text-xl text-teallight mb-6 lg:mb-8 max-w-3xl mx-auto leading-relaxed">
+            AI-powered career platform that bridges the gap between education and employment 
+            through personalized training, real-world tasks, and internship simulation.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md sm:max-w-none mx-auto">
             <Link
               to="/login"
-              className="bg-bg-secondary text-text-primary px-8 lg:px-12 py-4 lg:py-5 rounded-xl hover:bg-bg-tertiary transition-all font-bold text-lg lg:text-xl border border-border-primary hover:border-accent-primary/50 duration-200"
+              className="bg-trueturquoise text-offblack px-6 lg:px-8 py-3 lg:py-4 rounded-lg hover:bg-teallight transition-all flex items-center justify-center group"
             >
               Sign In
+              <ArrowRightIcon className="ml-2 h-4 w-4 lg:h-5 lg:w-5 group-hover:translate-x-1 transition-transform" />
             </Link>
-          </motion.div>
+            <Link
+              to="/register"
+              className="border-2 border-paperwhite/30 text-paperwhite px-6 lg:px-8 py-3 lg:py-4 rounded-lg hover:border-paperwhite/50 hover:bg-paperwhite/10 transition-all"
+            >
+              Create Account
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-12 lg:py-20 px-4 sm:px-6 lg:px-8 bg-bg-secondary/50 backdrop-blur-sm transition-colors duration-300">
+      <section className="py-12 lg:py-20 px-4 sm:px-6 lg:px-8 bg-paperwhite/5 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12 lg:mb-16">
-            <h2 className="text-2xl lg:text-4xl text-text-primary mb-3 lg:mb-4 font-heading transition-colors duration-300">
+            <h2 className="text-2xl lg:text-4xl text-paperwhite mb-3 lg:mb-4 font-heading">
               Everything You Need for Career Success
             </h2>
-            <p className="text-lg lg:text-xl text-text-secondary transition-colors duration-300">
+            <p className="text-lg lg:text-xl text-teallight">
               Comprehensive platform designed for both students and college administrators
             </p>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            <div className="bg-bg-primary backdrop-blur-sm p-6 lg:p-8 rounded-xl hover:bg-bg-secondary transition-all border border-border-primary hover:border-accent-primary/30 duration-300">
-              <div className="bg-accent-primary p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
-                <BarChartIcon className="h-5 w-5 lg:h-6 lg:w-6 text-bg-primary transition-colors duration-300" />
+            <div className="bg-paperwhite/10 backdrop-blur-sm p-6 lg:p-8 rounded-xl hover:bg-paperwhite/15 transition-all border border-paperwhite/10">
+              <div className="bg-trueturquoise p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
+                <BarChartIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
               </div>
-              <h3 className="text-lg lg:text-xl text-text-primary mb-2 lg:mb-3 font-heading transition-colors duration-300">AI-Personalized Learning</h3>
-              <p className="text-text-secondary text-sm lg:text-base transition-colors duration-300">
+              <h3 className="text-lg lg:text-xl text-paperwhite mb-2 lg:mb-3 font-heading">AI-Personalized Learning</h3>
+              <p className="text-teallight text-sm lg:text-base">
                 Adaptive learning paths that adjust to each student's pace and performance, 
                 ensuring optimal skill development.
               </p>
             </div>
 
-            <div className="bg-bg-primary backdrop-blur-sm p-6 lg:p-8 rounded-xl hover:bg-bg-secondary transition-all border border-border-primary hover:border-accent-primary/30 duration-300">
-              <div className="bg-accent-secondary p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
-                <RocketIcon className="h-5 w-5 lg:h-6 lg:w-6 text-bg-primary transition-colors duration-300" />
+            <div className="bg-paperwhite/10 backdrop-blur-sm p-6 lg:p-8 rounded-xl hover:bg-paperwhite/15 transition-all border border-paperwhite/10">
+              <div className="bg-teallight p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
+                <PersonIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
               </div>
-              <h3 className="text-lg lg:text-xl text-text-primary mb-2 lg:mb-3 font-heading transition-colors duration-300">Project-Based Learning</h3>
-              <p className="text-text-secondary text-sm lg:text-base transition-colors duration-300">
-                Build real-world projects that showcase your skills and create a portfolio 
-                that impresses employers.
+              <h3 className="text-lg lg:text-xl text-paperwhite mb-2 lg:mb-3 font-heading">Real-World Tasks</h3>
+              <p className="text-teallight text-sm lg:text-base">
+                Industry-standard projects and internship simulations that prepare students 
+                for actual workplace challenges.
               </p>
             </div>
 
-            <div className="bg-bg-primary backdrop-blur-sm p-6 lg:p-8 rounded-xl hover:bg-bg-secondary transition-all border border-border-primary hover:border-accent-primary/30 duration-300">
-              <div className="bg-accent-primary p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
-                <CheckCircledIcon className="h-5 w-5 lg:h-6 lg:w-6 text-bg-primary transition-colors duration-300" />
+            <div className="bg-paperwhite/10 backdrop-blur-sm p-6 lg:p-8 rounded-xl hover:bg-paperwhite/15 transition-all border border-paperwhite/10">
+              <div className="bg-rust p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
+                <TargetIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
               </div>
-              <h3 className="text-lg lg:text-xl text-text-primary mb-2 lg:mb-3 font-heading transition-colors duration-300">Admin Analytics</h3>
-              <p className="text-text-secondary text-sm lg:text-base transition-colors duration-300">
+              <h3 className="text-lg lg:text-xl text-paperwhite mb-2 lg:mb-3 font-heading">Career Tracks</h3>
+              <p className="text-teallight text-sm lg:text-base">
+                Specialized paths in AI/ML, Full Stack Development, UI/UX Design, 
+                and Data Science with industry-relevant curriculum.
+              </p>
+            </div>
+
+            <div className="bg-paperwhite/10 backdrop-blur-sm p-6 lg:p-8 rounded-xl hover:bg-paperwhite/15 transition-all border border-paperwhite/10">
+              <div className="bg-rust p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
+                <EnvelopeClosedIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
+              </div>
+              <h3 className="text-lg lg:text-xl text-paperwhite mb-2 lg:mb-3 font-heading">Interactive Content</h3>
+              <p className="text-teallight text-sm lg:text-base">
+                Engaging video tutorials, interactive assessments, and hands-on coding 
+                exercises to reinforce learning.
+              </p>
+            </div>
+
+            <div className="bg-paperwhite/10 backdrop-blur-sm p-6 lg:p-8 rounded-xl hover:bg-paperwhite/15 transition-all border border-paperwhite/10">
+              <div className="bg-trueturquoise p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
+                <CheckCircledIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
+              </div>
+              <h3 className="text-lg lg:text-xl text-paperwhite mb-2 lg:mb-3 font-heading">Admin Analytics</h3>
+              <p className="text-teallight text-sm lg:text-base">
                 Comprehensive dashboard for tracking student progress, attendance, 
                 and performance analytics.
               </p>
@@ -195,36 +188,36 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-12 lg:py-20 px-4 sm:px-6 lg:px-8 bg-accent-primary/10 backdrop-blur-sm transition-colors duration-300">
+      <section className="py-12 lg:py-20 px-4 sm:px-6 lg:px-8 bg-trueturquoise/10 backdrop-blur-sm">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl lg:text-4xl text-text-primary mb-4 lg:mb-6 font-heading transition-colors duration-300">
+          <h2 className="text-2xl lg:text-4xl text-paperwhite mb-4 lg:mb-6 font-heading">
             Ready to Transform Your Career Journey?
           </h2>
-          <p className="text-lg lg:text-xl text-text-secondary mb-6 lg:mb-8 transition-colors duration-300">
+          <p className="text-lg lg:text-xl text-teallight mb-6 lg:mb-8">
             Join thousands of students who are already building their future with Syncner
           </p>
           <Link
             to="/login"
-            className="bg-bg-primary text-accent-primary px-6 lg:px-8 py-3 lg:py-4 rounded-lg hover:bg-bg-secondary transition-colors inline-flex items-center border border-accent-primary hover:border-accent-secondary duration-300"
+            className="bg-paperwhite text-trueturquoise px-6 lg:px-8 py-3 lg:py-4 rounded-lg hover:bg-teallight transition-colors inline-flex items-center"
           >
             Get Started Today
-            <ArrowRightIcon className="ml-2 h-4 w-4 lg:h-5 lg:w-5 transition-colors duration-300" />
+            <ArrowRightIcon className="ml-2 h-4 w-4 lg:h-5 lg:w-5" />
           </Link>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-bg-secondary/80 backdrop-blur-sm text-text-primary py-8 lg:py-12 px-4 sm:px-6 lg:px-8 border-t border-border-primary transition-colors duration-300">
+      <footer className="bg-offblack/80 backdrop-blur-sm text-paperwhite py-8 lg:py-12 px-4 sm:px-6 lg:px-8 border-t border-paperwhite/10">
         <div className="max-w-7xl mx-auto text-center">
           <div className="flex items-center justify-center space-x-3 mb-4 lg:mb-6">
-            <div className="bg-accent-primary p-2 rounded-lg">
-              <img src={logo} alt="Syncner Logo" className="h-8 w-8 lg:h-10 lg:w-10 object-contain transition-colors duration-300" />
+            <div className="bg-trueturquoise p-2 rounded-lg">
+              <img src={logo} alt="Syncner Logo" className="h-8 w-8 lg:h-10 lg:w-10 object-contain" />
             </div>
           </div>
-          <p className="text-text-secondary mb-3 lg:mb-4 text-sm lg:text-base transition-colors duration-300">
+          <p className="text-teallight mb-3 lg:mb-4 text-sm lg:text-base">
             Empowering the next generation of professionals through AI-driven career development
           </p>
-          <p className="text-text-secondary/80 text-xs lg:text-sm transition-colors duration-300">
+          <p className="text-teallight/80 text-xs lg:text-sm">
             © 2024 Syncner. All rights reserved.
           </p>
         </div>
