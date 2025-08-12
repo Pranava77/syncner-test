@@ -360,7 +360,8 @@ const AdminUsers: React.FC = () => {
                     </button>
                     <button
                       onClick={() => handleDelete(u._id)}
-                      className="bg-rust hover:bg-rust/80 text-paperwhite px-2 py-1 rounded transition-colors"
+                      className="bg-rust hover:bg-rust/80 px-2 py-1 rounded transition-colors"
+                style={{ color: 'var(--color-text-inverse)' }}
                       title="Delete"
                     >
                       <TrashIcon className="h-4 w-4" />
@@ -446,11 +447,29 @@ const AdminUsers: React.FC = () => {
                   color: 'var(--color-text-primary)'
                 }}
               />
-              <select value={userForm.role} onChange={e => setUserForm(f => ({ ...f, role: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition">
+              <select 
+                value={userForm.role} 
+                onChange={e => setUserForm(f => ({ ...f, role: e.target.value }))} 
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition"
+                style={{ 
+                  borderColor: 'var(--color-border)',
+                  backgroundColor: 'var(--color-secondary-bg)',
+                  color: 'var(--color-text-primary)'
+                }}
+              >
                 <option value="student">Student</option>
               </select>
               {(userForm.role === 'student' || userForm.role === 'staff') && (
-                <select value={userForm.careerTrack} onChange={e => setUserForm(f => ({ ...f, careerTrack: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition">
+                <select 
+                  value={userForm.careerTrack} 
+                  onChange={e => setUserForm(f => ({ ...f, careerTrack: e.target.value }))} 
+                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition"
+                  style={{ 
+                    borderColor: 'var(--color-border)',
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    color: 'var(--color-text-primary)'
+                  }}
+                >
                   <option value="full-stack">Full Stack Development</option>
                   <option value="ai-ml">AI/ML</option>
                   <option value="ui-ux">UI/UX Design</option>
@@ -464,7 +483,12 @@ const AdminUsers: React.FC = () => {
                   placeholder="Password"
                   value={userForm.password}
                   onChange={e => setUserForm(f => ({ ...f, password: e.target.value }))}
-                  className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight"
+                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight"
+                  style={{ 
+                    borderColor: 'var(--color-border)',
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    color: 'var(--color-text-primary)'
+                  }}
                 />
               )}
               <div className="flex items-center gap-2">

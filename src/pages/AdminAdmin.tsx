@@ -245,9 +245,24 @@ const AdminAdmin: React.FC = () => {
               <tr><td colSpan={5} className="text-center py-6 text-teallight">No admins found.</td></tr>
             ) : filteredAdmins.map((a: User) => (
               <tr key={a._id} className="hover:bg-paperwhite/5">
-                <td className="px-6 py-4 whitespace-nowrap text-paperwhite font-medium">{a.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-paperwhite">{a.email}</td>
-                <td className="px-6 py-4 whitespace-nowrap capitalize text-paperwhite">{a.role}</td>
+                <td 
+                  className="px-6 py-4 whitespace-nowrap font-medium"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  {a.name}
+                </td>
+                <td 
+                  className="px-6 py-4 whitespace-nowrap"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  {a.email}
+                </td>
+                <td 
+                  className="px-6 py-4 whitespace-nowrap capitalize"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  {a.role}
+                </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span 
                     className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${a.isActive ? 'bg-teallight' : 'bg-rust'}`}
@@ -269,7 +284,8 @@ const AdminAdmin: React.FC = () => {
                     </button>
                     <button
                       onClick={() => handleDelete(a._id || a.id)}
-                      className="bg-rust hover:bg-rust/80 text-paperwhite px-2 py-1 rounded transition-colors"
+                      className="bg-rust hover:bg-rust/80 px-2 py-1 rounded transition-colors"
+                style={{ color: 'var(--color-text-inverse)' }}
                       title="Delete"
                     >
                       <TrashIcon className="h-4 w-4" />
@@ -297,13 +313,49 @@ const AdminAdmin: React.FC = () => {
         <div className="fixed inset-0 bg-offblack/60 flex items-center justify-center z-50">
           <div className="bg-offblack rounded-xl shadow-2xl p-8 w-full max-w-md border border-paperwhite/20">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-paperwhite">{editingAdmin ? 'Edit Admin' : 'Add Admin'}</h3>
+              <h3 
+                className="text-lg font-semibold"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                {editingAdmin ? 'Edit Admin' : 'Add Admin'}
+              </h3>
               <button onClick={() => setShowModal(false)} className="text-teallight hover:text-trueturquoise"><X className="h-5 w-5" /></button>
             </div>
             <div className="space-y-3">
-              <input type="text" placeholder="Name" value={adminForm.name} onChange={e => setAdminForm(f => ({ ...f, name: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight" />
-              <input type="email" placeholder="Email" value={adminForm.email} onChange={e => setAdminForm(f => ({ ...f, email: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight" />
-              <select value={adminForm.role} onChange={e => setAdminForm(f => ({ ...f, role: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition">
+              <input 
+                type="text" 
+                placeholder="Name" 
+                value={adminForm.name} 
+                onChange={e => setAdminForm(f => ({ ...f, name: e.target.value }))} 
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight" 
+                style={{ 
+                  borderColor: 'var(--color-border)',
+                  backgroundColor: 'var(--color-secondary-bg)',
+                  color: 'var(--color-text-primary)'
+                }}
+              />
+              <input 
+                type="email" 
+                placeholder="Email" 
+                value={adminForm.email} 
+                onChange={e => setAdminForm(f => ({ ...f, email: e.target.value }))} 
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight" 
+                style={{ 
+                  borderColor: 'var(--color-border)',
+                  backgroundColor: 'var(--color-secondary-bg)',
+                  color: 'var(--color-text-primary)'
+                }}
+              />
+              <select 
+                value={adminForm.role} 
+                onChange={e => setAdminForm(f => ({ ...f, role: e.target.value }))} 
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition"
+                style={{ 
+                  borderColor: 'var(--color-border)',
+                  backgroundColor: 'var(--color-secondary-bg)',
+                  color: 'var(--color-text-primary)'
+                }}
+              >
                 <option value="admin">Admin</option>
               </select>
               {/* Password field only for new admins */}
@@ -313,12 +365,22 @@ const AdminAdmin: React.FC = () => {
                   placeholder="Password"
                   value={adminForm.password}
                   onChange={e => setAdminForm(f => ({ ...f, password: e.target.value }))}
-                  className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight"
+                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight"
+                  style={{ 
+                    borderColor: 'var(--color-border)',
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    color: 'var(--color-text-primary)'
+                  }}
                 />
               )}
               <div className="flex items-center gap-2">
                 <input type="checkbox" checked={adminForm.isActive} onChange={e => setAdminForm(f => ({ ...f, isActive: e.target.checked }))} id="isActive" />
-                <label htmlFor="isActive" className="text-paperwhite">Active</label>
+                <label 
+                  htmlFor="isActive" 
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  Active
+                </label>
               </div>
               {formError && <div className="text-rust text-sm font-medium">{formError}</div>}
               <button 
@@ -338,11 +400,19 @@ const AdminAdmin: React.FC = () => {
         <div className="fixed inset-0 bg-offblack/60 flex items-center justify-center z-50">
           <div className="bg-offblack rounded-xl shadow-2xl p-8 w-full max-w-md border border-paperwhite/20">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-paperwhite">Admin Password</h3>
+              <h3 
+                className="text-lg font-semibold"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                Admin Password
+              </h3>
               <button onClick={() => { setShowPasswordModal(false); setCreatedPassword(''); }} className="text-teallight hover:text-trueturquoise"><X className="h-5 w-5" /></button>
             </div>
             <div className="space-y-4">
-              <div className="text-paperwhite text-center">
+              <div 
+                className="text-center"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
                 <p className="mb-2">Copy and share this password with the admin. It will not be shown again.</p>
                 <div className="bg-paperwhite/10 rounded-lg px-4 py-3 text-lg font-mono text-trueturquoise select-all break-all text-center">{createdPassword}</div>
               </div>

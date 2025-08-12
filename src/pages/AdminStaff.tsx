@@ -259,10 +259,30 @@ const AdminStaff: React.FC = () => {
               <tr><td colSpan={6} className="text-center py-6 text-teallight">No staff found.</td></tr>
             ) : filteredStaff.map((s: any) => (
               <tr key={s._id} className="hover:bg-paperwhite/5">
-                <td className="px-6 py-4 whitespace-nowrap text-paperwhite font-medium">{s.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-paperwhite">{s.email}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-paperwhite">{s.department}</td>
-                <td className="px-6 py-4 whitespace-nowrap capitalize text-paperwhite">{s.role}</td>
+                <td 
+                  className="px-6 py-4 whitespace-nowrap font-medium"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  {s.name}
+                </td>
+                <td 
+                  className="px-6 py-4 whitespace-nowrap"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  {s.email}
+                </td>
+                <td 
+                  className="px-6 py-4 whitespace-nowrap"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  {s.department}
+                </td>
+                <td 
+                  className="px-6 py-4 whitespace-nowrap capitalize"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  {s.role}
+                </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span 
                     className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${s.isActive ? 'bg-teallight' : 'bg-rust'}`}
@@ -284,7 +304,8 @@ const AdminStaff: React.FC = () => {
                     </button>
                     <button
                       onClick={() => handleDelete(s._id)}
-                      className="bg-rust hover:bg-rust/80 text-paperwhite px-2 py-1 rounded transition-colors"
+                      className="bg-rust hover:bg-rust/80 px-2 py-1 rounded transition-colors"
+                style={{ color: 'var(--color-text-inverse)' }}
                       title="Delete"
                     >
                       <TrashIcon className="h-4 w-4" />
@@ -312,15 +333,73 @@ const AdminStaff: React.FC = () => {
         <div className="fixed inset-0 bg-offblack/60 flex items-center justify-center z-50">
           <div className="bg-offblack rounded-xl shadow-2xl p-8 w-full max-w-md border border-paperwhite/20">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-paperwhite">{editingStaff ? 'Edit Staff' : 'Add Staff'}</h3>
+              <h3 
+                className="text-lg font-semibold"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                {editingStaff ? 'Edit Staff' : 'Add Staff'}
+              </h3>
               <button onClick={() => setShowModal(false)} className="text-teallight hover:text-trueturquoise"><X className="h-5 w-5" /></button>
             </div>
             <div className="space-y-3">
-              <input type="text" placeholder="Name" value={staffForm.name} onChange={e => setStaffForm(f => ({ ...f, name: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight" />
-              <input type="email" placeholder="Email" value={staffForm.email} onChange={e => setStaffForm(f => ({ ...f, email: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight" />
-              <input type="text" placeholder="Department" value={staffForm.department} onChange={e => setStaffForm(f => ({ ...f, department: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight" />
-              <input type="text" placeholder="College" value={staffForm.college} onChange={e => setStaffForm(f => ({ ...f, college: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight" />
-              <select value={staffForm.role} onChange={e => setStaffForm(f => ({ ...f, role: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition">
+              <input 
+                type="text" 
+                placeholder="Name" 
+                value={staffForm.name} 
+                onChange={e => setStaffForm(f => ({ ...f, name: e.target.value }))} 
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight" 
+                style={{ 
+                  borderColor: 'var(--color-border)',
+                  backgroundColor: 'var(--color-secondary-bg)',
+                  color: 'var(--color-text-primary)'
+                }}
+              />
+              <input 
+                type="email" 
+                placeholder="Email" 
+                value={staffForm.email} 
+                onChange={e => setStaffForm(f => ({ ...f, email: e.target.value }))} 
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight" 
+                style={{ 
+                  borderColor: 'var(--color-border)',
+                  backgroundColor: 'var(--color-secondary-bg)',
+                  color: 'var(--color-text-primary)'
+                }}
+              />
+              <input 
+                type="text" 
+                placeholder="Department" 
+                value={staffForm.department} 
+                onChange={e => setStaffForm(f => ({ ...f, department: e.target.value }))} 
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight" 
+                style={{ 
+                  borderColor: 'var(--color-border)',
+                  backgroundColor: 'var(--color-secondary-bg)',
+                  color: 'var(--color-text-primary)'
+                }}
+              />
+              <input 
+                type="text" 
+                placeholder="College" 
+                value={staffForm.college} 
+                onChange={e => setStaffForm(f => ({ ...f, college: e.target.value }))} 
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight" 
+                style={{ 
+                  borderColor: 'var(--color-border)',
+                  backgroundColor: 'var(--color-secondary-bg)',
+                  color: 'var(--color-text-primary)'
+                }}
+              />
+              <select 
+                value={staffForm.role} 
+                onChange={e => setStaffForm(f => ({ ...f, role: e.target.value }))} 
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition"
+                style={{ 
+                  borderColor: 'var(--color-border)',
+                  backgroundColor: 'var(--color-secondary-bg)',
+                  color: 'var(--color-text-primary)'
+                }}
+              >
                 <option value="staff">Staff</option>
               </select>
               {/* Password field only for new staff */}
@@ -330,12 +409,22 @@ const AdminStaff: React.FC = () => {
                   placeholder="Password"
                   value={staffForm.password}
                   onChange={e => setStaffForm(f => ({ ...f, password: e.target.value }))}
-                  className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight"
+                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight"
+                  style={{ 
+                    borderColor: 'var(--color-border)',
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    color: 'var(--color-text-primary)'
+                  }}
                 />
               )}
               <div className="flex items-center gap-2">
                 <input type="checkbox" checked={staffForm.isActive} onChange={e => setStaffForm(f => ({ ...f, isActive: e.target.checked }))} id="isActive" />
-                <label htmlFor="isActive" className="text-paperwhite">Active</label>
+                <label 
+                  htmlFor="isActive" 
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  Active
+                </label>
               </div>
               {formError && <div className="text-rust text-sm font-medium">{formError}</div>}
               <button 
@@ -355,11 +444,19 @@ const AdminStaff: React.FC = () => {
         <div className="fixed inset-0 bg-offblack/60 flex items-center justify-center z-50">
           <div className="bg-offblack rounded-xl shadow-2xl p-8 w-full max-w-md border border-paperwhite/20">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-paperwhite">Staff Password</h3>
+              <h3 
+                className="text-lg font-semibold"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                Staff Password
+              </h3>
               <button onClick={() => { setShowPasswordModal(false); setCreatedPassword(''); }} className="text-teallight hover:text-trueturquoise"><X className="h-5 w-5" /></button>
             </div>
             <div className="space-y-4">
-              <div className="text-paperwhite text-center">
+              <div 
+                className="text-center"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
                 <p className="mb-2">Copy and share this password with the staff member. It will not be shown again.</p>
                 <div className="bg-paperwhite/10 rounded-lg px-4 py-3 text-lg font-mono text-trueturquoise select-all break-all text-center">{createdPassword}</div>
               </div>
