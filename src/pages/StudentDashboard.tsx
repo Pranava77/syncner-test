@@ -325,140 +325,9 @@ const StudentDashboard: React.FC = () => {
 
           </div>
 
-          {/* Sidebar */}
+          {/* Sidebar - Empty for no-user case */}
           <div className="space-y-6">
-            {/* AI Helper */}
-            <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
-              <div className="text-center">
-                <div className="bg-trueturquoise/10 p-3 rounded-full w-fit mx-auto mb-4">
-                  <Brain className="h-6 w-6 text-trueturquoise" />
-                </div>
-                <h3 className="font-semibold text-paperwhite mb-2">Need Help?</h3>
-                <p className="text-teallight text-sm mb-4">
-                  Ask our AI assistant for personalized guidance
-                </p>
-                <button
-                  className="w-full bg-trueturquoise text-offblack py-2 rounded-lg hover:bg-teallight transition-all font-medium flex items-center justify-center"
-                  onClick={() => setShowAIModal(true)}
-                >
-                  Chat with AI
-                </button>
-              </div>
-            </div>
-
-            {/* AI Chat Coming Soon Modal */}
-            {showAIModal && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
-                <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-2xl p-8 max-w-sm w-full text-center relative border border-trueturquoise/30">
-                  <button
-                    className="absolute top-3 right-3 text-trueturquoise hover:text-teallight text-xl font-bold focus:outline-none"
-                    onClick={() => setShowAIModal(false)}
-                    aria-label="Close"
-                  >
-                    ×
-                  </button>
-                  <div className="flex flex-col items-center">
-                    <div className="bg-trueturquoise/10 p-4 rounded-full mb-4">
-                      <Brain className="h-8 w-8 text-trueturquoise" />
-                    </div>
-                    <h2 className="text-xl font-semibold text-paperwhite mb-2">Coming Soon!</h2>
-                    <p className="text-teallight mb-4">The AI chat assistant will be available soon. Stay tuned for updates!</p>
-                    <button
-                      className="bg-trueturquoise text-offblack px-6 py-2 rounded-lg hover:bg-teallight transition-colors font-medium mt-2"
-                      onClick={() => setShowAIModal(false)}
-                    >
-                      Close
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-
-                      {/* Progress Stats */}
-          <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
-            <h3 className="text-paperwhite mb-4 font-heading">
-              {completedLevels === levels?.length && levels?.length > 0 ? 'Track Completion' : 'Your Progress'}
-            </h3>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-teallight text-sm lg:text-base">
-                  {completedLevels === levels?.length && levels?.length > 0 ? 'Track Progress' : 'Level Completion'}
-                </span>
-                <span className="font-semibold text-paperwhite">{overallProgress}%</span>
-              </div>
-              <div className="w-full bg-paperwhite/20 rounded-full h-2">
-                <div 
-                  className={`h-2 rounded-full transition-all ${
-                    completedLevels === levels?.length && levels?.length > 0 
-                      ? 'bg-gradient-to-r from-green-400 to-teallight' 
-                      : 'bg-trueturquoise'
-                  }`}
-                  style={{ width: `${overallProgress}%` }}
-                ></div>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4 pt-4">
-                <div className="text-center">
-                  <div className="text-lg font-bold text-trueturquoise">{levels?.length || 0}</div>
-                  <div className="text-xs text-teallight">Total Levels</div>
-                </div>
-                <div className="text-center">
-                  <div className={`text-lg font-bold ${
-                    completedLevels === levels?.length && levels?.length > 0 
-                      ? 'text-green-400' 
-                      : 'text-trueturquoise'
-                  }`}>
-                    {completedLevels}
-                  </div>
-                  <div className="text-xs text-teallight">Completed</div>
-                </div>
-              </div>
-              
-              <div className="pt-4 border-t border-paperwhite/10">
-                <div className="text-center">
-                  <div className="text-sm text-teallight mb-2">
-                    {completedLevels === levels?.length && levels?.length > 0 ? 'Track Status' : 'Levels Status'}
-                  </div>
-                  <div className="text-xs text-teallight space-y-1">
-                    <div className="flex justify-between">
-                      <span>Completed Levels:</span>
-                      <span className="text-green-400">{completedLevels}</span>
-                    </div>
-                    {completedLevels < (levels?.length || 0) && (
-                      <div className="flex justify-between">
-                        <span>Remaining Levels:</span>
-                        <span className="text-orange-400">{levels?.length - completedLevels || 0}</span>
-                      </div>
-                    )}
-                    {currentLevel && completedLevels < (levels?.length || 0) && (
-                      <div className="flex justify-between">
-                        <span>Current Level:</span>
-                        <span className="text-trueturquoise">Level {currentLevel.order}</span>
-                      </div>
-                    )}
-                    {completedLevels === levels?.length && levels?.length > 0 && (
-                      <div className="flex justify-between">
-                        <span>Track Status:</span>
-                        <span className="text-green-400">🏆 Mastered</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-              
-              {/* Special completion message */}
-              {completedLevels === levels?.length && levels?.length > 0 && (
-                <div className="mt-4 p-3 bg-green-500/10 rounded-lg border border-green-500/20">
-                  <div className="text-center">
-                    <div className="text-2xl mb-2">🎉</div>
-                    <p className="text-xs text-green-400 font-medium">
-                      Congratulations! You've mastered the {userTrack} track!
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
+            {/* Placeholder for future content */}
           </div>
         </div>
       </div>
@@ -731,19 +600,32 @@ const StudentDashboard: React.FC = () => {
         {/* Sidebar */}
         <div className="space-y-6">
           {/* AI Helper */}
-          <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
-            <div className="text-center">
-              <div className="bg-trueturquoise/10 p-3 rounded-full w-fit mx-auto mb-4">
-                <Brain className="h-6 w-6 text-trueturquoise" />
+          <div className="bg-gradient-to-br from-paperwhite/5 to-paperwhite/10 rounded-2xl shadow-2xl p-6 lg:p-8 border border-paperwhite/20 backdrop-blur-sm">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-trueturquoise/20 to-blue-500/20 rounded-xl flex items-center justify-center">
+                  <Brain className="h-6 w-6 text-trueturquoise" />
+                </div>
+                <div>
+                  <h3 className="text-xl lg:text-2xl font-bold text-paperwhite">Need Help?</h3>
+                  <p className="text-teallight text-sm">AI-powered guidance at your fingertips</p>
+                </div>
               </div>
-              <h3 className="font-semibold text-paperwhite mb-2">Need Help?</h3>
-              <p className="text-teallight text-sm mb-4">
-                Ask our AI assistant for personalized guidance
+              <span className="bg-gradient-to-r from-trueturquoise/20 to-blue-500/20 text-trueturquoise px-3 py-1 rounded-full text-xs font-semibold border border-trueturquoise/30">
+                AI Assistant
+              </span>
+            </div>
+            
+            <div className="bg-gradient-to-r from-paperwhite/5 to-paperwhite/10 rounded-xl p-4 border border-paperwhite/20 shadow-lg mb-6">
+              <p className="text-teallight text-sm leading-relaxed mb-4">
+                Get personalized help with your learning journey. Our AI assistant can answer questions, 
+                provide explanations, and guide you through challenging concepts.
               </p>
               <button
-                className="w-full bg-trueturquoise text-offblack py-2 rounded-lg hover:bg-teallight transition-all font-medium flex items-center justify-center"
+                className="w-full bg-gradient-to-r from-trueturquoise to-teallight text-offblack py-3 rounded-xl hover:from-trueturquoise/90 hover:to-teallight/90 transition-all font-semibold flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
                 onClick={() => setShowAIModal(true)}
               >
+                <Brain className="h-4 w-4 mr-2 text-offblack" />
                 Chat with AI
               </button>
             </div>
@@ -752,7 +634,7 @@ const StudentDashboard: React.FC = () => {
           {/* AI Chat Coming Soon Modal */}
           {showAIModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
-              <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-2xl p-8 max-w-sm w-full text-center relative border border-trueturquoise/30">
+              <div className="bg-gradient-to-br from-paperwhite/10 to-paperwhite/5 rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center relative border border-trueturquoise/30 backdrop-blur-sm">
                 <button
                   className="absolute top-3 right-3 text-trueturquoise hover:text-teallight text-xl font-bold focus:outline-none"
                   onClick={() => setShowAIModal(false)}
@@ -761,13 +643,13 @@ const StudentDashboard: React.FC = () => {
                   ×
                 </button>
                 <div className="flex flex-col items-center">
-                  <div className="bg-trueturquoise/10 p-4 rounded-full mb-4">
+                  <div className="w-16 h-16 bg-gradient-to-br from-trueturquoise/20 to-blue-500/20 rounded-2xl flex items-center justify-center mb-4">
                     <Brain className="h-8 w-8 text-trueturquoise" />
                   </div>
                   <h2 className="text-xl font-semibold text-paperwhite mb-2">Coming Soon!</h2>
                   <p className="text-teallight mb-4">The AI chat assistant will be available soon. Stay tuned for updates!</p>
                   <button
-                    className="bg-trueturquoise text-offblack px-6 py-2 rounded-lg hover:bg-teallight transition-colors font-medium mt-2"
+                    className="bg-gradient-to-r from-trueturquoise to-teallight text-offblack px-6 py-2 rounded-xl hover:from-trueturquoise/90 hover:to-teallight/90 transition-all font-semibold mt-2 shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
                     onClick={() => setShowAIModal(false)}
                   >
                     Close
@@ -778,47 +660,61 @@ const StudentDashboard: React.FC = () => {
           )}
 
           {/* Progress Stats */}
-          <div className="bg-paperwhite/10 dark:bg-offblack rounded-xl shadow-lg p-4 lg:p-6">
-            <h3 className=" text-paperwhite mb-4 font-heading">Your Progress</h3>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-teallight text-sm lg:text-base">Level Completion</span>
-                <span className="font-semibold text-paperwhite">{overallProgress}%</span>
+          <div className="bg-gradient-to-br from-paperwhite/5 to-paperwhite/10 rounded-2xl shadow-2xl p-6 lg:p-8 border border-paperwhite/20 backdrop-blur-sm">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-trueturquoise/20 to-blue-500/20 rounded-xl flex items-center justify-center">
+                  <TrendingUp className="h-6 w-6 text-trueturquoise" />
+                </div>
+                <div>
+                  <h3 className="text-xl lg:text-2xl font-bold text-paperwhite">Your Progress</h3>
+                  <p className="text-teallight text-sm">Track your learning journey</p>
+                </div>
               </div>
-              <div className="w-full bg-paperwhite/20 rounded-full h-2">
+              <span className="bg-gradient-to-r from-trueturquoise/20 to-blue-500/20 text-trueturquoise px-3 py-1 rounded-full text-xs font-semibold border border-trueturquoise/30">
+                {overallProgress}% Complete
+              </span>
+            </div>
+            
+            <div className="bg-gradient-to-r from-paperwhite/5 to-paperwhite/10 rounded-xl p-4 border border-paperwhite/20 shadow-lg mb-6">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-teallight text-sm font-semibold">Level Completion</span>
+                <span className="font-bold text-trueturquoise text-lg">{overallProgress}%</span>
+              </div>
+              <div className="w-full bg-paperwhite/20 rounded-full h-3 shadow-inner mb-4">
                 <div 
-                  className="bg-trueturquoise h-2 rounded-full transition-all"
+                  className="bg-gradient-to-r from-trueturquoise to-teallight h-3 rounded-full transition-all duration-500 shadow-lg"
                   style={{ width: `${overallProgress}%` }}
                 ></div>
               </div>
               
-              <div className="grid grid-cols-2 gap-4 pt-4">
-                <div className="text-center">
-                  <div className="text-lg font-bold text-trueturquoise">{levels?.length || 0}</div>
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div className="text-center bg-gradient-to-br from-trueturquoise/10 to-blue-500/10 rounded-lg p-3 border border-trueturquoise/20">
+                  <div className="text-xl font-bold text-trueturquoise">{levels?.length || 0}</div>
                   <div className="text-xs text-teallight">Total Levels</div>
                 </div>
-                <div className="text-center">
-                  <div className="text-lg font-bold text-trueturquoise">{completedLevels}</div>
+                <div className="text-center bg-gradient-to-br from-trueturquoise/10 to-blue-500/10 rounded-lg p-3 border border-trueturquoise/20">
+                  <div className="text-xl font-bold text-trueturquoise">{completedLevels}</div>
                   <div className="text-xs text-teallight">Completed</div>
                 </div>
               </div>
               
               <div className="pt-4 border-t border-paperwhite/10">
                 <div className="text-center">
-                  <div className="text-sm text-teallight mb-2">Levels Status</div>
-                  <div className="text-xs text-teallight space-y-1">
-                    <div className="flex justify-between">
+                  <div className="text-sm text-teallight mb-3 font-semibold">Levels Status</div>
+                  <div className="text-xs text-teallight space-y-2">
+                    <div className="flex justify-between items-center bg-paperwhite/5 px-3 py-2 rounded-lg">
                       <span>Completed Levels:</span>
-                      <span className="text-green-400">{completedLevels}</span>
+                      <span className="text-green-400 font-semibold">{completedLevels}</span>
                     </div>
-                    <div className="flex justify-between">
+                    <div className="flex justify-between items-center bg-paperwhite/5 px-3 py-2 rounded-lg">
                       <span>Remaining Levels:</span>
-                      <span className="text-orange-400">{levels?.length - completedLevels || 0}</span>
+                      <span className="text-orange-400 font-semibold">{levels?.length - completedLevels || 0}</span>
                     </div>
                     {currentLevel && (
-                      <div className="flex justify-between">
+                      <div className="flex justify-between items-center bg-paperwhite/5 px-3 py-2 rounded-lg">
                         <span>Current Level:</span>
-                        <span className="text-trueturquoise">Level {currentLevel.order}</span>
+                        <span className="text-trueturquoise font-semibold">Level {currentLevel.order}</span>
                       </div>
                     )}
                   </div>
