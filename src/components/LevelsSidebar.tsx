@@ -194,7 +194,10 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
         <div className={`flex-1 flex flex-col relative ${sidebarOpen ? 'py-24 pl-2' : 'py-2'}`}>
           {sidebarOpen && (
             <div className="flex items-center justify-between mb-4 transition-opacity duration-200">
-              <h2 className="text-lg font-semibold text-paperwhite flex items-center gap-2">
+              <h2 
+                className="text-lg font-semibold flex items-center gap-2"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
                 <LayersIcon className="h-5 w-5 text-trueturquoise" /> 
                 Loading...
               </h2>
@@ -225,7 +228,10 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
         <div className={`flex-1 flex flex-col relative ${sidebarOpen ? 'py-24 pl-2' : 'py-2'}`}>
           {sidebarOpen && (
             <div className="flex items-center justify-between mb-4 transition-opacity duration-200">
-              <h2 className="text-lg font-semibold text-paperwhite flex items-center gap-2">
+              <h2 
+                className="text-lg font-semibold flex items-center gap-2"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
                 <LayersIcon className="h-5 w-5 text-trueturquoise" /> 
                 Error
               </h2>
@@ -272,7 +278,10 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
         {/* Header - Only visible when open */}
         {sidebarOpen && (
           <div className="flex items-center justify-between mb-4 transition-opacity duration-200">
-            <h2 className="text-lg font-semibold text-paperwhite flex items-center gap-2">
+            <h2 
+              className="text-lg font-semibold flex items-center gap-2"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
               <LayersIcon className="h-5 w-5 text-trueturquoise" /> 
               {loading ? 'Loading...' : `Levels (${levelsWithUnlockLogic.length})`}
             </h2>
@@ -289,11 +298,15 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                   key={level.id}
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${
                     currentLevel === level.id
-                      ? 'bg-trueturquoise text-offblack shadow-lg shadow-trueturquoise/30'
+                      ? 'bg-trueturquoise shadow-lg shadow-trueturquoise/30'
                       : level.isUnlocked
                       ? 'bg-green-500/20 text-green-400 border border-green-500/30'
                       : 'bg-paperwhite/10 text-teallight/50 border border-paperwhite/20'
                   }`}
+                  style={{ 
+                    color: currentLevel === level.id ? 'var(--color-text-inverse)' : 
+                           level.isUnlocked ? 'var(--color-text-primary)' : 'var(--color-text-muted)'
+                  }}
                   title={`Level ${level.order}: ${level.title}`}
                 >
                   {level.order}
@@ -411,29 +424,47 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                 <div className="ml-2 mt-2 flex flex-col space-y-1 border-l border-paperwhite/10 pl-2">
                   <button
                     className={`w-full flex items-center gap-2 text-left py-2 transition-colors text-xs font-${currentLevel === level.id && currentSection === 'learn' ? 'semibold' : 'normal'}
-                      ${currentLevel === level.id && currentSection === 'learn' ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'}`}
-                    style={{ borderRadius: 0 }}
+                      ${currentLevel === level.id && currentSection === 'learn' ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 'hover:bg-trueturquoise/20 hover:text-trueturquoise'}`}
+                    style={{ 
+                      borderRadius: 0,
+                      color: currentLevel === level.id && currentSection === 'learn' ? 'var(--color-accent-primary)' : 'var(--color-text-primary)'
+                    }}
                       onClick={() => handleLevelClick(level, 'learn')}
                   >
-                    <ReaderIcon className={`h-4 w-4 ${currentLevel === level.id && currentSection === 'learn' ? 'text-trueturquoise' : 'text-paperwhite'}`} />
+                    <ReaderIcon 
+                      className={`h-4 w-4 ${currentLevel === level.id && currentSection === 'learn' ? 'text-trueturquoise' : ''}`}
+                      style={{ color: currentLevel === level.id && currentSection === 'learn' ? 'var(--color-accent-primary)' : 'var(--color-text-primary)' }}
+                    />
                     Learn ({level.learn?.length || 0})
                   </button>
                   <button
                     className={`w-full flex items-center gap-2 text-left py-2 transition-colors text-xs font-${currentLevel === level.id && currentSection === 'test' ? 'semibold' : 'normal'}
-                      ${currentLevel === level.id && currentSection === 'test' ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'}`}
-                    style={{ borderRadius: 0 }}
+                      ${currentLevel === level.id && currentSection === 'test' ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 'hover:bg-trueturquoise/20 hover:text-trueturquoise'}`}
+                    style={{ 
+                      borderRadius: 0,
+                      color: currentLevel === level.id && currentSection === 'test' ? 'var(--color-accent-primary)' : 'var(--color-text-primary)'
+                    }}
                       onClick={() => handleLevelClick(level, 'test')}
                   >
-                    <ClipboardIcon className={`h-4 w-4 ${currentLevel === level.id && currentSection === 'test' ? 'text-trueturquoise' : 'text-paperwhite'}`} />
+                    <ClipboardIcon 
+                      className={`h-4 w-4 ${currentLevel === level.id && currentSection === 'test' ? 'text-trueturquoise' : ''}`}
+                      style={{ color: currentLevel === level.id && currentSection === 'test' ? 'var(--color-accent-primary)' : 'var(--color-text-primary)' }}
+                    />
                     Test ({level.test?.length || 0})
                   </button>
                   <button
                     className={`w-full flex items-center gap-2 text-left py-2 transition-colors text-xs font-${currentLevel === level.id && currentSection === 'exercise' ? 'semibold' : 'normal'}
-                      ${currentLevel === level.id && currentSection === 'exercise' ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'}`}
-                    style={{ borderRadius: 0 }}
+                      ${currentLevel === level.id && currentSection === 'exercise' ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 'hover:bg-trueturquoise/20 hover:text-trueturquoise'}`}
+                    style={{ 
+                      borderRadius: 0,
+                      color: currentLevel === level.id && currentSection === 'exercise' ? 'var(--color-accent-primary)' : 'var(--color-text-primary)'
+                    }}
                       onClick={() => handleLevelClick(level, 'exercise')}
                   >
-                    <Pencil2Icon className={`h-4 w-4 ${currentLevel === level.id && currentSection === 'exercise' ? 'text-trueturquoise' : 'text-paperwhite'}`} />
+                    <Pencil2Icon 
+                      className={`h-4 w-4 ${currentLevel === level.id && currentSection === 'exercise' ? 'text-trueturquoise' : ''}`}
+                      style={{ color: currentLevel === level.id && currentSection === 'exercise' ? 'var(--color-accent-primary)' : 'var(--color-text-primary)' }}
+                    />
                     Exercise ({level.exercise?.length || 0})
                   </button>
                 </div>

@@ -154,7 +154,8 @@ const AdminProfile: React.FC = () => {
           <button
             onClick={handleSave}
             disabled={isLoading}
-            className="w-full bg-trueturquoise text-offblack py-2 px-4 rounded hover:bg-trueturquoise/90 transition-colors disabled:opacity-50"
+            className="w-full bg-trueturquoise py-2 px-4 rounded hover:bg-trueturquoise/90 transition-colors disabled:opacity-50"
+            style={{ color: 'var(--color-text-inverse)' }}
           >
             {isLoading ? 'Saving...' : 'Save Changes'}
           </button>

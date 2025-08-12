@@ -371,9 +371,13 @@ const StudentDashboard: React.FC = () => {
                   </div>
                   <Link
                     to="/student/training"
-                    className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-teallight transition-colors font-medium flex items-center justify-center w-full sm:w-auto"
+                    className="bg-trueturquoise px-4 py-2 rounded-lg hover:bg-teallight transition-colors font-medium flex items-center justify-center w-full sm:w-auto"
+                    style={{ color: 'var(--color-text-inverse)' }}
                   >
-                    <PlayCircle className="h-4 w-4 mr-2 text-offblack" />
+                                          <PlayCircle 
+                        className="h-4 w-4 mr-2"
+                        style={{ color: 'var(--color-text-inverse)' }}
+                      />
                     Check Training
                   </Link>
                 </div>
@@ -405,9 +409,13 @@ const StudentDashboard: React.FC = () => {
                   </p>
                   <Link
                     to="/student/training"
-                    className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-teallight transition-colors font-medium inline-flex items-center"
+                    className="bg-trueturquoise px-4 py-2 rounded-lg hover:bg-teallight transition-colors font-medium inline-flex items-center"
+                    style={{ color: 'var(--color-text-inverse)' }}
                   >
-                    <ReaderIcon className="h-4 w-4 mr-2 text-offblack" />
+                    <ReaderIcon 
+                      className="h-4 w-4 mr-2"
+                      style={{ color: 'var(--color-text-inverse)' }}
+                    />
                     View All Levels
                   </Link>
                 </div>
@@ -439,9 +447,13 @@ const StudentDashboard: React.FC = () => {
                   </p>
                   <Link
                     to="/student/training"
-                    className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-teallight transition-colors font-medium inline-flex items-center"
+                    className="bg-trueturquoise px-4 py-2 rounded-lg hover:bg-teallight transition-colors font-medium inline-flex items-center"
+                    style={{ color: 'var(--color-text-inverse)' }}
                   >
-                    <ReaderIcon className="h-4 w-4 mr-2 text-offblack" />
+                    <ReaderIcon 
+                      className="h-4 w-4 mr-2"
+                      style={{ color: 'var(--color-text-inverse)' }}
+                    />
                     Check Training
                   </Link>
                 </div>
@@ -678,9 +690,13 @@ const StudentDashboard: React.FC = () => {
                   </div>
                   <Link
                     to={`/student/training/${currentLevel.id}/learn`}
-                    className="bg-gradient-to-r from-trueturquoise to-teallight text-offblack px-6 py-3 rounded-xl hover:from-trueturquoise/90 hover:to-teallight/90 transition-all font-semibold flex items-center justify-center w-full sm:w-auto shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
+                                          className="bg-gradient-to-r from-trueturquoise to-teallight px-6 py-3 rounded-xl hover:from-trueturquoise/90 hover:to-teallight/90 transition-all font-semibold flex items-center justify-center w-full sm:w-auto shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
+                      style={{ color: 'var(--color-text-inverse)' }}
                   >
-                    <PlayCircle className="h-4 w-4 mr-2 text-offblack" />
+                                          <PlayCircle 
+                        className="h-4 w-4 mr-2"
+                        style={{ color: 'var(--color-text-inverse)' }}
+                      />
                     {currentLevelProgress === 0 ? 'Start Learning' : 'Continue Learning'}
                   </Link>
                 </div>
@@ -720,7 +736,10 @@ const StudentDashboard: React.FC = () => {
                       to="/student/training"
                       className="bg-gradient-to-r from-trueturquoise to-teallight text-offblack px-6 py-3 rounded-xl hover:from-trueturquoise/90 hover:to-teallight/90 transition-all font-semibold inline-flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
                     >
-                      <ReaderIcon className="h-4 w-4 mr-2 text-offblack" />
+                      <ReaderIcon 
+                        className="h-4 w-4 mr-2"
+                        style={{ color: 'var(--color-text-inverse)' }}
+                      />
                       Review All Levels
                     </Link>
                   </div>
@@ -819,10 +838,14 @@ const StudentDashboard: React.FC = () => {
                 provide explanations, and guide you through challenging concepts.
               </p>
               <button
-                className="w-full bg-gradient-to-r from-trueturquoise to-teallight text-offblack py-3 rounded-xl hover:from-trueturquoise/90 hover:to-teallight/90 transition-all font-semibold flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
+                className="w-full bg-gradient-to-r from-trueturquoise to-teallight py-3 rounded-xl hover:from-trueturquoise/90 hover:to-teallight/90 transition-all font-semibold flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
+                style={{ color: 'var(--color-text-inverse)' }}
                 onClick={() => setShowAIModal(true)}
               >
-                <Brain className="h-4 w-4 mr-2 text-offblack" />
+                <Brain 
+                  className="h-4 w-4 mr-2"
+                  style={{ color: 'var(--color-text-inverse)' }}
+                />
                 Chat with AI
               </button>
             </div>
@@ -863,7 +886,8 @@ const StudentDashboard: React.FC = () => {
                     The AI chat assistant will be available soon. Stay tuned for updates!
                   </p>
                   <button
-                    className="bg-gradient-to-r from-trueturquoise to-teallight text-offblack px-6 py-2 rounded-xl hover:from-trueturquoise/90 hover:to-teallight/90 transition-all font-semibold mt-2 shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
+                    className="bg-gradient-to-r from-trueturquoise to-teallight px-6 py-2 rounded-xl hover:from-trueturquoise/90 hover:to-teallight/90 transition-all font-semibold mt-2 shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
+                    style={{ color: 'var(--color-text-inverse)' }}
                     onClick={() => setShowAIModal(false)}
                   >
                     Close

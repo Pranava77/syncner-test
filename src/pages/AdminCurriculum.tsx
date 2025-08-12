@@ -682,7 +682,8 @@ const AdminCurriculum: React.FC = () => {
                 <p>{error}</p>
                 <button 
                   onClick={() => fetchLevels(selectedTrack || undefined)}
-                  className="mt-2 bg-trueturquoise text-offblack px-3 py-1 rounded text-xs hover:bg-trueturquoise/90 transition-colors"
+                  className="mt-2 bg-trueturquoise px-3 py-1 rounded text-xs hover:bg-trueturquoise/90 transition-colors"
+                  style={{ color: 'var(--color-text-inverse)' }}
                 >
                   Retry
                 </button>
@@ -739,7 +740,8 @@ const AdminCurriculum: React.FC = () => {
                   <button
                     onClick={() => fetchLevels()}
                     disabled={loading}
-                    className="flex items-center gap-2 bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium disabled:opacity-50"
+                    className="flex items-center gap-2 bg-trueturquoise px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium disabled:opacity-50"
+                    style={{ color: 'var(--color-text-inverse)' }}
                   >
                     <ArrowClockwiseIcon className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
                     Refresh All
@@ -867,7 +869,8 @@ const AdminCurriculum: React.FC = () => {
                   </div>
                   <button
                     onClick={handleAddLevel}
-                    className="flex items-center gap-2 bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium"
+                    className="flex items-center gap-2 bg-trueturquoise px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium"
+                    style={{ color: 'var(--color-text-inverse)' }}
                   >
                     <PlusIcon className="h-5 w-5" />
                     Create Level
@@ -933,7 +936,8 @@ const AdminCurriculum: React.FC = () => {
                     <button
                       onClick={() => fetchLevels(selectedTrack || undefined)}
                       disabled={loading}
-                      className="w-full flex items-center justify-center gap-2 bg-trueturquoise text-offblack px-3 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium disabled:opacity-50 text-sm"
+                      className="w-full flex items-center justify-center gap-2 bg-trueturquoise px-3 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium disabled:opacity-50 text-sm"
+                      style={{ color: 'var(--color-text-inverse)' }}
                     >
                       <ArrowClockwiseIcon className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
                       Refresh
@@ -971,7 +975,8 @@ const AdminCurriculum: React.FC = () => {
                     <p>Search term: "{searchTerm}"</p>
                     <button 
                       onClick={() => fetchLevels(selectedTrack || undefined)}
-                      className="mt-4 bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors text-sm"
+                      className="mt-4 bg-trueturquoise px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors text-sm"
+                      style={{ color: 'var(--color-text-inverse)' }}
                     >
                       Refresh Data
                     </button>
@@ -1006,14 +1011,23 @@ const AdminCurriculum: React.FC = () => {
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-3">
                           {/* Level Number Badge */}
-                          <div className="bg-trueturquoise text-offblack px-3 py-1 rounded-lg font-bold text-sm">
+                          <div 
+                            className="bg-trueturquoise px-3 py-1 rounded-lg font-bold text-sm"
+                            style={{ color: 'var(--color-text-inverse)' }}
+                          >
                             Level {level.order}
                           </div>
-                          <div className={`px-2 py-1 rounded text-xs font-medium ${getDifficultyColor(level.difficulty)} text-white`}>
+                          <div 
+                            className={`px-2 py-1 rounded text-xs font-medium ${getDifficultyColor(level.difficulty)}`}
+                            style={{ color: 'var(--color-text-inverse)' }}
+                          >
                             {level.difficulty}
                           </div>
                         </div>
-                        <span className={`px-2 py-1 rounded text-xs font-medium ${getTrackColor(level.careerTrack)} text-white`}>
+                        <span 
+                          className={`px-2 py-1 rounded text-xs font-medium ${getTrackColor(level.careerTrack)}`}
+                          style={{ color: 'var(--color-text-inverse)' }}
+                        >
                           {getTrackLabel(level.careerTrack)}
                         </span>
                       </div>
@@ -1037,7 +1051,10 @@ const AdminCurriculum: React.FC = () => {
                           className="flex items-center gap-2 text-xs"
                           style={{ color: 'var(--color-text-tertiary)' }}
                         >
-                          <span className={`px-2 py-1 rounded ${getDifficultyColor(level.difficulty)} text-white`}>
+                          <span 
+                            className={`px-2 py-1 rounded ${getDifficultyColor(level.difficulty)}`}
+                            style={{ color: 'var(--color-text-inverse)' }}
+                          >
                             {level.difficulty}
                           </span>
                         </div>
@@ -1284,21 +1301,24 @@ const AdminCurriculum: React.FC = () => {
                           <div className="flex items-center gap-1">
                                                     <button
                           onClick={() => handleAddContent('learn', level)}
-                          className="px-2 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600 transition-colors"
+                          className="px-2 py-1 bg-green-500 text-xs rounded hover:bg-green-600 transition-colors"
+                          style={{ color: 'var(--color-text-inverse)' }}
                           title="Add Learn Content"
                         >
                           +Learn
                         </button>
                         <button
                           onClick={() => handleAddContent('test', level)}
-                          className="px-2 py-1 bg-yellow-500 text-white text-xs rounded hover:bg-yellow-600 transition-colors"
+                          className="px-2 py-1 bg-yellow-500 text-xs rounded hover:bg-yellow-600 transition-colors"
+                          style={{ color: 'var(--color-text-inverse)' }}
                           title="Add Test Content"
                         >
                           +Test
                         </button>
                         <button
                           onClick={() => handleAddContent('exercise', level)}
-                          className="px-2 py-1 bg-purple-500 text-white text-xs rounded hover:bg-purple-600 transition-colors"
+                          className="px-2 py-1 bg-purple-500 text-xs rounded hover:bg-purple-600 transition-colors"
+                          style={{ color: 'var(--color-text-inverse)' }}
                           title="Add Exercise Content"
                         >
                           +Exercise
@@ -1611,7 +1631,8 @@ const AdminCurriculum: React.FC = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="flex-1 bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 bg-trueturquoise px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{ color: 'var(--color-text-inverse)' }}
                   >
                     {isSubmitting ? 'Saving...' : (editingLevel ? 'Update' : 'Create')}
                   </button>
@@ -1813,7 +1834,8 @@ Option 3"
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="flex-1 bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 bg-trueturquoise px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{ color: 'var(--color-text-inverse)' }}
                   >
                     {isSubmitting ? 'Saving...' : (editingContent ? 'Update' : 'Create')}
                   </button>

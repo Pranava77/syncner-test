@@ -293,7 +293,10 @@ const Layout: React.FC = () => {
               title="Profile"
               aria-label="View profile"
             >
-              <span className="text-offblack text-base font-heading">
+              <span 
+                className="text-base font-heading"
+                style={{ color: 'var(--color-text-inverse)' }}
+              >
                 {user?.name?.charAt(0) || 'U'}
               </span>
             </Link>
@@ -338,7 +341,10 @@ const Layout: React.FC = () => {
               }}
             >
               <div className="bg-trueturquoise p-2 rounded-md flex items-center justify-center">
-                <span className="text-offblack text-base font-heading">
+                <span 
+                  className="text-base font-heading"
+                  style={{ color: 'var(--color-text-inverse)' }}
+                >
                   {user?.name?.charAt(0) || 'U'}
                 </span>
               </div>
@@ -449,7 +455,8 @@ const Layout: React.FC = () => {
               return (
                 <div
                   key={item.path}
-                  className="flex items-center px-6 py-3 text-sm transition-colors text-paperwhite/50 cursor-not-allowed"
+                  className="flex items-center px-6 py-3 text-sm transition-colors cursor-not-allowed"
+                style={{ color: 'var(--color-text-muted)' }}
                   title="Coming Soon"
                 >
                   <Icon className="h-5 w-5 mr-3" />
@@ -467,9 +474,10 @@ const Layout: React.FC = () => {
                 className={`flex items-center px-6 py-3 text-sm transition-colors ${
                   isActive(item.path)
                     ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise'
-                    : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'
-                }`}
-              >
+                                    : 'hover:bg-trueturquoise/20 hover:text-trueturquoise'
+                  }`}
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
                 <Icon className="h-5 w-5 mr-3" />
                 {item.label}
               </Link>

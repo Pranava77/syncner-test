@@ -459,11 +459,16 @@ const AdminSettings: React.FC = () => {
 
       {/* Save Message */}
       {saveMessage && (
-        <div className={`fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg ${
-          saveMessage.includes('successfully') 
-            ? 'bg-teallight text-offblack' 
-            : 'bg-rust text-paperwhite'
-        }`}>
+        <div 
+          className={`fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg ${
+            saveMessage.includes('successfully') 
+              ? 'bg-teallight' 
+              : 'bg-rust'
+          }`}
+          style={{ 
+            color: 'var(--color-text-inverse)'
+          }}
+        >
           {saveMessage}
         </div>
       )}

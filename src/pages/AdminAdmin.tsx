@@ -168,7 +168,8 @@ const AdminAdmin: React.FC = () => {
         </div>
         <button
           onClick={handleAdd}
-          className="bg-trueturquoise text-offblack px-5 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium flex items-center gap-2 shadow"
+          className="bg-trueturquoise px-5 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium flex items-center gap-2 shadow"
+          style={{ color: 'var(--color-text-inverse)' }}
         >
           <PlusIcon className="h-5 w-5" />
           Add Admin
@@ -248,7 +249,10 @@ const AdminAdmin: React.FC = () => {
                 <td className="px-6 py-4 whitespace-nowrap text-paperwhite">{a.email}</td>
                 <td className="px-6 py-4 whitespace-nowrap capitalize text-paperwhite">{a.role}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${a.isActive ? 'bg-teallight text-offblack' : 'bg-rust text-paperwhite'}`}>
+                  <span 
+                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${a.isActive ? 'bg-teallight' : 'bg-rust'}`}
+                    style={{ color: 'var(--color-text-inverse)' }}
+                  >
                     <CheckCircledIcon className="h-4 w-4 mr-1" />
                     {a.isActive ? 'Active' : 'Inactive'}
                   </span>
@@ -257,7 +261,8 @@ const AdminAdmin: React.FC = () => {
                   <div className="flex items-center space-x-2">
                     <button
                       onClick={() => handleEdit(a)}
-                      className="bg-trueturquoise hover:bg-trueturquoise/90 text-offblack px-2 py-1 rounded transition-colors"
+                      className="bg-trueturquoise hover:bg-trueturquoise/90 px-2 py-1 rounded transition-colors"
+                      style={{ color: 'var(--color-text-inverse)' }}
                       title="Edit"
                     >
                       <Edit3 className="h-4 w-4" />
@@ -319,7 +324,8 @@ const AdminAdmin: React.FC = () => {
               <button 
                 onClick={handleSave} 
                 disabled={isSubmitting}
-                className="w-full bg-trueturquoise text-offblack py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-trueturquoise py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ color: 'var(--color-text-inverse)' }}
               >
                 {isSubmitting ? 'Saving...' : (editingAdmin ? 'Save Changes' : 'Add Admin')}
               </button>
@@ -342,7 +348,8 @@ const AdminAdmin: React.FC = () => {
               </div>
               <button
                 onClick={() => { navigator.clipboard.writeText(createdPassword); }}
-                className="w-full bg-trueturquoise text-offblack py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold"
+                className="w-full bg-trueturquoise py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold"
+                style={{ color: 'var(--color-text-inverse)' }}
               >Copy Password</button>
             </div>
           </div>
