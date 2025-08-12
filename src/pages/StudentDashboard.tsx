@@ -179,7 +179,10 @@ const StudentDashboard: React.FC = () => {
 
   if (!user || !user.careerTrack) {
     return (
-      <div className="space-y-6 lg:space-y-8 p-4 lg:p-8 bg-black">
+      <div 
+        className="space-y-6 lg:space-y-8 p-4 lg:p-8"
+        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+      >
         <div className={`bg-trueturquoise/10 rounded-xl p-6 lg:p-8 text-paperwhite`}>
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
             <div className="flex-1 mb-6 lg:mb-0">

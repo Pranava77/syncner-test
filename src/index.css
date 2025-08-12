@@ -97,9 +97,74 @@ p, .body {
 }
 
 :root {
+  /* Light mode theme (default) */
+  --color-primary-bg: #FFFFFF;
+  --color-secondary-bg: #F8F9FA;
+  --color-tertiary-bg: #F1F3F4;
+  --color-surface: #FFFFFF;
+  --color-surface-elevated: #FFFFFF;
+  --color-border: #E5E7EB;
+  --color-border-subtle: #F3F4F6;
+  
+  --color-text-primary: #111827;
+  --color-text-secondary: #374151;
+  --color-text-tertiary: #6B7280;
+  --color-text-muted: #9CA3AF;
+  --color-text-inverse: #FFFFFF;
+  
+  --color-accent-primary: #00B8D9;
+  --color-accent-secondary: #A0D8EF;
+  --color-accent-tertiary: #E0F2F1;
+  
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-info: #3B82F6;
+  
+  /* Legacy colors for compatibility */
   --color-true-turquoise: #00B8D9;
   --color-rust: #B7410E;
   --color-paper-white: #FAFAFA;
   --color-black: #000000;
-  --color-grey-label: #888;
+  --color-grey-label: #6B7280;
+  
+  /* Shadow variables */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+/* Dark mode theme */
+.dark {
+  --color-primary-bg: #121212;
+  --color-secondary-bg: #1F1F1F;
+  --color-tertiary-bg: #2D2D2D;
+  --color-surface: #1F1F1F;
+  --color-surface-elevated: #2D2D2D;
+  --color-border: #404040;
+  --color-border-subtle: #2D2D2D;
+  
+  --color-text-primary: #FAFAFA;
+  --color-text-secondary: #E5E7EB;
+  --color-text-tertiary: #A0D8EF;
+  --color-text-muted: #9CA3AF;
+  --color-text-inverse: #121212;
+  
+  --color-accent-primary: #00B8D9;
+  --color-accent-secondary: #A0D8EF;
+  --color-accent-tertiary: #1A365D;
+  
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-info: #3B82F6;
+  
+  /* Legacy colors for dark mode */
+  --color-paper-white: #FAFAFA;
+  --color-grey-label: #A0D8EF;
+  
+  /* Dark mode shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.3);
 }

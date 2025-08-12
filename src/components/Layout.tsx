@@ -24,6 +24,7 @@ import {
 } from '@radix-ui/react-icons';
 import logo from '../assets/syncner-logo.png';
 import LoadingScreen from './LoadingScreen';
+import ThemeSwitcher from './ThemeSwitcher';
 import { motion, useAnimation } from 'framer-motion';
 import { useRef } from 'react';
 
@@ -171,11 +172,23 @@ const Layout: React.FC = () => {
   }
 
   return (
-    <div className="flex h-screen bg-black transition-colors">
+    <div className="flex h-screen transition-colors" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
       {/* Desktop Sidebar */}
-      <div className={`hidden lg:flex ${isSidebarCollapsed ? 'w-20' : 'w-64'} bg-offblack shadow-lg border-r border-gray-200 dark:border-gray-700 flex-col transition-all duration-300 relative`}>
+      <div 
+        className={`hidden lg:flex ${isSidebarCollapsed ? 'w-20' : 'w-64'} shadow-lg border-r flex-col transition-all duration-300 relative`}
+        style={{ 
+          backgroundColor: 'var(--color-secondary-bg)', 
+          borderColor: 'var(--color-border)' 
+        }}
+      >
         {/* Always show logo at the very top, centered */}
-        <div className="flex items-center justify-center py-6 border-b border-gray-200 dark:border-gray-700" style={{ position: 'relative' }}>
+        <div 
+          className="flex items-center justify-center py-6 border-b" 
+          style={{ 
+            position: 'relative',
+            borderColor: 'var(--color-border)'
+          }}
+        >
           <motion.img
             src={logo}
             alt="Syncner Logo"
@@ -187,16 +200,34 @@ const Layout: React.FC = () => {
             ref={logoRef}
             style={{ zIndex: 10 }}
           />
-          {!isSidebarCollapsed && <span className="ml-3 text-paperwhite text-2xl font-heading" style={{ fontFamily: 'Amatic SC, FK Grotesk, Inter, Helvetica Neue, Arial, sans-serif' }}>Syncner</span>}
+          {!isSidebarCollapsed && (
+            <span 
+              className="ml-3 text-2xl font-heading" 
+              style={{ 
+                fontFamily: 'Amatic SC, FK Grotesk, Inter, Helvetica Neue, Arial, sans-serif',
+                color: 'var(--color-text-primary)'
+              }}
+            >
+              Syncner
+            </span>
+          )}
         </div>
         {/* Arrow toggle at vertical center right edge, overlapping border */}
         <button
-          className="absolute top-1/2 -translate-y-1/2 -right-4 z-20 bg-offblack border border-paperwhite/20 shadow-lg p-1 rounded-xl hover:bg-paperwhite/10 transition"
+          className="absolute top-1/2 -translate-y-1/2 -right-4 z-20 border shadow-lg p-1 rounded-xl transition"
           onClick={() => setIsSidebarCollapsed((prev) => !prev)}
           aria-label={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          style={{ boxShadow: '0 2px 8px 0 rgba(0,0,0,0.10)' }}
+          style={{ 
+            backgroundColor: 'var(--color-secondary-bg)',
+            borderColor: 'var(--color-border)',
+            boxShadow: 'var(--shadow-md)'
+          }}
         >
-          {isSidebarCollapsed ? <ChevronRightIcon className="h-5 w-5 text-paperwhite" /> : <ChevronLeftIcon className="h-5 w-5 text-paperwhite" />}
+          {isSidebarCollapsed ? (
+            <ChevronRightIcon className="h-5 w-5" style={{ color: 'var(--color-text-primary)' }} />
+          ) : (
+            <ChevronLeftIcon className="h-5 w-5" style={{ color: 'var(--color-text-primary)' }} />
+          )}
         </button>
         <nav className="flex-1 flex flex-col justify-between">
           <div>
@@ -208,8 +239,9 @@ const Layout: React.FC = () => {
                 return (
                   <div
                     key={item.path}
-                    className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : ''} px-3 py-3 text-sm transition-colors text-paperwhite/50 cursor-not-allowed`}
+                    className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : ''} px-3 py-3 text-sm transition-colors cursor-not-allowed`}
                     title="Coming Soon"
+                    style={{ color: 'var(--color-text-muted)' }}
                   >
                     <Icon className="h-5 w-5" />
                     {!isSidebarCollapsed && (
@@ -228,9 +260,17 @@ const Layout: React.FC = () => {
                   to={item.path}
                   className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : ''} px-3 py-3 text-sm transition-colors ${
                     isActive(item.path)
-                      ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise'
-                      : 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise'
+                      ? 'border-r-2 border-trueturquoise'
+                      : ''
                   }`}
+                  style={{
+                    backgroundColor: isActive(item.path) 
+                      ? 'var(--color-accent-tertiary)' 
+                      : 'transparent',
+                    color: isActive(item.path) 
+                      ? 'var(--color-accent-primary)' 
+                      : 'var(--color-text-primary)'
+                  }}
                 >
                   <Icon className="h-5 w-5" />
                   {!isSidebarCollapsed && <span className="ml-3">{item.label}</span>}
@@ -246,12 +286,13 @@ const Layout: React.FC = () => {
         </nav>
         {isSidebarCollapsed ? (
           <div className="flex flex-col items-center gap-4 pb-6">
-          <Link
+            <ThemeSwitcher variant="icon" size="sm" className="mb-2" />
+            <Link
               to={user?.role === 'admin' ? '/admin/profile' : '/student/profile'}
               className="flex items-center justify-center w-10 h-10 rounded-md bg-trueturquoise mb-2"
               title="Profile"
-            aria-label="View profile"
-          >
+              aria-label="View profile"
+            >
               <span className="text-offblack text-base font-heading">
                 {user?.name?.charAt(0) || 'U'}
               </span>
@@ -259,58 +300,107 @@ const Layout: React.FC = () => {
             <button
               onClick={handleLogout}
               disabled={isLoggingOut}
-              className="flex items-center justify-center w-10 h-10 rounded-full bg-paperwhite/10 hover:bg-trueturquoise/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center justify-center w-10 h-10 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               title="Sign Out"
               aria-label="Sign Out"
+              style={{ 
+                backgroundColor: 'var(--color-tertiary-bg)',
+                color: 'var(--color-accent-primary)'
+              }}
             >
-              <ExitIcon className="h-5 w-5 text-trueturquoise" />
+              <ExitIcon className="h-5 w-5" />
             </button>
-            <div className="mt-4 text-center text-xs text-teallight font-label opacity-80 select-none">v1.0</div>
+            <div 
+              className="mt-4 text-center text-xs font-label opacity-80 select-none"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
+              v1.0
+            </div>
           </div>
         ) : (
-          <div className="p-6 border-t border-trueturquoise">
+          <div 
+            className="p-6 border-t" 
+            style={{ borderColor: 'var(--color-accent-primary)' }}
+          >
+            {/* Theme Switcher */}
+            <div className="mb-4">
+              <ThemeSwitcher variant="toggle" showLabels={false} className="w-full justify-center" />
+            </div>
+            
             {/* Unified Profile Section - clickable */}
             <Link
               to={user?.role === 'admin' ? '/admin/profile' : '/student/profile'}
-              className="flex items-center gap-3 w-full px-3 py-3 mb-2 rounded-lg transition-colors bg-paperwhite/10 hover:bg-trueturquoise/10 focus:outline-none focus:ring-2 focus:ring-trueturquoise group"
+              className="flex items-center gap-3 w-full px-3 py-3 mb-2 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-trueturquoise group"
               tabIndex={0}
               aria-label="View profile"
+              style={{
+                backgroundColor: 'var(--color-tertiary-bg)',
+              }}
             >
               <div className="bg-trueturquoise p-2 rounded-md flex items-center justify-center">
                 <span className="text-offblack text-base font-heading">
-                {user?.name?.charAt(0) || 'U'}
-              </span>
-            </div>
-            <div className="flex flex-col flex-1 min-w-0">
-                <span className="text-sm text-paperwhite truncate font-heading">{user?.name}</span>
-                <span className="text-xs text-teallight capitalize truncate font-label">{user?.role}</span>
-            </div>
+                  {user?.name?.charAt(0) || 'U'}
+                </span>
+              </div>
+              <div className="flex flex-col flex-1 min-w-0">
+                <span 
+                  className="text-sm truncate font-heading"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  {user?.name}
+                </span>
+                <span 
+                  className="text-xs capitalize truncate font-label"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                >
+                  {user?.role}
+                </span>
+              </div>
               <PersonIcon className="h-5 w-5 text-trueturquoise opacity-80 group-hover:scale-110 transition-transform" />
-          </Link>
-          <button
-            onClick={handleLogout}
-            disabled={isLoggingOut}
-              className="flex items-center w-full px-3 py-2 text-sm text-paperwhite hover:bg-trueturquoise/10 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-1"
-          >
+            </Link>
+            
+            <button
+              onClick={handleLogout}
+              disabled={isLoggingOut}
+              className="flex items-center w-full px-3 py-2 text-sm rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-1"
+              style={{
+                color: 'var(--color-text-primary)',
+                backgroundColor: 'transparent'
+              }}
+            >
               <ExitIcon className="h-4 w-4 mr-2 text-trueturquoise" />
-            Sign Out
-          </button>
-          <div className="mt-4 text-center text-xs text-teallight font-label opacity-80 select-none">V1.0</div>
-        </div>
+              Sign Out
+            </button>
+            
+            <div 
+              className="mt-4 text-center text-xs font-label opacity-80 select-none"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
+              V1.0
+            </div>
+          </div>
         )}
       </div>
 
       {/* Mobile Header */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3">
+      <div 
+        className="lg:hidden fixed top-0 left-0 right-0 z-50 border-b px-4 py-3"
+        style={{
+          backgroundColor: 'var(--color-surface)',
+          borderColor: 'var(--color-border)'
+        }}
+      >
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <img src={logo} alt="Syncner Logo" className="h-8 w-8 object-contain" />
           </div>
           
           <div className="flex items-center space-x-2">
+            <ThemeSwitcher variant="icon" size="sm" className="mr-2" />
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+              className="p-2 transition-colors"
+              style={{ color: 'var(--color-text-primary)' }}
             >
               {isMobileMenuOpen ? <Cross1Icon className="h-6 w-6" /> : <HamburgerMenuIcon className="h-6 w-6" />}
             </button>
@@ -424,7 +514,10 @@ const Layout: React.FC = () => {
 
       {/* Main Content */}
       <div className="flex-1 overflow-hidden">
-        <main className="h-full overflow-y-auto bg-black scroll-smooth">
+        <main 
+          className="h-full overflow-y-auto scroll-smooth"
+          style={{ backgroundColor: 'var(--color-primary-bg)' }}
+        >
           <Outlet />
         </main>
       </div>

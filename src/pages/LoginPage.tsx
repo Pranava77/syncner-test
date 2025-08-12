@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { loginUser, clearError, logoutUser } from '../redux/slices/authSlice';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import LoadingScreen from '../components/LoadingScreen';
+import ThemeSwitcher from '../components/ThemeSwitcher';
 import logo from '../assets/syncner-logo.png';
 import {
   ExclamationTriangleIcon,
@@ -131,19 +132,44 @@ const LoginPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-offblack flex items-center justify-center px-4">
+    <div 
+      className="min-h-screen flex items-center justify-center px-4 relative"
+      style={{ backgroundColor: 'var(--color-primary-bg)' }}
+    >
+      {/* Theme Switcher */}
+      <div className="absolute top-4 right-4">
+        <ThemeSwitcher variant="button" size="sm" />
+      </div>
+      
       <div className="max-w-md w-full">
         {/* Header */}
         <div className="text-center mb-6 lg:mb-8">
           <div className="flex items-center justify-center space-x-3 mb-4">
             <img src={logo} alt="Syncner Logo" className="h-8 w-8 lg:h-10 lg:w-10 object-contain" />
           </div>
-          <h1 className="text-2xl lg:text-3xl text-paperwhite mb-2 font-heading">Welcome Back</h1>
-          <p className="text-teallight text-sm lg:text-base font-label">Sign in to continue your career journey</p>
+          <h1 
+            className="text-2xl lg:text-3xl mb-2 font-heading"
+            style={{ color: 'var(--color-text-primary)' }}
+          >
+            Welcome Back
+          </h1>
+          <p 
+            className="text-sm lg:text-base font-label"
+            style={{ color: 'var(--color-text-tertiary)' }}
+          >
+            Sign in to continue your career journey
+          </p>
         </div>
 
         {/* Login Form */}
-        <div className="bg-paperwhite/10 backdrop-blur-sm rounded-xl p-6 lg:p-8 border border-paperwhite/10 shadow-xl">
+        <div 
+          className="backdrop-blur-sm rounded-xl p-6 lg:p-8 border"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            borderColor: 'var(--color-border)',
+            boxShadow: 'var(--shadow-lg)'
+          }}
+        >
           {error && !emailError && !passwordError && (
             <div className="mb-4 p-3 bg-rust/10 border border-rust/20 rounded-lg flex items-center space-x-2">
               <ExclamationTriangleIcon className="h-4 w-4 text-rust flex-shrink-0" />

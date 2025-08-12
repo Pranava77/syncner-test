@@ -69,10 +69,12 @@ function App() {
     // Apply theme on mount and whenever isDarkMode changes
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
-      document.documentElement.style.backgroundColor = '#111827'; // Tailwind dark:bg-gray-900
+      document.documentElement.style.backgroundColor = '#121212'; // Dark mode primary background
+      document.body.style.backgroundColor = '#121212';
     } else {
       document.documentElement.classList.remove('dark');
-      document.documentElement.style.backgroundColor = '#f9fafb'; // Tailwind bg-gray-50
+      document.documentElement.style.backgroundColor = '#FFFFFF'; // Light mode primary background
+      document.body.style.backgroundColor = '#FFFFFF';
     }
   }, [isDarkMode]);
 

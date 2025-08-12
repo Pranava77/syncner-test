@@ -30,20 +30,34 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
   }, [showProgress, progressDuration]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-offblack p-4">
+    <div 
+      className="min-h-screen flex items-center justify-center p-4"
+      style={{ backgroundColor: 'var(--color-primary-bg)' }}
+    >
       <div className="text-center">
         {/* Logo */}
         <div className="mb-8">
           <div className="inline-block mb-4">
             <img src={logo} alt="Syncner Logo" className="h-20 w-20 object-contain" />
           </div>
-          <h1 className="text-3xl text-paperwhite mb-2 font-heading" style={{ fontFamily: 'Amatic SC, FK Grotesk, Inter, Helvetica Neue, Arial, sans-serif' }}>Syncner</h1>
+          <h1 
+            className="text-3xl mb-2 font-heading" 
+            style={{ 
+              fontFamily: 'Amatic SC, FK Grotesk, Inter, Helvetica Neue, Arial, sans-serif',
+              color: 'var(--color-text-primary)'
+            }}
+          >
+            Syncner
+          </h1>
         </div>
 
         {/* Progress Bar */}
         {showProgress && (
           <div className="w-64 mx-auto mb-4">
-            <div className="w-full bg-paperwhite/20 rounded-full h-2">
+            <div 
+              className="w-full rounded-full h-2"
+              style={{ backgroundColor: 'var(--color-border)' }}
+            >
               <div 
                 className="bg-trueturquoise h-2 rounded-full transition-all duration-300 ease-out"
                 style={{ width: `${progress}%` }}
@@ -53,7 +67,12 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
         )}
 
         {/* Tagline below progress bar */}
-        <p className="text-teallight text-sm font-label">Syncing your success...</p>
+        <p 
+          className="text-sm font-label"
+          style={{ color: 'var(--color-text-tertiary)' }}
+        >
+          Syncing your success...
+        </p>
       </div>
     </div>
   );
