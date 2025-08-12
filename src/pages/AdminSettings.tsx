@@ -185,69 +185,117 @@ const AdminSettings: React.FC = () => {
             <div className="grid md:grid-cols-2 gap-6">
               {/* All inputs use bg-offblack, border-paperwhite/20, text-paperwhite */}
               <div>
-                <label className="block text-sm text-teallight mb-2 font-label">
+                <label 
+                  className="block text-sm mb-2 font-label"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                >
                   Platform Name
                 </label>
                 <input
                   type="text"
                   value={settingsDraft?.general?.platformName ?? ''}
                   onChange={(e) => handleSettingChange('general', 'platformName', e.target.value)}
-                  className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] bg-offblack text-paperwhite placeholder:text-teallight"
+                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9]"
+                  style={{
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    borderColor: 'var(--color-border)',
+                    color: 'var(--color-text-primary)'
+                  }}
                 />
               </div>
               <div>
-                <label className="block text-sm text-teallight mb-2 font-label">
+                <label 
+                  className="block text-sm mb-2 font-label"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                >
                   Support Email
                 </label>
                 <input
                   type="email"
                   value={settingsDraft?.general?.supportEmail ?? ''}
                   onChange={(e) => handleSettingChange('general', 'supportEmail', e.target.value)}
-                  className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] bg-offblack text-paperwhite placeholder:text-teallight"
+                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9]"
+                  style={{
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    borderColor: 'var(--color-border)',
+                    color: 'var(--color-text-primary)'
+                  }}
                 />
               </div>
               <div>
-                <label className="block text-sm text-teallight mb-2 font-label">
+                <label 
+                  className="block text-sm mb-2 font-label"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                >
                   Max Students per Admin
                 </label>
                 <input
                   type="number"
                   value={settingsDraft?.general?.maxStudentsPerAdmin ?? 0}
                   onChange={(e) => handleSettingChange('general', 'maxStudentsPerAdmin', parseInt(e.target.value))}
-                  className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] bg-offblack text-paperwhite placeholder:text-teallight"
+                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9]"
+                  style={{
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    borderColor: 'var(--color-border)',
+                    color: 'var(--color-text-primary)'
+                  }}
                 />
               </div>
               <div>
-                <label className="block text-sm text-teallight mb-2 font-label">
+                <label 
+                  className="block text-sm mb-2 font-label"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                >
                   Session Timeout (minutes)
                 </label>
                 <input
                   type="number"
                   value={settingsDraft?.general?.sessionTimeout ?? 0}
                   onChange={(e) => handleSettingChange('general', 'sessionTimeout', parseInt(e.target.value))}
-                  className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] bg-offblack text-paperwhite placeholder:text-teallight"
+                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9]"
+                  style={{
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    borderColor: 'var(--color-border)',
+                    color: 'var(--color-text-primary)'
+                  }}
                 />
               </div>
               <div>
-                <label className="block text-sm text-teallight mb-2 font-label">
+                <label 
+                  className="block text-sm mb-2 font-label"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                >
                   Site Name
                 </label>
                 <input
                   type="text"
                   value={settingsDraft?.general?.siteName ?? ''}
                   onChange={(e) => handleSettingChange('general', 'siteName', e.target.value)}
-                  className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] bg-offblack text-paperwhite placeholder:text-teallight"
+                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9]"
+                  style={{
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    borderColor: 'var(--color-border)',
+                    color: 'var(--color-text-primary)'
+                  }}
                 />
               </div>
               <div>
-                <label className="block text-sm text-teallight mb-2 font-label">
+                <label 
+                  className="block text-sm mb-2 font-label"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                >
                   Site Description
                 </label>
                 <input
                   type="text"
                   value={settingsDraft?.general?.siteDescription ?? ''}
                   onChange={(e) => handleSettingChange('general', 'siteDescription', e.target.value)}
-                  className="w-full px-3 py-2 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9] bg-offblack text-paperwhite placeholder:text-teallight"
+                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9]"
+                  style={{
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    borderColor: 'var(--color-border)',
+                    color: 'var(--color-text-primary)'
+                  }}
                 />
               </div>
             </div>
@@ -256,54 +304,115 @@ const AdminSettings: React.FC = () => {
 
         {/* Integrations Tab */}
         {activeTab === 'integrations' && (
-          <div className="bg-paperwhite/10 rounded-xl shadow p-6 space-y-8">
-            <h3 className="text-lg mb-4 flex items-center gap-2 text-paperwhite font-heading">
+          <div 
+            className="rounded-xl shadow p-6 space-y-8"
+            style={{
+              backgroundColor: 'var(--color-surface)',
+              boxShadow: 'var(--shadow-md)'
+            }}
+          >
+            <h3 
+              className="text-lg mb-4 flex items-center gap-2 font-heading"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
               Integrations
             </h3>
             {/* Gemini API Key */}
             <div>
-              <label className="block text-sm text-paperwhite mb-2 font-label">Gemini API Key</label>
+              <label 
+                className="block text-sm mb-2 font-label"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                Gemini API Key
+              </label>
               <input
                 type="text"
                 value={geminiKeyInput}
                 onChange={handleGeminiKeyChange}
-                className="w-full px-4 py-2 border rounded-lg bg-offblack border-paperwhite/20 text-paperwhite placeholder:text-teallight"
+                className="w-full px-4 py-2 border rounded-lg"
+                style={{
+                  backgroundColor: 'var(--color-secondary-bg)',
+                  borderColor: 'var(--color-border)',
+                  color: 'var(--color-text-primary)'
+                }}
                 placeholder="Enter Gemini API Key"
               />
-              <p className="text-xs text-teallight">Used for AI features (chat, feedback, resume).</p>
+              <p 
+                className="text-xs"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >
+                Used for AI features (chat, feedback, resume).
+              </p>
             </div>
             {/* Email Provider */}
             <div>
-              <label className="block text-sm text-paperwhite mb-2 font-label">Email Provider</label>
+              <label 
+                className="block text-sm mb-2 font-label"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                Email Provider
+              </label>
               <input
                 type="text"
                 value={settingsDraft?.integrations?.emailProvider ?? ''}
                 onChange={e => handleSettingChange('integrations', 'emailProvider', e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg bg-offblack border-paperwhite/20 text-paperwhite placeholder:text-teallight"
+                className="w-full px-4 py-2 border rounded-lg"
+                style={{
+                  backgroundColor: 'var(--color-secondary-bg)',
+                  borderColor: 'var(--color-border)',
+                  color: 'var(--color-text-primary)'
+                }}
                 placeholder="e.g. SendGrid, Gmail, Mailgun"
               />
-              <p className="text-xs text-teallight">For reference. Not connected to any provider yet.</p>
+              <p 
+                className="text-xs"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >
+                For reference. Not connected to any provider yet.
+              </p>
             </div>
             {/* Analytics Enabled Toggle */}
             <div className="flex items-center justify-between">
-              <span className="text-paperwhite font-medium">Analytics Enabled</span>
+              <span 
+                className="font-medium"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                Analytics Enabled
+              </span>
               <button
                 type="button"
-                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${settingsDraft?.integrations?.analyticsEnabled ? 'bg-[#00B8D9]' : 'bg-offblack'}`}
+                className="w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300"
+                style={{
+                  backgroundColor: settingsDraft?.integrations?.analyticsEnabled ? '#00B8D9' : 'var(--color-secondary-bg)'
+                }}
                 onClick={() => handleSettingChange('integrations', 'analyticsEnabled', !settingsDraft?.integrations?.analyticsEnabled)}
               >
-                <span className={`h-4 w-4 bg-paperwhite rounded-full shadow transform transition-transform duration-300 ${settingsDraft?.integrations?.analyticsEnabled ? 'translate-x-6' : ''}`}></span>
+                <span 
+                  className={`h-4 w-4 rounded-full shadow transform transition-transform duration-300 ${settingsDraft?.integrations?.analyticsEnabled ? 'translate-x-6' : ''}`}
+                  style={{ backgroundColor: 'var(--color-text-inverse)' }}
+                ></span>
               </button>
             </div>
             {/* Backup Enabled Toggle */}
             <div className="flex items-center justify-between">
-              <span className="text-paperwhite font-medium">Backup Enabled</span>
+              <span 
+                className="font-medium"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                Backup Enabled
+              </span>
               <button
                 type="button"
-                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${settingsDraft?.integrations?.backupEnabled ? 'bg-[#00B8D9]' : 'bg-offblack'}`}
+                className="w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300"
+                style={{
+                  backgroundColor: settingsDraft?.integrations?.backupEnabled ? '#00B8D9' : 'var(--color-secondary-bg)'
+                }}
                 onClick={() => handleSettingChange('integrations', 'backupEnabled', !settingsDraft?.integrations?.backupEnabled)}
               >
-                <span className={`h-4 w-4 bg-paperwhite rounded-full shadow transform transition-transform duration-300 ${settingsDraft?.integrations?.backupEnabled ? 'translate-x-6' : ''}`}></span>
+                <span 
+                  className={`h-4 w-4 rounded-full shadow transform transition-transform duration-300 ${settingsDraft?.integrations?.backupEnabled ? 'translate-x-6' : ''}`}
+                  style={{ backgroundColor: 'var(--color-text-inverse)' }}
+                ></span>
               </button>
             </div>
             <button
@@ -313,7 +422,14 @@ const AdminSettings: React.FC = () => {
             >
               {isSaving ? 'Saving...' : 'Save Integrations'}
             </button>
-            {saveMessage && <div className="mt-2 text-teallight">{saveMessage}</div>}
+            {saveMessage && 
+              <div 
+                className="mt-2"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >
+                {saveMessage}
+              </div>
+            }
           </div>
         )}
       </div>

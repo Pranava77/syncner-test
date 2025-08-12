@@ -380,16 +380,67 @@ const AdminUsers: React.FC = () => {
       </div>
       {/* Modal for Add/Edit User */}
       {showModal && (
-        <div className="fixed inset-0 bg-offblack/60 flex items-center justify-center z-50">
-          <div className="bg-offblack rounded-xl shadow-2xl p-8 w-full max-w-md border border-paperwhite/20">
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+          <div 
+            className="rounded-xl shadow-2xl p-8 w-full max-w-md border"
+            style={{
+              backgroundColor: 'var(--color-surface-elevated)',
+              borderColor: 'var(--color-border)',
+              boxShadow: 'var(--shadow-lg)'
+            }}
+          >
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-paperwhite">{editingUser ? 'Edit User' : 'Add User'}</h3>
-              <button onClick={() => setShowModal(false)} className="text-teallight hover:text-trueturquoise"><X className="h-5 w-5" /></button>
+              <h3 
+                className="text-lg font-semibold"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                {editingUser ? 'Edit User' : 'Add User'}
+              </h3>
+              <button 
+                onClick={() => setShowModal(false)} 
+                className="hover:text-trueturquoise"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >
+                <X className="h-5 w-5" />
+              </button>
             </div>
             <div className="space-y-3">
-              <input type="text" placeholder="Name" value={userForm.name} onChange={e => setUserForm(f => ({ ...f, name: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight" />
-              <input type="email" placeholder="Email" value={userForm.email} onChange={e => setUserForm(f => ({ ...f, email: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight" />
-              <input type="text" placeholder="College" value={userForm.college} onChange={e => setUserForm(f => ({ ...f, college: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight" />
+              <input 
+                type="text" 
+                placeholder="Name" 
+                value={userForm.name} 
+                onChange={e => setUserForm(f => ({ ...f, name: e.target.value }))} 
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition"
+                style={{
+                  backgroundColor: 'var(--color-secondary-bg)',
+                  borderColor: 'var(--color-border)',
+                  color: 'var(--color-text-primary)'
+                }}
+              />
+              <input 
+                type="email" 
+                placeholder="Email" 
+                value={userForm.email} 
+                onChange={e => setUserForm(f => ({ ...f, email: e.target.value }))} 
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition"
+                style={{
+                  backgroundColor: 'var(--color-secondary-bg)',
+                  borderColor: 'var(--color-border)',
+                  color: 'var(--color-text-primary)'
+                }}
+              />
+              <input 
+                type="text" 
+                placeholder="College" 
+                value={userForm.college} 
+                onChange={e => setUserForm(f => ({ ...f, college: e.target.value }))} 
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition"
+                style={{
+                  backgroundColor: 'var(--color-secondary-bg)',
+                  borderColor: 'var(--color-border)',
+                  color: 'var(--color-text-primary)'
+                }}
+              />
               <select value={userForm.role} onChange={e => setUserForm(f => ({ ...f, role: e.target.value }))} className="w-full px-3 py-2 border border-paperwhite/20 bg-offblack text-paperwhite rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition">
                 <option value="student">Student</option>
               </select>
@@ -413,7 +464,12 @@ const AdminUsers: React.FC = () => {
               )}
               <div className="flex items-center gap-2">
                 <input type="checkbox" checked={userForm.isActive} onChange={e => setUserForm(f => ({ ...f, isActive: e.target.checked }))} id="isActive" />
-                <label htmlFor="isActive" className="text-paperwhite">Active</label>
+                <label 
+                  htmlFor="isActive" 
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  Active
+                </label>
               </div>
               {formError && <div className="text-rust text-sm font-medium">{formError}</div>}
               <button 
@@ -445,7 +501,13 @@ const AdminUsers: React.FC = () => {
               >
                 User Password
               </h3>
-              <button onClick={() => { setShowPasswordModal(false); setCreatedPassword(''); }} className="text-teallight hover:text-trueturquoise"><X className="h-5 w-5" /></button>
+              <button 
+                onClick={() => { setShowPasswordModal(false); setCreatedPassword(''); }} 
+                className="hover:text-trueturquoise"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >
+                <X className="h-5 w-5" />
+              </button>
             </div>
             <div className="space-y-4">
               <div className="text-center">

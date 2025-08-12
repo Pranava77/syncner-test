@@ -42,9 +42,17 @@ const AdminDashboard: React.FC = () => {
 
   if (!analytics) {
     return (
-      <div className="min-h-screen bg-offblack flex items-center justify-center">
+      <div 
+        className="min-h-screen flex items-center justify-center"
+        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+      >
         <div className="text-center">
-          <p className="text-paperwhite text-lg">No analytics data available.</p>
+          <p 
+            className="text-lg"
+            style={{ color: 'var(--color-text-primary)' }}
+          >
+            No analytics data available.
+          </p>
         </div>
       </div>
     );
@@ -82,44 +90,92 @@ const AdminDashboard: React.FC = () => {
 
       {/* Analytics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-        <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6 flex items-center gap-4">
+        <div 
+          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
           <div className="bg-trueturquoise/10 p-3 rounded-lg">
             <Users className="h-6 w-6 text-trueturquoise" />
           </div>
           <div>
-            <p className="text-teallight text-sm">Total Students</p>
-            <p className="text-2xl font-bold text-paperwhite">{userCount}</p>
+            <p 
+              className="text-sm"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >Total Students</p>
+            <p 
+              className="text-2xl font-bold"
+              style={{ color: 'var(--color-text-primary)' }}
+            >{userCount}</p>
           </div>
         </div>
-        <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6 flex items-center gap-4">
+        <div 
+          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
           <div className="bg-trueturquoise/10 p-3 rounded-lg">
             <Users className="h-6 w-6 text-trueturquoise" />
           </div>
           <div>
-            <p className="text-teallight text-sm">Active Students</p>
-            <p className="text-2xl font-bold text-paperwhite">{activeStudents}</p>
+            <p 
+              className="text-sm"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >Active Students</p>
+            <p 
+              className="text-2xl font-bold"
+              style={{ color: 'var(--color-text-primary)' }}
+            >{activeStudents}</p>
           </div>
         </div>
-        <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6 flex items-center gap-4">
+        <div 
+          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
           <div className="bg-trueturquoise/10 p-3 rounded-lg">
             <Target className="h-6 w-6 text-trueturquoise" />
           </div>
           <div>
-            <p className="text-teallight text-sm">Completion Rate</p>
-            <p className="text-2xl font-bold text-paperwhite">{completionRate}%</p>
+            <p 
+              className="text-sm"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >Completion Rate</p>
+            <p 
+              className="text-2xl font-bold"
+              style={{ color: 'var(--color-text-primary)' }}
+            >{completionRate}%</p>
             <p className="text-trueturquoise text-xs flex items-center mt-1">
               <TrendingUp className="h-3 w-3 mr-1" />
               +5.1% from last month
             </p>
           </div>
         </div>
-        <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6 flex items-center gap-4">
+        <div 
+          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
           <div className="bg-trueturquoise/10 p-3 rounded-lg">
             <LayersIcon className="h-6 w-6 text-trueturquoise" />
           </div>
           <div>
-            <p className="text-teallight text-sm">Avg Level Reached</p>
-            <p className="text-2xl font-bold text-paperwhite">{overallMetrics.averageLevelReached}</p>
+            <p 
+              className="text-sm"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >Avg Level Reached</p>
+            <p 
+              className="text-2xl font-bold"
+              style={{ color: 'var(--color-text-primary)' }}
+            >{overallMetrics.averageLevelReached}</p>
             <p className="text-trueturquoise text-xs flex items-center mt-1">
               <TrendingUp className="h-3 w-3 mr-1" />
               {overallMetrics.overallCompletionRate}% completed levels
@@ -138,8 +194,17 @@ const AdminDashboard: React.FC = () => {
       </div>
 
       {/* Students by Track Pie Chart */}
-      <div className="bg-paperwhite/10 rounded-xl shadow-sm p-8 mb-12 flex flex-col items-center">
-        <h2 className="text-lg font-semibold text-paperwhite mb-6">Students by Track</h2>
+      <div 
+        className="rounded-xl shadow-sm p-8 mb-12 flex flex-col items-center"
+        style={{
+          backgroundColor: 'var(--color-surface)',
+          boxShadow: 'var(--shadow-sm)'
+        }}
+      >
+        <h2 
+          className="text-lg font-semibold mb-6"
+          style={{ color: 'var(--color-text-primary)' }}
+        >Students by Track</h2>
         <div className="w-full flex flex-col items-center justify-center">
           <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto">
             <ResponsiveContainer width="100%" height={320}>
@@ -211,8 +276,14 @@ const AdminDashboard: React.FC = () => {
                   className="inline-block w-3 h-3 rounded-full transition-all group-hover:shadow-lg"
                   style={{ background: COLORS[idx % COLORS.length] + 'cc' }}
                 ></span>
-                <span className="text-paperwhite text-xs font-medium opacity-80">{entry.track}</span>
-                <span className="text-teallight text-xs ml-1 opacity-60">({entry.count})</span>
+                <span 
+                  className="text-xs font-medium opacity-80"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >{entry.track}</span>
+                <span 
+                  className="text-xs ml-1 opacity-60"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                >({entry.count})</span>
               </div>
             ))}
           </div>
@@ -220,8 +291,17 @@ const AdminDashboard: React.FC = () => {
       </div>
 
       {/* Modern Bar Chart: Students per Track */}
-      <div className="bg-paperwhite/10 rounded-xl shadow-sm p-8 mb-12 flex flex-col items-center">
-        <h2 className="text-lg font-semibold text-paperwhite mb-6">Students per Track</h2>
+      <div 
+        className="rounded-xl shadow-sm p-8 mb-12 flex flex-col items-center"
+        style={{
+          backgroundColor: 'var(--color-surface)',
+          boxShadow: 'var(--shadow-sm)'
+        }}
+      >
+        <h2 
+          className="text-lg font-semibold mb-6"
+          style={{ color: 'var(--color-text-primary)' }}
+        >Students per Track</h2>
         <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-2xl mx-auto">
           <ResponsiveContainer width="100%" height={240}>
             <BarChart data={trackDistribution} barCategoryGap={24}>

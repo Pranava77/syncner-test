@@ -670,7 +670,12 @@ const AdminCurriculum: React.FC = () => {
         <main className="flex-1 p-6 lg:p-12 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-trueturquoise mx-auto mb-4"></div>
-            <p className="text-paperwhite text-lg">Loading curriculum levels...</p>
+            <p 
+              className="text-lg"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              Loading curriculum levels...
+            </p>
             {error && (
               <div className="mt-4 p-3 bg-red-500/20 border border-red-500/30 rounded-lg text-red-400 text-sm max-w-md mx-auto">
                 <p className="font-medium">Error loading curriculum:</p>
@@ -704,8 +709,15 @@ const AdminCurriculum: React.FC = () => {
               <div className="mb-8">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h1 className="text-3xl font-heading text-paperwhite mb-2">Curriculum Management</h1>
-                    <p className="text-teallight">
+                    <h1 
+                      className="text-3xl font-heading mb-2"
+                      style={{ color: 'var(--color-text-primary)' }}
+                    >
+                      Curriculum Management
+                    </h1>
+                    <p 
+                      style={{ color: 'var(--color-text-tertiary)' }}
+                    >
                       Select a career track to manage its training levels and content
                     </p>
                     {successMessage && (
@@ -759,13 +771,27 @@ const AdminCurriculum: React.FC = () => {
                     >
                       <div className="text-center">
                         <div className={`w-16 h-16 ${track.bgColor} ${track.borderColor} border-2 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                          <IconComponent className="h-8 w-8 text-paperwhite" />
+                          <IconComponent 
+                            className="h-8 w-8"
+                            style={{ color: 'var(--color-text-inverse)' }}
+                          />
                         </div>
-                        <h3 className="text-lg font-heading text-paperwhite mb-2">{track.name}</h3>
-                        <p className="text-teallight text-sm mb-4">
+                        <h3 
+                          className="text-lg font-heading mb-2"
+                          style={{ color: 'var(--color-text-primary)' }}
+                        >
+                          {track.name}
+                        </h3>
+                        <p 
+                          className="text-sm mb-4"
+                          style={{ color: 'var(--color-text-tertiary)' }}
+                        >
                           {trackStats[track.id] || 0} levels available
                         </p>
-                        <div className="text-xs text-teallight group-hover:text-trueturquoise transition-colors">
+                        <div 
+                          className="text-xs group-hover:text-trueturquoise transition-colors"
+                          style={{ color: 'var(--color-text-tertiary)' }}
+                        >
                           Click to manage levels
                         </div>
                       </div>
@@ -784,19 +810,28 @@ const AdminCurriculum: React.FC = () => {
                     <div className="flex items-center gap-4 mb-2">
                       <button
                         onClick={handleBackToTracks}
-                        className="p-2 text-teallight hover:text-paperwhite transition-colors"
+                        className="p-2 hover:text-trueturquoise transition-colors"
+                        style={{ color: 'var(--color-text-tertiary)' }}
                         title="Back to Tracks"
                       >
                         <ChevronRightIcon className="h-5 w-5 rotate-180" />
                       </button>
-                      <h1 className="text-3xl font-heading text-paperwhite">
+                      <h1 
+                        className="text-3xl font-heading"
+                        style={{ color: 'var(--color-text-primary)' }}
+                      >
                         {getTrackLabel(selectedTrack || '')} Curriculum Management
                       </h1>
                     </div>
-                    <p className="text-teallight">
+                    <p 
+                      style={{ color: 'var(--color-text-tertiary)' }}
+                    >
                       Manage training levels and content for {getTrackLabel(selectedTrack || '')} curriculum
                     </p>
-                    <div className="flex items-center gap-4 mt-2 text-sm text-teallight">
+                    <div 
+                      className="flex items-center gap-4 mt-2 text-sm"
+                      style={{ color: 'var(--color-text-tertiary)' }}
+                    >
                       <span className="flex items-center gap-1">
                         <LayersIcon className="h-4 w-4" />
                         {filteredLevels.length} levels total
@@ -807,7 +842,10 @@ const AdminCurriculum: React.FC = () => {
                       </span>
                     </div>
                     {lastUpdated && (
-                      <p className="text-xs text-teallight mt-1">
+                      <p 
+                        className="text-xs mt-1"
+                        style={{ color: 'var(--color-text-tertiary)' }}
+                      >
                         Last updated: {lastUpdated.toLocaleTimeString()}
                       </p>
                     )}
@@ -838,25 +876,51 @@ const AdminCurriculum: React.FC = () => {
               </div>
 
               {/* Filters and Search */}
-              <div className="mb-6 p-4 bg-paperwhite/5 rounded-lg border border-paperwhite/10">
+              <div 
+                className="mb-6 p-4 rounded-lg border"
+                style={{
+                  backgroundColor: 'var(--color-tertiary-bg)',
+                  borderColor: 'var(--color-border-subtle)'
+                }}
+              >
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-paperwhite mb-2">Search</label>
+                    <label 
+                      className="block text-sm font-medium mb-2"
+                      style={{ color: 'var(--color-text-primary)' }}
+                    >
+                      Search
+                    </label>
                     <input
                       type="text"
                       placeholder="Search levels..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full px-3 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite placeholder-teallight focus:outline-none focus:border-trueturquoise text-sm"
+                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-trueturquoise text-sm"
+                      style={{
+                        backgroundColor: 'var(--color-secondary-bg)',
+                        borderColor: 'var(--color-border)',
+                        color: 'var(--color-text-primary)'
+                      }}
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-paperwhite mb-2">Difficulty</label>
+                    <label 
+                      className="block text-sm font-medium mb-2"
+                      style={{ color: 'var(--color-text-primary)' }}
+                    >
+                      Difficulty
+                    </label>
                     <select
                       value={filterDifficulty}
                       onChange={(e) => setFilterDifficulty(e.target.value)}
-                      className="w-full px-3 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise text-sm"
+                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-trueturquoise text-sm"
+                      style={{
+                        backgroundColor: 'var(--color-secondary-bg)',
+                        borderColor: 'var(--color-border)',
+                        color: 'var(--color-text-primary)'
+                      }}
                     >
                       <option value="all">All Difficulties</option>
                       <option value="beginner">Beginner</option>
@@ -884,9 +948,22 @@ const AdminCurriculum: React.FC = () => {
                   <div className="text-paperwhite/30 mb-4">
                     <FileTextIcon className="h-16 w-16 mx-auto" />
                   </div>
-                  <h3 className="text-xl font-heading text-paperwhite mb-2">No levels found</h3>
-                  <p className="text-teallight mb-6">Create your first training level for this track</p>
-                  <div className="space-y-2 text-sm text-teallight">
+                  <h3 
+                    className="text-xl font-heading mb-2"
+                    style={{ color: 'var(--color-text-primary)' }}
+                  >
+                    No levels found
+                  </h3>
+                  <p 
+                    className="mb-6"
+                    style={{ color: 'var(--color-text-tertiary)' }}
+                  >
+                    Create your first training level for this track
+                  </p>
+                  <div 
+                    className="space-y-2 text-sm"
+                    style={{ color: 'var(--color-text-tertiary)' }}
+                  >
                     <p>Debug Info:</p>
                     <p>Selected track: {selectedTrack}</p>
                     <p>Total levels in database: {levels.length}</p>
@@ -942,11 +1019,17 @@ const AdminCurriculum: React.FC = () => {
 
                       {/* Duration and Difficulty */}
                       <div className="space-y-2 mb-4">
-                        <div className="flex items-center gap-2 text-xs text-teallight">
+                        <div 
+                          className="flex items-center gap-2 text-xs"
+                          style={{ color: 'var(--color-text-tertiary)' }}
+                        >
                           <ClockIcon className="h-3 w-3" />
                           <span>{level.estimatedHours}h estimated</span>
                         </div>
-                        <div className="flex items-center gap-2 text-xs text-teallight">
+                        <div 
+                          className="flex items-center gap-2 text-xs"
+                          style={{ color: 'var(--color-text-tertiary)' }}
+                        >
                           <span className={`px-2 py-1 rounded ${getDifficultyColor(level.difficulty)} text-white`}>
                             {level.difficulty}
                           </span>
@@ -1239,11 +1322,19 @@ const AdminCurriculum: React.FC = () => {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-offblack border border-paperwhite/20 rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+              className="border rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+              style={{
+                backgroundColor: 'var(--color-surface-elevated)',
+                borderColor: 'var(--color-border)',
+                boxShadow: 'var(--shadow-lg)'
+              }}
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-heading text-paperwhite">
+                <h2 
+                  className="text-2xl font-heading"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
                   {editingLevel ? 'Edit Level' : 'Create Level'}
                 </h2>
                 <button
@@ -1544,11 +1635,19 @@ const AdminCurriculum: React.FC = () => {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-offblack border border-paperwhite/20 rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+              className="border rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+              style={{
+                backgroundColor: 'var(--color-surface-elevated)',
+                borderColor: 'var(--color-border)',
+                boxShadow: 'var(--shadow-lg)'
+              }}
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-heading text-paperwhite">
+                <h2 
+                  className="text-2xl font-heading"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
                   {editingContent ? `Edit ${editingContent.type}` : `Add Content`}
                 </h2>
                 <button
