@@ -349,7 +349,11 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
             </div>
           ) : (
                         levelsWithUnlockLogic.map((level) => (
-              <div key={level.id} className="border-b border-paperwhite/10 last:border-b-0">
+              <div 
+                key={level.id} 
+                className="border-b last:border-b-0"
+                style={{ borderColor: 'var(--color-border-subtle)' }}
+              >
                 <div className="flex items-center">
                   <button
                     onClick={() => {
@@ -361,9 +365,13 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                     }}
                     className={`w-full flex items-center py-2 transition-colors text-sm font-${currentLevel === level.id ? 'semibold' : 'normal'} text-left
                       ${currentLevel === level.id ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 
-                        level.isUnlocked ? 'text-paperwhite hover:bg-trueturquoise/20 hover:text-trueturquoise' : 
-                        'text-teallight/50 cursor-not-allowed'}`}
-                    style={{ borderRadius: 0 }}
+                        level.isUnlocked ? 'hover:bg-trueturquoise/20 hover:text-trueturquoise' : 
+                        'cursor-not-allowed opacity-60'}`}
+                    style={{
+                      color: currentLevel === level.id ? 'var(--color-accent-primary)' :
+                             level.isUnlocked ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
+                      borderRadius: 0
+                    }}
                     disabled={!level.isUnlocked}
                   >
                     {level.isUnlocked ? (
@@ -375,8 +383,16 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                       <div className="font-medium">
                         Level {level.order}
                       </div>
-                      <div className="text-xs text-teallight truncate">{level.title}</div>
-                      <div className="text-xs text-teallight/60 flex items-center gap-2 mt-1">
+                      <div 
+                        className="text-xs truncate"
+                        style={{ color: level.isUnlocked ? 'var(--color-text-tertiary)' : 'var(--color-text-muted)' }}
+                      >
+                        {level.title}
+                      </div>
+                      <div 
+                        className="text-xs flex items-center gap-2 mt-1"
+                        style={{ color: level.isUnlocked ? 'var(--color-text-muted)' : 'var(--color-text-muted)' }}
+                      >
                         <span>{level.learn?.length || 0} learn</span>
                         <span>{level.test?.length || 0} test</span>
                         <span>{level.exercise?.length || 0} exercise</span>

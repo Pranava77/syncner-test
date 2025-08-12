@@ -13,16 +13,42 @@ const StaffDashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-offblack flex flex-col items-center justify-center p-8">
-      <div className="bg-paperwhite/10 rounded-xl shadow-lg p-8 max-w-xl w-full text-center">
-        <h1 className="text-3xl font-heading text-paperwhite mb-4">Staff Dashboard</h1>
-        <p className="text-teallight font-label mb-6">Welcome to your staff dashboard. Here you will find tools and resources for staff members.</p>
-        <div className="bg-paperwhite/5 rounded-lg p-6 text-paperwhite mb-6">
+    <div 
+      className="min-h-screen flex flex-col items-center justify-center p-8"
+      style={{ backgroundColor: 'var(--color-primary-bg)' }}
+    >
+      <div 
+        className="rounded-xl shadow-lg p-8 max-w-xl w-full text-center"
+        style={{
+          backgroundColor: 'var(--color-surface)',
+          boxShadow: 'var(--shadow-lg)'
+        }}
+      >
+        <h1 
+          className="text-3xl font-heading mb-4"
+          style={{ color: 'var(--color-text-primary)' }}
+        >
+          Staff Dashboard
+        </h1>
+        <p 
+          className="font-label mb-6"
+          style={{ color: 'var(--color-text-tertiary)' }}
+        >
+          Welcome to your staff dashboard. Here you will find tools and resources for staff members.
+        </p>
+        <div 
+          className="rounded-lg p-6 mb-6"
+          style={{
+            backgroundColor: 'var(--color-tertiary-bg)',
+            color: 'var(--color-text-primary)'
+          }}
+        >
           <p className="text-lg">Staff features coming soon!</p>
         </div>
         <button
           onClick={handleLogout}
-          className="mt-4 bg-rust text-paperwhite px-6 py-2 rounded-lg hover:bg-rust/90 transition-colors font-medium shadow"
+          className="mt-4 bg-rust px-6 py-2 rounded-lg hover:bg-rust/90 transition-colors font-medium shadow"
+          style={{ color: 'var(--color-text-inverse)' }}
         >
           Logout
         </button>

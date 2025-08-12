@@ -297,20 +297,33 @@ const TrainingLevels: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                   onClick={() => handleLevelClick(level)}
-                  className={`bg-offblack border rounded-lg p-6 transition-all duration-300 relative ${
+                  className={`border rounded-lg p-6 transition-all duration-300 relative ${
                     level.isUnlocked 
-                      ? 'border-paperwhite/20 cursor-pointer hover:border-trueturquoise/50 hover:bg-paperwhite/5' 
-                      : 'border-paperwhite/10 cursor-not-allowed opacity-60'
+                      ? 'cursor-pointer hover:border-trueturquoise/50' 
+                      : 'cursor-not-allowed opacity-60'
                   }`}
+                  style={{
+                    backgroundColor: level.isUnlocked ? 'var(--color-surface)' : 'var(--color-tertiary-bg)',
+                    borderColor: level.isUnlocked ? 'var(--color-border)' : 'var(--color-border-subtle)'
+                  }}
                 >
                   {/* Level Order Indicator */}
-                  <div className="absolute top-2 right-2 bg-paperwhite/10 text-paperwhite/60 text-xs px-2 py-1 rounded-full">
+                  <div 
+                    className="absolute top-2 right-2 text-xs px-2 py-1 rounded-full"
+                    style={{
+                      backgroundColor: 'var(--color-tertiary-bg)',
+                      color: 'var(--color-text-muted)'
+                    }}
+                  >
                     #{level.order}
                   </div>
                   
                   {/* Lock Icon for locked levels */}
                   {!level.isUnlocked && (
-                    <div className="absolute top-2 left-2 bg-red-500/20 text-red-400 p-2 rounded-full">
+                    <div 
+                      className="absolute top-2 left-2 text-red-400 p-2 rounded-full"
+                      style={{ backgroundColor: 'rgba(239, 68, 68, 0.2)' }}
+                    >
                       <LockClosedIcon className="h-4 w-4" />
                     </div>
                   )}
@@ -329,13 +342,24 @@ const TrainingLevels: React.FC = () => {
                     </span>
                   </div>
 
-                  <h3 className="text-lg font-heading text-paperwhite mb-2">
+                  <h3 
+                    className="text-lg font-heading mb-2"
+                    style={{ color: level.isUnlocked ? 'var(--color-text-primary)' : 'var(--color-text-muted)' }}
+                  >
                     Level {level.order}: {level.title}
                   </h3>
-                  <p className="text-teallight text-sm mb-4 line-clamp-2">{level.description}</p>
+                  <p 
+                    className="text-sm mb-4 line-clamp-2"
+                    style={{ color: level.isUnlocked ? 'var(--color-text-tertiary)' : 'var(--color-text-muted)' }}
+                  >
+                    {level.description}
+                  </p>
 
                   <div className="space-y-2 mb-4">
-                    <div className="flex items-center gap-2 text-xs text-teallight">
+                    <div 
+                      className="flex items-center gap-2 text-xs"
+                      style={{ color: level.isUnlocked ? 'var(--color-text-tertiary)' : 'var(--color-text-muted)' }}
+                    >
                       <ClockIcon className="h-3 w-3" />
                       <span>{level.estimatedHours}h estimated</span>
                     </div>
@@ -347,7 +371,10 @@ const TrainingLevels: React.FC = () => {
                   </div>
 
                   <div className="flex items-center justify-between">
-                                      <div className="flex items-center gap-4 text-xs text-teallight">
+                                      <div 
+                      className="flex items-center gap-4 text-xs"
+                      style={{ color: level.isUnlocked ? 'var(--color-text-tertiary)' : 'var(--color-text-muted)' }}
+                    >
                     <span className="flex items-center gap-1">
                       <ReaderIcon className="h-3 w-3" />
                       {level.learn.length} learn
