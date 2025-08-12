@@ -420,9 +420,15 @@ const LevelTestPage: React.FC = () => {
 
   if (error || !level) {
     return (
-      <div className="flex h-screen bg-offblack overflow-x-hidden">
+      <div 
+        className="flex h-screen overflow-x-hidden"
+        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+      >
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
-        <main className="flex-1 overflow-y-auto scroll-smooth p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
+        <main 
+          className="flex-1 overflow-y-auto scroll-smooth p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center"
+          style={{ backgroundColor: 'var(--color-primary-bg)' }}
+        >
           <div className="text-center">
             <p className="text-rust text-lg mb-4">{error || 'Level not found'}</p>
             <button 
@@ -440,9 +446,15 @@ const LevelTestPage: React.FC = () => {
   // Check if test is unlocked
   if (!isTestUnlocked) {
     return (
-      <div className="flex h-screen bg-offblack overflow-x-hidden">
+      <div 
+        className="flex h-screen overflow-x-hidden"
+        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+      >
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
+        <main 
+          className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center"
+          style={{ backgroundColor: 'var(--color-primary-bg)' }}
+        >
           <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 text-center">
             <div 
               className="text-6xl mb-4"
@@ -472,9 +484,15 @@ const LevelTestPage: React.FC = () => {
   // Check if test is already completed - show results instead of just completion message
   if (testProgress.isCompleted && !submitted) {
     return (
-      <div className="flex h-screen bg-offblack overflow-x-hidden">
+      <div 
+        className="flex h-screen overflow-x-hidden"
+        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+      >
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
-        <main className="flex-1 overflow-y-auto scroll-smooth p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
+        <main 
+          className="flex-1 overflow-y-auto scroll-smooth p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center"
+          style={{ backgroundColor: 'var(--color-primary-bg)' }}
+        >
           <div className="w-full max-w-5xl bg-gradient-to-r from-green-500/10 to-teallight/10 rounded-xl border border-green-500/30 shadow-lg p-6 text-center">
             <div className="text-green-400 text-6xl mb-4">✓</div>
             <h2 
@@ -507,9 +525,15 @@ const LevelTestPage: React.FC = () => {
   // Show loading state during submission
   if (isSubmitting) {
     return (
-      <div className="flex h-screen bg-offblack overflow-x-hidden">
+      <div 
+        className="flex h-screen overflow-x-hidden"
+        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+      >
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
-        <main className="flex-1 overflow-y-auto scroll-smooth p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center justify-center">
+        <main 
+          className="flex-1 overflow-y-auto scroll-smooth p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center justify-center"
+          style={{ backgroundColor: 'var(--color-primary-bg)' }}
+        >
           <div className="text-center">
             <motion.img
               src={syncnerLogo}
@@ -579,9 +603,15 @@ const LevelTestPage: React.FC = () => {
   
   if (!level.test || level.test.length === 0 || validQuestions.length === 0) {
     return (
-      <div className="flex h-screen bg-offblack overflow-x-hidden">
+      <div 
+        className="flex h-screen overflow-x-hidden"
+        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+      >
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
+        <main 
+          className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center"
+          style={{ backgroundColor: 'var(--color-primary-bg)' }}
+        >
           <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 text-center">
             <div 
               className="text-6xl mb-4"
@@ -607,9 +637,16 @@ const LevelTestPage: React.FC = () => {
   }
 
   return (
-    <div className="flex h-screen bg-offblack overflow-x-hidden">
+    <div 
+      className="flex h-screen overflow-x-hidden"
+      style={{ backgroundColor: 'var(--color-primary-bg)' }}
+    >
       <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
-      <main className="flex-1 overflow-y-auto overflow-x-hidden scroll-smooth p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center" ref={scrollContainerRef}>
+      <main 
+        className="flex-1 overflow-y-auto overflow-x-hidden scroll-smooth p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center"
+        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+        ref={scrollContainerRef}
+      >
         {/* Test Header */}
         <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
           <div className="flex items-center justify-between mb-4">
@@ -913,7 +950,10 @@ const LevelTestPage: React.FC = () => {
           {/* Retake Popup */}
           {showRetakePopup && (
             <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-              <div className="bg-offblack rounded-2xl shadow-2xl p-8 max-w-md w-full border border-paperwhite/20">
+              <div 
+                className="rounded-2xl shadow-2xl p-8 max-w-md w-full border border-paperwhite/20"
+                style={{ backgroundColor: 'var(--color-surface)' }}
+              >
                 <div className="text-center">
                   <div className="w-16 h-16 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
                     <ExclamationTriangleIcon className="h-8 w-8 text-orange-400" />

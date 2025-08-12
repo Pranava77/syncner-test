@@ -165,13 +165,19 @@ const TrainingLevels: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex h-screen bg-offblack">
+      <div 
+        className="flex h-screen"
+        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+      >
         <LevelsSidebar 
           sidebarOpen={sidebarOpen} 
           setSidebarOpen={setSidebarOpen} 
           refreshTrigger={0}
         />
-        <main className="flex-1 overflow-y-auto scroll-smooth p-6 lg:p-12">
+        <main 
+          className="flex-1 overflow-y-auto scroll-smooth p-6 lg:p-12"
+          style={{ backgroundColor: 'var(--color-primary-bg)' }}
+        >
           <div className="max-w-7xl mx-auto">
             <div className="mb-8">
               <h1 
@@ -254,13 +260,19 @@ const TrainingLevels: React.FC = () => {
   }
 
   return (
-    <div className="flex h-screen bg-offblack w-full">
+    <div 
+      className="flex h-screen w-full"
+      style={{ backgroundColor: 'var(--color-primary-bg)' }}
+    >
       <LevelsSidebar 
         sidebarOpen={sidebarOpen} 
         setSidebarOpen={setSidebarOpen} 
         refreshTrigger={0} // No longer needed as refetch is handled by useLevels
       />
-      <main className="flex-1 overflow-y-auto scroll-smooth p-6 lg:p-12">
+      <main 
+        className="flex-1 overflow-y-auto scroll-smooth p-6 lg:p-12"
+        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+      >
         <div className="max-w-6xl mx-auto">
           <div className="mb-8">
             <h1 

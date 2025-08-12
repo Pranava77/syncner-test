@@ -305,9 +305,15 @@ const LevelExercisePage: React.FC = () => {
 
   if (loading || levelsLoading) {
     return (
-      <div className="flex h-screen bg-offblack overflow-x-hidden">
+      <div 
+        className="flex h-screen overflow-x-hidden"
+        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+      >
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="exercise" refreshTrigger={refreshTrigger} />
-        <main className="flex-1 overflow-y-auto scroll-smooth p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center justify-center">
+        <main 
+          className="flex-1 overflow-y-auto scroll-smooth p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center justify-center"
+          style={{ backgroundColor: 'var(--color-primary-bg)' }}
+        >
           <div className="text-center">
             <motion.img
               src={syncnerLogo}
@@ -334,9 +340,15 @@ const LevelExercisePage: React.FC = () => {
 
   if (error || !level) {
     return (
-      <div className="flex h-screen bg-offblack overflow-x-hidden">
+      <div 
+        className="flex h-screen overflow-x-hidden"
+        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+      >
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="exercise" refreshTrigger={refreshTrigger} />
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
+        <main 
+          className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center"
+          style={{ backgroundColor: 'var(--color-primary-bg)' }}
+        >
           <div className="text-center">
             <p className="text-red-400 text-lg mb-4">{error || 'Level not found'}</p>
             <button 
@@ -354,9 +366,15 @@ const LevelExercisePage: React.FC = () => {
   // Check if there are any levels in the current track (only after all loading is complete)
   if (!levelsLoading && allLevels.length > 0 && !hasLevelsInTrack) {
     return (
-      <div className="flex h-screen bg-offblack overflow-x-hidden">
+      <div 
+        className="flex h-screen overflow-x-hidden"
+        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+      >
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="exercise" refreshTrigger={refreshTrigger} />
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
+        <main 
+          className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center"
+          style={{ backgroundColor: 'var(--color-primary-bg)' }}
+        >
           <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 text-center">
             <div 
               className="text-6xl mb-4"
@@ -386,9 +404,15 @@ const LevelExercisePage: React.FC = () => {
   // Check if exercise is unlocked (test must be passed)
   if (!isExerciseUnlocked) {
     return (
-      <div className="flex h-screen bg-offblack overflow-x-hidden">
+      <div 
+        className="flex h-screen overflow-x-hidden"
+        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+      >
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="exercise" refreshTrigger={refreshTrigger} />
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
+        <main 
+          className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center"
+          style={{ backgroundColor: 'var(--color-primary-bg)' }}
+        >
           <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 text-center">
             <div 
               className="text-6xl mb-4"
@@ -419,9 +443,15 @@ const LevelExercisePage: React.FC = () => {
   
   if (!level.exercise || level.exercise.length === 0 || validExercises.length === 0) {
     return (
-      <div className="flex h-screen bg-offblack overflow-x-hidden">
+      <div 
+        className="flex h-screen overflow-x-hidden"
+        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+      >
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="exercise" refreshTrigger={refreshTrigger} />
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
+        <main 
+          className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center"
+          style={{ backgroundColor: 'var(--color-primary-bg)' }}
+        >
           <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 text-center">
             <div 
               className="text-6xl mb-4"
@@ -577,9 +607,15 @@ const LevelExercisePage: React.FC = () => {
   );
 
   return (
-    <div className="flex h-screen bg-offblack overflow-x-hidden">
+    <div 
+      className="flex h-screen overflow-x-hidden"
+      style={{ backgroundColor: 'var(--color-primary-bg)' }}
+    >
       <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="exercise" refreshTrigger={refreshTrigger} />
-      <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
+      <main 
+        className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center"
+        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+      >
         {/* Exercise Header */}
         <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
           <div className="flex items-center justify-between mb-4">
