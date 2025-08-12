@@ -3,7 +3,6 @@ import { HexGrid, Layout, Hexagon } from 'react-hexgrid';
 import { motion } from 'framer-motion';
 import apiService from '../services/api';
 import { useAppSelector } from '../redux/store';
-import { CalendarIcon } from '@radix-ui/react-icons';
 
 const AttendanceHeatmap: React.FC = () => {
   const { user } = useAppSelector((state) => state.auth);
@@ -64,49 +63,10 @@ const AttendanceHeatmap: React.FC = () => {
     return new Date(year, month + 1, 0).getDate();
   }
 
-  // Calculate attendance statistics
-  const totalDays = data.length;
-  const presentDays = data.filter(d => d.count === 1).length;
-  const attendanceRate = totalDays > 0 ? Math.round((presentDays / totalDays) * 100) : 0;
-
   return (
-    <div className="w-full max-w-6xl mx-auto">
-      <div className="bg-gradient-to-br from-paperwhite/5 to-paperwhite/10 rounded-2xl shadow-2xl p-6 lg:p-8 border border-paperwhite/20 backdrop-blur-sm">
-        {/* Header Section */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-trueturquoise/20 to-blue-500/20 rounded-xl flex items-center justify-center">
-              <CalendarIcon className="h-6 w-6 text-trueturquoise" />
-            </div>
-            <div>
-              <h2 className="text-xl lg:text-2xl font-bold text-paperwhite">Attendance Tracker</h2>
-              <p className="text-teallight text-sm">Monitor your daily learning commitment</p>
-            </div>
-          </div>
-          <div className="text-right">
-            <div className="text-2xl font-bold text-trueturquoise">{attendanceRate}%</div>
-            <div className="text-xs text-teallight">Attendance Rate</div>
-          </div>
-        </div>
-
-        {/* Stats Row */}
-        <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="text-center bg-gradient-to-br from-trueturquoise/10 to-blue-500/10 rounded-lg p-3 border border-trueturquoise/20">
-            <div className="text-xl font-bold text-trueturquoise">{totalDays}</div>
-            <div className="text-xs text-teallight">Total Days</div>
-          </div>
-          <div className="text-center bg-gradient-to-br from-green-500/10 to-green-500/5 rounded-lg p-3 border border-green-500/20">
-            <div className="text-xl font-bold text-green-400">{presentDays}</div>
-            <div className="text-xs text-teallight">Present</div>
-          </div>
-          <div className="text-center bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-lg p-3 border border-orange-500/20">
-            <div className="text-xl font-bold text-orange-400">{totalDays - presentDays}</div>
-            <div className="text-xs text-teallight">Absent</div>
-          </div>
-        </div>
-
-        {/* Heatmap Container */}
-        <div className="bg-gradient-to-r from-paperwhite/5 to-paperwhite/10 rounded-xl p-4 border border-paperwhite/20 shadow-lg">
+    <div className="flex flex-col items-center w-full font-primary">
+      <div className="w-full flex flex-col items-center">
+        <div className="bg-paperwhite/10 rounded-xl shadow-lg border border-paperwhite/20 w-full flex flex-col items-center p-2 sm:p-4">
           {loading ? (
             <div className="flex flex-col items-center w-full relative gap-6">
               {/* Single month skeleton to match the actual structure */}
@@ -142,11 +102,7 @@ const AttendanceHeatmap: React.FC = () => {
           ) : (
             <div className="flex flex-col items-center w-full relative gap-6">
               {monthRange.length === 0 && (
-                <div className="text-center py-8">
-                  <div className="text-4xl mb-4">📊</div>
-                  <div className="text-sm text-teallight font-primary">No attendance data available.</div>
-                  <div className="text-xs text-teallight mt-2">Start tracking your daily progress!</div>
-                </div>
+                <div className="text-xs text-teallight font-primary">No attendance data available.</div>
               )}
               {monthRange.map((monthKey) => {
                 const [year, month] = monthKey.split('-').map(Number);
@@ -178,9 +134,6 @@ const AttendanceHeatmap: React.FC = () => {
                   }
                 }
                 const hasData = monthData.length > 0;
-                const monthPresent = monthData.filter(d => d.count === 1).length;
-                const monthRate = Math.round((monthPresent / daysInMonth) * 100);
-                
                 return (
                   <div key={monthKey} className="w-full flex items-center justify-between">
                     <HexGrid 
@@ -265,13 +218,10 @@ const AttendanceHeatmap: React.FC = () => {
                       className="text-sm font-label mb-2 ml-4 whitespace-nowrap min-w-[90px] text-right"
                       style={{ color: hasData ? 'var(--color-grey-label)' : 'var(--color-black)' }}
                     >
-                      <div className="text-paperwhite font-semibold">
-                        {new Date(year, month - 1).toLocaleString('default', { month: 'long', year: 'numeric' })}
-                      </div>
+                      {new Date(year, month - 1).toLocaleString('default', { month: 'long', year: 'numeric' })}
                       {hasData && (
                         <div className="text-xs mt-1 font-label text-teallight">
-                          <div className="text-trueturquoise font-semibold">{monthRate}%</div>
-                          <div>Present: {monthPresent}/{daysInMonth}</div>
+                          Present: {monthData.filter(d => d.count === 1).length}/{daysInMonth}
                         </div>
                       )}
                     </div>
@@ -281,26 +231,7 @@ const AttendanceHeatmap: React.FC = () => {
             </div>
           )}
         </div>
-
-        {/* Legend */}
-        <div className="mt-6 pt-4 border-t border-paperwhite/10">
-          <div className="flex flex-wrap justify-center items-center gap-6 text-xs text-teallight">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-trueturquoise rounded-sm"></div>
-              <span>Present</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-rust rounded-sm"></div>
-              <span>Absent</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-paperwhite/20 rounded-sm border border-paperwhite/30"></div>
-              <span>No Data</span>
-            </div>
-          </div>
-        </div>
       </div>
-      
       {/* Tooltip */}
       {tooltip && (
         <div
@@ -311,7 +242,7 @@ const AttendanceHeatmap: React.FC = () => {
             zIndex: 1000,
             pointerEvents: 'none',
           }}
-          className="bg-gradient-to-br from-paperwhite/10 to-paperwhite/5 text-paperwhite px-4 py-2 rounded-xl shadow-2xl border border-paperwhite/20 text-xs font-label whitespace-nowrap animate-fade-in backdrop-blur-sm"
+          className="bg-offblack text-paperwhite px-4 py-2 rounded-lg shadow-lg border border-paperwhite/20 text-xs font-label whitespace-nowrap animate-fade-in"
         >
           {tooltip.content}
         </div>
