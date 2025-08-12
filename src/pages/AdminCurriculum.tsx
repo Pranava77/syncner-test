@@ -978,8 +978,15 @@ const AdminCurriculum: React.FC = () => {
                   </div>
                 </div>
               ) : (
-                <div className="grid gap-6 grid-cols-1 relative">
-                  {filteredLevels.map((level, index) => (
+                <div 
+                  className="rounded-xl shadow-lg p-8"
+                  style={{
+                    backgroundColor: 'var(--color-surface)',
+                    boxShadow: 'var(--shadow-lg)'
+                  }}
+                >
+                  <div className="grid gap-6 grid-cols-1 relative">
+                    {filteredLevels.map((level, index) => (
                     <motion.div
                       key={level.id}
                       initial={{ opacity: 0, y: 20 }}
@@ -1300,7 +1307,8 @@ const AdminCurriculum: React.FC = () => {
                         </div>
                       </div>
                     </motion.div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               )}
             </>

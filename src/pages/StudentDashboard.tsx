@@ -183,13 +183,25 @@ const StudentDashboard: React.FC = () => {
         className="space-y-6 lg:space-y-8 p-4 lg:p-8"
         style={{ backgroundColor: 'var(--color-primary-bg)' }}
       >
-        <div className={`bg-trueturquoise/10 rounded-xl p-6 lg:p-8 text-paperwhite`}>
+        <div 
+        className="rounded-xl p-6 lg:p-8"
+        style={{
+          background: 'linear-gradient(135deg, rgba(0, 184, 217, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%)',
+          color: 'var(--color-text-primary)'
+        }}
+      >
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
             <div className="flex-1 mb-6 lg:mb-0">
-              <h1 className="text-2xl lg:text-3xl mb-2 text-paperwhite font-heading">
+              <h1 
+              className="text-2xl lg:text-3xl mb-2 font-heading"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
                 Welcome back, {user?.name}! 👋
               </h1>
-              <p className="text-teallight mb-4 lg:mb-6 text-sm lg:text-base font-label">
+              <p 
+              className="mb-4 lg:mb-6 text-sm lg:text-base font-label"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
                 You're on the {user?.careerTrack} track. Let's continue building your career!
               </p>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
@@ -241,7 +253,10 @@ const StudentDashboard: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="bg-paperwhite/10 p-3 lg:p-4 rounded-lg w-fit mx-auto lg:mx-0">
+            <div 
+              className="p-3 lg:p-4 rounded-lg w-fit mx-auto lg:mx-0"
+              style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
+            >
               {/* Placeholder for track icon */}
             </div>
           </div>
@@ -447,7 +462,10 @@ const StudentDashboard: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-offblack p-4">
+      <div 
+        className="min-h-screen flex items-center justify-center p-4"
+        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+      >
         <div className="text-center">
           <motion.img
             src={syncnerLogo}
@@ -484,15 +502,30 @@ const StudentDashboard: React.FC = () => {
   const currentLevelProgress = getCurrentLevelProgress();
 
   return (
-    <div className="space-y-6 lg:space-y-8 p-4 lg:p-8 bg-black">
+    <div 
+      className="space-y-6 lg:space-y-8 p-4 lg:p-8"
+      style={{ backgroundColor: 'var(--color-primary-bg)' }}
+    >
       {/* Welcome Section */}
-      <div className={`bg-trueturquoise/10 rounded-xl p-6 lg:p-8 text-paperwhite`}>
+      <div 
+        className="rounded-xl p-6 lg:p-8"
+        style={{
+          background: 'linear-gradient(135deg, rgba(0, 184, 217, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%)',
+          color: 'var(--color-text-primary)'
+        }}
+      >
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
           <div className="flex-1 mb-6 lg:mb-0">
-            <h1 className="text-2xl lg:text-3xl mb-2 text-paperwhite font-heading">
+            <h1 
+              className="text-2xl lg:text-3xl mb-2 font-heading"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
               Welcome back, {user?.name}! 👋
             </h1>
-            <p className="text-teallight mb-4 lg:mb-6 text-sm lg:text-base font-label">
+            <p 
+              className="mb-4 lg:mb-6 text-sm lg:text-base font-label"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
               You're on the {userTrack} track. Let's continue building your career!
             </p>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
@@ -516,7 +549,10 @@ const StudentDashboard: React.FC = () => {
           </div>
           <div className="flex items-center gap-3">
 
-            <div className="bg-paperwhite/10 p-3 lg:p-4 rounded-lg w-fit">
+            <div 
+              className="p-3 lg:p-4 rounded-lg w-fit"
+              style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
+            >
             {getTrackIcon()}
             </div>
           </div>
@@ -532,7 +568,14 @@ const StudentDashboard: React.FC = () => {
       <div className="grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
           {/* Current Learning */}
-          <div className="bg-gradient-to-br from-paperwhite/5 to-paperwhite/10 rounded-2xl shadow-2xl p-6 lg:p-8 border border-paperwhite/20 backdrop-blur-sm">
+          <div 
+            className="rounded-2xl shadow-2xl p-6 lg:p-8 border backdrop-blur-sm"
+            style={{
+              background: 'linear-gradient(135deg, var(--color-surface) 0%, var(--color-tertiary-bg) 100%)',
+              borderColor: 'var(--color-border)',
+              boxShadow: 'var(--shadow-lg)'
+            }}
+          >
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 bg-gradient-to-br from-trueturquoise/20 to-blue-500/20 rounded-xl flex items-center justify-center">
@@ -549,7 +592,14 @@ const StudentDashboard: React.FC = () => {
             </div>
 
             {currentLevel && completedLevels < levels?.length && !(currentLevel.order === levels?.length && currentLevelProgress === 100) ? (
-              <div className="bg-gradient-to-r from-paperwhite/5 to-paperwhite/10 rounded-xl p-6 border border-paperwhite/20 shadow-lg">
+              <div 
+                className="rounded-xl p-6 border shadow-lg"
+                style={{
+                  background: 'linear-gradient(90deg, var(--color-tertiary-bg) 0%, var(--color-surface) 100%)',
+                  borderColor: 'var(--color-border)',
+                  boxShadow: 'var(--shadow-md)'
+                }}
+              >
                 <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-6">
                   <div className="mb-4 lg:mb-0 flex-1">
                     <div className="flex items-center gap-3 mb-2">
@@ -675,8 +725,17 @@ const StudentDashboard: React.FC = () => {
                     </Link>
                   </div>
                   
-                  <div className="mt-6 p-4 bg-gradient-to-r from-paperwhite/5 to-paperwhite/10 rounded-xl border border-paperwhite/20">
-                    <p className="text-sm text-teallight leading-relaxed">
+                  <div 
+                    className="mt-6 p-4 rounded-xl border"
+                    style={{
+                      background: 'linear-gradient(90deg, var(--color-tertiary-bg) 0%, var(--color-surface) 100%)',
+                      borderColor: 'var(--color-border)'
+                    }}
+                  >
+                    <p 
+                      className="text-sm leading-relaxed"
+                      style={{ color: 'var(--color-text-tertiary)' }}
+                    >
                       🎯 <strong>Track Mastered:</strong> You've successfully completed the {userTrack} track. 
                       Consider exploring other tracks or advanced topics to continue your learning journey.
                     </p>

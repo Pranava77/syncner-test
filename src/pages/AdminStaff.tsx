@@ -195,19 +195,60 @@ const AdminStaff: React.FC = () => {
               placeholder="Search staff..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-4 pr-4 py-2 w-full border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise bg-offblack text-paperwhite placeholder-teallight"
+              className="pl-4 pr-4 py-2 w-full border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise"
+              style={{
+                backgroundColor: 'var(--color-secondary-bg)',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-text-primary)'
+              }}
             />
           </div>
         </div>
         <table className="w-full">
           <thead>
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Name</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Email</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Department</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Role</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Status</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-teallight uppercase tracking-wider bg-offblack">Actions</th>
+              <th 
+                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                style={{
+                  color: 'var(--color-text-tertiary)',
+                  backgroundColor: 'var(--color-secondary-bg)'
+                }}
+              >Name</th>
+              <th 
+                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                style={{
+                  color: 'var(--color-text-tertiary)',
+                  backgroundColor: 'var(--color-secondary-bg)'
+                }}
+              >Email</th>
+              <th 
+                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                style={{
+                  color: 'var(--color-text-tertiary)',
+                  backgroundColor: 'var(--color-secondary-bg)'
+                }}
+              >Department</th>
+              <th 
+                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                style={{
+                  color: 'var(--color-text-tertiary)',
+                  backgroundColor: 'var(--color-secondary-bg)'
+                }}
+              >Role</th>
+              <th 
+                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                style={{
+                  color: 'var(--color-text-tertiary)',
+                  backgroundColor: 'var(--color-secondary-bg)'
+                }}
+              >Status</th>
+              <th 
+                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                style={{
+                  color: 'var(--color-text-tertiary)',
+                  backgroundColor: 'var(--color-secondary-bg)'
+                }}
+              >Actions</th>
             </tr>
           </thead>
           <tbody>
