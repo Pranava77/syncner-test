@@ -98,16 +98,36 @@ const AIChat: React.FC = () => {
         onClick={() => setIsOpen(false)}
       />
       {/* Chat Modal */}
-      <div className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-2xl h-[80vh] flex flex-col border border-gray-200 dark:border-gray-800 animate-fade-in-up">
+      <div 
+        className="relative rounded-2xl shadow-2xl w-full max-w-2xl h-[80vh] flex flex-col border animate-fade-in-up"
+        style={{
+          backgroundColor: 'var(--color-surface)',
+          borderColor: 'var(--color-border)',
+          boxShadow: 'var(--shadow-lg)'
+        }}
+      >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-800">
+        <div 
+          className="flex items-center justify-between px-6 py-4 border-b"
+          style={{ borderColor: 'var(--color-border)' }}
+        >
           <div className="flex items-center space-x-3">
             <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-full">
               <MessageCircle className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h3 className="text-lg font-heading text-gray-900 dark:text-white">AI Career Mentor</h3>
-              <p className="text-xs text-gray-500 dark:text-gray-400 font-label">Ask anything about your career, learning, or skills!</p>
+              <h3 
+                className="text-lg font-heading"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                AI Career Mentor
+              </h3>
+              <p 
+                className="text-xs font-label"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >
+                Ask anything about your career, learning, or skills!
+              </p>
             </div>
           </div>
           <button
@@ -118,7 +138,10 @@ const AIChat: React.FC = () => {
           </button>
         </div>
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4 bg-gray-50 dark:bg-gray-800">
+        <div 
+          className="flex-1 overflow-y-auto px-6 py-4 space-y-4"
+          style={{ backgroundColor: 'var(--color-secondary-bg)' }}
+        >
           {messages.map((message) => (
             <div
               key={message.id}

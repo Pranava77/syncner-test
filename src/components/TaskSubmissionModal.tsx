@@ -166,19 +166,38 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-      <div className="bg-offblack rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto scroll-smooth border border-paperwhite/20">
+      <div 
+        className="rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto scroll-smooth border"
+        style={{
+          backgroundColor: 'var(--color-surface-elevated)',
+          borderColor: 'var(--color-border)',
+          boxShadow: 'var(--shadow-lg)'
+        }}
+      >
         {/* Header */}
-        <div className="sticky top-0 bg-offblack/95 backdrop-blur-sm border-b border-paperwhite/20 p-6 rounded-t-2xl">
+        <div 
+          className="sticky top-0 backdrop-blur-sm border-b p-6 rounded-t-2xl"
+          style={{
+            backgroundColor: 'var(--color-surface-elevated)',
+            borderColor: 'var(--color-border)'
+          }}
+        >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-gradient-to-br from-trueturquoise/20 to-blue-500/20 rounded-xl flex items-center justify-center">
                 <FileTextIcon className="w-6 h-6 text-trueturquoise" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-paperwhite">
+                <h2 
+                  className="text-xl font-bold"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
                   {isEditMode ? 'Edit Submission' : exercise.title}
                 </h2>
-                <p className="text-sm text-teallight max-w-md">
+                <p 
+                  className="text-sm max-w-md"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                >
                   {isEditMode ? `Update your submission for: ${exercise.title}` : exercise.description}
                 </p>
               </div>

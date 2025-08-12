@@ -245,16 +245,24 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
 
   return (
     <aside
-      className={`relative h-full flex flex-col border-r border-paperwhite/20 bg-offblack transition-all duration-300 ${sidebarOpen ? 'w-72' : 'w-16'}`}
-      style={{ minWidth: sidebarOpen ? '18rem' : '4rem' }}
+      className={`relative h-full flex flex-col border-r transition-all duration-300 ${sidebarOpen ? 'w-72' : 'w-16'}`}
+      style={{ 
+        minWidth: sidebarOpen ? '18rem' : '4rem',
+        backgroundColor: 'var(--color-secondary-bg)',
+        borderColor: 'var(--color-border)'
+      }}
     >
       {/* Toggle Button - vertical center, right edge */}
       {setSidebarOpen && (
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className={`absolute top-1/2 -translate-y-1/2 -right-4 z-20 bg-offblack border border-paperwhite/20 shadow-lg p-1 rounded-xl hover:bg-trueturquoise/10 transition`}
+          className={`absolute top-1/2 -translate-y-1/2 -right-4 z-20 border shadow-lg p-1 rounded-xl transition`}
+          style={{
+            backgroundColor: 'var(--color-secondary-bg)',
+            borderColor: 'var(--color-border)',
+            boxShadow: 'var(--shadow-md)'
+          }}
           aria-label={sidebarOpen ? 'Close sidebar' : 'Open sidebar'}
-          style={{ boxShadow: '0 2px 8px 0 rgba(0,0,0,0.10)' }}
         >
           <ChevronRightIcon className={`h-5 w-5 text-trueturquoise transition-transform ${sidebarOpen ? 'rotate-180' : ''}`} />
         </button>

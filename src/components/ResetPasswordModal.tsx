@@ -60,7 +60,14 @@ const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({ open, onClose, 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-      <div className="bg-offblack rounded-xl shadow-2xl p-6 sm:p-8 w-full max-w-md border border-paperwhite/20 relative flex flex-col items-center">
+      <div 
+        className="rounded-xl shadow-2xl p-6 sm:p-8 w-full max-w-md border relative flex flex-col items-center"
+        style={{
+          backgroundColor: 'var(--color-surface-elevated)',
+          borderColor: 'var(--color-border)',
+          boxShadow: 'var(--shadow-lg)'
+        }}
+      >
         <button
           className="absolute top-3 right-3 sm:top-4 sm:right-4 text-paperwhite hover:text-trueturquoise text-xl font-bold"
           onClick={handleClose}
@@ -68,8 +75,23 @@ const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({ open, onClose, 
         >
           ×
         </button>
-        <h2 className="text-xl font-bold text-paperwhite mb-2 text-center w-full">Reset Password</h2>
-        <p className="text-teallight mb-4 text-sm text-center w-full">User: <span className="text-paperwhite font-semibold">{user.name}</span> ({user.email})</p>
+        <h2 
+          className="text-xl font-bold mb-2 text-center w-full"
+          style={{ color: 'var(--color-text-primary)' }}
+        >
+          Reset Password
+        </h2>
+        <p 
+          className="mb-4 text-sm text-center w-full"
+          style={{ color: 'var(--color-text-tertiary)' }}
+        >
+          User: <span 
+            className="font-semibold"
+            style={{ color: 'var(--color-text-primary)' }}
+          >
+            {user.name}
+          </span> ({user.email})
+        </p>
         {success ? (
           <div className="space-y-4 w-full flex flex-col items-center">
             <div className="text-paperwhite text-center">

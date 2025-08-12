@@ -215,7 +215,10 @@ const TrainingLevels: React.FC = () => {
 
   if (error) {
     return (
-      <div className="flex h-screen bg-offblack w-full">
+      <div 
+        className="flex h-screen w-full"
+        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+      >
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <main className="flex-1 p-6 lg:p-12 flex items-center justify-center">
           <div className="text-center max-w-md">

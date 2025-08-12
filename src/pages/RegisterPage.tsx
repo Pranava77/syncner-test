@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from '../redux/store';
 import { registerUser, clearError } from '../redux/slices/authSlice';
 import { getDefaultRoute } from '../utils/routing';
 import { motion } from 'framer-motion';
+import ThemeSwitcher from '../components/ThemeSwitcher';
 import { 
   EnvelopeClosedIcon,
   LockClosedIcon, 
@@ -154,7 +155,15 @@ const RegisterPage: React.FC = () => {
   const passwordStrength = getPasswordStrength(formData.password);
 
   return (
-    <div className="min-h-screen bg-offblack flex items-center justify-center p-4 relative">
+    <div 
+      className="min-h-screen flex items-center justify-center p-4 relative"
+      style={{ backgroundColor: 'var(--color-primary-bg)' }}
+    >
+      {/* Theme Switcher */}
+      <div className="absolute top-4 right-4 z-20">
+        <ThemeSwitcher variant="button" size="sm" />
+      </div>
+      
       {/* Optional: Minimal pattern or leave solid for minimalism */}
       <div className="w-full max-w-md z-10">
         {/* Header */}
@@ -162,12 +171,29 @@ const RegisterPage: React.FC = () => {
           <div className="flex items-center justify-center mb-4">
             <img src={logo} alt="Syncner Logo" className="h-8 w-8 lg:h-10 lg:w-10 object-contain" />
           </div>
-          <h1 className="text-3xl text-paperwhite mb-2 font-heading">Create Account</h1>
-          <p className="text-teallight font-label">Join Syncner and start your learning journey</p>
+          <h1 
+            className="text-3xl mb-2 font-heading"
+            style={{ color: 'var(--color-text-primary)' }}
+          >
+            Create Account
+          </h1>
+          <p 
+            className="font-label"
+            style={{ color: 'var(--color-text-tertiary)' }}
+          >
+            Join Syncner and start your learning journey
+          </p>
         </div>
 
         {/* Form */}
-        <div className="bg-paperwhite/10 backdrop-blur-md rounded-xl shadow-2xl p-6 border border-paperwhite/10">
+        <div 
+          className="backdrop-blur-md rounded-xl p-6 border"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            borderColor: 'var(--color-border)',
+            boxShadow: 'var(--shadow-lg)'
+          }}
+        >
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
               <div className="bg-rust/10 border border-rust/30 rounded-lg p-4 flex items-center space-x-3">
