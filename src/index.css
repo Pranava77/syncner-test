@@ -98,13 +98,13 @@ p, .body {
 
 :root {
   /* Light mode theme (default) */
-  --color-primary-bg: #c6c6c6;
-  --color-secondary-bg: #d7d8d8;
-  --color-tertiary-bg: #f9f9f9;
-  --color-surface: #FFFFFF;
-  --color-surface-elevated: #FFFFFF;
-  --color-border: #E5E7EB;
-  --color-border-subtle: #F3F4F6;
+  --color-primary-bg: #d5c9c9;
+  --color-secondary-bg: #b7b7b7;
+  --color-tertiary-bg: #adadad;
+  --color-surface: #969696;
+  --color-surface-elevated: #817b7b;
+  --color-border: #dacaca;
+  --color-border-subtle: #ffffff;
   
   --color-text-primary: #111827;
   --color-text-secondary: #374151;
