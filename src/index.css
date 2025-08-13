@@ -98,11 +98,11 @@ p, .body {
 
 :root {
  /* Light mode theme (revised) */
---color-primary-bg: #212a91;
---color-secondary-bg: #495db7;
---color-tertiary-bg: #9093e8;
---color-surface: #787bde;
---color-surface-elevated: #888585;
+--color-primary-bg: #c6d9d2;
+--color-secondary-bg: #B9e5e8;
+--color-tertiary-bg: #78B2D3;
+--color-surface: #4A628A;
+--color-surface-elevated: #DFF2EB;
 --color-border: #2d2dd9;
 --color-border-subtle: #EAEAEA;
 
