@@ -98,9 +98,9 @@ p, .body {
 
 :root {
   /* Light mode theme (default) */
-  --color-primary-bg: #FFFFFF;
-  --color-secondary-bg: #F8F9FA;
-  --color-tertiary-bg: #F1F3F4;
+  --color-primary-bg: #c6c6c6;
+  --color-secondary-bg: #d7d8d8;
+  --color-tertiary-bg: #f9f9f9;
   --color-surface: #FFFFFF;
   --color-surface-elevated: #FFFFFF;
   --color-border: #E5E7EB;
