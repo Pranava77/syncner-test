@@ -188,9 +188,15 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
 
   if (loading) {
     return (
-      <div className={`bg-offblack border-r border-paperwhite/10 transition-all duration-300 ${
-        sidebarOpen ? 'w-80' : 'w-0'
-      } overflow-hidden`}>
+      <div 
+        className={`border-r transition-all duration-300 ${
+          sidebarOpen ? 'w-80' : 'w-0'
+        } overflow-hidden`}
+        style={{ 
+          backgroundColor: 'var(--color-secondary-bg)',
+          borderColor: 'var(--color-border)'
+        }}
+      >
         <div className={`flex-1 flex flex-col relative ${sidebarOpen ? 'py-24 pl-2' : 'py-2'}`}>
           {sidebarOpen && (
             <div className="flex items-center justify-between mb-4 transition-opacity duration-200">
@@ -222,9 +228,15 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
 
   if (error) {
     return (
-      <div className={`bg-offblack border-r border-paperwhite/10 transition-all duration-300 ${
-        sidebarOpen ? 'w-80' : 'w-0'
-      } overflow-hidden`}>
+      <div 
+        className={`border-r transition-all duration-300 ${
+          sidebarOpen ? 'w-80' : 'w-0'
+        } overflow-hidden`}
+        style={{ 
+          backgroundColor: 'var(--color-secondary-bg)',
+          borderColor: 'var(--color-border)'
+        }}
+      >
         <div className={`flex-1 flex flex-col relative ${sidebarOpen ? 'py-24 pl-2' : 'py-2'}`}>
           {sidebarOpen && (
             <div className="flex items-center justify-between mb-4 transition-opacity duration-200">
