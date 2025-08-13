@@ -98,12 +98,12 @@ p, .body {
 
 :root {
  /* Light mode theme (revised) */
---color-primary-bg: #FFFFFF;
---color-secondary-bg: #F5F5F5;
---color-tertiary-bg: #E5E5E5;
---color-surface: #F5F5F5;
---color-surface-elevated: #E5E5E5;
---color-border: #D4D4D4;
+--color-primary-bg: #212a91;
+--color-secondary-bg: #495db7;
+--color-tertiary-bg: #9093e8;
+--color-surface: #787bde;
+--color-surface-elevated: #888585;
+--color-border: #2d2dd9;
 --color-border-subtle: #EAEAEA;
 
 --color-text-primary: #121212;
@@ -112,9 +112,9 @@ p, .body {
 --color-text-muted: #6B7280;
 --color-text-inverse: #FAFAFA;
 
---color-accent-primary: #001aae;
---color-accent-secondary: #1542b4;
---color-accent-tertiary: #303030;
+--color-accent-primary: #00B8D9;
+--color-accent-secondary: #00899c;
+--color-accent-tertiary: #E0F7FA;
   
   --color-success: #10B981;
   --color-warning: #F59E0B;
