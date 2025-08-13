@@ -117,9 +117,25 @@ const LoginPage: React.FC = () => {
 
   if (isAuthenticated && user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-        <div className="bg-white/10 p-8 rounded-xl shadow-xl text-center">
-          <h2 className="text-2xl font-bold text-white mb-4">You are already signed in as {user.name} ({user.role})</h2>
+      <div 
+        className="min-h-screen flex items-center justify-center"
+        style={{ 
+          background: 'linear-gradient(to bottom right, var(--color-primary-bg), var(--color-secondary-bg), var(--color-tertiary-bg))'
+        }}
+      >
+        <div 
+          className="p-8 rounded-xl shadow-xl text-center"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            border: '1px solid var(--color-border)'
+          }}
+        >
+          <h2 
+            className="text-2xl font-bold mb-4"
+            style={{ color: 'var(--color-text-primary)' }}
+          >
+            You are already signed in as {user.name} ({user.role})
+          </h2>
           <button
             onClick={() => dispatch(logoutUser())}
             className="mt-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all font-medium"
@@ -179,7 +195,11 @@ const LoginPage: React.FC = () => {
 
           <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm text-paperwhite mb-2 font-label">
+              <label 
+                htmlFor="email" 
+                className="block text-sm mb-2 font-label"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
                 Email
               </label>
               <div className="relative">
@@ -192,9 +212,14 @@ const LoginPage: React.FC = () => {
                     setEmail(e.target.value);
                     if (emailError) setEmailError('');
                   }}
-                  className={`w-full pl-10 lg:pl-12 pr-4 py-2.5 lg:py-3 bg-offblack/60 border rounded-lg focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors text-paperwhite placeholder-teallight text-sm lg:text-base ${
-                    emailError ? 'border-rust' : 'border-paperwhite/20'
+                  className={`w-full pl-10 lg:pl-12 pr-4 py-2.5 lg:py-3 border rounded-lg focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors text-sm lg:text-base ${
+                    emailError ? 'border-rust' : ''
                   }`}
+                  style={{
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    borderColor: emailError ? undefined : 'var(--color-border)',
+                    color: 'var(--color-text-primary)'
+                  }}
                   placeholder="Enter your email"
                   required
                 />
@@ -205,7 +230,11 @@ const LoginPage: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm text-paperwhite mb-2 font-label">
+              <label 
+                htmlFor="password" 
+                className="block text-sm mb-2 font-label"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
                 Password
               </label>
               <div className="relative">
@@ -218,9 +247,14 @@ const LoginPage: React.FC = () => {
                     setPassword(e.target.value);
                     if (passwordError) setPasswordError('');
                   }}
-                  className={`w-full pl-10 lg:pl-12 pr-4 py-2.5 lg:py-3 bg-offblack/60 border rounded-lg focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors text-paperwhite placeholder-teallight text-sm lg:text-base ${
-                    passwordError ? 'border-rust' : 'border-paperwhite/20'
+                  className={`w-full pl-10 lg:pl-12 pr-4 py-2.5 lg:py-3 border rounded-lg focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors text-sm lg:text-base ${
+                    passwordError ? 'border-rust' : ''
                   }`}
+                  style={{
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    borderColor: passwordError ? undefined : 'var(--color-border)',
+                    color: 'var(--color-text-primary)'
+                  }}
                   placeholder="Enter your password"
                   required
                 />
