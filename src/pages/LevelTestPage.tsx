@@ -455,7 +455,13 @@ const LevelTestPage: React.FC = () => {
           className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center"
           style={{ backgroundColor: 'var(--color-primary-bg)' }}
         >
-          <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 text-center">
+          <div 
+            className="w-full max-w-5xl rounded-xl border shadow-lg p-6 text-center"
+            style={{
+              backgroundColor: 'var(--color-tertiary-bg)',
+              borderColor: 'var(--color-border)'
+            }}
+          >
             <div 
               className="text-6xl mb-4"
               style={{ color: 'var(--color-text-muted)' }}
@@ -493,7 +499,13 @@ const LevelTestPage: React.FC = () => {
           className="flex-1 overflow-y-auto scroll-smooth p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center"
           style={{ backgroundColor: 'var(--color-primary-bg)' }}
         >
-          <div className="w-full max-w-5xl bg-gradient-to-r from-green-500/10 to-teallight/10 rounded-xl border border-green-500/30 shadow-lg p-6 text-center">
+          <div 
+            className="w-full max-w-5xl rounded-xl border shadow-lg p-6 text-center"
+            style={{
+              background: 'linear-gradient(to right, rgba(34, 197, 94, 0.1), rgba(20, 184, 166, 0.1))',
+              borderColor: 'rgba(34, 197, 94, 0.3)'
+            }}
+          >
             <div className="text-green-400 text-6xl mb-4">✓</div>
             <h2 
               className="text-2xl font-bold mb-2"
@@ -561,21 +573,42 @@ const LevelTestPage: React.FC = () => {
   // Check if max attempts reached or cooldown active (only before taking test and not after passing)
   if (!submitted && !testPassed && (currentAttempt >= 3 && !canRetake)) {
     return (
-      <div className="flex h-screen bg-offblack overflow-x-hidden">
+      <div 
+        className="flex h-screen overflow-x-hidden"
+        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+      >
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 bg-offblack max-w-full flex flex-col items-center">
-          <div className="w-full max-w-5xl bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-2xl border border-orange-500/30 shadow-2xl p-8 text-center">
+        <main 
+          className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center"
+          style={{ backgroundColor: 'var(--color-primary-bg)' }}
+        >
+          <div 
+            className="w-full max-w-5xl rounded-2xl border shadow-2xl p-8 text-center"
+            style={{
+              background: 'linear-gradient(to right, rgba(249, 115, 22, 0.1), rgba(239, 68, 68, 0.1))',
+              borderColor: 'rgba(249, 115, 22, 0.3)'
+            }}
+          >
             <div className="w-20 h-20 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
               <ExclamationTriangleIcon className="h-10 w-10 text-orange-400" />
             </div>
-            <h2 className="text-3xl font-bold text-paperwhite mb-3">
+            <h2 
+              className="text-3xl font-bold mb-3"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
               Maximum Attempts Reached
             </h2>
             <p className="text-teallight mb-6 text-lg leading-relaxed">
               You have used all 3 attempts for this test. Please wait 5 hours before retaking.
             </p>
             {retakeTimer && (
-              <div className="bg-gradient-to-r from-paperwhite/5 to-paperwhite/10 rounded-xl p-6 mb-6 border border-paperwhite/20">
+              <div 
+                className="rounded-xl p-6 mb-6 border"
+                style={{
+                  background: 'linear-gradient(to right, var(--color-tertiary-bg), var(--color-secondary-bg))',
+                  borderColor: 'var(--color-border)'
+                }}
+              >
                 <div className="text-trueturquoise font-semibold mb-2 text-sm">Time until you can retake:</div>
                 <div 
                   className="text-3xl font-bold"
@@ -648,7 +681,13 @@ const LevelTestPage: React.FC = () => {
         ref={scrollContainerRef}
       >
         {/* Test Header */}
-        <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
+        <div 
+          className="w-full max-w-5xl rounded-xl border shadow-lg p-6 mb-8"
+          style={{
+            backgroundColor: 'var(--color-tertiary-bg)',
+            borderColor: 'var(--color-border)'
+          }}
+        >
           <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-4">
                 <div className="bg-trueturquoise text-offblack p-3 rounded-lg">
@@ -667,14 +706,26 @@ const LevelTestPage: React.FC = () => {
             </div>
               </div>
               <div className="flex items-center gap-6">
-                <div className="text-center bg-paperwhite/5 rounded-lg p-4 border border-paperwhite/10">
+                <div 
+                  className="text-center rounded-lg p-4 border"
+                  style={{
+                    backgroundColor: 'var(--color-tertiary-bg)',
+                    borderColor: 'var(--color-border)'
+                  }}
+                >
                   <div className="flex items-center gap-2 mb-2">
                     <ClockIcon className="h-5 w-5 text-trueturquoise" />
                     <div className="text-2xl font-bold text-trueturquoise">{formatTime(timeLeft)}</div>
                   </div>
                   <div className="text-xs text-teallight font-label">Time Remaining</div>
                 </div>
-                <div className="text-center bg-paperwhite/5 rounded-lg p-4 border border-paperwhite/10">
+                <div 
+                  className="text-center rounded-lg p-4 border"
+                  style={{
+                    backgroundColor: 'var(--color-tertiary-bg)',
+                    borderColor: 'var(--color-border)'
+                  }}
+                >
                   <div 
                     className="text-2xl font-bold mb-2"
                     style={{ color: 'var(--color-text-primary)' }}
@@ -693,7 +744,14 @@ const LevelTestPage: React.FC = () => {
               <div className="w-full max-w-5xl space-y-6 pb-8">
                 <form onSubmit={handleSubmit} className="space-y-6">
           {validQuestions.map((question, qIdx) => (
-            <div key={qIdx} className="bg-paperwhite/5 rounded-xl border border-paperwhite/20 shadow-lg p-6">
+            <div 
+              key={qIdx} 
+              className="rounded-xl border shadow-lg p-6"
+              style={{
+                backgroundColor: 'var(--color-tertiary-bg)',
+                borderColor: 'var(--color-border)'
+              }}
+            >
               <h3 
                 className="text-lg font-semibold mb-4"
                 style={{ color: 'var(--color-text-primary)' }}
@@ -705,18 +763,31 @@ const LevelTestPage: React.FC = () => {
                 {question.options.map((option, optIdx) => (
                           <div 
                             key={optIdx} 
-                            className={`flex items-center p-4 border rounded-lg cursor-pointer hover:bg-paperwhite/5 transition-colors ${
+                            className={`flex items-center p-4 border rounded-lg cursor-pointer transition-colors ${
                               answers[qIdx]?.[optIdx] 
                                 ? 'bg-trueturquoise/20 border-trueturquoise/30' 
-                                : 'bg-paperwhite/5 border-paperwhite/10'
+                                : ''
                             }`}
+                            style={{
+                              backgroundColor: answers[qIdx]?.[optIdx] 
+                                ? 'rgba(20, 184, 166, 0.2)' 
+                                : 'var(--color-tertiary-bg)',
+                              borderColor: answers[qIdx]?.[optIdx]
+                                ? 'rgba(20, 184, 166, 0.3)'
+                                : 'var(--color-border)'
+                            }}
                             onClick={() => handleCheck(qIdx, optIdx)}
                           >
                             <div className={`w-6 h-6 rounded border-2 flex items-center justify-center mr-4 transition-colors duration-200 ${
                               answers[qIdx]?.[optIdx]
                                 ? 'bg-trueturquoise border-trueturquoise'
-                                : 'border-paperwhite/20'
-                            }`}>
+                                : ''
+                            }`}
+                            style={{
+                              borderColor: answers[qIdx]?.[optIdx]
+                                ? 'var(--color-accent)'
+                                : 'var(--color-border)'
+                            }}>
                               {answers[qIdx]?.[optIdx] && (
                                 <CheckCircledIcon className="h-4 w-4 text-offblack" aria-hidden="true" />
                               )}
@@ -813,8 +884,12 @@ const LevelTestPage: React.FC = () => {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <button 
                     onClick={() => navigate(`/student/training/${levelId}/learn`)}
-                    className="bg-paperwhite/10 px-8 py-3 rounded-xl font-semibold hover:bg-paperwhite/20 transition-colors text-lg shadow-lg border border-paperwhite/20"
-                    style={{ color: 'var(--color-text-primary)' }}
+                    className="px-8 py-3 rounded-xl font-semibold transition-colors text-lg shadow-lg border"
+                    style={{ 
+                      color: 'var(--color-text-primary)',
+                      backgroundColor: 'var(--color-tertiary-bg)',
+                      borderColor: 'var(--color-border)'
+                    }}
                   >
                     Back to Learning
                   </button>
@@ -830,7 +905,13 @@ const LevelTestPage: React.FC = () => {
               </div>
 
               {/* Answers Review Section */}
-              <div className="bg-paperwhite/5 rounded-xl border border-paperwhite/20 shadow-lg p-6">
+              <div 
+                className="rounded-xl border shadow-lg p-6"
+                style={{
+                  backgroundColor: 'var(--color-tertiary-bg)',
+                  borderColor: 'var(--color-border)'
+                }}
+              >
                 <h3 
                 className="text-xl font-bold mb-6 text-center"
                 style={{ color: 'var(--color-text-primary)' }}
@@ -854,7 +935,14 @@ const LevelTestPage: React.FC = () => {
 
                     
                     return (
-                      <div key={qIdx} className="bg-paperwhite/5 rounded-lg border border-paperwhite/10 p-4">
+                      <div 
+                        key={qIdx} 
+                        className="rounded-lg border p-4"
+                        style={{
+                          backgroundColor: 'var(--color-tertiary-bg)',
+                          borderColor: 'var(--color-border)'
+                        }}
+                      >
                                               <h4 
                         className="text-lg font-semibold mb-3"
                         style={{ color: 'var(--color-text-primary)' }}
@@ -873,8 +961,16 @@ const LevelTestPage: React.FC = () => {
                                     : 'bg-red-500/20 border-red-500/30'
                                   : optIdx === correctAnswerIndex
                                     ? 'bg-green-500/20 border-green-500/30'
-                                    : 'bg-paperwhite/5 border-paperwhite/10'
+                                    : ''
                               }`}
+                              style={{
+                                backgroundColor: (optIdx === userAnswerIndex || optIdx === correctAnswerIndex) 
+                                  ? undefined 
+                                  : 'var(--color-tertiary-bg)',
+                                borderColor: (optIdx === userAnswerIndex || optIdx === correctAnswerIndex)
+                                  ? undefined
+                                  : 'var(--color-border)'
+                              }}
                             >
                               <div className={`w-5 h-5 rounded border-2 flex items-center justify-center mr-3 ${
                                 optIdx === userAnswerIndex
@@ -883,8 +979,13 @@ const LevelTestPage: React.FC = () => {
                                     : 'bg-red-500 border-red-500'
                                   : optIdx === correctAnswerIndex
                                     ? 'bg-green-500 border-green-500'
-                                    : 'border-paperwhite/20'
-                              }`}>
+                                    : ''
+                              }`}
+                              style={{
+                                borderColor: (optIdx === userAnswerIndex || optIdx === correctAnswerIndex)
+                                  ? undefined
+                                  : 'var(--color-border)'
+                              }}>
                                 {optIdx === userAnswerIndex && (
                                   <CheckCircledIcon className="h-3 w-3 text-white" aria-hidden="true" />
                                 )}
@@ -968,7 +1069,13 @@ const LevelTestPage: React.FC = () => {
                     You have used all 3 attempts for this test. Please wait 5 hours before retaking.
                   </p>
                   {retakeTimer && (
-                    <div className="bg-gradient-to-r from-paperwhite/5 to-paperwhite/10 rounded-xl p-6 mb-6 border border-paperwhite/20">
+                    <div 
+                      className="rounded-xl p-6 mb-6 border"
+                      style={{
+                        background: 'linear-gradient(to right, var(--color-tertiary-bg), var(--color-secondary-bg))',
+                        borderColor: 'var(--color-border)'
+                      }}
+                    >
                       <div className="text-trueturquoise font-semibold mb-2 text-sm">Time until you can retake:</div>
                       <div 
                         className="text-3xl font-bold"
@@ -987,8 +1094,12 @@ const LevelTestPage: React.FC = () => {
                     </button>
                     <button 
                       onClick={() => navigate(`/student/training/${levelId}/learn`)}
-                      className="bg-paperwhite/10 px-6 py-3 rounded-xl font-semibold hover:bg-paperwhite/20 transition-colors border border-paperwhite/20"
-                      style={{ color: 'var(--color-text-primary)' }}
+                      className="px-6 py-3 rounded-xl font-semibold transition-colors border"
+                      style={{ 
+                        color: 'var(--color-text-primary)',
+                        backgroundColor: 'var(--color-tertiary-bg)',
+                        borderColor: 'var(--color-border)'
+                      }}
                     >
                       Back to Learning
                     </button>
