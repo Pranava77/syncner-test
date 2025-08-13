@@ -122,7 +122,11 @@ const AdminSettings: React.FC = () => {
           <p className="text-rust mb-4">{settingsError}</p>
           <button
             onClick={() => dispatch(fetchSettings())}
-            className="bg-[#00B8D9] text-[#121212] px-4 py-2 rounded-lg hover:bg-[#00B8D9]/90 transition-colors"
+            className="px-4 py-2 rounded-lg transition-colors"
+            style={{
+              backgroundColor: 'var(--color-accent-primary)',
+              color: 'var(--color-text-inverse)'
+            }}
           >
             Retry
           </button>
@@ -163,13 +167,13 @@ const AdminSettings: React.FC = () => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`py-2 px-1 border-b-2 font-medium text-lg flex items-center space-x-2 transition-colors duration-200
-                  ${activeTab === tab.id
-                    ? 'text-[#00B8D9] border-b-2 border-[#00B8D9]'
-                    : 'hover:text-[#00B8D9] border-b-2 border-transparent'}`}
+                className={`py-2 px-1 border-b-2 font-medium text-lg flex items-center space-x-2 transition-colors duration-200 ${
+                  activeTab === tab.id ? 'border-b-2' : 'border-b-2 border-transparent'
+                }`}
                 style={{
                   backgroundColor: activeTab === tab.id ? 'var(--color-secondary-bg)' : 'var(--color-surface)',
-                  color: activeTab === tab.id ? 'var(--color-accent-primary)' : 'var(--color-text-muted)'
+                  color: activeTab === tab.id ? 'var(--color-accent-primary)' : 'var(--color-text-muted)',
+                  borderColor: activeTab === tab.id ? 'var(--color-accent-primary)' : 'transparent'
                 }}
               >
                 <Icon className="h-5 w-5" />
@@ -181,22 +185,28 @@ const AdminSettings: React.FC = () => {
       </div>
 
       {/* Tab Content */}
-      <div className="space-y-8">
+      <div className="space-y-8 p-6 rounded-xl" style={{ backgroundColor: 'var(--color-surface-elevated)' }}>
         {/* General Settings */}
         {activeTab === 'general' && (
-          <div className="bg-paperwhite/10 rounded-xl shadow-lg p-6">
+          <div 
+            className="rounded-xl shadow-lg p-6"
+            style={{
+              backgroundColor: 'var(--color-surface)',
+              boxShadow: 'var(--shadow-md)'
+            }}
+          >
             <h2 
               className="text-xl mb-6 font-heading"
               style={{ color: 'var(--color-text-primary)' }}
             >
               General Settings
             </h2>
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-8">
               {/* All inputs now use theme-aware styling */}
-              <div>
+              <div className="space-y-2">
                 <label 
-                  className="block text-sm mb-2 font-label"
-                  style={{ color: 'var(--color-text-tertiary)' }}
+                  className="block text-sm font-medium font-label"
+                  style={{ color: 'var(--color-text-secondary)' }}
                 >
                   Platform Name
                 </label>
@@ -204,7 +214,7 @@ const AdminSettings: React.FC = () => {
                   type="text"
                   value={settingsDraft?.general?.platformName ?? ''}
                   onChange={(e) => handleSettingChange('general', 'platformName', e.target.value)}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9]"
+                  className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition-all hover:border-trueturquoise/60"
                   style={{
                     backgroundColor: 'var(--color-secondary-bg)',
                     borderColor: 'var(--color-border)',
@@ -212,10 +222,10 @@ const AdminSettings: React.FC = () => {
                   }}
                 />
               </div>
-              <div>
+              <div className="space-y-2">
                 <label 
-                  className="block text-sm mb-2 font-label"
-                  style={{ color: 'var(--color-text-tertiary)' }}
+                  className="block text-sm font-medium font-label"
+                  style={{ color: 'var(--color-text-secondary)' }}
                 >
                   Support Email
                 </label>
@@ -223,7 +233,7 @@ const AdminSettings: React.FC = () => {
                   type="email"
                   value={settingsDraft?.general?.supportEmail ?? ''}
                   onChange={(e) => handleSettingChange('general', 'supportEmail', e.target.value)}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9]"
+                  className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition-all hover:border-trueturquoise/60"
                   style={{
                     backgroundColor: 'var(--color-secondary-bg)',
                     borderColor: 'var(--color-border)',
@@ -231,10 +241,10 @@ const AdminSettings: React.FC = () => {
                   }}
                 />
               </div>
-              <div>
+              <div className="space-y-2">
                 <label 
-                  className="block text-sm mb-2 font-label"
-                  style={{ color: 'var(--color-text-tertiary)' }}
+                  className="block text-sm font-medium font-label"
+                  style={{ color: 'var(--color-text-secondary)' }}
                 >
                   Max Students per Admin
                 </label>
@@ -242,7 +252,7 @@ const AdminSettings: React.FC = () => {
                   type="number"
                   value={settingsDraft?.general?.maxStudentsPerAdmin ?? 0}
                   onChange={(e) => handleSettingChange('general', 'maxStudentsPerAdmin', parseInt(e.target.value))}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9]"
+                  className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition-all hover:border-trueturquoise/60"
                   style={{
                     backgroundColor: 'var(--color-secondary-bg)',
                     borderColor: 'var(--color-border)',
@@ -250,10 +260,10 @@ const AdminSettings: React.FC = () => {
                   }}
                 />
               </div>
-              <div>
+              <div className="space-y-2">
                 <label 
-                  className="block text-sm mb-2 font-label"
-                  style={{ color: 'var(--color-text-tertiary)' }}
+                  className="block text-sm font-medium font-label"
+                  style={{ color: 'var(--color-text-secondary)' }}
                 >
                   Session Timeout (minutes)
                 </label>
@@ -261,7 +271,7 @@ const AdminSettings: React.FC = () => {
                   type="number"
                   value={settingsDraft?.general?.sessionTimeout ?? 0}
                   onChange={(e) => handleSettingChange('general', 'sessionTimeout', parseInt(e.target.value))}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9]"
+                  className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition-all hover:border-trueturquoise/60"
                   style={{
                     backgroundColor: 'var(--color-secondary-bg)',
                     borderColor: 'var(--color-border)',
@@ -269,10 +279,10 @@ const AdminSettings: React.FC = () => {
                   }}
                 />
               </div>
-              <div>
+              <div className="space-y-2">
                 <label 
-                  className="block text-sm mb-2 font-label"
-                  style={{ color: 'var(--color-text-tertiary)' }}
+                  className="block text-sm font-medium font-label"
+                  style={{ color: 'var(--color-text-secondary)' }}
                 >
                   Site Name
                 </label>
@@ -280,7 +290,7 @@ const AdminSettings: React.FC = () => {
                   type="text"
                   value={settingsDraft?.general?.siteName ?? ''}
                   onChange={(e) => handleSettingChange('general', 'siteName', e.target.value)}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9]"
+                  className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition-all hover:border-trueturquoise/60"
                   style={{
                     backgroundColor: 'var(--color-secondary-bg)',
                     borderColor: 'var(--color-border)',
@@ -288,10 +298,10 @@ const AdminSettings: React.FC = () => {
                   }}
                 />
               </div>
-              <div>
+              <div className="space-y-2">
                 <label 
-                  className="block text-sm mb-2 font-label"
-                  style={{ color: 'var(--color-text-tertiary)' }}
+                  className="block text-sm font-medium font-label"
+                  style={{ color: 'var(--color-text-secondary)' }}
                 >
                   Site Description
                 </label>
@@ -299,7 +309,7 @@ const AdminSettings: React.FC = () => {
                   type="text"
                   value={settingsDraft?.general?.siteDescription ?? ''}
                   onChange={(e) => handleSettingChange('general', 'siteDescription', e.target.value)}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#00B8D9]/40 focus:border-[#00B8D9]"
+                  className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition-all hover:border-trueturquoise/60"
                   style={{
                     backgroundColor: 'var(--color-secondary-bg)',
                     borderColor: 'var(--color-border)',
@@ -327,10 +337,10 @@ const AdminSettings: React.FC = () => {
               Integrations
             </h3>
             {/* Gemini API Key */}
-            <div>
+            <div className="space-y-3 p-6 rounded-lg border" style={{ borderColor: 'var(--color-border)' }}>
               <label 
-                className="block text-sm mb-2 font-label"
-                style={{ color: 'var(--color-text-primary)' }}
+                className="block text-sm font-medium font-label"
+                style={{ color: 'var(--color-text-secondary)' }}
               >
                 Gemini API Key
               </label>
@@ -338,7 +348,7 @@ const AdminSettings: React.FC = () => {
                 type="text"
                 value={geminiKeyInput}
                 onChange={handleGeminiKeyChange}
-                className="w-full px-4 py-2 border rounded-lg"
+                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition-all hover:border-trueturquoise/60"
                 style={{
                   backgroundColor: 'var(--color-secondary-bg)',
                   borderColor: 'var(--color-border)',
@@ -354,10 +364,10 @@ const AdminSettings: React.FC = () => {
               </p>
             </div>
             {/* Email Provider */}
-            <div>
+            <div className="space-y-3 p-6 rounded-lg border" style={{ borderColor: 'var(--color-border)' }}>
               <label 
-                className="block text-sm mb-2 font-label"
-                style={{ color: 'var(--color-text-primary)' }}
+                className="block text-sm font-medium font-label"
+                style={{ color: 'var(--color-text-secondary)' }}
               >
                 Email Provider
               </label>
@@ -365,7 +375,7 @@ const AdminSettings: React.FC = () => {
                 type="text"
                 value={settingsDraft?.integrations?.emailProvider ?? ''}
                 onChange={e => handleSettingChange('integrations', 'emailProvider', e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg"
+                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition-all hover:border-trueturquoise/60"
                 style={{
                   backgroundColor: 'var(--color-secondary-bg)',
                   borderColor: 'var(--color-border)',
@@ -381,18 +391,26 @@ const AdminSettings: React.FC = () => {
               </p>
             </div>
             {/* Analytics Enabled Toggle */}
-            <div className="flex items-center justify-between">
-              <span 
-                className="font-medium"
-                style={{ color: 'var(--color-text-primary)' }}
-              >
-                Analytics Enabled
-              </span>
+            <div className="flex items-center justify-between p-6 rounded-lg border" style={{ borderColor: 'var(--color-border)' }}>
+              <div className="space-y-1">
+                <span 
+                  className="font-medium block"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  Analytics Enabled
+                </span>
+                <span 
+                  className="text-sm"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                >
+                  Track user engagement and platform usage
+                </span>
+              </div>
               <button
                 type="button"
                 className="w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300"
                 style={{
-                  backgroundColor: settingsDraft?.integrations?.analyticsEnabled ? '#00B8D9' : 'var(--color-secondary-bg)'
+                  backgroundColor: settingsDraft?.integrations?.analyticsEnabled ? 'var(--color-accent-primary)' : 'var(--color-secondary-bg)'
                 }}
                 onClick={() => handleSettingChange('integrations', 'analyticsEnabled', !settingsDraft?.integrations?.analyticsEnabled)}
               >
@@ -403,18 +421,26 @@ const AdminSettings: React.FC = () => {
               </button>
             </div>
             {/* Backup Enabled Toggle */}
-            <div className="flex items-center justify-between">
-              <span 
-                className="font-medium"
-                style={{ color: 'var(--color-text-primary)' }}
-              >
-                Backup Enabled
-              </span>
+            <div className="flex items-center justify-between p-6 rounded-lg border" style={{ borderColor: 'var(--color-border)' }}>
+              <div className="space-y-1">
+                <span 
+                  className="font-medium block"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  Backup Enabled
+                </span>
+                <span 
+                  className="text-sm"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                >
+                  Automatically backup platform data
+                </span>
+              </div>
               <button
                 type="button"
                 className="w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300"
                 style={{
-                  backgroundColor: settingsDraft?.integrations?.backupEnabled ? '#00B8D9' : 'var(--color-secondary-bg)'
+                  backgroundColor: settingsDraft?.integrations?.backupEnabled ? 'var(--color-accent-primary)' : 'var(--color-secondary-bg)'
                 }}
                 onClick={() => handleSettingChange('integrations', 'backupEnabled', !settingsDraft?.integrations?.backupEnabled)}
               >
@@ -425,7 +451,11 @@ const AdminSettings: React.FC = () => {
               </button>
             </div>
             <button
-              className="mt-4 bg-[#00B8D9] text-[#121212] px-6 py-2 rounded-lg hover:bg-[#00B8D9]/90 transition-all font-medium"
+              className="mt-4 px-6 py-2 rounded-lg transition-all font-medium"
+              style={{
+                backgroundColor: 'var(--color-accent-primary)',
+                color: 'var(--color-text-inverse)'
+              }}
               onClick={handleSaveSettings}
               disabled={isSaving}
             >
@@ -449,7 +479,11 @@ const AdminSettings: React.FC = () => {
           <button
             onClick={handleSaveSettings}
             disabled={isSaving}
-            className="bg-[#00B8D9] text-[#121212] px-6 py-2 rounded-lg hover:bg-[#00B8D9]/90 transition-colors font-medium flex items-center disabled:opacity-50"
+            className="px-6 py-2 rounded-lg transition-colors font-medium flex items-center disabled:opacity-50"
+            style={{
+              backgroundColor: 'var(--color-accent-primary)',
+              color: 'var(--color-text-inverse)'
+            }}
           >
             {isSaving ? (
               <>

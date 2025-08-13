@@ -1,9 +1,9 @@
 import React from 'react';
-import { DownloadIcon, GroupIcon as Users, TargetIcon as Target, ArrowTopRightIcon as TrendingUp, LayersIcon } from '@radix-ui/react-icons';
+import { DownloadIcon, GroupIcon as Users, TargetIcon as Target, ArrowTopRightIcon as TrendingUp } from '@radix-ui/react-icons';
 import { useAppDispatch } from '../redux/store';
 import { useSelector } from 'react-redux';
 import LoadingScreen from '../components/LoadingScreen';
-import LevelProgressChart from '../components/LevelProgressChart';
+
 import { fetchAnalytics } from '../redux/slices/analyticsSlice';
 import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
 
@@ -33,12 +33,6 @@ const AdminDashboard: React.FC = () => {
   const completionRate = analytics?.completionRate ?? 0;
   const studentRetention = analytics?.studentRetention;
   const trackDistribution = analytics?.trackDistribution ?? [];
-  const levelProgress = analytics?.levelProgress?.levelProgress ?? [];
-  const overallMetrics = analytics?.levelProgress?.overallMetrics ?? {
-    totalStudents: 0,
-    averageLevelReached: 0,
-    overallCompletionRate: 0
-  };
 
   if (!analytics) {
     return (
@@ -90,7 +84,7 @@ const AdminDashboard: React.FC = () => {
       </div>
 
       {/* Analytics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
         <div 
           className="rounded-xl shadow-sm p-6 flex items-center gap-4"
           style={{
@@ -158,41 +152,10 @@ const AdminDashboard: React.FC = () => {
             </p>
           </div>
         </div>
-        <div 
-          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
-          style={{
-            backgroundColor: 'var(--color-surface)',
-            boxShadow: 'var(--shadow-sm)'
-          }}
-        >
-          <div className="bg-trueturquoise/10 p-3 rounded-lg">
-            <LayersIcon className="h-6 w-6 text-trueturquoise" />
-          </div>
-          <div>
-            <p 
-              className="text-sm"
-              style={{ color: 'var(--color-text-tertiary)' }}
-            >Avg Level Reached</p>
-            <p 
-              className="text-2xl font-bold"
-              style={{ color: 'var(--color-text-primary)' }}
-            >{overallMetrics.averageLevelReached}</p>
-            <p className="text-trueturquoise text-xs flex items-center mt-1">
-              <TrendingUp className="h-3 w-3 mr-1" />
-              {overallMetrics.overallCompletionRate}% completed levels
-            </p>
-          </div>
-        </div>
+
       </div>
 
-      {/* Level Progress Section */}
-      <div className="mb-12">
-        <LevelProgressChart 
-          levelProgress={levelProgress}
-          overallMetrics={overallMetrics}
-          loading={analyticsLoading}
-        />
-      </div>
+
 
       {/* Students by Track Pie Chart */}
       <div 
