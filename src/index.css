@@ -97,24 +97,24 @@ p, .body {
 }
 
 :root {
- /* Light mode theme (revised) */
---color-primary-bg: #c6d9d2;
---color-secondary-bg: #B9e5e8;
---color-tertiary-bg: #78B2D3;
---color-surface: #4A628A;
---color-surface-elevated: #DFF2EB;
---color-border: #2d2dd9;
---color-border-subtle: #EAEAEA;
+/* Light mode theme (Blue-focused) */
+--color-primary-bg: #FFFFFF;        /* main background - pure white */
+--color-secondary-bg: #F5F8FF;      /* very light blue tint */
+--color-tertiary-bg: #E6ECFF;       /* subtle light blue section bg */
+--color-surface: #FFFFFF;           /* card or panel background */
+--color-surface-elevated: #F0F3FF;  /* slightly more pronounced surface */
+--color-border: #C5D0FF;            /* light blue-gray borders */
+--color-border-subtle: #E8EBF5;     /* ultra-light divider lines */
 
---color-text-primary: #121212;
---color-text-secondary: #374151;
---color-text-tertiary: #5B5B5B;
---color-text-muted: #6B7280;
---color-text-inverse: #FAFAFA;
+--color-text-primary: #000000;      /* main text - black */
+--color-text-secondary: #1B1B1B;    /* slightly softened black */
+--color-text-tertiary: #3A3A3A;     /* muted dark gray */
+--color-text-muted: #6B7280;        /* for hints/help text */
+--color-text-inverse: #FFFFFF;      /* text on dark/blue backgrounds */
 
---color-accent-primary: #00B8D9;
---color-accent-secondary: #00899c;
---color-accent-tertiary: #E0F7FA;
+--color-accent-primary: #1B37F4;    /* brand blue */
+--color-accent-secondary: #3452FF;  /* hover/active blue */
+--color-accent-tertiary: #EAF0FF;   /* very soft blue for backgrounds */
   
   --color-success: #10B981;
   --color-warning: #F59E0B;
