@@ -97,24 +97,24 @@ p, .body {
 }
 
 :root {
-  /* Light mode theme (default) */
-  --color-primary-bg: #d5c9c9;
-  --color-secondary-bg: #b7b7b7;
-  --color-tertiary-bg: #adadad;
-  --color-surface: #969696;
-  --color-surface-elevated: #817b7b;
-  --color-border: #dacaca;
-  --color-border-subtle: #ffffff;
-  
-  --color-text-primary: #111827;
-  --color-text-secondary: #374151;
-  --color-text-tertiary: #6B7280;
-  --color-text-muted: #9CA3AF;
-  --color-text-inverse: #FFFFFF;
-  
-  --color-accent-primary: #00B8D9;
-  --color-accent-secondary: #A0D8EF;
-  --color-accent-tertiary: #E0F2F1;
+ /* Light mode theme (revised) */
+--color-primary-bg: #FFFFFF;
+--color-secondary-bg: #F5F5F5;
+--color-tertiary-bg: #E5E5E5;
+--color-surface: #F5F5F5;
+--color-surface-elevated: #E5E5E5;
+--color-border: #D4D4D4;
+--color-border-subtle: #EAEAEA;
+
+--color-text-primary: #121212;
+--color-text-secondary: #374151;
+--color-text-tertiary: #5B5B5B;
+--color-text-muted: #6B7280;
+--color-text-inverse: #FAFAFA;
+
+--color-accent-primary: #00B8D9;
+--color-accent-secondary: #007A8A;
+--color-accent-tertiary: #E0F7FA;
   
   --color-success: #10B981;
   --color-warning: #F59E0B;
