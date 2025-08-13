@@ -330,8 +330,18 @@ const AdminStaff: React.FC = () => {
       </div>
       {/* Modal for Add/Edit Staff */}
       {showModal && (
-        <div className="fixed inset-0 bg-offblack/60 flex items-center justify-center z-50">
-          <div className="bg-offblack rounded-xl shadow-2xl p-8 w-full max-w-md border border-paperwhite/20">
+        <div 
+          className="fixed inset-0 flex items-center justify-center z-50"
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}
+        >
+          <div 
+            className="rounded-xl shadow-2xl p-8 w-full max-w-md border"
+            style={{
+              backgroundColor: 'var(--color-surface-elevated)',
+              borderColor: 'var(--color-border)',
+              boxShadow: 'var(--shadow-lg)'
+            }}
+          >
             <div className="flex justify-between items-center mb-4">
               <h3 
                 className="text-lg font-semibold"
@@ -441,8 +451,18 @@ const AdminStaff: React.FC = () => {
       )}
       {/* Password shown-once modal */}
       {showPasswordModal && (
-        <div className="fixed inset-0 bg-offblack/60 flex items-center justify-center z-50">
-          <div className="bg-offblack rounded-xl shadow-2xl p-8 w-full max-w-md border border-paperwhite/20">
+        <div 
+          className="fixed inset-0 flex items-center justify-center z-50"
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}
+        >
+          <div 
+            className="rounded-xl shadow-2xl p-8 w-full max-w-md border"
+            style={{
+              backgroundColor: 'var(--color-surface-elevated)',
+              borderColor: 'var(--color-border)',
+              boxShadow: 'var(--shadow-lg)'
+            }}
+          >
             <div className="flex justify-between items-center mb-4">
               <h3 
                 className="text-lg font-semibold"
