@@ -121,12 +121,29 @@ p, .body {
   --color-error: #EF4444;
   --color-info: #3B82F6;
   
+  /* Background variants for status colors */
+  --color-success-bg: rgba(16, 185, 129, 0.1);
+  --color-warning-bg: rgba(245, 158, 11, 0.1);
+  --color-error-bg: rgba(239, 68, 68, 0.1);
+  --color-info-bg: rgba(59, 130, 246, 0.1);
+  
+  /* Hover states for status colors */
+  --color-success-hover: #059669;
+  --color-warning-hover: #D97706;
+  --color-error-hover: #DC2626;
+  --color-info-hover: #2563EB;
+  
+  /* Overlay background for modals */
+  --color-overlay-bg: rgba(0, 0, 0, 0.6);
+  
   /* Legacy colors for compatibility */
-  --color-true-turquoise: #1a2ea0;
+  --color-trueturquoise: #1a2ea0;
+  --color-teallight: #A0D8EF;
   --color-rust: #B7410E;
   --color-paper-white: #FAFAFA;
   --color-black: #000000;
   --color-grey-label: #6B7280;
+  --color-offblack: #000000;
   
   /* Shadow variables */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
@@ -159,9 +176,27 @@ p, .body {
   --color-error: #EF4444;
   --color-info: #3B82F6;
   
+  /* Background variants for status colors (darker for dark mode) */
+  --color-success-bg: rgba(16, 185, 129, 0.2);
+  --color-warning-bg: rgba(245, 158, 11, 0.2);
+  --color-error-bg: rgba(239, 68, 68, 0.2);
+  --color-info-bg: rgba(59, 130, 246, 0.2);
+  
+  /* Hover states for status colors (brighter for dark mode) */
+  --color-success-hover: #34D399;
+  --color-warning-hover: #FBBF24;
+  --color-error-hover: #F87171;
+  --color-info-hover: #60A5FA;
+  
+  /* Overlay background for modals (darker for dark mode) */
+  --color-overlay-bg: rgba(0, 0, 0, 0.8);
+  
   /* Legacy colors for dark mode */
   --color-paper-white: #FAFAFA;
   --color-grey-label: #A0D8EF;
+  --color-trueturquoise: #00B8D9;
+  --color-teallight: #A0D8EF;
+  --color-offblack: #121212;
   
   /* Dark mode shadows */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);

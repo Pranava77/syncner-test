@@ -29,7 +29,10 @@ const LandingPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-offblack">
+    <div 
+      className="min-h-screen"
+      style={{ backgroundColor: 'var(--color-primary-bg)' }}
+    >
       {/* Header */}
       <header className="bg-paperwhite/5 backdrop-blur-md shadow-sm fixed w-full z-50 border-b border-paperwhite/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -45,7 +48,17 @@ const LandingPage: React.FC = () => {
             <div className="hidden md:flex items-center space-x-4">
               <Link
                 to="/login"
-                className="bg-trueturquoise text-offblack px-4 lg:px-6 py-2 rounded-lg hover:bg-teallight transition-all"
+                className="px-4 lg:px-6 py-2 rounded-lg transition-all"
+                style={{
+                  backgroundColor: 'var(--color-accent-primary)',
+                  color: 'var(--color-text-inverse)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                }}
               >
                 Get Started
               </Link>
@@ -76,7 +89,17 @@ const LandingPage: React.FC = () => {
               <Link
                 to="/login"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block w-full text-center bg-trueturquoise text-offblack px-6 py-3 rounded-lg hover:bg-teallight transition-all"
+                className="block w-full text-center px-6 py-3 rounded-lg transition-all"
+                style={{
+                  backgroundColor: 'var(--color-accent-primary)',
+                  color: 'var(--color-text-inverse)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                }}
               >
                 Get Started
               </Link>
@@ -95,14 +118,27 @@ const LandingPage: React.FC = () => {
             </span>
             Professionals
           </h1>
-          <p className="text-lg lg:text-xl text-teallight mb-6 lg:mb-8 max-w-3xl mx-auto leading-relaxed">
+          <p 
+            className="text-lg lg:text-xl mb-6 lg:mb-8 max-w-3xl mx-auto leading-relaxed"
+            style={{ color: 'var(--color-text-secondary)' }}
+          >
             AI-powered career platform that bridges the gap between education and employment 
             through personalized training, real-world tasks, and internship simulation.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md sm:max-w-none mx-auto">
             <Link
               to="/login"
-              className="bg-trueturquoise text-offblack px-6 lg:px-8 py-3 lg:py-4 rounded-lg hover:bg-teallight transition-all flex items-center justify-center group"
+              className="px-6 lg:px-8 py-3 lg:py-4 rounded-lg transition-all flex items-center justify-center group"
+              style={{
+                backgroundColor: 'var(--color-accent-primary)',
+                color: 'var(--color-text-inverse)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+              }}
             >
               Sign In
               <ArrowRightIcon className="ml-2 h-4 w-4 lg:h-5 lg:w-5 group-hover:translate-x-1 transition-transform" />
@@ -135,7 +171,10 @@ const LandingPage: React.FC = () => {
                 <BarChartIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
               </div>
               <h3 className="text-lg lg:text-xl text-paperwhite mb-2 lg:mb-3 font-heading">AI-Personalized Learning</h3>
-              <p className="text-teallight text-sm lg:text-base">
+              <p 
+                className="text-sm lg:text-base"
+                style={{ color: 'var(--color-text-secondary)' }}
+              >
                 Adaptive learning paths that adjust to each student's pace and performance, 
                 ensuring optimal skill development.
               </p>
@@ -146,7 +185,10 @@ const LandingPage: React.FC = () => {
                 <PersonIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
               </div>
               <h3 className="text-lg lg:text-xl text-paperwhite mb-2 lg:mb-3 font-heading">Real-World Tasks</h3>
-              <p className="text-teallight text-sm lg:text-base">
+              <p 
+                className="text-sm lg:text-base"
+                style={{ color: 'var(--color-text-secondary)' }}
+              >
                 Industry-standard projects and internship simulations that prepare students 
                 for actual workplace challenges.
               </p>
@@ -157,7 +199,10 @@ const LandingPage: React.FC = () => {
                 <TargetIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
               </div>
               <h3 className="text-lg lg:text-xl text-paperwhite mb-2 lg:mb-3 font-heading">Career Tracks</h3>
-              <p className="text-teallight text-sm lg:text-base">
+              <p 
+                className="text-sm lg:text-base"
+                style={{ color: 'var(--color-text-secondary)' }}
+              >
                 Specialized paths in AI/ML, Full Stack Development, UI/UX Design, 
                 and Data Science with industry-relevant curriculum.
               </p>
@@ -168,7 +213,10 @@ const LandingPage: React.FC = () => {
                 <EnvelopeClosedIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
               </div>
               <h3 className="text-lg lg:text-xl text-paperwhite mb-2 lg:mb-3 font-heading">Interactive Content</h3>
-              <p className="text-teallight text-sm lg:text-base">
+              <p 
+                className="text-sm lg:text-base"
+                style={{ color: 'var(--color-text-secondary)' }}
+              >
                 Engaging video tutorials, interactive assessments, and hands-on coding 
                 exercises to reinforce learning.
               </p>
@@ -179,7 +227,10 @@ const LandingPage: React.FC = () => {
                 <CheckCircledIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
               </div>
               <h3 className="text-lg lg:text-xl text-paperwhite mb-2 lg:mb-3 font-heading">Admin Analytics</h3>
-              <p className="text-teallight text-sm lg:text-base">
+              <p 
+                className="text-sm lg:text-base"
+                style={{ color: 'var(--color-text-secondary)' }}
+              >
                 Comprehensive dashboard for tracking student progress, attendance, 
                 and performance analytics.
               </p>
@@ -189,12 +240,18 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-12 lg:py-20 px-4 sm:px-6 lg:px-8 bg-trueturquoise/10 backdrop-blur-sm">
+      <section 
+        className="py-12 lg:py-20 px-4 sm:px-6 lg:px-8 backdrop-blur-sm"
+        style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+      >
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-2xl lg:text-4xl text-paperwhite mb-4 lg:mb-6 font-heading">
             Ready to Transform Your Career Journey?
           </h2>
-          <p className="text-lg lg:text-xl text-teallight mb-6 lg:mb-8">
+          <p 
+            className="text-lg lg:text-xl mb-6 lg:mb-8"
+            style={{ color: 'var(--color-text-secondary)' }}
+          >
             Join thousands of students who are already building their future with Syncner
           </p>
           <Link
@@ -208,17 +265,30 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-offblack/80 backdrop-blur-sm text-paperwhite py-8 lg:py-12 px-4 sm:px-6 lg:px-8 border-t border-paperwhite/10">
+      <footer 
+        className="backdrop-blur-sm py-8 lg:py-12 px-4 sm:px-6 lg:px-8 border-t"
+        style={{
+          backgroundColor: 'var(--color-secondary-bg)',
+          color: 'var(--color-text-primary)',
+          borderColor: 'var(--color-border)'
+        }}
+      >
         <div className="max-w-7xl mx-auto text-center">
           <div className="flex items-center justify-center space-x-3 mb-4 lg:mb-6">
             <div className="bg-trueturquoise p-2 rounded-lg">
               <img src={logo} alt="Syncner Logo" className="h-8 w-8 lg:h-10 lg:w-10 object-contain" />
             </div>
           </div>
-          <p className="text-teallight mb-3 lg:mb-4 text-sm lg:text-base">
+          <p 
+            className="mb-3 lg:mb-4 text-sm lg:text-base"
+            style={{ color: 'var(--color-text-secondary)' }}
+          >
             Empowering the next generation of professionals through AI-driven career development
           </p>
-          <p className="text-teallight/80 text-xs lg:text-sm">
+          <p 
+            className="text-xs lg:text-sm"
+            style={{ color: 'var(--color-text-tertiary)' }}
+          >
             © 2024 Syncner. All rights reserved.
           </p>
         </div>
