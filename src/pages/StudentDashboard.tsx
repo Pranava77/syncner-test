@@ -184,10 +184,12 @@ const StudentDashboard: React.FC = () => {
         style={{ backgroundColor: 'var(--color-primary-bg)' }}
       >
         <div 
-        className="rounded-xl p-6 lg:p-8"
+        className="rounded-xl p-6 lg:p-8 border shadow-md"
         style={{
-          backgroundColor: 'var(--color-accent-tertiary)',
-          color: 'var(--color-text-primary)'
+          backgroundColor: 'var(--color-surface)',
+          borderColor: 'var(--color-border)',
+          color: 'var(--color-text-primary)',
+          boxShadow: 'var(--shadow-md)'
         }}
       >
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
@@ -560,10 +562,12 @@ const StudentDashboard: React.FC = () => {
     >
       {/* Welcome Section */}
       <div 
-        className="rounded-xl p-6 lg:p-8"
+        className="rounded-xl p-6 lg:p-8 border shadow-md"
         style={{
-          backgroundColor: 'var(--color-accent-tertiary)',
-          color: 'var(--color-text-primary)'
+          backgroundColor: 'var(--color-surface)',
+          borderColor: 'var(--color-border)',
+          color: 'var(--color-text-primary)',
+          boxShadow: 'var(--shadow-md)'
         }}
       >
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
