@@ -105,7 +105,10 @@ const AdminAnalytics: React.FC = () => {
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#A259F7', '#F95F62'];
 
   return (
-    <div className="space-y-8 bg-offblack min-h-screen p-4 lg:p-8">
+    <div 
+      className="space-y-8 min-h-screen p-4 lg:p-8"
+      style={{ backgroundColor: 'var(--color-primary-bg)' }}
+    >
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -115,7 +118,7 @@ const AdminAnalytics: React.FC = () => {
         >
           Analytics Dashboard
         </h1>
-          <p className="text-teallight mt-1 font-label">Comprehensive insights into platform performance</p>
+          <p className="mt-1 font-label" style={{ color: 'var(--color-text-secondary)' }}>Comprehensive insights into platform performance</p>
         </div>
         <div className="flex items-center space-x-3">
           <select
@@ -136,7 +139,7 @@ const AdminAnalytics: React.FC = () => {
             onClick={refreshData}
             className="p-2 border border-teallight rounded-lg hover:bg-teallight/20 transition-colors"
           >
-            <ReloadIcon className="h-4 w-4 text-teallight" />
+            <ReloadIcon className="h-4 w-4" style={{ color: 'var(--color-text-secondary)' }} />
           </button>
           <button
             onClick={exportData}
@@ -154,7 +157,7 @@ const AdminAnalytics: React.FC = () => {
         <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-teallight text-sm">Total Students</p>
+              <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Total Students</p>
               <p 
                 className="text-3xl font-bold"
                 style={{ color: 'var(--color-text-primary)' }}
@@ -174,7 +177,7 @@ const AdminAnalytics: React.FC = () => {
         <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-teallight text-sm">Active Students</p>
+              <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Active Students</p>
               <p 
                 className="text-3xl font-bold"
                 style={{ color: 'var(--color-text-primary)' }}

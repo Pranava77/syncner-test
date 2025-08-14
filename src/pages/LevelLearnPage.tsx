@@ -293,10 +293,20 @@ const LevelLearnPage: React.FC = () => {
           </div>
         ) : error || !level ? (
           <div className="text-center">
-            <p className="text-red-400 text-lg mb-4">{error || 'Level not found'}</p>
+            <p className="text-lg mb-4" style={{ color: 'var(--color-error)' }}>{error || 'Level not found'}</p>
             <button 
               onClick={fetchLevel}
-              className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors"
+              className="px-4 py-2 rounded-lg transition-colors"
+              style={{
+                backgroundColor: 'var(--color-accent-primary)',
+                color: 'var(--color-text-inverse)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+              }}
             >
               Retry
             </button>
@@ -310,7 +320,7 @@ const LevelLearnPage: React.FC = () => {
               boxShadow: 'var(--shadow-lg)'
             }}
           >
-            <div className="text-paperwhite/30 text-6xl mb-4">
+            <div className="text-6xl mb-4" style={{ color: 'var(--color-text-muted)' }}>
               <LockClosedIcon className="h-16 w-16 mx-auto" />
             </div>
             <h2 
@@ -327,7 +337,17 @@ const LevelLearnPage: React.FC = () => {
             </p>
             <button 
               onClick={() => navigate('/student/training')}
-              className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold hover:bg-trueturquoise/90 transition-colors text-lg shadow-sm"
+              className="px-8 py-3 rounded-lg font-bold transition-colors text-lg shadow-sm"
+              style={{
+                backgroundColor: 'var(--color-accent-primary)',
+                color: 'var(--color-text-inverse)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+              }}
             >
               Back to Training
             </button>
@@ -344,7 +364,7 @@ const LevelLearnPage: React.FC = () => {
             >
               Level {level.order}: {level.title}
             </h1>
-                  <p className="text-teallight">{level.description}</p>
+                  <p style={{ color: 'var(--color-text-secondary)' }}>{level.description}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="px-3 py-1 rounded-full bg-paperwhite/10 text-trueturquoise font-semibold text-sm">
@@ -373,12 +393,12 @@ const LevelLearnPage: React.FC = () => {
                 </div>
                 <div className="text-right">
                   <div className="text-2xl font-bold text-trueturquoise">{Math.round(getProgressPercentage()) || 0}%</div>
-                  <div className="text-xs text-teallight">Progress</div>
+                  <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>Progress</div>
                 </div>
               </div>
               
               <div className="mb-4">
-                <div className="flex justify-between text-sm text-teallight mb-1">
+                <div className="flex justify-between text-sm mb-1" style={{ color: 'var(--color-text-tertiary)' }}>
                   <span>Progress</span>
                   <span>{Math.round(getProgressPercentage()) || 0}%</span>
                 </div>
