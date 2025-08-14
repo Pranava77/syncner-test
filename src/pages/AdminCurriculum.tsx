@@ -56,6 +56,7 @@ interface Level {
 }
 
 interface LearnItem {
+  id: string;
   type: 'video' | 'reading' | 'slide' | 'other';
   title: string;
   content: string;
@@ -64,6 +65,7 @@ interface LearnItem {
 }
 
 interface TestItem {
+  id: string;
   question: string;
   options: string[];
   answer: string;
@@ -71,6 +73,7 @@ interface TestItem {
 }
 
 interface ExerciseItem {
+  id: string;
   title: string;
   description: string;
   resources: string[];
@@ -137,10 +140,8 @@ const AdminCurriculum: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      console.log('Fetching curriculum from API...');
       const url = track ? `/curriculum?careerTrack=${track}` : '/curriculum';
       const response = await apiService.get(url);
-      console.log('API Response:', response);
       
       // Handle different response formats
       let levelsData = [];
@@ -150,18 +151,14 @@ const AdminCurriculum: React.FC = () => {
         levelsData = response;
       }
       
-      console.log('Processed levels data:', levelsData);
-      
       // First, find all syllabus items (main levels)
       const syllabusItems = levelsData.filter((item: any) => item.type === 'syllabus');
-      console.log('Found syllabus items:', syllabusItems.length);
       
       // Create level map from syllabus items
       const levelMap = new Map();
       
       syllabusItems.forEach((syllabus: any) => {
         const levelKey = `${syllabus.order}-${syllabus.careerTrack}`;
-        console.log('Creating level from syllabus:', { title: syllabus.title, order: syllabus.order, careerTrack: syllabus.careerTrack });
         
         levelMap.set(levelKey, {
           id: syllabus.id || levelKey,
@@ -191,15 +188,12 @@ const AdminCurriculum: React.FC = () => {
       
       // Now add content items to their respective levels
       const contentItems = levelsData.filter((item: any) => item.type !== 'syllabus');
-      console.log('Found content items:', contentItems.length);
       
       contentItems.forEach((item: any) => {
         const levelKey = `${item.order}-${item.careerTrack}`;
         const level = levelMap.get(levelKey);
         
         if (level) {
-          console.log('Adding content to level:', { levelTitle: level.title, contentType: item.type, contentTitle: item.title });
-          
           if (item.type === 'learn') {
             level.learn.push({
               id: item.id,
@@ -241,29 +235,11 @@ const AdminCurriculum: React.FC = () => {
               order: item.order || 1
             });
           }
-        } else {
-          console.warn('No level found for content item:', { title: item.title, order: item.order, careerTrack: item.careerTrack });
         }
       });
       
       // Convert map to array and sort by order
       const uniqueLevels = Array.from(levelMap.values()).sort((a: Level, b: Level) => a.order - b.order);
-      console.log('Grouping complete. Unique levels created:', uniqueLevels.length);
-      
-      console.log('Unique levels after grouping:', uniqueLevels);
-      console.log('AdminCurriculum: Levels by track:', uniqueLevels.reduce((acc: Record<string, number>, level: Level) => {
-        acc[level.careerTrack] = (acc[level.careerTrack] || 0) + 1;
-        return acc;
-      }, {}));
-      
-      // Debug: Show content distribution
-      uniqueLevels.forEach((level: Level) => {
-        console.log(`Level ${level.order}: ${level.title}`, {
-          learn: level.learn.length,
-          test: level.test.length,
-          exercise: level.exercise.length
-        });
-      });
       
       setLevels(uniqueLevels);
       setLastUpdated(new Date());
@@ -369,11 +345,17 @@ const AdminCurriculum: React.FC = () => {
   };
 
   const handleDeleteLevel = async (id: string) => {
+    if (!id) {
+      setError('Invalid level ID');
+      return;
+    }
+
     if (window.confirm('Are you sure you want to delete this level?')) {
       try {
         setError(null);
         // Find the level to get its title and career track
         const level = levels.find(l => l.id === id);
+        
         if (level) {
           // Delete all curriculum items for this level (same title and career track)
           const response = await apiService.get('/curriculum');
@@ -384,12 +366,14 @@ const AdminCurriculum: React.FC = () => {
           
           // Delete each item
           for (const item of itemsToDelete) {
-            await apiService.delete(`/curriculum/${item._id}`);
+            const itemId = item.id;
+            if (itemId) {
+              await apiService.delete(`/curriculum/${itemId}`);
+            }
           }
         }
         await fetchLevels(selectedTrack || undefined);
-        setSuccessMessage('Level deleted successfully');
-        setTimeout(() => setSuccessMessage(null), 3000);
+        showSuccessMessage('Level deleted successfully');
       } catch (error: any) {
         console.error('Error deleting level:', error);
         const errorMessage = error.message || 'Failed to delete level';
@@ -408,7 +392,8 @@ const AdminCurriculum: React.FC = () => {
     setError(null);
     try {
       if (editingLevel) {
-        await apiService.put(`/curriculum/${editingLevel.id}`, {
+        const levelId = editingLevel.id;
+        await apiService.put(`/curriculum/${levelId}`, {
           ...levelForm,
           type: 'syllabus',
           content: levelForm.description,
@@ -421,8 +406,7 @@ const AdminCurriculum: React.FC = () => {
         setLevelForm(defaultLevelForm);
         setFormError('');
         await fetchLevels(selectedTrack || undefined);
-        setSuccessMessage('Level updated successfully');
-        setTimeout(() => setSuccessMessage(null), 3000);
+        showSuccessMessage('Level updated successfully');
       } else {
         // Create new level
         await apiService.post('/curriculum', {
@@ -438,8 +422,7 @@ const AdminCurriculum: React.FC = () => {
         setLevelForm(defaultLevelForm);
         setFormError('');
         await fetchLevels(selectedTrack || undefined);
-        setSuccessMessage('Level created successfully');
-        setTimeout(() => setSuccessMessage(null), 3000);
+        showSuccessMessage('Level created successfully');
       }
     } catch (error: any) {
       console.error('Error saving level:', error);
@@ -506,23 +489,18 @@ const AdminCurriculum: React.FC = () => {
         setError(null);
         // Find the level to get its title and career track
         const level = levels.find(l => l.id === levelId);
+        
         if (level) {
           // Find the specific content item to delete
-          const response = await apiService.get('/curriculum');
-          const curriculumItems = response.data || [];
-          const levelItems = curriculumItems.filter((item: any) => 
-            item.title === level.title && 
-            item.careerTrack === level.careerTrack &&
-            item.type === type
-          ).sort((a: any, b: any) => a.order - b.order);
+          const contentItems = level[type] || [];
+          const itemToDelete = contentItems[index];
           
-          if (levelItems[index]) {
-            await apiService.delete(`/curriculum/${levelItems[index]._id}`);
+          if (itemToDelete) {
+            await apiService.delete(`/curriculum/${itemToDelete.id}`);
           }
         }
         await fetchLevels(selectedTrack || undefined);
-        setSuccessMessage('Content deleted successfully');
-        setTimeout(() => setSuccessMessage(null), 3000);
+        showSuccessMessage('Content deleted successfully');
       } catch (error: any) {
         console.error('Error deleting content:', error);
         const errorMessage = error.message || 'Failed to delete content';
@@ -601,7 +579,7 @@ const AdminCurriculum: React.FC = () => {
             updateData.description = contentForm.title;
           }
 
-          await apiService.put(`/curriculum/${itemToUpdate._id}`, updateData);
+          await apiService.put(`/curriculum/${itemToUpdate.id}`, updateData);
         }
       } else if (editingLevel) {
         // Create new content item
@@ -646,8 +624,7 @@ const AdminCurriculum: React.FC = () => {
       setContentForm({});
       setFormError('');
       await fetchLevels(selectedTrack || undefined);
-      setSuccessMessage('Content saved successfully');
-      setTimeout(() => setSuccessMessage(null), 3000);
+      showSuccessMessage('Content saved successfully');
     } catch (error: any) {
       console.error('Error saving content:', error);
       const errorMessage = error.message || 'Failed to save content';
@@ -680,12 +657,16 @@ const AdminCurriculum: React.FC = () => {
     fetchLevels(track);
   };
 
-
-
   const handleBackToTracks = () => {
     setSelectedTrack(null);
     setShowTrackSelection(true);
     setLevels([]);
+  };
+
+  // Utility function to show success message with auto-hide
+  const showSuccessMessage = (message: string) => {
+    setSuccessMessage(message);
+    setTimeout(() => setSuccessMessage(null), 3000);
   };
 
   if (loading && levels.length === 0) {
@@ -1586,7 +1567,13 @@ const AdminCurriculum: React.FC = () => {
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <button
-                              onClick={() => handleEditLevel(level)}
+                              onClick={() => {
+                                if (!level.id) {
+                                  setError('Level ID not found. Please refresh the page.');
+                                  return;
+                                }
+                                handleEditLevel(level);
+                              }}
                               className="p-2 transition-colors"
                               style={{ color: 'var(--color-text-tertiary)' }}
                               onMouseEnter={(e) => {
@@ -1600,7 +1587,13 @@ const AdminCurriculum: React.FC = () => {
                               <EditIcon className="h-4 w-4" />
                             </button>
                             <button
-                              onClick={() => handleDeleteLevel(level.id)}
+                              onClick={() => {
+                                if (!level.id) {
+                                  setError('Level ID not found. Please refresh the page.');
+                                  return;
+                                }
+                                handleDeleteLevel(level.id);
+                              }}
                               className="p-2 transition-colors"
                               style={{ color: 'var(--color-text-tertiary)' }}
                               onMouseEnter={(e) => {
