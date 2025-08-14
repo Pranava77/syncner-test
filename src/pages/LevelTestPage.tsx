@@ -842,70 +842,25 @@ const LevelTestPage: React.FC = () => {
                 Test Progress
               </h2>
             </div>
-            <div className="flex items-center gap-6">
-              <div className="text-center">
-                <div className="text-sm mb-1" style={{ color: 'var(--color-text-tertiary)' }}>
-                  Attempt {currentAttempt === 0 && canRetake ? 1 : currentAttempt}/3
-                </div>
-                <div className="text-xs" style={{ color: 'var(--color-warning)' }}>
-                  Passing: 60%
-                </div>
-              </div>
+            <div className="text-right">
               <div 
-                className="text-center rounded-lg p-4 border"
-                style={{
-                  backgroundColor: 'var(--color-tertiary-bg)',
-                  borderColor: 'var(--color-border-subtle)'
-                }}
+                className="text-2xl font-bold"
+                style={{ color: 'var(--color-accent-primary)' }}
               >
-                <div className="flex items-center gap-2 mb-2">
-                  <ClockIcon 
-                    className="h-5 w-5" 
-                    style={{ color: 'var(--color-accent-primary)' }}
-                  />
-                  <div 
-                    className="text-2xl font-bold"
-                    style={{ color: 'var(--color-accent-primary)' }}
-                  >
-                    {formatTime(timeLeft)}
-                  </div>
-                </div>
-                <div 
-                  className="text-xs font-label"
-                  style={{ color: 'var(--color-text-tertiary)' }}
-                >
-                  Time Remaining
-                </div>
+                {Math.round((Object.keys(answers).filter(key => answers[parseInt(key)].some(a => a)).length / Math.max(validQuestions.length, 1)) * 100)}%
               </div>
-              <div 
-                className="text-center rounded-lg p-4 border"
-                style={{
-                  backgroundColor: 'var(--color-tertiary-bg)',
-                  borderColor: 'var(--color-border-subtle)'
-                }}
-              >
-                  <div 
-                    className="text-2xl font-bold mb-2"
-                    style={{ color: 'var(--color-text-primary)' }}
-                  >
-                    {validQuestions.length}
-                  </div>
-                  <div 
-                    className="text-xs font-label"
-                    style={{ color: 'var(--color-text-tertiary)' }}
-                  >
-                    Questions
-                  </div>
-              </div>
+              <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>Progress</div>
             </div>
             
-            {/* Progress Bar */}
             <div className="mb-4">
               <div className="flex justify-between text-sm mb-1" style={{ color: 'var(--color-text-tertiary)' }}>
                 <span>Progress</span>
                 <span>{Math.round((Object.keys(answers).filter(key => answers[parseInt(key)].some(a => a)).length / Math.max(validQuestions.length, 1)) * 100)}%</span>
               </div>
-              <div className="w-full rounded-full h-2" style={{ backgroundColor: 'var(--color-border)' }}>
+              <div 
+                className="w-full rounded-full h-2"
+                style={{ backgroundColor: 'var(--color-border)' }}
+              >
                 <div 
                   className="h-2 rounded-full transition-all duration-500"
                   style={{ 
@@ -913,6 +868,22 @@ const LevelTestPage: React.FC = () => {
                     width: `${(Object.keys(answers).filter(key => answers[parseInt(key)].some(a => a)).length / Math.max(validQuestions.length, 1)) * 100}%`
                   }}
                 ></div>
+              </div>
+            </div>
+            
+            <div 
+              className="flex items-center justify-between text-sm"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
+              <span>Time remaining: {formatTime(timeLeft)}</span>
+              <span>{Object.keys(answers).filter(key => answers[parseInt(key)].some(a => a)).length} of {validQuestions.length} questions answered</span>
+            </div>
+            
+            {/* Additional Test Info */}
+            <div className="mt-4 pt-4 border-t" style={{ borderColor: 'var(--color-border-subtle)' }}>
+              <div className="flex items-center justify-between text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                <span>Attempt {currentAttempt === 0 && canRetake ? 1 : currentAttempt}/3</span>
+                <span>Passing score: 60%</span>
               </div>
             </div>
           </div>
