@@ -126,10 +126,16 @@ const StudentProfile: React.FC = () => {
                 </p>
               </div>
               <div className="flex items-center gap-2">
-                <span className="px-3 py-1 rounded-full bg-paperwhite/10 text-trueturquoise font-semibold text-sm">
+                <span className="px-3 py-1 rounded-full font-semibold text-sm" style={{
+                  backgroundColor: 'var(--color-tertiary-bg)',
+                  color: 'var(--color-accent-primary)'
+                }}>
                   {user?.role || 'Student'}
                 </span>
-                <span className="px-3 py-1 rounded-full bg-paperwhite/10 text-trueturquoise font-semibold text-sm">
+                <span className="px-3 py-1 rounded-full font-semibold text-sm" style={{
+                  backgroundColor: 'var(--color-tertiary-bg)',
+                  color: 'var(--color-accent-primary)'
+                }}>
                   {formatCareerTrack(user?.careerTrack || '')}
                 </span>
               </div>
@@ -137,7 +143,10 @@ const StudentProfile: React.FC = () => {
           </div>
 
           {/* Profile Form */}
-          <div className="w-full bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 space-y-6">
+          <div className="w-full rounded-xl border shadow-lg p-6 space-y-6" style={{
+            backgroundColor: 'var(--color-tertiary-bg)',
+            borderColor: 'var(--color-border-subtle)'
+          }}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label 
@@ -151,13 +160,21 @@ const StudentProfile: React.FC = () => {
                   name="name"
                   value={profileData.name}
                   onChange={handleChange}
-                  className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors"
+                  className="w-full border rounded-lg px-4 py-3 transition-colors"
                   style={{ 
                     backgroundColor: 'var(--color-secondary-bg)',
                     borderColor: 'var(--color-border)',
                     color: 'var(--color-text-primary)'
                   }}
                   placeholder="Enter your full name"
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                    e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-border)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                 />
               </div>
               
@@ -195,13 +212,21 @@ const StudentProfile: React.FC = () => {
                   name="phone"
                   value={profileData.phone}
                   onChange={handleChange}
-                  className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors"
+                  className="w-full border rounded-lg px-4 py-3 transition-colors"
                   style={{ 
                     backgroundColor: 'var(--color-secondary-bg)',
                     borderColor: 'var(--color-border)',
                     color: 'var(--color-text-primary)'
                   }}
                   placeholder="Enter your phone number"
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                    e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-border)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                 />
               </div>
               
@@ -217,13 +242,21 @@ const StudentProfile: React.FC = () => {
                   name="location"
                   value={profileData.location}
                   onChange={handleChange}
-                  className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors"
+                  className="w-full border rounded-lg px-4 py-3 transition-colors"
                   style={{ 
                     backgroundColor: 'var(--color-secondary-bg)',
                     borderColor: 'var(--color-border)',
                     color: 'var(--color-text-primary)'
                   }}
                   placeholder="Enter your location"
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                    e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-border)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                 />
               </div>
               
@@ -239,13 +272,21 @@ const StudentProfile: React.FC = () => {
                   name="college"
                   value={profileData.college}
                   onChange={handleChange}
-                  className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors"
+                  className="w-full border rounded-lg px-4 py-3 transition-colors"
                   style={{ 
                     backgroundColor: 'var(--color-secondary-bg)',
                     borderColor: 'var(--color-border)',
                     color: 'var(--color-text-primary)'
                   }}
                   placeholder="Enter your college name"
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                    e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-border)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                 />
               </div>
               
@@ -261,13 +302,21 @@ const StudentProfile: React.FC = () => {
                   name="department"
                   value={profileData.department}
                   onChange={handleChange}
-                  className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors"
+                  className="w-full border rounded-lg px-4 py-3 transition-colors"
                   style={{ 
                     backgroundColor: 'var(--color-secondary-bg)',
                     borderColor: 'var(--color-border)',
                     color: 'var(--color-text-primary)'
                   }}
                   placeholder="Enter your department"
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                    e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-border)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                 />
               </div>
               
@@ -305,13 +354,21 @@ const StudentProfile: React.FC = () => {
                   name="gpa"
                   value={profileData.gpa}
                   onChange={handleChange}
-                  className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors"
+                  className="w-full border rounded-lg px-4 py-3 transition-colors"
                   style={{ 
                     backgroundColor: 'var(--color-secondary-bg)',
                     borderColor: 'var(--color-border)',
                     color: 'var(--color-text-primary)'
                   }}
                   placeholder="Enter your GPA"
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                    e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-border)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                 />
               </div>
               
@@ -327,23 +384,38 @@ const StudentProfile: React.FC = () => {
                   name="graduationYear"
                   value={profileData.graduationYear}
                   onChange={handleChange}
-                  className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors"
+                  className="w-full border rounded-lg px-4 py-3 transition-colors"
                   style={{ 
                     backgroundColor: 'var(--color-secondary-bg)',
                     borderColor: 'var(--color-border)',
                     color: 'var(--color-text-primary)'
                   }}
                   placeholder="Enter graduation year"
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                    e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-border)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                 />
               </div>
             </div>
             
             {message && (
-              <div className={`p-4 rounded-lg border ${
-                message.includes('success') 
-                  ? 'bg-trueturquoise/10 border-trueturquoise/20 text-trueturquoise' 
-                  : 'bg-rust/10 border-rust/20 text-rust'
-              }`}>
+              <div className="p-4 rounded-lg border" style={{
+                backgroundColor: message.includes('success') 
+                  ? 'var(--color-success-bg)' 
+                  : 'var(--color-error-bg)',
+                borderColor: message.includes('success') 
+                  ? 'var(--color-success)' 
+                  : 'var(--color-error)',
+                color: message.includes('success') 
+                  ? 'var(--color-success)' 
+                  : 'var(--color-error)',
+                border: '1px solid'
+              }}>
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium">{message}</span>
                 </div>
@@ -354,8 +426,21 @@ const StudentProfile: React.FC = () => {
               <button
                 onClick={handleSave}
                 disabled={isLoading}
-                className="bg-trueturquoise px-8 py-3 rounded-lg font-semibold hover:bg-teallight transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
-            style={{ color: 'var(--color-text-inverse)' }}
+                className="px-8 py-3 rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                style={{ 
+                  backgroundColor: 'var(--color-accent-primary)',
+                  color: 'var(--color-text-inverse)' 
+                }}
+                onMouseEnter={(e) => {
+                  if (!isLoading) {
+                    e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isLoading) {
+                    e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                  }
+                }}
               >
                 {isLoading ? 'Saving...' : 'Save Changes'}
               </button>

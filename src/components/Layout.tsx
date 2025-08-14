@@ -258,18 +258,15 @@ const Layout: React.FC = () => {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : ''} px-3 py-3 text-sm transition-colors ${
-                    isActive(item.path)
-                      ? 'border-r-2 border-trueturquoise'
-                      : ''
-                  }`}
+                  className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : ''} px-3 py-3 text-sm transition-colors`}
                   style={{
                     backgroundColor: isActive(item.path) 
                       ? 'var(--color-accent-tertiary)' 
                       : 'transparent',
                     color: isActive(item.path) 
                       ? 'var(--color-accent-primary)' 
-                      : 'var(--color-text-primary)'
+                      : 'var(--color-text-primary)',
+                    borderRight: isActive(item.path) ? '2px solid var(--color-accent-primary)' : 'none'
                   }}
                 >
                   <Icon className="h-5 w-5" />
@@ -289,7 +286,8 @@ const Layout: React.FC = () => {
             <ThemeSwitcher variant="icon" size="sm" className="mb-2" />
             <Link
               to={user?.role === 'admin' ? '/admin/profile' : '/student/profile'}
-              className="flex items-center justify-center w-10 h-10 rounded-md bg-trueturquoise mb-2"
+              className="flex items-center justify-center w-10 h-10 rounded-md mb-2"
+              style={{ backgroundColor: 'var(--color-accent-primary)' }}
               title="Profile"
               aria-label="View profile"
             >
@@ -333,14 +331,20 @@ const Layout: React.FC = () => {
             {/* Unified Profile Section - clickable */}
             <Link
               to={user?.role === 'admin' ? '/admin/profile' : '/student/profile'}
-              className="flex items-center gap-3 w-full px-3 py-3 mb-2 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-trueturquoise group"
+              className="flex items-center gap-3 w-full px-3 py-3 mb-2 rounded-lg transition-colors focus:outline-none group"
+              onFocus={(e) => {
+                e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.boxShadow = 'none';
+              }}
               tabIndex={0}
               aria-label="View profile"
               style={{
                 backgroundColor: 'var(--color-tertiary-bg)',
               }}
             >
-              <div className="bg-trueturquoise p-2 rounded-md flex items-center justify-center">
+              <div className="p-2 rounded-md flex items-center justify-center" style={{ backgroundColor: 'var(--color-accent-primary)' }}>
                 <span 
                   className="text-base font-heading"
                   style={{ color: 'var(--color-text-inverse)' }}
@@ -471,12 +475,22 @@ const Layout: React.FC = () => {
                 key={item.path}
                 to={item.path}
                 onClick={closeMobileMenu}
-                className={`flex items-center px-6 py-3 text-sm transition-colors ${
-                  isActive(item.path)
-                    ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise'
-                                    : 'hover:bg-trueturquoise/20 hover:text-trueturquoise'
-                  }`}
-                  style={{ color: 'var(--color-text-primary)' }}
+                className="flex items-center px-6 py-3 text-sm transition-colors"
+                style={{ 
+                  backgroundColor: isActive(item.path) ? 'var(--color-accent-tertiary)' : 'transparent',
+                  color: isActive(item.path) ? 'var(--color-accent-primary)' : 'var(--color-text-primary)',
+                  borderRight: isActive(item.path) ? '2px solid var(--color-accent-primary)' : 'none'
+                }}
+                onMouseEnter={(e) => {
+                  if (!isActive(item.path)) {
+                    e.currentTarget.style.backgroundColor = 'var(--color-accent-tertiary)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive(item.path)) {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }
+                }}
                 >
                 <Icon className="h-5 w-5 mr-3" />
                 {item.label}
@@ -516,7 +530,7 @@ const Layout: React.FC = () => {
             <ExitIcon className="h-5 w-5 mr-3" />
             Sign Out
           </button>
-          <div className="mt-4 text-center text-xs text-teallight font-label opacity-80 select-none">V1.0</div>
+          <div className="mt-4 text-center text-xs font-label opacity-80 select-none" style={{ color: 'var(--color-text-tertiary)' }}>V1.0</div>
         </div>
       </div>
 

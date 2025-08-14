@@ -389,11 +389,27 @@ const AdminSettings: React.FC = () => {
                   type="text"
                   value={settingsDraft?.general?.siteDescription ?? ''}
                   onChange={(e) => handleSettingChange('general', 'siteDescription', e.target.value)}
-                  className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition-all hover:border-trueturquoise/60"
+                  className="w-full px-4 py-3 border rounded-lg transition-all"
                   style={{
                     backgroundColor: 'var(--color-secondary-bg)',
                     borderColor: 'var(--color-border)',
                     color: 'var(--color-text-primary)'
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                    e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-border)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                  }}
+                  onMouseLeave={(e) => {
+                    if (e.currentTarget !== document.activeElement) {
+                      e.currentTarget.style.borderColor = 'var(--color-border)';
+                    }
                   }}
                 />
               </div>
@@ -424,18 +440,34 @@ const AdminSettings: React.FC = () => {
               >
                 Gemini API Key
               </label>
-              <input
-                type="text"
-                value={geminiKeyInput}
-                onChange={handleGeminiKeyChange}
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition-all hover:border-trueturquoise/60"
-                style={{
-                  backgroundColor: 'var(--color-secondary-bg)',
-                  borderColor: 'var(--color-border)',
-                  color: 'var(--color-text-primary)'
-                }}
-                placeholder="Enter Gemini API Key"
-              />
+                              <input
+                  type="text"
+                  value={geminiKeyInput}
+                  onChange={handleGeminiKeyChange}
+                  className="w-full px-4 py-3 border rounded-lg transition-all"
+                  style={{
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    borderColor: 'var(--color-border)',
+                    color: 'var(--color-text-primary)'
+                  }}
+                  placeholder="Enter Gemini API Key"
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                    e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-border)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                  }}
+                  onMouseLeave={(e) => {
+                    if (e.currentTarget !== document.activeElement) {
+                      e.currentTarget.style.borderColor = 'var(--color-border)';
+                    }
+                  }}
+                />
               <p 
                 className="text-xs"
                 style={{ color: 'var(--color-text-tertiary)' }}
@@ -451,18 +483,34 @@ const AdminSettings: React.FC = () => {
               >
                 Email Provider
               </label>
-              <input
-                type="text"
-                value={settingsDraft?.integrations?.emailProvider ?? ''}
-                onChange={e => handleSettingChange('integrations', 'emailProvider', e.target.value)}
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition-all hover:border-trueturquoise/60"
-                style={{
-                  backgroundColor: 'var(--color-secondary-bg)',
-                  borderColor: 'var(--color-border)',
-                  color: 'var(--color-text-primary)'
-                }}
-                placeholder="e.g. SendGrid, Gmail, Mailgun"
-              />
+                              <input
+                  type="text"
+                  value={settingsDraft?.integrations?.emailProvider ?? ''}
+                  onChange={e => handleSettingChange('integrations', 'emailProvider', e.target.value)}
+                  className="w-full px-4 py-3 border rounded-lg transition-all"
+                  style={{
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    borderColor: 'var(--color-border)',
+                    color: 'var(--color-text-primary)'
+                  }}
+                  placeholder="e.g. SendGrid, Gmail, Mailgun"
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                    e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-border)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                  }}
+                  onMouseLeave={(e) => {
+                    if (e.currentTarget !== document.activeElement) {
+                      e.currentTarget.style.borderColor = 'var(--color-border)';
+                    }
+                  }}
+                />
               <p 
                 className="text-xs"
                 style={{ color: 'var(--color-text-tertiary)' }}
@@ -567,7 +615,7 @@ const AdminSettings: React.FC = () => {
           >
             {isSaving ? (
               <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-paperwhite mr-2"></div>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 mr-2" style={{ borderColor: 'var(--color-text-inverse)' }}></div>
                 Saving...
               </>
             ) : (
@@ -582,16 +630,15 @@ const AdminSettings: React.FC = () => {
 
       {/* Save Message */}
       {saveMessage && (
-        <div 
-          className={`fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg ${
-            saveMessage.includes('successfully') 
-              ? 'bg-teallight' 
-              : 'bg-rust'
-          }`}
-          style={{ 
-            color: 'var(--color-text-inverse)'
-          }}
-        >
+                  <div 
+            className="fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg"
+            style={{ 
+              backgroundColor: saveMessage.includes('successfully') 
+                ? 'var(--color-success)' 
+                : 'var(--color-error)',
+              color: 'var(--color-text-inverse)'
+            }}
+          >
           {saveMessage}
         </div>
       )}

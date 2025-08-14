@@ -124,7 +124,15 @@ const AdminAnalytics: React.FC = () => {
           <select
             value={dateRange}
             onChange={(e) => setDateRange(e.target.value)}
-            className="border border-teallight rounded-lg px-3 py-2 focus:ring-2 focus:ring-trueturquoise focus:border-transparent"
+            className="border rounded-lg px-3 py-2 transition-colors"
+            onFocus={(e) => {
+              e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+              e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.borderColor = 'var(--color-border)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
             style={{ 
               backgroundColor: 'var(--color-secondary-bg)',
               color: 'var(--color-text-primary)'
@@ -137,7 +145,14 @@ const AdminAnalytics: React.FC = () => {
           </select>
           <button
             onClick={refreshData}
-            className="p-2 border border-teallight rounded-lg hover:bg-teallight/20 transition-colors"
+            className="p-2 border rounded-lg transition-colors"
+            style={{ borderColor: 'var(--color-border)' }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--color-tertiary-bg)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+            }}
           >
             <ReloadIcon className="h-4 w-4" style={{ color: 'var(--color-text-secondary)' }} />
           </button>

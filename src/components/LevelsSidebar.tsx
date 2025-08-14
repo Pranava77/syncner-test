@@ -212,11 +212,11 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
           <div className="animate-pulse space-y-4">
             {[1, 2, 3].map((i) => (
               <div key={i} className="space-y-2">
-                <div className="h-6 bg-paperwhite/10 rounded"></div>
+                <div className="h-6 rounded" style={{ backgroundColor: 'var(--color-tertiary-bg)' }}></div>
                 <div className="space-y-1 ml-4">
-                  <div className="h-4 bg-paperwhite/5 rounded"></div>
-                  <div className="h-4 bg-paperwhite/5 rounded"></div>
-                  <div className="h-4 bg-paperwhite/5 rounded"></div>
+                  <div className="h-4 rounded" style={{ backgroundColor: 'var(--color-tertiary-bg-subtle)' }}></div>
+                  <div className="h-4 rounded" style={{ backgroundColor: 'var(--color-tertiary-bg-subtle)' }}></div>
+                  <div className="h-4 rounded" style={{ backgroundColor: 'var(--color-tertiary-bg-subtle)' }}></div>
                 </div>
               </div>
             ))}
@@ -244,15 +244,22 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                 className="text-lg font-semibold flex items-center gap-2"
                 style={{ color: 'var(--color-text-primary)' }}
               >
-                <LayersIcon className="h-5 w-5 text-trueturquoise" /> 
+                <LayersIcon className="h-5 w-5" style={{ color: 'var(--color-accent-primary)' }} /> 
                 Error
               </h2>
             </div>
           )}
-          <div className="text-red-400 text-sm">Error loading levels: {error}</div>
+          <div className="text-sm" style={{ color: 'var(--color-error)' }}>Error loading levels: {error}</div>
           <button 
             onClick={refetch}
-            className="mt-2 text-trueturquoise hover:text-teallight text-sm"
+            className="mt-2 text-sm transition-colors"
+            style={{ color: 'var(--color-accent-primary)' }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = 'var(--color-accent-secondary)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = 'var(--color-accent-primary)';
+            }}
           >
             Retry
           </button>
@@ -282,7 +289,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
           }}
           aria-label={sidebarOpen ? 'Close sidebar' : 'Open sidebar'}
         >
-          <ChevronRightIcon className={`h-5 w-5 text-trueturquoise transition-transform ${sidebarOpen ? 'rotate-180' : ''}`} />
+          <ChevronRightIcon className={`h-5 w-5 transition-transform ${sidebarOpen ? 'rotate-180' : ''}`} style={{ color: 'var(--color-accent-primary)' }} />
         </button>
       )}
       {/* Sidebar Content */}
@@ -294,7 +301,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
               className="text-lg font-semibold flex items-center gap-2"
               style={{ color: 'var(--color-text-primary)' }}
             >
-              <LayersIcon className="h-5 w-5 text-trueturquoise" /> 
+              <LayersIcon className="h-5 w-5" style={{ color: 'var(--color-accent-primary)' }} /> 
               {loading ? 'Loading...' : `Levels (${levelsWithUnlockLogic.length})`}
             </h2>
           </div>
@@ -308,14 +315,15 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
               {levelsWithUnlockLogic.slice(0, 6).map((level, index) => (
                 <div
                   key={level.id}
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${
-                    currentLevel === level.id
-                      ? 'bg-trueturquoise shadow-lg shadow-trueturquoise/30'
+                  className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300"
+                  style={{
+                    backgroundColor: currentLevel === level.id
+                      ? 'var(--color-accent-primary)'
                       : level.isUnlocked
-                      ? 'bg-green-500/20 text-green-400 border border-green-500/30'
-                      : 'bg-paperwhite/10 text-teallight/50 border border-paperwhite/20'
-                  }`}
-                  style={{ 
+                      ? 'var(--color-success-bg)'
+                      : 'var(--color-tertiary-bg)',
+                    border: level.isUnlocked ? '1px solid var(--color-success)' : '1px solid var(--color-border-subtle)',
+                    boxShadow: currentLevel === level.id ? 'var(--shadow-lg)' : 'none',
                     color: currentLevel === level.id ? 'var(--color-text-inverse)' : 
                            level.isUnlocked ? 'var(--color-text-primary)' : 'var(--color-text-muted)'
                   }}
@@ -407,21 +415,32 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                         alert('This level is locked. Complete the previous level\'s exercise to unlock it.');
                       }
                     }}
-                    className={`w-full flex items-center py-2 transition-colors text-sm font-${currentLevel === level.id ? 'semibold' : 'normal'} text-left
-                      ${currentLevel === level.id ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 
-                        level.isUnlocked ? 'hover:bg-trueturquoise/20 hover:text-trueturquoise' : 
-                        'cursor-not-allowed opacity-60'}`}
+                    className={`w-full flex items-center py-2 transition-colors text-sm font-${currentLevel === level.id ? 'semibold' : 'normal'} text-left`}
                     style={{
+                      backgroundColor: currentLevel === level.id ? 'var(--color-accent-tertiary)' : 'transparent',
+                      borderRight: currentLevel === level.id ? '2px solid var(--color-accent-primary)' : 'none',
                       color: currentLevel === level.id ? 'var(--color-accent-primary)' :
                              level.isUnlocked ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
-                      borderRadius: 0
+                      borderRadius: 0,
+                      cursor: level.isUnlocked ? 'pointer' : 'not-allowed',
+                      opacity: level.isUnlocked ? 1 : 0.6
+                    }}
+                    onMouseEnter={(e) => {
+                      if (level.isUnlocked && currentLevel !== level.id) {
+                        e.currentTarget.style.backgroundColor = 'var(--color-accent-tertiary)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (level.isUnlocked && currentLevel !== level.id) {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                      }
                     }}
                     disabled={!level.isUnlocked}
                   >
                     {level.isUnlocked ? (
-                      <LockOpen1Icon className={`h-5 w-5 mr-2 ${currentLevel === level.id ? 'text-trueturquoise' : 'text-green-400'}`} />
+                      <LockOpen1Icon className="h-5 w-5 mr-2" style={{ color: currentLevel === level.id ? 'var(--color-accent-primary)' : 'var(--color-success)' }} />
                     ) : (
-                      <LockClosedIcon className="h-5 w-5 mr-2 text-teallight/50" />
+                      <LockClosedIcon className="h-5 w-5 mr-2" style={{ color: 'var(--color-text-muted)' }} />
                     )}
                     <div className="flex-1 text-left">
                       <div className="font-medium">
@@ -444,56 +463,90 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                     </div>
                     {level.isUnlocked && (
                       <ChevronDownIcon 
-                        className={`h-4 w-4 text-teallight transition-transform duration-200 mr-2 ${
+                        className={`h-4 w-4 transition-transform duration-200 mr-2 ${
                           isLevelExpanded(level.id) ? 'rotate-180' : ''
                         }`} 
+                        style={{ color: 'var(--color-text-tertiary)' }}
                       />
                     )}
                   </button>
                 </div>
                 {sidebarOpen && level.isUnlocked && isLevelExpanded(level.id) && (
-                <div className="ml-2 mt-2 flex flex-col space-y-1 border-l border-paperwhite/10 pl-2">
+                <div className="ml-2 mt-2 flex flex-col space-y-1 border-l pl-2" style={{ borderColor: 'var(--color-border-subtle)' }}>
                   <button
-                    className={`w-full flex items-center gap-2 text-left py-2 transition-colors text-xs font-${currentLevel === level.id && currentSection === 'learn' ? 'semibold' : 'normal'}
-                      ${currentLevel === level.id && currentSection === 'learn' ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 'hover:bg-trueturquoise/20 hover:text-trueturquoise'}`}
+                    className={`w-full flex items-center gap-2 text-left py-2 transition-colors text-xs font-${currentLevel === level.id && currentSection === 'learn' ? 'semibold' : 'normal'}`}
                     style={{ 
+                      backgroundColor: currentLevel === level.id && currentSection === 'learn' ? 'var(--color-accent-tertiary)' : 'transparent',
+                      borderRight: currentLevel === level.id && currentSection === 'learn' ? '2px solid var(--color-accent-primary)' : 'none',
                       borderRadius: 0,
                       color: currentLevel === level.id && currentSection === 'learn' ? 'var(--color-accent-primary)' : 'var(--color-text-primary)'
                     }}
-                      onClick={() => handleLevelClick(level, 'learn')}
+                    onMouseEnter={(e) => {
+                      if (currentLevel !== level.id || currentSection !== 'learn') {
+                        e.currentTarget.style.backgroundColor = 'var(--color-accent-tertiary)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (currentLevel !== level.id || currentSection !== 'learn') {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                      }
+                    }}
+                    onClick={() => handleLevelClick(level, 'learn')}
                   >
                     <ReaderIcon 
-                      className={`h-4 w-4 ${currentLevel === level.id && currentSection === 'learn' ? 'text-trueturquoise' : ''}`}
+                      className="h-4 w-4"
                       style={{ color: currentLevel === level.id && currentSection === 'learn' ? 'var(--color-accent-primary)' : 'var(--color-text-primary)' }}
                     />
                     Learn ({level.learn?.length || 0})
                   </button>
                   <button
-                    className={`w-full flex items-center gap-2 text-left py-2 transition-colors text-xs font-${currentLevel === level.id && currentSection === 'test' ? 'semibold' : 'normal'}
-                      ${currentLevel === level.id && currentSection === 'test' ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 'hover:bg-trueturquoise/20 hover:text-trueturquoise'}`}
+                    className={`w-full flex items-center gap-2 text-left py-2 transition-colors text-xs font-${currentLevel === level.id && currentSection === 'test' ? 'semibold' : 'normal'}`}
                     style={{ 
+                      backgroundColor: currentLevel === level.id && currentSection === 'test' ? 'var(--color-accent-tertiary)' : 'transparent',
+                      borderRight: currentLevel === level.id && currentSection === 'test' ? '2px solid var(--color-accent-primary)' : 'none',
                       borderRadius: 0,
                       color: currentLevel === level.id && currentSection === 'test' ? 'var(--color-accent-primary)' : 'var(--color-text-primary)'
                     }}
-                      onClick={() => handleLevelClick(level, 'test')}
+                    onMouseEnter={(e) => {
+                      if (currentLevel !== level.id || currentSection !== 'test') {
+                        e.currentTarget.style.backgroundColor = 'var(--color-accent-tertiary)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (currentLevel !== level.id || currentSection !== 'test') {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                      }
+                    }}
+                    onClick={() => handleLevelClick(level, 'test')}
                   >
                     <ClipboardIcon 
-                      className={`h-4 w-4 ${currentLevel === level.id && currentSection === 'test' ? 'text-trueturquoise' : ''}`}
+                      className="h-4 w-4"
                       style={{ color: currentLevel === level.id && currentSection === 'test' ? 'var(--color-accent-primary)' : 'var(--color-text-primary)' }}
                     />
                     Test ({level.test?.length || 0})
                   </button>
                   <button
-                    className={`w-full flex items-center gap-2 text-left py-2 transition-colors text-xs font-${currentLevel === level.id && currentSection === 'exercise' ? 'semibold' : 'normal'}
-                      ${currentLevel === level.id && currentSection === 'exercise' ? 'bg-trueturquoise/10 text-trueturquoise border-r-2 border-trueturquoise' : 'hover:bg-trueturquoise/20 hover:text-trueturquoise'}`}
+                    className={`w-full flex items-center gap-2 text-left py-2 transition-colors text-xs font-${currentLevel === level.id && currentSection === 'exercise' ? 'semibold' : 'normal'}`}
                     style={{ 
+                      backgroundColor: currentLevel === level.id && currentSection === 'exercise' ? 'var(--color-accent-tertiary)' : 'transparent',
+                      borderRight: currentLevel === level.id && currentSection === 'exercise' ? '2px solid var(--color-accent-primary)' : 'none',
                       borderRadius: 0,
                       color: currentLevel === level.id && currentSection === 'exercise' ? 'var(--color-accent-primary)' : 'var(--color-text-primary)'
                     }}
-                      onClick={() => handleLevelClick(level, 'exercise')}
+                    onMouseEnter={(e) => {
+                      if (currentLevel !== level.id || currentSection !== 'exercise') {
+                        e.currentTarget.style.backgroundColor = 'var(--color-accent-tertiary)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (currentLevel !== level.id || currentSection !== 'exercise') {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                      }
+                    }}
+                    onClick={() => handleLevelClick(level, 'exercise')}
                   >
                     <Pencil2Icon 
-                      className={`h-4 w-4 ${currentLevel === level.id && currentSection === 'exercise' ? 'text-trueturquoise' : ''}`}
+                      className="h-4 w-4"
                       style={{ color: currentLevel === level.id && currentSection === 'exercise' ? 'var(--color-accent-primary)' : 'var(--color-text-primary)' }}
                     />
                     Exercise ({level.exercise?.length || 0})

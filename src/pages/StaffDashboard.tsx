@@ -47,8 +47,17 @@ const StaffDashboard: React.FC = () => {
         </div>
         <button
           onClick={handleLogout}
-          className="mt-4 bg-rust px-6 py-2 rounded-lg hover:bg-rust/90 transition-colors font-medium shadow"
-          style={{ color: 'var(--color-text-inverse)' }}
+          className="mt-4 px-6 py-2 rounded-lg transition-colors font-medium shadow"
+          style={{ 
+            backgroundColor: 'var(--color-error)',
+            color: 'var(--color-text-inverse)' 
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = 'var(--color-error-hover)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'var(--color-error)';
+          }}
         >
           Logout
         </button>

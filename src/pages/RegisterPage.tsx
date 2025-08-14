@@ -196,123 +196,168 @@ const RegisterPage: React.FC = () => {
         >
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="bg-rust/10 border border-rust/30 rounded-lg p-4 flex items-center space-x-3">
-                <CrossCircledIcon className="h-5 w-5 text-rust flex-shrink-0" />
-                <span className="text-rust text-sm">{error}</span>
+              <div className="rounded-lg p-4 flex items-center space-x-3" style={{
+                backgroundColor: 'var(--color-error-bg)',
+                borderColor: 'var(--color-error)',
+                border: '1px solid'
+              }}>
+                <CrossCircledIcon className="h-5 w-5 flex-shrink-0" style={{ color: 'var(--color-error)' }} />
+                <span className="text-sm" style={{ color: 'var(--color-error)' }}>{error}</span>
               </div>
             )}
 
             {/* Name Field */}
             <div>
-              <label htmlFor="name" className="block text-sm text-paperwhite mb-2 font-label">
+              <label htmlFor="name" className="block text-sm mb-2 font-label" style={{ color: 'var(--color-text-primary)' }}>
                 Full Name
               </label>
               <div className="relative">
-                <PersonIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-teallight" />
+                <PersonIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5" style={{ color: 'var(--color-text-tertiary)' }} />
                 <input
                   id="name"
                   name="name"
                   type="text"
                   value={formData.name}
                   onChange={handleInputChange}
-                  className={`w-full pl-10 pr-4 py-3 bg-offblack/60 border rounded-lg focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors text-paperwhite placeholder-teallight ${
-                    errors.name ? 'border-rust' : 'border-paperwhite/20'
-                  }`}
+                  className="w-full pl-10 pr-4 py-3 border rounded-lg transition-colors"
+                  style={{
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    borderColor: errors.name ? 'var(--color-error)' : 'var(--color-border-subtle)',
+                    color: 'var(--color-text-primary)'
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                    e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = errors.name ? 'var(--color-error)' : 'var(--color-border-subtle)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                   placeholder="Enter your full name"
                 />
                 {errors.name && (
                   <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                    <CrossCircledIcon className="h-5 w-5 text-rust" />
+                    <CrossCircledIcon className="h-5 w-5" style={{ color: 'var(--color-error)' }} />
                   </div>
                 )}
               </div>
-              {errors.name && <p className="text-rust text-xs mt-1 font-label">{errors.name}</p>}
+              {errors.name && <p className="text-xs mt-1 font-label" style={{ color: 'var(--color-error)' }}>{errors.name}</p>}
             </div>
 
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-sm text-paperwhite mb-2 font-label">
+              <label htmlFor="email" className="block text-sm mb-2 font-label" style={{ color: 'var(--color-text-primary)' }}>
                 Email Address
               </label>
               <div className="relative">
-                <EnvelopeClosedIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-teallight" />
+                <EnvelopeClosedIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5" style={{ color: 'var(--color-text-tertiary)' }} />
                 <input
                   id="email"
                   name="email"
                   type="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className={`w-full pl-10 pr-4 py-3 bg-offblack/60 border rounded-lg focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors text-paperwhite placeholder-teallight ${
-                    errors.email ? 'border-rust' : 'border-paperwhite/20'
-                  }`}
+                  className="w-full pl-10 pr-4 py-3 border rounded-lg transition-colors"
+                  style={{
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    borderColor: errors.email ? 'var(--color-error)' : 'var(--color-border-subtle)',
+                    color: 'var(--color-text-primary)'
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                    e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = errors.email ? 'var(--color-error)' : 'var(--color-border-subtle)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                   placeholder="Enter your email address"
                 />
                 {errors.email && (
                   <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                    <CrossCircledIcon className="h-5 w-5 text-rust" />
+                    <CrossCircledIcon className="h-5 w-5" style={{ color: 'var(--color-error)' }} />
                   </div>
                 )}
               </div>
-              {errors.email && <p className="text-rust text-xs mt-1 font-label">{errors.email}</p>}
+              {errors.email && <p className="text-xs mt-1 font-label" style={{ color: 'var(--color-error)' }}>{errors.email}</p>}
             </div>
 
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-sm text-paperwhite mb-2 font-label">
+              <label htmlFor="password" className="block text-sm mb-2 font-label" style={{ color: 'var(--color-text-primary)' }}>
                 Password
               </label>
               <div className="relative">
-                <LockClosedIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-teallight" />
+                <LockClosedIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5" style={{ color: 'var(--color-text-tertiary)' }} />
                 <input
                   id="password"
                   name="password"
                   type={showPassword ? 'text' : 'password'}
                   value={formData.password}
                   onChange={handleInputChange}
-                  className={`w-full pl-10 pr-12 py-3 bg-offblack/60 border rounded-lg focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors text-paperwhite placeholder-teallight ${
-                    errors.password ? 'border-rust' : 'border-paperwhite/20'
-                  }`}
+                  className="w-full pl-10 pr-12 py-3 border rounded-lg transition-colors"
+                  style={{
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    borderColor: errors.password ? 'var(--color-error)' : 'var(--color-border-subtle)',
+                    color: 'var(--color-text-primary)'
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                    e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = errors.password ? 'var(--color-error)' : 'var(--color-border-subtle)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                   placeholder="Create a password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-teallight hover:text-paperwhite"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 transition-colors"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = 'var(--color-text-primary)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = 'var(--color-text-tertiary)';
+                  }}
                 >
                   {showPassword ? '🙈' : '👁️'}
                 </button>
                 {errors.password && (
                   <div className="absolute right-10 top-1/2 transform -translate-y-1/2">
-                    <CrossCircledIcon className="h-5 w-5 text-rust" />
+                    <CrossCircledIcon className="h-5 w-5" style={{ color: 'var(--color-error)' }} />
                   </div>
                 )}
               </div>
-              {errors.password && <p className="text-rust text-xs mt-1 font-label">{errors.password}</p>}
+              {errors.password && <p className="text-xs mt-1 font-label" style={{ color: 'var(--color-error)' }}>{errors.password}</p>}
 
               {formData.password && (
                 <div className="mt-2">
                   <div className="flex items-center space-x-2 mb-1">
-                    <div className="flex-1 bg-teallight rounded-full h-2">
+                    <div className="flex-1 rounded-full h-2" style={{ backgroundColor: 'var(--color-border)' }}>
                       <div
-                        className={`h-2 rounded-full transition-all ${
-                          passwordStrength.color === 'red' ? 'bg-rust' :
-                          passwordStrength.color === 'orange' ? 'bg-rust/70' :
-                          passwordStrength.color === 'yellow' ? 'bg-teallight' :
-                          passwordStrength.color === 'lightgreen' ? 'bg-trueturquoise' :
-                          passwordStrength.color === 'green' ? 'bg-trueturquoise' :
-                          'bg-trueturquoise/80'
-                        }`}
-                        style={{ width: `${(passwordStrength.strength / 5) * 100}%` }}
+                        className="h-2 rounded-full transition-all"
+                        style={{ 
+                          width: `${(passwordStrength.strength / 5) * 100}%`,
+                          backgroundColor: passwordStrength.color === 'red' ? 'var(--color-error)' :
+                          passwordStrength.color === 'orange' ? 'var(--color-warning)' :
+                          passwordStrength.color === 'yellow' ? 'var(--color-warning)' :
+                          passwordStrength.color === 'lightgreen' ? 'var(--color-success)' :
+                          passwordStrength.color === 'green' ? 'var(--color-success)' :
+                          'var(--color-accent-primary)'
+                        }}
                       ></div>
                     </div>
-                    <span className={`text-xs ${
-                      passwordStrength.color === 'red' ? 'text-rust' :
-                      passwordStrength.color === 'orange' ? 'text-rust/70' :
-                      passwordStrength.color === 'yellow' ? 'text-teallight' :
-                      passwordStrength.color === 'lightgreen' ? 'text-trueturquoise' :
-                      passwordStrength.color === 'green' ? 'text-trueturquoise' :
-                      'text-trueturquoise/80'
-                    }`}>
+                    <span className="text-xs" style={{
+                      color: passwordStrength.color === 'red' ? 'var(--color-error)' :
+                      passwordStrength.color === 'orange' ? 'var(--color-warning)' :
+                      passwordStrength.color === 'yellow' ? 'var(--color-warning)' :
+                      passwordStrength.color === 'lightgreen' ? 'var(--color-success)' :
+                      passwordStrength.color === 'green' ? 'var(--color-success)' :
+                      'var(--color-accent-primary)'
+                    }}>
                       {passwordStrength.text}
                     </span>
                   </div>
@@ -322,68 +367,97 @@ const RegisterPage: React.FC = () => {
 
             {/* Confirm Password Field */}
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm text-paperwhite mb-2 font-label">
+              <label htmlFor="confirmPassword" className="block text-sm mb-2 font-label" style={{ color: 'var(--color-text-primary)' }}>
                 Confirm Password
               </label>
               <div className="relative">
-                <LockClosedIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-teallight" />
+                <LockClosedIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5" style={{ color: 'var(--color-text-tertiary)' }} />
                 <input
                   id="confirmPassword"
                   name="confirmPassword"
                   type={showConfirmPassword ? 'text' : 'password'}
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
-                  className={`w-full pl-10 pr-12 py-3 bg-offblack/60 border rounded-lg focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors text-paperwhite placeholder-teallight ${
-                    errors.confirmPassword ? 'border-rust' : 'border-paperwhite/20'
-                  }`}
+                  className="w-full pl-10 pr-12 py-3 border rounded-lg transition-colors"
+                  style={{
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    borderColor: errors.confirmPassword ? 'var(--color-error)' : 'var(--color-border-subtle)',
+                    color: 'var(--color-text-primary)'
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                    e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = errors.confirmPassword ? 'var(--color-error)' : 'var(--color-border-subtle)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                   placeholder="Confirm your password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-teallight hover:text-paperwhite"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 transition-colors"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = 'var(--color-text-primary)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = 'var(--color-text-tertiary)';
+                  }}
                 >
                   {showConfirmPassword ? '🙈' : '👁️'}
                 </button>
                 {formData.confirmPassword && formData.password === formData.confirmPassword && (
                   <div className="absolute right-12 top-1/2 transform -translate-y-1/2">
-                    <CheckCircledIcon className="h-5 w-5 text-trueturquoise" />
+                    <CheckCircledIcon className="h-5 w-5" style={{ color: 'var(--color-success)' }} />
                   </div>
                 )}
               </div>
-              {errors.confirmPassword && <p className="text-rust text-xs mt-1 font-label">{errors.confirmPassword}</p>}
+              {errors.confirmPassword && <p className="text-xs mt-1 font-label" style={{ color: 'var(--color-error)' }}>{errors.confirmPassword}</p>}
             </div>
 
             {/* College Field */}
             <div>
-              <label htmlFor="college" className="block text-sm text-paperwhite mb-2 font-label">
+              <label htmlFor="college" className="block text-sm mb-2 font-label" style={{ color: 'var(--color-text-primary)' }}>
                 College/University
               </label>
               <div className="relative">
-                <PersonIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-teallight" />
+                <PersonIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5" style={{ color: 'var(--color-text-tertiary)' }} />
                 <input
                   id="college"
                   name="college"
                   type="text"
                   value={formData.college}
                   onChange={handleInputChange}
-                  className={`w-full pl-10 pr-4 py-3 bg-offblack/60 border rounded-lg focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors text-paperwhite placeholder-teallight ${
-                    errors.college ? 'border-rust' : 'border-paperwhite/20'
-                  }`}
+                  className="w-full pl-10 pr-4 py-3 border rounded-lg transition-colors"
+                  style={{
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    borderColor: errors.college ? 'var(--color-error)' : 'var(--color-border-subtle)',
+                    color: 'var(--color-text-primary)'
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                    e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = errors.college ? 'var(--color-error)' : 'var(--color-border-subtle)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                   placeholder="Enter your college/university"
                 />
                 {errors.college && (
                   <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                    <CrossCircledIcon className="h-5 w-5 text-rust" />
+                    <CrossCircledIcon className="h-5 w-5" style={{ color: 'var(--color-error)' }} />
                   </div>
                 )}
               </div>
-              {errors.college && <p className="text-rust text-xs mt-1 font-label">{errors.college}</p>}
+              {errors.college && <p className="text-xs mt-1 font-label" style={{ color: 'var(--color-error)' }}>{errors.college}</p>}
             </div>
 
             {/* Career Track Selection */}
             <div>
-              <label htmlFor="careerTrack" className="block text-sm text-paperwhite mb-2 font-label">
+              <label htmlFor="careerTrack" className="block text-sm mb-2 font-label" style={{ color: 'var(--color-text-primary)' }}>
                 Career Track
               </label>
               <div className="relative">
@@ -392,33 +466,44 @@ const RegisterPage: React.FC = () => {
                   name="careerTrack"
                   value={formData.careerTrack}
                   onChange={handleInputChange}
-                  className={`w-full pl-10 pr-4 py-3 bg-offblack/60 border rounded-lg focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors text-paperwhite appearance-none ${
-                    errors.careerTrack ? 'border-rust' : 'border-paperwhite/20'
-                  }`}
+                  className="w-full pl-10 pr-4 py-3 border rounded-lg transition-colors appearance-none"
+                  style={{
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    borderColor: errors.careerTrack ? 'var(--color-error)' : 'var(--color-border-subtle)',
+                    color: 'var(--color-text-primary)'
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                    e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = errors.careerTrack ? 'var(--color-error)' : 'var(--color-border-subtle)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                 >
-                  <option value="" className="bg-offblack text-paperwhite">Select a career track</option>
-                  <option value="full-stack" className="bg-offblack text-paperwhite">Full Stack Development</option>
-                  <option value="ai-ml" className="bg-offblack text-paperwhite">AI/ML Engineering</option>
-                  <option value="ui-ux" className="bg-offblack text-paperwhite">UI/UX Design</option>
-                  <option value="data-science" className="bg-offblack text-paperwhite">Data Science</option>
+                  <option value="" style={{ backgroundColor: 'var(--color-secondary-bg)', color: 'var(--color-text-primary)' }}>Select a career track</option>
+                  <option value="full-stack" style={{ backgroundColor: 'var(--color-secondary-bg)', color: 'var(--color-text-primary)' }}>Full Stack Development</option>
+                  <option value="ai-ml" style={{ backgroundColor: 'var(--color-secondary-bg)', color: 'var(--color-text-primary)' }}>AI/ML Engineering</option>
+                  <option value="ui-ux" style={{ backgroundColor: 'var(--color-secondary-bg)', color: 'var(--color-text-primary)' }}>UI/UX Design</option>
+                  <option value="data-science" style={{ backgroundColor: 'var(--color-secondary-bg)', color: 'var(--color-text-primary)' }}>Data Science</option>
                 </select>
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                  <svg className="h-5 w-5 text-teallight" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ color: 'var(--color-text-tertiary)' }}>
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
                 {errors.careerTrack && (
                   <div className="absolute right-10 top-1/2 transform -translate-y-1/2">
-                    <CrossCircledIcon className="h-5 w-5 text-rust" />
+                    <CrossCircledIcon className="h-5 w-5" style={{ color: 'var(--color-error)' }} />
                   </div>
                 )}
               </div>
-              {errors.careerTrack && <p className="text-rust text-xs mt-1 font-label">{errors.careerTrack}</p>}
+              {errors.careerTrack && <p className="text-xs mt-1 font-label" style={{ color: 'var(--color-error)' }}>{errors.careerTrack}</p>}
             </div>
 
             {/* Role Selection */}
             <div>
-              <label htmlFor="role" className="block text-sm text-paperwhite mb-2 font-label">
+              <label htmlFor="role" className="block text-sm mb-2 font-label" style={{ color: 'var(--color-text-primary)' }}>
                 I am a
               </label>
               <div className="relative">
@@ -427,13 +512,26 @@ const RegisterPage: React.FC = () => {
                   name="role"
                   value={formData.role}
                   onChange={handleInputChange}
-                  className="w-full pl-10 pr-4 py-3 bg-offblack/60 border border-paperwhite/20 rounded-lg focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors text-paperwhite appearance-none"
+                  className="w-full pl-10 pr-4 py-3 border rounded-lg transition-colors appearance-none"
+                  style={{
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    borderColor: 'var(--color-border-subtle)',
+                    color: 'var(--color-text-primary)'
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                    e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-border-subtle)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                 >
-                  <option value="student" className="bg-offblack text-paperwhite">Student</option>
-                  <option value="admin" className="bg-offblack text-paperwhite">Administrator</option>
+                  <option value="student" style={{ backgroundColor: 'var(--color-secondary-bg)', color: 'var(--color-text-primary)' }}>Student</option>
+                  <option value="admin" style={{ backgroundColor: 'var(--color-secondary-bg)', color: 'var(--color-text-primary)' }}>Administrator</option>
                 </select>
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                  <svg className="h-5 w-5 text-teallight" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ color: 'var(--color-text-tertiary)' }}>
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
@@ -444,7 +542,21 @@ const RegisterPage: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading || isSubmitting}
-              className="w-full bg-trueturquoise text-offblack py-3 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed mt-6"
+              className="w-full py-3 rounded-lg transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed mt-6"
+              style={{
+                backgroundColor: 'var(--color-accent-primary)',
+                color: 'var(--color-text-inverse)'
+              }}
+              onMouseEnter={(e) => {
+                if (!isLoading && !isSubmitting) {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isLoading && !isSubmitting) {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                }
+              }}
             >
               {isLoading || isSubmitting ? (
                 <div className="flex items-center justify-center space-x-2">
@@ -469,9 +581,9 @@ const RegisterPage: React.FC = () => {
 
           {/* Login Link */}
           <div className="mt-6 text-center">
-            <p className="text-teallight text-sm">
+            <p className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
               Already have an account?{' '}
-              <Link to="/login" className="text-trueturquoise hover:text-trueturquoise/90 transition-colors font-medium">
+              <Link to="/login" className="transition-colors font-medium" style={{ color: 'var(--color-accent-primary)' }} onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--color-accent-secondary)'; }} onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--color-accent-primary)'; }}>
                 Sign In
               </Link>
             </p>

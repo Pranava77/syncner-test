@@ -147,11 +147,19 @@ const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({ open, onClose, 
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                                  className="flex-1 min-w-0 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-trueturquoise"
+                                  className="flex-1 min-w-0 px-3 py-2 border rounded-lg transition-colors"
                   style={{ 
                     borderColor: 'var(--color-border)',
                     backgroundColor: 'var(--color-secondary-bg)',
                     color: 'var(--color-text-primary)'
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                    e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-border)';
+                    e.currentTarget.style.boxShadow = 'none';
                   }}
                 placeholder="Enter or generate password"
                 required
@@ -187,7 +195,7 @@ const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({ open, onClose, 
             >
               Password must be at least 6 characters.
             </div>
-            {error && <div className="text-rust text-sm font-medium w-full">{error}</div>}
+            {error && <div className="text-sm font-medium w-full" style={{ color: 'var(--color-error)' }}>{error}</div>}
             <button
               type="submit"
               disabled={loading || !password}

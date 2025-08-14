@@ -117,7 +117,7 @@ const AttendanceHeatmap: React.FC = () => {
           ) : (
             <div className="flex flex-col items-center w-full relative gap-6">
               {monthRange.length === 0 && (
-                <div className="text-xs text-teallight font-primary">No attendance data available.</div>
+                <div className="text-xs font-primary" style={{ color: 'var(--color-text-tertiary)' }}>No attendance data available.</div>
               )}
               {monthRange.map((monthKey) => {
                 const [year, month] = monthKey.split('-').map(Number);
@@ -235,7 +235,7 @@ const AttendanceHeatmap: React.FC = () => {
                     >
                       {new Date(year, month - 1).toLocaleString('default', { month: 'long', year: 'numeric' })}
                       {hasData && (
-                        <div className="text-xs mt-1 font-label text-teallight">
+                        <div className="text-xs mt-1 font-label" style={{ color: 'var(--color-text-tertiary)' }}>
                           Present: {monthData.filter(d => d.count === 1).length}/{daysInMonth}
                         </div>
                       )}

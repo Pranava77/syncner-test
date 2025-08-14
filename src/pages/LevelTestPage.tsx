@@ -430,7 +430,7 @@ const LevelTestPage: React.FC = () => {
           style={{ backgroundColor: 'var(--color-primary-bg)' }}
         >
           <div className="text-center">
-            <p className="text-rust text-lg mb-4">{error || 'Level not found'}</p>
+            <p className="text-lg mb-4" style={{ color: 'var(--color-error)' }}>{error || 'Level not found'}</p>
             <button 
               onClick={fetchLevel}
               className="px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105"

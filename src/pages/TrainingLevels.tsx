@@ -362,14 +362,22 @@ const TrainingLevels: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                   onClick={() => handleLevelClick(level)}
-                  className={`border rounded-lg p-6 transition-all duration-300 relative ${
-                    level.isUnlocked 
-                      ? 'cursor-pointer hover:border-trueturquoise/50' 
-                      : 'cursor-not-allowed opacity-60'
-                  }`}
+                  className="border rounded-lg p-6 transition-all duration-300 relative"
                   style={{
                     backgroundColor: level.isUnlocked ? 'var(--color-surface)' : 'var(--color-tertiary-bg)',
-                    borderColor: level.isUnlocked ? 'var(--color-border)' : 'var(--color-border-subtle)'
+                    borderColor: level.isUnlocked ? 'var(--color-border)' : 'var(--color-border-subtle)',
+                    cursor: level.isUnlocked ? 'pointer' : 'not-allowed',
+                    opacity: level.isUnlocked ? 1 : 0.6
+                  }}
+                  onMouseEnter={(e) => {
+                    if (level.isUnlocked) {
+                      e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (level.isUnlocked) {
+                      e.currentTarget.style.borderColor = 'var(--color-border)';
+                    }
                   }}
                 >
                   {/* Level Order Indicator */}
