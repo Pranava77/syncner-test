@@ -179,11 +179,11 @@ const StudentDashboard: React.FC = () => {
 
   if (!user || !user.careerTrack) {
     return (
-              <div 
-          className="space-y-6 lg:space-y-8 p-4 lg:p-8"
-          style={{ backgroundColor: 'var(--color-secondary-bg)' }}
-        >
-          <div 
+      <div 
+        className="space-y-6 lg:space-y-8 p-4 lg:p-8"
+        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+      >
+        <div 
         className="rounded-xl p-6 lg:p-8"
         style={{
           backgroundColor: 'var(--color-accent-tertiary)',
@@ -514,7 +514,7 @@ const StudentDashboard: React.FC = () => {
     return (
       <div 
         className="min-h-screen flex items-center justify-center p-4"
-        style={{ backgroundColor: 'var(--color-secondary-bg)' }}
+        style={{ backgroundColor: 'var(--color-primary-bg)' }}
       >
         <div className="text-center">
           <motion.img
@@ -556,7 +556,7 @@ const StudentDashboard: React.FC = () => {
   return (
     <div 
       className="space-y-6 lg:space-y-8 p-4 lg:p-8"
-      style={{ backgroundColor: 'var(--color-secondary-bg)' }}
+      style={{ backgroundColor: 'var(--color-primary-bg)' }}
     >
       {/* Welcome Section */}
       <div 

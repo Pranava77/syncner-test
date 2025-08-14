@@ -15,7 +15,7 @@ const StaffDashboard: React.FC = () => {
   return (
     <div 
       className="min-h-screen flex flex-col items-center justify-center p-8"
-              style={{ backgroundColor: 'var(--color-secondary-bg)' }}
+      style={{ backgroundColor: 'var(--color-primary-bg)' }}
     >
       <div 
         className="rounded-xl shadow-lg p-8 max-w-xl w-full text-center"

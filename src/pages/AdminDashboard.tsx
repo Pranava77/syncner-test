@@ -38,7 +38,7 @@ const AdminDashboard: React.FC = () => {
     return (
       <div 
         className="min-h-screen flex items-center justify-center"
-        style={{ backgroundColor: 'var(--color-secondary-bg)' }}
+        style={{ backgroundColor: 'var(--color-primary-bg)' }}
       >
         <div className="text-center">
           <p 
@@ -55,7 +55,7 @@ const AdminDashboard: React.FC = () => {
   return (
     <div 
       className="min-h-screen p-4 lg:p-8"
-              style={{ backgroundColor: 'var(--color-secondary-bg)' }}
+      style={{ backgroundColor: 'var(--color-primary-bg)' }}
     >
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">

@@ -138,7 +138,7 @@ const AdminSettings: React.FC = () => {
   return (
     <div 
       className="space-y-6 lg:space-y-8 p-4 lg:p-8 min-h-screen"
-              style={{ backgroundColor: 'var(--color-secondary-bg)' }}
+      style={{ backgroundColor: 'var(--color-primary-bg)' }}
     >
       <div className="mb-8">
         <h1 

@@ -89,7 +89,7 @@ const ProjectsPage: React.FC = () => {
   return (
     <div 
       className="min-h-screen w-full flex flex-col items-center justify-center p-6 lg:p-12"
-              style={{ backgroundColor: 'var(--color-secondary-bg)' }}
+      style={{ backgroundColor: 'var(--color-primary-bg)' }}
     >
       <div className="w-full max-w-6xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mx-auto">
         {projects.map((project) => (

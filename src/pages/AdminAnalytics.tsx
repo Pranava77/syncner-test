@@ -125,7 +125,7 @@ const AdminAnalytics: React.FC = () => {
   return (
     <div 
       className="space-y-8 min-h-screen p-4 lg:p-8"
-              style={{ backgroundColor: 'var(--color-secondary-bg)' }}
+      style={{ backgroundColor: 'var(--color-primary-bg)' }}
     >
       {/* Header */}
       <div className="flex items-center justify-between">

@@ -31,7 +31,7 @@ const LandingPage: React.FC = () => {
   return (
     <div 
       className="min-h-screen"
-              style={{ backgroundColor: 'var(--color-secondary-bg)' }}
+      style={{ backgroundColor: 'var(--color-primary-bg)' }}
     >
       {/* Header */}
       <header 

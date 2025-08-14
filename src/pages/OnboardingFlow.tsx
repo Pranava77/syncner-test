@@ -123,7 +123,7 @@ const OnboardingFlow: React.FC = () => {
   return (
     <div 
       className="min-h-screen py-12 px-4 font-sans relative"
-              style={{ backgroundColor: 'var(--color-secondary-bg)' }}
+      style={{ backgroundColor: 'var(--color-primary-bg)' }}
     >
       {/* Theme Switcher */}
       <div className="absolute top-4 right-4">
