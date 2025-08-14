@@ -1018,13 +1018,13 @@ const LevelTestPage: React.FC = () => {
               <div 
                 className="rounded-xl border shadow-lg p-6 text-center"
                 style={{
-                  background: testPassed 
-                    ? 'linear-gradient(to right, var(--color-success), var(--color-accent-primary))'
-                    : 'linear-gradient(to right, var(--color-error), var(--color-warning))',
-                  opacity: 0.1,
+                  backgroundColor: testPassed 
+                    ? 'var(--color-success-bg)' 
+                    : 'var(--color-error-bg)',
                   borderColor: testPassed 
                     ? 'var(--color-success)' 
-                    : 'var(--color-error)'
+                    : 'var(--color-error)',
+                  boxShadow: 'var(--shadow-md)'
                 }}
               >
                 <h2 
@@ -1038,7 +1038,8 @@ const LevelTestPage: React.FC = () => {
                     style={{ 
                       color: testPassed 
                         ? 'var(--color-success)' 
-                        : 'var(--color-error)' 
+                        : 'var(--color-error)',
+                      textShadow: '0 2px 4px rgba(0,0,0,0.1)'
                     }}
                   >
                     {testScore}%
@@ -1058,8 +1059,9 @@ const LevelTestPage: React.FC = () => {
                   <div 
                     className="rounded-xl p-6 mb-6 border"
                     style={{
-                      backgroundColor: 'var(--color-accent-tertiary)',
-                      borderColor: 'var(--color-border)'
+                      backgroundColor: 'var(--color-tertiary-bg)',
+                      borderColor: 'var(--color-border-subtle)',
+                      boxShadow: 'var(--shadow-sm)'
                     }}
                   >
                     {(currentAttempt < 3 || (currentAttempt === 0 && canRetake)) ? (
@@ -1119,7 +1121,13 @@ const LevelTestPage: React.FC = () => {
                     style={{ 
                       color: 'var(--color-text-primary)',
                       backgroundColor: 'var(--color-tertiary-bg)',
-                      borderColor: 'var(--color-border)'
+                      borderColor: 'var(--color-border-subtle)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--color-secondary-bg)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--color-tertiary-bg)';
                     }}
                   >
                     Back to Learning
@@ -1150,7 +1158,8 @@ const LevelTestPage: React.FC = () => {
                 className="rounded-xl border shadow-lg p-6"
                 style={{
                   backgroundColor: 'var(--color-tertiary-bg)',
-                  borderColor: 'var(--color-border)'
+                  borderColor: 'var(--color-border-subtle)',
+                  boxShadow: 'var(--shadow-md)'
                 }}
               >
                 <h3 
@@ -1181,7 +1190,8 @@ const LevelTestPage: React.FC = () => {
                         className="rounded-lg border p-4"
                         style={{
                           backgroundColor: 'var(--color-tertiary-bg)',
-                          borderColor: 'var(--color-border)'
+                          borderColor: 'var(--color-border-subtle)',
+                          boxShadow: 'var(--shadow-sm)'
                         }}
                       >
                                               <h4 
