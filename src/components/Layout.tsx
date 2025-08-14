@@ -331,62 +331,45 @@ const Layout: React.FC = () => {
             {/* Unified Profile Section - clickable */}
             <Link
               to={user?.role === 'admin' ? '/admin/profile' : '/student/profile'}
-              className="flex items-center gap-3 w-full px-3 py-3 mb-2 rounded-lg transition-colors focus:outline-none group"
-              onFocus={(e) => {
-                e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
-              }}
-              onBlur={(e) => {
-                e.currentTarget.style.boxShadow = 'none';
-              }}
+              className="flex items-center gap-3 w-full px-3 py-2 mb-3 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-offset-1 focus:ring-offset-[var(--color-secondary-bg)] group hover:bg-[var(--color-tertiary-bg)]"
               tabIndex={0}
               aria-label="View profile"
-              style={{
-                backgroundColor: 'var(--color-tertiary-bg)',
-              }}
             >
-              <div className="p-2 rounded-md flex items-center justify-center" style={{ backgroundColor: 'var(--color-accent-primary)' }}>
-                <span 
-                  className="text-base font-heading"
-                  style={{ color: 'var(--color-text-inverse)' }}
-                >
-                  {user?.name?.charAt(0) || 'U'}
-                </span>
+              <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium border-2 transition-colors group-hover:border-[var(--color-accent-primary)]" style={{ 
+                backgroundColor: 'var(--color-accent-primary)', 
+                borderColor: 'var(--color-accent-primary)',
+                color: 'var(--color-text-inverse)' 
+              }}>
+                {user?.name?.charAt(0) || 'U'}
               </div>
               <div className="flex flex-col flex-1 min-w-0">
-                <span 
-                  className="text-sm truncate font-heading"
-                  style={{ color: 'var(--color-text-primary)' }}
-                >
+                <span className="text-sm font-medium truncate" style={{ color: 'var(--color-text-primary)' }}>
                   {user?.name}
                 </span>
-                <span 
-                  className="text-xs capitalize truncate font-label"
-                  style={{ color: 'var(--color-text-tertiary)' }}
-                >
+                <span className="text-xs capitalize truncate opacity-70" style={{ color: 'var(--color-text-secondary)' }}>
                   {user?.role}
                 </span>
               </div>
-              <PersonIcon className="h-5 w-5 text-trueturquoise opacity-80 group-hover:scale-110 transition-transform" />
+              <PersonIcon className="h-4 w-4 opacity-60 group-hover:opacity-80 transition-opacity" style={{ color: 'var(--color-text-secondary)' }} />
             </Link>
             
             <button
               onClick={handleLogout}
               disabled={isLoggingOut}
-              className="flex items-center w-full px-3 py-2 text-sm rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-1"
+              className="flex items-center w-full px-3 py-2 text-sm rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[var(--color-tertiary-bg)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-offset-1 focus:ring-offset-[var(--color-secondary-bg)]"
               style={{
-                color: 'var(--color-text-primary)',
-                backgroundColor: 'transparent'
+                color: 'var(--color-text-secondary)'
               }}
             >
-              <ExitIcon className="h-4 w-4 mr-2 text-trueturquoise" />
+              <ExitIcon className="h-4 w-4 mr-2" />
               Sign Out
             </button>
             
             <div 
-              className="mt-4 text-center text-xs font-label opacity-80 select-none"
-              style={{ color: 'var(--color-text-tertiary)' }}
+              className="mt-4 text-center text-xs opacity-50 select-none"
+              style={{ color: 'var(--color-text-secondary)' }}
             >
-              V1.0
+              v1.0
             </div>
           </div>
         )}
@@ -427,34 +410,31 @@ const Layout: React.FC = () => {
       <div className={`lg:hidden fixed top-0 right-0 h-full w-80 max-w-[85vw] shadow-xl z-50 transform transition-transform duration-300 ease-in-out scroll-smooth ${
         isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
       }`} style={{ backgroundColor: 'var(--color-primary-bg)' }}>
-        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between mb-4">
+        <div className="p-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
+          <div className="flex items-center justify-between mb-3">
             <div className="flex items-center space-x-3">
-              <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 rounded-full">
-                <span className="text-white text-base font-heading">
-                  {user?.name?.charAt(0) || 'U'}
-                </span>
+              <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium" style={{ 
+                backgroundColor: 'var(--color-accent-primary)', 
+                color: 'var(--color-text-inverse)' 
+              }}>
+                {user?.name?.charAt(0) || 'U'}
               </div>
               <div>
-                <p className="text-sm" style={{ color: 'var(--color-text-primary)' }}>{user?.name}</p>
-                <p className="text-xs capitalize" style={{ color: 'var(--color-text-tertiary)' }}>{user?.role}</p>
+                <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{user?.name}</p>
+                <p className="text-xs capitalize opacity-70" style={{ color: 'var(--color-text-secondary)' }}>{user?.role}</p>
               </div>
             </div>
             <button
               onClick={closeMobileMenu}
-              className="p-2"
-              style={{ color: 'var(--color-text-tertiary)' }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = 'var(--color-text-primary)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = 'var(--color-text-tertiary)';
-              }}
+              className="p-1.5 rounded-md hover:bg-[var(--color-tertiary-bg)] transition-colors"
+              style={{ color: 'var(--color-text-secondary)' }}
             >
-              <Cross1Icon className="h-5 w-5" />
+              <Cross1Icon className="h-4 w-4" />
             </button>
           </div>
-          <p className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>{user?.college}</p>
+          {user?.college && (
+            <p className="text-xs opacity-70" style={{ color: 'var(--color-text-secondary)' }}>{user?.college}</p>
+          )}
         </div>
 
         <nav className="space-y-1">
@@ -516,32 +496,22 @@ const Layout: React.FC = () => {
           <Link
             to={user?.role === 'admin' ? '/admin/profile' : '/student/profile'}
             onClick={closeMobileMenu}
-            className="flex items-center gap-3 w-full px-3 py-3 mb-2 rounded-lg transition-colors focus:outline-none group"
+            className="flex items-center gap-3 w-full px-3 py-2 mb-3 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-offset-1 focus:ring-offset-[var(--color-primary-bg)] group hover:bg-[var(--color-tertiary-bg)]"
             tabIndex={0}
             aria-label="View profile"
-            style={{
-              background: 'linear-gradient(to right, var(--color-accent-tertiary), var(--color-accent-secondary))',
-              opacity: 0.8
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.opacity = '1';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.opacity = '0.8';
-            }}
           >
-            <div className="p-2 rounded-full flex items-center justify-center" style={{
-              background: 'linear-gradient(to right, var(--color-accent-primary), var(--color-accent-secondary))'
+            <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium border-2 transition-colors group-hover:border-[var(--color-accent-primary)]" style={{ 
+              backgroundColor: 'var(--color-accent-primary)', 
+              borderColor: 'var(--color-accent-primary)',
+              color: 'var(--color-text-inverse)' 
             }}>
-              <span className="text-base font-heading" style={{ color: 'var(--color-text-inverse)' }}>
-                {user?.name?.charAt(0) || 'U'}
-              </span>
+              {user?.name?.charAt(0) || 'U'}
             </div>
             <div className="flex flex-col flex-1 min-w-0">
-              <span className="text-sm truncate font-heading" style={{ color: 'var(--color-text-primary)' }}>{user?.name}</span>
-              <span className="text-xs capitalize truncate font-label" style={{ color: 'var(--color-text-tertiary)' }}>{user?.role}</span>
+              <span className="text-sm font-medium truncate" style={{ color: 'var(--color-text-primary)' }}>{user?.name}</span>
+              <span className="text-xs capitalize truncate opacity-70" style={{ color: 'var(--color-text-secondary)' }}>{user?.role}</span>
             </div>
-            <PersonIcon className="h-5 w-5 opacity-80 group-hover:scale-110 transition-transform" style={{ color: 'var(--color-accent-primary)' }} />
+            <PersonIcon className="h-4 w-4 opacity-60 group-hover:opacity-80 transition-opacity" style={{ color: 'var(--color-text-secondary)' }} />
           </Link>
           <button
             onClick={() => {
@@ -549,26 +519,15 @@ const Layout: React.FC = () => {
               closeMobileMenu();
             }}
             disabled={isLoggingOut}
-            className="flex items-center w-full px-3 py-3 text-base rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-1"
+            className="flex items-center w-full px-3 py-2 text-sm rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[var(--color-tertiary-bg)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-offset-1 focus:ring-offset-[var(--color-primary-bg)]"
             style={{
-              color: 'var(--color-text-primary)',
-              backgroundColor: 'transparent'
-            }}
-            onMouseEnter={(e) => {
-              if (!isLoggingOut) {
-                e.currentTarget.style.backgroundColor = 'var(--color-tertiary-bg)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!isLoggingOut) {
-                e.currentTarget.style.backgroundColor = 'transparent';
-              }
+              color: 'var(--color-text-secondary)'
             }}
           >
-            <ExitIcon className="h-5 w-5 mr-3" />
+            <ExitIcon className="h-4 w-4 mr-2" />
             Sign Out
           </button>
-          <div className="mt-4 text-center text-xs font-label opacity-80 select-none" style={{ color: 'var(--color-text-tertiary)' }}>V1.0</div>
+          <div className="mt-4 text-center text-xs opacity-50 select-none" style={{ color: 'var(--color-text-secondary)' }}>v1.0</div>
         </div>
       </div>
 
