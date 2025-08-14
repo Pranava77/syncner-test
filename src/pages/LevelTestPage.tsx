@@ -765,12 +765,12 @@ const LevelTestPage: React.FC = () => {
   return (
     <div 
       className="flex h-screen overflow-x-hidden"
-      style={{ backgroundColor: 'var(--color-primary-bg)' }}
+      style={{ backgroundColor: 'var(--color-secondary-bg)' }}
     >
       <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
       <main 
         className="flex-1 overflow-y-auto overflow-x-hidden scroll-smooth p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center"
-        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+        style={{ backgroundColor: 'var(--color-secondary-bg)' }}
         ref={scrollContainerRef}
       >
         {/* Level Header */}

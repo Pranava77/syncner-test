@@ -167,7 +167,7 @@ const TrainingLevels: React.FC = () => {
     return (
       <div 
         className="flex h-screen"
-        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+        style={{ backgroundColor: 'var(--color-secondary-bg)' }}
       >
         <LevelsSidebar 
           sidebarOpen={sidebarOpen} 
@@ -176,7 +176,7 @@ const TrainingLevels: React.FC = () => {
         />
         <main 
           className="flex-1 overflow-y-auto scroll-smooth p-6 lg:p-12"
-          style={{ backgroundColor: 'var(--color-primary-bg)' }}
+          style={{ backgroundColor: 'var(--color-secondary-bg)' }}
         >
           <div className="max-w-7xl mx-auto">
             <div className="mb-8">
@@ -234,7 +234,7 @@ const TrainingLevels: React.FC = () => {
     return (
       <div 
         className="flex h-screen w-full"
-        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+        style={{ backgroundColor: 'var(--color-secondary-bg)' }}
       >
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <main className="flex-1 p-6 lg:p-12 flex items-center justify-center">
@@ -279,7 +279,7 @@ const TrainingLevels: React.FC = () => {
   return (
     <div 
       className="flex h-screen w-full"
-      style={{ backgroundColor: 'var(--color-primary-bg)' }}
+      style={{ backgroundColor: 'var(--color-secondary-bg)' }}
     >
       <LevelsSidebar 
         sidebarOpen={sidebarOpen} 
@@ -288,7 +288,7 @@ const TrainingLevels: React.FC = () => {
       />
       <main 
         className="flex-1 overflow-y-auto scroll-smooth p-6 lg:p-12"
-        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+        style={{ backgroundColor: 'var(--color-secondary-bg)' }}
       >
         <div className="max-w-6xl mx-auto">
           <div className="mb-8">

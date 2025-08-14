@@ -699,12 +699,12 @@ const LevelExercisePage: React.FC = () => {
   return (
     <div 
       className="flex h-screen overflow-x-hidden"
-      style={{ backgroundColor: 'var(--color-primary-bg)' }}
+      style={{ backgroundColor: 'var(--color-secondary-bg)' }}
     >
       <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="exercise" refreshTrigger={refreshTrigger} />
       <main 
         className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center"
-        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+        style={{ backgroundColor: 'var(--color-secondary-bg)' }}
       >
         {/* Level Header */}
         <div className="w-full max-w-5xl rounded-xl border shadow-lg p-6 mb-8" style={{

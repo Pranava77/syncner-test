@@ -264,12 +264,12 @@ const LevelLearnPage: React.FC = () => {
   return (
     <div 
       className="flex h-screen overflow-x-hidden"
-      style={{ backgroundColor: 'var(--color-primary-bg)' }}
+      style={{ backgroundColor: 'var(--color-secondary-bg)' }}
     >
       <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="learn" refreshTrigger={refreshTrigger} />
       <main 
         className="flex-1 overflow-y-auto scroll-smooth p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center"
-        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+        style={{ backgroundColor: 'var(--color-secondary-bg)' }}
       >
         {loading ? (
           <div className="text-center flex flex-col items-center justify-center min-h-screen">
