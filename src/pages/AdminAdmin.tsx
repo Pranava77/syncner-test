@@ -156,12 +156,20 @@ const AdminAdmin: React.FC = () => {
             Manage admins
           </p>
           {successMessage && (
-            <div className="mt-2 p-2 bg-green-500/20 border border-green-500/30 rounded-lg text-green-400 text-sm">
+            <div className="mt-2 p-2 rounded-lg text-sm" style={{
+              backgroundColor: 'var(--color-success-bg)',
+              border: '1px solid var(--color-success)',
+              color: 'var(--color-success)'
+            }}>
               {successMessage}
             </div>
           )}
           {error && (
-            <div className="mt-2 p-2 bg-red-500/20 border border-red-500/30 rounded-lg text-red-400 text-sm">
+            <div className="mt-2 p-2 rounded-lg text-sm" style={{
+              backgroundColor: 'var(--color-error-bg)',
+              border: '1px solid var(--color-error)',
+              color: 'var(--color-error)'
+            }}>
               {error}
             </div>
           )}

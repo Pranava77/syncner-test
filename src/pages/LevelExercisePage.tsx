@@ -361,7 +361,7 @@ const LevelExercisePage: React.FC = () => {
           style={{ backgroundColor: 'var(--color-primary-bg)' }}
         >
           <div className="text-center">
-            <p className="text-red-400 text-lg mb-4">{error || 'Level not found'}</p>
+            <p className="text-lg mb-4" style={{ color: 'var(--color-error)' }}>{error || 'Level not found'}</p>
             <button 
               onClick={fetchLevel}
               className="px-4 py-2 rounded-lg transition-colors"
@@ -641,12 +641,16 @@ const LevelExercisePage: React.FC = () => {
                   {exercise.description}
                 </td>
                   <td className="py-3 px-4">
-                    <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                      exercise.difficulty === 'Easy' ? 'bg-green-500/20 text-green-400' :
-                      exercise.difficulty === 'Medium' ? 'bg-yellow-500/20 text-yellow-400' :
-                      exercise.difficulty === 'Hard' ? 'bg-orange-500/20 text-orange-400' :
-                      'bg-red-500/20 text-red-400'
-                    }`}>
+                    <span className="px-2 py-1 rounded text-xs font-semibold" style={{
+                      backgroundColor: exercise.difficulty === 'Easy' ? 'var(--color-success-bg)' :
+                        exercise.difficulty === 'Medium' ? 'var(--color-warning-bg)' :
+                        exercise.difficulty === 'Hard' ? 'var(--color-warning-bg)' :
+                        'var(--color-error-bg)',
+                      color: exercise.difficulty === 'Easy' ? 'var(--color-success)' :
+                        exercise.difficulty === 'Medium' ? 'var(--color-warning)' :
+                        exercise.difficulty === 'Hard' ? 'var(--color-warning)' :
+                        'var(--color-error)'
+                    }}>
                       {exercise.difficulty}
                     </span>
                   </td>
@@ -659,8 +663,8 @@ const LevelExercisePage: React.FC = () => {
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-2">
                       {isSubmitted ? (
-                        <div className="w-4 h-4 bg-green-500 rounded flex items-center justify-center">
-                          <CheckCircledIcon className="h-3 w-3 text-white" />
+                        <div className="w-4 h-4 rounded flex items-center justify-center" style={{ backgroundColor: 'var(--color-success)' }}>
+                          <CheckCircledIcon className="h-3 w-3" style={{ color: 'var(--color-text-inverse)' }} />
                         </div>
                       ) : (
                         <div className="w-4 h-4 rounded" style={{ backgroundColor: 'var(--color-border)' }}></div>
@@ -777,19 +781,25 @@ const LevelExercisePage: React.FC = () => {
           </div>
           
           {hasExerciseLinks ? (
-            <div className="bg-green-500/20 border border-green-500/30 rounded-lg p-3">
-              <div className="flex items-center gap-2 text-green-400">
-                <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-xs">✓</span>
+            <div className="rounded-lg p-3" style={{
+              backgroundColor: 'var(--color-success-bg)',
+              border: '1px solid var(--color-success)'
+            }}>
+              <div className="flex items-center gap-2" style={{ color: 'var(--color-success)' }}>
+                <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--color-success)' }}>
+                  <span className="text-xs" style={{ color: 'var(--color-text-inverse)' }}>✓</span>
                 </div>
                 <span className="font-semibold">Exercise links submitted! You can now unlock the next level.</span>
               </div>
             </div>
           ) : (
-            <div className="bg-orange-500/20 border border-orange-500/30 rounded-lg p-3">
-              <div className="flex items-center gap-2 text-orange-400">
-                <div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-xs">!</span>
+            <div className="rounded-lg p-3" style={{
+              backgroundColor: 'var(--color-warning-bg)',
+              border: '1px solid var(--color-warning)'
+            }}>
+              <div className="flex items-center gap-2" style={{ color: 'var(--color-warning)' }}>
+                <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--color-warning)' }}>
+                  <span className="text-xs" style={{ color: 'var(--color-text-inverse)' }}>!</span>
                 </div>
                 <span className="font-semibold">Submit exercise links to unlock the next level.</span>
               </div>

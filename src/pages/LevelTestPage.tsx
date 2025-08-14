@@ -531,7 +531,7 @@ const LevelTestPage: React.FC = () => {
               borderColor: 'rgba(34, 197, 94, 0.3)'
             }}
           >
-            <div className="text-green-400 text-6xl mb-4">✓</div>
+            <div className="text-6xl mb-4" style={{ color: 'var(--color-success)' }}>✓</div>
             <h2 
               className="text-2xl font-bold mb-2"
               style={{ color: 'var(--color-text-primary)' }}
@@ -641,8 +641,10 @@ const LevelTestPage: React.FC = () => {
               borderColor: 'rgba(249, 115, 22, 0.3)'
             }}
           >
-            <div className="w-20 h-20 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
-              <ExclamationTriangleIcon className="h-10 w-10 text-orange-400" />
+            <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6" style={{
+              background: 'linear-gradient(to bottom right, var(--color-warning-bg), var(--color-error-bg))'
+            }}>
+              <ExclamationTriangleIcon className="h-10 w-10" style={{ color: 'var(--color-warning)' }} />
             </div>
             <h2 
               className="text-3xl font-bold mb-3"
@@ -809,7 +811,7 @@ const LevelTestPage: React.FC = () => {
                   >
                     Test your knowledge with {validQuestions.length} questions
                   </p>
-                  <p className="text-orange-400 text-sm mt-1">Passing score: 60% or higher</p>
+                  <p className="text-sm mt-1" style={{ color: 'var(--color-warning)' }}>Passing score: 60% or higher</p>
             </div>
               </div>
               <div className="flex items-center gap-6">
@@ -919,11 +921,10 @@ const LevelTestPage: React.FC = () => {
                               )}
                             </div>
                             <span 
-                              className={`text-lg ${
-                                answers[qIdx]?.[optIdx] ? 'text-trueturquoise font-semibold' : ''
-                              }`}
+                              className="text-lg"
                               style={{ 
-                                color: answers[qIdx]?.[optIdx] ? undefined : 'var(--color-text-primary)'
+                                color: answers[qIdx]?.[optIdx] ? 'var(--color-accent-primary)' : 'var(--color-text-primary)',
+                                fontWeight: answers[qIdx]?.[optIdx] ? 'bold' : 'normal'
                               }}
                             >
                               {option}
@@ -1140,37 +1141,40 @@ const LevelTestPage: React.FC = () => {
                           {question.options.map((option, optIdx) => (
                             <div 
                               key={optIdx} 
-                              className={`flex items-center p-3 rounded-lg border ${
-                                optIdx === userAnswerIndex 
-                                  ? isCorrect 
-                                    ? 'bg-green-500/20 border-green-500/30' 
-                                    : 'bg-red-500/20 border-red-500/30'
-                                  : optIdx === correctAnswerIndex
-                                    ? 'bg-green-500/20 border-green-500/30'
-                                    : ''
-                              }`}
+                              className="flex items-center p-3 rounded-lg border"
                               style={{
-                                backgroundColor: (optIdx === userAnswerIndex || optIdx === correctAnswerIndex) 
-                                  ? undefined 
-                                  : 'var(--color-tertiary-bg)',
-                                borderColor: (optIdx === userAnswerIndex || optIdx === correctAnswerIndex)
-                                  ? undefined
-                                  : 'var(--color-border)'
+                                backgroundColor: optIdx === userAnswerIndex 
+                                  ? isCorrect 
+                                    ? 'var(--color-success-bg)' 
+                                    : 'var(--color-error-bg)'
+                                  : optIdx === correctAnswerIndex
+                                    ? 'var(--color-success-bg)'
+                                    : 'var(--color-tertiary-bg)',
+                                borderColor: optIdx === userAnswerIndex 
+                                  ? isCorrect 
+                                    ? 'var(--color-success)' 
+                                    : 'var(--color-error)'
+                                  : optIdx === correctAnswerIndex
+                                    ? 'var(--color-success)'
+                                    : 'var(--color-border)'
                               }}
                             >
-                              <div className={`w-5 h-5 rounded border-2 flex items-center justify-center mr-3 ${
-                                optIdx === userAnswerIndex
-                                  ? isCorrect
-                                    ? 'bg-green-500 border-green-500'
-                                    : 'bg-red-500 border-red-500'
-                                  : optIdx === correctAnswerIndex
-                                    ? 'bg-green-500 border-green-500'
-                                    : ''
-                              }`}
+                              <div className="w-5 h-5 rounded border-2 flex items-center justify-center mr-3"
                               style={{
-                                borderColor: (optIdx === userAnswerIndex || optIdx === correctAnswerIndex)
-                                  ? undefined
-                                  : 'var(--color-border)'
+                                backgroundColor: optIdx === userAnswerIndex
+                                  ? isCorrect
+                                    ? 'var(--color-success)'
+                                    : 'var(--color-error)'
+                                  : optIdx === correctAnswerIndex
+                                    ? 'var(--color-success)'
+                                    : 'transparent',
+                                borderColor: optIdx === userAnswerIndex
+                                  ? isCorrect
+                                    ? 'var(--color-success)'
+                                    : 'var(--color-error)'
+                                  : optIdx === correctAnswerIndex
+                                    ? 'var(--color-success)'
+                                    : 'var(--color-border)'
                               }}>
                                 {optIdx === userAnswerIndex && (
                                   <CheckCircledIcon className="h-3 w-3 text-white" aria-hidden="true" />
@@ -1180,17 +1184,16 @@ const LevelTestPage: React.FC = () => {
                                 )}
                               </div>
                               <span 
-                                className={`text-sm ${
-                                  optIdx === userAnswerIndex 
-                                    ? isCorrect 
-                                      ? 'text-green-400 font-semibold' 
-                                      : 'text-red-400 font-semibold'
-                                    : optIdx === correctAnswerIndex
-                                      ? 'text-green-400 font-semibold'
-                                      : ''
-                                }`}
+                                className="text-sm"
                                 style={{ 
-                                  color: (optIdx === userAnswerIndex || optIdx === correctAnswerIndex) ? undefined : 'var(--color-text-primary)'
+                                  color: optIdx === userAnswerIndex 
+                                    ? isCorrect 
+                                      ? 'var(--color-success)' 
+                                      : 'var(--color-error)'
+                                    : optIdx === correctAnswerIndex
+                                      ? 'var(--color-success)'
+                                      : 'var(--color-text-primary)',
+                                  fontWeight: (optIdx === userAnswerIndex || optIdx === correctAnswerIndex) ? 'bold' : 'normal'
                                 }}
                               >
                                 {option}
@@ -1199,11 +1202,14 @@ const LevelTestPage: React.FC = () => {
           ))}
                         </div>
 
-                        <div className={`rounded-lg p-3 border ${
-                          isCorrect 
-                            ? 'bg-green-500/10 border-green-500/20' 
-                            : 'bg-red-500/10 border-red-500/20'
-                        }`}>
+                        <div className="rounded-lg p-3 border" style={{
+                          backgroundColor: isCorrect 
+                            ? 'var(--color-success-bg)' 
+                            : 'var(--color-error-bg)',
+                          borderColor: isCorrect 
+                            ? 'var(--color-success)' 
+                            : 'var(--color-error)'
+                        }}>
                           <div className="flex items-center gap-2 mb-1">
                             <span 
                               className="text-sm font-semibold"
@@ -1212,18 +1218,18 @@ const LevelTestPage: React.FC = () => {
                               {isCorrect ? 'Correct!' : 'Incorrect'}
                             </span>
                             {isCorrect ? (
-                              <span className="text-green-400">✓</span>
+                              <span style={{ color: 'var(--color-success)' }}>✓</span>
                             ) : (
-                              <span className="text-red-400">✗</span>
+                              <span style={{ color: 'var(--color-error)' }}>✗</span>
                             )}
                           </div>
                           <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
                             Your answer: {hasAnswered ? question.options[userAnswerIndex] : 'Not answered'}
                           </div>
                           {!isCorrect && hasAnswered && (
-                            <div className="text-xs text-green-400 mt-1">
-                              Correct answer: {correctAnswerIndex !== -1 ? question.options[correctAnswerIndex] : question.answer}
-                            </div>
+                                                      <div className="text-xs mt-1" style={{ color: 'var(--color-success)' }}>
+                            Correct answer: {correctAnswerIndex !== -1 ? question.options[correctAnswerIndex] : question.answer}
+                          </div>
                           )}
                         </div>
                       </div>

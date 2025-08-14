@@ -61,12 +61,21 @@ const AdminAnalytics: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <ExclamationTriangleIcon className="h-8 w-8 text-red-600 mx-auto mb-4" />
-          <p className="text-gray-600 dark:text-gray-300">Failed to load analytics: {error}</p>
+          <ExclamationTriangleIcon className="h-8 w-8 mx-auto mb-4" style={{ color: 'var(--color-error)' }} />
+          <p style={{ color: 'var(--color-text-tertiary)' }}>Failed to load analytics: {error}</p>
           <button
             onClick={refreshData}
-            className="mt-4 bg-blue-600 px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-            style={{ color: 'var(--color-text-inverse)' }}
+            className="mt-4 px-4 py-2 rounded-lg transition-colors"
+            style={{ 
+              backgroundColor: 'var(--color-accent-primary)',
+              color: 'var(--color-text-inverse)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+            }}
           >
             Try Again
           </button>
@@ -83,12 +92,21 @@ const AdminAnalytics: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <ExclamationTriangleIcon className="h-8 w-8 text-yellow-500 mx-auto mb-4" />
-          <p className="text-gray-600 dark:text-gray-300">No analytics data available.</p>
+          <ExclamationTriangleIcon className="h-8 w-8 mx-auto mb-4" style={{ color: 'var(--color-warning)' }} />
+          <p style={{ color: 'var(--color-text-tertiary)' }}>No analytics data available.</p>
           <button
             onClick={refreshData}
-            className="mt-4 bg-blue-600 px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-            style={{ color: 'var(--color-text-inverse)' }}
+            className="mt-4 px-4 py-2 rounded-lg transition-colors"
+            style={{ 
+              backgroundColor: 'var(--color-accent-primary)',
+              color: 'var(--color-text-inverse)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+            }}
           >
             Refresh
           </button>

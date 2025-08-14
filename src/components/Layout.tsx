@@ -424,9 +424,9 @@ const Layout: React.FC = () => {
       )}
 
       {/* Mobile Sidebar */}
-      <div className={`lg:hidden fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-offblack shadow-xl z-50 transform transition-transform duration-300 ease-in-out scroll-smooth ${
+      <div className={`lg:hidden fixed top-0 right-0 h-full w-80 max-w-[85vw] shadow-xl z-50 transform transition-transform duration-300 ease-in-out scroll-smooth ${
         isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
-      }`}>
+      }`} style={{ backgroundColor: 'var(--color-primary-bg)' }}>
         <div className="p-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-3">
@@ -436,18 +436,25 @@ const Layout: React.FC = () => {
                 </span>
               </div>
               <div>
-                <p className="text-sm text-gray-900 dark:text-white">{user?.name}</p>
-                <p className="text-xs text-gray-600 dark:text-gray-400 capitalize">{user?.role}</p>
+                <p className="text-sm" style={{ color: 'var(--color-text-primary)' }}>{user?.name}</p>
+                <p className="text-xs capitalize" style={{ color: 'var(--color-text-tertiary)' }}>{user?.role}</p>
               </div>
             </div>
             <button
               onClick={closeMobileMenu}
-              className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              className="p-2"
+              style={{ color: 'var(--color-text-tertiary)' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = 'var(--color-text-primary)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = 'var(--color-text-tertiary)';
+              }}
             >
               <Cross1Icon className="h-5 w-5" />
             </button>
           </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">{user?.college}</p>
+          <p className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>{user?.college}</p>
         </div>
 
         <nav className="space-y-1">
@@ -504,20 +511,32 @@ const Layout: React.FC = () => {
           <Link
             to={user?.role === 'admin' ? '/admin/profile' : '/student/profile'}
             onClick={closeMobileMenu}
-            className="flex items-center gap-3 w-full px-3 py-3 mb-2 rounded-lg transition-colors bg-gradient-to-r from-blue-50/80 to-purple-50/80 dark:from-blue-900/30 dark:to-purple-900/30 hover:bg-blue-100 dark:hover:bg-blue-800/60 focus:outline-none focus:ring-2 focus:ring-blue-400 group"
+            className="flex items-center gap-3 w-full px-3 py-3 mb-2 rounded-lg transition-colors focus:outline-none group"
             tabIndex={0}
             aria-label="View profile"
+            style={{
+              background: 'linear-gradient(to right, var(--color-accent-tertiary), var(--color-accent-secondary))',
+              opacity: 0.8
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.opacity = '1';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.opacity = '0.8';
+            }}
           >
-            <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 rounded-full flex items-center justify-center">
-              <span className="text-white text-base font-heading">
+            <div className="p-2 rounded-full flex items-center justify-center" style={{
+              background: 'linear-gradient(to right, var(--color-accent-primary), var(--color-accent-secondary))'
+            }}>
+              <span className="text-base font-heading" style={{ color: 'var(--color-text-inverse)' }}>
                 {user?.name?.charAt(0) || 'U'}
               </span>
             </div>
             <div className="flex flex-col flex-1 min-w-0">
-              <span className="text-sm text-gray-900 dark:text-white truncate font-heading">{user?.name}</span>
-              <span className="text-xs text-gray-600 dark:text-gray-400 capitalize truncate font-label">{user?.role}</span>
+              <span className="text-sm truncate font-heading" style={{ color: 'var(--color-text-primary)' }}>{user?.name}</span>
+              <span className="text-xs capitalize truncate font-label" style={{ color: 'var(--color-text-tertiary)' }}>{user?.role}</span>
             </div>
-            <PersonIcon className="h-5 w-5 text-blue-500 dark:text-blue-400 opacity-80 group-hover:scale-110 transition-transform" />
+            <PersonIcon className="h-5 w-5 opacity-80 group-hover:scale-110 transition-transform" style={{ color: 'var(--color-accent-primary)' }} />
           </Link>
           <button
             onClick={() => {
@@ -525,7 +544,21 @@ const Layout: React.FC = () => {
               closeMobileMenu();
             }}
             disabled={isLoggingOut}
-            className="flex items-center w-full px-3 py-3 text-base text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-1"
+            className="flex items-center w-full px-3 py-3 text-base rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-1"
+            style={{
+              color: 'var(--color-text-primary)',
+              backgroundColor: 'transparent'
+            }}
+            onMouseEnter={(e) => {
+              if (!isLoggingOut) {
+                e.currentTarget.style.backgroundColor = 'var(--color-tertiary-bg)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!isLoggingOut) {
+                e.currentTarget.style.backgroundColor = 'transparent';
+              }
+            }}
           >
             <ExitIcon className="h-5 w-5 mr-3" />
             Sign Out

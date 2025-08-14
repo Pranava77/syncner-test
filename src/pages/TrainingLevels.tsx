@@ -127,20 +127,20 @@ const TrainingLevels: React.FC = () => {
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty.toLowerCase()) {
-      case 'beginner': return 'bg-green-500';
-      case 'intermediate': return 'bg-yellow-500';
-      case 'advanced': return 'bg-red-500';
-      default: return 'bg-gray-500';
+      case 'beginner': return 'var(--color-success)';
+      case 'intermediate': return 'var(--color-warning)';
+      case 'advanced': return 'var(--color-error)';
+      default: return 'var(--color-text-muted)';
     }
   };
 
   const getTrackColor = (track: string) => {
     switch (track) {
-      case 'full-stack': return 'bg-blue-500';
-      case 'ai-ml': return 'bg-purple-500';
-      case 'ui-ux': return 'bg-pink-500';
-      case 'data-science': return 'bg-orange-500';
-      default: return 'bg-gray-500';
+      case 'full-stack': return 'var(--color-accent-primary)';
+      case 'ai-ml': return 'var(--color-accent-secondary)';
+      case 'ui-ux': return 'var(--color-accent-tertiary)';
+      case 'data-science': return 'var(--color-warning)';
+      default: return 'var(--color-text-muted)';
     }
   };
 
@@ -239,7 +239,7 @@ const TrainingLevels: React.FC = () => {
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <main className="flex-1 p-6 lg:p-12 flex items-center justify-center">
           <div className="text-center max-w-md">
-            <div className="text-red-400 text-4xl mb-4">⚠️</div>
+            <div className="text-4xl mb-4" style={{ color: 'var(--color-warning)' }}>⚠️</div>
             <h3 
               className="text-xl font-heading mb-2"
               style={{ color: 'var(--color-text-primary)' }}
@@ -416,16 +416,22 @@ const TrainingLevels: React.FC = () => {
                         Level {level.order}
                       </div>
                       <div 
-                  className={`px-2 py-1 rounded text-xs font-medium ${getDifficultyColor(level.difficulty)}`}
-                  style={{ color: 'var(--color-text-inverse)' }}
-                >
+                        className="px-2 py-1 rounded text-xs font-medium"
+                        style={{ 
+                          backgroundColor: getDifficultyColor(level.difficulty),
+                          color: 'var(--color-text-inverse)' 
+                        }}
+                      >
                         {level.difficulty}
                       </div>
                     </div>
                     <span 
-                  className={`px-2 py-1 rounded text-xs font-medium ${getTrackColor(level.careerTrack)}`}
-                  style={{ color: 'var(--color-text-inverse)' }}
-                >
+                      className="px-2 py-1 rounded text-xs font-medium"
+                      style={{ 
+                        backgroundColor: getTrackColor(level.careerTrack),
+                        color: 'var(--color-text-inverse)' 
+                      }}
+                    >
                       {getTrackLabel(level.careerTrack)}
                     </span>
                   </div>
@@ -456,9 +462,12 @@ const TrainingLevels: React.FC = () => {
                       style={{ color: 'var(--color-text-tertiary)' }}
                     >
                       <span 
-                  className={`px-2 py-1 rounded ${getDifficultyColor(level.difficulty)}`}
-                  style={{ color: 'var(--color-text-inverse)' }}
-                >
+                        className="px-2 py-1 rounded"
+                        style={{ 
+                          backgroundColor: getDifficultyColor(level.difficulty),
+                          color: 'var(--color-text-inverse)' 
+                        }}
+                      >
                         {level.difficulty.charAt(0).toUpperCase() + level.difficulty.slice(1)}
                       </span>
                     </div>
@@ -484,12 +493,12 @@ const TrainingLevels: React.FC = () => {
                   </div>
                     <div className="flex items-center gap-1 text-xs">
                       {level.isActive ? (
-                        <span className="text-green-400 flex items-center gap-1">
+                        <span className="flex items-center gap-1" style={{ color: 'var(--color-success)' }}>
                           <CheckCircledIcon className="h-3 w-3" />
                           Active
                         </span>
                       ) : (
-                        <span className="text-red-400 flex items-center gap-1">
+                        <span className="flex items-center gap-1" style={{ color: 'var(--color-error)' }}>
                           <Cross1Icon className="h-3 w-3" />
                           Inactive
                         </span>

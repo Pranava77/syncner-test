@@ -206,11 +206,11 @@ const LevelLearnPage: React.FC = () => {
 
   const getContentColor = (type: string) => {
     switch (type) {
-      case 'video': return 'bg-red-500';
-      case 'reading': return 'bg-blue-500';
-      case 'slide': return 'bg-green-500';
-      case 'learn': return 'bg-blue-500';
-      default: return 'bg-gray-500';
+      case 'video': return 'var(--color-error)';
+      case 'reading': return 'var(--color-accent-primary)';
+      case 'slide': return 'var(--color-success)';
+      case 'learn': return 'var(--color-accent-primary)';
+      default: return 'var(--color-text-muted)';
     }
   };
 
