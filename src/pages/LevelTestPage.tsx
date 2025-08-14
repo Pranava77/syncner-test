@@ -433,7 +433,17 @@ const LevelTestPage: React.FC = () => {
             <p className="text-rust text-lg mb-4">{error || 'Level not found'}</p>
             <button 
               onClick={fetchLevel}
-              className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors"
+              className="px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105"
+              style={{
+                backgroundColor: 'var(--color-accent-primary)',
+                color: 'var(--color-text-inverse)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+              }}
             >
               Retry
             </button>
@@ -474,10 +484,25 @@ const LevelTestPage: React.FC = () => {
             >
               Test Locked
             </h2>
-            <p className="text-teallight mb-6 text-lg">Complete the learning section first to unlock this test.</p>
+                            <p 
+                  className="mb-6 text-lg"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                >
+                  Complete the learning section first to unlock this test.
+                </p>
             <button 
               onClick={() => navigate(`/student/training/${levelId}/learn`)}
-              className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold hover:bg-trueturquoise/90 transition-colors text-lg shadow-sm"
+              className="px-8 py-3 rounded-lg font-bold transition-all duration-200 hover:scale-105 text-lg shadow-sm"
+              style={{
+                backgroundColor: 'var(--color-accent-primary)',
+                color: 'var(--color-text-inverse)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+              }}
             >
               Go to Learning
             </button>
@@ -513,17 +538,37 @@ const LevelTestPage: React.FC = () => {
             >
               Test Already Completed!
             </h2>
-            <p className="text-teallight mb-6 text-lg">You have successfully passed this test. You can now proceed to the exercise.</p>
+                            <p 
+                  className="mb-6 text-lg"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                >
+                  You have successfully passed this test. You can now proceed to the exercise.
+                </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button 
                 onClick={() => navigate(`/student/training/${levelId}/learn`)}
-                className="bg-paperwhite text-offblack px-8 py-3 rounded-lg font-bold hover:bg-trueturquoise hover:text-offblack transition-colors text-lg shadow-sm"
+                className="px-8 py-3 rounded-lg font-bold transition-all duration-200 hover:scale-105 text-lg shadow-sm"
+                style={{
+                  backgroundColor: 'var(--color-accent-tertiary)',
+                  color: 'var(--color-text-primary)',
+                  borderColor: 'var(--color-border)'
+                }}
               >
                 Back to Learning
               </button>
               <button 
                 onClick={() => navigate(`/student/training/${levelId}/exercise`)}
-                className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold hover:bg-trueturquoise/90 transition-colors text-lg shadow-sm"
+                className="px-8 py-3 rounded-lg font-bold transition-all duration-200 hover:scale-105 text-lg shadow-sm"
+                style={{
+                  backgroundColor: 'var(--color-accent-primary)',
+                  color: 'var(--color-text-inverse)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                }}
               >
                 Go to Exercise
               </button>
@@ -598,7 +643,10 @@ const LevelTestPage: React.FC = () => {
             >
               Maximum Attempts Reached
             </h2>
-            <p className="text-teallight mb-6 text-lg leading-relaxed">
+            <p 
+              className="mb-6 text-lg leading-relaxed"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
               You have used all 3 attempts for this test. Please wait 5 hours before retaking.
             </p>
             {retakeTimer && (
@@ -609,7 +657,12 @@ const LevelTestPage: React.FC = () => {
                   borderColor: 'var(--color-border)'
                 }}
               >
-                <div className="text-trueturquoise font-semibold mb-2 text-sm">Time until you can retake:</div>
+                <div 
+                  className="font-semibold mb-2 text-sm"
+                  style={{ color: 'var(--color-accent-primary)' }}
+                >
+                  Time until you can retake:
+                </div>
                 <div 
                   className="text-3xl font-bold"
                   style={{ color: 'var(--color-text-primary)' }}
@@ -621,7 +674,17 @@ const LevelTestPage: React.FC = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button 
                 onClick={() => navigate(`/student/training/${levelId}/learn`)}
-                className="bg-trueturquoise text-offblack px-8 py-3 rounded-xl font-semibold hover:bg-trueturquoise/90 transition-colors text-lg shadow-lg"
+                className="px-8 py-3 rounded-xl font-semibold transition-all duration-200 hover:scale-105 text-lg shadow-lg"
+                style={{
+                  backgroundColor: 'var(--color-accent-primary)',
+                  color: 'var(--color-text-inverse)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                }}
               >
                 Back to Learning
               </button>
@@ -645,7 +708,13 @@ const LevelTestPage: React.FC = () => {
           className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center"
           style={{ backgroundColor: 'var(--color-primary-bg)' }}
         >
-          <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 text-center">
+          <div 
+            className="w-full max-w-5xl rounded-xl border shadow-lg p-6 text-center"
+            style={{
+              backgroundColor: 'var(--color-accent-tertiary)',
+              borderColor: 'var(--color-border)'
+            }}
+          >
             <div 
               className="text-6xl mb-4"
               style={{ color: 'var(--color-text-muted)' }}
@@ -656,10 +725,25 @@ const LevelTestPage: React.FC = () => {
             >
               No Test Available
             </h2>
-            <p className="text-teallight mb-6 text-lg">This level doesn't have any test questions yet.</p>
+            <p 
+              className="mb-6 text-lg"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
+              This level doesn't have any test questions yet.
+            </p>
             <button 
               onClick={() => navigate(`/student/training/${levelId}/learn`)}
-              className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold hover:bg-trueturquoise/90 transition-colors text-lg shadow-sm"
+              className="px-8 py-3 rounded-lg font-bold transition-all duration-200 hover:scale-105 text-lg shadow-sm"
+              style={{
+                backgroundColor: 'var(--color-accent-primary)',
+                color: 'var(--color-text-inverse)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+              }}
             >
               Back to Learning
             </button>
@@ -690,7 +774,13 @@ const LevelTestPage: React.FC = () => {
         >
           <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-4">
-                <div className="bg-trueturquoise text-offblack p-3 rounded-lg">
+                <div 
+                  className="p-3 rounded-lg"
+                  style={{
+                    backgroundColor: 'var(--color-accent-primary)',
+                    color: 'var(--color-text-inverse)'
+                  }}
+                >
                   <ReaderIcon className="h-8 w-8" />
                 </div>
             <div>
@@ -699,9 +789,19 @@ const LevelTestPage: React.FC = () => {
                     style={{ color: 'var(--color-text-primary)' }}
                   >
                     Level {level.order}: {level.title} - Test
-                    <span className="text-lg font-normal text-teallight ml-3">(Attempt {currentAttempt === 0 && canRetake ? 1 : currentAttempt}/3)</span>
+                    <span 
+                      className="text-lg font-normal ml-3"
+                      style={{ color: 'var(--color-text-tertiary)' }}
+                    >
+                      (Attempt {currentAttempt === 0 && canRetake ? 1 : currentAttempt}/3)
+                    </span>
                   </h1>
-                  <p className="text-teallight text-lg">Test your knowledge with {validQuestions.length} questions</p>
+                  <p 
+                    className="text-lg"
+                    style={{ color: 'var(--color-text-tertiary)' }}
+                  >
+                    Test your knowledge with {validQuestions.length} questions
+                  </p>
                   <p className="text-orange-400 text-sm mt-1">Passing score: 60% or higher</p>
             </div>
               </div>
@@ -714,10 +814,23 @@ const LevelTestPage: React.FC = () => {
                   }}
                 >
                   <div className="flex items-center gap-2 mb-2">
-                    <ClockIcon className="h-5 w-5 text-trueturquoise" />
-                    <div className="text-2xl font-bold text-trueturquoise">{formatTime(timeLeft)}</div>
+                    <ClockIcon 
+                      className="h-5 w-5" 
+                      style={{ color: 'var(--color-accent-primary)' }}
+                    />
+                    <div 
+                      className="text-2xl font-bold"
+                      style={{ color: 'var(--color-accent-primary)' }}
+                    >
+                      {formatTime(timeLeft)}
+                    </div>
                   </div>
-                  <div className="text-xs text-teallight font-label">Time Remaining</div>
+                  <div 
+                    className="text-xs font-label"
+                    style={{ color: 'var(--color-text-tertiary)' }}
+                  >
+                    Time Remaining
+                  </div>
                 </div>
                 <div 
                   className="text-center rounded-lg p-4 border"
@@ -732,7 +845,12 @@ const LevelTestPage: React.FC = () => {
                   >
                     {validQuestions.length}
                   </div>
-                  <div className="text-xs text-teallight font-label">Questions</div>
+                  <div 
+                    className="text-xs font-label"
+                    style={{ color: 'var(--color-text-tertiary)' }}
+                  >
+                    Questions
+                  </div>
               </div>
             </div>
           </div>
@@ -763,41 +881,45 @@ const LevelTestPage: React.FC = () => {
                 {question.options.map((option, optIdx) => (
                           <div 
                             key={optIdx} 
-                            className={`flex items-center p-4 border rounded-lg cursor-pointer transition-colors ${
-                              answers[qIdx]?.[optIdx] 
-                                ? 'bg-trueturquoise/20 border-trueturquoise/30' 
-                                : ''
-                            }`}
+                            className="flex items-center p-4 border rounded-lg cursor-pointer transition-colors"
                             style={{
                               backgroundColor: answers[qIdx]?.[optIdx] 
-                                ? 'rgba(20, 184, 166, 0.2)' 
+                                ? 'var(--color-accent-primary)' 
                                 : 'var(--color-tertiary-bg)',
                               borderColor: answers[qIdx]?.[optIdx]
-                                ? 'rgba(20, 184, 166, 0.3)'
-                                : 'var(--color-border)'
+                                ? 'var(--color-accent-primary)'
+                                : 'var(--color-border)',
+                              opacity: answers[qIdx]?.[optIdx] ? 0.2 : 1
                             }}
                             onClick={() => handleCheck(qIdx, optIdx)}
                           >
-                            <div className={`w-6 h-6 rounded border-2 flex items-center justify-center mr-4 transition-colors duration-200 ${
-                              answers[qIdx]?.[optIdx]
-                                ? 'bg-trueturquoise border-trueturquoise'
-                                : ''
-                            }`}
-                            style={{
-                              borderColor: answers[qIdx]?.[optIdx]
-                                ? 'var(--color-accent)'
-                                : 'var(--color-border)'
-                            }}>
+                            <div 
+                              className="w-6 h-6 rounded border-2 flex items-center justify-center mr-4 transition-colors duration-200"
+                              style={{
+                                backgroundColor: answers[qIdx]?.[optIdx]
+                                  ? 'var(--color-accent-primary)'
+                                  : 'transparent',
+                                borderColor: answers[qIdx]?.[optIdx]
+                                  ? 'var(--color-accent-primary)'
+                                  : 'var(--color-border)'
+                              }}
+                            >
                               {answers[qIdx]?.[optIdx] && (
-                                <CheckCircledIcon className="h-4 w-4 text-offblack" aria-hidden="true" />
+                                <CheckCircledIcon 
+                                  className="h-4 w-4" 
+                                  style={{ color: 'var(--color-text-inverse)' }}
+                                  aria-hidden="true" 
+                                />
                               )}
                             </div>
                             <span 
                               className={`text-lg ${
-                                answers[qIdx]?.[optIdx] ? 'text-trueturquoise font-semibold' : ''
+                                answers[qIdx]?.[optIdx] ? 'font-semibold' : ''
                               }`}
                               style={{ 
-                                color: answers[qIdx]?.[optIdx] ? undefined : 'var(--color-text-primary)'
+                                color: answers[qIdx]?.[optIdx] 
+                                  ? 'var(--color-accent-primary)' 
+                                  : 'var(--color-text-primary)'
                               }}
                             >
                               {option}
@@ -813,7 +935,17 @@ const LevelTestPage: React.FC = () => {
                 <div className="flex justify-center pt-4">
                   <button
                     onClick={handleSubmit}
-                    className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-trueturquoise/90 transition-colors"
+                    className="px-8 py-3 rounded-lg font-bold text-lg shadow transition-all duration-200 hover:scale-105"
+                    style={{
+                      backgroundColor: 'var(--color-accent-primary)',
+                      color: 'var(--color-text-inverse)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                    }}
                   >
                     Submit Test
                   </button>
@@ -824,11 +956,18 @@ const LevelTestPage: React.FC = () => {
             /* Results View */
             <div className="w-full max-w-5xl space-y-6 pb-8">
               {/* Results Header */}
-              <div className={`rounded-xl border shadow-lg p-6 text-center ${
-                testPassed 
-                  ? 'bg-gradient-to-r from-green-500/10 to-teallight/10 border-green-500/30' 
-                  : 'bg-gradient-to-r from-red-500/10 to-orange-500/10 border-red-500/30'
-              }`}>
+              <div 
+                className="rounded-xl border shadow-lg p-6 text-center"
+                style={{
+                  background: testPassed 
+                    ? 'linear-gradient(to right, var(--color-success), var(--color-accent-primary))'
+                    : 'linear-gradient(to right, var(--color-error), var(--color-warning))',
+                  opacity: 0.1,
+                  borderColor: testPassed 
+                    ? 'var(--color-success)' 
+                    : 'var(--color-error)'
+                }}
+              >
                 <h2 
                   className="text-2xl font-bold mb-4"
                   style={{ color: 'var(--color-text-primary)' }}
@@ -836,11 +975,20 @@ const LevelTestPage: React.FC = () => {
                   {testPassed ? 'Test Passed! 🎉' : 'Test Failed'}
                 </h2>
                 <div className="text-4xl font-bold mb-4">
-                  <span className={testPassed ? 'text-green-400' : 'text-red-400'}>
+                  <span 
+                    style={{ 
+                      color: testPassed 
+                        ? 'var(--color-success)' 
+                        : 'var(--color-error)' 
+                    }}
+                  >
                     {testScore}%
                   </span>
                 </div>
-                <p className="text-teallight mb-6 text-lg">
+                <p 
+                  className="mb-6 text-lg"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                >
                   {testPassed 
                     ? 'Congratulations! You can now proceed to the exercise.'
                     : `You need 60% to pass. You scored ${testScore}%.`
@@ -848,28 +996,52 @@ const LevelTestPage: React.FC = () => {
                 </p>
                 
                 {!testPassed && (
-                  <div className="bg-gradient-to-r from-paperwhite/5 to-paperwhite/10 rounded-xl p-6 mb-6 border border-paperwhite/20">
+                  <div 
+                    className="rounded-xl p-6 mb-6 border"
+                    style={{
+                      backgroundColor: 'var(--color-accent-tertiary)',
+                      borderColor: 'var(--color-border)'
+                    }}
+                  >
                     {(currentAttempt < 3 || (currentAttempt === 0 && canRetake)) ? (
                       <>
-                        <div className="text-trueturquoise font-semibold mb-2 text-sm">Attempts Remaining</div>
                         <div 
-                    className="text-3xl font-bold"
-                    style={{ color: 'var(--color-text-primary)' }}
-                  >
-                    {currentAttempt === 0 && canRetake ? 3 : 3 - currentAttempt}
-                  </div>
-                        <div className="text-sm text-teallight mt-1">You can retry immediately</div>
+                          className="font-semibold mb-2 text-sm"
+                          style={{ color: 'var(--color-accent-primary)' }}
+                        >
+                          Attempts Remaining
+                        </div>
+                        <div 
+                          className="text-3xl font-bold"
+                          style={{ color: 'var(--color-text-primary)' }}
+                        >
+                          {currentAttempt === 0 && canRetake ? 3 : 3 - currentAttempt}
+                        </div>
+                        <div 
+                          className="text-sm mt-1"
+                          style={{ color: 'var(--color-text-tertiary)' }}
+                        >
+                          You can retry immediately
+                        </div>
                       </>
                     ) : (
                       <>
-                        <div className="text-red-400 font-semibold mb-2 text-sm">Maximum Attempts Reached</div>
                         <div 
-                    className="text-3xl font-bold"
-                    style={{ color: 'var(--color-text-primary)' }}
-                  >
-                    0
-                  </div>
-                        <div className="text-sm text-teallight mt-1">
+                          className="font-semibold mb-2 text-sm"
+                          style={{ color: 'var(--color-error)' }}
+                        >
+                          Maximum Attempts Reached
+                        </div>
+                        <div 
+                          className="text-3xl font-bold"
+                          style={{ color: 'var(--color-text-primary)' }}
+                        >
+                          0
+                        </div>
+                        <div 
+                          className="text-sm mt-1"
+                          style={{ color: 'var(--color-text-tertiary)' }}
+                        >
                           {retakeTimer && retakeTimer > 0 ? (
                             <>Please wait {formatRetakeTime(retakeTimer)} before retaking</>
                           ) : (
@@ -884,7 +1056,7 @@ const LevelTestPage: React.FC = () => {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <button 
                     onClick={() => navigate(`/student/training/${levelId}/learn`)}
-                    className="px-8 py-3 rounded-xl font-semibold transition-colors text-lg shadow-lg border"
+                    className="px-8 py-3 rounded-xl font-semibold transition-all duration-200 hover:scale-105 text-lg shadow-lg border"
                     style={{ 
                       color: 'var(--color-text-primary)',
                       backgroundColor: 'var(--color-tertiary-bg)',
@@ -896,7 +1068,17 @@ const LevelTestPage: React.FC = () => {
                   {testPassed && (
                     <button 
                       onClick={() => navigate(`/student/training/${levelId}/exercise`)}
-                      className="bg-trueturquoise text-offblack px-8 py-3 rounded-xl font-semibold hover:bg-trueturquoise/90 transition-colors text-lg shadow-lg"
+                      className="px-8 py-3 rounded-xl font-semibold transition-all duration-200 hover:scale-105 text-lg shadow-lg"
+                      style={{
+                        backgroundColor: 'var(--color-accent-primary)',
+                        color: 'var(--color-text-inverse)'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                      }}
                     >
                       Go to Exercise
                     </button>
@@ -1031,7 +1213,10 @@ const LevelTestPage: React.FC = () => {
                               <span className="text-red-400">✗</span>
                             )}
                           </div>
-                          <div className="text-xs text-teallight">
+                          <div 
+                            className="text-xs"
+                            style={{ color: 'var(--color-text-tertiary)' }}
+                          >
                             Your answer: {hasAnswered ? question.options[userAnswerIndex] : 'Not answered'}
                           </div>
                           {!isCorrect && hasAnswered && (
@@ -1050,22 +1235,41 @@ const LevelTestPage: React.FC = () => {
 
           {/* Retake Popup */}
           {showRetakePopup && (
-            <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+            <div 
+              className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+              style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}
+            >
               <div 
-                className="rounded-2xl shadow-2xl p-8 max-w-md w-full border border-paperwhite/20"
-                style={{ backgroundColor: 'var(--color-surface)' }}
+                className="rounded-2xl shadow-2xl p-8 max-w-md w-full border backdrop-blur-md"
+                style={{ 
+                  backgroundColor: 'var(--color-surface-elevated)',
+                  borderColor: 'var(--color-border)',
+                  boxShadow: 'var(--shadow-lg)'
+                }}
               >
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                    <ExclamationTriangleIcon className="h-8 w-8 text-orange-400" />
+                  <div 
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6"
+                    style={{
+                      background: 'linear-gradient(135deg, var(--color-warning), var(--color-error))',
+                      opacity: 0.2
+                    }}
+                  >
+                    <ExclamationTriangleIcon 
+                      className="h-8 w-8" 
+                      style={{ color: 'var(--color-warning)' }}
+                    />
                   </div>
-                                <h2 
-                className="text-2xl font-bold mb-3"
-                style={{ color: 'var(--color-text-primary)' }}
-              >
-                Maximum Attempts Reached
-              </h2>
-                  <p className="text-teallight mb-6 text-base leading-relaxed">
+                  <h2 
+                    className="text-2xl font-bold mb-3"
+                    style={{ color: 'var(--color-text-primary)' }}
+                  >
+                    Maximum Attempts Reached
+                  </h2>
+                  <p 
+                    className="mb-6 text-base leading-relaxed"
+                    style={{ color: 'var(--color-text-tertiary)' }}
+                  >
                     You have used all 3 attempts for this test. Please wait 5 hours before retaking.
                   </p>
                   {retakeTimer && (
@@ -1076,7 +1280,12 @@ const LevelTestPage: React.FC = () => {
                         borderColor: 'var(--color-border)'
                       }}
                     >
-                      <div className="text-trueturquoise font-semibold mb-2 text-sm">Time until you can retake:</div>
+                      <div 
+                        className="font-semibold mb-2 text-sm"
+                        style={{ color: 'var(--color-accent-primary)' }}
+                      >
+                        Time until you can retake:
+                      </div>
                       <div 
                         className="text-3xl font-bold"
                         style={{ color: 'var(--color-text-primary)' }}
@@ -1088,13 +1297,23 @@ const LevelTestPage: React.FC = () => {
                   <div className="flex flex-col gap-3">
                     <button 
                       onClick={() => setShowRetakePopup(false)}
-                      className="bg-trueturquoise text-offblack px-6 py-3 rounded-xl font-semibold hover:bg-trueturquoise/90 transition-colors shadow-lg"
+                      className="px-6 py-3 rounded-xl font-semibold transition-all duration-200 hover:scale-105 shadow-lg"
+                      style={{
+                        backgroundColor: 'var(--color-accent-primary)',
+                        color: 'var(--color-text-inverse)'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                      }}
                     >
                       Close
                     </button>
                     <button 
                       onClick={() => navigate(`/student/training/${levelId}/learn`)}
-                      className="px-6 py-3 rounded-xl font-semibold transition-colors border"
+                      className="px-6 py-3 rounded-xl font-semibold transition-all duration-200 hover:scale-105 border"
                       style={{ 
                         color: 'var(--color-text-primary)',
                         backgroundColor: 'var(--color-tertiary-bg)',

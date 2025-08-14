@@ -165,7 +165,7 @@ const LevelExercisePage: React.FC = () => {
   }, [fetchAllLevels]);
 
   const statusColor = (status: string) =>
-    status === 'Completed' ? 'bg-trueturquoise/20 text-trueturquoise' : 'bg-paperwhite/10 text-teallight';
+    status === 'Completed' ? 'bg-green-500/20 text-green-600' : 'bg-gray-100 text-gray-600';
 
   const handleViewExercise = (exercise: ExerciseItem) => {
     // Find existing submission for this exercise
@@ -353,7 +353,17 @@ const LevelExercisePage: React.FC = () => {
             <p className="text-red-400 text-lg mb-4">{error || 'Level not found'}</p>
             <button 
               onClick={fetchLevel}
-              className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors"
+              className="px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105"
+              style={{
+                backgroundColor: 'var(--color-accent-primary)',
+                color: 'var(--color-text-inverse)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+              }}
             >
               Retry
             </button>
@@ -375,7 +385,14 @@ const LevelExercisePage: React.FC = () => {
           className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center"
           style={{ backgroundColor: 'var(--color-primary-bg)' }}
         >
-          <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 text-center">
+          <div 
+            className="w-full max-w-5xl rounded-xl border shadow-lg p-6 text-center"
+            style={{
+              backgroundColor: 'var(--color-accent-tertiary)',
+              borderColor: 'var(--color-border)',
+              opacity: 0.1
+            }}
+          >
             <div 
               className="text-6xl mb-4"
               style={{ color: 'var(--color-text-muted)' }}
@@ -388,10 +405,25 @@ const LevelExercisePage: React.FC = () => {
             >
               No Levels Available
             </h2>
-            <p className="text-teallight mb-6">There are no levels available for your current career track ({user?.careerTrack || 'Unknown'}).</p>
+            <p 
+              className="mb-6"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
+              There are no levels available for your current career track ({user?.careerTrack || 'Unknown'}).
+            </p>
             <button 
               onClick={() => navigate('/student/training')}
-              className="bg-trueturquoise text-offblack px-6 py-3 rounded-lg font-bold hover:bg-trueturquoise/90 transition-colors"
+              className="px-6 py-3 rounded-lg font-bold transition-all duration-200 hover:scale-105"
+              style={{
+                backgroundColor: 'var(--color-accent-primary)',
+                color: 'var(--color-text-inverse)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+              }}
             >
               Back to Training
             </button>
@@ -413,7 +445,13 @@ const LevelExercisePage: React.FC = () => {
           className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center"
           style={{ backgroundColor: 'var(--color-primary-bg)' }}
         >
-          <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 text-center">
+          <div 
+            className="w-full max-w-5xl rounded-xl border shadow-lg p-6 text-center"
+            style={{
+              backgroundColor: 'var(--color-accent-tertiary)',
+              borderColor: 'var(--color-border)'
+            }}
+          >
             <div 
               className="text-6xl mb-4"
               style={{ color: 'var(--color-text-muted)' }}
@@ -426,10 +464,25 @@ const LevelExercisePage: React.FC = () => {
             >
               Exercise Locked
             </h2>
-            <p className="text-teallight mb-6 text-lg">Pass the test first to unlock this exercise section.</p>
+            <p 
+              className="mb-6 text-lg"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
+              Pass the test first to unlock this exercise section.
+            </p>
             <button 
               onClick={() => navigate(`/student/training/${levelId}/test`)}
-              className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold hover:bg-trueturquoise/90 transition-colors text-lg shadow-sm"
+              className="px-8 py-3 rounded-lg font-bold transition-all duration-200 hover:scale-105 text-lg shadow-sm"
+              style={{
+                backgroundColor: 'var(--color-accent-primary)',
+                color: 'var(--color-text-inverse)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+              }}
             >
               Take Test First
             </button>
@@ -707,11 +760,28 @@ const LevelExercisePage: React.FC = () => {
               <button 
                 onClick={handleUnlockNextLevel}
                 disabled={unlockingLevel}
-                className="w-full sm:w-auto bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold text-lg shadow hover:bg-teallight transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="w-full sm:w-auto px-8 py-3 rounded-lg font-bold text-lg shadow transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                style={{
+                  backgroundColor: 'var(--color-accent-primary)',
+                  color: 'var(--color-text-inverse)'
+                }}
+                onMouseEnter={(e) => {
+                  if (!unlockingLevel) {
+                    e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!unlockingLevel) {
+                    e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                  }
+                }}
               >
                 {unlockingLevel ? (
                   <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-offblack"></div>
+                    <div 
+                      className="animate-spin rounded-full h-5 w-5 border-b-2"
+                      style={{ borderColor: 'var(--color-text-inverse)' }}
+                    ></div>
                     Unlocking...
                   </>
                 ) : (
@@ -722,8 +792,11 @@ const LevelExercisePage: React.FC = () => {
           ) : (
             <button 
               disabled
-                              className="w-full sm:w-auto bg-paperwhite/20 px-8 py-3 rounded-lg font-bold text-lg cursor-not-allowed flex items-center gap-2"
-                style={{ color: 'var(--color-text-muted)' }}
+              className="w-full sm:w-auto px-8 py-3 rounded-lg font-bold text-lg cursor-not-allowed flex items-center gap-2"
+              style={{ 
+                color: 'var(--color-text-muted)',
+                backgroundColor: 'var(--color-accent-tertiary)'
+              }}
             >
               <LockClosedIcon className="h-5 w-5" />
               Submit Exercise Links First
@@ -733,32 +806,83 @@ const LevelExercisePage: React.FC = () => {
 
         {/* Bootcamp Completion Celebration */}
         {isLastLevel && hasExerciseLinks && (
-          <div className="w-full max-w-5xl bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-xl border border-green-500/30 shadow-lg p-8 mb-8 text-center">
+          <div 
+            className="w-full max-w-5xl rounded-xl border shadow-lg p-8 mb-8 text-center"
+            style={{
+              background: 'linear-gradient(to right, var(--color-success), var(--color-accent-primary))',
+              opacity: 0.2,
+              borderColor: 'var(--color-success)'
+            }}
+          >
             <div className="text-6xl mb-4">🎉</div>
-            <h2 className="text-3xl font-bold text-green-400 mb-4">Congratulations!</h2>
-            <p className="text-teallight text-lg mb-6">
+            <h2 
+              className="text-3xl font-bold mb-4"
+              style={{ color: 'var(--color-success)' }}
+            >
+              Congratulations!
+            </h2>
+            <p 
+              className="text-lg mb-6"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
               You've completed all levels in this bootcamp! You've successfully mastered the concepts and completed all exercises.
             </p>
-            <div className="bg-green-500/20 border border-green-500/30 rounded-lg p-4 mb-6">
-              <div className="flex items-center justify-center gap-2 text-green-400">
-                <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm">✓</span>
+            <div 
+              className="rounded-lg p-4 mb-6 border"
+              style={{
+                backgroundColor: 'var(--color-success)',
+                opacity: 0.2,
+                borderColor: 'var(--color-success)'
+              }}
+            >
+              <div className="flex items-center justify-center gap-2">
+                <div 
+                  className="w-6 h-6 rounded-full flex items-center justify-center"
+                  style={{
+                    backgroundColor: 'var(--color-success)',
+                    color: 'var(--color-text-inverse)'
+                  }}
+                >
+                  <span className="text-sm">✓</span>
                 </div>
-                <span className="font-semibold text-lg">Bootcamp Completed Successfully!</span>
+                <span 
+                  className="font-semibold text-lg"
+                  style={{ color: 'var(--color-success)' }}
+                >
+                  Bootcamp Completed Successfully!
+                </span>
               </div>
             </div>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <button 
                 onClick={() => navigate('/student/dashboard')}
-                className="bg-paperwhite/10 px-6 py-3 rounded-lg font-semibold hover:bg-paperwhite/20 transition-colors"
-                style={{ color: 'var(--color-text-primary)' }}
+                className="px-6 py-3 rounded-lg font-semibold transition-all duration-200 hover:scale-105"
+                style={{ 
+                  color: 'var(--color-text-primary)',
+                  backgroundColor: 'var(--color-accent-tertiary)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-tertiary)';
+                }}
               >
                 Go to Dashboard
               </button>
               <button 
                 onClick={() => navigate('/student/training')}
-                className="bg-paperwhite/10 px-6 py-3 rounded-lg font-semibold hover:bg-paperwhite/20 transition-colors"
-                style={{ color: 'var(--color-text-primary)' }}
+                className="px-6 py-3 rounded-lg font-semibold transition-all duration-200 hover:scale-105"
+                style={{ 
+                  color: 'var(--color-text-primary)',
+                  backgroundColor: 'var(--color-accent-tertiary)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-tertiary)';
+                }}
               >
                 View All Levels
               </button>

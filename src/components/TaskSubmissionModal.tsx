@@ -203,12 +203,29 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <span className="px-4 py-2 rounded-full bg-gradient-to-r from-trueturquoise/20 to-blue-500/20 text-trueturquoise font-semibold text-sm border border-trueturquoise/30">
+              <span 
+                className="px-4 py-2 rounded-full font-semibold text-sm border"
+                style={{
+                  backgroundColor: 'var(--color-accent-tertiary)',
+                  color: 'var(--color-accent-primary)',
+                  borderColor: 'var(--color-accent-primary)',
+                  opacity: 0.3
+                }}
+              >
                 {exercise.difficulty || 'Medium'}
               </span>
               <button
                 onClick={onClose}
-                className="w-8 h-8 rounded-lg bg-paperwhite/10 hover:bg-paperwhite/20 flex items-center justify-center transition-colors"
+                className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-105"
+                style={{
+                  backgroundColor: 'var(--color-accent-tertiary)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-tertiary)';
+                }}
               >
                 <Cross1Icon 
                   className="w-4 h-4" 
@@ -221,8 +238,18 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
 
         {/* Error Message */}
         {error && (
-          <div className="mx-6 mt-4 p-4 bg-red-500/10 border border-red-500/30 rounded-xl">
-            <div className="flex items-center gap-3 text-red-400">
+          <div 
+            className="mx-6 mt-4 p-4 rounded-xl border"
+            style={{
+              backgroundColor: 'var(--color-error)',
+              opacity: 0.1,
+              borderColor: 'var(--color-error)'
+            }}
+          >
+            <div 
+              className="flex items-center gap-3"
+              style={{ color: 'var(--color-error)' }}
+            >
               <ExclamationTriangleIcon className="w-5 h-5 flex-shrink-0" />
               <span className="text-sm font-medium">{error}</span>
             </div>
@@ -232,119 +259,239 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
         {/* Content Sections */}
         <div className="p-6 space-y-8">
           {/* Exercise Overview Card */}
-          <div className="bg-gradient-to-r from-paperwhite/5 to-paperwhite/10 rounded-2xl p-6 border border-paperwhite/20">
+          <div 
+            className="rounded-2xl p-6 border"
+            style={{
+              backgroundColor: 'var(--color-accent-tertiary)',
+              opacity: 0.1,
+              borderColor: 'var(--color-border)'
+            }}
+          >
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-trueturquoise/20 to-blue-500/20 rounded-xl flex items-center justify-center">
-                <ClipboardIcon className="w-5 h-5 text-trueturquoise" />
+              <div 
+                className="w-10 h-10 rounded-xl flex items-center justify-center"
+                style={{
+                  backgroundColor: 'var(--color-accent-primary)',
+                  opacity: 0.2
+                }}
+              >
+                <ClipboardIcon 
+                  className="w-5 h-5" 
+                  style={{ color: 'var(--color-accent-primary)' }}
+                />
               </div>
-                              <h3 
-                  className="text-lg font-semibold"
-                  style={{ color: 'var(--color-text-primary)' }}
-                >
-                  Exercise Overview
-                </h3>
+              <h3 
+                className="text-lg font-semibold"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                Exercise Overview
+              </h3>
             </div>
             <div className="space-y-4">
               <div>
-                <h4 className="text-sm font-medium text-trueturquoise mb-2">What you need to do:</h4>
-                <div className="bg-offblack/50 rounded-xl p-4 border border-paperwhite/10">
-                  <p 
-                  className="text-sm leading-relaxed"
-                  style={{ color: 'var(--color-text-primary)' }}
+                <h4 
+                  className="text-sm font-medium mb-2"
+                  style={{ color: 'var(--color-accent-primary)' }}
                 >
-                  {formData.brief}
-                </p>
+                  What you need to do:
+                </h4>
+                <div 
+                  className="rounded-xl p-4 border"
+                  style={{
+                    backgroundColor: 'var(--color-surface)',
+                    borderColor: 'var(--color-border-subtle)'
+                  }}
+                >
+                  <p 
+                    className="text-sm leading-relaxed"
+                    style={{ color: 'var(--color-text-primary)' }}
+                  >
+                    {formData.brief}
+                  </p>
                 </div>
               </div>
               <div>
-                <h4 className="text-sm font-medium text-trueturquoise mb-2">Instructions & Guidelines:</h4>
-                <div className="bg-offblack/50 rounded-xl p-4 border border-paperwhite/10">
-                  <p 
-                  className="text-sm leading-relaxed whitespace-pre-line"
-                  style={{ color: 'var(--color-text-primary)' }}
+                <h4 
+                  className="text-sm font-medium mb-2"
+                  style={{ color: 'var(--color-accent-primary)' }}
                 >
-                  {formData.instruction}
-                </p>
+                  Instructions & Guidelines:
+                </h4>
+                <div 
+                  className="rounded-xl p-4 border"
+                  style={{
+                    backgroundColor: 'var(--color-surface)',
+                    borderColor: 'var(--color-border-subtle)'
+                  }}
+                >
+                  <p 
+                    className="text-sm leading-relaxed whitespace-pre-line"
+                    style={{ color: 'var(--color-text-primary)' }}
+                  >
+                    {formData.instruction}
+                  </p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Resources Card */}
-          <div className="bg-gradient-to-r from-paperwhite/5 to-paperwhite/10 rounded-2xl p-6 border border-paperwhite/20">
+          <div 
+            className="rounded-2xl p-6 border"
+            style={{
+              backgroundColor: 'var(--color-accent-tertiary)',
+              opacity: 0.1,
+              borderColor: 'var(--color-border)'
+            }}
+          >
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-xl flex items-center justify-center">
-                <FileTextIcon className="w-5 h-5 text-orange-400" />
+              <div 
+                className="w-10 h-10 rounded-xl flex items-center justify-center"
+                style={{
+                  backgroundColor: 'var(--color-warning)',
+                  opacity: 0.2
+                }}
+              >
+                <FileTextIcon 
+                  className="w-5 h-5" 
+                  style={{ color: 'var(--color-warning)' }}
+                />
               </div>
-                              <h3 
-                  className="text-lg font-semibold"
-                  style={{ color: 'var(--color-text-primary)' }}
-                >
-                  Reference Materials
-                </h3>
+              <h3 
+                className="text-lg font-semibold"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                Reference Materials
+              </h3>
             </div>
-            <div className="bg-offblack/50 rounded-xl p-4 border border-paperwhite/10">
+            <div 
+              className="rounded-xl p-4 border"
+              style={{
+                backgroundColor: 'var(--color-surface)',
+                borderColor: 'var(--color-border-subtle)'
+              }}
+            >
               {exercise.resources && exercise.resources.length > 0 ? (
                 <div className="space-y-3">
                   {exercise.resources.map((resource, index) => (
-                    <div key={index} className="flex items-center justify-between p-2 bg-paperwhite/5 rounded-lg">
-                      <div className="flex items-center gap-2 text-sm text-teallight flex-1">
-                        <div className="w-2 h-2 bg-orange-400 rounded-full flex-shrink-0"></div>
-                        <span className="break-all">{resource}</span>
+                    <div 
+                      key={index} 
+                      className="flex items-center justify-between p-2 rounded-lg"
+                      style={{
+                        backgroundColor: 'var(--color-accent-tertiary)',
+                        opacity: 0.3
+                      }}
+                    >
+                      <div className="flex items-center gap-2 text-sm flex-1">
+                        <div 
+                          className="w-2 h-2 rounded-full flex-shrink-0"
+                          style={{ backgroundColor: 'var(--color-warning)' }}
+                        ></div>
+                        <span 
+                          className="break-all"
+                          style={{ color: 'var(--color-text-tertiary)' }}
+                        >
+                          {resource}
+                        </span>
                       </div>
                       <button
                         onClick={() => copyToClipboard(resource)}
-                        className="ml-2 p-1.5 bg-paperwhite/10 hover:bg-paperwhite/20 rounded-lg transition-colors flex-shrink-0"
+                        className="ml-2 p-1.5 rounded-lg transition-all duration-200 hover:scale-105 flex-shrink-0"
+                        style={{
+                          backgroundColor: 'var(--color-accent-tertiary)',
+                          opacity: 0.5
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'var(--color-accent-tertiary)';
+                        }}
                         title="Copy link"
                       >
-                        <ClipboardIcon className="w-4 h-4 text-teallight" />
+                        <ClipboardIcon 
+                          className="w-4 h-4" 
+                          style={{ color: 'var(--color-text-tertiary)' }}
+                        />
                       </button>
                     </div>
                   ))}
                 </div>
-              ) : (
-                <p className="text-sm text-teallight">No reference materials provided for this exercise.</p>
-              )}
+                              ) : (
+                  <p 
+                    className="text-sm"
+                    style={{ color: 'var(--color-text-tertiary)' }}
+                  >
+                    No reference materials provided for this exercise.
+                  </p>
+                )}
             </div>
           </div>
 
           {/* Submission Section Card */}
-          <div className="bg-gradient-to-r from-green-500/5 to-teallight/10 rounded-2xl p-6 border border-green-500/20">
+          <div 
+            className="rounded-2xl p-6 border"
+            style={{
+              background: 'linear-gradient(to right, var(--color-success), var(--color-accent-primary))',
+              opacity: 0.1,
+              borderColor: 'var(--color-success)'
+            }}
+          >
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-green-500/20 to-teallight/20 rounded-xl flex items-center justify-center">
-                <Link1Icon className="w-5 h-5 text-green-400" />
+              <div 
+                className="w-10 h-10 rounded-xl flex items-center justify-center"
+                style={{
+                  backgroundColor: 'var(--color-success)',
+                  opacity: 0.2
+                }}
+              >
+                <Link1Icon 
+                  className="w-5 h-5" 
+                  style={{ color: 'var(--color-success)' }}
+                />
               </div>
-                              <h3 
-                  className="text-lg font-semibold"
-                  style={{ color: 'var(--color-text-primary)' }}
-                >
-                  Submit Your Work
-                </h3>
+              <h3 
+                className="text-lg font-semibold"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                Submit Your Work
+              </h3>
             </div>
             <div className="space-y-4">
               <div>
-                <label className="flex items-center gap-2 text-sm font-medium text-green-400 mb-2">
-                  Main Submission Link <span className="text-red-400">*</span>
+                <label 
+                  className="flex items-center gap-2 text-sm font-medium mb-2"
+                  style={{ color: 'var(--color-success)' }}
+                >
+                  Main Submission Link <span style={{ color: 'var(--color-error)' }}>*</span>
                 </label>
                 <input
                   type="url"
                   value={formData.submissionLink}
                   onChange={(e) => handleInputChange('submissionLink', e.target.value)}
-                  className="w-full p-4 border border-green-500/30 rounded-xl focus:ring-2 focus:ring-green-500/40 focus:border-green-500 transition placeholder:text-teallight"
+                  className="w-full p-4 border rounded-xl focus:ring-2 focus:ring-green-500/40 focus:border-green-500 transition"
                   style={{ 
                     backgroundColor: 'var(--color-secondary-bg)',
-                    color: 'var(--color-text-primary)'
+                    color: 'var(--color-text-primary)',
+                    borderColor: 'var(--color-success)',
+                    opacity: 0.3
                   }}
                   placeholder="https://your-project-link.com"
                   required
                 />
-                <p className="text-xs text-teallight mt-2">
+                <p 
+                  className="text-xs mt-2"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                >
                   This link is required to unlock the next level. Please provide a valid URL to your completed work.
                 </p>
               </div>
               
               <div>
-                <label className="flex items-center gap-2 text-sm font-medium text-green-400 mb-2">
+                <label 
+                  className="flex items-center gap-2 text-sm font-medium mb-2"
+                  style={{ color: 'var(--color-success)' }}
+                >
                   Additional Links (Optional)
                 </label>
                 <div className="space-y-3">
@@ -354,16 +501,21 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
                       type="url"
                       value={material}
                       onChange={(e) => handleReferenceMaterialChange(index, e.target.value)}
-                      className="w-full p-4 border border-green-500/30 rounded-xl focus:ring-2 focus:ring-green-500/40 focus:border-green-500 transition placeholder:text-teallight"
+                      className="w-full p-4 border rounded-xl focus:ring-2 focus:ring-green-500/40 focus:border-green-500 transition"
                       style={{ 
                         backgroundColor: 'var(--color-secondary-bg)',
-                        color: 'var(--color-text-primary)'
+                        color: 'var(--color-text-primary)',
+                        borderColor: 'var(--color-success)',
+                        opacity: 0.3
                       }}
                       placeholder={`Additional link ${index + 1} (GitHub, demo, docs, etc.)`}
                     />
                   ))}
                 </div>
-                <p className="text-xs text-teallight mt-2">
+                <p 
+                  className="text-xs mt-2"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                >
                   You can add additional links to your work (e.g., GitHub repository, live demo, documentation).
                 </p>
               </div>
@@ -372,16 +524,26 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
         </div>
 
         {/* Footer */}
-        <div className="sticky bottom-0 bg-offblack/95 backdrop-blur-sm border-t border-paperwhite/20 p-6 rounded-b-2xl">
+        <div 
+          className="sticky bottom-0 backdrop-blur-sm border-t p-6 rounded-b-2xl"
+          style={{
+            backgroundColor: 'var(--color-surface-elevated)',
+            opacity: 0.95,
+            borderColor: 'var(--color-border)'
+          }}
+        >
           <div className="flex justify-between items-center">
-            <div className="text-sm text-teallight">
-              <span className="text-red-400">*</span> Required field
+            <div 
+              className="text-sm"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
+              <span style={{ color: 'var(--color-error)' }}>*</span> Required field
             </div>
             <div className="flex gap-3">
               <button
                 onClick={onClose}
                 disabled={isSubmitting}
-                className="flex items-center gap-2 px-6 py-3 border rounded-xl transition-colors disabled:opacity-50 font-medium"
+                className="flex items-center gap-2 px-6 py-3 border rounded-xl transition-all duration-200 hover:scale-105 disabled:opacity-50 font-medium"
                 style={{ 
                   color: 'var(--color-text-primary)',
                   borderColor: 'var(--color-border)',
@@ -394,8 +556,21 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
               <button
                 onClick={handleSubmit}
                 disabled={isSubmitting || !formData.submissionLink.trim()}
-                className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-green-500 to-teallight rounded-xl hover:from-green-600 hover:to-teallight/90 transition-all font-semibold disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
-                style={{ color: 'var(--color-text-inverse)' }}
+                className="flex items-center gap-2 px-8 py-3 rounded-xl transition-all duration-200 hover:scale-105 font-semibold disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                style={{ 
+                  color: 'var(--color-text-inverse)',
+                  background: 'linear-gradient(to right, var(--color-success), var(--color-accent-primary))'
+                }}
+                onMouseEnter={(e) => {
+                  if (!isSubmitting && formData.submissionLink.trim()) {
+                    e.currentTarget.style.background = 'linear-gradient(to right, var(--color-success), var(--color-accent-secondary))';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isSubmitting && formData.submissionLink.trim()) {
+                    e.currentTarget.style.background = 'linear-gradient(to right, var(--color-success), var(--color-accent-primary))';
+                  }
+                }}
               >
                 {isSubmitting ? (
                   <>

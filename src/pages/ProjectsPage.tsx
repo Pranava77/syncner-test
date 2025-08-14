@@ -58,10 +58,7 @@ const projects = [
   },
 ];
 
-const statusColor = (status: string) => {
-  if (status === 'In-progress') return 'text-trueturquoise';
-  return 'text-teallight';
-};
+
 
 const ProjectsPage: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -99,7 +96,7 @@ const ProjectsPage: React.FC = () => {
           <div
             key={project.id}
             className={`rounded-xl border transition-all shadow-lg flex flex-col justify-between p-6 group
-              ${project.selected ? 'border-2 border-trueturquoise' : 'hover:scale-[1.025] hover:shadow-xl'}
+              ${project.selected ? 'border-2' : 'hover:scale-[1.025] hover:shadow-xl'}
             `}
             style={{
               backgroundColor: project.selected 
@@ -112,10 +109,22 @@ const ProjectsPage: React.FC = () => {
             }}
           >
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs text-teallight font-medium">
+              <span 
+                className="text-xs font-medium"
+                style={{ color: 'var(--color-text-muted)' }}
+              >
                 {project.optional ? '(optional)' : ''}
               </span>
-              <span className={`text-xs font-semibold uppercase tracking-wide ${statusColor(project.status)}`}>{project.status}</span>
+              <span 
+                className="text-xs font-semibold uppercase tracking-wide"
+                style={{ 
+                  color: project.status === 'In-progress' 
+                    ? 'var(--color-success)' 
+                    : 'var(--color-accent-primary)' 
+                }}
+              >
+                {project.status}
+              </span>
             </div>
             <h2 
               className="text-xl font-bold mb-1 leading-tight"
@@ -130,11 +139,34 @@ const ProjectsPage: React.FC = () => {
               {project.description}
             </p>
             <div className="flex items-center justify-between text-sm mb-6">
-              <span className="font-semibold text-trueturquoise">Points: {project.points}</span>
-              <span className="text-xs px-3 py-1 rounded-full bg-paperwhite/10 text-trueturquoise font-semibold uppercase tracking-wide">{project.difficulty}</span>
+              <span 
+                className="font-semibold"
+                style={{ color: 'var(--color-accent-primary)' }}
+              >
+                Points: {project.points}
+              </span>
+              <span 
+                className="text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wide"
+                style={{
+                  backgroundColor: 'var(--color-accent-tertiary)',
+                  color: 'var(--color-accent-primary)'
+                }}
+              >
+                {project.difficulty}
+              </span>
             </div>
             <button
-              className="mt-auto bg-trueturquoise text-offblack px-6 py-2 rounded-lg font-bold shadow hover:bg-teallight transition-colors"
+              className="mt-auto px-6 py-2 rounded-lg font-bold shadow transition-all duration-200 hover:scale-105"
+              style={{
+                backgroundColor: 'var(--color-accent-primary)',
+                color: 'var(--color-text-inverse)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+              }}
               onClick={() => openModal(project)}
             >
               View
@@ -145,29 +177,90 @@ const ProjectsPage: React.FC = () => {
 
       {/* Modal */}
       {modalOpen && selectedProject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
-          <div className="bg-offblack rounded-2xl shadow-2xl p-8 w-full max-w-lg relative border border-paperwhite/20">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm"
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}
+        >
+          <div 
+            className="rounded-2xl shadow-2xl p-8 w-full max-w-lg relative border backdrop-blur-md"
+            style={{
+              backgroundColor: 'var(--color-surface-elevated)',
+              borderColor: 'var(--color-border)',
+              boxShadow: 'var(--shadow-lg)'
+            }}
+          >
             <button
-              className="absolute top-4 right-4 text-paperwhite hover:text-trueturquoise text-xl font-bold"
+              className="absolute top-4 right-4 text-xl font-bold transition-colors hover:text-blue-600"
+              style={{ 
+                color: 'var(--color-text-primary)'
+              }}
               onClick={closeModal}
               aria-label="Close"
             >
               ×
             </button>
-            <h2 className="text-2xl font-bold text-paperwhite mb-2">{selectedProject.title}</h2>
+            <h2 
+              className="text-2xl font-bold mb-2"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              {selectedProject.title}
+            </h2>
             <div className="flex items-center gap-4 mb-2">
-              <span className="text-xs px-3 py-1 rounded-full bg-paperwhite/10 text-trueturquoise font-semibold uppercase tracking-wide">{selectedProject.difficulty}</span>
-              <span className="text-xs font-semibold text-trueturquoise">Points: {selectedProject.points}</span>
-              <span className={`text-xs font-semibold ${statusColor(selectedProject.status)}`}>{selectedProject.status}</span>
+              <span 
+                className="text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wide"
+                style={{
+                  backgroundColor: 'var(--color-accent-tertiary)',
+                  color: 'var(--color-accent-primary)'
+                }}
+              >
+                {selectedProject.difficulty}
+              </span>
+              <span 
+                className="text-xs font-semibold"
+                style={{ color: 'var(--color-accent-primary)' }}
+              >
+                Points: {selectedProject.points}
+              </span>
+              <span 
+                className="text-xs font-semibold"
+                style={{ 
+                  color: selectedProject.status === 'In-progress' 
+                    ? 'var(--color-success)' 
+                    : 'var(--color-accent-primary)' 
+                }}
+              >
+                {selectedProject.status}
+              </span>
             </div>
-            <p className="text-teallight mb-4 text-sm leading-relaxed">{selectedProject.description}</p>
-            <div className="mb-6 text-paperwhite/80 text-sm leading-relaxed">{selectedProject.details}</div>
+            <p 
+              className="mb-4 text-sm leading-relaxed"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
+              {selectedProject.description}
+            </p>
+            <div 
+              className="mb-6 text-sm leading-relaxed"
+              style={{ color: 'var(--color-text-secondary)' }}
+            >
+              {selectedProject.details}
+            </div>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-              <label className="text-paperwhite text-sm font-medium" htmlFor="submission">Submission Link (e.g., GitHub):</label>
+              <label 
+                className="text-sm font-medium"
+                style={{ color: 'var(--color-text-primary)' }}
+                htmlFor="submission"
+              >
+                Submission Link (e.g., GitHub):
+              </label>
               <input
                 id="submission"
                 type="url"
-                className="bg-paperwhite/10 border border-paperwhite/20 rounded-lg px-4 py-2 text-paperwhite focus:outline-none focus:ring-2 focus:ring-trueturquoise"
+                className="border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                style={{
+                  backgroundColor: 'var(--color-surface)',
+                  borderColor: 'var(--color-border)',
+                  color: 'var(--color-text-primary)'
+                }}
                 placeholder="https://github.com/your-repo"
                 value={submission}
                 onChange={e => setSubmission(e.target.value)}
@@ -175,11 +268,28 @@ const ProjectsPage: React.FC = () => {
               />
               <button
                 type="submit"
-                className="bg-trueturquoise text-offblack px-6 py-2 rounded-lg font-bold shadow hover:bg-teallight transition-colors"
+                className="px-6 py-2 rounded-lg font-bold shadow transition-all duration-200 hover:scale-105"
+                style={{
+                  backgroundColor: 'var(--color-accent-primary)',
+                  color: 'var(--color-text-inverse)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                }}
               >
                 Submit
               </button>
-              {submitted && <div className="text-trueturquoise font-semibold text-center">Submission received!</div>}
+              {submitted && (
+                <div 
+                  className="font-semibold text-center"
+                  style={{ color: 'var(--color-success)' }}
+                >
+                  Submission received!
+                </div>
+              )}
             </form>
           </div>
         </div>
