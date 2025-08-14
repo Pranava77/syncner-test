@@ -492,7 +492,17 @@ const LevelTestPage: React.FC = () => {
                 </p>
             <button 
               onClick={() => navigate(`/student/training/${levelId}/learn`)}
-              className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold hover:bg-trueturquoise/90 transition-colors text-lg shadow-sm"
+              className="px-8 py-3 rounded-lg font-bold transition-colors text-lg shadow-sm"
+              style={{
+                backgroundColor: 'var(--color-accent-primary)',
+                color: 'var(--color-text-inverse)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+              }}
             >
               Go to Learning
             </button>
@@ -537,13 +547,35 @@ const LevelTestPage: React.FC = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button 
                 onClick={() => navigate(`/student/training/${levelId}/learn`)}
-                className="bg-paperwhite text-offblack px-8 py-3 rounded-lg font-bold hover:bg-trueturquoise hover:text-offblack transition-colors text-lg shadow-sm"
+                className="px-8 py-3 rounded-lg font-bold transition-colors text-lg shadow-sm"
+                style={{
+                  backgroundColor: 'var(--color-tertiary-bg)',
+                  color: 'var(--color-text-primary)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                  e.currentTarget.style.color = 'var(--color-text-inverse)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-tertiary-bg)';
+                  e.currentTarget.style.color = 'var(--color-text-primary)';
+                }}
               >
                 Back to Learning
               </button>
               <button 
                 onClick={() => navigate(`/student/training/${levelId}/exercise`)}
-                className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold hover:bg-trueturquoise/90 transition-colors text-lg shadow-sm"
+                className="px-8 py-3 rounded-lg font-bold transition-colors text-lg shadow-sm"
+                style={{
+                  backgroundColor: 'var(--color-accent-primary)',
+                  color: 'var(--color-text-inverse)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                }}
               >
                 Go to Exercise
               </button>
@@ -856,11 +888,7 @@ const LevelTestPage: React.FC = () => {
                 {question.options.map((option, optIdx) => (
                           <div 
                             key={optIdx} 
-                            className={`flex items-center p-4 border rounded-lg cursor-pointer transition-colors ${
-                              answers[qIdx]?.[optIdx] 
-                                ? 'bg-trueturquoise/20 border-trueturquoise/30' 
-                                : ''
-                            }`}
+                            className={`flex items-center p-4 border rounded-lg cursor-pointer transition-colors`}
                             style={{
                               backgroundColor: answers[qIdx]?.[optIdx] 
                                 ? 'rgba(20, 184, 166, 0.2)' 
@@ -1189,7 +1217,7 @@ const LevelTestPage: React.FC = () => {
                               <span className="text-red-400">✗</span>
                             )}
                           </div>
-                          <div className="text-xs text-teallight">
+                          <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
                             Your answer: {hasAnswered ? question.options[userAnswerIndex] : 'Not answered'}
                           </div>
                           {!isCorrect && hasAnswered && (

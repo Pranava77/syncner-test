@@ -59,8 +59,11 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
               style={{ backgroundColor: 'var(--color-border)' }}
             >
               <div 
-                className="bg-trueturquoise h-2 rounded-full transition-all duration-300 ease-out"
-                style={{ width: `${progress}%` }}
+                className="h-2 rounded-full transition-all duration-300 ease-out"
+                style={{ 
+                  backgroundColor: 'var(--color-accent-primary)',
+                  width: `${progress}%` 
+                }}
               ></div>
             </div>
           </div>

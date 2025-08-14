@@ -28,9 +28,18 @@ const LevelProgressChart: React.FC<LevelProgressChartProps> = ({
 }) => {
   if (loading) {
     return (
-      <div className="bg-paperwhite/10 rounded-xl shadow-sm p-8">
+      <div 
+        className="rounded-xl shadow-sm p-8"
+        style={{
+          backgroundColor: 'var(--color-tertiary-bg)',
+          boxShadow: 'var(--shadow-md)'
+        }}
+      >
         <div className="flex items-center justify-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-trueturquoise"></div>
+          <div 
+            className="animate-spin rounded-full h-8 w-8 border-b-2"
+            style={{ borderColor: 'var(--color-accent-primary)' }}
+          ></div>
                           <span 
                   className="ml-3"
                   style={{ color: 'var(--color-text-primary)' }}
@@ -84,8 +93,16 @@ const LevelProgressChart: React.FC<LevelProgressChartProps> = ({
             >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-trueturquoise/20 rounded-lg flex items-center justify-center">
-                    <span className="text-trueturquoise font-bold text-sm">{levelData.level}</span>
+                  <div 
+                    className="w-8 h-8 rounded-lg flex items-center justify-center"
+                    style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+                  >
+                    <span 
+                      className="font-bold text-sm"
+                      style={{ color: 'var(--color-accent-primary)' }}
+                    >
+                      {levelData.level}
+                    </span>
                   </div>
                   <div>
                     <h3 
@@ -103,7 +120,12 @@ const LevelProgressChart: React.FC<LevelProgressChartProps> = ({
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-lg font-bold text-trueturquoise">{levelData.completionPercentage}%</p>
+                  <p 
+                    className="text-lg font-bold"
+                    style={{ color: 'var(--color-accent-primary)' }}
+                  >
+                    {levelData.completionPercentage}%
+                  </p>
                   <p 
                     className="text-xs"
                     style={{ color: 'var(--color-text-tertiary)' }}
@@ -119,8 +141,11 @@ const LevelProgressChart: React.FC<LevelProgressChartProps> = ({
                 style={{ backgroundColor: 'var(--color-border)' }}
               >
                 <div 
-                  className="bg-gradient-to-r from-trueturquoise to-teallight h-3 rounded-full transition-all duration-1000 ease-out"
-                  style={{ width: `${levelData.completionPercentage}%` }}
+                  className="h-3 rounded-full transition-all duration-1000 ease-out"
+                  style={{ 
+                    background: 'linear-gradient(90deg, var(--color-accent-primary) 0%, var(--color-accent-secondary) 100%)',
+                    width: `${levelData.completionPercentage}%` 
+                  }}
                 ></div>
               </div>
               

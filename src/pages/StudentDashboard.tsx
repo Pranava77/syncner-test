@@ -212,7 +212,7 @@ const StudentDashboard: React.FC = () => {
                 >
                   No Level
                 </div>
-                  <div className="text-teallight text-xs lg:text-sm font-label">Current Module</div>
+                  <div className="text-xs lg:text-sm font-label" style={{ color: 'var(--color-text-tertiary)' }}>Current Module</div>
                 </div>
                 <div className="text-center">
                   <div 
@@ -286,7 +286,10 @@ const StudentDashboard: React.FC = () => {
                 >
                   Continue Learning
                 </h2>
-                <span className="bg-trueturquoise/20 text-trueturquoise px-2 lg:px-3 py-1 rounded-full text-xs lg:text-sm font-medium">
+                <span className="px-2 lg:px-3 py-1 rounded-full text-xs lg:text-sm font-medium" style={{
+                  backgroundColor: 'var(--color-accent-tertiary)',
+                  color: 'var(--color-accent-primary)'
+                }}>
                   No Level Available
                 </span>
               </div>
@@ -313,8 +316,8 @@ const StudentDashboard: React.FC = () => {
                       No training levels are currently available for your track.
                     </p>
                   </div>
-                  <div className="bg-trueturquoise/10 p-2 rounded-lg w-fit">
-                    <ReaderIcon className="h-5 w-5 lg:h-6 lg:w-6 text-trueturquoise" />
+                  <div className="p-2 rounded-lg w-fit" style={{ backgroundColor: 'var(--color-accent-tertiary)' }}>
+                    <ReaderIcon className="h-5 w-5 lg:h-6 lg:w-6" style={{ color: 'var(--color-accent-primary)' }} />
                   </div>
                 </div>
                 
@@ -332,8 +335,11 @@ const StudentDashboard: React.FC = () => {
                     style={{ backgroundColor: 'var(--color-border)' }}
                   >
                     <div 
-                      className="bg-trueturquoise h-2 rounded-full transition-all"
-                      style={{ width: '0%' }}
+                      className="h-2 rounded-full transition-all"
+                      style={{ 
+                        width: '0%',
+                        backgroundColor: 'var(--color-accent-primary)'
+                      }}
                     ></div>
                   </div>
                   
@@ -371,13 +377,22 @@ const StudentDashboard: React.FC = () => {
                     className="flex items-center text-sm"
                     style={{ color: 'var(--color-text-tertiary)' }}
                   >
-                    <Clock className="h-4 w-4 mr-1 text-trueturquoise" />
+                    <Clock className="h-4 w-4 mr-1" style={{ color: 'var(--color-accent-primary)' }} />
                     No Duration
                   </div>
                   <Link
                     to="/student/training"
-                    className="bg-trueturquoise px-4 py-2 rounded-lg hover:bg-teallight transition-colors font-medium flex items-center justify-center w-full sm:w-auto"
-                    style={{ color: 'var(--color-text-inverse)' }}
+                    className="px-4 py-2 rounded-lg transition-colors font-medium flex items-center justify-center w-full sm:w-auto"
+                    style={{ 
+                      backgroundColor: 'var(--color-accent-primary)',
+                      color: 'var(--color-text-inverse)' 
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                    }}
                   >
                                           <PlayCircle 
                         className="h-4 w-4 mr-2"
@@ -414,8 +429,17 @@ const StudentDashboard: React.FC = () => {
                   </p>
                   <Link
                     to="/student/training"
-                    className="bg-trueturquoise px-4 py-2 rounded-lg hover:bg-teallight transition-colors font-medium inline-flex items-center"
-                    style={{ color: 'var(--color-text-inverse)' }}
+                    className="px-4 py-2 rounded-lg transition-colors font-medium inline-flex items-center"
+                    style={{ 
+                      backgroundColor: 'var(--color-accent-primary)',
+                      color: 'var(--color-text-inverse)' 
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                    }}
                   >
                     <ReaderIcon 
                       className="h-4 w-4 mr-2"
@@ -452,8 +476,17 @@ const StudentDashboard: React.FC = () => {
                   </p>
                   <Link
                     to="/student/training"
-                    className="bg-trueturquoise px-4 py-2 rounded-lg hover:bg-teallight transition-colors font-medium inline-flex items-center"
-                    style={{ color: 'var(--color-text-inverse)' }}
+                    className="px-4 py-2 rounded-lg transition-colors font-medium inline-flex items-center"
+                    style={{ 
+                      backgroundColor: 'var(--color-accent-primary)',
+                      color: 'var(--color-text-inverse)' 
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                    }}
                   >
                     <ReaderIcon 
                       className="h-4 w-4 mr-2"
@@ -508,7 +541,8 @@ const StudentDashboard: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="text-teallight text-lg"
+            className="text-lg"
+            style={{ color: 'var(--color-text-tertiary)' }}
           >
             Please wait while we fetch your training data.
           </motion.p>
@@ -554,7 +588,7 @@ const StudentDashboard: React.FC = () => {
                 >
                   {currentLevel ? `Level ${currentLevel.order}` : 'No Level'}
                 </div>
-                <div className="text-teallight text-xs lg:text-sm font-label">Current Module</div>
+                <div className="text-xs lg:text-sm font-label" style={{ color: 'var(--color-text-tertiary)' }}>Current Module</div>
               </div>
               <div className="text-center">
                 <div 
@@ -563,7 +597,7 @@ const StudentDashboard: React.FC = () => {
                 >
                   {completedLevels}
                 </div>
-                <div className="text-teallight text-xs lg:text-sm font-label">Completed</div>
+                <div className="text-xs lg:text-sm font-label" style={{ color: 'var(--color-text-tertiary)' }}>Completed</div>
               </div>
               <div className="text-center">
                 <div 
@@ -572,7 +606,7 @@ const StudentDashboard: React.FC = () => {
                 >
                   {levels?.length || 0}
                 </div>
-                <div className="text-teallight text-xs lg:text-sm font-label">Total Levels</div>
+                <div className="text-xs lg:text-sm font-label" style={{ color: 'var(--color-text-tertiary)' }}>Total Levels</div>
               </div>
               <div className="text-center">
                 <div 
@@ -581,7 +615,7 @@ const StudentDashboard: React.FC = () => {
                 >
                   {overallProgress}%
                 </div>
-                <div className="text-teallight text-xs lg:text-sm font-label">Progress</div>
+                <div className="text-xs lg:text-sm font-label" style={{ color: 'var(--color-text-tertiary)' }}>Progress</div>
               </div>
             </div>
           </div>
@@ -616,8 +650,10 @@ const StudentDashboard: React.FC = () => {
           >
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-trueturquoise/20 to-blue-500/20 rounded-xl flex items-center justify-center">
-                  <ReaderIcon className="h-6 w-6 text-trueturquoise" />
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{
+                  background: 'linear-gradient(135deg, var(--color-accent-tertiary) 0%, var(--color-accent-secondary) 100%)'
+                }}>
+                  <ReaderIcon className="h-6 w-6" style={{ color: 'var(--color-accent-primary)' }} />
                 </div>
                 <div>
                   <h2 
@@ -626,10 +662,14 @@ const StudentDashboard: React.FC = () => {
             >
               Continue Learning
             </h2>
-                  <p className="text-teallight text-sm">Pick up where you left off</p>
+                  <p className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>Pick up where you left off</p>
                 </div>
               </div>
-              <span className="bg-gradient-to-r from-trueturquoise/20 to-blue-500/20 text-trueturquoise px-4 py-2 rounded-full text-sm font-semibold border border-trueturquoise/30">
+              <span className="px-4 py-2 rounded-full text-sm font-semibold border" style={{
+                background: 'linear-gradient(to right, var(--color-accent-tertiary), var(--color-accent-secondary))',
+                color: 'var(--color-accent-primary)',
+                borderColor: 'var(--color-accent-primary)'
+              }}>
                 {currentLevel ? (currentLevelProgress === 100 && currentLevel.order === levels?.length ? 'Bootcamp Complete' : currentLevelProgress === 100 ? 'Level Complete' : 'In Progress') : 'All Levels Complete'}
               </span>
             </div>
@@ -646,8 +686,10 @@ const StudentDashboard: React.FC = () => {
                 <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-6">
                   <div className="mb-4 lg:mb-0 flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-8 h-8 bg-gradient-to-br from-trueturquoise/20 to-blue-500/20 rounded-lg flex items-center justify-center">
-                        <span className="text-trueturquoise font-bold text-sm">{currentLevel.order}</span>
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{
+                        background: 'linear-gradient(135deg, var(--color-accent-tertiary), var(--color-accent-secondary))'
+                      }}>
+                        <span className="font-bold text-sm" style={{ color: 'var(--color-accent-primary)' }}>{currentLevel.order}</span>
                       </div>
                       <h3 
               className="text-lg font-bold"
@@ -917,7 +959,8 @@ const StudentDashboard: React.FC = () => {
                 }}
               >
                 <button
-                  className="absolute top-3 right-3 text-trueturquoise hover:text-teallight text-xl font-bold focus:outline-none"
+                  className="absolute top-3 right-3 text-xl font-bold focus:outline-none"
+                  style={{ color: 'var(--color-accent-primary)' }}
                   onClick={() => setShowAIModal(false)}
                   aria-label="Close"
                 >

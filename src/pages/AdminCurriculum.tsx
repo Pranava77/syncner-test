@@ -669,7 +669,7 @@ const AdminCurriculum: React.FC = () => {
       >
         <main className="flex-1 p-6 lg:p-12 flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-trueturquoise mx-auto mb-4"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: 'var(--color-accent-primary)' }}></div>
             <p 
               className="text-lg"
               style={{ color: 'var(--color-text-primary)' }}
@@ -682,8 +682,17 @@ const AdminCurriculum: React.FC = () => {
                 <p>{error}</p>
                 <button 
                   onClick={() => fetchLevels(selectedTrack || undefined)}
-                  className="mt-2 bg-trueturquoise px-3 py-1 rounded text-xs hover:bg-trueturquoise/90 transition-colors"
-                  style={{ color: 'var(--color-text-inverse)' }}
+                  className="mt-2 px-3 py-1 rounded text-xs transition-colors"
+                  style={{ 
+                    backgroundColor: 'var(--color-accent-primary)',
+                    color: 'var(--color-text-inverse)' 
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                  }}
                 >
                   Retry
                 </button>
@@ -740,8 +749,21 @@ const AdminCurriculum: React.FC = () => {
                   <button
                     onClick={() => fetchLevels()}
                     disabled={loading}
-                    className="flex items-center gap-2 bg-trueturquoise px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium disabled:opacity-50"
-                    style={{ color: 'var(--color-text-inverse)' }}
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors font-medium disabled:opacity-50"
+                    style={{ 
+                      backgroundColor: 'var(--color-accent-primary)',
+                      color: 'var(--color-text-inverse)' 
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!loading) {
+                        e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!loading) {
+                        e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                      }
+                    }}
                   >
                     <ArrowClockwiseIcon className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
                     Refresh All
@@ -765,10 +787,16 @@ const AdminCurriculum: React.FC = () => {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
                       onClick={() => handleTrackSelect(track.id)}
-                      className="border rounded-xl p-6 cursor-pointer hover:border-trueturquoise/50 transition-all duration-300 group"
+                      className="border rounded-xl p-6 cursor-pointer transition-all duration-300 group"
                       style={{
                         backgroundColor: 'var(--color-surface)',
                         borderColor: 'var(--color-border)'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-border)';
                       }}
                     >
                       <div className="text-center">
@@ -791,8 +819,14 @@ const AdminCurriculum: React.FC = () => {
                           {trackStats[track.id] || 0} levels available
                         </p>
                         <div 
-                          className="text-xs group-hover:text-trueturquoise transition-colors"
+                          className="text-xs transition-colors"
                           style={{ color: 'var(--color-text-tertiary)' }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.color = 'var(--color-accent-primary)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.color = 'var(--color-text-tertiary)';
+                          }}
                         >
                           Click to manage levels
                         </div>
@@ -812,8 +846,14 @@ const AdminCurriculum: React.FC = () => {
                     <div className="flex items-center gap-4 mb-2">
                       <button
                         onClick={handleBackToTracks}
-                        className="p-2 hover:text-trueturquoise transition-colors"
+                        className="p-2 transition-colors"
                         style={{ color: 'var(--color-text-tertiary)' }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.color = 'var(--color-accent-primary)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.color = 'var(--color-text-tertiary)';
+                        }}
                         title="Back to Tracks"
                       >
                         <ChevronRightIcon className="h-5 w-5 rotate-180" />
@@ -869,8 +909,17 @@ const AdminCurriculum: React.FC = () => {
                   </div>
                   <button
                     onClick={handleAddLevel}
-                    className="flex items-center gap-2 bg-trueturquoise px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium"
-                    style={{ color: 'var(--color-text-inverse)' }}
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors font-medium"
+                    style={{ 
+                      backgroundColor: 'var(--color-accent-primary)',
+                      color: 'var(--color-text-inverse)' 
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                    }}
                   >
                     <PlusIcon className="h-5 w-5" />
                     Create Level
@@ -899,11 +948,19 @@ const AdminCurriculum: React.FC = () => {
                       placeholder="Search levels..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-trueturquoise text-sm"
+                      className="w-full px-3 py-2 border rounded-lg focus:outline-none text-sm"
                       style={{
                         backgroundColor: 'var(--color-secondary-bg)',
                         borderColor: 'var(--color-border)',
                         color: 'var(--color-text-primary)'
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                        e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-border)';
+                        e.currentTarget.style.boxShadow = 'none';
                       }}
                     />
                   </div>
@@ -918,11 +975,19 @@ const AdminCurriculum: React.FC = () => {
                     <select
                       value={filterDifficulty}
                       onChange={(e) => setFilterDifficulty(e.target.value)}
-                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-trueturquoise text-sm"
+                      className="w-full px-3 py-2 border rounded-lg focus:outline-none text-sm"
                       style={{
                         backgroundColor: 'var(--color-secondary-bg)',
                         borderColor: 'var(--color-border)',
                         color: 'var(--color-text-primary)'
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                        e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-border)';
+                        e.currentTarget.style.boxShadow = 'none';
                       }}
                     >
                       <option value="all">All Difficulties</option>
@@ -936,8 +1001,21 @@ const AdminCurriculum: React.FC = () => {
                     <button
                       onClick={() => fetchLevels(selectedTrack || undefined)}
                       disabled={loading}
-                      className="w-full flex items-center justify-center gap-2 bg-trueturquoise px-3 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium disabled:opacity-50 text-sm"
-                      style={{ color: 'var(--color-text-inverse)' }}
+                      className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg transition-colors font-medium disabled:opacity-50 text-sm"
+                      style={{ 
+                        backgroundColor: 'var(--color-accent-primary)',
+                        color: 'var(--color-text-inverse)' 
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!loading) {
+                          e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!loading) {
+                          e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                        }
+                      }}
                     >
                       <ArrowClockwiseIcon className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
                       Refresh
@@ -949,7 +1027,7 @@ const AdminCurriculum: React.FC = () => {
               {/* Levels Grid */}
               {filteredLevels.length === 0 ? (
                 <div className="text-center py-12">
-                  <div className="text-paperwhite/30 mb-4">
+                  <div className="mb-4" style={{ color: 'var(--color-text-muted)' }}>
                     <FileTextIcon className="h-16 w-16 mx-auto" />
                   </div>
                   <h3 
@@ -975,8 +1053,17 @@ const AdminCurriculum: React.FC = () => {
                     <p>Search term: "{searchTerm}"</p>
                     <button 
                       onClick={() => fetchLevels(selectedTrack || undefined)}
-                      className="mt-4 bg-trueturquoise px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors text-sm"
-                      style={{ color: 'var(--color-text-inverse)' }}
+                      className="mt-4 px-4 py-2 rounded-lg transition-colors text-sm"
+                      style={{ 
+                        backgroundColor: 'var(--color-accent-primary)',
+                        color: 'var(--color-text-inverse)' 
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                      }}
                     >
                       Refresh Data
                     </button>
@@ -997,14 +1084,23 @@ const AdminCurriculum: React.FC = () => {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      className="border rounded-xl p-6 hover:border-trueturquoise/50 transition-all duration-300 group relative"
+                      className="border rounded-xl p-6 transition-all duration-300 group relative"
                       style={{
                         backgroundColor: 'var(--color-surface)',
                         borderColor: 'var(--color-border)'
                       }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-border)';
+                      }}
                     >
                       {/* Level Order Indicator */}
-                      <div className="absolute top-2 right-2 bg-paperwhite/10 text-paperwhite/60 text-xs px-2 py-1 rounded-full">
+                      <div className="absolute top-2 right-2 text-xs px-2 py-1 rounded-full" style={{
+                        backgroundColor: 'var(--color-tertiary-bg)',
+                        color: 'var(--color-text-muted)'
+                      }}>
                         #{level.order}
                       </div>
                       {/* Header with level number, difficulty and track */}
@@ -1012,8 +1108,11 @@ const AdminCurriculum: React.FC = () => {
                         <div className="flex items-center gap-3">
                           {/* Level Number Badge */}
                           <div 
-                            className="bg-trueturquoise px-3 py-1 rounded-lg font-bold text-sm"
-                            style={{ color: 'var(--color-text-inverse)' }}
+                            className="px-3 py-1 rounded-lg font-bold text-sm"
+                            style={{ 
+                              backgroundColor: 'var(--color-accent-primary)',
+                              color: 'var(--color-text-inverse)' 
+                            }}
                           >
                             Level {level.order}
                           </div>
@@ -1033,10 +1132,10 @@ const AdminCurriculum: React.FC = () => {
                       </div>
 
                       {/* Title and Description */}
-                      <h3 className="text-lg font-heading text-paperwhite mb-2">
+                      <h3 className="text-lg font-heading mb-2" style={{ color: 'var(--color-text-primary)' }}>
                         Level {level.order}: {level.title}
                       </h3>
-                      <p className="text-teallight text-sm mb-4 line-clamp-2">{level.description}</p>
+                      <p className="text-sm mb-4 line-clamp-2" style={{ color: 'var(--color-text-tertiary)' }}>{level.description}</p>
 
                       {/* Duration and Difficulty */}
                       <div className="space-y-2 mb-4">
@@ -1062,7 +1161,7 @@ const AdminCurriculum: React.FC = () => {
 
                       {/* Content Counts */}
                       <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-4 text-xs text-teallight">
+                        <div className="flex items-center gap-4 text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
                           <span className="flex items-center gap-1">
                             <BookOpenIcon className="h-3 w-3" />
                             {level.learn.length} learn
@@ -1096,12 +1195,18 @@ const AdminCurriculum: React.FC = () => {
                         <div className="mb-4">
                           <div className="flex flex-wrap gap-1">
                             {level.skills.slice(0, 3).map((skill, idx) => (
-                              <span key={idx} className="px-2 py-1 bg-trueturquoise/20 text-trueturquoise text-xs rounded">
+                              <span key={idx} className="px-2 py-1 text-xs rounded" style={{
+                                backgroundColor: 'var(--color-accent-tertiary)',
+                                color: 'var(--color-accent-primary)'
+                              }}>
                                 {skill}
                               </span>
                             ))}
                             {level.skills.length > 3 && (
-                              <span className="px-2 py-1 bg-paperwhite/20 text-paperwhite text-xs rounded">
+                              <span className="px-2 py-1 text-xs rounded" style={{
+                                backgroundColor: 'var(--color-tertiary-bg)',
+                                color: 'var(--color-text-primary)'
+                              }}>
                                 +{level.skills.length - 3} more
                               </span>
                             )}
@@ -1138,8 +1243,8 @@ const AdminCurriculum: React.FC = () => {
                                 level.learn.map((item, idx) => (
                                   <div key={idx} className="flex items-center justify-between bg-green-500/5 rounded-lg p-2">
                                     <div className="flex-1 min-w-0">
-                                      <p className="text-xs text-paperwhite font-medium truncate">{item.title}</p>
-                                      <p className="text-xs text-teallight truncate">{item.type}</p>
+                                      <p className="text-xs font-medium truncate" style={{ color: 'var(--color-text-primary)' }}>{item.title}</p>
+                                      <p className="text-xs truncate" style={{ color: 'var(--color-text-tertiary)' }}>{item.type}</p>
                                     </div>
                                     <div className="flex items-center gap-1 ml-2">
                                       <button
@@ -1160,7 +1265,7 @@ const AdminCurriculum: React.FC = () => {
                                   </div>
                                 ))
                               ) : (
-                                <p className="text-xs text-teallight text-center py-2">No learn content yet</p>
+                                <p className="text-xs text-center py-2" style={{ color: 'var(--color-text-tertiary)' }}>No learn content yet</p>
                               )}
                             </div>
                           )}
@@ -1193,8 +1298,8 @@ const AdminCurriculum: React.FC = () => {
                                 level.test.map((item, idx) => (
                                   <div key={idx} className="flex items-center justify-between bg-yellow-500/5 rounded-lg p-2">
                                     <div className="flex-1 min-w-0">
-                                      <p className="text-xs text-paperwhite font-medium truncate">{item.question}</p>
-                                      <p className="text-xs text-teallight">{item.options.length} options</p>
+                                      <p className="text-xs font-medium truncate" style={{ color: 'var(--color-text-primary)' }}>{item.question}</p>
+                                      <p className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>{item.options.length} options</p>
                                     </div>
                                     <div className="flex items-center gap-1 ml-2">
                                       <button
@@ -1215,7 +1320,7 @@ const AdminCurriculum: React.FC = () => {
                                   </div>
                                 ))
                               ) : (
-                                <p className="text-xs text-teallight text-center py-2">No test content yet</p>
+                                <p className="text-xs text-center py-2" style={{ color: 'var(--color-text-tertiary)' }}>No test content yet</p>
                               )}
                             </div>
                           )}
@@ -1248,8 +1353,8 @@ const AdminCurriculum: React.FC = () => {
                                 level.exercise.map((item, idx) => (
                                   <div key={idx} className="flex items-center justify-between bg-purple-500/5 rounded-lg p-2">
                                     <div className="flex-1 min-w-0">
-                                      <p className="text-xs text-paperwhite font-medium truncate">{item.title}</p>
-                                      <p className="text-xs text-teallight truncate">{item.description}</p>
+                                      <p className="text-xs font-medium truncate" style={{ color: 'var(--color-text-primary)' }}>{item.title}</p>
+                                      <p className="text-xs truncate" style={{ color: 'var(--color-text-tertiary)' }}>{item.description}</p>
                                     </div>
                                     <div className="flex items-center gap-1 ml-2">
                                       <button
@@ -1270,7 +1375,7 @@ const AdminCurriculum: React.FC = () => {
                                   </div>
                                 ))
                               ) : (
-                                <p className="text-xs text-teallight text-center py-2">No exercise content yet</p>
+                                <p className="text-xs text-center py-2" style={{ color: 'var(--color-text-tertiary)' }}>No exercise content yet</p>
                               )}
                             </div>
                           )}
@@ -1278,19 +1383,33 @@ const AdminCurriculum: React.FC = () => {
                       </div>
 
                       {/* Admin Controls */}
-                      <div className="border-t border-paperwhite/10 pt-4">
+                      <div className="border-t pt-4" style={{ borderColor: 'var(--color-border-subtle)' }}>
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <button
                               onClick={() => handleEditLevel(level)}
-                              className="p-2 text-teallight hover:text-trueturquoise transition-colors"
+                              className="p-2 transition-colors"
+                              style={{ color: 'var(--color-text-tertiary)' }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.color = 'var(--color-accent-primary)';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.color = 'var(--color-text-tertiary)';
+                              }}
                               title="Edit Level"
                             >
                               <EditIcon className="h-4 w-4" />
                             </button>
                             <button
                               onClick={() => handleDeleteLevel(level.id)}
-                              className="p-2 text-teallight hover:text-red-400 transition-colors"
+                              className="p-2 transition-colors"
+                              style={{ color: 'var(--color-text-tertiary)' }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.color = 'var(--color-error)';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.color = 'var(--color-text-tertiary)';
+                              }}
                               title="Delete Level"
                             >
                               <TrashIcon className="h-4 w-4" />
@@ -1367,7 +1486,14 @@ const AdminCurriculum: React.FC = () => {
                 </h2>
                 <button
                   onClick={() => setShowLevelModal(false)}
-                  className="p-2 text-teallight hover:text-paperwhite transition-colors"
+                  className="p-2 transition-colors"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = 'var(--color-text-primary)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = 'var(--color-text-tertiary)';
+                  }}
                 >
                   <Cross1Icon className="h-5 w-5" />
                 </button>
@@ -1375,40 +1501,79 @@ const AdminCurriculum: React.FC = () => {
 
               <form onSubmit={handleLevelSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-paperwhite mb-2">
+                  <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
                     Title *
                   </label>
                   <input
                     type="text"
                     value={levelForm.title}
                     onChange={(e) => setLevelForm({ ...levelForm, title: e.target.value })}
-                    className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
+                    className="w-full px-4 py-2 border rounded-lg focus:outline-none"
+                    style={{
+                      backgroundColor: 'var(--color-secondary-bg)',
+                      borderColor: 'var(--color-border)',
+                      color: 'var(--color-text-primary)'
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                      e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.borderColor = 'var(--color-border)';
+                      e.currentTarget.style.boxShadow = 'none';
+                    }}
                     placeholder="Enter level title"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-paperwhite mb-2">
+                  <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
                     Description *
                   </label>
                   <textarea
                     value={levelForm.description}
                     onChange={(e) => setLevelForm({ ...levelForm, description: e.target.value })}
                     rows={3}
-                    className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise resize-none"
+                    className="w-full px-4 py-2 border rounded-lg focus:outline-none resize-none"
+                    style={{
+                      backgroundColor: 'var(--color-secondary-bg)',
+                      borderColor: 'var(--color-border)',
+                      color: 'var(--color-text-primary)'
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                      e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.borderColor = 'var(--color-border)';
+                      e.currentTarget.style.boxShadow = 'none';
+                    }}
                     placeholder="Enter level description"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-paperwhite mb-2">
+                    <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
                       Difficulty *
                     </label>
                     <select
                       value={levelForm.difficulty}
                       onChange={(e) => setLevelForm({ ...levelForm, difficulty: e.target.value })}
-                      className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none"
+                      style={{
+                        backgroundColor: 'var(--color-secondary-bg)',
+                        borderColor: 'var(--color-border)',
+                        color: 'var(--color-text-primary)'
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                        e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-border)';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
                     >
                       <option value="Beginner">Beginner</option>
                       <option value="Intermediate">Intermediate</option>
@@ -1417,16 +1582,21 @@ const AdminCurriculum: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-paperwhite mb-2">
+                    <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
                       Career Track *
                     </label>
                     <input
                       type="text"
                       value={getTrackLabel(levelForm.careerTrack)}
                       disabled
-                      className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite/50 cursor-not-allowed"
+                      className="w-full px-4 py-2 border rounded-lg cursor-not-allowed"
+                      style={{
+                        backgroundColor: 'var(--color-secondary-bg)',
+                        borderColor: 'var(--color-border)',
+                        color: 'var(--color-text-muted)'
+                      }}
                     />
-                    <p className="text-xs text-teallight mt-1">
+                    <p className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
                       Track is determined by your selection
                     </p>
                   </div>
@@ -1434,56 +1604,108 @@ const AdminCurriculum: React.FC = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-paperwhite mb-2">
+                    <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
                       Duration
                     </label>
                     <input
                       type="text"
                       value={levelForm.duration}
                       onChange={(e) => setLevelForm({ ...levelForm, duration: e.target.value })}
-                      className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none"
+                      style={{
+                        backgroundColor: 'var(--color-secondary-bg)',
+                        borderColor: 'var(--color-border)',
+                        color: 'var(--color-text-primary)'
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                        e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-border)';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
                       placeholder="e.g., 2-3 weeks"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-paperwhite mb-2">
+                    <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
                       Estimated Hours
                     </label>
                     <input
                       type="number"
                       value={levelForm.estimatedHours}
                       onChange={(e) => setLevelForm({ ...levelForm, estimatedHours: parseInt(e.target.value) || 1 })}
-                      className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none"
+                      style={{
+                        backgroundColor: 'var(--color-secondary-bg)',
+                        borderColor: 'var(--color-border)',
+                        color: 'var(--color-text-primary)'
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                        e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-border)';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
                       min="1"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-paperwhite mb-2">
+                  <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
                     Skills (comma-separated)
                   </label>
-                  <input
-                    type="text"
-                    value={levelForm.skills.join(', ')}
-                    onChange={(e) => setLevelForm({ ...levelForm, skills: e.target.value.split(',').map(s => s.trim()).filter(s => s) })}
-                    className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
-                    placeholder="e.g., HTML, CSS, JavaScript"
-                  />
+                                      <input
+                      type="text"
+                      value={levelForm.skills.join(', ')}
+                      onChange={(e) => setLevelForm({ ...levelForm, skills: e.target.value.split(',').map(s => s.trim()).filter(s => s) })}
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none"
+                      style={{
+                        backgroundColor: 'var(--color-secondary-bg)',
+                        borderColor: 'var(--color-border)',
+                        color: 'var(--color-text-primary)'
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                        e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-border)';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
+                      placeholder="e.g., HTML, CSS, JavaScript"
+                    />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-paperwhite mb-2">
+                  <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
                     Prerequisites (comma-separated)
                   </label>
-                  <input
-                    type="text"
-                    value={levelForm.prerequisites.join(', ')}
-                    onChange={(e) => setLevelForm({ ...levelForm, prerequisites: e.target.value.split(',').map(s => s.trim()).filter(s => s) })}
-                    className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
-                    placeholder="e.g., Basic programming knowledge"
-                  />
+                                      <input
+                      type="text"
+                      value={levelForm.prerequisites.join(', ')}
+                      onChange={(e) => setLevelForm({ ...levelForm, prerequisites: e.target.value.split(',').map(s => s.trim()).filter(s => s) })}
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none"
+                      style={{
+                        backgroundColor: 'var(--color-secondary-bg)',
+                        borderColor: 'var(--color-border)',
+                        color: 'var(--color-text-primary)'
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                        e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-border)';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
+                      placeholder="e.g., Basic programming knowledge"
+                    />
                 </div>
 
                 <div className="flex items-center gap-3">
@@ -1492,25 +1714,30 @@ const AdminCurriculum: React.FC = () => {
                     id="isActive"
                     checked={levelForm.isActive}
                     onChange={(e) => setLevelForm({ ...levelForm, isActive: e.target.checked })}
-                    className="w-4 h-4 text-trueturquoise bg-black border-paperwhite/20 rounded focus:ring-trueturquoise"
+                    className="w-4 h-4 rounded"
+                    style={{
+                      color: 'var(--color-accent-primary)',
+                      backgroundColor: 'var(--color-secondary-bg)',
+                      borderColor: 'var(--color-border)'
+                    }}
                   />
-                  <label htmlFor="isActive" className="text-sm text-paperwhite">
+                  <label htmlFor="isActive" className="text-sm" style={{ color: 'var(--color-text-primary)' }}>
                     Active
                   </label>
                 </div>
 
                 {/* Read First Section */}
-                <div className="border-t border-paperwhite/20 pt-6">
+                <div className="border-t pt-6" style={{ borderColor: 'var(--color-border-subtle)' }}>
                   <div className="mb-4">
-                    <h3 className="text-lg font-semibold text-paperwhite">Read This First! Section</h3>
-                    <p className="text-sm text-teallight">
+                    <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>Read This First! Section</h3>
+                    <p className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
                       This section appears to students before the learning materials to provide context and motivation.
                     </p>
                   </div>
                   
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-paperwhite mb-2">
+                      <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
                         Brief - What is this?
                       </label>
                       <textarea
@@ -1524,21 +1751,36 @@ const AdminCurriculum: React.FC = () => {
                         })}
                         rows={3}
                         maxLength={500}
-                        className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise resize-none"
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none resize-none"
+                        style={{
+                          backgroundColor: 'var(--color-secondary-bg)',
+                          borderColor: 'var(--color-border)',
+                          color: 'var(--color-text-primary)'
+                        }}
+                        onFocus={(e) => {
+                          e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                          e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                        }}
+                        onBlur={(e) => {
+                          e.currentTarget.style.borderColor = 'var(--color-border)';
+                          e.currentTarget.style.boxShadow = 'none';
+                        }}
                         placeholder="Briefly explain what this topic/concept is..."
                       />
                       <div className="flex justify-between items-center mt-1">
-                        <span className="text-xs text-teallight">
+                        <span className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
                           Keep it concise and engaging
                         </span>
-                        <span className={`text-xs ${(levelForm.readFirst?.brief?.length || 0) > 450 ? 'text-red-400' : 'text-teallight'}`}>
+                        <span className={`text-xs ${(levelForm.readFirst?.brief?.length || 0) > 450 ? 'text-red-400' : ''}`} style={{ 
+                          color: (levelForm.readFirst?.brief?.length || 0) > 450 ? 'var(--color-error)' : 'var(--color-text-tertiary)' 
+                        }}>
                           {(levelForm.readFirst?.brief?.length || 0)}/500
                         </span>
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-paperwhite mb-2">
+                      <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
                         Why you need to learn this
                       </label>
                       <textarea
@@ -1552,21 +1794,36 @@ const AdminCurriculum: React.FC = () => {
                         })}
                         rows={3}
                         maxLength={500}
-                        className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise resize-none"
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none resize-none"
+                        style={{
+                          backgroundColor: 'var(--color-secondary-bg)',
+                          borderColor: 'var(--color-border)',
+                          color: 'var(--color-text-primary)'
+                        }}
+                        onFocus={(e) => {
+                          e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                          e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                        }}
+                        onBlur={(e) => {
+                          e.currentTarget.style.borderColor = 'var(--color-border)';
+                          e.currentTarget.style.boxShadow = 'none';
+                        }}
                         placeholder="Explain why this knowledge is important and valuable..."
                       />
                       <div className="flex justify-between items-center mt-1">
-                        <span className="text-xs text-teallight">
+                        <span className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
                           Focus on career benefits and opportunities
                         </span>
-                        <span className={`text-xs ${(levelForm.readFirst?.whyLearn?.length || 0) > 450 ? 'text-red-400' : 'text-teallight'}`}>
+                        <span className={`text-xs ${(levelForm.readFirst?.whyLearn?.length || 0) > 450 ? 'text-red-400' : ''}`} style={{ 
+                          color: (levelForm.readFirst?.whyLearn?.length || 0) > 450 ? 'var(--color-error)' : 'var(--color-text-tertiary)' 
+                        }}>
                           {(levelForm.readFirst?.whyLearn?.length || 0)}/500
                         </span>
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-paperwhite mb-2">
+                      <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
                         Where it is used
                       </label>
                       <textarea
@@ -1580,21 +1837,36 @@ const AdminCurriculum: React.FC = () => {
                         })}
                         rows={3}
                         maxLength={500}
-                        className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise resize-none"
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none resize-none"
+                        style={{
+                          backgroundColor: 'var(--color-secondary-bg)',
+                          borderColor: 'var(--color-border)',
+                          color: 'var(--color-text-primary)'
+                        }}
+                        onFocus={(e) => {
+                          e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                          e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                        }}
+                        onBlur={(e) => {
+                          e.currentTarget.style.borderColor = 'var(--color-border)';
+                          e.currentTarget.style.boxShadow = 'none';
+                        }}
                         placeholder="Describe real-world applications and use cases..."
                       />
                       <div className="flex justify-between items-center mt-1">
-                        <span className="text-xs text-teallight">
+                        <span className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
                           Provide specific examples and industries
                         </span>
-                        <span className={`text-xs ${(levelForm.readFirst?.whereUsed?.length || 0) > 450 ? 'text-red-400' : 'text-teallight'}`}>
+                        <span className={`text-xs ${(levelForm.readFirst?.whereUsed?.length || 0) > 450 ? 'text-red-400' : ''}`} style={{ 
+                          color: (levelForm.readFirst?.whereUsed?.length || 0) > 450 ? 'var(--color-error)' : 'var(--color-text-tertiary)' 
+                        }}>
                           {(levelForm.readFirst?.whereUsed?.length || 0)}/500
                         </span>
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-paperwhite mb-2">
+                      <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
                         Custom Example
                       </label>
                       <textarea
@@ -1608,14 +1880,29 @@ const AdminCurriculum: React.FC = () => {
                         })}
                         rows={4}
                         maxLength={1000}
-                        className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise resize-none"
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none resize-none"
+                        style={{
+                          backgroundColor: 'var(--color-secondary-bg)',
+                          borderColor: 'var(--color-border)',
+                          color: 'var(--color-text-primary)'
+                        }}
+                        onFocus={(e) => {
+                          e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                          e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                        }}
+                        onBlur={(e) => {
+                          e.currentTarget.style.borderColor = 'var(--color-border)';
+                          e.currentTarget.style.boxShadow = 'none';
+                        }}
                         placeholder="Provide a practical example to illustrate the concept..."
                       />
                       <div className="flex justify-between items-center mt-1">
-                        <span className="text-xs text-teallight">
+                        <span className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
                           Use analogies or real-world scenarios
                         </span>
-                        <span className={`text-xs ${(levelForm.readFirst?.customExample?.length || 0) > 900 ? 'text-red-400' : 'text-teallight'}`}>
+                        <span className={`text-xs ${(levelForm.readFirst?.customExample?.length || 0) > 900 ? 'text-red-400' : ''}`} style={{ 
+                          color: (levelForm.readFirst?.customExample?.length || 0) > 900 ? 'var(--color-error)' : 'var(--color-text-tertiary)' 
+                        }}>
                           {(levelForm.readFirst?.customExample?.length || 0)}/1000
                         </span>
                       </div>
@@ -1631,15 +1918,38 @@ const AdminCurriculum: React.FC = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="flex-1 bg-trueturquoise px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                    style={{ color: 'var(--color-text-inverse)' }}
+                    className="flex-1 px-4 py-2 rounded-lg transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{ 
+                      backgroundColor: 'var(--color-accent-primary)',
+                      color: 'var(--color-text-inverse)' 
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isSubmitting) {
+                        e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isSubmitting) {
+                        e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                      }
+                    }}
                   >
                     {isSubmitting ? 'Saving...' : (editingLevel ? 'Update' : 'Create')}
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowLevelModal(false)}
-                    className="px-4 py-2 border border-paperwhite/20 text-paperwhite rounded-lg hover:bg-paperwhite/10 transition-colors"
+                    className="px-4 py-2 border rounded-lg transition-colors"
+                    style={{
+                      borderColor: 'var(--color-border)',
+                      color: 'var(--color-text-primary)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--color-tertiary-bg)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                    }}
                   >
                     Cancel
                   </button>
@@ -1681,7 +1991,14 @@ const AdminCurriculum: React.FC = () => {
                 </h2>
                 <button
                   onClick={() => setShowContentModal(false)}
-                  className="p-2 text-teallight hover:text-paperwhite transition-colors"
+                  className="p-2 transition-colors"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = 'var(--color-text-primary)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = 'var(--color-text-tertiary)';
+                  }}
                 >
                   <Cross1Icon className="h-5 w-5" />
                 </button>
@@ -1689,27 +2006,53 @@ const AdminCurriculum: React.FC = () => {
 
               <form onSubmit={handleContentSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-paperwhite mb-2">
+                  <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
                     Title *
                   </label>
                   <input
                     type="text"
                     value={contentForm.title || ''}
                     onChange={(e) => setContentForm({ ...contentForm, title: e.target.value })}
-                    className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
+                    className="w-full px-4 py-2 border rounded-lg focus:outline-none"
+                    style={{
+                      backgroundColor: 'var(--color-secondary-bg)',
+                      borderColor: 'var(--color-border)',
+                      color: 'var(--color-text-primary)'
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                      e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.borderColor = 'var(--color-border)';
+                      e.currentTarget.style.boxShadow = 'none';
+                    }}
                     placeholder="Enter title"
                   />
                 </div>
 
                 {editingContent?.type === 'learn' && (
                   <div>
-                    <label className="block text-sm font-medium text-paperwhite mb-2">
+                    <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
                       Type
                     </label>
                     <select
                       value={contentForm.type || 'reading'}
                       onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setContentForm({ ...contentForm, type: e.target.value })}
-                      className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none"
+                      style={{
+                        backgroundColor: 'var(--color-secondary-bg)',
+                        borderColor: 'var(--color-border)',
+                        color: 'var(--color-text-primary)'
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                        e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-border)';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
                     >
                       <option value="reading">Reading</option>
                       <option value="video">Video</option>
@@ -1723,14 +2066,27 @@ const AdminCurriculum: React.FC = () => {
 
                 {editingContent?.type === 'learn' && (
                   <div>
-                    <label className="block text-sm font-medium text-paperwhite mb-2">
+                    <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
                       Content *
                     </label>
                     <textarea
                       value={contentForm.content || ''}
                       onChange={(e) => setContentForm({ ...contentForm, content: e.target.value })}
                       rows={4}
-                      className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise resize-none"
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none resize-none"
+                      style={{
+                        backgroundColor: 'var(--color-secondary-bg)',
+                        borderColor: 'var(--color-border)',
+                        color: 'var(--color-text-primary)'
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                        e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-border)';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
                       placeholder="Enter content"
                     />
                   </div>
@@ -1738,14 +2094,27 @@ const AdminCurriculum: React.FC = () => {
 
                 {editingContent?.type === 'test' && (
                   <div>
-                    <label className="block text-sm font-medium text-paperwhite mb-2">
+                    <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
                       Question *
                     </label>
                     <textarea
                       value={contentForm.question || ''}
                       onChange={(e) => setContentForm({ ...contentForm, question: e.target.value })}
                       rows={3}
-                      className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise resize-none"
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none resize-none"
+                      style={{
+                        backgroundColor: 'var(--color-secondary-bg)',
+                        borderColor: 'var(--color-border)',
+                        color: 'var(--color-text-primary)'
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                        e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-border)';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
                       placeholder="Enter question"
                     />
                   </div>
@@ -1753,14 +2122,27 @@ const AdminCurriculum: React.FC = () => {
 
                 {editingContent?.type === 'test' && (
                   <div>
-                    <label className="block text-sm font-medium text-paperwhite mb-2">
+                    <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
                       Options (one per line)
                     </label>
                     <textarea
                       value={contentForm.options?.join('\n') || ''}
                       onChange={(e) => setContentForm({ ...contentForm, options: e.target.value.split('\n').filter(s => s.trim()) })}
                       rows={3}
-                      className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise resize-none"
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none resize-none"
+                      style={{
+                        backgroundColor: 'var(--color-secondary-bg)',
+                        borderColor: 'var(--color-border)',
+                        color: 'var(--color-text-primary)'
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                        e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-border)';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
                       placeholder="Option 1
 Option 2
 Option 3"
@@ -1770,14 +2152,27 @@ Option 3"
 
                 {editingContent?.type === 'test' && (
                   <div>
-                    <label className="block text-sm font-medium text-paperwhite mb-2">
+                    <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
                       Correct Answer
                     </label>
                     <input
                       type="text"
                       value={contentForm.answer || ''}
                       onChange={(e) => setContentForm({ ...contentForm, answer: e.target.value })}
-                      className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none"
+                      style={{
+                        backgroundColor: 'var(--color-secondary-bg)',
+                        borderColor: 'var(--color-border)',
+                        color: 'var(--color-text-primary)'
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                        e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-border)';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
                       placeholder="Enter correct answer"
                     />
                   </div>
@@ -1785,14 +2180,27 @@ Option 3"
 
                 {editingContent?.type === 'exercise' && (
                   <div>
-                    <label className="block text-sm font-medium text-paperwhite mb-2">
+                    <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
                       Description *
                     </label>
                     <textarea
                       value={contentForm.description || ''}
                       onChange={(e) => setContentForm({ ...contentForm, description: e.target.value })}
                       rows={4}
-                      className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise resize-none"
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none resize-none"
+                      style={{
+                        backgroundColor: 'var(--color-secondary-bg)',
+                        borderColor: 'var(--color-border)',
+                        color: 'var(--color-text-primary)'
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                        e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-border)';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
                       placeholder="Enter description"
                     />
                   </div>
@@ -1800,28 +2208,54 @@ Option 3"
 
                 {editingContent?.type === 'exercise' && (
                   <div>
-                    <label className="block text-sm font-medium text-paperwhite mb-2">
+                    <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
                       Resources (one per line)
                     </label>
                     <textarea
                       value={contentForm.resources?.join('\n') || ''}
                       onChange={(e) => setContentForm({ ...contentForm, resources: e.target.value.split('\n').filter(s => s.trim()) })}
                       rows={3}
-                      className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise resize-none"
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none resize-none"
+                      style={{
+                        backgroundColor: 'var(--color-secondary-bg)',
+                        borderColor: 'var(--color-border)',
+                        color: 'var(--color-text-primary)'
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                        e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-border)';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
                       placeholder="Resource 1&#10;Resource 2&#10;Resource 3"
                     />
                   </div>
                 )}
 
                 <div>
-                  <label className="block text-sm font-medium text-paperwhite mb-2">
+                  <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
                     Order
                   </label>
                   <input
                     type="number"
                     value={contentForm.order || 1}
                     onChange={(e) => setContentForm({ ...contentForm, order: parseInt(e.target.value) || 1 })}
-                    className="w-full px-4 py-2 bg-black border border-paperwhite/20 rounded-lg text-paperwhite focus:outline-none focus:border-trueturquoise"
+                    className="w-full px-4 py-2 border rounded-lg focus:outline-none"
+                    style={{
+                      backgroundColor: 'var(--color-secondary-bg)',
+                      borderColor: 'var(--color-border)',
+                      color: 'var(--color-text-primary)'
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                      e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.borderColor = 'var(--color-border)';
+                      e.currentTarget.style.boxShadow = 'none';
+                    }}
                     min="1"
                   />
                 </div>
@@ -1834,15 +2268,38 @@ Option 3"
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="flex-1 bg-trueturquoise px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                    style={{ color: 'var(--color-text-inverse)' }}
+                    className="flex-1 px-4 py-2 rounded-lg transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{ 
+                      backgroundColor: 'var(--color-accent-primary)',
+                      color: 'var(--color-text-inverse)' 
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isSubmitting) {
+                        e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isSubmitting) {
+                        e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                      }
+                    }}
                   >
                     {isSubmitting ? 'Saving...' : (editingContent ? 'Update' : 'Create')}
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowContentModal(false)}
-                    className="px-4 py-2 border border-paperwhite/20 text-paperwhite rounded-lg hover:bg-paperwhite/10 transition-colors"
+                    className="px-4 py-2 border rounded-lg transition-colors"
+                    style={{
+                      borderColor: 'var(--color-border)',
+                      color: 'var(--color-text-primary)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--color-tertiary-bg)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                    }}
                   >
                     Cancel
                   </button>

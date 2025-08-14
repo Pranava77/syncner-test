@@ -83,8 +83,11 @@ class ErrorBoundary extends Component<Props, State> {
               
               <button
                 onClick={() => window.location.reload()}
-                className="mt-6 bg-trueturquoise px-6 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors"
-                style={{ color: 'var(--color-text-inverse)' }}
+                className="mt-6 px-6 py-2 rounded-lg transition-colors"
+                style={{ 
+                  backgroundColor: 'var(--color-accent-primary)',
+                  color: 'var(--color-text-inverse)' 
+                }}
               >
                 Refresh Page
               </button>

@@ -164,8 +164,19 @@ const LevelExercisePage: React.FC = () => {
     fetchAllLevels();
   }, [fetchAllLevels]);
 
-  const statusColor = (status: string) =>
-    status === 'Completed' ? 'bg-trueturquoise/20 text-trueturquoise' : 'bg-paperwhite/10 text-teallight';
+  const statusColor = (status: string) => {
+    if (status === 'Completed') {
+      return {
+        backgroundColor: 'var(--color-accent-tertiary)',
+        color: 'var(--color-accent-primary)'
+      };
+    } else {
+      return {
+        backgroundColor: 'var(--color-tertiary-bg)',
+        color: 'var(--color-text-tertiary)'
+      };
+    }
+  };
 
   const handleViewExercise = (exercise: ExerciseItem) => {
     // Find existing submission for this exercise
@@ -353,7 +364,17 @@ const LevelExercisePage: React.FC = () => {
             <p className="text-red-400 text-lg mb-4">{error || 'Level not found'}</p>
             <button 
               onClick={fetchLevel}
-              className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors"
+              className="px-4 py-2 rounded-lg transition-colors"
+              style={{
+                backgroundColor: 'var(--color-accent-primary)',
+                color: 'var(--color-text-inverse)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+              }}
             >
               Retry
             </button>
@@ -375,7 +396,10 @@ const LevelExercisePage: React.FC = () => {
           className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center"
           style={{ backgroundColor: 'var(--color-primary-bg)' }}
         >
-          <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 text-center">
+          <div className="w-full max-w-5xl rounded-xl border shadow-lg p-6 text-center" style={{
+            backgroundColor: 'var(--color-tertiary-bg)',
+            borderColor: 'var(--color-border-subtle)'
+          }}>
             <div 
               className="text-6xl mb-4"
               style={{ color: 'var(--color-text-muted)' }}
@@ -388,10 +412,20 @@ const LevelExercisePage: React.FC = () => {
             >
               No Levels Available
             </h2>
-            <p className="text-teallight mb-6">There are no levels available for your current career track ({user?.careerTrack || 'Unknown'}).</p>
+            <p className="mb-6" style={{ color: 'var(--color-text-tertiary)' }}>There are no levels available for your current career track ({user?.careerTrack || 'Unknown'}).</p>
             <button 
               onClick={() => navigate('/student/training')}
-              className="bg-trueturquoise text-offblack px-6 py-3 rounded-lg font-bold hover:bg-trueturquoise/90 transition-colors"
+              className="px-6 py-3 rounded-lg font-bold transition-colors"
+              style={{
+                backgroundColor: 'var(--color-accent-primary)',
+                color: 'var(--color-text-inverse)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+              }}
             >
               Back to Training
             </button>
@@ -473,7 +507,10 @@ const LevelExercisePage: React.FC = () => {
           className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center"
           style={{ backgroundColor: 'var(--color-primary-bg)' }}
         >
-          <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 text-center">
+          <div className="w-full max-w-5xl rounded-xl border shadow-lg p-6 text-center" style={{
+            backgroundColor: 'var(--color-tertiary-bg)',
+            borderColor: 'var(--color-border-subtle)'
+          }}>
             <div 
               className="text-6xl mb-4"
               style={{ color: 'var(--color-text-muted)' }}
@@ -486,10 +523,20 @@ const LevelExercisePage: React.FC = () => {
             >
               No Exercise Available
             </h2>
-            <p className="text-teallight mb-6">This level doesn't have any exercises yet.</p>
+            <p className="mb-6" style={{ color: 'var(--color-text-tertiary)' }}>This level doesn't have any exercises yet.</p>
             <button 
               onClick={() => navigate(`/student/training/${levelId}/learn`)}
-              className="bg-trueturquoise text-offblack px-6 py-3 rounded-lg font-bold hover:bg-teallight transition-colors"
+              className="px-6 py-3 rounded-lg font-bold transition-colors"
+              style={{
+                backgroundColor: 'var(--color-accent-primary)',
+                color: 'var(--color-text-inverse)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+              }}
             >
               Back to Learning
             </button>
@@ -511,7 +558,10 @@ const LevelExercisePage: React.FC = () => {
   const optionalExercises = processedExercises.filter(ex => !ex.isMandatory);
 
   const renderExerciseTable = (exercises: any[], title: string, startIndex: number = 0) => (
-    <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-6">
+    <div className="w-full max-w-5xl rounded-xl border shadow-lg p-6 mb-6" style={{
+      backgroundColor: 'var(--color-tertiary-bg)',
+      borderColor: 'var(--color-border-subtle)'
+    }}>
                   <h2 
               className="text-xl font-bold mb-4"
               style={{ color: 'var(--color-text-primary)' }}
@@ -565,7 +615,13 @@ const LevelExercisePage: React.FC = () => {
               const isSubmitted = exerciseSubmissions.some(sub => sub.exerciseTitle === exercise.title);
               
               return (
-                <tr key={index} className="border-b border-paperwhite/10 hover:bg-paperwhite/5">
+                <tr key={index} className="border-b hover:transition-colors" style={{
+              borderColor: 'var(--color-border-subtle)'
+            }} onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--color-secondary-bg)';
+            }} onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+            }}>
                                   <td 
                   className="py-3 px-4"
                   style={{ color: 'var(--color-text-primary)' }}
@@ -607,12 +663,21 @@ const LevelExercisePage: React.FC = () => {
                           <CheckCircledIcon className="h-3 w-3 text-white" />
                         </div>
                       ) : (
-                        <div className="w-4 h-4 bg-paperwhite/20 rounded"></div>
+                        <div className="w-4 h-4 rounded" style={{ backgroundColor: 'var(--color-border)' }}></div>
                       )}
                       <button 
                         onClick={() => handleViewExercise(exercise)}
-                        className="bg-paperwhite/10 px-3 py-1 rounded text-sm hover:bg-paperwhite/20 transition-colors"
-                style={{ color: 'var(--color-text-primary)' }}
+                                                className="px-3 py-1 rounded text-sm transition-colors"
+                        style={{
+                          backgroundColor: 'var(--color-tertiary-bg)',
+                          color: 'var(--color-text-primary)'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = 'var(--color-secondary-bg)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'var(--color-tertiary-bg)';
+                        }}
                       >
                         {isSubmitted ? 'Edit' : 'Submit'}
                       </button>
@@ -638,7 +703,10 @@ const LevelExercisePage: React.FC = () => {
         style={{ backgroundColor: 'var(--color-primary-bg)' }}
       >
         {/* Exercise Header */}
-        <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
+        <div className="w-full max-w-5xl rounded-xl border shadow-lg p-6 mb-8" style={{
+          backgroundColor: 'var(--color-tertiary-bg)',
+          borderColor: 'var(--color-border-subtle)'
+        }}>
           <div className="flex items-center justify-between mb-4">
             <div>
               <h1 
@@ -647,13 +715,19 @@ const LevelExercisePage: React.FC = () => {
             >
               Level {level.order}: {level.title} - Exercise
             </h1>
-              <p className="text-teallight">Practice what you've learned with hands-on exercises</p>
+              <p style={{ color: 'var(--color-text-tertiary)' }}>Practice what you've learned with hands-on exercises</p>
             </div>
             <div className="flex items-center gap-2">
-              <span className="px-3 py-1 rounded-full bg-paperwhite/10 text-trueturquoise font-semibold text-sm">
+              <span className="px-3 py-1 rounded-full font-semibold text-sm" style={{
+                backgroundColor: 'var(--color-tertiary-bg)',
+                color: 'var(--color-accent-primary)'
+              }}>
                 {level.difficulty}
               </span>
-              <span className="px-3 py-1 rounded-full bg-paperwhite/10 text-trueturquoise font-semibold text-sm">
+              <span className="px-3 py-1 rounded-full font-semibold text-sm" style={{
+                backgroundColor: 'var(--color-tertiary-bg)',
+                color: 'var(--color-accent-primary)'
+              }}>
                 {level.careerTrack}
               </span>
             </div>
@@ -661,10 +735,16 @@ const LevelExercisePage: React.FC = () => {
         </div>
 
         {/* Exercise Progress Status */}
-        <div className="w-full max-w-5xl bg-gradient-to-r from-trueturquoise/10 to-teallight/10 rounded-xl border border-trueturquoise/30 shadow-lg p-6 mb-8">
+        <div className="w-full max-w-5xl rounded-xl border shadow-lg p-6 mb-8" style={{
+          background: 'linear-gradient(to right, var(--color-accent-tertiary), var(--color-accent-secondary))',
+          borderColor: 'var(--color-accent-primary)'
+        }}>
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="bg-trueturquoise text-offblack p-2 rounded-lg">
+              <div className="p-2 rounded-lg" style={{
+                backgroundColor: 'var(--color-accent-primary)',
+                color: 'var(--color-text-inverse)'
+              }}>
                 <CheckCircledIcon className="h-6 w-6" />
               </div>
               <h2 
@@ -675,20 +755,23 @@ const LevelExercisePage: React.FC = () => {
             </h2>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold text-trueturquoise">{exerciseSubmissions.length}</div>
-              <div className="text-xs text-teallight">Submissions</div>
+              <div className="text-2xl font-bold" style={{ color: 'var(--color-accent-primary)' }}>{exerciseSubmissions.length}</div>
+              <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>Submissions</div>
             </div>
           </div>
           
           <div className="mb-4">
-            <div className="flex justify-between text-sm text-teallight mb-1">
+            <div className="flex justify-between text-sm mb-1" style={{ color: 'var(--color-text-tertiary)' }}>
               <span>Progress</span>
               <span>{Math.round((exerciseSubmissions.length / Math.max(validExercises.length, 1)) * 100)}%</span>
             </div>
-            <div className="w-full bg-paperwhite/20 rounded-full h-3">
+            <div className="w-full rounded-full h-3" style={{ backgroundColor: 'var(--color-border)' }}>
               <div 
-                className="bg-trueturquoise h-3 rounded-full transition-all duration-500"
-                style={{ width: `${(exerciseSubmissions.length / Math.max(validExercises.length, 1)) * 100}%` }}
+                className="h-3 rounded-full transition-all duration-500"
+                style={{ 
+                  width: `${(exerciseSubmissions.length / Math.max(validExercises.length, 1)) * 100}%`,
+                  background: 'linear-gradient(to right, var(--color-accent-primary), var(--color-accent-secondary))'
+                }}
               ></div>
             </div>
           </div>

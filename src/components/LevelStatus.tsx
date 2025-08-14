@@ -64,13 +64,21 @@ const LevelStatus: React.FC<LevelStatusProps> = ({ onLevelsLoaded }) => {
         </span>
       </div>
       
-      <p className="text-xs text-teallight mb-2">{message}</p>
+      <p 
+        className="text-xs mb-2"
+        style={{ color: 'var(--color-text-tertiary)' }}
+      >
+        {message}
+      </p>
       
       <button
         onClick={checkLevels}
         disabled={status === 'loading'}
-                    className="text-xs bg-trueturquoise px-2 py-1 rounded hover:bg-trueturquoise/90 transition-colors disabled:opacity-50"
-            style={{ color: 'var(--color-text-inverse)' }}
+                    className="text-xs px-2 py-1 rounded transition-colors disabled:opacity-50"
+            style={{ 
+              backgroundColor: 'var(--color-accent-primary)',
+              color: 'var(--color-text-inverse)' 
+            }}
       >
         Refresh
       </button>

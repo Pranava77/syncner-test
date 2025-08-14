@@ -137,13 +137,29 @@ const OnboardingFlow: React.FC = () => {
         {/* Progress Bar */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <span className="text-base font-label text-teallight">Step {step} of 3</span>
-            <span className="text-base font-label text-teallight">{Math.round((step / 3) * 100)}% Complete</span>
+                    <span 
+          className="text-base font-label"
+          style={{ color: 'var(--color-text-tertiary)' }}
+        >
+          Step {step} of 3
+        </span>
+        <span 
+          className="text-base font-label"
+          style={{ color: 'var(--color-text-tertiary)' }}
+        >
+          {Math.round((step / 3) * 100)}% Complete
+        </span>
           </div>
-          <div className="w-full bg-paperwhite/10 rounded-full h-2">
+          <div 
+            className="w-full rounded-full h-2"
+            style={{ backgroundColor: 'var(--color-border)' }}
+          >
             <div 
-              className="bg-trueturquoise h-2 rounded-full transition-all duration-500"
-              style={{ width: `${(step / 3) * 100}%` }}
+              className="h-2 rounded-full transition-all duration-500"
+              style={{ 
+                backgroundColor: 'var(--color-accent-primary)',
+                width: `${(step / 3) * 100}%` 
+              }}
             ></div>
           </div>
         </div>
@@ -158,42 +174,103 @@ const OnboardingFlow: React.FC = () => {
         {/* Step 1: Welcome */}
         {step === 1 && (
               <div className="text-center" role="region" aria-label="Welcome Step">
-                <h1 className="text-4xl font-heading text-paperwhite mb-4 leading-tight">
-              Welcome to Syncner, {user?.name}!
-            </h1>
-                <p className="text-xl font-label text-teallight mb-8 max-w-2xl mx-auto leading-relaxed">
-              Let's set up your personalized learning path to help you achieve your career goals.
-            </p>
-                <div className="bg-paperwhite/10 rounded-xl shadow-lg p-8 max-w-2xl mx-auto">
-                  <h2 className="text-2xl font-heading text-paperwhite mb-6 leading-tight">
-                What makes Syncner special?
-              </h2>
+                <h1 
+                  className="text-4xl font-heading mb-4 leading-tight"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  Welcome to Syncner, {user?.name}!
+                </h1>
+                <p 
+                  className="text-xl font-label mb-8 max-w-2xl mx-auto leading-relaxed"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                >
+                  Let's set up your personalized learning path to help you achieve your career goals.
+                </p>
+                <div 
+                  className="rounded-xl shadow-lg p-8 max-w-2xl mx-auto"
+                  style={{
+                    backgroundColor: 'var(--color-tertiary-bg)',
+                    boxShadow: 'var(--shadow-lg)'
+                  }}
+                >
+                  <h2 
+                    className="text-2xl font-heading mb-6 leading-tight"
+                    style={{ color: 'var(--color-text-primary)' }}
+                  >
+                    What makes Syncner special?
+                  </h2>
                   <ul className="space-y-4 text-left">
                     <li className="flex items-start space-x-3">
-                      <CheckCircledIcon className="h-6 w-6 text-trueturquoise mt-1 flex-shrink-0" aria-hidden="true" />
+                      <CheckCircledIcon 
+                        className="h-6 w-6 mt-1 flex-shrink-0" 
+                        aria-hidden="true"
+                        style={{ color: 'var(--color-accent-primary)' }}
+                      />
                   <div>
-                        <h3 className="font-heading text-paperwhite">AI-Personalized Learning</h3>
-                        <p className="font-label text-teallight">Adaptive curriculum that adjusts to your pace and learning style</p>
+                        <h3 
+                          className="font-heading"
+                          style={{ color: 'var(--color-text-primary)' }}
+                        >
+                          AI-Personalized Learning
+                        </h3>
+                        <p 
+                          className="font-label"
+                          style={{ color: 'var(--color-text-tertiary)' }}
+                        >
+                          Adaptive curriculum that adjusts to your pace and learning style
+                        </p>
                   </div>
                     </li>
                     <li className="flex items-start space-x-3">
-                      <CheckCircledIcon className="h-6 w-6 text-trueturquoise mt-1 flex-shrink-0" aria-hidden="true" />
+                      <CheckCircledIcon 
+                        className="h-6 w-6 mt-1 flex-shrink-0" 
+                        aria-hidden="true"
+                        style={{ color: 'var(--color-accent-primary)' }}
+                      />
                   <div>
-                        <h3 className="font-heading text-paperwhite">Real-World Projects</h3>
-                        <p className="font-label text-teallight">Industry-standard tasks that build your portfolio</p>
+                        <h3 
+                          className="font-heading"
+                          style={{ color: 'var(--color-text-primary)' }}
+                        >
+                          Real-World Projects
+                        </h3>
+                        <p 
+                          className="font-label"
+                          style={{ color: 'var(--color-text-tertiary)' }}
+                        >
+                          Industry-standard tasks that build your portfolio
+                        </p>
                   </div>
                     </li>
                     <li className="flex items-start space-x-3">
-                      <CheckCircledIcon className="h-6 w-6 text-trueturquoise mt-1 flex-shrink-0" aria-hidden="true" />
+                      <CheckCircledIcon 
+                        className="h-6 w-6 mt-1 flex-shrink-0" 
+                        aria-hidden="true"
+                        style={{ color: 'var(--color-accent-primary)' }}
+                      />
                   <div>
-                        <h3 className="font-heading text-paperwhite">Career Guidance</h3>
-                        <p className="font-label text-teallight">AI-powered mentoring and career advice</p>
+                        <h3 
+                          className="font-heading"
+                          style={{ color: 'var(--color-text-primary)' }}
+                        >
+                          Career Guidance
+                        </h3>
+                        <p 
+                          className="font-label"
+                          style={{ color: 'var(--color-text-tertiary)' }}
+                        >
+                          AI-powered mentoring and career advice
+                        </p>
                   </div>
                     </li>
                   </ul>
               <button
                 onClick={() => setStep(2)}
-                    className="w-full mt-8 bg-trueturquoise text-offblack py-3 rounded-lg hover:bg-trueturquoise/90 focus:ring-2 focus:ring-trueturquoise focus:outline-none transition-all font-medium flex items-center justify-center text-lg shadow-sm"
+                    className="w-full mt-8 py-3 rounded-lg focus:ring-2 focus:outline-none transition-all font-medium flex items-center justify-center text-lg shadow-sm"
+                    style={{
+                      backgroundColor: 'var(--color-accent-primary)',
+                      color: 'var(--color-text-inverse)'
+                    }}
                     aria-label="Start onboarding"
               >
                 Let's Get Started
@@ -206,13 +283,19 @@ const OnboardingFlow: React.FC = () => {
         {step === 2 && (
               <div role="region" aria-label="Career Track Selection">
             <div className="text-center mb-8">
-                  <h1 className="text-4xl font-heading text-paperwhite mb-4 leading-tight">
-                Choose Your Career Track
-              </h1>
-                  <p className="text-xl font-label text-teallight leading-relaxed">
-                Select the path that aligns with your career aspirations
-              </p>
-            </div>
+                  <h1 
+                    className="text-4xl font-heading mb-4 leading-tight"
+                    style={{ color: 'var(--color-text-primary)' }}
+                  >
+                    Choose Your Career Track
+                  </h1>
+                  <p 
+                    className="text-xl font-label leading-relaxed"
+                    style={{ color: 'var(--color-text-tertiary)' }}
+                  >
+                    Select the path that aligns with your career aspirations
+                  </p>
+                </div>
             <div className="grid md:grid-cols-2 gap-6">
               {careerTracks.map((track) => {
                 const Icon = track.icon;
@@ -220,29 +303,56 @@ const OnboardingFlow: React.FC = () => {
                   <div
                     key={track.id}
                     onClick={() => handleTrackSelect(track.id)}
-                        className={`bg-paperwhite/10 rounded-xl shadow-lg p-6 cursor-pointer transition-all hover:shadow-xl focus-within:ring-2 focus-within:ring-trueturquoise outline-none ${
+                        className={`rounded-xl shadow-lg p-6 cursor-pointer transition-all hover:shadow-xl focus-within:ring-2 outline-none ${
                       selectedTrack === track.id 
-                            ? 'ring-2 ring-trueturquoise bg-trueturquoise/10' 
-                            : 'hover:bg-paperwhite/5'
+                            ? 'ring-2' 
+                            : ''
                     }`}
+                        style={{
+                          backgroundColor: selectedTrack === track.id 
+                            ? 'var(--color-accent-tertiary)' 
+                            : 'var(--color-tertiary-bg)',
+                          borderColor: selectedTrack === track.id 
+                            ? 'var(--color-accent-primary)' 
+                            : 'var(--color-border)'
+                        }}
                         tabIndex={0}
                         role="button"
                         aria-pressed={selectedTrack === track.id}
                         aria-label={track.title}
                         onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && handleTrackSelect(track.id)}
                   >
-                        <div className="bg-trueturquoise/20 p-3 rounded-lg w-fit mb-4">
-                          <Icon className="h-8 w-8 text-trueturquoise" aria-hidden="true" />
+                        <div 
+                          className="p-3 rounded-lg w-fit mb-4"
+                          style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+                        >
+                          <Icon 
+                            className="h-8 w-8" 
+                            aria-hidden="true"
+                            style={{ color: 'var(--color-accent-primary)' }}
+                          />
                     </div>
-                        <h3 className="text-xl font-heading text-paperwhite mb-2 leading-tight">
-                      {track.title}
-                    </h3>
-                        <p className="text-teallight font-label mb-4 leading-relaxed">{track.description}</p>
+                        <h3 
+                          className="text-xl font-heading mb-2 leading-tight"
+                          style={{ color: 'var(--color-text-primary)' }}
+                        >
+                          {track.title}
+                        </h3>
+                        <p 
+                          className="font-label mb-4 leading-relaxed"
+                          style={{ color: 'var(--color-text-tertiary)' }}
+                        >
+                          {track.description}
+                        </p>
                     <div className="flex flex-wrap gap-2">
                       {track.skills.map((skill) => (
                         <span
                           key={skill}
-                              className="bg-soft-gray text-paperwhite px-3 py-1 rounded-full text-sm font-label"
+                              className="px-3 py-1 rounded-full text-sm font-label"
+                              style={{
+                                backgroundColor: 'var(--color-text-muted)',
+                                color: 'var(--color-text-inverse)'
+                              }}
                         >
                           {skill}
                         </span>
@@ -256,7 +366,11 @@ const OnboardingFlow: React.FC = () => {
               <button
                 onClick={() => setStep(3)}
                 disabled={!selectedTrack}
-                    className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg hover:bg-trueturquoise/90 focus:ring-2 focus:ring-trueturquoise focus:outline-none transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center text-lg shadow-sm"
+                    className="px-8 py-3 rounded-lg focus:ring-2 focus:outline-none transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center text-lg shadow-sm"
+                    style={{
+                      backgroundColor: 'var(--color-accent-primary)',
+                      color: 'var(--color-text-inverse)'
+                    }}
                     aria-label="Continue to goals"
               >
                 Continue
@@ -269,19 +383,35 @@ const OnboardingFlow: React.FC = () => {
         {step === 3 && (
               <div role="region" aria-label="Goals Selection">
             <div className="text-center mb-8">
-                  <h1 className="text-4xl font-heading text-paperwhite mb-4 leading-tight">
-                What are your goals?
-              </h1>
-                  <p className="text-xl font-label text-teallight leading-relaxed">
-                Select all that apply to personalize your experience
-              </p>
-            </div>
-                <div className="bg-paperwhite/10 rounded-xl shadow-lg p-8 max-w-2xl mx-auto">
+                  <h1 
+                    className="text-4xl font-heading mb-4 leading-tight"
+                    style={{ color: 'var(--color-text-primary)' }}
+                  >
+                    What are your goals?
+                  </h1>
+                  <p 
+                    className="text-xl font-label leading-relaxed"
+                    style={{ color: 'var(--color-text-tertiary)' }}
+                  >
+                    Select all that apply to personalize your experience
+                  </p>
+                </div>
+                <div 
+                  className="rounded-xl shadow-lg p-8 max-w-2xl mx-auto"
+                  style={{
+                    backgroundColor: 'var(--color-tertiary-bg)',
+                    boxShadow: 'var(--shadow-lg)'
+                  }}
+                >
               <div className="grid gap-4">
                 {goalOptions.map((goal) => (
                   <label
                     key={goal}
-                        className="flex items-center p-4 border border-paperwhite/20 rounded-lg cursor-pointer hover:bg-paperwhite/5 focus-within:ring-2 focus-within:ring-trueturquoise outline-none transition-colors"
+                        className="flex items-center p-4 border rounded-lg cursor-pointer focus-within:ring-2 outline-none transition-colors"
+                        style={{
+                          borderColor: 'var(--color-border)',
+                          backgroundColor: goals.includes(goal) ? 'var(--color-accent-tertiary)' : 'transparent'
+                        }}
                         tabIndex={0}
                         role="checkbox"
                         aria-checked={goals.includes(goal)}
@@ -295,23 +425,42 @@ const OnboardingFlow: React.FC = () => {
                       className="sr-only"
                           tabIndex={-1}
                     />
-                        <div className={`w-5 h-5 rounded border-2 flex items-center justify-center mr-3 transition-colors duration-200 ${
-                      goals.includes(goal)
-                            ? 'bg-trueturquoise border-trueturquoise'
-                            : 'border-paperwhite/20'
-                    }`}>
-                      {goals.includes(goal) && (
-                            <CheckCircledIcon className="h-3 w-3 text-offblack" aria-hidden="true" />
-                      )}
-                    </div>
-                        <span className="text-paperwhite font-label text-lg">{goal}</span>
+                        <div 
+                          className="w-5 h-5 rounded border-2 flex items-center justify-center mr-3 transition-colors duration-200"
+                          style={{
+                            backgroundColor: goals.includes(goal) 
+                              ? 'var(--color-accent-primary)'
+                              : 'transparent',
+                            borderColor: goals.includes(goal) 
+                              ? 'var(--color-accent-primary)'
+                              : 'var(--color-border)'
+                          }}
+                        >
+                          {goals.includes(goal) && (
+                            <CheckCircledIcon 
+                              className="h-3 w-3" 
+                              aria-hidden="true"
+                              style={{ color: 'var(--color-text-inverse)' }}
+                            />
+                          )}
+                        </div>
+                        <span 
+                          className="font-label text-lg"
+                          style={{ color: 'var(--color-text-primary)' }}
+                        >
+                          {goal}
+                        </span>
                   </label>
                 ))}
               </div>
               <button
                 onClick={handleComplete}
                 disabled={goals.length === 0 || isLoading}
-                    className="w-full mt-8 bg-trueturquoise text-offblack py-3 rounded-lg hover:bg-trueturquoise/90 focus:ring-2 focus:ring-trueturquoise focus:outline-none transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed text-lg shadow-sm"
+                    className="w-full mt-8 py-3 rounded-lg focus:ring-2 focus:outline-none transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed text-lg shadow-sm"
+                    style={{
+                      backgroundColor: 'var(--color-accent-primary)',
+                      color: 'var(--color-text-inverse)'
+                    }}
                     aria-label="Complete onboarding"
               >
                 Complete Setup

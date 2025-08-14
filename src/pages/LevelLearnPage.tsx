@@ -355,7 +355,14 @@ const LevelLearnPage: React.FC = () => {
         ) : (
           <>
             {/* Level Header */}
-            <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
+            <div 
+              className="w-full max-w-5xl rounded-xl border shadow-lg p-6 mb-8"
+              style={{
+                backgroundColor: 'var(--color-tertiary-bg)',
+                borderColor: 'var(--color-border-subtle)',
+                boxShadow: 'var(--shadow-md)'
+              }}
+            >
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <h1 
@@ -367,10 +374,22 @@ const LevelLearnPage: React.FC = () => {
                   <p style={{ color: 'var(--color-text-secondary)' }}>{level.description}</p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="px-3 py-1 rounded-full bg-paperwhite/10 text-trueturquoise font-semibold text-sm">
+                  <span 
+                    className="px-3 py-1 rounded-full font-semibold text-sm"
+                    style={{
+                      backgroundColor: 'var(--color-accent-tertiary)',
+                      color: 'var(--color-accent-primary)'
+                    }}
+                  >
                     {level.difficulty}
                   </span>
-                  <span className="px-3 py-1 rounded-full bg-paperwhite/10 text-trueturquoise font-semibold text-sm">
+                  <span 
+                    className="px-3 py-1 rounded-full font-semibold text-sm"
+                    style={{
+                      backgroundColor: 'var(--color-accent-tertiary)',
+                      color: 'var(--color-accent-primary)'
+                    }}
+                  >
                     {level.careerTrack}
                   </span>
                 </div>
@@ -378,10 +397,23 @@ const LevelLearnPage: React.FC = () => {
             </div>
 
             {/* Learn Progress Tracker */}
-            <div className="w-full max-w-5xl bg-gradient-to-r from-trueturquoise/10 to-teallight/10 rounded-xl border border-trueturquoise/30 shadow-lg p-6 mb-8">
+            <div 
+              className="w-full max-w-5xl rounded-xl border shadow-lg p-6 mb-8"
+              style={{
+                background: 'linear-gradient(135deg, var(--color-accent-tertiary) 0%, var(--color-tertiary-bg) 100%)',
+                borderColor: 'var(--color-accent-primary)',
+                boxShadow: 'var(--shadow-md)'
+              }}
+            >
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="bg-trueturquoise text-offblack p-2 rounded-lg">
+                  <div 
+                    className="p-2 rounded-lg"
+                    style={{
+                      backgroundColor: 'var(--color-accent-primary)',
+                      color: 'var(--color-text-inverse)'
+                    }}
+                  >
                     <ClockIcon className="h-6 w-6" />
                   </div>
                   <h2 
@@ -392,7 +424,12 @@ const LevelLearnPage: React.FC = () => {
             </h2>
                 </div>
                 <div className="text-right">
-                  <div className="text-2xl font-bold text-trueturquoise">{Math.round(getProgressPercentage()) || 0}%</div>
+                  <div 
+                    className="text-2xl font-bold"
+                    style={{ color: 'var(--color-accent-primary)' }}
+                  >
+                    {Math.round(getProgressPercentage()) || 0}%
+                  </div>
                   <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>Progress</div>
                 </div>
               </div>
@@ -402,10 +439,16 @@ const LevelLearnPage: React.FC = () => {
                   <span>Progress</span>
                   <span>{Math.round(getProgressPercentage()) || 0}%</span>
                 </div>
-                <div className="w-full bg-paperwhite/20 rounded-full h-2">
+                <div 
+                  className="w-full rounded-full h-2"
+                  style={{ backgroundColor: 'var(--color-border)' }}
+                >
                   <div 
-                    className="bg-gradient-to-r from-trueturquoise to-teallight h-2 rounded-full transition-all duration-500"
-                    style={{ width: `${getProgressPercentage() || 0}%` }}
+                    className="h-2 rounded-full transition-all duration-500"
+                    style={{ 
+                      background: 'linear-gradient(90deg, var(--color-accent-primary) 0%, var(--color-accent-secondary) 100%)',
+                      width: `${getProgressPercentage() || 0}%` 
+                    }}
                   ></div>
                 </div>
               </div>

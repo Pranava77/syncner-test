@@ -103,18 +103,36 @@ const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({ open, onClose, 
               style={{ color: 'var(--color-text-primary)' }}
             >
               <p className="mb-2">Password has been reset. Copy and share this password with the user. It will not be shown again.</p>
-              <div className="bg-paperwhite/10 rounded-lg px-4 py-3 text-lg font-mono text-trueturquoise select-all break-all text-center">{password}</div>
+              <div 
+                className="rounded-lg px-4 py-3 text-lg font-mono select-all break-all text-center"
+                style={{
+                  backgroundColor: 'var(--color-tertiary-bg)',
+                  color: 'var(--color-accent-primary)'
+                }}
+              >
+                {password}
+              </div>
             </div>
             <button
               onClick={handleCopy}
-              className="w-full bg-trueturquoise py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold"
-            style={{ color: 'var(--color-text-inverse)' }}
-            >Copy Password</button>
+              className="w-full py-2 rounded-lg transition-colors font-semibold"
+              style={{ 
+                backgroundColor: 'var(--color-accent-primary)',
+                color: 'var(--color-text-inverse)' 
+              }}
+            >
+              Copy Password
+            </button>
             <button
               onClick={handleClose}
-              className="w-full bg-paperwhite/10 py-2 rounded-lg hover:bg-paperwhite/20 transition-colors font-semibold mt-2"
-            style={{ color: 'var(--color-text-primary)' }}
-            >Close</button>
+              className="w-full py-2 rounded-lg transition-colors font-semibold mt-2"
+              style={{ 
+                backgroundColor: 'var(--color-tertiary-bg)',
+                color: 'var(--color-text-primary)' 
+              }}
+            >
+              Close
+            </button>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4 w-full flex flex-col items-center">
@@ -142,27 +160,45 @@ const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({ open, onClose, 
               <button
                 type="button"
                 onClick={handleGenerate}
-                className="flex-shrink-0 w-24 bg-trueturquoise px-3 py-2 rounded-lg hover:bg-teallight transition-colors font-semibold"
-            style={{ color: 'var(--color-text-inverse)' }}
-              >Generate</button>
+                className="flex-shrink-0 w-24 px-3 py-2 rounded-lg transition-colors font-semibold"
+                style={{ 
+                  backgroundColor: 'var(--color-accent-primary)',
+                  color: 'var(--color-text-inverse)' 
+                }}
+              >
+                Generate
+              </button>
               <button
                 type="button"
                 onClick={() => setShowPassword(p => !p)}
-                className="flex-shrink-0 w-12 bg-paperwhite/10 px-0 py-2 rounded-lg hover:bg-paperwhite/20 transition-colors font-semibold flex items-center justify-center"
-            style={{ color: 'var(--color-text-primary)' }}
+                className="flex-shrink-0 w-12 px-0 py-2 rounded-lg transition-colors font-semibold flex items-center justify-center"
+                style={{ 
+                  backgroundColor: 'var(--color-tertiary-bg)',
+                  color: 'var(--color-text-primary)' 
+                }}
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
                 {showPassword ? <EyeClosedIcon className="w-5 h-5" /> : <EyeOpenIcon className="w-5 h-5" />}
               </button>
             </div>
-            <div className="text-xs text-teallight w-full">Password must be at least 6 characters.</div>
+            <div 
+              className="text-xs w-full"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
+              Password must be at least 6 characters.
+            </div>
             {error && <div className="text-rust text-sm font-medium w-full">{error}</div>}
             <button
               type="submit"
               disabled={loading || !password}
-              className="w-full bg-trueturquoise py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-            style={{ color: 'var(--color-text-inverse)' }}
-            >{loading ? 'Resetting...' : 'Reset Password'}</button>
+              className="w-full py-2 rounded-lg transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ 
+                backgroundColor: 'var(--color-accent-primary)',
+                color: 'var(--color-text-inverse)' 
+              }}
+            >
+              {loading ? 'Resetting...' : 'Reset Password'}
+            </button>
           </form>
         )}
       </div>

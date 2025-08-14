@@ -143,8 +143,11 @@ const AdminAnalytics: React.FC = () => {
           </button>
           <button
             onClick={exportData}
-            className="bg-trueturquoise px-4 py-2 rounded-lg hover:bg-teallight transition-colors flex items-center"
-            style={{ color: 'var(--color-text-inverse)' }}
+            className="px-4 py-2 rounded-lg transition-colors flex items-center"
+            style={{ 
+              backgroundColor: 'var(--color-accent-primary)',
+              color: 'var(--color-text-inverse)'
+            }}
           >
             <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
             Export
@@ -154,7 +157,13 @@ const AdminAnalytics: React.FC = () => {
 
       {/* Key Performance Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6">
+        <div 
+          className="rounded-xl shadow-sm p-6"
+          style={{
+            backgroundColor: 'var(--color-tertiary-bg)',
+            boxShadow: 'var(--shadow-md)'
+          }}
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Total Students</p>
@@ -164,17 +173,38 @@ const AdminAnalytics: React.FC = () => {
               >
                 {analytics.totalStudents}
               </p>
-              <p className="text-trueturquoise text-sm flex items-center mt-1">
+              <p 
+                className="text-sm flex items-center mt-1"
+                style={{ color: 'var(--color-accent-primary)' }}
+              >
                 <TrendingUp className="h-3 w-3 mr-1" />
                 +5.1% from last month
               </p>
             </div>
-            <div className="bg-teallight/10 p-3 rounded-lg">
-              <svg className="h-6 w-6 text-trueturquoise" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h-2a2 2 0 01-2-2V3a1 1 0 011-1h4a1 1 0 011 1v15a2 2 0 01-2 2zM7 20H5a2 2 0 01-2-2V9a1 1 0 011-1h4a1 1 0 011 1v9a2 2 0 01-2 2z"></path></svg>
+            <div 
+              className="p-3 rounded-lg"
+              style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+            >
+              <svg 
+                className="h-6 w-6" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24" 
+                xmlns="http://www.w3.org/2000/svg"
+                style={{ color: 'var(--color-accent-primary)' }}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h-2a2 2 0 01-2-2V3a1 1 0 011-1h4a1 1 0 011 1v15a2 2 0 01-2 2zM7 20H5a2 2 0 01-2-2V9a1 1 0 011-1h4a1 1 0 011 1v9a2 2 0 01-2 2z"></path>
+              </svg>
             </div>
           </div>
         </div>
-        <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6">
+        <div 
+          className="rounded-xl shadow-sm p-6"
+          style={{
+            backgroundColor: 'var(--color-tertiary-bg)',
+            boxShadow: 'var(--shadow-md)'
+          }}
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Active Students</p>
@@ -184,54 +214,115 @@ const AdminAnalytics: React.FC = () => {
               >
                 {analytics.activeStudents}
               </p>
-              <p className="text-trueturquoise text-sm flex items-center mt-1">
+              <p 
+                className="text-sm flex items-center mt-1"
+                style={{ color: 'var(--color-accent-primary)' }}
+              >
                 <TrendingUp className="h-3 w-3 mr-1" />
                 +1.2% from last month
               </p>
             </div>
-            <div className="bg-rust/10 p-3 rounded-lg">
-              <svg className="h-6 w-6 text-rust" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h-2a2 2 0 01-2-2V3a1 1 0 011-1h4a1 1 0 011 1v15a2 2 0 01-2 2zM7 20H5a2 2 0 01-2-2V9a1 1 0 011-1h4a1 1 0 011 1v9a2 2 0 01-2 2z"></path></svg>
+            <div 
+              className="p-3 rounded-lg"
+              style={{ backgroundColor: 'var(--color-error-bg)' }}
+            >
+              <svg 
+                className="h-6 w-6" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24" 
+                xmlns="http://www.w3.org/2000/svg"
+                style={{ color: 'var(--color-error)' }}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h-2a2 2 0 01-2-2V3a1 1 0 011-1h4a1 1 0 011 1v15a2 2 0 01-2 2zM7 20H5a2 2 0 01-2-2V9a1 1 0 011-1h4a1 1 0 011 1v9a2 2 0 01-2 2z"></path>
+              </svg>
             </div>
           </div>
         </div>
-        <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6">
+        <div 
+          className="rounded-xl shadow-sm p-6"
+          style={{
+            backgroundColor: 'var(--color-tertiary-bg)',
+            boxShadow: 'var(--shadow-md)'
+          }}
+        >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-teallight text-sm">Completion Rate</p>
+              <p 
+                className="text-sm"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >
+                Completion Rate
+              </p>
               <p 
                 className="text-3xl font-bold"
                 style={{ color: 'var(--color-text-primary)' }}
               >
                 {performanceMetrics.completionRate}%
               </p>
-              <p className="text-trueturquoise text-sm flex items-center mt-1">
+              <p 
+                className="text-sm flex items-center mt-1"
+                style={{ color: 'var(--color-accent-primary)' }}
+              >
                 <TrendingUp className="h-3 w-3 mr-1" />
                 +5.1% from last month
               </p>
             </div>
-            <div className="bg-teallight/10 p-3 rounded-lg">
-              <Target className="h-6 w-6 text-trueturquoise" />
+            <div 
+              className="p-3 rounded-lg"
+              style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+            >
+              <Target 
+                className="h-6 w-6" 
+                style={{ color: 'var(--color-accent-primary)' }}
+              />
             </div>
           </div>
         </div>
         {typeof performanceMetrics.studentRetention === 'number' && (
-          <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6">
+          <div 
+            className="rounded-xl shadow-sm p-6"
+            style={{
+              backgroundColor: 'var(--color-tertiary-bg)',
+              boxShadow: 'var(--shadow-md)'
+            }}
+          >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-teallight text-sm">Student Retention</p>
+                <p 
+                  className="text-sm"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                >
+                  Student Retention
+                </p>
                 <p 
                   className="text-3xl font-bold"
                   style={{ color: 'var(--color-text-primary)' }}
                 >
                   {performanceMetrics.studentRetention}%
                 </p>
-                <p className="text-trueturquoise text-sm flex items-center mt-1">
+                <p 
+                  className="text-sm flex items-center mt-1"
+                  style={{ color: 'var(--color-accent-primary)' }}
+                >
                   <TrendingUp className="h-3 w-3 mr-1" />
                   +1.2% from last month
                 </p>
               </div>
-              <div className="bg-rust/10 p-3 rounded-lg">
-                <svg className="h-6 w-6 text-rust" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h-2a2 2 0 01-2-2V3a1 1 0 011-1h4a1 1 0 011 1v15a2 2 0 01-2 2zM7 20H5a2 2 0 01-2-2V9a1 1 0 011-1h4a1 1 0 011 1v9a2 2 0 01-2 2z"></path></svg>
+              <div 
+                className="p-3 rounded-lg"
+                style={{ backgroundColor: 'var(--color-error-bg)' }}
+              >
+                <svg 
+                  className="h-6 w-6" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24" 
+                  xmlns="http://www.w3.org/2000/svg"
+                  style={{ color: 'var(--color-error)' }}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h-2a2 2 0 01-2-2V3a1 1 0 011-1h4a1 1 0 011 1v15a2 2 0 01-2 2zM7 20H5a2 2 0 01-2-2V9a1 1 0 011-1h4a1 1 0 011 1v9a2 2 0 01-2 2z"></path>
+                </svg>
               </div>
             </div>
           </div>
@@ -239,7 +330,13 @@ const AdminAnalytics: React.FC = () => {
       </div>
 
       {/* Students by Track Pie Chart */}
-      <div className="bg-paperwhite/10 rounded-xl shadow-sm p-6">
+              <div 
+          className="rounded-xl shadow-sm p-6"
+          style={{
+            backgroundColor: 'var(--color-tertiary-bg)',
+            boxShadow: 'var(--shadow-md)'
+          }}
+        >
         <h2 
           className="text-lg font-semibold mb-4"
           style={{ color: 'var(--color-text-primary)' }}

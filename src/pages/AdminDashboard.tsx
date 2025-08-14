@@ -75,8 +75,11 @@ const AdminDashboard: React.FC = () => {
         </div>
         <button
           onClick={exportData}
-          className="bg-trueturquoise px-5 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium flex items-center gap-2 shadow"
-          style={{ color: 'var(--color-text-inverse)' }}
+                                  className="px-5 py-2 rounded-lg transition-colors font-medium flex items-center gap-2 shadow"
+            style={{ 
+              backgroundColor: 'var(--color-accent-primary)',
+              color: 'var(--color-text-inverse)' 
+            }}
         >
           <DownloadIcon className="h-5 w-5" />
           Export CSV
@@ -92,8 +95,14 @@ const AdminDashboard: React.FC = () => {
             boxShadow: 'var(--shadow-sm)'
           }}
         >
-          <div className="bg-trueturquoise/10 p-3 rounded-lg">
-            <Users className="h-6 w-6 text-trueturquoise" />
+          <div 
+            className="p-3 rounded-lg"
+            style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+          >
+            <Users 
+              className="h-6 w-6" 
+              style={{ color: 'var(--color-accent-primary)' }}
+            />
           </div>
           <div>
             <p 
@@ -113,8 +122,14 @@ const AdminDashboard: React.FC = () => {
             boxShadow: 'var(--shadow-sm)'
           }}
         >
-          <div className="bg-trueturquoise/10 p-3 rounded-lg">
-            <Users className="h-6 w-6 text-trueturquoise" />
+          <div 
+            className="p-3 rounded-lg"
+            style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+          >
+            <Users 
+              className="h-6 w-6" 
+              style={{ color: 'var(--color-accent-primary)' }}
+            />
           </div>
           <div>
             <p 
@@ -134,8 +149,14 @@ const AdminDashboard: React.FC = () => {
             boxShadow: 'var(--shadow-sm)'
           }}
         >
-          <div className="bg-trueturquoise/10 p-3 rounded-lg">
-            <Target className="h-6 w-6 text-trueturquoise" />
+          <div 
+            className="p-3 rounded-lg"
+            style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+          >
+            <Target 
+              className="h-6 w-6" 
+              style={{ color: 'var(--color-accent-primary)' }}
+            />
           </div>
           <div>
             <p 
@@ -146,7 +167,10 @@ const AdminDashboard: React.FC = () => {
               className="text-2xl font-bold"
               style={{ color: 'var(--color-text-primary)' }}
             >{completionRate}%</p>
-            <p className="text-trueturquoise text-xs flex items-center mt-1">
+            <p 
+              className="text-xs flex items-center mt-1"
+              style={{ color: 'var(--color-accent-primary)' }}
+            >
               <TrendingUp className="h-3 w-3 mr-1" />
               +5.1% from last month
             </p>

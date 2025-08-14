@@ -34,14 +34,28 @@ const LandingPage: React.FC = () => {
       style={{ backgroundColor: 'var(--color-primary-bg)' }}
     >
       {/* Header */}
-      <header className="bg-paperwhite/5 backdrop-blur-md shadow-sm fixed w-full z-50 border-b border-paperwhite/10">
+      <header 
+        className="backdrop-blur-md shadow-sm fixed w-full z-50 border-b"
+        style={{
+          backgroundColor: 'var(--color-surface)',
+          borderColor: 'var(--color-border)'
+        }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-3">
               <div>
                 <img src={logo} alt="Syncner Logo" className="h-8 w-8 lg:h-10 lg:w-10 object-contain" />
               </div>
-              <h1 className="text-2xl text-paperwhite font-heading" style={{ fontFamily: 'Amatic SC, FK Grotesk, Inter, Helvetica Neue, Arial, sans-serif' }}>Syncner</h1>  
+              <h1 
+                className="text-2xl font-heading" 
+                style={{ 
+                  fontFamily: 'Amatic SC, FK Grotesk, Inter, Helvetica Neue, Arial, sans-serif',
+                  color: 'var(--color-text-primary)'
+                }}
+              >
+                Syncner
+              </h1>  
             </div>
             
             {/* Desktop Navigation */}
@@ -111,9 +125,19 @@ const LandingPage: React.FC = () => {
       {/* Hero Section */}
       <section className="pt-24 lg:pt-32 pb-12 lg:pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl text-paperwhite mb-4 lg:mb-6 font-heading">
+          <h1 
+            className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl mb-4 lg:mb-6 font-heading"
+            style={{ color: 'var(--color-text-primary)' }}
+          >
             Transform Students Into
-            <span className="bg-gradient-to-r from-trueturquoise to-teallight bg-clip-text text-transparent block lg:inline">
+            <span 
+              className="bg-clip-text text-transparent block lg:inline"
+              style={{
+                background: 'linear-gradient(90deg, var(--color-accent-primary) 0%, var(--color-accent-secondary) 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}
+            >
               {' '}Industry-Ready{' '}
             </span>
             Professionals
@@ -145,7 +169,11 @@ const LandingPage: React.FC = () => {
             </Link>
             <Link
               to="/register"
-              className="border-2 border-paperwhite/30 text-paperwhite px-6 lg:px-8 py-3 lg:py-4 rounded-lg hover:border-paperwhite/50 hover:bg-paperwhite/10 transition-all"
+              className="border-2 px-6 lg:px-8 py-3 lg:py-4 rounded-lg transition-all"
+              style={{
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-text-primary)'
+              }}
             >
               Create Account
             </Link>
@@ -154,23 +182,49 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-12 lg:py-20 px-4 sm:px-6 lg:px-8 bg-paperwhite/5 backdrop-blur-sm">
+      <section 
+        className="py-12 lg:py-20 px-4 sm:px-6 lg:px-8 backdrop-blur-sm"
+        style={{ backgroundColor: 'var(--color-secondary-bg)' }}
+      >
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12 lg:mb-16">
-            <h2 className="text-2xl lg:text-4xl text-paperwhite mb-3 lg:mb-4 font-heading">
+            <h2 
+              className="text-2xl lg:text-4xl mb-3 lg:mb-4 font-heading"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
               Everything You Need for Career Success
             </h2>
-            <p className="text-lg lg:text-xl text-teallight">
+            <p 
+              className="text-lg lg:text-xl"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
               Comprehensive platform designed for both students and college administrators
             </p>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            <div className="bg-paperwhite/10 backdrop-blur-sm p-6 lg:p-8 rounded-xl hover:bg-paperwhite/15 transition-all border border-paperwhite/10">
-              <div className="bg-trueturquoise p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
-                <BarChartIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
+            <div 
+              className="backdrop-blur-sm p-6 lg:p-8 rounded-xl transition-all border"
+              style={{
+                backgroundColor: 'var(--color-tertiary-bg)',
+                borderColor: 'var(--color-border)'
+              }}
+            >
+              <div 
+                className="p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4"
+                style={{ backgroundColor: 'var(--color-accent-primary)' }}
+              >
+                <BarChartIcon 
+                  className="h-5 w-5 lg:h-6 lg:w-6" 
+                  style={{ color: 'var(--color-text-inverse)' }}
+                />
               </div>
-              <h3 className="text-lg lg:text-xl text-paperwhite mb-2 lg:mb-3 font-heading">AI-Personalized Learning</h3>
+              <h3 
+                className="text-lg lg:text-xl mb-2 lg:mb-3 font-heading"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                AI-Personalized Learning
+              </h3>
               <p 
                 className="text-sm lg:text-base"
                 style={{ color: 'var(--color-text-secondary)' }}
@@ -180,11 +234,28 @@ const LandingPage: React.FC = () => {
               </p>
             </div>
 
-            <div className="bg-paperwhite/10 backdrop-blur-sm p-6 lg:p-8 rounded-xl hover:bg-paperwhite/15 transition-all border border-paperwhite/10">
-              <div className="bg-teallight p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
-                <PersonIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
+            <div 
+              className="backdrop-blur-sm p-6 lg:p-8 rounded-xl transition-all border"
+              style={{
+                backgroundColor: 'var(--color-tertiary-bg)',
+                borderColor: 'var(--color-border)'
+              }}
+            >
+              <div 
+                className="p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4"
+                style={{ backgroundColor: 'var(--color-accent-secondary)' }}
+              >
+                <PersonIcon 
+                  className="h-5 w-5 lg:h-6 lg:w-6" 
+                  style={{ color: 'var(--color-text-inverse)' }}
+                />
               </div>
-              <h3 className="text-lg lg:text-xl text-paperwhite mb-2 lg:mb-3 font-heading">Real-World Tasks</h3>
+              <h3 
+                className="text-lg lg:text-xl mb-2 lg:mb-3 font-heading"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                Real-World Tasks
+              </h3>
               <p 
                 className="text-sm lg:text-base"
                 style={{ color: 'var(--color-text-secondary)' }}
@@ -194,11 +265,28 @@ const LandingPage: React.FC = () => {
               </p>
             </div>
 
-            <div className="bg-paperwhite/10 backdrop-blur-sm p-6 lg:p-8 rounded-xl hover:bg-paperwhite/15 transition-all border border-paperwhite/10">
-              <div className="bg-rust p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
-                <TargetIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
+            <div 
+              className="backdrop-blur-sm p-6 lg:p-8 rounded-xl transition-all border"
+              style={{
+                backgroundColor: 'var(--color-tertiary-bg)',
+                borderColor: 'var(--color-border)'
+              }}
+            >
+              <div 
+                className="p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4"
+                style={{ backgroundColor: 'var(--color-error)' }}
+              >
+                <TargetIcon 
+                  className="h-5 w-5 lg:h-6 lg:w-6" 
+                  style={{ color: 'var(--color-text-inverse)' }}
+                />
               </div>
-              <h3 className="text-lg lg:text-xl text-paperwhite mb-2 lg:mb-3 font-heading">Career Tracks</h3>
+              <h3 
+                className="text-lg lg:text-xl mb-2 lg:mb-3 font-heading"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                Career Tracks
+              </h3>
               <p 
                 className="text-sm lg:text-base"
                 style={{ color: 'var(--color-text-secondary)' }}
@@ -208,11 +296,28 @@ const LandingPage: React.FC = () => {
               </p>
             </div>
 
-            <div className="bg-paperwhite/10 backdrop-blur-sm p-6 lg:p-8 rounded-xl hover:bg-paperwhite/15 transition-all border border-paperwhite/10">
-              <div className="bg-rust p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
-                <EnvelopeClosedIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
+            <div 
+              className="backdrop-blur-sm p-6 lg:p-8 rounded-xl transition-all border"
+              style={{
+                backgroundColor: 'var(--color-tertiary-bg)',
+                borderColor: 'var(--color-border)'
+              }}
+            >
+              <div 
+                className="p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4"
+                style={{ backgroundColor: 'var(--color-warning)' }}
+              >
+                <EnvelopeClosedIcon 
+                  className="h-5 w-5 lg:h-6 lg:w-6" 
+                  style={{ color: 'var(--color-text-inverse)' }}
+                />
               </div>
-              <h3 className="text-lg lg:text-xl text-paperwhite mb-2 lg:mb-3 font-heading">Interactive Content</h3>
+              <h3 
+                className="text-lg lg:text-xl mb-2 lg:mb-3 font-heading"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                Interactive Content
+              </h3>
               <p 
                 className="text-sm lg:text-base"
                 style={{ color: 'var(--color-text-secondary)' }}
@@ -222,11 +327,28 @@ const LandingPage: React.FC = () => {
               </p>
             </div>
 
-            <div className="bg-paperwhite/10 backdrop-blur-sm p-6 lg:p-8 rounded-xl hover:bg-paperwhite/15 transition-all border border-paperwhite/10">
-              <div className="bg-trueturquoise p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4">
-                <CheckCircledIcon className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
+            <div 
+              className="backdrop-blur-sm p-6 lg:p-8 rounded-xl transition-all border"
+              style={{
+                backgroundColor: 'var(--color-tertiary-bg)',
+                borderColor: 'var(--color-border)'
+              }}
+            >
+              <div 
+                className="p-2 lg:p-3 rounded-lg w-fit mb-3 lg:mb-4"
+                style={{ backgroundColor: 'var(--color-info)' }}
+              >
+                <CheckCircledIcon 
+                  className="h-5 w-5 lg:h-6 lg:w-6" 
+                  style={{ color: 'var(--color-text-inverse)' }}
+                />
               </div>
-              <h3 className="text-lg lg:text-xl text-paperwhite mb-2 lg:mb-3 font-heading">Admin Analytics</h3>
+              <h3 
+                className="text-lg lg:text-xl mb-2 lg:mb-3 font-heading"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                Admin Analytics
+              </h3>
               <p 
                 className="text-sm lg:text-base"
                 style={{ color: 'var(--color-text-secondary)' }}
@@ -245,7 +367,10 @@ const LandingPage: React.FC = () => {
         style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
       >
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl lg:text-4xl text-paperwhite mb-4 lg:mb-6 font-heading">
+          <h2 
+            className="text-2xl lg:text-4xl mb-4 lg:mb-6 font-heading"
+            style={{ color: 'var(--color-text-primary)' }}
+          >
             Ready to Transform Your Career Journey?
           </h2>
           <p 
@@ -256,7 +381,11 @@ const LandingPage: React.FC = () => {
           </p>
           <Link
             to="/login"
-            className="bg-paperwhite text-trueturquoise px-6 lg:px-8 py-3 lg:py-4 rounded-lg hover:bg-teallight transition-colors inline-flex items-center"
+            className="px-6 lg:px-8 py-3 lg:py-4 rounded-lg transition-colors inline-flex items-center"
+            style={{
+              backgroundColor: 'var(--color-surface)',
+              color: 'var(--color-accent-primary)'
+            }}
           >
             Get Started Today
             <ArrowRightIcon className="ml-2 h-4 w-4 lg:h-5 lg:w-5" />
@@ -275,7 +404,10 @@ const LandingPage: React.FC = () => {
       >
         <div className="max-w-7xl mx-auto text-center">
           <div className="flex items-center justify-center space-x-3 mb-4 lg:mb-6">
-            <div className="bg-trueturquoise p-2 rounded-lg">
+            <div 
+              className="p-2 rounded-lg"
+              style={{ backgroundColor: 'var(--color-accent-primary)' }}
+            >
               <img src={logo} alt="Syncner Logo" className="h-8 w-8 lg:h-10 lg:w-10 object-contain" />
             </div>
           </div>

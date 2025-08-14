@@ -186,7 +186,12 @@ const TrainingLevels: React.FC = () => {
         >
           Training Levels
         </h1>
-              <p className="text-teallight text-lg">Master your skills through structured learning paths</p>
+              <p 
+                className="text-lg"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >
+                Master your skills through structured learning paths
+              </p>
             </div>
             
             {/* Logo Loading Animation */}
@@ -212,7 +217,8 @@ const TrainingLevels: React.FC = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.3 }}
-                  className="text-trueturquoise text-lg font-medium"
+                  className="text-lg font-medium"
+                  style={{ color: 'var(--color-accent-primary)' }}
                 >
                   Loading your training levels...
                 </motion.p>
@@ -240,16 +246,27 @@ const TrainingLevels: React.FC = () => {
             >
               Unable to Load Training Levels
             </h3>
-            <p className="text-teallight text-sm mb-6">{error}</p>
+            <p 
+              className="text-sm mb-6"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
+              {error}
+            </p>
             <div className="space-y-3">
               <button 
                 onClick={refetch}
-                className="w-full bg-trueturquoise px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium"
-                style={{ color: 'var(--color-text-inverse)' }}
+                className="w-full px-4 py-2 rounded-lg transition-colors font-medium"
+                style={{
+                  backgroundColor: 'var(--color-accent-primary)',
+                  color: 'var(--color-text-inverse)'
+                }}
               >
                 Try Again
               </button>
-              <p className="text-xs text-teallight">
+              <p 
+                className="text-xs"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >
                 If the problem persists, please check your connection or contact support.
               </p>
             </div>
@@ -281,7 +298,9 @@ const TrainingLevels: React.FC = () => {
             >
               Training Levels
             </h1>
-            <p className="text-teallight">
+            <p 
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
               {user?.careerTrack ? 
                 `${getTrackLabel(user.careerTrack)} Track - Complete these levels to advance your skills` :
                 'Complete these levels to advance your skills'
@@ -306,20 +325,29 @@ const TrainingLevels: React.FC = () => {
                   'No levels available'
                 }
               </h3>
-              <p className="text-teallight mb-6">
+              <p 
+                className="mb-6"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >
                 {user?.careerTrack ? 
                   'Check back later for new training content in your track' :
                   'Check back later for new training content'
                 }
               </p>
-              <div className="space-y-2 text-sm text-teallight">
+              <div 
+                className="space-y-2 text-sm"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >
                 <p>Debug Info:</p>
                 <p>User Career Track: {user?.careerTrack || 'Not set'}</p>
                 <p>Total Levels Found: {levelsWithUnlockLogic.length}</p>
                 <button 
                   onClick={refetch}
-                  className="mt-4 bg-trueturquoise px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors text-sm"
-                style={{ color: 'var(--color-text-inverse)' }}
+                  className="mt-4 px-4 py-2 rounded-lg transition-colors text-sm"
+                  style={{
+                    backgroundColor: 'var(--color-accent-primary)',
+                    color: 'var(--color-text-inverse)'
+                  }}
                 >
                   Refresh Data
                 </button>
@@ -371,9 +399,12 @@ const TrainingLevels: React.FC = () => {
                     <div className="flex items-center gap-3">
                       {/* Level Number Badge */}
                       <div 
-                  className="bg-trueturquoise px-3 py-1 rounded-lg font-bold text-sm"
-                  style={{ color: 'var(--color-text-inverse)' }}
-                >
+                        className="px-3 py-1 rounded-lg font-bold text-sm"
+                        style={{
+                          backgroundColor: 'var(--color-accent-primary)',
+                          color: 'var(--color-text-inverse)'
+                        }}
+                      >
                         Level {level.order}
                       </div>
                       <div 
@@ -412,7 +443,10 @@ const TrainingLevels: React.FC = () => {
                       <ClockIcon className="h-3 w-3" />
                       <span>{level.estimatedHours}h estimated</span>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-teallight">
+                    <div 
+                      className="flex items-center gap-2 text-xs"
+                      style={{ color: 'var(--color-text-tertiary)' }}
+                    >
                       <span 
                   className={`px-2 py-1 rounded ${getDifficultyColor(level.difficulty)}`}
                   style={{ color: 'var(--color-text-inverse)' }}
@@ -459,15 +493,25 @@ const TrainingLevels: React.FC = () => {
                     <div className="mt-4">
                       <div className="flex flex-wrap gap-1">
                         {level.skills.slice(0, 3).map((skill, idx) => (
-                          <span key={idx} className="px-2 py-1 bg-trueturquoise/20 text-trueturquoise text-xs rounded">
+                          <span 
+                            key={idx} 
+                            className="px-2 py-1 text-xs rounded"
+                            style={{
+                              backgroundColor: 'var(--color-accent-tertiary)',
+                              color: 'var(--color-accent-primary)'
+                            }}
+                          >
                             {skill}
                           </span>
                         ))}
                         {level.skills.length > 3 && (
                           <span 
-                  className="px-2 py-1 bg-paperwhite/20 text-xs rounded"
-                  style={{ color: 'var(--color-text-primary)' }}
-                >
+                            className="px-2 py-1 text-xs rounded"
+                            style={{
+                              backgroundColor: 'var(--color-tertiary-bg)',
+                              color: 'var(--color-text-primary)'
+                            }}
+                          >
                             +{level.skills.length - 3} more
                           </span>
                         )}

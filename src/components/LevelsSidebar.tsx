@@ -325,7 +325,14 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                 </div>
               ))}
               {levelsWithUnlockLogic.length > 6 && (
-                <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-paperwhite/10 text-teallight/50 border border-paperwhite/20">
+                <div 
+                  className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border"
+                  style={{
+                    backgroundColor: 'var(--color-tertiary-bg)',
+                    color: 'var(--color-text-muted)',
+                    borderColor: 'var(--color-border-subtle)'
+                  }}
+                >
                   +{levelsWithUnlockLogic.length - 6}
                 </div>
               )}
@@ -333,10 +340,14 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
             
             {/* Progress Indicator */}
             <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-              <div className="w-1 h-16 bg-paperwhite/10 rounded-full overflow-hidden">
+              <div 
+                className="w-1 h-16 rounded-full overflow-hidden"
+                style={{ backgroundColor: 'var(--color-border)' }}
+              >
                 <div 
-                  className="bg-gradient-to-t from-trueturquoise to-teallight transition-all duration-500"
+                  className="transition-all duration-500"
                   style={{ 
+                    background: 'linear-gradient(to top, var(--color-accent-primary) 0%, var(--color-accent-secondary) 100%)',
                     height: `${Math.min((levelsWithUnlockLogic.filter(l => l.isUnlocked).length / levelsWithUnlockLogic.length) * 100, 100)}%` 
                   }}
                 ></div>
@@ -361,11 +372,19 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
                   scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
                 }}
               />
-              <p className="text-xs text-teallight">Loading levels...</p>
+              <p 
+                className="text-xs"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >
+                Loading levels...
+              </p>
             </div>
           ) : levelsWithUnlockLogic.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-xs text-teallight">
+              <p 
+                className="text-xs"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >
                 {user?.careerTrack ? 
                   `No levels for ${user.careerTrack} track` :
                   'No levels available'
