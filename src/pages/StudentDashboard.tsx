@@ -186,7 +186,7 @@ const StudentDashboard: React.FC = () => {
         <div 
         className="rounded-xl p-6 lg:p-8"
         style={{
-          background: 'linear-gradient(135deg, rgba(0, 184, 217, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%)',
+          backgroundColor: 'var(--color-accent-tertiary)',
           color: 'var(--color-text-primary)'
         }}
       >
@@ -562,7 +562,7 @@ const StudentDashboard: React.FC = () => {
       <div 
         className="rounded-xl p-6 lg:p-8"
         style={{
-          background: 'linear-gradient(135deg, rgba(0, 184, 217, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%)',
+          backgroundColor: 'var(--color-accent-tertiary)',
           color: 'var(--color-text-primary)'
         }}
       >
@@ -643,7 +643,7 @@ const StudentDashboard: React.FC = () => {
           <div 
             className="rounded-2xl shadow-2xl p-6 lg:p-8 border backdrop-blur-sm"
             style={{
-              background: 'linear-gradient(135deg, var(--color-surface) 0%, var(--color-tertiary-bg) 100%)',
+              backgroundColor: 'var(--color-surface)',
               borderColor: 'var(--color-border)',
               boxShadow: 'var(--shadow-lg)'
             }}
@@ -651,7 +651,7 @@ const StudentDashboard: React.FC = () => {
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{
-                  background: 'linear-gradient(135deg, var(--color-accent-tertiary) 0%, var(--color-accent-secondary) 100%)'
+                  backgroundColor: 'var(--color-accent-tertiary)'
                 }}>
                   <ReaderIcon className="h-6 w-6" style={{ color: 'var(--color-accent-primary)' }} />
                 </div>
@@ -666,7 +666,7 @@ const StudentDashboard: React.FC = () => {
                 </div>
               </div>
               <span className="px-4 py-2 rounded-full text-sm font-semibold border" style={{
-                background: 'linear-gradient(to right, var(--color-accent-tertiary), var(--color-accent-secondary))',
+                backgroundColor: 'var(--color-accent-tertiary)',
                 color: 'var(--color-accent-primary)',
                 borderColor: 'var(--color-accent-primary)'
               }}>
@@ -678,7 +678,7 @@ const StudentDashboard: React.FC = () => {
               <div 
                 className="rounded-xl p-6 border shadow-lg"
                 style={{
-                  background: 'linear-gradient(90deg, var(--color-tertiary-bg) 0%, var(--color-surface) 100%)',
+                  backgroundColor: 'var(--color-tertiary-bg)',
                   borderColor: 'var(--color-border)',
                   boxShadow: 'var(--shadow-md)'
                 }}
@@ -687,7 +687,7 @@ const StudentDashboard: React.FC = () => {
                   <div className="mb-4 lg:mb-0 flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{
-                        background: 'linear-gradient(135deg, var(--color-accent-tertiary), var(--color-accent-secondary))'
+                        backgroundColor: 'var(--color-accent-tertiary)'
                       }}>
                         <span className="font-bold text-sm" style={{ color: 'var(--color-accent-primary)' }}>{currentLevel.order}</span>
                       </div>
@@ -701,7 +701,7 @@ const StudentDashboard: React.FC = () => {
                     <p className="text-sm lg:text-base leading-relaxed" style={{ color: 'var(--color-text-tertiary)' }}>{currentLevel.description}</p>
                   </div>
                   <div className="p-3 rounded-xl border" style={{
-                    background: 'linear-gradient(to bottom right, var(--color-accent-tertiary), var(--color-accent-secondary))',
+                    backgroundColor: 'var(--color-accent-tertiary)',
                     borderColor: 'var(--color-accent-primary)'
                   }}>
                     <ReaderIcon className="h-6 w-6" style={{ color: 'var(--color-accent-primary)' }} />
@@ -719,7 +719,7 @@ const StudentDashboard: React.FC = () => {
                       className="h-3 rounded-full transition-all duration-500 shadow-lg"
                       style={{ 
                         width: `${currentLevelProgress}%`,
-                        background: 'linear-gradient(to right, var(--color-accent-primary), var(--color-accent-secondary))'
+                        backgroundColor: 'var(--color-accent-primary)'
                       }}
                     ></div>
                   </div>
@@ -796,14 +796,14 @@ const StudentDashboard: React.FC = () => {
                     to={`/student/training/${currentLevel.id}/learn`}
                       className="px-6 py-3 rounded-xl transition-all font-semibold flex items-center justify-center w-full sm:w-auto shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
                       style={{ 
-                        background: 'linear-gradient(to right, var(--color-accent-primary), var(--color-accent-secondary))',
+                        backgroundColor: 'var(--color-accent-primary)',
                         color: 'var(--color-text-inverse)'
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.background = 'linear-gradient(to right, var(--color-accent-secondary), var(--color-accent-tertiary))';
+                        e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.background = 'linear-gradient(to right, var(--color-accent-primary), var(--color-accent-secondary))';
+                        e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
                       }}
                   >
                                           <PlayCircle 
@@ -816,11 +816,11 @@ const StudentDashboard: React.FC = () => {
               </div>
             ) : ((completedLevels === levels?.length && levels?.length > 0) || (currentLevel?.order === levels?.length && currentLevelProgress === 100)) ? (
               <div className="rounded-xl p-6 text-center border shadow-lg" style={{
-                background: 'linear-gradient(to right, var(--color-success-bg), var(--color-tertiary-bg))',
+                backgroundColor: 'var(--color-success-bg)',
                 borderColor: 'var(--color-success)'
               }}>
                 <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{
-                  background: 'linear-gradient(to bottom right, var(--color-success-bg), var(--color-tertiary-bg))'
+                  backgroundColor: 'var(--color-success-bg)'
                 }}>
                   <span className="text-3xl">🎉</span>
                 </div>
@@ -837,21 +837,21 @@ const StudentDashboard: React.FC = () => {
                 {/* Completion Stats */}
                 <div className="grid grid-cols-3 gap-4 mb-6">
                   <div className="rounded-xl p-4 border" style={{
-                    background: 'linear-gradient(to bottom right, var(--color-success-bg), var(--color-success-bg-subtle))',
+                    backgroundColor: 'var(--color-success-bg)',
                     borderColor: 'var(--color-success)'
                   }}>
                     <div className="text-2xl font-bold" style={{ color: 'var(--color-success)' }}>{levels?.length || 0}</div>
                     <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>Levels Completed</div>
                   </div>
                   <div className="rounded-xl p-4 border" style={{
-                    background: 'linear-gradient(to bottom right, var(--color-success-bg), var(--color-success-bg-subtle))',
+                    backgroundColor: 'var(--color-success-bg)',
                     borderColor: 'var(--color-success)'
                   }}>
                     <div className="text-2xl font-bold" style={{ color: 'var(--color-success)' }}>100%</div>
                     <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>Track Progress</div>
                   </div>
                   <div className="rounded-xl p-4 border" style={{
-                    background: 'linear-gradient(to bottom right, var(--color-success-bg), var(--color-success-bg-subtle))',
+                    backgroundColor: 'var(--color-success-bg)',
                     borderColor: 'var(--color-success)'
                   }}>
                     <div className="text-2xl font-bold" style={{ color: 'var(--color-success)' }}>🏆</div>
@@ -873,14 +873,14 @@ const StudentDashboard: React.FC = () => {
                       to="/student/training"
                       className="px-6 py-3 rounded-xl transition-all font-semibold inline-flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
                       style={{ 
-                        background: 'linear-gradient(to right, var(--color-accent-primary), var(--color-accent-secondary))',
+                        backgroundColor: 'var(--color-accent-primary)',
                         color: 'var(--color-text-inverse)'
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.background = 'linear-gradient(to right, var(--color-accent-secondary), var(--color-accent-tertiary))';
+                        e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.background = 'linear-gradient(to right, var(--color-accent-primary), var(--color-accent-secondary))';
+                        e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
                       }}
                     >
                       <ReaderIcon 
@@ -894,7 +894,7 @@ const StudentDashboard: React.FC = () => {
                   <div 
                     className="mt-6 p-4 rounded-xl border"
                     style={{
-                      background: 'linear-gradient(90deg, var(--color-tertiary-bg) 0%, var(--color-surface) 100%)',
+                      backgroundColor: 'var(--color-tertiary-bg)',
                       borderColor: 'var(--color-border)'
                     }}
                   >
@@ -910,11 +910,11 @@ const StudentDashboard: React.FC = () => {
               </div>
             ) : (
               <div className="rounded-xl p-6 text-center border shadow-lg" style={{
-                background: 'linear-gradient(to right, var(--color-tertiary-bg-subtle), var(--color-tertiary-bg))',
+                backgroundColor: 'var(--color-tertiary-bg)',
                 borderColor: 'var(--color-border-subtle)'
               }}>
                 <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{
-                  background: 'linear-gradient(to bottom right, var(--color-accent-tertiary), var(--color-accent-secondary))'
+                  backgroundColor: 'var(--color-accent-tertiary)'
                 }}>
                   <span className="text-3xl">📚</span>
                 </div>
@@ -931,14 +931,14 @@ const StudentDashboard: React.FC = () => {
                   to="/student/training"
                   className="px-6 py-3 rounded-xl transition-all font-semibold inline-flex items-center shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
                   style={{ 
-                    background: 'linear-gradient(to right, var(--color-accent-primary), var(--color-accent-secondary))',
+                    backgroundColor: 'var(--color-accent-primary)',
                     color: 'var(--color-text-inverse)'
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = 'linear-gradient(to right, var(--color-accent-secondary), var(--color-accent-tertiary))';
+                    e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'linear-gradient(to right, var(--color-accent-primary), var(--color-accent-secondary))';
+                    e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
                   }}
                 >
                                           <ReaderIcon 
@@ -962,7 +962,7 @@ const StudentDashboard: React.FC = () => {
           <div 
             className="rounded-2xl shadow-2xl p-6 lg:p-8 border backdrop-blur-sm"
             style={{
-              background: 'linear-gradient(135deg, var(--color-surface) 0%, var(--color-tertiary-bg) 100%)',
+              backgroundColor: 'var(--color-surface)',
               borderColor: 'var(--color-border)',
               boxShadow: 'var(--shadow-lg)'
             }}
@@ -970,7 +970,7 @@ const StudentDashboard: React.FC = () => {
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                                   <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{
-                    background: 'linear-gradient(to bottom right, var(--color-accent-tertiary), var(--color-accent-secondary))'
+                    backgroundColor: 'var(--color-accent-tertiary)'
                   }}>
                     <Brain className="h-6 w-6" style={{ color: 'var(--color-accent-primary)' }} />
                   </div>
@@ -990,7 +990,7 @@ const StudentDashboard: React.FC = () => {
                 </div>
               </div>
               <span className="px-3 py-1 rounded-full text-xs font-semibold border" style={{
-                background: 'linear-gradient(to right, var(--color-accent-tertiary), var(--color-accent-secondary))',
+                backgroundColor: 'var(--color-accent-tertiary)',
                 color: 'var(--color-accent-primary)',
                 borderColor: 'var(--color-accent-primary)'
               }}>
@@ -1001,7 +1001,7 @@ const StudentDashboard: React.FC = () => {
             <div 
               className="rounded-xl p-4 border shadow-lg mb-6"
               style={{
-                background: 'linear-gradient(90deg, var(--color-tertiary-bg) 0%, var(--color-surface) 100%)',
+                backgroundColor: 'var(--color-tertiary-bg)',
                 borderColor: 'var(--color-border)',
                 boxShadow: 'var(--shadow-md)'
               }}
@@ -1016,14 +1016,14 @@ const StudentDashboard: React.FC = () => {
               <button
                 className="w-full py-3 rounded-xl transition-all font-semibold flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
                 style={{ 
-                  background: 'linear-gradient(to right, var(--color-accent-primary), var(--color-accent-secondary))',
+                  backgroundColor: 'var(--color-accent-primary)',
                   color: 'var(--color-text-inverse)'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'linear-gradient(to right, var(--color-accent-secondary), var(--color-accent-tertiary))';
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'linear-gradient(to right, var(--color-accent-primary), var(--color-accent-secondary))';
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
                 }}
                 onClick={() => setShowAIModal(true)}
               >
@@ -1042,7 +1042,7 @@ const StudentDashboard: React.FC = () => {
               <div 
                 className="rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center relative border backdrop-blur-sm"
                 style={{
-                  background: 'linear-gradient(135deg, var(--color-surface-elevated) 0%, var(--color-surface) 100%)',
+                  backgroundColor: 'var(--color-surface)',
                   borderColor: 'var(--color-accent-primary)',
                   boxShadow: 'var(--shadow-lg)'
                 }}
@@ -1057,7 +1057,7 @@ const StudentDashboard: React.FC = () => {
                 </button>
                 <div className="flex flex-col items-center">
                                       <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4" style={{
-                      background: 'linear-gradient(to bottom right, var(--color-accent-tertiary), var(--color-accent-secondary))'
+                      backgroundColor: 'var(--color-accent-tertiary)'
                     }}>
                       <Brain className="h-8 w-8" style={{ color: 'var(--color-accent-primary)' }} />
                     </div>
@@ -1076,14 +1076,14 @@ const StudentDashboard: React.FC = () => {
                   <button
                     className="px-6 py-2 rounded-xl transition-all font-semibold mt-2 shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
                     style={{ 
-                      background: 'linear-gradient(to right, var(--color-accent-primary), var(--color-accent-secondary))',
+                      backgroundColor: 'var(--color-accent-primary)',
                       color: 'var(--color-text-inverse)'
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = 'linear-gradient(to right, var(--color-accent-secondary), var(--color-accent-tertiary))';
+                      e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.background = 'linear-gradient(to right, var(--color-accent-primary), var(--color-accent-secondary))';
+                      e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
                     }}
                     onClick={() => setShowAIModal(false)}
                   >
@@ -1098,7 +1098,7 @@ const StudentDashboard: React.FC = () => {
           <div 
             className="rounded-2xl shadow-2xl p-6 lg:p-8 border backdrop-blur-sm"
             style={{
-              background: 'linear-gradient(135deg, var(--color-surface) 0%, var(--color-tertiary-bg) 100%)',
+              backgroundColor: 'var(--color-surface)',
               borderColor: 'var(--color-border)',
               boxShadow: 'var(--shadow-lg)'
             }}
@@ -1106,7 +1106,7 @@ const StudentDashboard: React.FC = () => {
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                                   <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{
-                    background: 'linear-gradient(to bottom right, var(--color-accent-tertiary), var(--color-accent-secondary))'
+                    backgroundColor: 'var(--color-accent-tertiary)'
                   }}>
                     <TrendingUp className="h-6 w-6" style={{ color: 'var(--color-accent-primary)' }} />
                   </div>
@@ -1126,7 +1126,7 @@ const StudentDashboard: React.FC = () => {
                 </div>
               </div>
                               <span className="px-3 py-1 rounded-full text-xs font-semibold border" style={{
-                  background: 'linear-gradient(to right, var(--color-accent-tertiary), var(--color-accent-secondary))',
+                  backgroundColor: 'var(--color-accent-tertiary)',
                   color: 'var(--color-accent-primary)',
                   borderColor: 'var(--color-accent-primary)'
                 }}>
@@ -1137,7 +1137,7 @@ const StudentDashboard: React.FC = () => {
             <div 
               className="rounded-xl p-4 border shadow-lg mb-6"
               style={{
-                background: 'linear-gradient(90deg, var(--color-tertiary-bg) 0%, var(--color-surface) 100%)',
+                backgroundColor: 'var(--color-tertiary-bg)',
                 borderColor: 'var(--color-border)',
                 boxShadow: 'var(--shadow-md)'
               }}
@@ -1159,7 +1159,7 @@ const StudentDashboard: React.FC = () => {
                   className="h-3 rounded-full transition-all duration-500 shadow-lg"
                   style={{ 
                     width: `${overallProgress}%`,
-                    background: 'linear-gradient(to right, var(--color-accent-primary), var(--color-accent-secondary))'
+                    backgroundColor: 'var(--color-accent-primary)'
                   }}
                 ></div>
               </div>
@@ -1168,7 +1168,7 @@ const StudentDashboard: React.FC = () => {
                 <div 
                   className="text-center rounded-lg p-3 border"
                   style={{ 
-                    background: 'linear-gradient(135deg, var(--color-accent-tertiary), var(--color-accent-secondary))',
+                    backgroundColor: 'var(--color-accent-tertiary)',
                     borderColor: 'var(--color-accent-primary)'
                   }}
                 >
@@ -1183,7 +1183,7 @@ const StudentDashboard: React.FC = () => {
                 <div 
                   className="text-center rounded-lg p-3 border"
                   style={{ 
-                    background: 'linear-gradient(135deg, var(--color-accent-tertiary), var(--color-accent-secondary))',
+                    backgroundColor: 'var(--color-accent-tertiary)',
                     borderColor: 'var(--color-accent-primary)'
                   }}
                 >
