@@ -8,7 +8,8 @@ import {
 import apiService from '../services/api';
 import { fetchSettings } from '../redux/slices/settingsSlice';
 import { useAppDispatch } from '../redux/store';
-
+import { motion } from 'framer-motion';
+import syncnerLogo from '../assets/syncner-logo.png';
 
 
 const AdminSettings: React.FC = () => {
@@ -109,7 +110,19 @@ const AdminSettings: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-true-turquoise mx-auto mb-4" />
+          <motion.img
+            src={syncnerLogo}
+            alt="Syncner Logo"
+            className="w-8 h-8 mx-auto mb-4"
+            animate={{
+              scale: [1, 1.1, 1],
+              rotate: [0, 5, -5, 0],
+            }}
+            transition={{
+              scale: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
+              rotate: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+            }}
+          />
           <p style={{ color: 'var(--color-text-tertiary)' }}>Loading settings...</p>
         </div>
       </div>
@@ -615,7 +628,19 @@ const AdminSettings: React.FC = () => {
           >
             {isSaving ? (
               <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 mr-2" style={{ borderColor: 'var(--color-text-inverse)' }}></div>
+                <motion.img
+                  src={syncnerLogo}
+                  alt="Syncner Logo"
+                  className="w-4 h-4 mr-2"
+                  animate={{
+                    scale: [1, 1.1, 1],
+                    rotate: [0, 5, -5, 0],
+                  }}
+                  transition={{
+                    scale: { duration: 1, repeat: Infinity, ease: "easeInOut" },
+                    rotate: { duration: 1.5, repeat: Infinity, ease: "easeInOut" }
+                  }}
+                />
                 Saving...
               </>
             ) : (

@@ -1,22 +1,21 @@
 import React from 'react';
-import { LayersIcon } from '@radix-ui/react-icons';
+import syncnerLogo from '../assets/syncner-logo.png';
+import { motion } from 'framer-motion';
 
-interface LevelProgressData {
+interface LevelProgress {
   level: number;
-  totalStudents: number;
-  studentsAtLevel: number;
-  studentsCompletedLevel: number;
   completionPercentage: number;
+  studentsAtLevel: number;
 }
 
 interface OverallMetrics {
   totalStudents: number;
-  averageLevelReached: number;
-  overallCompletionRate: number;
+  averageCompletion: number;
+  totalLevels: number;
 }
 
 interface LevelProgressChartProps {
-  levelProgress: LevelProgressData[];
+  levelProgress: LevelProgress[];
   overallMetrics: OverallMetrics;
   loading?: boolean;
 }
@@ -36,16 +35,25 @@ const LevelProgressChart: React.FC<LevelProgressChartProps> = ({
         }}
       >
         <div className="flex items-center justify-center py-12">
-          <div 
-            className="animate-spin rounded-full h-8 w-8 border-b-2"
-            style={{ borderColor: 'var(--color-accent-primary)' }}
-          ></div>
-                          <span 
-                  className="ml-3"
-                  style={{ color: 'var(--color-text-primary)' }}
-                >
-                  Loading level progress...
-                </span>
+          <motion.img
+            src={syncnerLogo}
+            alt="Syncner Logo"
+            className="w-8 h-8"
+            animate={{
+              scale: [1, 1.1, 1],
+              rotate: [0, 5, -5, 0],
+            }}
+            transition={{
+              scale: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
+              rotate: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+            }}
+          />
+          <span 
+            className="ml-3"
+            style={{ color: 'var(--color-text-primary)' }}
+          >
+            Loading level progress...
+          </span>
         </div>
       </div>
     );
@@ -55,68 +63,122 @@ const LevelProgressChart: React.FC<LevelProgressChartProps> = ({
     <div 
       className="rounded-xl shadow-sm p-8"
       style={{
-        backgroundColor: 'var(--color-surface)',
+        backgroundColor: 'var(--color-tertiary-bg)',
         boxShadow: 'var(--shadow-md)'
       }}
     >
-      <div className="flex items-center justify-between mb-6">
-        <h2 
-          className="text-lg font-semibold flex items-center gap-2"
+      {/* Header */}
+      <div className="mb-6">
+        <h3 
+          className="text-xl font-bold mb-2"
           style={{ color: 'var(--color-text-primary)' }}
         >
-          <LayersIcon className="h-5 w-5 text-trueturquoise" />
           Level Progress Overview
-        </h2>
-        <div className="text-right">
-          <p 
+        </h3>
+        <p 
+          className="text-sm"
+          style={{ color: 'var(--color-text-tertiary)' }}
+        >
+          Track student progress across all levels
+        </p>
+      </div>
+
+      {/* Overall Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div 
+          className="p-4 rounded-lg border"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            borderColor: 'var(--color-border)'
+          }}
+        >
+          <div 
+            className="text-2xl font-bold mb-1"
+            style={{ color: 'var(--color-accent-primary)' }}
+          >
+            {overallMetrics.totalStudents}
+          </div>
+          <div 
             className="text-sm"
             style={{ color: 'var(--color-text-tertiary)' }}
           >
-            Total Students: {overallMetrics.totalStudents}
-          </p>
-          <p className="text-sm text-trueturquoise">
-            Overall Completion: {overallMetrics.overallCompletionRate}%
-          </p>
+            Total Students
+          </div>
+        </div>
+        
+        <div 
+          className="p-4 rounded-lg border"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            borderColor: 'var(--color-border)'
+          }}
+        >
+          <div 
+            className="text-2xl font-bold mb-1"
+            style={{ color: 'var(--color-accent-primary)' }}
+          >
+            {overallMetrics.averageCompletion}%
+          </div>
+          <div 
+            className="text-sm"
+            style={{ color: 'var(--color-text-tertiary)' }}
+          >
+            Avg. Completion
+          </div>
+        </div>
+        
+        <div 
+          className="p-4 rounded-lg border"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            borderColor: 'var(--color-border)'
+          }}
+        >
+          <div 
+            className="text-2xl font-bold mb-1"
+            style={{ color: 'var(--color-accent-primary)' }}
+          >
+            {overallMetrics.totalLevels}
+          </div>
+          <div 
+            className="text-sm"
+            style={{ color: 'var(--color-text-tertiary)' }}
+          >
+            Total Levels
+          </div>
         </div>
       </div>
-      
+
+      {/* Level Progress Bars */}
       <div className="space-y-6">
         {levelProgress.length > 0 ? (
           levelProgress.map((levelData) => (
             <div 
-              key={levelData.level} 
-              className="rounded-lg p-4 border"
+              key={levelData.level}
+              className="p-4 rounded-lg border"
               style={{
-                backgroundColor: 'var(--color-tertiary-bg)',
-                borderColor: 'var(--color-border-subtle)'
+                backgroundColor: 'var(--color-surface)',
+                borderColor: 'var(--color-border)'
               }}
             >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
                   <div 
-                    className="w-8 h-8 rounded-lg flex items-center justify-center"
-                    style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold"
+                    style={{
+                      backgroundColor: 'var(--color-accent-primary)',
+                      color: 'var(--color-text-inverse)'
+                    }}
                   >
-                    <span 
-                      className="font-bold text-sm"
-                      style={{ color: 'var(--color-accent-primary)' }}
-                    >
-                      {levelData.level}
-                    </span>
+                    {levelData.level}
                   </div>
                   <div>
-                    <h3 
+                    <h4 
                       className="font-semibold"
                       style={{ color: 'var(--color-text-primary)' }}
                     >
                       Level {levelData.level}
-                    </h3>
-                    <p 
-                      className="text-xs"
-                      style={{ color: 'var(--color-text-tertiary)' }}
-                    >
-                      {levelData.studentsCompletedLevel} of {levelData.totalStudents} students completed
-                    </p>
+                    </h4>
                   </div>
                 </div>
                 <div className="text-right">
@@ -162,16 +224,17 @@ const LevelProgressChart: React.FC<LevelProgressChartProps> = ({
           ))
         ) : (
           <div className="text-center py-8">
-                            <div 
-                  className="text-4xl mb-4"
-                  style={{ color: 'var(--color-text-muted)' }}
-                >
-                  📊
-                </div>
-            <p 
-              style={{ color: 'var(--color-text-tertiary)' }}
+            <div 
+              className="text-lg font-medium mb-2"
+              style={{ color: 'var(--color-text-primary)' }}
             >
               No level progress data available
+            </div>
+            <p 
+              className="text-sm"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
+              Level progress will appear here once students start completing levels.
             </p>
           </div>
         )}

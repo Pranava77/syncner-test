@@ -208,8 +208,7 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
                 style={{
                   backgroundColor: 'var(--color-accent-tertiary)',
                   color: 'var(--color-accent-primary)',
-                  borderColor: 'var(--color-accent-primary)',
-                  opacity: 0.3
+                  borderColor: 'var(--color-accent-primary)'
                 }}
               >
                 {exercise.difficulty || 'Medium'}
@@ -229,7 +228,7 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
               >
                 <Cross1Icon 
                   className="w-4 h-4" 
-                  style={{ color: 'var(--color-text-primary)' }}
+                  style={{ color: 'var(--color-accent-primary)' }}
                 />
               </button>
             </div>
@@ -241,8 +240,7 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
           <div 
             className="mx-6 mt-4 p-4 rounded-xl border"
             style={{
-              backgroundColor: 'var(--color-error)',
-              opacity: 0.1,
+              backgroundColor: 'var(--color-error-bg)',
               borderColor: 'var(--color-error)'
             }}
           >
@@ -263,7 +261,6 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
             className="rounded-2xl p-6 border"
             style={{
               backgroundColor: 'var(--color-accent-tertiary)',
-              opacity: 0.1,
               borderColor: 'var(--color-border)'
             }}
           >
@@ -340,7 +337,6 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
             className="rounded-2xl p-6 border"
             style={{
               backgroundColor: 'var(--color-accent-tertiary)',
-              opacity: 0.1,
               borderColor: 'var(--color-border)'
             }}
           >
@@ -378,8 +374,7 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
                       key={index} 
                       className="flex items-center justify-between p-2 rounded-lg"
                       style={{
-                        backgroundColor: 'var(--color-accent-tertiary)',
-                        opacity: 0.3
+                        backgroundColor: 'var(--color-accent-tertiary)'
                       }}
                     >
                       <div className="flex items-center gap-2 text-sm flex-1">
@@ -398,8 +393,7 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
                         onClick={() => copyToClipboard(resource)}
                         className="ml-2 p-1.5 rounded-lg transition-all duration-200 hover:scale-105 flex-shrink-0"
                         style={{
-                          backgroundColor: 'var(--color-accent-tertiary)',
-                          opacity: 0.5
+                          backgroundColor: 'var(--color-accent-tertiary)'
                         }}
                         onMouseEnter={(e) => {
                           e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
@@ -417,14 +411,14 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
                     </div>
                   ))}
                 </div>
-                              ) : (
-                  <p 
-                    className="text-sm"
-                    style={{ color: 'var(--color-text-tertiary)' }}
-                  >
-                    No reference materials provided for this exercise.
-                  </p>
-                )}
+              ) : (
+                <p 
+                  className="text-sm"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                >
+                  No reference materials provided for this exercise.
+                </p>
+              )}
             </div>
           </div>
 
@@ -432,8 +426,7 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
           <div 
             className="rounded-2xl p-6 border"
             style={{
-              background: 'linear-gradient(to right, var(--color-success), var(--color-accent-primary))',
-              opacity: 0.1,
+              background: 'linear-gradient(135deg, var(--color-success-bg), var(--color-accent-tertiary))',
               borderColor: 'var(--color-success)'
             }}
           >
@@ -471,10 +464,9 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
                   onChange={(e) => handleInputChange('submissionLink', e.target.value)}
                   className="w-full p-4 border rounded-xl focus:ring-2 focus:ring-green-500/40 focus:border-green-500 transition"
                   style={{ 
-                    backgroundColor: 'var(--color-secondary-bg)',
+                    backgroundColor: 'var(--color-surface)',
                     color: 'var(--color-text-primary)',
-                    borderColor: 'var(--color-success)',
-                    opacity: 0.3
+                    borderColor: 'var(--color-success)'
                   }}
                   placeholder="https://your-project-link.com"
                   required
@@ -503,10 +495,9 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
                       onChange={(e) => handleReferenceMaterialChange(index, e.target.value)}
                       className="w-full p-4 border rounded-xl focus:ring-2 focus:ring-green-500/40 focus:border-green-500 transition"
                       style={{ 
-                        backgroundColor: 'var(--color-secondary-bg)',
+                        backgroundColor: 'var(--color-surface)',
                         color: 'var(--color-text-primary)',
-                        borderColor: 'var(--color-success)',
-                        opacity: 0.3
+                        borderColor: 'var(--color-success)'
                       }}
                       placeholder={`Additional link ${index + 1} (GitHub, demo, docs, etc.)`}
                     />
@@ -528,7 +519,6 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
           className="sticky bottom-0 backdrop-blur-sm border-t p-6 rounded-b-2xl"
           style={{
             backgroundColor: 'var(--color-surface-elevated)',
-            opacity: 0.95,
             borderColor: 'var(--color-border)'
           }}
         >
@@ -559,16 +549,16 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
                 className="flex items-center gap-2 px-8 py-3 rounded-xl transition-all duration-200 hover:scale-105 font-semibold disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
                 style={{ 
                   color: 'var(--color-text-inverse)',
-                  background: 'linear-gradient(to right, var(--color-success), var(--color-accent-primary))'
+                  background: 'linear-gradient(135deg, var(--color-success), var(--color-accent-primary))'
                 }}
                 onMouseEnter={(e) => {
                   if (!isSubmitting && formData.submissionLink.trim()) {
-                    e.currentTarget.style.background = 'linear-gradient(to right, var(--color-success), var(--color-accent-secondary))';
+                    e.currentTarget.style.background = 'linear-gradient(135deg, var(--color-success), var(--color-accent-secondary))';
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!isSubmitting && formData.submissionLink.trim()) {
-                    e.currentTarget.style.background = 'linear-gradient(to right, var(--color-success), var(--color-accent-primary))';
+                    e.currentTarget.style.background = 'linear-gradient(135deg, var(--color-success), var(--color-accent-primary))';
                   }
                 }}
               >

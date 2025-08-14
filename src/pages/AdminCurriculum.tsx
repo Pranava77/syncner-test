@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import {
-  PlusIcon,
-  Pencil1Icon as EditIcon,
-  TrashIcon,
+import { 
+  PlusIcon, 
+  Pencil1Icon as EditIcon, 
+  TrashIcon, 
   Cross1Icon,
   CheckCircledIcon,
   FileTextIcon,
@@ -23,7 +23,7 @@ import {
 } from '@radix-ui/react-icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import apiService from '../services/api';
-
+import syncnerLogo from '../assets/syncner-logo.png';
 
 interface ReadFirst {
   brief?: string;
@@ -696,7 +696,19 @@ const AdminCurriculum: React.FC = () => {
       >
         <main className="flex-1 p-6 lg:p-12 flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: 'var(--color-accent-primary)' }}></div>
+            <motion.img
+              src={syncnerLogo}
+              alt="Syncner Logo"
+              className="w-12 h-12 mx-auto mb-4"
+              animate={{
+                scale: [1, 1.1, 1],
+                rotate: [0, 5, -5, 0],
+              }}
+              transition={{
+                scale: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
+                rotate: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+              }}
+            />
             <p 
               className="text-lg"
               style={{ color: 'var(--color-text-primary)' }}
@@ -804,7 +816,23 @@ const AdminCurriculum: React.FC = () => {
                       }
                     }}
                   >
-                    <ArrowClockwiseIcon className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+                    {loading ? (
+                      <motion.img
+                        src={syncnerLogo}
+                        alt="Syncner Logo"
+                        className="h-4 w-4"
+                        animate={{
+                          scale: [1, 1.1, 1],
+                          rotate: [0, 5, -5, 0],
+                        }}
+                        transition={{
+                          scale: { duration: 1, repeat: Infinity, ease: "easeInOut" },
+                          rotate: { duration: 1.5, repeat: Infinity, ease: "easeInOut" }
+                        }}
+                      />
+                    ) : (
+                      <ArrowClockwiseIcon className="h-4 w-4" />
+                    )}
                     Refresh All
                   </button>
                 </div>
@@ -1091,7 +1119,23 @@ const AdminCurriculum: React.FC = () => {
                         }
                       }}
                     >
-                      <ArrowClockwiseIcon className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+                      {loading ? (
+                        <motion.img
+                          src={syncnerLogo}
+                          alt="Syncner Logo"
+                          className="h-4 w-4"
+                          animate={{
+                            scale: [1, 1.1, 1],
+                            rotate: [0, 5, -5, 0],
+                          }}
+                          transition={{
+                            scale: { duration: 1, repeat: Infinity, ease: "easeInOut" },
+                            rotate: { duration: 1.5, repeat: Infinity, ease: "easeInOut" }
+                          }}
+                        />
+                      ) : (
+                        <ArrowClockwiseIcon className="h-4 w-4" />
+                      )}
                       Refresh
                     </button>
                   </div>

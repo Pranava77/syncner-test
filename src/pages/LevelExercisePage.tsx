@@ -841,10 +841,19 @@ const LevelExercisePage: React.FC = () => {
               >
                 {unlockingLevel ? (
                   <>
-                    <div 
-                      className="animate-spin rounded-full h-5 w-5 border-b-2"
-                      style={{ borderColor: 'var(--color-text-inverse)' }}
-                    ></div>
+                    <motion.img
+                      src={syncnerLogo}
+                      alt="Syncner Logo"
+                      className="w-5 h-5"
+                      animate={{
+                        scale: [1, 1.1, 1],
+                        rotate: [0, 5, -5, 0],
+                      }}
+                      transition={{
+                        scale: { duration: 1, repeat: Infinity, ease: "easeInOut" },
+                        rotate: { duration: 1.5, repeat: Infinity, ease: "easeInOut" }
+                      }}
+                    />
                     Unlocking...
                   </>
                 ) : (
@@ -872,8 +881,7 @@ const LevelExercisePage: React.FC = () => {
           <div 
             className="w-full max-w-5xl rounded-xl border shadow-lg p-8 mb-8 text-center"
             style={{
-              background: 'linear-gradient(to right, var(--color-success), var(--color-accent-primary))',
-              opacity: 0.2,
+              background: 'linear-gradient(135deg, var(--color-success-bg), var(--color-accent-tertiary))',
               borderColor: 'var(--color-success)'
             }}
           >
@@ -886,15 +894,14 @@ const LevelExercisePage: React.FC = () => {
             </h2>
             <p 
               className="text-lg mb-6"
-              style={{ color: 'var(--color-text-tertiary)' }}
+              style={{ color: 'var(--color-text-primary)' }}
             >
               You've completed all levels in this bootcamp! You've successfully mastered the concepts and completed all exercises.
             </p>
             <div 
               className="rounded-lg p-4 mb-6 border"
               style={{
-                backgroundColor: 'var(--color-success)',
-                opacity: 0.2,
+                backgroundColor: 'var(--color-success-bg)',
                 borderColor: 'var(--color-success)'
               }}
             >
