@@ -97,7 +97,7 @@ const StudentProfile: React.FC = () => {
   return (
     <div 
       className="flex h-screen overflow-x-hidden"
-      style={{ backgroundColor: 'var(--color-primary-bg)' }}
+              style={{ backgroundColor: 'var(--color-secondary-bg)' }}
     >
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto">

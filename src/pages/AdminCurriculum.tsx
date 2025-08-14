@@ -692,7 +692,7 @@ const AdminCurriculum: React.FC = () => {
     return (
       <div 
         className="flex h-screen w-full"
-        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+        style={{ backgroundColor: 'var(--color-secondary-bg)' }}
       >
         <main className="flex-1 p-6 lg:p-12 flex items-center justify-center">
           <div className="text-center">
@@ -738,7 +738,7 @@ const AdminCurriculum: React.FC = () => {
   return (
     <div 
       className="flex h-screen w-full"
-      style={{ backgroundColor: 'var(--color-primary-bg)' }}
+              style={{ backgroundColor: 'var(--color-secondary-bg)' }}
     >
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto p-6 lg:p-12">

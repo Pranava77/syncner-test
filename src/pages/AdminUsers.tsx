@@ -146,7 +146,7 @@ const AdminUsers: React.FC = () => {
   return (
     <div 
       className="min-h-screen p-4 lg:p-8"
-      style={{ backgroundColor: 'var(--color-primary-bg)' }}
+              style={{ backgroundColor: 'var(--color-secondary-bg)' }}
     >
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
         <div>

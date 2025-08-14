@@ -71,7 +71,7 @@ const AdminProfile: React.FC = () => {
     <div 
       className="min-h-screen p-4"
       style={{ 
-        backgroundColor: 'var(--color-primary-bg)',
+        backgroundColor: 'var(--color-secondary-bg)',
         color: 'var(--color-text-primary)'
       }}
     >
