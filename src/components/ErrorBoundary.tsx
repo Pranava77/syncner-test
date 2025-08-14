@@ -46,7 +46,7 @@ class ErrorBoundary extends Component<Props, State> {
             }}
           >
             <div className="text-center">
-              <div className="text-red-400 text-6xl mb-4">⚠️</div>
+              <div style={{ color: 'var(--color-error)' }} className="text-6xl mb-4">⚠️</div>
               <h1 
                 className="text-2xl font-bold mb-4"
                 style={{ color: 'var(--color-text-primary)' }}
@@ -74,7 +74,7 @@ class ErrorBoundary extends Component<Props, State> {
                   >
                     Error Details (Development)
                   </summary>
-                  <pre className="text-xs text-red-400 overflow-auto">
+                  <pre className="text-xs overflow-auto" style={{ color: 'var(--color-error)' }}>
                     {this.state.error.toString()}
                     {this.state.errorInfo?.componentStack}
                   </pre>

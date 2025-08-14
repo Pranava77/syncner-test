@@ -59,7 +59,10 @@ const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({ open, onClose, 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center"
+      style={{ backgroundColor: 'var(--color-overlay-bg)' }}
+    >
       <div 
         className="rounded-xl shadow-2xl p-6 sm:p-8 w-full max-w-md border relative flex flex-col items-center"
         style={{

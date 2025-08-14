@@ -358,8 +358,11 @@ const TrainingLevels: React.FC = () => {
                   {/* Lock Icon for locked levels */}
                   {!level.isUnlocked && (
                     <div 
-                      className="absolute top-2 left-2 text-red-400 p-2 rounded-full"
-                      style={{ backgroundColor: 'rgba(239, 68, 68, 0.2)' }}
+                      className="absolute top-2 left-2 p-2 rounded-full"
+                      style={{ 
+                        backgroundColor: 'var(--color-error-bg)',
+                        color: 'var(--color-error)'
+                      }}
                     >
                       <LockClosedIcon className="h-4 w-4" />
                     </div>

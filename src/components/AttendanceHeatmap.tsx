@@ -160,18 +160,18 @@ const AttendanceHeatmap: React.FC = () => {
                         {hexes.map((hex, idx) => {
                           const isHovered = hovered === hex.date && !hex.isEmpty && hasData;
                           let fillColor = hex.isEmpty
-                            ? 'var(--color-black)'
+                            ? 'var(--color-tertiary-bg)'
                             : hex.count === 1
-                            ? 'var(--color-true-turquoise)'
+                            ? 'var(--color-success)'
                             : hex.count === 0
-                            ? 'var(--color-rust)'
-                            : 'var(--color-black)';
+                            ? 'var(--color-error)'
+                            : 'var(--color-tertiary-bg)';
                           // Keep original color on hover, just add brightness
                           if (isHovered) {
                             if (hex.count === 1) {
-                              fillColor = 'var(--color-true-turquoise)'; // Keep blue for present
+                              fillColor = 'var(--color-success-hover)';
                             } else if (hex.count === 0) {
-                              fillColor = 'var(--color-rust)'; // Keep red for absent
+                              fillColor = 'var(--color-error-hover)';
                             }
                           }
                           return (
