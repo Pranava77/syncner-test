@@ -4,7 +4,7 @@ import { useAppSelector } from '../redux/store';
 import LevelsSidebar from '../components/LevelsSidebar';
 import { useLevels } from '../hooks/useLevels';
 import { motion } from 'framer-motion';
-import {  ClockIcon, CheckCircledIcon, Cross1Icon, ReaderIcon, ClipboardIcon, PlayIcon, LockClosedIcon } from '@radix-ui/react-icons';
+import {  ClockIcon, CheckCircledIcon, Cross1Icon, ReaderIcon, ClipboardIcon, PlayIcon, LockClosedIcon, UpdateIcon } from '@radix-ui/react-icons';
 import syncnerLogo from '../assets/syncner-logo.png';
 
 interface LearnItem {
@@ -292,20 +292,42 @@ const TrainingLevels: React.FC = () => {
       >
         <div className="max-w-6xl mx-auto">
           <div className="mb-8">
-            <h1 
-              className="text-3xl font-heading mb-2"
-              style={{ color: 'var(--color-text-primary)' }}
-            >
-              Training Levels
-            </h1>
+            <div className="flex items-center justify-between">
+              <h1 
+                className="text-3xl font-heading mb-2"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                Training Levels
+              </h1>
+              <button
+                onClick={refetch}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors font-medium"
+                style={{
+                  backgroundColor: 'var(--color-accent-primary)',
+                  color: 'var(--color-text-inverse)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                }}
+              >
+                <UpdateIcon className="h-4 w-4" />
+                Refresh
+              </button>
+            </div>
             <p 
+              className="text-lg"
               style={{ color: 'var(--color-text-tertiary)' }}
             >
-              {user?.careerTrack ? 
-                `${getTrackLabel(user.careerTrack)} Track - Complete these levels to advance your skills` :
-                'Complete these levels to advance your skills'
-              }
+              Master your {getTrackLabel(user?.careerTrack || '')} skills through structured learning
             </p>
+            <div className="flex items-center gap-4 mt-2 text-sm" style={{ color: 'var(--color-text-muted)' }}>
+              <span>Last updated: {new Date().toLocaleTimeString()}</span>
+              <span>•</span>
+              <span>Click refresh if you don't see recent changes</span>
+            </div>
           </div>
 
           {levelsWithUnlockLogic.length === 0 ? (

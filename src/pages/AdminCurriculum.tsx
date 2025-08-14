@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   PlusIcon, 
   Pencil1Icon as EditIcon, 
@@ -21,9 +22,10 @@ import {
   ImageIcon,
   BarChartIcon
 } from '@radix-ui/react-icons';
-import { motion, AnimatePresence } from 'framer-motion';
 import apiService from '../services/api';
 import syncnerLogo from '../assets/syncner-logo.png';
+import { useAppDispatch } from '../redux/store';
+import { clearCache } from '../redux/slices/curriculumSlice';
 
 interface ReadFirst {
   brief?: string;
@@ -113,6 +115,7 @@ const defaultLevelForm: LevelForm = {
 };
 
 const AdminCurriculum: React.FC = () => {
+  const dispatch = useAppDispatch();
   const [levels, setLevels] = useState<Level[]>([]);
   const [loading, setLoading] = useState(false);
   const [showLevelModal, setShowLevelModal] = useState(false);
@@ -357,22 +360,34 @@ const AdminCurriculum: React.FC = () => {
         const level = levels.find(l => l.id === id);
         
         if (level) {
-          // Delete all curriculum items for this level (same title and career track)
+          // Delete all curriculum items for this level (same order and career track)
           const response = await apiService.get('/curriculum');
           const curriculumItems = response.data || [];
           const itemsToDelete = curriculumItems.filter((item: any) => 
-            item.title === level.title && item.careerTrack === level.careerTrack
+            item.order === level.order && item.careerTrack === level.careerTrack
           );
+          
+          console.log(`Found ${itemsToDelete.length} items to delete for level ${level.order} in track ${level.careerTrack}`);
           
           // Delete each item
           for (const item of itemsToDelete) {
             const itemId = item.id;
             if (itemId) {
+              console.log(`Deleting ${item.type} item: ${item.title} (ID: ${itemId})`);
               await apiService.delete(`/curriculum/${itemId}`);
             }
           }
         }
         await fetchLevels(selectedTrack || undefined);
+        
+        // Clear the student training cache to ensure changes are reflected
+        try {
+          // Clear the curriculum cache in Redux store
+          dispatch(clearCache());
+        } catch (cacheError) {
+          console.warn('Could not clear cache:', cacheError);
+        }
+        
         showSuccessMessage('Level deleted successfully');
       } catch (error: any) {
         console.error('Error deleting level:', error);
@@ -406,6 +421,10 @@ const AdminCurriculum: React.FC = () => {
         setLevelForm(defaultLevelForm);
         setFormError('');
         await fetchLevels(selectedTrack || undefined);
+        
+        // Clear the student training cache to ensure changes are reflected
+        dispatch(clearCache());
+        
         showSuccessMessage('Level updated successfully');
       } else {
         // Create new level
@@ -422,6 +441,10 @@ const AdminCurriculum: React.FC = () => {
         setLevelForm(defaultLevelForm);
         setFormError('');
         await fetchLevels(selectedTrack || undefined);
+        
+        // Clear the student training cache to ensure changes are reflected
+        dispatch(clearCache());
+        
         showSuccessMessage('Level created successfully');
       }
     } catch (error: any) {
@@ -500,6 +523,10 @@ const AdminCurriculum: React.FC = () => {
           }
         }
         await fetchLevels(selectedTrack || undefined);
+        
+        // Clear the student training cache to ensure changes are reflected
+        dispatch(clearCache());
+        
         showSuccessMessage('Content deleted successfully');
       } catch (error: any) {
         console.error('Error deleting content:', error);
@@ -624,6 +651,10 @@ const AdminCurriculum: React.FC = () => {
       setContentForm({});
       setFormError('');
       await fetchLevels(selectedTrack || undefined);
+      
+      // Clear the student training cache to ensure changes are reflected
+      dispatch(clearCache());
+      
       showSuccessMessage('Content saved successfully');
     } catch (error: any) {
       console.error('Error saving content:', error);
