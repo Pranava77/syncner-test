@@ -14,8 +14,10 @@ import {
   CheckCircledIcon,
   LockClosedIcon
 } from '@radix-ui/react-icons';
+import { motion } from 'framer-motion';
 import ResetPasswordModal from '../components/ResetPasswordModal';
 import apiService from '../services/api';
+import syncnerLogo from '../assets/syncner-logo.png';
 import { User } from '../redux/slices/authSlice';
 
 const defaultAdminForm = {
@@ -265,7 +267,30 @@ const AdminAdmin: React.FC = () => {
           </thead>
           <tbody>
             {loading ? (
-              <tr><td colSpan={5} className="text-center py-6" style={{ color: 'var(--color-text-tertiary)' }}>Loading...</td></tr>
+              <tr>
+                <td 
+                  colSpan={6} 
+                  className="text-center py-6"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                >
+                  <div className="flex items-center justify-center gap-3">
+                    <motion.img
+                      src={syncnerLogo}
+                      alt="Syncner Logo"
+                      className="w-6 h-6"
+                      animate={{
+                        scale: [1, 1.1, 1],
+                        rotate: [0, 5, -5, 0],
+                      }}
+                      transition={{
+                        scale: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
+                        rotate: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+                      }}
+                    />
+                    Loading admins...
+                  </div>
+                </td>
+              </tr>
             ) : filteredAdmins.length === 0 ? (
               <tr><td colSpan={5} className="text-center py-6" style={{ color: 'var(--color-text-tertiary)' }}>No admins found.</td></tr>
             ) : filteredAdmins.map((a: User) => (
@@ -508,7 +533,24 @@ const AdminAdmin: React.FC = () => {
                   }
                 }}
               >
-                {isSubmitting ? 'Saving...' : (editingAdmin ? 'Save Changes' : 'Add Admin')}
+                {isSubmitting ? (
+                  <div className="flex items-center gap-2">
+                    <motion.img
+                      src={syncnerLogo}
+                      alt="Syncner Logo"
+                      className="w-4 h-4"
+                      animate={{
+                        scale: [1, 1.1, 1],
+                        rotate: [0, 5, -5, 0],
+                      }}
+                      transition={{
+                        scale: { duration: 1, repeat: Infinity, ease: "easeInOut" },
+                        rotate: { duration: 1.5, repeat: Infinity, ease: "easeInOut" }
+                      }}
+                    />
+                    Saving...
+                  </div>
+                ) : (editingAdmin ? 'Save Changes' : 'Add Admin')}
               </button>
             </div>
           </div>

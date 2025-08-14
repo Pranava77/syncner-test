@@ -14,8 +14,10 @@ import {
   CheckCircledIcon,
   LockClosedIcon
 } from '@radix-ui/react-icons';
+import { motion } from 'framer-motion';
 import ResetPasswordModal from '../components/ResetPasswordModal';
 import apiService from '../services/api';
+import syncnerLogo from '../assets/syncner-logo.png';
 
 const defaultUserForm = {
   name: '',
@@ -306,7 +308,22 @@ const AdminUsers: React.FC = () => {
                   className="text-center py-6"
                   style={{ color: 'var(--color-text-tertiary)' }}
                 >
-                  Loading...
+                  <div className="flex items-center justify-center gap-3">
+                    <motion.img
+                      src={syncnerLogo}
+                      alt="Syncner Logo"
+                      className="w-6 h-6"
+                      animate={{
+                        scale: [1, 1.1, 1],
+                        rotate: [0, 5, -5, 0],
+                      }}
+                      transition={{
+                        scale: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
+                        rotate: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+                      }}
+                    />
+                    Loading users...
+                  </div>
                 </td>
               </tr>
             ) : filteredUsers.length === 0 ? (
@@ -630,7 +647,24 @@ const AdminUsers: React.FC = () => {
                   }
                 }}
               >
-                {isSubmitting ? 'Saving...' : (editingUser ? 'Save Changes' : 'Add User')}
+                {isSubmitting ? (
+                  <div className="flex items-center gap-2">
+                    <motion.img
+                      src={syncnerLogo}
+                      alt="Syncner Logo"
+                      className="w-4 h-4"
+                      animate={{
+                        scale: [1, 1.1, 1],
+                        rotate: [0, 5, -5, 0],
+                      }}
+                      transition={{
+                        scale: { duration: 1, repeat: Infinity, ease: "easeInOut" },
+                        rotate: { duration: 1.5, repeat: Infinity, ease: "easeInOut" }
+                      }}
+                    />
+                    Saving...
+                  </div>
+                ) : (editingUser ? 'Save Changes' : 'Add User')}
               </button>
             </div>
           </div>

@@ -310,7 +310,7 @@ const AdminCurriculum: React.FC = () => {
         color: 'var(--color-text-inverse)'
       };
       case 'ui-ux': return {
-        backgroundColor: 'var(--color-accent-tertiary)',
+        backgroundColor: 'var(--color-accent-primary)',
         color: 'var(--color-text-inverse)'
       };
       case 'data-science': return {
@@ -845,7 +845,7 @@ const AdminCurriculum: React.FC = () => {
                     id: 'full-stack', 
                     name: 'Full Stack', 
                     icon: DesktopIcon, 
-                    bgColor: 'var(--color-accent-tertiary)',
+                    bgColor: 'var(--color-accent-primary)',
                     borderColor: 'var(--color-accent-primary)'
                   },
                   { 
@@ -859,14 +859,14 @@ const AdminCurriculum: React.FC = () => {
                     id: 'ui-ux', 
                     name: 'UI/UX', 
                     icon: ImageIcon, 
-                    bgColor: 'var(--color-accent-tertiary)',
-                    borderColor: 'var(--color-accent-tertiary)'
+                    bgColor: 'var(--color-accent-primary)',
+                    borderColor: 'var(--color-accent-primary)'
                   },
                   { 
                     id: 'data-science', 
                     name: 'Data Science', 
                     icon: BarChartIcon, 
-                    bgColor: 'var(--color-warning-bg)',
+                    bgColor: 'var(--color-warning)',
                     borderColor: 'var(--color-warning)'
                   }
                 ].map((track, index) => {
@@ -969,12 +969,12 @@ const AdminCurriculum: React.FC = () => {
                       style={{ color: 'var(--color-text-tertiary)' }}
                     >
                       <span className="flex items-center gap-1">
-                        <LayersIcon className="h-4 w-4" style={{ color: 'var(--color-text-tertiary)' }} />
+                        <LayersIcon className="h-4 w-4" style={{ color: 'var(--color-accent-primary)' }} />
                         {filteredLevels.length} levels total
                       </span>
                       <span className="flex items-center gap-1">
-                        <StarIcon className="h-4 w-4" style={{ color: 'var(--color-text-tertiary)' }} />
-                        Level {filteredLevels.length > 0 ? `1 - ${filteredLevels[filteredLevels.length - 1].order}` : '0'} progression
+                        <StarIcon className="h-4 w-4" style={{ color: 'var(--color-accent-primary)' }} />
+                        Level {filteredLevels.length > 0 ? `1 - ${filteredLevels.length}` : '0'} progression
                       </span>
                     </div>
                     {lastUpdated && (
@@ -1261,7 +1261,7 @@ const AdminCurriculum: React.FC = () => {
                           className="flex items-center gap-2 text-xs"
                           style={{ color: 'var(--color-text-tertiary)' }}
                         >
-                          <ClockIcon className="h-3 w-3" style={{ color: 'var(--color-text-tertiary)' }} />
+                          <ClockIcon className="h-3 w-3" style={{ color: 'var(--color-accent-primary)' }} />
                           <span>{level.estimatedHours}h estimated</span>
                         </div>
                         <div 
@@ -1281,16 +1281,16 @@ const AdminCurriculum: React.FC = () => {
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-4 text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
                           <span className="flex items-center gap-1">
-                            <BookOpenIcon className="h-3 w-3" style={{ color: 'var(--color-text-tertiary)' }} />
-                            {level.learn.length} learn
+                            <BookOpenIcon className="h-3 w-3" style={{ color: 'var(--color-accent-primary)' }} />
+                            {level.learn?.length || 0} learn items
                           </span>
                           <span className="flex items-center gap-1">
-                            <ClipboardIcon className="h-3 w-3" style={{ color: 'var(--color-text-tertiary)' }} />
-                            {level.test.length} test
+                            <ClipboardIcon className="h-3 w-3" style={{ color: 'var(--color-accent-primary)' }} />
+                            {level.test?.length || 0} test items
                           </span>
                           <span className="flex items-center gap-1">
-                            <PlayIcon className="h-3 w-3" style={{ color: 'var(--color-text-tertiary)' }} />
-                            {level.exercise.length} exercise
+                            <PlayIcon className="h-3 w-3" style={{ color: 'var(--color-accent-primary)' }} />
+                            {level.exercise?.length || 0} exercises
                           </span>
                         </div>
                         <div className="flex items-center gap-1 text-xs">
@@ -1343,7 +1343,7 @@ const AdminCurriculum: React.FC = () => {
                           <div className="flex items-center justify-between mb-2">
                             <h4 className="text-sm font-medium flex items-center gap-1" style={{ color: 'var(--color-success)' }}>
                               <BookOpenIcon className="h-3 w-3" style={{ color: 'var(--color-success)' }} />
-                              Learn Content ({level.learn.length})
+                              Learn Content ({level.learn?.length || 0})
                             </h4>
                             <button
                               onClick={() => {
@@ -1363,12 +1363,12 @@ const AdminCurriculum: React.FC = () => {
                                 e.currentTarget.style.color = 'var(--color-success)';
                               }}
                             >
-                              {level.learnExpanded ? <ChevronDownIcon className="h-3 w-3" style={{ color: 'var(--color-text-tertiary)' }} /> : <ChevronRightIcon className="h-3 w-3" style={{ color: 'var(--color-text-tertiary)' }} />}
+                              {level.learnExpanded ? <ChevronDownIcon className="h-3 w-3" style={{ color: 'var(--color-accent-primary)' }} /> : <ChevronRightIcon className="h-3 w-3" style={{ color: 'var(--color-accent-primary)' }} />}
                             </button>
                           </div>
                           {level.learnExpanded && (
                             <div className="space-y-2">
-                              {level.learn.length > 0 ? (
+                              {level.learn?.length > 0 ? (
                                 level.learn.map((item, idx) => (
                                   <div key={idx} className="flex items-center justify-between rounded-lg p-2" style={{
                                     backgroundColor: 'var(--color-success-bg-subtle)'
@@ -1425,7 +1425,7 @@ const AdminCurriculum: React.FC = () => {
                           <div className="flex items-center justify-between mb-2">
                             <h4 className="text-sm font-medium flex items-center gap-1" style={{ color: 'var(--color-warning)' }}>
                               <ClipboardIcon className="h-3 w-3" style={{ color: 'var(--color-warning)' }} />
-                              Test Content ({level.test.length})
+                              Test Content ({level.test?.length || 0})
                             </h4>
                             <button
                               onClick={() => {
@@ -1450,7 +1450,7 @@ const AdminCurriculum: React.FC = () => {
                           </div>
                           {level.testExpanded && (
                             <div className="space-y-2">
-                              {level.test.length > 0 ? (
+                              {level.test?.length > 0 ? (
                                 level.test.map((item, idx) => (
                                   <div key={idx} className="flex items-center justify-between rounded-lg p-2" style={{
                                     backgroundColor: 'var(--color-warning-bg-subtle)'
@@ -1506,8 +1506,8 @@ const AdminCurriculum: React.FC = () => {
                         }}>
                           <div className="flex items-center justify-between mb-2">
                             <h4 className="text-sm font-medium flex items-center gap-1" style={{ color: 'var(--color-accent-secondary)' }}>
-                              <PlayIcon className="h-3 w-3" />
-                              Exercise Content ({level.exercise.length})
+                              <PlayIcon className="h-3 w-3" style={{ color: 'var(--color-accent-secondary)' }} />
+                              Exercise Content ({level.exercise?.length || 0})
                             </h4>
                             <button
                               onClick={() => {
@@ -1527,12 +1527,12 @@ const AdminCurriculum: React.FC = () => {
                                 e.currentTarget.style.color = 'var(--color-accent-secondary)';
                               }}
                             >
-                              {level.exerciseExpanded ? <ChevronDownIcon className="h-3 w-3" /> : <ChevronRightIcon className="h-3 w-3" />}
+                              {level.exerciseExpanded ? <ChevronDownIcon className="h-3 w-3" style={{ color: 'var(--color-accent-secondary)' }} /> : <ChevronRightIcon className="h-3 w-3" style={{ color: 'var(--color-accent-secondary)' }} />}
                             </button>
                           </div>
                           {level.exerciseExpanded && (
                             <div className="space-y-2">
-                              {level.exercise.length > 0 ? (
+                              {level.exercise?.length > 0 ? (
                                 level.exercise.map((item, idx) => (
                                   <div key={idx} className="flex items-center justify-between rounded-lg p-2" style={{
                                     backgroundColor: 'var(--color-accent-tertiary-subtle)'
