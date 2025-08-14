@@ -142,7 +142,28 @@ const StudentDashboard: React.FC = () => {
         refetch();
       }, 100);
     }
-  }, [user?.careerTrack, location.pathname, dispatch, refetch]);
+  }, [user?.careerTrack, dispatch, refetch]);
+
+  // Listen for curriculum changes from admin
+  useEffect(() => {
+    const handleCurriculumChange = (event: CustomEvent) => {
+      console.log('StudentDashboard: Curriculum change detected:', event.detail);
+      if (event.detail.track === user?.careerTrack) {
+        console.log('StudentDashboard: Refreshing levels due to curriculum change in admin');
+        // Clear cache and refetch to get updated data
+        dispatch(clearCache());
+        setTimeout(() => {
+          refetch();
+        }, 100);
+      }
+    };
+    
+    window.addEventListener('curriculum-changed', handleCurriculumChange as EventListener);
+    
+    return () => {
+      window.removeEventListener('curriculum-changed', handleCurriculumChange as EventListener);
+    };
+  }, [dispatch, refetch, user?.careerTrack]);
 
   // Handle progress updates
   const handleProgressUpdate = () => {

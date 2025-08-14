@@ -119,11 +119,23 @@ const TrainingLevels: React.FC = () => {
     window.addEventListener('progress-updated', handleProgressUpdate);
     window.addEventListener('storage', handleStorageChange);
     
+    // Listen for curriculum changes from admin
+    const handleCurriculumChange = (event: CustomEvent) => {
+      console.log('Curriculum change detected:', event.detail);
+      if (event.detail.track === user?.careerTrack) {
+        console.log('Refreshing levels due to curriculum change in admin');
+        refetch();
+      }
+    };
+    
+    window.addEventListener('curriculum-changed', handleCurriculumChange as EventListener);
+    
     return () => {
       window.removeEventListener('progress-updated', handleProgressUpdate);
       window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('curriculum-changed', handleCurriculumChange as EventListener);
     };
-  }, [handleProgressUpdate, handleStorageChange]);
+  }, [handleProgressUpdate, handleStorageChange, refetch, user?.careerTrack]);
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty.toLowerCase()) {

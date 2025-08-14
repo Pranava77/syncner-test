@@ -59,6 +59,8 @@ const curriculumSlice = createSlice({
   reducers: {
     clearCache: (state) => {
       state.lastFetched = null;
+      state.levelsWithStatus = [];
+      state.data = [];
     },
     updateLevelStatus: (state, action) => {
       const { levelId, section, completed } = action.payload;

@@ -368,15 +368,33 @@ const AdminCurriculum: React.FC = () => {
           );
           
           console.log(`Found ${itemsToDelete.length} items to delete for level ${level.order} in track ${level.careerTrack}`);
+          console.log('Items to delete:', itemsToDelete.map((item: any) => ({ id: item.id, type: item.type, title: item.title })));
           
           // Delete each item
           for (const item of itemsToDelete) {
             const itemId = item.id;
             if (itemId) {
               console.log(`Deleting ${item.type} item: ${item.title} (ID: ${itemId})`);
-              await apiService.delete(`/curriculum/${itemId}`);
+              const deleteResponse = await apiService.delete(`/curriculum/${itemId}`);
+              console.log(`Delete response for ${itemId}:`, deleteResponse);
             }
           }
+          
+          // Wait a moment for deletion to complete
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          
+          // Verify deletion by checking if items still exist
+          const verifyResponse = await apiService.get('/curriculum');
+          const remainingItems = verifyResponse.data?.filter((item: any) => 
+            item.order === level.order && item.careerTrack === level.careerTrack
+          ) || [];
+          
+          console.log(`Verification: ${remainingItems.length} items still exist for level ${level.order}`);
+          if (remainingItems.length > 0) {
+            console.warn('Some items may not have been deleted properly:', remainingItems);
+          }
+          
+          console.log('All items deleted. Now clearing cache...');
         }
         await fetchLevels(selectedTrack || undefined);
         
@@ -384,6 +402,22 @@ const AdminCurriculum: React.FC = () => {
         try {
           // Clear the curriculum cache in Redux store
           dispatch(clearCache());
+          
+          // Also clear local levels state to force immediate UI update
+          setLevels([]);
+          
+          // Dispatch a global event to notify all components
+          if (level) {
+            window.dispatchEvent(new CustomEvent('curriculum-changed', { 
+              detail: { 
+                action: 'delete', 
+                track: selectedTrack,
+                levelOrder: level.order 
+              } 
+            }));
+          }
+          
+          console.log('Cache cleared, local state reset, and global event dispatched. Changes should be visible immediately.');
         } catch (cacheError) {
           console.warn('Could not clear cache:', cacheError);
         }
@@ -425,6 +459,18 @@ const AdminCurriculum: React.FC = () => {
         // Clear the student training cache to ensure changes are reflected
         dispatch(clearCache());
         
+        // Also clear local levels state to force immediate UI update
+        setLevels([]);
+        
+        // Dispatch a global event to notify all components
+        window.dispatchEvent(new CustomEvent('curriculum-changed', { 
+          detail: { 
+            action: 'update', 
+            track: selectedTrack,
+            levelOrder: editingLevel.order 
+          } 
+        }));
+        
         showSuccessMessage('Level updated successfully');
       } else {
         // Create new level
@@ -444,6 +490,18 @@ const AdminCurriculum: React.FC = () => {
         
         // Clear the student training cache to ensure changes are reflected
         dispatch(clearCache());
+        
+        // Also clear local levels state to force immediate UI update
+        setLevels([]);
+        
+        // Dispatch a global event to notify all components
+        window.dispatchEvent(new CustomEvent('curriculum-changed', { 
+          detail: { 
+            action: 'create', 
+            track: selectedTrack,
+            levelOrder: levelForm.order || levels.length + 1
+          } 
+        }));
         
         showSuccessMessage('Level created successfully');
       }

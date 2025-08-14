@@ -47,6 +47,23 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
   // Use the optimized hook
   const { levels, loading, error, refetch, updateLevelSectionStatus } = useLevels(user?.careerTrack);
 
+  // Listen for curriculum changes from admin
+  useEffect(() => {
+    const handleCurriculumChange = (event: CustomEvent) => {
+      console.log('LevelsSidebar: Curriculum change detected:', event.detail);
+      if (event.detail.track === user?.careerTrack) {
+        console.log('LevelsSidebar: Refreshing levels due to curriculum change in admin');
+        refetch();
+      }
+    };
+    
+    window.addEventListener('curriculum-changed', handleCurriculumChange as EventListener);
+    
+    return () => {
+      window.removeEventListener('curriculum-changed', handleCurriculumChange as EventListener);
+    };
+  }, [refetch, user?.careerTrack]);
+
   // Memoized level completion map for efficient lookups (only for current user's track)
   const levelCompletionMap = useMemo(() => {
     const map = new Map();
