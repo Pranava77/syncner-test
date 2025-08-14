@@ -98,7 +98,7 @@ p, .body {
 
 :root {
 /* Light mode theme (Blue-focused) */
---color-primary-bg: #FFFFFF;        /* main background - pure white */
+--color-primary-bg: #EAF0FF;        /* main background - pure white */
 --color-secondary-bg: #F5F8FF;      /* very light blue tint */
 --color-tertiary-bg: #E6ECFF;       /* subtle light blue section bg */
 --color-surface: #FFFFFF;           /* card or panel background */
