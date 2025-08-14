@@ -283,7 +283,7 @@ const Layout: React.FC = () => {
         </nav>
         {isSidebarCollapsed ? (
           <div className="flex flex-col items-center gap-4 pb-6">
-            <ThemeSwitcher variant="icon" size="sm" className="mb-2" />
+            <ThemeSwitcher variant="icon" size="md" className="mb-2 p-2 rounded-lg bg-[var(--color-accent-primary)]" />
             <Link
               to={user?.role === 'admin' ? '/admin/profile' : '/student/profile'}
               className="flex items-center justify-center w-10 h-10 rounded-md mb-2"
@@ -325,7 +325,7 @@ const Layout: React.FC = () => {
           >
             {/* Theme Switcher */}
             <div className="mb-4">
-              <ThemeSwitcher variant="toggle" showLabels={false} className="w-full justify-center" />
+              <ThemeSwitcher variant="full-width" className="w-full" />
             </div>
             
             {/* Unified Profile Section - clickable */}
@@ -406,7 +406,7 @@ const Layout: React.FC = () => {
           </div>
           
           <div className="flex items-center space-x-2">
-            <ThemeSwitcher variant="icon" size="sm" className="mr-2" />
+            <ThemeSwitcher variant="icon" size="md" className="mr-2 p-2 rounded-lg bg-[var(--color-accent-primary)]" />
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="p-2 transition-colors"
@@ -507,6 +507,11 @@ const Layout: React.FC = () => {
         </nav>
 
         <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-gray-200 dark:border-gray-700">
+          {/* Theme Switcher */}
+          <div className="mb-4">
+            <ThemeSwitcher variant="full-width" className="w-full" />
+          </div>
+          
           {/* Unified Profile Section - clickable */}
           <Link
             to={user?.role === 'admin' ? '/admin/profile' : '/student/profile'}

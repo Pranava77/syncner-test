@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 
 interface ThemeSwitcherProps {
   size?: 'sm' | 'md' | 'lg';
-  variant?: 'button' | 'toggle' | 'icon';
+  variant?: 'button' | 'toggle' | 'icon' | 'full-width';
   showLabels?: boolean;
   className?: string;
 }
@@ -79,6 +79,80 @@ const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
             Dark
           </span>
         )}
+      </div>
+    );
+  }
+
+  if (variant === 'full-width') {
+    return (
+      <div className={`w-full ${className}`}>
+        <button
+          onClick={handleToggle}
+          className="relative w-full h-12 rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-secondary-bg)] overflow-hidden group"
+          role="switch"
+          aria-checked={isDarkMode}
+          aria-label={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
+          style={{
+            backgroundColor: isDarkMode 
+              ? 'var(--color-accent-primary)' 
+              : 'var(--color-accent-secondary)',
+            boxShadow: 'var(--shadow-md)'
+          }}
+        >
+          {/* Background gradient overlay */}
+          <div 
+            className="absolute inset-0 opacity-20 transition-opacity duration-300 group-hover:opacity-30"
+            style={{
+              background: isDarkMode 
+                ? 'linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary))'
+                : 'linear-gradient(135deg, var(--color-accent-secondary), var(--color-accent-primary))'
+            }}
+          />
+          
+          {/* Content container */}
+          <div className="relative z-10 flex items-center justify-center h-full px-4">
+            {/* Icon with animation */}
+            <motion.div
+              key={isDarkMode ? 'dark' : 'light'}
+              initial={{ scale: 0.8, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="flex items-center justify-center"
+              style={{ color: 'var(--color-text-inverse)' }}
+            >
+              {isDarkMode ? (
+                <SunIcon className="h-6 w-6 mr-3" />
+              ) : (
+                <MoonIcon className="h-6 w-6 mr-3" />
+              )}
+            </motion.div>
+            
+            {/* Text label */}
+            <motion.span
+              key={isDarkMode ? 'dark-text' : 'light-text'}
+              initial={{ opacity: 0, x: 10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
+              className="text-sm font-medium"
+              style={{ color: 'var(--color-text-inverse)' }}
+            >
+              {isDarkMode ? 'Switch to Light' : 'Switch to Dark'}
+            </motion.span>
+          </div>
+          
+          {/* Animated border accent */}
+          <motion.div
+            className="absolute bottom-0 left-0 h-1 transition-all duration-300"
+            style={{
+              backgroundColor: 'var(--color-text-inverse)',
+              width: isDarkMode ? '100%' : '0%'
+            }}
+            animate={{
+              width: isDarkMode ? '100%' : '0%'
+            }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+          />
+        </button>
       </div>
     );
   }
