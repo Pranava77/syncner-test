@@ -706,30 +706,31 @@ const LevelExercisePage: React.FC = () => {
         className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center"
         style={{ backgroundColor: 'var(--color-primary-bg)' }}
       >
-        {/* Exercise Header */}
+        {/* Level Header */}
         <div className="w-full max-w-5xl rounded-xl border shadow-lg p-6 mb-8" style={{
           backgroundColor: 'var(--color-tertiary-bg)',
-          borderColor: 'var(--color-border-subtle)'
+          borderColor: 'var(--color-border-subtle)',
+          boxShadow: 'var(--shadow-md)'
         }}>
           <div className="flex items-center justify-between mb-4">
             <div>
               <h1 
-              className="text-2xl font-bold mb-2"
-              style={{ color: 'var(--color-text-primary)' }}
-            >
-              Level {level.order}: {level.title} - Exercise
-            </h1>
-              <p style={{ color: 'var(--color-text-tertiary)' }}>Practice what you've learned with hands-on exercises</p>
+                className="text-2xl font-bold mb-2"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                Level {level.order}: {level.title}
+              </h1>
+              <p style={{ color: 'var(--color-text-secondary)' }}>Practice what you've learned with hands-on exercises</p>
             </div>
             <div className="flex items-center gap-2">
               <span className="px-3 py-1 rounded-full font-semibold text-sm" style={{
-                backgroundColor: 'var(--color-tertiary-bg)',
+                backgroundColor: 'var(--color-accent-tertiary)',
                 color: 'var(--color-accent-primary)'
               }}>
                 {level.difficulty}
               </span>
               <span className="px-3 py-1 rounded-full font-semibold text-sm" style={{
-                backgroundColor: 'var(--color-tertiary-bg)',
+                backgroundColor: 'var(--color-accent-tertiary)',
                 color: 'var(--color-accent-primary)'
               }}>
                 {level.careerTrack}
@@ -738,10 +739,11 @@ const LevelExercisePage: React.FC = () => {
           </div>
         </div>
 
-        {/* Exercise Progress Status */}
+        {/* Exercise Progress Tracker */}
         <div className="w-full max-w-5xl rounded-xl border shadow-lg p-6 mb-8" style={{
-          background: 'linear-gradient(to right, var(--color-accent-tertiary), var(--color-accent-secondary))',
-          borderColor: 'var(--color-accent-primary)'
+          background: 'linear-gradient(135deg, var(--color-accent-tertiary) 0%, var(--color-tertiary-bg) 100%)',
+          borderColor: 'var(--color-accent-primary)',
+          boxShadow: 'var(--shadow-md)'
         }}>
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
@@ -752,11 +754,11 @@ const LevelExercisePage: React.FC = () => {
                 <CheckCircledIcon className="h-6 w-6" />
               </div>
               <h2 
-              className="text-xl font-bold"
-              style={{ color: 'var(--color-text-primary)' }}
-            >
-              Exercise Progress
-            </h2>
+                className="text-xl font-bold"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                Exercise Progress
+              </h2>
             </div>
             <div className="text-right">
               <div className="text-2xl font-bold" style={{ color: 'var(--color-accent-primary)' }}>{exerciseSubmissions.length}</div>
@@ -769,12 +771,12 @@ const LevelExercisePage: React.FC = () => {
               <span>Progress</span>
               <span>{Math.round((exerciseSubmissions.length / Math.max(validExercises.length, 1)) * 100)}%</span>
             </div>
-            <div className="w-full rounded-full h-3" style={{ backgroundColor: 'var(--color-border)' }}>
+            <div className="w-full rounded-full h-2" style={{ backgroundColor: 'var(--color-border)' }}>
               <div 
-                className="h-3 rounded-full transition-all duration-500"
+                className="h-2 rounded-full transition-all duration-500"
                 style={{ 
-                  width: `${(exerciseSubmissions.length / Math.max(validExercises.length, 1)) * 100}%`,
-                  background: 'linear-gradient(to right, var(--color-accent-primary), var(--color-accent-secondary))'
+                  background: 'linear-gradient(90deg, var(--color-accent-primary) 0%, var(--color-accent-secondary) 100%)',
+                  width: `${(exerciseSubmissions.length / Math.max(validExercises.length, 1)) * 100}%`
                 }}
               ></div>
             </div>

@@ -773,81 +773,117 @@ const LevelTestPage: React.FC = () => {
         style={{ backgroundColor: 'var(--color-primary-bg)' }}
         ref={scrollContainerRef}
       >
-        {/* Test Header */}
+        {/* Level Header */}
         <div 
           className="w-full max-w-5xl rounded-xl border shadow-lg p-6 mb-8"
           style={{
             backgroundColor: 'var(--color-tertiary-bg)',
-            borderColor: 'var(--color-border)'
+            borderColor: 'var(--color-border-subtle)',
+            boxShadow: 'var(--shadow-md)'
           }}
         >
           <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-4">
-                <div 
-                  className="p-3 rounded-lg"
-                  style={{
-                    backgroundColor: 'var(--color-accent-primary)',
-                    color: 'var(--color-text-inverse)'
-                  }}
-                >
-                  <ReaderIcon className="h-8 w-8" />
-                </div>
             <div>
-                  <h1 
-                    className="text-2xl font-bold mb-2"
-                    style={{ color: 'var(--color-text-primary)' }}
-                  >
-                    Level {level.order}: {level.title} - Test
-                    <span 
-                      className="text-lg font-normal ml-3"
-                      style={{ color: 'var(--color-text-tertiary)' }}
-                    >
-                      (Attempt {currentAttempt === 0 && canRetake ? 1 : currentAttempt}/3)
-                    </span>
-                  </h1>
-                  <p 
-                    className="text-lg"
-                    style={{ color: 'var(--color-text-tertiary)' }}
-                  >
-                    Test your knowledge with {validQuestions.length} questions
-                  </p>
-                  <p className="text-sm mt-1" style={{ color: 'var(--color-warning)' }}>Passing score: 60% or higher</p>
+              <h1 
+                className="text-2xl font-bold mb-2"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                Level {level.order}: {level.title}
+              </h1>
+              <p style={{ color: 'var(--color-text-secondary)' }}>Test your knowledge with {validQuestions.length} questions</p>
             </div>
+            <div className="flex items-center gap-2">
+              <span 
+                className="px-3 py-1 rounded-full font-semibold text-sm"
+                style={{
+                  backgroundColor: 'var(--color-accent-tertiary)',
+                  color: 'var(--color-accent-primary)'
+                }}
+              >
+                {level.difficulty}
+              </span>
+              <span 
+                className="px-3 py-1 rounded-full font-semibold text-sm"
+                style={{
+                  backgroundColor: 'var(--color-accent-tertiary)',
+                  color: 'var(--color-accent-primary)'
+                }}
+              >
+                {level.careerTrack}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Test Progress Tracker */}
+        <div 
+          className="w-full max-w-5xl rounded-xl border shadow-lg p-6 mb-8"
+          style={{
+            background: 'linear-gradient(135deg, var(--color-accent-tertiary) 0%, var(--color-tertiary-bg) 100%)',
+            borderColor: 'var(--color-accent-primary)',
+            boxShadow: 'var(--shadow-md)'
+          }}
+        >
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div 
+                className="p-2 rounded-lg"
+                style={{
+                  backgroundColor: 'var(--color-accent-primary)',
+                  color: 'var(--color-text-inverse)'
+                }}
+              >
+                <ReaderIcon className="h-6 w-6" />
               </div>
-              <div className="flex items-center gap-6">
-                <div 
-                  className="text-center rounded-lg p-4 border"
-                  style={{
-                    backgroundColor: 'var(--color-tertiary-bg)',
-                    borderColor: 'var(--color-border)'
-                  }}
-                >
-                  <div className="flex items-center gap-2 mb-2">
-                    <ClockIcon 
-                      className="h-5 w-5" 
-                      style={{ color: 'var(--color-accent-primary)' }}
-                    />
-                    <div 
-                      className="text-2xl font-bold"
-                      style={{ color: 'var(--color-accent-primary)' }}
-                    >
-                      {formatTime(timeLeft)}
-                    </div>
-                  </div>
+              <h2 
+                className="text-xl font-bold"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                Test Progress
+              </h2>
+            </div>
+            <div className="flex items-center gap-6">
+              <div className="text-center">
+                <div className="text-sm mb-1" style={{ color: 'var(--color-text-tertiary)' }}>
+                  Attempt {currentAttempt === 0 && canRetake ? 1 : currentAttempt}/3
+                </div>
+                <div className="text-xs" style={{ color: 'var(--color-warning)' }}>
+                  Passing: 60%
+                </div>
+              </div>
+              <div 
+                className="text-center rounded-lg p-4 border"
+                style={{
+                  backgroundColor: 'var(--color-tertiary-bg)',
+                  borderColor: 'var(--color-border-subtle)'
+                }}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <ClockIcon 
+                    className="h-5 w-5" 
+                    style={{ color: 'var(--color-accent-primary)' }}
+                  />
                   <div 
-                    className="text-xs font-label"
-                    style={{ color: 'var(--color-text-tertiary)' }}
+                    className="text-2xl font-bold"
+                    style={{ color: 'var(--color-accent-primary)' }}
                   >
-                    Time Remaining
+                    {formatTime(timeLeft)}
                   </div>
                 </div>
                 <div 
-                  className="text-center rounded-lg p-4 border"
-                  style={{
-                    backgroundColor: 'var(--color-tertiary-bg)',
-                    borderColor: 'var(--color-border)'
-                  }}
+                  className="text-xs font-label"
+                  style={{ color: 'var(--color-text-tertiary)' }}
                 >
+                  Time Remaining
+                </div>
+              </div>
+              <div 
+                className="text-center rounded-lg p-4 border"
+                style={{
+                  backgroundColor: 'var(--color-tertiary-bg)',
+                  borderColor: 'var(--color-border-subtle)'
+                }}
+              >
                   <div 
                     className="text-2xl font-bold mb-2"
                     style={{ color: 'var(--color-text-primary)' }}
@@ -860,6 +896,23 @@ const LevelTestPage: React.FC = () => {
                   >
                     Questions
                   </div>
+              </div>
+            </div>
+            
+            {/* Progress Bar */}
+            <div className="mb-4">
+              <div className="flex justify-between text-sm mb-1" style={{ color: 'var(--color-text-tertiary)' }}>
+                <span>Progress</span>
+                <span>{Math.round((Object.keys(answers).filter(key => answers[parseInt(key)].some(a => a)).length / Math.max(validQuestions.length, 1)) * 100)}%</span>
+              </div>
+              <div className="w-full rounded-full h-2" style={{ backgroundColor: 'var(--color-border)' }}>
+                <div 
+                  className="h-2 rounded-full transition-all duration-500"
+                  style={{ 
+                    background: 'linear-gradient(90deg, var(--color-accent-primary) 0%, var(--color-accent-secondary) 100%)',
+                    width: `${(Object.keys(answers).filter(key => answers[parseInt(key)].some(a => a)).length / Math.max(validQuestions.length, 1)) * 100}%`
+                  }}
+                ></div>
               </div>
             </div>
           </div>
@@ -876,7 +929,8 @@ const LevelTestPage: React.FC = () => {
               className="rounded-xl border shadow-lg p-6"
               style={{
                 backgroundColor: 'var(--color-tertiary-bg)',
-                borderColor: 'var(--color-border)'
+                borderColor: 'var(--color-border-subtle)',
+                boxShadow: 'var(--shadow-md)'
               }}
             >
               <h3 
