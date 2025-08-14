@@ -165,7 +165,7 @@ const LevelExercisePage: React.FC = () => {
   }, [fetchAllLevels]);
 
   const statusColor = (status: string) =>
-    status === 'Completed' ? 'bg-green-500/20 text-green-600' : 'bg-gray-100 text-gray-600';
+    status === 'Completed' ? 'bg-trueturquoise/20 text-trueturquoise' : 'bg-paperwhite/10 text-teallight';
 
   const handleViewExercise = (exercise: ExerciseItem) => {
     // Find existing submission for this exercise
@@ -353,17 +353,7 @@ const LevelExercisePage: React.FC = () => {
             <p className="text-red-400 text-lg mb-4">{error || 'Level not found'}</p>
             <button 
               onClick={fetchLevel}
-              className="px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105"
-              style={{
-                backgroundColor: 'var(--color-accent-primary)',
-                color: 'var(--color-text-inverse)'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
-              }}
+              className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors"
             >
               Retry
             </button>
@@ -385,14 +375,7 @@ const LevelExercisePage: React.FC = () => {
           className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center"
           style={{ backgroundColor: 'var(--color-primary-bg)' }}
         >
-          <div 
-            className="w-full max-w-5xl rounded-xl border shadow-lg p-6 text-center"
-            style={{
-              backgroundColor: 'var(--color-accent-tertiary)',
-              borderColor: 'var(--color-border)',
-              opacity: 0.1
-            }}
-          >
+          <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 text-center">
             <div 
               className="text-6xl mb-4"
               style={{ color: 'var(--color-text-muted)' }}
@@ -405,25 +388,10 @@ const LevelExercisePage: React.FC = () => {
             >
               No Levels Available
             </h2>
-            <p 
-              className="mb-6"
-              style={{ color: 'var(--color-text-tertiary)' }}
-            >
-              There are no levels available for your current career track ({user?.careerTrack || 'Unknown'}).
-            </p>
+            <p className="text-teallight mb-6">There are no levels available for your current career track ({user?.careerTrack || 'Unknown'}).</p>
             <button 
               onClick={() => navigate('/student/training')}
-              className="px-6 py-3 rounded-lg font-bold transition-all duration-200 hover:scale-105"
-              style={{
-                backgroundColor: 'var(--color-accent-primary)',
-                color: 'var(--color-text-inverse)'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
-              }}
+              className="bg-trueturquoise text-offblack px-6 py-3 rounded-lg font-bold hover:bg-trueturquoise/90 transition-colors"
             >
               Back to Training
             </button>

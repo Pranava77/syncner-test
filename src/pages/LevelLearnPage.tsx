@@ -296,17 +296,7 @@ const LevelLearnPage: React.FC = () => {
             <p className="text-red-400 text-lg mb-4">{error || 'Level not found'}</p>
             <button 
               onClick={fetchLevel}
-              className="px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105"
-              style={{
-                backgroundColor: 'var(--color-accent-primary)',
-                color: 'var(--color-text-inverse)'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
-              }}
+              className="bg-trueturquoise text-offblack px-4 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors"
             >
               Retry
             </button>
@@ -337,17 +327,7 @@ const LevelLearnPage: React.FC = () => {
             </p>
             <button 
               onClick={() => navigate('/student/training')}
-              className="px-8 py-3 rounded-lg font-bold transition-all duration-200 hover:scale-105 text-lg shadow-sm"
-              style={{
-                backgroundColor: 'var(--color-accent-primary)',
-                color: 'var(--color-text-inverse)'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
-              }}
+              className="bg-trueturquoise text-offblack px-8 py-3 rounded-lg font-bold hover:bg-trueturquoise/90 transition-colors text-lg shadow-sm"
             >
               Back to Training
             </button>
@@ -355,14 +335,7 @@ const LevelLearnPage: React.FC = () => {
         ) : (
           <>
             {/* Level Header */}
-            <div 
-              className="w-full max-w-5xl rounded-xl border shadow-lg p-6 mb-8"
-              style={{
-                backgroundColor: 'var(--color-accent-tertiary)',
-                borderColor: 'var(--color-border)',
-                opacity: 0.1
-              }}
-            >
+            <div className="w-full max-w-5xl bg-paperwhite/10 rounded-xl border border-paperwhite/20 shadow-lg p-6 mb-8">
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <h1 
@@ -371,31 +344,13 @@ const LevelLearnPage: React.FC = () => {
             >
               Level {level.order}: {level.title}
             </h1>
-                  <p 
-                    style={{ color: 'var(--color-text-tertiary)' }}
-                  >
-                    {level.description}
-                  </p>
+                  <p className="text-teallight">{level.description}</p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span 
-                    className="px-3 py-1 rounded-full font-semibold text-sm"
-                    style={{
-                      backgroundColor: 'var(--color-accent-tertiary)',
-                      color: 'var(--color-accent-primary)',
-                      opacity: 0.3
-                    }}
-                  >
+                  <span className="px-3 py-1 rounded-full bg-paperwhite/10 text-trueturquoise font-semibold text-sm">
                     {level.difficulty}
                   </span>
-                  <span 
-                    className="px-3 py-1 rounded-full font-semibold text-sm"
-                    style={{
-                      backgroundColor: 'var(--color-accent-tertiary)',
-                      color: 'var(--color-accent-primary)',
-                      opacity: 0.3
-                    }}
-                  >
+                  <span className="px-3 py-1 rounded-full bg-paperwhite/10 text-trueturquoise font-semibold text-sm">
                     {level.careerTrack}
                   </span>
                 </div>
@@ -403,23 +358,10 @@ const LevelLearnPage: React.FC = () => {
             </div>
 
             {/* Learn Progress Tracker */}
-            <div 
-              className="w-full max-w-5xl rounded-xl border shadow-lg p-6 mb-8"
-              style={{
-                background: 'linear-gradient(to right, var(--color-accent-primary), var(--color-accent-secondary))',
-                opacity: 0.1,
-                borderColor: 'var(--color-accent-primary)'
-              }}
-            >
+            <div className="w-full max-w-5xl bg-gradient-to-r from-trueturquoise/10 to-teallight/10 rounded-xl border border-trueturquoise/30 shadow-lg p-6 mb-8">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div 
-                    className="p-2 rounded-lg"
-                    style={{
-                      backgroundColor: 'var(--color-accent-primary)',
-                      color: 'var(--color-text-inverse)'
-                    }}
-                  >
+                  <div className="bg-trueturquoise text-offblack p-2 rounded-lg">
                     <ClockIcon className="h-6 w-6" />
                   </div>
                   <h2 
@@ -430,42 +372,20 @@ const LevelLearnPage: React.FC = () => {
             </h2>
                 </div>
                 <div className="text-right">
-                  <div 
-                    className="text-2xl font-bold"
-                    style={{ color: 'var(--color-accent-primary)' }}
-                  >
-                    {Math.round(getProgressPercentage()) || 0}%
-                  </div>
-                  <div 
-                    className="text-xs"
-                    style={{ color: 'var(--color-text-tertiary)' }}
-                  >
-                    Progress
-                  </div>
+                  <div className="text-2xl font-bold text-trueturquoise">{Math.round(getProgressPercentage()) || 0}%</div>
+                  <div className="text-xs text-teallight">Progress</div>
                 </div>
               </div>
               
               <div className="mb-4">
-                <div 
-                  className="flex justify-between text-sm mb-1"
-                  style={{ color: 'var(--color-text-tertiary)' }}
-                >
+                <div className="flex justify-between text-sm text-teallight mb-1">
                   <span>Progress</span>
                   <span>{Math.round(getProgressPercentage()) || 0}%</span>
                 </div>
-                <div 
-                  className="w-full rounded-full h-2"
-                  style={{
-                    backgroundColor: 'var(--color-accent-tertiary)',
-                    opacity: 0.3
-                  }}
-                >
+                <div className="w-full bg-paperwhite/20 rounded-full h-2">
                   <div 
-                    className="h-2 rounded-full transition-all duration-500"
-                    style={{ 
-                      width: `${getProgressPercentage() || 0}%`,
-                      background: 'linear-gradient(to right, var(--color-accent-primary), var(--color-accent-secondary))'
-                    }}
+                    className="bg-gradient-to-r from-trueturquoise to-teallight h-2 rounded-full transition-all duration-500"
+                    style={{ width: `${getProgressPercentage() || 0}%` }}
                   ></div>
                 </div>
               </div>
