@@ -387,12 +387,12 @@ const LevelTestPage: React.FC = () => {
     return (
       <div 
         className="flex h-screen overflow-x-hidden"
-        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+        style={{ backgroundColor: 'var(--color-secondary-bg)' }}
       >
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
         <main 
           className="flex-1 overflow-y-auto scroll-smooth p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center justify-center"
-          style={{ backgroundColor: 'var(--color-primary-bg)' }}
+          style={{ backgroundColor: 'var(--color-secondary-bg)' }}
         >
           <div className="text-center">
             <motion.img
@@ -422,12 +422,12 @@ const LevelTestPage: React.FC = () => {
     return (
       <div 
         className="flex h-screen overflow-x-hidden"
-        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+        style={{ backgroundColor: 'var(--color-secondary-bg)' }}
       >
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
         <main 
           className="flex-1 overflow-y-auto scroll-smooth p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center"
-          style={{ backgroundColor: 'var(--color-primary-bg)' }}
+          style={{ backgroundColor: 'var(--color-secondary-bg)' }}
         >
           <div className="text-center">
             <p className="text-lg mb-4" style={{ color: 'var(--color-error)' }}>{error || 'Level not found'}</p>
@@ -458,12 +458,12 @@ const LevelTestPage: React.FC = () => {
     return (
       <div 
         className="flex h-screen overflow-x-hidden"
-        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+        style={{ backgroundColor: 'var(--color-secondary-bg)' }}
       >
         <LevelsSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} currentLevel={levelId} currentSection="test" refreshTrigger={refreshTrigger} />
         <main 
           className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center"
-          style={{ backgroundColor: 'var(--color-primary-bg)' }}
+          style={{ backgroundColor: 'var(--color-secondary-bg)' }}
         >
           <div 
             className="w-full max-w-5xl rounded-xl border shadow-lg p-6 text-center"
