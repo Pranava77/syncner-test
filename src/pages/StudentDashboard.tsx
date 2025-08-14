@@ -205,63 +205,63 @@ const StudentDashboard: React.FC = () => {
                 You're on the {user?.careerTrack} track. Let's continue building your career!
               </p>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-                <div className="text-center">
-                  <div 
-                  className="text-xl lg:text-2xl font-heading"
-                  style={{ color: 'var(--color-text-primary)' }}
+                                    <div className="text-center">
+                      <div 
+                        className="text-xl lg:text-2xl font-heading"
+                        style={{ color: 'var(--color-text-primary)' }}
+                      >
+                        No Level
+                      </div>
+                      <div className="text-xs lg:text-sm font-label" style={{ color: 'var(--color-text-tertiary)' }}>Current Module</div>
+                    </div>
+                    <div className="text-center">
+                      <div 
+                        className="text-xl lg:text-2xl font-heading"
+                        style={{ color: 'var(--color-text-primary)' }}
+                      >
+                        0
+                      </div>
+                      <div 
+                        className="text-xs lg:text-sm font-label"
+                        style={{ color: 'var(--color-text-tertiary)' }}
+                      >
+                        Completed
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <div 
+                        className="text-xl lg:text-2xl font-heading"
+                        style={{ color: 'var(--color-text-primary)' }}
+                      >
+                        {levels?.length || 0}
+                      </div>
+                      <div 
+                        className="text-xs lg:text-sm font-label"
+                        style={{ color: 'var(--color-text-tertiary)' }}
+                      >
+                        Total Levels
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <div 
+                        className="text-xl lg:text-2xl font-heading"
+                        style={{ color: 'var(--color-text-primary)' }}
+                      >
+                        0%
+                      </div>
+                      <div 
+                        className="text-xs lg:text-sm font-label"
+                        style={{ color: 'var(--color-text-tertiary)' }}
+                      >
+                        Progress
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div 
+                  className="p-3 lg:p-4 rounded-lg w-fit mx-auto lg:mx-0"
+                  style={{ backgroundColor: 'var(--color-secondary-bg)' }}
                 >
-                  No Level
-                </div>
-                  <div className="text-xs lg:text-sm font-label" style={{ color: 'var(--color-text-tertiary)' }}>Current Module</div>
-                </div>
-                <div className="text-center">
-                  <div 
-                    className="text-xl lg:text-2xl font-heading"
-                    style={{ color: 'var(--color-text-primary)' }}
-                  >
-                    0
-                  </div>
-                  <div 
-                    className="text-xs lg:text-sm font-label"
-                    style={{ color: 'var(--color-text-tertiary)' }}
-                  >
-                    Completed
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div 
-                    className="text-xl lg:text-2xl font-heading"
-                    style={{ color: 'var(--color-text-primary)' }}
-                  >
-                    {levels?.length || 0}
-                  </div>
-                  <div 
-                    className="text-xs lg:text-sm font-label"
-                    style={{ color: 'var(--color-text-tertiary)' }}
-                  >
-                    Total Levels
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div 
-                    className="text-xl lg:text-2xl font-heading"
-                    style={{ color: 'var(--color-text-primary)' }}
-                  >
-                    0%
-                  </div>
-                  <div 
-                    className="text-xs lg:text-sm font-label"
-                    style={{ color: 'var(--color-text-tertiary)' }}
-                  >
-                    Progress
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div 
-              className="p-3 lg:p-4 rounded-lg w-fit mx-auto lg:mx-0"
-              style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
-            >
               {/* Placeholder for track icon */}
             </div>
           </div>
@@ -275,7 +275,7 @@ const StudentDashboard: React.FC = () => {
             <div 
               className="rounded-xl shadow-lg p-4 lg:p-6"
               style={{
-                backgroundColor: 'var(--color-surface)',
+                backgroundColor: 'var(--color-secondary-bg)',
                 boxShadow: 'var(--shadow-lg)'
               }}
             >
@@ -297,7 +297,7 @@ const StudentDashboard: React.FC = () => {
               <div 
                 className="rounded-lg p-4 lg:p-6"
                 style={{
-                  backgroundColor: 'var(--color-surface)',
+                  backgroundColor: 'var(--color-secondary-bg)',
                   boxShadow: 'var(--shadow-md)'
                 }}
               >
@@ -623,7 +623,7 @@ const StudentDashboard: React.FC = () => {
 
             <div 
               className="p-3 lg:p-4 rounded-lg w-fit"
-              style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
+              style={{ backgroundColor: 'var(--color-secondary-bg)' }}
             >
             {getTrackIcon()}
             </div>
@@ -643,7 +643,7 @@ const StudentDashboard: React.FC = () => {
           <div 
             className="rounded-2xl shadow-2xl p-6 lg:p-8 border backdrop-blur-sm"
             style={{
-              backgroundColor: 'var(--color-surface)',
+              backgroundColor: 'var(--color-secondary-bg)',
               borderColor: 'var(--color-border)',
               boxShadow: 'var(--shadow-lg)'
             }}
@@ -678,7 +678,7 @@ const StudentDashboard: React.FC = () => {
               <div 
                 className="rounded-xl p-6 border shadow-lg"
                 style={{
-                  backgroundColor: 'var(--color-tertiary-bg)',
+                  backgroundColor: 'var(--color-secondary-bg)',
                   borderColor: 'var(--color-border)',
                   boxShadow: 'var(--shadow-md)'
                 }}
@@ -729,7 +729,7 @@ const StudentDashboard: React.FC = () => {
                     <div className="flex items-center gap-2 px-3 py-2 rounded-lg border" style={{
                       backgroundColor: (currentLevel.completedSections?.learn === true || currentLevel.completedSections?.learn === "true") 
                         ? 'var(--color-success-bg)' 
-                        : 'var(--color-tertiary-bg)',
+                        : 'var(--color-secondary-bg)',
                       color: (currentLevel.completedSections?.learn === true || currentLevel.completedSections?.learn === "true") 
                         ? 'var(--color-success)' 
                         : 'var(--color-text-tertiary)',
@@ -747,7 +747,7 @@ const StudentDashboard: React.FC = () => {
                     <div className="flex items-center gap-2 px-3 py-2 rounded-lg border" style={{
                       backgroundColor: (currentLevel.completedSections?.test === true || currentLevel.completedSections?.test === "true") 
                         ? 'var(--color-success-bg)' 
-                        : 'var(--color-tertiary-bg)',
+                        : 'var(--color-secondary-bg)',
                       color: (currentLevel.completedSections?.test === true || currentLevel.completedSections?.test === "true") 
                         ? 'var(--color-success)' 
                         : 'var(--color-text-tertiary)',
@@ -765,7 +765,7 @@ const StudentDashboard: React.FC = () => {
                     <div className="flex items-center gap-2 px-3 py-2 rounded-lg border" style={{
                       backgroundColor: (currentLevel.completedSections?.exercise === true || currentLevel.completedSections?.exercise === "true") 
                         ? 'var(--color-success-bg)' 
-                        : 'var(--color-tertiary-bg)',
+                        : 'var(--color-secondary-bg)',
                       color: (currentLevel.completedSections?.exercise === true || currentLevel.completedSections?.exercise === "true") 
                         ? 'var(--color-success)' 
                         : 'var(--color-text-tertiary)',
@@ -962,7 +962,7 @@ const StudentDashboard: React.FC = () => {
           <div 
             className="rounded-2xl shadow-2xl p-6 lg:p-8 border backdrop-blur-sm"
             style={{
-              backgroundColor: 'var(--color-surface)',
+              backgroundColor: 'var(--color-secondary-bg)',
               borderColor: 'var(--color-border)',
               boxShadow: 'var(--shadow-lg)'
             }}
@@ -1001,7 +1001,7 @@ const StudentDashboard: React.FC = () => {
             <div 
               className="rounded-xl p-4 border shadow-lg mb-6"
               style={{
-                backgroundColor: 'var(--color-tertiary-bg)',
+                backgroundColor: 'var(--color-secondary-bg)',
                 borderColor: 'var(--color-border)',
                 boxShadow: 'var(--shadow-md)'
               }}
@@ -1042,7 +1042,7 @@ const StudentDashboard: React.FC = () => {
               <div 
                 className="rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center relative border backdrop-blur-sm"
                 style={{
-                  backgroundColor: 'var(--color-surface)',
+                  backgroundColor: 'var(--color-secondary-bg)',
                   borderColor: 'var(--color-accent-primary)',
                   boxShadow: 'var(--shadow-lg)'
                 }}
@@ -1098,7 +1098,7 @@ const StudentDashboard: React.FC = () => {
           <div 
             className="rounded-2xl shadow-2xl p-6 lg:p-8 border backdrop-blur-sm"
             style={{
-              backgroundColor: 'var(--color-surface)',
+              backgroundColor: 'var(--color-secondary-bg)',
               borderColor: 'var(--color-border)',
               boxShadow: 'var(--shadow-lg)'
             }}
@@ -1137,7 +1137,7 @@ const StudentDashboard: React.FC = () => {
             <div 
               className="rounded-xl p-4 border shadow-lg mb-6"
               style={{
-                backgroundColor: 'var(--color-tertiary-bg)',
+                backgroundColor: 'var(--color-secondary-bg)',
                 borderColor: 'var(--color-border)',
                 boxShadow: 'var(--shadow-md)'
               }}
@@ -1214,14 +1214,14 @@ const StudentDashboard: React.FC = () => {
                   >
                     <div 
                       className="flex justify-between items-center px-3 py-2 rounded-lg"
-                      style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
+                      style={{ backgroundColor: 'var(--color-secondary-bg)' }}
                     >
                       <span>Completed Levels:</span>
                       <span className="font-semibold" style={{ color: 'var(--color-success)' }}>{completedLevels}</span>
                     </div>
                     <div 
                       className="flex justify-between items-center px-3 py-2 rounded-lg"
-                      style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
+                      style={{ backgroundColor: 'var(--color-secondary-bg)' }}
                     >
                       <span>Remaining Levels:</span>
                       <span className="font-semibold" style={{ color: 'var(--color-warning)' }}>{levels?.length - completedLevels || 0}</span>
@@ -1229,7 +1229,7 @@ const StudentDashboard: React.FC = () => {
                     {currentLevel && (
                       <div 
                         className="flex justify-between items-center px-3 py-2 rounded-lg"
-                        style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
+                        style={{ backgroundColor: 'var(--color-secondary-bg)' }}
                       >
                         <span>Current Level:</span>
                         <span className="font-semibold" style={{ color: 'var(--color-accent-primary)' }}>Level {currentLevel.order}</span>
