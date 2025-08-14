@@ -110,7 +110,7 @@ const AdminSettings: React.FC = () => {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-true-turquoise mx-auto mb-4" />
-          <p className="text-teallight">Loading settings...</p>
+          <p style={{ color: 'var(--color-text-tertiary)' }}>Loading settings...</p>
         </div>
       </div>
     );
@@ -119,7 +119,7 @@ const AdminSettings: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <p className="text-rust mb-4">{settingsError}</p>
+          <p className="mb-4" style={{ color: 'var(--color-error)' }}>{settingsError}</p>
           <button
             onClick={() => dispatch(fetchSettings())}
             className="px-4 py-2 rounded-lg transition-colors"
@@ -214,11 +214,27 @@ const AdminSettings: React.FC = () => {
                   type="text"
                   value={settingsDraft?.general?.platformName ?? ''}
                   onChange={(e) => handleSettingChange('general', 'platformName', e.target.value)}
-                  className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition-all hover:border-trueturquoise/60"
+                  className="w-full px-4 py-3 border rounded-lg transition-all"
                   style={{
                     backgroundColor: 'var(--color-secondary-bg)',
                     borderColor: 'var(--color-border)',
                     color: 'var(--color-text-primary)'
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                    e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-border)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                  }}
+                  onMouseLeave={(e) => {
+                    if (e.currentTarget !== document.activeElement) {
+                      e.currentTarget.style.borderColor = 'var(--color-border)';
+                    }
                   }}
                 />
               </div>
@@ -233,11 +249,27 @@ const AdminSettings: React.FC = () => {
                   type="email"
                   value={settingsDraft?.general?.supportEmail ?? ''}
                   onChange={(e) => handleSettingChange('general', 'supportEmail', e.target.value)}
-                  className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition-all hover:border-trueturquoise/60"
+                  className="w-full px-4 py-3 border rounded-lg transition-all"
                   style={{
                     backgroundColor: 'var(--color-secondary-bg)',
                     borderColor: 'var(--color-border)',
                     color: 'var(--color-text-primary)'
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                    e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-border)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                  }}
+                  onMouseLeave={(e) => {
+                    if (e.currentTarget !== document.activeElement) {
+                      e.currentTarget.style.borderColor = 'var(--color-border)';
+                    }
                   }}
                 />
               </div>
@@ -252,11 +284,27 @@ const AdminSettings: React.FC = () => {
                   type="number"
                   value={settingsDraft?.general?.maxStudentsPerAdmin ?? 0}
                   onChange={(e) => handleSettingChange('general', 'maxStudentsPerAdmin', parseInt(e.target.value))}
-                  className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition-all hover:border-trueturquoise/60"
+                  className="w-full px-4 py-3 border rounded-lg transition-all"
                   style={{
                     backgroundColor: 'var(--color-secondary-bg)',
                     borderColor: 'var(--color-border)',
                     color: 'var(--color-text-primary)'
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                    e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-border)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                  }}
+                  onMouseLeave={(e) => {
+                    if (e.currentTarget !== document.activeElement) {
+                      e.currentTarget.style.borderColor = 'var(--color-border)';
+                    }
                   }}
                 />
               </div>
@@ -271,11 +319,27 @@ const AdminSettings: React.FC = () => {
                   type="number"
                   value={settingsDraft?.general?.sessionTimeout ?? 0}
                   onChange={(e) => handleSettingChange('general', 'sessionTimeout', parseInt(e.target.value))}
-                  className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition-all hover:border-trueturquoise/60"
+                  className="w-full px-4 py-3 border rounded-lg transition-all"
                   style={{
                     backgroundColor: 'var(--color-secondary-bg)',
                     borderColor: 'var(--color-border)',
                     color: 'var(--color-text-primary)'
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                    e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-border)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                  }}
+                  onMouseLeave={(e) => {
+                    if (e.currentTarget !== document.activeElement) {
+                      e.currentTarget.style.borderColor = 'var(--color-border)';
+                    }
                   }}
                 />
               </div>
@@ -290,11 +354,27 @@ const AdminSettings: React.FC = () => {
                   type="text"
                   value={settingsDraft?.general?.siteName ?? ''}
                   onChange={(e) => handleSettingChange('general', 'siteName', e.target.value)}
-                  className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition-all hover:border-trueturquoise/60"
+                  className="w-full px-4 py-3 border rounded-lg transition-all"
                   style={{
                     backgroundColor: 'var(--color-secondary-bg)',
                     borderColor: 'var(--color-border)',
                     color: 'var(--color-text-primary)'
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                    e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-border)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                  }}
+                  onMouseLeave={(e) => {
+                    if (e.currentTarget !== document.activeElement) {
+                      e.currentTarget.style.borderColor = 'var(--color-border)';
+                    }
                   }}
                 />
               </div>

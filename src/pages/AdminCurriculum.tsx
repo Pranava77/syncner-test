@@ -280,20 +280,47 @@ const AdminCurriculum: React.FC = () => {
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty.toLowerCase()) {
-      case 'beginner': return 'bg-green-500';
-      case 'intermediate': return 'bg-yellow-500';
-      case 'advanced': return 'bg-red-500';
-      default: return 'bg-gray-500';
+      case 'beginner': return {
+        backgroundColor: 'var(--color-success)',
+        color: 'var(--color-text-inverse)'
+      };
+      case 'intermediate': return {
+        backgroundColor: 'var(--color-warning)',
+        color: 'var(--color-text-inverse)'
+      };
+      case 'advanced': return {
+        backgroundColor: 'var(--color-error)',
+        color: 'var(--color-text-inverse)'
+      };
+      default: return {
+        backgroundColor: 'var(--color-text-muted)',
+        color: 'var(--color-text-inverse)'
+      };
     }
   };
 
   const getTrackColor = (track: string) => {
     switch (track) {
-      case 'full-stack': return 'bg-blue-500';
-      case 'ai-ml': return 'bg-purple-500';
-      case 'ui-ux': return 'bg-pink-500';
-      case 'data-science': return 'bg-orange-500';
-      default: return 'bg-gray-500';
+      case 'full-stack': return {
+        backgroundColor: 'var(--color-accent-primary)',
+        color: 'var(--color-text-inverse)'
+      };
+      case 'ai-ml': return {
+        backgroundColor: 'var(--color-accent-secondary)',
+        color: 'var(--color-text-inverse)'
+      };
+      case 'ui-ux': return {
+        backgroundColor: 'var(--color-accent-tertiary)',
+        color: 'var(--color-text-inverse)'
+      };
+      case 'data-science': return {
+        backgroundColor: 'var(--color-warning)',
+        color: 'var(--color-text-inverse)'
+      };
+      default: return {
+        backgroundColor: 'var(--color-text-muted)',
+        color: 'var(--color-text-inverse)'
+      };
     }
   };
 
@@ -677,7 +704,11 @@ const AdminCurriculum: React.FC = () => {
               Loading curriculum levels...
             </p>
             {error && (
-              <div className="mt-4 p-3 bg-red-500/20 border border-red-500/30 rounded-lg text-red-400 text-sm max-w-md mx-auto">
+              <div className="mt-4 p-3 rounded-lg text-sm max-w-md mx-auto" style={{
+                backgroundColor: 'var(--color-error-bg)',
+                borderColor: 'var(--color-error)',
+                color: 'var(--color-error)'
+              }}>
                 <p className="font-medium">Error loading curriculum:</p>
                 <p>{error}</p>
                 <button 
@@ -731,17 +762,25 @@ const AdminCurriculum: React.FC = () => {
                       Select a career track to manage its training levels and content
                     </p>
                     {successMessage && (
-                      <div className="mt-2 p-2 bg-green-500/20 border border-green-500/30 rounded-lg text-green-400 text-sm">
+                      <div className="mt-2 p-2 rounded-lg text-sm" style={{
+                        backgroundColor: 'var(--color-success-bg)',
+                        borderColor: 'var(--color-success)',
+                        color: 'var(--color-success)'
+                      }}>
                         {successMessage}
                       </div>
                     )}
                     {error && (
-                      <div className="mt-2 p-2 bg-red-500/20 border border-red-500/30 rounded-lg text-red-400 text-sm">
+                      <div className="mt-2 p-2 rounded-lg text-sm" style={{
+                        backgroundColor: 'var(--color-error-bg)',
+                        borderColor: 'var(--color-error)',
+                        color: 'var(--color-error)'
+                      }}>
                         {error}
                       </div>
                     )}
                     {formError && (
-                      <p className="text-xs text-red-400 mt-1">
+                      <p className="text-xs mt-1" style={{ color: 'var(--color-error)' }}>
                         Error: {formError}
                       </p>
                     )}
@@ -774,10 +813,34 @@ const AdminCurriculum: React.FC = () => {
               {/* Track Selection Grid */}
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                 {[
-                  { id: 'full-stack', name: 'Full Stack', icon: DesktopIcon, color: 'bg-blue-500', bgColor: 'bg-blue-500/20', borderColor: 'border-blue-500/30' },
-                  { id: 'ai-ml', name: 'AI/ML', icon: RocketIcon, color: 'bg-purple-500', bgColor: 'bg-purple-500/20', borderColor: 'border-purple-500/30' },
-                  { id: 'ui-ux', name: 'UI/UX', icon: ImageIcon, color: 'bg-pink-500', bgColor: 'bg-pink-500/20', borderColor: 'border-pink-500/30' },
-                  { id: 'data-science', name: 'Data Science', icon: BarChartIcon, color: 'bg-orange-500', bgColor: 'bg-orange-500/20', borderColor: 'border-orange-500/30' }
+                  { 
+                    id: 'full-stack', 
+                    name: 'Full Stack', 
+                    icon: DesktopIcon, 
+                    bgColor: 'var(--color-accent-tertiary)',
+                    borderColor: 'var(--color-accent-primary)'
+                  },
+                  { 
+                    id: 'ai-ml', 
+                    name: 'AI/ML', 
+                    icon: RocketIcon, 
+                    bgColor: 'var(--color-accent-secondary)',
+                    borderColor: 'var(--color-accent-secondary)'
+                  },
+                  { 
+                    id: 'ui-ux', 
+                    name: 'UI/UX', 
+                    icon: ImageIcon, 
+                    bgColor: 'var(--color-accent-tertiary)',
+                    borderColor: 'var(--color-accent-tertiary)'
+                  },
+                  { 
+                    id: 'data-science', 
+                    name: 'Data Science', 
+                    icon: BarChartIcon, 
+                    bgColor: 'var(--color-warning-bg)',
+                    borderColor: 'var(--color-warning)'
+                  }
                 ].map((track, index) => {
                   const IconComponent = track.icon;
                   return (
@@ -800,7 +863,10 @@ const AdminCurriculum: React.FC = () => {
                       }}
                     >
                       <div className="text-center">
-                        <div className={`w-16 h-16 ${track.bgColor} ${track.borderColor} border-2 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                        <div className="w-16 h-16 border-2 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" style={{
+                          backgroundColor: track.bgColor,
+                          borderColor: track.borderColor
+                        }}>
                           <IconComponent 
                             className="h-8 w-8"
                             style={{ color: 'var(--color-text-inverse)' }}
@@ -892,17 +958,25 @@ const AdminCurriculum: React.FC = () => {
                       </p>
                     )}
                     {successMessage && (
-                      <div className="mt-2 p-2 bg-green-500/20 border border-green-500/30 rounded-lg text-green-400 text-sm">
+                      <div className="mt-2 p-2 rounded-lg text-sm" style={{
+                        backgroundColor: 'var(--color-success-bg)',
+                        borderColor: 'var(--color-success)',
+                        color: 'var(--color-success)'
+                      }}>
                         {successMessage}
                       </div>
                     )}
                     {error && (
-                      <div className="mt-2 p-2 bg-red-500/20 border border-red-500/30 rounded-lg text-red-400 text-sm">
+                      <div className="mt-2 p-2 rounded-lg text-sm" style={{
+                        backgroundColor: 'var(--color-error-bg)',
+                        borderColor: 'var(--color-error)',
+                        color: 'var(--color-error)'
+                      }}>
                         {error}
                       </div>
                     )}
                     {formError && (
-                      <p className="text-xs text-red-400 mt-1">
+                      <p className="text-xs mt-1" style={{ color: 'var(--color-error)' }}>
                         Error: {formError}
                       </p>
                     )}
@@ -1117,8 +1191,8 @@ const AdminCurriculum: React.FC = () => {
                             Level {level.order}
                           </div>
                           <div 
-                            className={`px-2 py-1 rounded text-xs font-medium ${getDifficultyColor(level.difficulty)}`}
-                            style={{ color: 'var(--color-text-inverse)' }}
+                            className="px-2 py-1 rounded text-xs font-medium"
+                            style={getDifficultyColor(level.difficulty)}
                           >
                             {level.difficulty}
                           </div>
@@ -1151,8 +1225,8 @@ const AdminCurriculum: React.FC = () => {
                           style={{ color: 'var(--color-text-tertiary)' }}
                         >
                           <span 
-                            className={`px-2 py-1 rounded ${getDifficultyColor(level.difficulty)}`}
-                            style={{ color: 'var(--color-text-inverse)' }}
+                            className="px-2 py-1 rounded"
+                            style={getDifficultyColor(level.difficulty)}
                           >
                             {level.difficulty}
                           </span>
@@ -1177,12 +1251,12 @@ const AdminCurriculum: React.FC = () => {
                         </div>
                         <div className="flex items-center gap-1 text-xs">
                           {level.isActive ? (
-                            <span className="text-green-400 flex items-center gap-1">
+                            <span className="flex items-center gap-1" style={{ color: 'var(--color-success)' }}>
                               <CheckCircledIcon className="h-3 w-3" />
                               Active
                             </span>
                           ) : (
-                            <span className="text-red-400 flex items-center gap-1">
+                            <span className="flex items-center gap-1" style={{ color: 'var(--color-error)' }}>
                               <Cross1Icon className="h-3 w-3" />
                               Inactive
                             </span>
@@ -1217,9 +1291,13 @@ const AdminCurriculum: React.FC = () => {
                       {/* Content Sections */}
                       <div className="space-y-3 mb-4">
                         {/* Learn Content */}
-                        <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-3">
+                        <div className="rounded-lg p-3" style={{
+                          backgroundColor: 'var(--color-success-bg)',
+                          borderColor: 'var(--color-success)',
+                          border: '1px solid'
+                        }}>
                           <div className="flex items-center justify-between mb-2">
-                            <h4 className="text-sm font-medium text-green-400 flex items-center gap-1">
+                            <h4 className="text-sm font-medium flex items-center gap-1" style={{ color: 'var(--color-success)' }}>
                               <BookOpenIcon className="h-3 w-3" />
                               Learn Content ({level.learn.length})
                             </h4>
@@ -1232,7 +1310,14 @@ const AdminCurriculum: React.FC = () => {
                                 );
                                 setLevels(updatedLevels);
                               }}
-                              className="p-1 text-green-400 hover:text-green-300 transition-colors"
+                              className="p-1 transition-colors"
+                              style={{ color: 'var(--color-success)' }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.color = 'var(--color-success-hover)';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.color = 'var(--color-success)';
+                              }}
                             >
                               {level.learnExpanded ? <ChevronDownIcon className="h-3 w-3" /> : <ChevronRightIcon className="h-3 w-3" />}
                             </button>
@@ -1241,7 +1326,9 @@ const AdminCurriculum: React.FC = () => {
                             <div className="space-y-2">
                               {level.learn.length > 0 ? (
                                 level.learn.map((item, idx) => (
-                                  <div key={idx} className="flex items-center justify-between bg-green-500/5 rounded-lg p-2">
+                                  <div key={idx} className="flex items-center justify-between rounded-lg p-2" style={{
+                                    backgroundColor: 'var(--color-success-bg-subtle)'
+                                  }}>
                                     <div className="flex-1 min-w-0">
                                       <p className="text-xs font-medium truncate" style={{ color: 'var(--color-text-primary)' }}>{item.title}</p>
                                       <p className="text-xs truncate" style={{ color: 'var(--color-text-tertiary)' }}>{item.type}</p>
@@ -1249,15 +1336,29 @@ const AdminCurriculum: React.FC = () => {
                                     <div className="flex items-center gap-1 ml-2">
                                       <button
                                         onClick={() => handleEditContent('learn', item, idx, level)}
-                                        className="p-1 text-green-400 hover:text-green-300 transition-colors"
+                                        className="p-1 transition-colors"
                                         title="Edit"
+                                        style={{ color: 'var(--color-success)' }}
+                                        onMouseEnter={(e) => {
+                                          e.currentTarget.style.color = 'var(--color-success-hover)';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                          e.currentTarget.style.color = 'var(--color-success)';
+                                        }}
                                       >
                                         <EditIcon className="h-3 w-3" />
                                       </button>
                                       <button
                                         onClick={() => handleDeleteContent(level.id, 'learn', idx)}
-                                        className="p-1 text-red-400 hover:text-red-300 transition-colors"
+                                        className="p-1 transition-colors"
                                         title="Delete"
+                                        style={{ color: 'var(--color-error)' }}
+                                        onMouseEnter={(e) => {
+                                          e.currentTarget.style.color = 'var(--color-error-hover)';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                          e.currentTarget.style.color = 'var(--color-error)';
+                                        }}
                                       >
                                         <TrashIcon className="h-3 w-3" />
                                       </button>
@@ -1272,9 +1373,13 @@ const AdminCurriculum: React.FC = () => {
                         </div>
 
                         {/* Test Content */}
-                        <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
+                        <div className="rounded-lg p-3" style={{
+                          backgroundColor: 'var(--color-warning-bg)',
+                          borderColor: 'var(--color-warning)',
+                          border: '1px solid'
+                        }}>
                           <div className="flex items-center justify-between mb-2">
-                            <h4 className="text-sm font-medium text-yellow-400 flex items-center gap-1">
+                            <h4 className="text-sm font-medium flex items-center gap-1" style={{ color: 'var(--color-warning)' }}>
                               <ClipboardIcon className="h-3 w-3" />
                               Test Content ({level.test.length})
                             </h4>
@@ -1287,7 +1392,14 @@ const AdminCurriculum: React.FC = () => {
                                 );
                                 setLevels(updatedLevels);
                               }}
-                              className="p-1 text-yellow-400 hover:text-yellow-300 transition-colors"
+                              className="p-1 transition-colors"
+                              style={{ color: 'var(--color-warning)' }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.color = 'var(--color-warning-hover)';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.color = 'var(--color-warning)';
+                              }}
                             >
                               {level.testExpanded ? <ChevronDownIcon className="h-3 w-3" /> : <ChevronRightIcon className="h-3 w-3" />}
                             </button>
@@ -1296,7 +1408,9 @@ const AdminCurriculum: React.FC = () => {
                             <div className="space-y-2">
                               {level.test.length > 0 ? (
                                 level.test.map((item, idx) => (
-                                  <div key={idx} className="flex items-center justify-between bg-yellow-500/5 rounded-lg p-2">
+                                  <div key={idx} className="flex items-center justify-between rounded-lg p-2" style={{
+                                    backgroundColor: 'var(--color-warning-bg-subtle)'
+                                  }}>
                                     <div className="flex-1 min-w-0">
                                       <p className="text-xs font-medium truncate" style={{ color: 'var(--color-text-primary)' }}>{item.question}</p>
                                       <p className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>{item.options.length} options</p>
@@ -1304,15 +1418,29 @@ const AdminCurriculum: React.FC = () => {
                                     <div className="flex items-center gap-1 ml-2">
                                       <button
                                         onClick={() => handleEditContent('test', item, idx, level)}
-                                        className="p-1 text-yellow-400 hover:text-yellow-300 transition-colors"
+                                        className="p-1 transition-colors"
                                         title="Edit"
+                                        style={{ color: 'var(--color-warning)' }}
+                                        onMouseEnter={(e) => {
+                                          e.currentTarget.style.color = 'var(--color-warning-hover)';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                          e.currentTarget.style.color = 'var(--color-warning)';
+                                        }}
                                       >
                                         <EditIcon className="h-3 w-3" />
                                       </button>
                                       <button
                                         onClick={() => handleDeleteContent(level.id, 'test', idx)}
-                                        className="p-1 text-red-400 hover:text-red-300 transition-colors"
+                                        className="p-1 transition-colors"
                                         title="Delete"
+                                        style={{ color: 'var(--color-error)' }}
+                                        onMouseEnter={(e) => {
+                                          e.currentTarget.style.color = 'var(--color-error-hover)';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                          e.currentTarget.style.color = 'var(--color-error)';
+                                        }}
                                       >
                                         <TrashIcon className="h-3 w-3" />
                                       </button>
@@ -1327,9 +1455,13 @@ const AdminCurriculum: React.FC = () => {
                         </div>
 
                         {/* Exercise Content */}
-                        <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-3">
+                        <div className="rounded-lg p-3" style={{
+                          backgroundColor: 'var(--color-accent-tertiary)',
+                          borderColor: 'var(--color-accent-secondary)',
+                          border: '1px solid'
+                        }}>
                           <div className="flex items-center justify-between mb-2">
-                            <h4 className="text-sm font-medium text-purple-400 flex items-center gap-1">
+                            <h4 className="text-sm font-medium flex items-center gap-1" style={{ color: 'var(--color-accent-secondary)' }}>
                               <PlayIcon className="h-3 w-3" />
                               Exercise Content ({level.exercise.length})
                             </h4>
@@ -1342,7 +1474,14 @@ const AdminCurriculum: React.FC = () => {
                                 );
                                 setLevels(updatedLevels);
                               }}
-                              className="p-1 text-purple-400 hover:text-purple-300 transition-colors"
+                              className="p-1 transition-colors"
+                              style={{ color: 'var(--color-accent-secondary)' }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.color = 'var(--color-accent-primary)';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.color = 'var(--color-accent-secondary)';
+                              }}
                             >
                               {level.exerciseExpanded ? <ChevronDownIcon className="h-3 w-3" /> : <ChevronRightIcon className="h-3 w-3" />}
                             </button>
@@ -1351,7 +1490,9 @@ const AdminCurriculum: React.FC = () => {
                             <div className="space-y-2">
                               {level.exercise.length > 0 ? (
                                 level.exercise.map((item, idx) => (
-                                  <div key={idx} className="flex items-center justify-between bg-purple-500/5 rounded-lg p-2">
+                                  <div key={idx} className="flex items-center justify-between rounded-lg p-2" style={{
+                                    backgroundColor: 'var(--color-accent-tertiary-subtle)'
+                                  }}>
                                     <div className="flex-1 min-w-0">
                                       <p className="text-xs font-medium truncate" style={{ color: 'var(--color-text-primary)' }}>{item.title}</p>
                                       <p className="text-xs truncate" style={{ color: 'var(--color-text-tertiary)' }}>{item.description}</p>
@@ -1359,15 +1500,29 @@ const AdminCurriculum: React.FC = () => {
                                     <div className="flex items-center gap-1 ml-2">
                                       <button
                                         onClick={() => handleEditContent('exercise', item, idx, level)}
-                                        className="p-1 text-purple-400 hover:text-purple-300 transition-colors"
+                                        className="p-1 transition-colors"
                                         title="Edit"
+                                        style={{ color: 'var(--color-accent-secondary)' }}
+                                        onMouseEnter={(e) => {
+                                          e.currentTarget.style.color = 'var(--color-accent-primary)';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                          e.currentTarget.style.color = 'var(--color-accent-secondary)';
+                                        }}
                                       >
                                         <EditIcon className="h-3 w-3" />
                                       </button>
                                       <button
                                         onClick={() => handleDeleteContent(level.id, 'exercise', idx)}
-                                        className="p-1 text-red-400 hover:text-red-300 transition-colors"
+                                        className="p-1 transition-colors"
                                         title="Delete"
+                                        style={{ color: 'var(--color-error)' }}
+                                        onMouseEnter={(e) => {
+                                          e.currentTarget.style.color = 'var(--color-error-hover)';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                          e.currentTarget.style.color = 'var(--color-error)';
+                                        }}
                                       >
                                         <TrashIcon className="h-3 w-3" />
                                       </button>
@@ -1420,24 +1575,51 @@ const AdminCurriculum: React.FC = () => {
                           <div className="flex items-center gap-1">
                                                     <button
                           onClick={() => handleAddContent('learn', level)}
-                          className="px-2 py-1 bg-green-500 text-xs rounded hover:bg-green-600 transition-colors"
-                          style={{ color: 'var(--color-text-inverse)' }}
+                          className="px-2 py-1 text-xs rounded transition-colors"
+                          style={{ 
+                            backgroundColor: 'var(--color-success)',
+                            color: 'var(--color-text-inverse)' 
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = 'var(--color-success-hover)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = 'var(--color-success)';
+                          }}
                           title="Add Learn Content"
                         >
                           +Learn
                         </button>
                         <button
                           onClick={() => handleAddContent('test', level)}
-                          className="px-2 py-1 bg-yellow-500 text-xs rounded hover:bg-yellow-600 transition-colors"
-                          style={{ color: 'var(--color-text-inverse)' }}
+                          className="px-2 py-1 text-xs rounded transition-colors"
+                          style={{ 
+                            backgroundColor: 'var(--color-warning)',
+                            color: 'var(--color-text-inverse)' 
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = 'var(--color-warning-hover)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = 'var(--color-warning)';
+                          }}
                           title="Add Test Content"
                         >
                           +Test
                         </button>
                         <button
                           onClick={() => handleAddContent('exercise', level)}
-                          className="px-2 py-1 bg-purple-500 text-xs rounded hover:bg-purple-600 transition-colors"
-                          style={{ color: 'var(--color-text-inverse)' }}
+                          className="px-2 py-1 text-xs rounded transition-colors"
+                          style={{ 
+                            backgroundColor: 'var(--color-accent-secondary)',
+                            color: 'var(--color-text-inverse)' 
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                          }}
                           title="Add Exercise Content"
                         >
                           +Exercise
@@ -1911,7 +2093,7 @@ const AdminCurriculum: React.FC = () => {
                 </div>
 
                 {formError && (
-                  <div className="text-red-400 text-sm">{formError}</div>
+                  <div className="text-sm" style={{ color: 'var(--color-error)' }}>{formError}</div>
                 )}
 
                 <div className="flex gap-3 pt-4">
@@ -2261,7 +2443,7 @@ Option 3"
                 </div>
 
                 {formError && (
-                  <div className="text-red-400 text-sm">{formError}</div>
+                  <div className="text-sm" style={{ color: 'var(--color-error)' }}>{formError}</div>
                 )}
 
                 <div className="flex gap-3 pt-4">

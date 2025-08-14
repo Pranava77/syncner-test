@@ -187,9 +187,13 @@ const LoginPage: React.FC = () => {
           }}
         >
           {error && !emailError && !passwordError && (
-            <div className="mb-4 p-3 bg-rust/10 border border-rust/20 rounded-lg flex items-center space-x-2">
-              <ExclamationTriangleIcon className="h-4 w-4 text-rust flex-shrink-0" />
-              <span className="text-rust text-sm">{error}</span>
+            <div className="mb-4 p-3 rounded-lg flex items-center space-x-2" style={{
+              backgroundColor: 'var(--color-error-bg)',
+              borderColor: 'var(--color-error)',
+              border: '1px solid'
+            }}>
+              <ExclamationTriangleIcon className="h-4 w-4 flex-shrink-0" style={{ color: 'var(--color-error)' }} />
+              <span className="text-sm" style={{ color: 'var(--color-error)' }}>{error}</span>
             </div>
           )}
 
@@ -203,7 +207,7 @@ const LoginPage: React.FC = () => {
                 Email
               </label>
               <div className="relative">
-                <EnvelopeClosedIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 lg:h-5 lg:w-5 text-teallight" />
+                <EnvelopeClosedIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 lg:h-5 lg:w-5" style={{ color: 'var(--color-text-tertiary)' }} />
                 <input
                   id="email"
                   type="email"
@@ -212,9 +216,17 @@ const LoginPage: React.FC = () => {
                     setEmail(e.target.value);
                     if (emailError) setEmailError('');
                   }}
-                  className={`w-full pl-10 lg:pl-12 pr-4 py-2.5 lg:py-3 border rounded-lg focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors text-sm lg:text-base ${
-                    emailError ? 'border-rust' : ''
+                  className={`w-full pl-10 lg:pl-12 pr-4 py-2.5 lg:py-3 border rounded-lg transition-colors text-sm lg:text-base ${
+                    emailError ? '' : ''
                   }`}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                    e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = emailError ? 'var(--color-error)' : 'var(--color-border)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                   style={{
                     backgroundColor: 'var(--color-secondary-bg)',
                     borderColor: emailError ? undefined : 'var(--color-border)',
@@ -225,7 +237,7 @@ const LoginPage: React.FC = () => {
                 />
               </div>
               {emailError && (
-                <p className="mt-1 text-rust text-xs">{emailError}</p>
+                <p className="mt-1 text-xs" style={{ color: 'var(--color-error)' }}>{emailError}</p>
               )}
             </div>
 
@@ -238,7 +250,7 @@ const LoginPage: React.FC = () => {
                 Password
               </label>
               <div className="relative">
-                <LockClosedIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 lg:h-5 lg:w-5 text-teallight" />
+                <LockClosedIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 lg:h-5 lg:w-5" style={{ color: 'var(--color-text-tertiary)' }} />
                 <input
                   id="password"
                   type="password"
@@ -247,9 +259,17 @@ const LoginPage: React.FC = () => {
                     setPassword(e.target.value);
                     if (passwordError) setPasswordError('');
                   }}
-                  className={`w-full pl-10 lg:pl-12 pr-4 py-2.5 lg:py-3 border rounded-lg focus:ring-2 focus:ring-trueturquoise focus:border-transparent transition-colors text-sm lg:text-base ${
-                    passwordError ? 'border-rust' : ''
+                  className={`w-full pl-10 lg:pl-12 pr-4 py-2.5 lg:py-3 border rounded-lg transition-colors text-sm lg:text-base ${
+                    passwordError ? '' : ''
                   }`}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                    e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = passwordError ? 'var(--color-error)' : 'var(--color-border)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                   style={{
                     backgroundColor: 'var(--color-secondary-bg)',
                     borderColor: passwordError ? undefined : 'var(--color-border)',
@@ -260,14 +280,28 @@ const LoginPage: React.FC = () => {
                 />
               </div>
               {passwordError && (
-                <p className="mt-1 text-rust text-xs">{passwordError}</p>
+                <p className="mt-1 text-xs" style={{ color: 'var(--color-error)' }}>{passwordError}</p>
               )}
             </div>
 
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-trueturquoise text-offblack py-2.5 lg:py-3 rounded-lg hover:bg-teallight transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed text-sm lg:text-base shadow-md"
+              className="w-full py-2.5 lg:py-3 rounded-lg transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed text-sm lg:text-base shadow-md"
+              style={{
+                backgroundColor: 'var(--color-accent-primary)',
+                color: 'var(--color-text-inverse)'
+              }}
+              onMouseEnter={(e) => {
+                if (!isLoading) {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isLoading) {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                }
+              }}
             >
               Sign In
             </button>

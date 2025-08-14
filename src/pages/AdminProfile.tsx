@@ -171,7 +171,10 @@ const AdminProfile: React.FC = () => {
           </div>
           
           {message && (
-            <div className={`p-3 rounded ${message.includes('success') ? 'bg-trueturquoise/20 text-trueturquoise' : 'bg-rust/20 text-rust'}`}>
+            <div className="p-3 rounded" style={{
+              backgroundColor: message.includes('success') ? 'var(--color-success-bg)' : 'var(--color-error-bg)',
+              color: message.includes('success') ? 'var(--color-success)' : 'var(--color-error)'
+            }}>
               {message}
             </div>
           )}
@@ -179,8 +182,21 @@ const AdminProfile: React.FC = () => {
           <button
             onClick={handleSave}
             disabled={isLoading}
-            className="w-full bg-trueturquoise py-2 px-4 rounded hover:bg-trueturquoise/90 transition-colors disabled:opacity-50"
-            style={{ color: 'var(--color-text-inverse)' }}
+            className="w-full py-2 px-4 rounded transition-colors disabled:opacity-50"
+            style={{ 
+              backgroundColor: 'var(--color-accent-primary)',
+              color: 'var(--color-text-inverse)' 
+            }}
+            onMouseEnter={(e) => {
+              if (!isLoading) {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!isLoading) {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+              }
+            }}
           >
             {isLoading ? 'Saving...' : 'Save Changes'}
           </button>

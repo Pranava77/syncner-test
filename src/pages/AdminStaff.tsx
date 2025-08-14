@@ -175,8 +175,17 @@ const AdminStaff: React.FC = () => {
         </div>
         <button
           onClick={handleAdd}
-          className="bg-trueturquoise px-5 py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-medium flex items-center gap-2 shadow"
-          style={{ color: 'var(--color-text-inverse)' }}
+          className="px-5 py-2 rounded-lg transition-colors font-medium flex items-center gap-2 shadow"
+          style={{ 
+            backgroundColor: 'var(--color-accent-primary)',
+            color: 'var(--color-text-inverse)' 
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+          }}
         >
           <PlusIcon className="h-5 w-5" />
           Add Staff
@@ -196,7 +205,15 @@ const AdminStaff: React.FC = () => {
               placeholder="Search staff..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-4 pr-4 py-2 w-full border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise"
+              className="pl-4 pr-4 py-2 w-full border rounded-lg transition-colors"
+              onFocus={(e) => {
+                e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.borderColor = 'var(--color-border)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
               style={{
                 backgroundColor: 'var(--color-secondary-bg)',
                 borderColor: 'var(--color-border)',
@@ -254,11 +271,19 @@ const AdminStaff: React.FC = () => {
           </thead>
           <tbody>
             {loading ? (
-              <tr><td colSpan={6} className="text-center py-6 text-teallight">Loading...</td></tr>
+              <tr><td colSpan={6} className="text-center py-6" style={{ color: 'var(--color-text-tertiary)' }}>Loading...</td></tr>
             ) : filteredStaff.length === 0 ? (
-              <tr><td colSpan={6} className="text-center py-6 text-teallight">No staff found.</td></tr>
+              <tr><td colSpan={6} className="text-center py-6" style={{ color: 'var(--color-text-tertiary)' }}>No staff found.</td></tr>
             ) : filteredStaff.map((s: any) => (
-              <tr key={s._id} className="hover:bg-paperwhite/5">
+              <tr key={s._id} style={{
+                backgroundColor: 'transparent'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-secondary-bg)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+              }}>
                 <td 
                   className="px-6 py-4 whitespace-nowrap font-medium"
                   style={{ color: 'var(--color-text-primary)' }}
@@ -285,8 +310,11 @@ const AdminStaff: React.FC = () => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span 
-                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${s.isActive ? 'bg-teallight' : 'bg-rust'}`}
-                    style={{ color: 'var(--color-text-inverse)' }}
+                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                    style={{ 
+                      backgroundColor: s.isActive ? 'var(--color-success)' : 'var(--color-error)',
+                      color: 'var(--color-text-inverse)' 
+                    }}
                   >
                     <CheckCircledIcon className="h-4 w-4 mr-1" />
                     {s.isActive ? 'Active' : 'Inactive'}
@@ -296,16 +324,34 @@ const AdminStaff: React.FC = () => {
                   <div className="flex items-center space-x-2">
                     <button
                       onClick={() => handleEdit(s)}
-                      className="bg-trueturquoise hover:bg-trueturquoise/90 px-2 py-1 rounded transition-colors"
-                      style={{ color: 'var(--color-text-inverse)' }}
+                      className="px-2 py-1 rounded transition-colors"
+                      style={{ 
+                        backgroundColor: 'var(--color-accent-primary)',
+                        color: 'var(--color-text-inverse)' 
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                      }}
                       title="Edit"
                     >
                       <Edit3 className="h-4 w-4" />
                     </button>
                     <button
                       onClick={() => handleDelete(s._id)}
-                      className="bg-rust hover:bg-rust/80 px-2 py-1 rounded transition-colors"
-                style={{ color: 'var(--color-text-inverse)' }}
+                      className="px-2 py-1 rounded transition-colors"
+                      style={{ 
+                        backgroundColor: 'var(--color-error)',
+                        color: 'var(--color-text-inverse)' 
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'var(--color-error-hover)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'var(--color-error)';
+                      }}
                       title="Delete"
                     >
                       <TrashIcon className="h-4 w-4" />
@@ -316,7 +362,17 @@ const AdminStaff: React.FC = () => {
                         setResetUser({ name: s.name, email: s.email });
                         setResetModalOpen(true);
                       }}
-                      className="bg-paperwhite/20 hover:bg-trueturquoise/30 text-trueturquoise px-2 py-1 rounded transition-colors flex items-center justify-center"
+                      className="px-2 py-1 rounded transition-colors flex items-center justify-center"
+                      style={{
+                        backgroundColor: 'var(--color-tertiary-bg)',
+                        color: 'var(--color-accent-primary)'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'var(--color-secondary-bg)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'var(--color-tertiary-bg)';
+                      }}
                       title="Reset Password"
                     >
                       <LockClosedIcon className="h-4 w-4" />
@@ -349,7 +405,7 @@ const AdminStaff: React.FC = () => {
               >
                 {editingStaff ? 'Edit Staff' : 'Add Staff'}
               </h3>
-              <button onClick={() => setShowModal(false)} className="text-teallight hover:text-trueturquoise"><X className="h-5 w-5" /></button>
+              <button onClick={() => setShowModal(false)} className="transition-colors" style={{ color: 'var(--color-text-tertiary)' }} onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--color-accent-primary)'; }} onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--color-text-tertiary)'; }}><X className="h-5 w-5" /></button>
             </div>
             <div className="space-y-3">
               <input 
@@ -357,11 +413,19 @@ const AdminStaff: React.FC = () => {
                 placeholder="Name" 
                 value={staffForm.name} 
                 onChange={e => setStaffForm(f => ({ ...f, name: e.target.value }))} 
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight" 
+                className="w-full px-3 py-2 border rounded-lg transition-colors" 
                 style={{ 
                   borderColor: 'var(--color-border)',
                   backgroundColor: 'var(--color-secondary-bg)',
                   color: 'var(--color-text-primary)'
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                  e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--color-border)';
+                  e.currentTarget.style.boxShadow = 'none';
                 }}
               />
               <input 
@@ -369,11 +433,19 @@ const AdminStaff: React.FC = () => {
                 placeholder="Email" 
                 value={staffForm.email} 
                 onChange={e => setStaffForm(f => ({ ...f, email: e.target.value }))} 
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight" 
+                className="w-full px-3 py-2 border rounded-lg transition-colors" 
                 style={{ 
                   borderColor: 'var(--color-border)',
                   backgroundColor: 'var(--color-secondary-bg)',
                   color: 'var(--color-text-primary)'
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                  e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--color-border)';
+                  e.currentTarget.style.boxShadow = 'none';
                 }}
               />
               <input 
@@ -381,11 +453,19 @@ const AdminStaff: React.FC = () => {
                 placeholder="Department" 
                 value={staffForm.department} 
                 onChange={e => setStaffForm(f => ({ ...f, department: e.target.value }))} 
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight" 
+                className="w-full px-3 py-2 border rounded-lg transition-colors" 
                 style={{ 
                   borderColor: 'var(--color-border)',
                   backgroundColor: 'var(--color-secondary-bg)',
                   color: 'var(--color-text-primary)'
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                  e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--color-border)';
+                  e.currentTarget.style.boxShadow = 'none';
                 }}
               />
               <input 
@@ -393,17 +473,33 @@ const AdminStaff: React.FC = () => {
                 placeholder="College" 
                 value={staffForm.college} 
                 onChange={e => setStaffForm(f => ({ ...f, college: e.target.value }))} 
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight" 
+                className="w-full px-3 py-2 border rounded-lg transition-colors" 
                 style={{ 
                   borderColor: 'var(--color-border)',
                   backgroundColor: 'var(--color-secondary-bg)',
                   color: 'var(--color-text-primary)'
                 }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                  e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--color-border)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
               />
               <select 
                 value={staffForm.role} 
                 onChange={e => setStaffForm(f => ({ ...f, role: e.target.value }))} 
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition"
+                className="w-full px-3 py-2 border rounded-lg transition-colors"
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                  e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--color-border)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
                 style={{ 
                   borderColor: 'var(--color-border)',
                   backgroundColor: 'var(--color-secondary-bg)',
@@ -419,7 +515,15 @@ const AdminStaff: React.FC = () => {
                   placeholder="Password"
                   value={staffForm.password}
                   onChange={e => setStaffForm(f => ({ ...f, password: e.target.value }))}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-trueturquoise/40 focus:border-trueturquoise transition placeholder:text-teallight"
+                  className="w-full px-3 py-2 border rounded-lg transition-colors"
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                    e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-border)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                   style={{ 
                     borderColor: 'var(--color-border)',
                     backgroundColor: 'var(--color-secondary-bg)',
@@ -436,12 +540,25 @@ const AdminStaff: React.FC = () => {
                   Active
                 </label>
               </div>
-              {formError && <div className="text-rust text-sm font-medium">{formError}</div>}
+              {formError && <div className="text-sm font-medium" style={{ color: 'var(--color-error)' }}>{formError}</div>}
               <button 
                 onClick={handleSave} 
                 disabled={isSubmitting}
-                className="w-full bg-trueturquoise py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                style={{ color: 'var(--color-text-inverse)' }}
+                className="w-full py-2 rounded-lg transition-colors font-semibold mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ 
+                  backgroundColor: 'var(--color-accent-primary)',
+                  color: 'var(--color-text-inverse)' 
+                }}
+                onMouseEnter={(e) => {
+                  if (!isSubmitting) {
+                    e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isSubmitting) {
+                    e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                  }
+                }}
               >
                 {isSubmitting ? 'Saving...' : (editingStaff ? 'Save Changes' : 'Add Staff')}
               </button>
@@ -470,7 +587,7 @@ const AdminStaff: React.FC = () => {
               >
                 Staff Password
               </h3>
-              <button onClick={() => { setShowPasswordModal(false); setCreatedPassword(''); }} className="text-teallight hover:text-trueturquoise"><X className="h-5 w-5" /></button>
+              <button onClick={() => { setShowPasswordModal(false); setCreatedPassword(''); }} className="transition-colors" style={{ color: 'var(--color-text-tertiary)' }} onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--color-accent-primary)'; }} onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--color-text-tertiary)'; }}><X className="h-5 w-5" /></button>
             </div>
             <div className="space-y-4">
               <div 
@@ -478,12 +595,24 @@ const AdminStaff: React.FC = () => {
                 style={{ color: 'var(--color-text-primary)' }}
               >
                 <p className="mb-2">Copy and share this password with the staff member. It will not be shown again.</p>
-                <div className="bg-paperwhite/10 rounded-lg px-4 py-3 text-lg font-mono text-trueturquoise select-all break-all text-center">{createdPassword}</div>
+                <div className="rounded-lg px-4 py-3 text-lg font-mono select-all break-all text-center" style={{
+                  backgroundColor: 'var(--color-tertiary-bg)',
+                  color: 'var(--color-accent-primary)'
+                }}>{createdPassword}</div>
               </div>
               <button
                 onClick={() => { navigator.clipboard.writeText(createdPassword); }}
-                className="w-full bg-trueturquoise py-2 rounded-lg hover:bg-trueturquoise/90 transition-colors font-semibold"
-                style={{ color: 'var(--color-text-inverse)' }}
+                className="w-full py-2 rounded-lg transition-colors font-semibold"
+                style={{ 
+                  backgroundColor: 'var(--color-accent-primary)',
+                  color: 'var(--color-text-inverse)' 
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                }}
               >Copy Password</button>
             </div>
           </div>

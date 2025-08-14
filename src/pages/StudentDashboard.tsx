@@ -698,70 +698,98 @@ const StudentDashboard: React.FC = () => {
                         {currentLevel.title}
                       </h3>
                     </div>
-                    <p className="text-teallight text-sm lg:text-base leading-relaxed">{currentLevel.description}</p>
+                    <p className="text-sm lg:text-base leading-relaxed" style={{ color: 'var(--color-text-tertiary)' }}>{currentLevel.description}</p>
                   </div>
-                  <div className="bg-gradient-to-br from-trueturquoise/10 to-blue-500/10 p-3 rounded-xl border border-trueturquoise/20">
-                    <ReaderIcon className="h-6 w-6 text-trueturquoise" />
+                  <div className="p-3 rounded-xl border" style={{
+                    background: 'linear-gradient(to bottom right, var(--color-accent-tertiary), var(--color-accent-secondary))',
+                    borderColor: 'var(--color-accent-primary)'
+                  }}>
+                    <ReaderIcon className="h-6 w-6" style={{ color: 'var(--color-accent-primary)' }} />
                   </div>
                 </div>
                 
                 {/* Section Progress */}
                 <div className="mb-6">
-                  <div className="flex justify-between text-sm text-teallight mb-3">
+                  <div className="flex justify-between text-sm mb-3" style={{ color: 'var(--color-text-tertiary)' }}>
                     <span className="font-semibold">Level Progress</span>
-                    <span className="font-bold text-trueturquoise">{currentLevelProgress}%</span>
+                    <span className="font-bold" style={{ color: 'var(--color-accent-primary)' }}>{currentLevelProgress}%</span>
                   </div>
-                  <div className="w-full bg-paperwhite/20 rounded-full h-3 shadow-inner">
+                  <div className="w-full rounded-full h-3 shadow-inner" style={{ backgroundColor: 'var(--color-border)' }}>
                     <div 
-                      className="bg-gradient-to-r from-trueturquoise to-teallight h-3 rounded-full transition-all duration-500 shadow-lg"
-                      style={{ width: `${currentLevelProgress}%` }}
+                      className="h-3 rounded-full transition-all duration-500 shadow-lg"
+                      style={{ 
+                        width: `${currentLevelProgress}%`,
+                        background: 'linear-gradient(to right, var(--color-accent-primary), var(--color-accent-secondary))'
+                      }}
                     ></div>
                   </div>
                   
                   {/* Section Status */}
                   <div className="flex justify-between mt-4 text-xs">
-                    <div className={`flex items-center gap-2 px-3 py-2 rounded-lg ${
-                      (currentLevel.completedSections?.learn === true || currentLevel.completedSections?.learn === "true") 
-                        ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
-                        : 'bg-paperwhite/10 text-teallight border border-paperwhite/20'
-                    }`}>
-                      <span className={`w-2 h-2 rounded-full ${
-                        (currentLevel.completedSections?.learn === true || currentLevel.completedSections?.learn === "true") 
-                          ? 'bg-green-400' 
-                          : 'bg-paperwhite/30'
-                      }`}></span>
+                    <div className="flex items-center gap-2 px-3 py-2 rounded-lg border" style={{
+                      backgroundColor: (currentLevel.completedSections?.learn === true || currentLevel.completedSections?.learn === "true") 
+                        ? 'var(--color-success-bg)' 
+                        : 'var(--color-tertiary-bg)',
+                      color: (currentLevel.completedSections?.learn === true || currentLevel.completedSections?.learn === "true") 
+                        ? 'var(--color-success)' 
+                        : 'var(--color-text-tertiary)',
+                      borderColor: (currentLevel.completedSections?.learn === true || currentLevel.completedSections?.learn === "true") 
+                        ? 'var(--color-success)' 
+                        : 'var(--color-border-subtle)'
+                    }}>
+                      <span className="w-2 h-2 rounded-full" style={{
+                        backgroundColor: (currentLevel.completedSections?.learn === true || currentLevel.completedSections?.learn === "true") 
+                          ? 'var(--color-success)' 
+                          : 'var(--color-border)'
+                      }}></span>
                       Learn
                     </div>
-                    <div className={`flex items-center gap-2 px-3 py-2 rounded-lg ${
-                      (currentLevel.completedSections?.test === true || currentLevel.completedSections?.test === "true") 
-                        ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
-                        : 'bg-paperwhite/10 text-teallight border border-paperwhite/20'
-                    }`}>
-                      <span className={`w-2 h-2 rounded-full ${
-                        (currentLevel.completedSections?.test === true || currentLevel.completedSections?.test === "true") 
-                          ? 'bg-green-400' 
-                          : 'bg-paperwhite/30'
-                      }`}></span>
+                    <div className="flex items-center gap-2 px-3 py-2 rounded-lg border" style={{
+                      backgroundColor: (currentLevel.completedSections?.test === true || currentLevel.completedSections?.test === "true") 
+                        ? 'var(--color-success-bg)' 
+                        : 'var(--color-tertiary-bg)',
+                      color: (currentLevel.completedSections?.test === true || currentLevel.completedSections?.test === "true") 
+                        ? 'var(--color-success)' 
+                        : 'var(--color-text-tertiary)',
+                      borderColor: (currentLevel.completedSections?.test === true || currentLevel.completedSections?.test === "true") 
+                        ? 'var(--color-success)' 
+                        : 'var(--color-border-subtle)'
+                    }}>
+                      <span className="w-2 h-2 rounded-full" style={{
+                        backgroundColor: (currentLevel.completedSections?.test === true || currentLevel.completedSections?.test === "true") 
+                          ? 'var(--color-success)' 
+                          : 'var(--color-border)'
+                      }}></span>
                       Test
                     </div>
-                    <div className={`flex items-center gap-2 px-3 py-2 rounded-lg ${
-                      (currentLevel.completedSections?.exercise === true || currentLevel.completedSections?.exercise === "true") 
-                        ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
-                        : 'bg-paperwhite/10 text-teallight border border-paperwhite/20'
-                    }`}>
-                      <span className={`w-2 h-2 rounded-full ${
-                        (currentLevel.completedSections?.exercise === true || currentLevel.completedSections?.exercise === "true") 
-                          ? 'bg-green-400' 
-                          : 'bg-paperwhite/30'
-                      }`}></span>
+                    <div className="flex items-center gap-2 px-3 py-2 rounded-lg border" style={{
+                      backgroundColor: (currentLevel.completedSections?.exercise === true || currentLevel.completedSections?.exercise === "true") 
+                        ? 'var(--color-success-bg)' 
+                        : 'var(--color-tertiary-bg)',
+                      color: (currentLevel.completedSections?.exercise === true || currentLevel.completedSections?.exercise === "true") 
+                        ? 'var(--color-success)' 
+                        : 'var(--color-text-tertiary)',
+                      borderColor: (currentLevel.completedSections?.exercise === true || currentLevel.completedSections?.exercise === "true") 
+                        ? 'var(--color-success)' 
+                        : 'var(--color-border-subtle)'
+                    }}>
+                      <span className="w-2 h-2 rounded-full" style={{
+                        backgroundColor: (currentLevel.completedSections?.exercise === true || currentLevel.completedSections?.exercise === "true") 
+                          ? 'var(--color-success)' 
+                          : 'var(--color-border)'
+                      }}></span>
                       Exercise
                     </div>
                   </div>
                 </div>
                 
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                  <div className="flex items-center gap-2 text-teallight text-sm bg-paperwhite/10 px-4 py-2 rounded-lg border border-paperwhite/20">
-                    <Clock className="h-4 w-4 text-trueturquoise" />
+                  <div className="flex items-center gap-2 text-sm px-4 py-2 rounded-lg border" style={{
+                    color: 'var(--color-text-tertiary)',
+                    backgroundColor: 'var(--color-tertiary-bg)',
+                    borderColor: 'var(--color-border-subtle)'
+                  }}>
+                    <Clock className="h-4 w-4" style={{ color: 'var(--color-accent-primary)' }} />
                     {currentLevel.duration || 'Estimated time'}
                   </div>
                   <Link
@@ -788,23 +816,23 @@ const StudentDashboard: React.FC = () => {
             >
               Congratulations!
             </h3>
-                <p className="text-teallight text-base mb-6">
+                <p className="text-base mb-6" style={{ color: 'var(--color-text-tertiary)' }}>
                   You've completed all {levels?.length || 0} levels in your {userTrack} track!
                 </p>
                 
                 {/* Completion Stats */}
                 <div className="grid grid-cols-3 gap-4 mb-6">
                   <div className="bg-gradient-to-br from-green-500/10 to-green-500/5 rounded-xl p-4 border border-green-500/20">
-                    <div className="text-2xl font-bold text-green-400">{levels?.length || 0}</div>
-                    <div className="text-xs text-teallight">Levels Completed</div>
+                    <div className="text-2xl font-bold" style={{ color: 'var(--color-success)' }}>{levels?.length || 0}</div>
+                    <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>Levels Completed</div>
                   </div>
                   <div className="bg-gradient-to-br from-green-500/10 to-green-500/5 rounded-xl p-4 border border-green-500/20">
-                    <div className="text-2xl font-bold text-green-400">100%</div>
-                    <div className="text-xs text-teallight">Track Progress</div>
+                    <div className="text-2xl font-bold" style={{ color: 'var(--color-success)' }}>100%</div>
+                    <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>Track Progress</div>
                   </div>
                   <div className="bg-gradient-to-br from-green-500/10 to-green-500/5 rounded-xl p-4 border border-green-500/20">
-                    <div className="text-2xl font-bold text-green-400">🏆</div>
-                    <div className="text-xs text-teallight">Track Mastered</div>
+                    <div className="text-2xl font-bold" style={{ color: 'var(--color-success)' }}>🏆</div>
+                    <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>Track Mastered</div>
                   </div>
                 </div>
 
@@ -849,7 +877,10 @@ const StudentDashboard: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="bg-gradient-to-r from-paperwhite/5 to-paperwhite/10 rounded-xl p-6 text-center border border-paperwhite/20 shadow-lg">
+              <div className="rounded-xl p-6 text-center border shadow-lg" style={{
+                background: 'linear-gradient(to right, var(--color-tertiary-bg-subtle), var(--color-tertiary-bg))',
+                borderColor: 'var(--color-border-subtle)'
+              }}>
                 <div className="w-16 h-16 bg-gradient-to-br from-trueturquoise/20 to-blue-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <span className="text-3xl">📚</span>
                 </div>
@@ -859,7 +890,7 @@ const StudentDashboard: React.FC = () => {
             >
               No Levels Available
             </h3>
-                <p className="text-teallight text-base mb-6">
+                <p className="text-base mb-6" style={{ color: 'var(--color-text-tertiary)' }}>
                   No training levels are currently available for your track.
                 </p>
                 <Link
@@ -895,9 +926,11 @@ const StudentDashboard: React.FC = () => {
           >
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-trueturquoise/20 to-blue-500/20 rounded-xl flex items-center justify-center">
-                  <Brain className="h-6 w-6 text-trueturquoise" />
-                </div>
+                                  <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{
+                    background: 'linear-gradient(to bottom right, var(--color-accent-tertiary), var(--color-accent-secondary))'
+                  }}>
+                    <Brain className="h-6 w-6" style={{ color: 'var(--color-accent-primary)' }} />
+                  </div>
                 <div>
                   <h3 
                     className="text-xl lg:text-2xl font-bold"
@@ -913,7 +946,11 @@ const StudentDashboard: React.FC = () => {
                   </p>
                 </div>
               </div>
-              <span className="bg-gradient-to-r from-trueturquoise/20 to-blue-500/20 text-trueturquoise px-3 py-1 rounded-full text-xs font-semibold border border-trueturquoise/30">
+              <span className="px-3 py-1 rounded-full text-xs font-semibold border" style={{
+                background: 'linear-gradient(to right, var(--color-accent-tertiary), var(--color-accent-secondary))',
+                color: 'var(--color-accent-primary)',
+                borderColor: 'var(--color-accent-primary)'
+              }}>
                 AI Assistant
               </span>
             </div>
@@ -967,9 +1004,11 @@ const StudentDashboard: React.FC = () => {
                   ×
                 </button>
                 <div className="flex flex-col items-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-trueturquoise/20 to-blue-500/20 rounded-2xl flex items-center justify-center mb-4">
-                    <Brain className="h-8 w-8 text-trueturquoise" />
-                  </div>
+                                      <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4" style={{
+                      background: 'linear-gradient(to bottom right, var(--color-accent-tertiary), var(--color-accent-secondary))'
+                    }}>
+                      <Brain className="h-8 w-8" style={{ color: 'var(--color-accent-primary)' }} />
+                    </div>
                   <h2 
                     className="text-xl font-semibold mb-2"
                     style={{ color: 'var(--color-text-primary)' }}
@@ -1005,9 +1044,11 @@ const StudentDashboard: React.FC = () => {
           >
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-trueturquoise/20 to-blue-500/20 rounded-xl flex items-center justify-center">
-                  <TrendingUp className="h-6 w-6 text-trueturquoise" />
-                </div>
+                                  <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{
+                    background: 'linear-gradient(to bottom right, var(--color-accent-tertiary), var(--color-accent-secondary))'
+                  }}>
+                    <TrendingUp className="h-6 w-6" style={{ color: 'var(--color-accent-primary)' }} />
+                  </div>
                 <div>
                   <h3 
                     className="text-xl lg:text-2xl font-bold"
@@ -1023,9 +1064,13 @@ const StudentDashboard: React.FC = () => {
                   </p>
                 </div>
               </div>
-              <span className="bg-gradient-to-r from-trueturquoise/20 to-blue-500/20 text-trueturquoise px-3 py-1 rounded-full text-xs font-semibold border border-trueturquoise/30">
-                {overallProgress}% Complete
-              </span>
+                              <span className="px-3 py-1 rounded-full text-xs font-semibold border" style={{
+                  background: 'linear-gradient(to right, var(--color-accent-tertiary), var(--color-accent-secondary))',
+                  color: 'var(--color-accent-primary)',
+                  borderColor: 'var(--color-accent-primary)'
+                }}>
+                  {overallProgress}% Complete
+                </span>
             </div>
             
             <div 
@@ -1043,24 +1088,30 @@ const StudentDashboard: React.FC = () => {
                 >
                   Level Completion
                 </span>
-                <span className="font-bold text-trueturquoise text-lg">{overallProgress}%</span>
+                <span className="font-bold text-lg" style={{ color: 'var(--color-accent-primary)' }}>{overallProgress}%</span>
               </div>
               <div 
                 className="w-full rounded-full h-3 shadow-inner mb-4"
                 style={{ backgroundColor: 'var(--color-border)' }}
               >
                 <div 
-                  className="bg-gradient-to-r from-trueturquoise to-teallight h-3 rounded-full transition-all duration-500 shadow-lg"
-                  style={{ width: `${overallProgress}%` }}
+                  className="h-3 rounded-full transition-all duration-500 shadow-lg"
+                  style={{ 
+                    width: `${overallProgress}%`,
+                    background: 'linear-gradient(to right, var(--color-accent-primary), var(--color-accent-secondary))'
+                  }}
                 ></div>
               </div>
               
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div 
-                  className="text-center rounded-lg p-3 border border-trueturquoise/20"
-                  style={{ background: 'linear-gradient(135deg, rgba(0, 184, 217, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%)' }}
+                  className="text-center rounded-lg p-3 border"
+                  style={{ 
+                    background: 'linear-gradient(135deg, var(--color-accent-tertiary), var(--color-accent-secondary))',
+                    borderColor: 'var(--color-accent-primary)'
+                  }}
                 >
-                  <div className="text-xl font-bold text-trueturquoise">{levels?.length || 0}</div>
+                  <div className="text-xl font-bold" style={{ color: 'var(--color-accent-primary)' }}>{levels?.length || 0}</div>
                   <div 
                     className="text-xs"
                     style={{ color: 'var(--color-text-tertiary)' }}
@@ -1069,10 +1120,13 @@ const StudentDashboard: React.FC = () => {
                   </div>
                 </div>
                 <div 
-                  className="text-center rounded-lg p-3 border border-trueturquoise/20"
-                  style={{ background: 'linear-gradient(135deg, rgba(0, 184, 217, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%)' }}
+                  className="text-center rounded-lg p-3 border"
+                  style={{ 
+                    background: 'linear-gradient(135deg, var(--color-accent-tertiary), var(--color-accent-secondary))',
+                    borderColor: 'var(--color-accent-primary)'
+                  }}
                 >
-                  <div className="text-xl font-bold text-trueturquoise">{completedLevels}</div>
+                  <div className="text-xl font-bold" style={{ color: 'var(--color-accent-primary)' }}>{completedLevels}</div>
                   <div 
                     className="text-xs"
                     style={{ color: 'var(--color-text-tertiary)' }}
@@ -1102,14 +1156,14 @@ const StudentDashboard: React.FC = () => {
                       style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
                     >
                       <span>Completed Levels:</span>
-                      <span className="text-green-400 font-semibold">{completedLevels}</span>
+                      <span className="font-semibold" style={{ color: 'var(--color-success)' }}>{completedLevels}</span>
                     </div>
                     <div 
                       className="flex justify-between items-center px-3 py-2 rounded-lg"
                       style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
                     >
                       <span>Remaining Levels:</span>
-                      <span className="text-orange-400 font-semibold">{levels?.length - completedLevels || 0}</span>
+                      <span className="font-semibold" style={{ color: 'var(--color-warning)' }}>{levels?.length - completedLevels || 0}</span>
                     </div>
                     {currentLevel && (
                       <div 
@@ -1117,7 +1171,7 @@ const StudentDashboard: React.FC = () => {
                         style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
                       >
                         <span>Current Level:</span>
-                        <span className="text-trueturquoise font-semibold">Level {currentLevel.order}</span>
+                        <span className="font-semibold" style={{ color: 'var(--color-accent-primary)' }}>Level {currentLevel.order}</span>
                       </div>
                     )}
                   </div>
