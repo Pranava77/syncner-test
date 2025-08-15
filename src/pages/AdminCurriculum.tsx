@@ -689,7 +689,48 @@ const AdminCurriculum: React.FC = () => {
             updateData.description = contentForm.title;
           }
 
-          await apiService.put(`/curriculum/${itemToUpdate.id}`, updateData);
+          const updateRes = await apiService.put(`/curriculum/${itemToUpdate.id}`, updateData);
+
+          // Optimistic UI update: reflect edited content immediately
+          setLevels((prev: any[]) => prev.map((lvl: any) => {
+            if (lvl.id !== editingLevel.id) return lvl;
+            const updated = { ...lvl };
+            if (contentType === 'learn') {
+              const arr = [...(updated.learn || [])];
+              arr[editingContent.index] = {
+                ...(arr[editingContent.index] || {}),
+                id: itemToUpdate.id,
+                title: contentForm.title,
+                content: contentForm.content,
+                videoUrl: contentForm.videoUrl || '',
+                order: updated.order,
+              };
+              updated.learn = arr;
+            } else if (contentType === 'test') {
+              const arr = [...(updated.test || [])];
+              arr[editingContent.index] = {
+                ...(arr[editingContent.index] || {}),
+                id: itemToUpdate.id,
+                question: contentForm.question,
+                options: contentForm.options || [],
+                answer: contentForm.answer || '',
+                order: updated.order,
+              };
+              updated.test = arr;
+            } else if (contentType === 'exercise') {
+              const arr = [...(updated.exercise || [])];
+              arr[editingContent.index] = {
+                ...(arr[editingContent.index] || {}),
+                id: itemToUpdate.id,
+                title: contentForm.title,
+                description: contentForm.description,
+                resources: contentForm.resources || [],
+                order: updated.order,
+              };
+              updated.exercise = arr;
+            }
+            return updated;
+          }));
         }
       } else if (editingLevel) {
         // Create new content item
@@ -727,7 +768,53 @@ const AdminCurriculum: React.FC = () => {
           newContentData.description = contentForm.title;
         }
 
-        await apiService.post('/curriculum', newContentData);
+        const createRes = await apiService.post('/curriculum', newContentData);
+
+        // Optimistic UI update: append new content immediately
+        const newId = createRes?.data?.id || createRes?.id;
+        setLevels((prev: any[]) => prev.map((lvl: any) => {
+          if (lvl.id !== editingLevel.id) return lvl;
+          const updated = { ...lvl };
+          if (contentType === 'learn') {
+            updated.learn = [
+              ...(updated.learn || []),
+              {
+                id: newId,
+                type: 'reading',
+                title: contentForm.title,
+                content: contentForm.content,
+                videoUrl: contentForm.videoUrl || '',
+                order: updated.order,
+              }
+            ];
+            updated.learnExpanded = true;
+          } else if (contentType === 'test') {
+            updated.test = [
+              ...(updated.test || []),
+              {
+                id: newId,
+                question: contentForm.question,
+                options: contentForm.options || [],
+                answer: contentForm.answer || '',
+                order: updated.order,
+              }
+            ];
+            updated.testExpanded = true;
+          } else if (contentType === 'exercise') {
+            updated.exercise = [
+              ...(updated.exercise || []),
+              {
+                id: newId,
+                title: contentForm.title,
+                description: contentForm.description,
+                resources: contentForm.resources || [],
+                order: updated.order,
+              }
+            ];
+            updated.exerciseExpanded = true;
+          }
+          return updated;
+        }));
       }
       
       setShowContentModal(false);
