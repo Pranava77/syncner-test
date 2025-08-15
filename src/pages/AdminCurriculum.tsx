@@ -139,6 +139,9 @@ const AdminCurriculum: React.FC = () => {
   const [reorderMessage, setReorderMessage] = useState<string | null>(null);
   const [isDeletingLevel, setIsDeletingLevel] = useState(false);
   const [deleteMessage, setDeleteMessage] = useState<string | null>(null);
+  const [pendingExpand, setPendingExpand] = useState<{ levelId: string | null; section?: 'learn' | 'test' | 'exercise' }>({ levelId: null });
+  const [isRefetching, setIsRefetching] = useState(false);
+  const [refetchMessage, setRefetchMessage] = useState<string | null>(null);
 
   useEffect(() => {
     fetchLevels();
@@ -256,9 +259,31 @@ const AdminCurriculum: React.FC = () => {
         uniqueLevels = uniqueLevels.filter((lvl: any) => lvl.careerTrack === trackToShow);
       }
 
+      // Apply pending auto-expansion (after a save) to ensure section is visible post-refetch
+      if (pendingExpand.levelId) {
+        uniqueLevels = uniqueLevels.map((lvl: any) => {
+          if (lvl.id !== pendingExpand.levelId) return lvl;
+          if (pendingExpand.section === 'learn') return { ...lvl, learnExpanded: true };
+          if (pendingExpand.section === 'test') return { ...lvl, testExpanded: true };
+          if (pendingExpand.section === 'exercise') return { ...lvl, exerciseExpanded: true };
+          return lvl;
+        });
+      }
+
       setLevels(uniqueLevels);
       setLastUpdated(new Date());
       setFormError(''); // Clear any previous errors
+
+      // Scroll to the affected level card if any
+      if (pendingExpand.levelId) {
+        setTimeout(() => {
+          const el = document.getElementById(`level-${pendingExpand.levelId}`);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+          setPendingExpand({ levelId: null });
+        }, 50);
+      }
     } catch (error: any) {
       console.error('Error fetching levels:', error);
       const errorMessage = error.message || 'Failed to load levels. Please check your connection.';
@@ -689,7 +714,7 @@ const AdminCurriculum: React.FC = () => {
             updateData.description = contentForm.title;
           }
 
-          const updateRes = await apiService.put(`/curriculum/${itemToUpdate.id}`, updateData);
+          await apiService.put(`/curriculum/${itemToUpdate.id}`, updateData);
 
           // Optimistic UI update: reflect edited content immediately
           setLevels((prev: any[]) => prev.map((lvl: any) => {
@@ -815,12 +840,21 @@ const AdminCurriculum: React.FC = () => {
           }
           return updated;
         }));
+
+        // Remember to auto-expand and scroll after refetch as well
+        setPendingExpand({ levelId: editingLevel.id, section: contentType });
       }
       
       setShowContentModal(false);
       setContentForm({});
       setFormError('');
+      // Small delay to allow DB write to be fully visible, then refetch targeted track
+      setIsRefetching(true);
+      setRefetchMessage('Finalizing changes...');
+      await new Promise(res => setTimeout(res, 250));
       await fetchLevels(editingLevel?.careerTrack || selectedTrack || undefined);
+      setIsRefetching(false);
+      setRefetchMessage(null);
       
       // Clear the student training cache to ensure changes are reflected
       dispatch(clearCache());
@@ -1941,9 +1975,9 @@ const AdminCurriculum: React.FC = () => {
         </div>
       </main>
 
-      {/* Reorder Loading Modal */}
+      {/* Loading Modals: Reorder / Delete / Refetch */}
       <AnimatePresence>
-        {(isReordering || isDeletingLevel) && (
+        {(isReordering || isDeletingLevel || isRefetching) && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -1969,7 +2003,7 @@ const AdminCurriculum: React.FC = () => {
                 transition={{ scale: { duration: 1.2, repeat: Infinity, ease: 'easeInOut' } }}
               />
               <p className="text-sm" style={{ color: 'var(--color-text-primary)' }}>
-                {reorderMessage || deleteMessage || 'Please wait...'}
+                {reorderMessage || deleteMessage || refetchMessage || 'Please wait...'}
               </p>
             </motion.div>
           </motion.div>
