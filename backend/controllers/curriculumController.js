@@ -649,6 +649,7 @@ export {
   createCurriculumItem,
   updateCurriculumItem,
   invalidateCache,
+  reorderLevelsByTrack,
   deleteLevelByTrackAndOrder,
   deleteCurriculumItem,
   getCurriculumStats,
