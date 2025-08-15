@@ -114,8 +114,15 @@ router.get('/type/:type/track/:careerTrack', protect, getCurriculumByTypeAndTrac
 // Admin routes
 router.get('/', protect, authorize('admin'), getAllCurriculumItems);
 router.get('/stats', protect, authorize('admin'), getCurriculumStats);
-router.get('/:id', protect, authorize('admin'), getCurriculumItemById);
 router.post('/invalidate-cache', protect, authorize('admin'), invalidateCache);
+
+// Bulk operations MUST come before parameterized ':id' routes to avoid conflicts
+router.put('/bulk-order', protect, authorize('admin'), [
+  body('items').isArray().withMessage('Items must be an array'),
+  body('items.*.id').isMongoId().withMessage('Invalid item ID'),
+  body('items.*.order').isInt({ min: 1 }).withMessage('Order must be a positive integer')
+], updateCurriculumOrder);
+
 // Bulk delete all items for a level (track + order)
 import { deleteLevelByTrackAndOrder } from '../controllers/curriculumController.js';
 router.delete('/level', protect, authorize('admin'), deleteLevelByTrackAndOrder);
@@ -127,15 +134,11 @@ router.post('/content', protect, authorize('admin'), curriculumValidation, creat
 router.put('/content/:id', protect, authorize('admin'), curriculumValidation, updateContentItem);
 router.delete('/content/:id', protect, authorize('admin'), deleteContentItem);
 
+// Item routes (after bulk-order to avoid PUT /bulk-order hitting PUT /:id)
+router.get('/:id', protect, authorize('admin'), getCurriculumItemById);
 router.post('/', protect, authorize('admin'), curriculumValidation, createCurriculumItem);
 router.put('/:id', protect, authorize('admin'), curriculumValidation, updateCurriculumItem);
 router.delete('/:id', protect, authorize('admin'), deleteCurriculumItem);
-
-router.put('/bulk-order', protect, authorize('admin'), [
-  body('items').isArray().withMessage('Items must be an array'),
-  body('items.*.id').isMongoId().withMessage('Invalid item ID'),
-  body('items.*.order').isInt({ min: 1 }).withMessage('Order must be a positive integer')
-], updateCurriculumOrder);
 
 router.patch('/:id/toggle', protect, authorize('admin'), toggleCurriculumStatus);
 
