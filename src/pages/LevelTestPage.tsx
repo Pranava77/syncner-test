@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useAppSelector } from '../redux/store';
 import LevelsSidebar from '../components/LevelsSidebar';
 import { CheckCircledIcon, ClockIcon, ReaderIcon, LockClosedIcon, ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import { motion } from 'framer-motion';
@@ -36,6 +37,7 @@ const TEST_DURATION = 10 * 60; // 10 minutes in seconds
 const LevelTestPage: React.FC = () => {
   const { levelId } = useParams<{ levelId: string }>();
   const navigate = useNavigate();
+  const { user } = useAppSelector((state) => state.auth);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [level, setLevel] = useState<Level | null>(null);
   const [loading, setLoading] = useState(true);
@@ -154,6 +156,37 @@ const LevelTestPage: React.FC = () => {
       fetchTestProgress();
     }
   }, [levelId, fetchLevel, fetchTestProgress]);
+
+  // Listen for curriculum changes from admin
+  useEffect(() => {
+    const handleCurriculumChange = (event: CustomEvent) => {
+      console.log('LevelTestPage: Curriculum change detected:', event.detail);
+      // Check both level career track and user career track as fallback
+      if (event.detail.track === level?.careerTrack || event.detail.track === user?.careerTrack) {
+        console.log('LevelTestPage: Refreshing level due to curriculum change in admin');
+        // Refresh the current level data
+        fetchLevel();
+      }
+    };
+    
+    const handleLevelsRefreshRequired = (event: CustomEvent) => {
+      console.log('LevelTestPage: Immediate refresh required:', event.detail);
+      // Check both level career track and user career track as fallback
+      if (event.detail.track === level?.careerTrack || event.detail.track === user?.careerTrack) {
+        console.log('LevelTestPage: Force refreshing level due to immediate refresh requirement');
+        // Force immediate refresh
+        setTimeout(() => fetchLevel(), 100);
+      }
+    };
+    
+    window.addEventListener('curriculum-changed', handleCurriculumChange as EventListener);
+    window.addEventListener('levels-refresh-required', handleLevelsRefreshRequired as EventListener);
+    
+    return () => {
+      window.removeEventListener('curriculum-changed', handleCurriculumChange as EventListener);
+      window.removeEventListener('levels-refresh-required', handleLevelsRefreshRequired as EventListener);
+    };
+  }, [fetchLevel, level?.careerTrack, user?.careerTrack]);
 
   // Timer effect for retake countdown (5-hour cooldown)
   useEffect(() => {
@@ -382,6 +415,25 @@ const LevelTestPage: React.FC = () => {
     const minutes = Math.floor((seconds % 3600) / 60);
     return `${hours}h ${minutes}m`;
   };
+
+  // Check if current level still exists (in case it was deleted by admin)
+  useEffect(() => {
+    if (level && levelId) {
+      // If we have level data but it's not active, it might have been deleted
+      if (!level.isActive) {
+        console.log('LevelTestPage: Current level is not active, redirecting to training page');
+        navigate('/student/training');
+        return;
+      }
+      
+      // If the level ID doesn't match the level data, it might have been changed
+      if (level.id !== levelId) {
+        console.log('LevelTestPage: Level ID mismatch, redirecting to training page');
+        navigate('/student/training');
+        return;
+      }
+    }
+  }, [level, levelId, navigate]);
 
   if (loading) {
     return (

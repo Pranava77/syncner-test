@@ -45,7 +45,7 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
   const [expandedLevels, setExpandedLevels] = useState<Set<string>>(new Set());
   
   // Use the optimized hook
-  const { levels, loading, error, refetch, updateLevelSectionStatus } = useLevels(user?.careerTrack);
+  const { levels, loading, error, refetch, forceRefresh, updateLevelSectionStatus } = useLevels(user?.careerTrack);
 
   // Listen for curriculum changes from admin
   useEffect(() => {
@@ -57,12 +57,23 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
       }
     };
     
+    const handleLevelsRefreshRequired = (event: CustomEvent) => {
+      console.log('LevelsSidebar: Immediate refresh required:', event.detail);
+      if (event.detail.track === user?.careerTrack) {
+        console.log('LevelsSidebar: Force refreshing levels due to immediate refresh requirement');
+        // Force immediate refresh using the enhanced function
+        setTimeout(() => forceRefresh(), 100);
+      }
+    };
+    
     window.addEventListener('curriculum-changed', handleCurriculumChange as EventListener);
+    window.addEventListener('levels-refresh-required', handleLevelsRefreshRequired as EventListener);
     
     return () => {
       window.removeEventListener('curriculum-changed', handleCurriculumChange as EventListener);
+      window.removeEventListener('levels-refresh-required', handleLevelsRefreshRequired as EventListener);
     };
-  }, [refetch, user?.careerTrack]);
+  }, [refetch, forceRefresh, user?.careerTrack]);
 
   // Memoized level completion map for efficient lookups (only for current user's track)
   const levelCompletionMap = useMemo(() => {
@@ -150,6 +161,20 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
       setExpandedLevels(prev => new Set([...prev, currentLevel]));
     }
   }, [currentLevel]);
+
+  // Check if current level still exists (in case it was deleted by admin)
+  useEffect(() => {
+    if (levels.length > 0 && currentLevel) {
+      const levelExists = levels.find(level => level.id === currentLevel);
+      if (!levelExists) {
+        console.log('LevelsSidebar: Current level no longer exists, clearing current selection');
+        // Clear the current level selection since it no longer exists
+        if (setSidebarOpen) {
+          setSidebarOpen(true); // Open sidebar to show available levels
+        }
+      }
+    }
+  }, [levels, currentLevel, setSidebarOpen]);
 
   const toggleLevelExpansion = (levelId: string) => {
     // Find the level to check if it belongs to the current user's track

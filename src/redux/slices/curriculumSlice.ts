@@ -61,6 +61,12 @@ const curriculumSlice = createSlice({
       state.lastFetched = null;
       state.levelsWithStatus = [];
       state.data = [];
+      // Force immediate invalidation by setting cache expiry to past
+      state.cacheExpiry = 0;
+    },
+    forceRefresh: (state) => {
+      state.lastFetched = null;
+      state.cacheExpiry = 0;
     },
     updateLevelStatus: (state, action) => {
       const { levelId, section, completed } = action.payload;
@@ -83,6 +89,8 @@ const curriculumSlice = createSlice({
         state.data = action.payload;
         state.loading = false;
         state.lastFetched = Date.now();
+        // Reset cache expiry to normal value after successful fetch
+        state.cacheExpiry = 5 * 60 * 1000; // 5 minutes
       })
       .addCase(fetchCurriculum.rejected, (state, action) => {
         state.loading = false;
@@ -109,6 +117,8 @@ const curriculumSlice = createSlice({
         state.levelsWithStatus = levelsWithStatus;
         state.loading = false;
         state.lastFetched = Date.now();
+        // Reset cache expiry to normal value after successful fetch
+        state.cacheExpiry = 5 * 60 * 1000; // 5 minutes
       })
       .addCase(fetchLevelsWithStatus.rejected, (state, action) => {
         state.loading = false;
@@ -117,5 +127,5 @@ const curriculumSlice = createSlice({
   },
 });
 
-export const { clearCache, updateLevelStatus } = curriculumSlice.actions;
+export const { clearCache, forceRefresh, updateLevelStatus } = curriculumSlice.actions;
 export default curriculumSlice.reducer; 

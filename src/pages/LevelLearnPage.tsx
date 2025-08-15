@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useAppSelector } from '../redux/store';
 import LevelsSidebar from '../components/LevelsSidebar';
 import { PlayIcon, ReaderIcon, FileTextIcon, ChevronUpIcon, ChevronDownIcon, ExternalLinkIcon, ClockIcon, LockClosedIcon, CheckCircledIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -49,6 +50,7 @@ interface LearnProgress {
 const LevelLearnPage: React.FC = () => {
   const { levelId } = useParams<{ levelId: string }>();
   const navigate = useNavigate();
+  const { user } = useAppSelector((state) => state.auth);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [level, setLevel] = useState<Level | null>(null);
   const [loading, setLoading] = useState(true);
@@ -146,6 +148,56 @@ const LevelLearnPage: React.FC = () => {
       fetchLearnProgress();
     }
   }, [levelId, fetchLevel, fetchLearnProgress]);
+
+  // Listen for curriculum changes from admin
+  useEffect(() => {
+    const handleCurriculumChange = (event: CustomEvent) => {
+      console.log('LevelLearnPage: Curriculum change detected:', event.detail);
+      // Check both level career track and user career track as fallback
+      if (event.detail.track === level?.careerTrack || event.detail.track === user?.careerTrack) {
+        console.log('LevelLearnPage: Refreshing level due to curriculum change in admin');
+        // Refresh the current level data
+        fetchLevel();
+      }
+    };
+    
+    const handleLevelsRefreshRequired = (event: CustomEvent) => {
+      console.log('LevelLearnPage: Immediate refresh required:', event.detail);
+      // Check both level career track and user career track as fallback
+      if (event.detail.track === level?.careerTrack || event.detail.track === user?.careerTrack) {
+        console.log('LevelLearnPage: Force refreshing level due to immediate refresh requirement');
+        // Force immediate refresh
+        setTimeout(() => fetchLevel(), 100);
+      }
+    };
+    
+    window.addEventListener('curriculum-changed', handleCurriculumChange as EventListener);
+    window.addEventListener('levels-refresh-required', handleLevelsRefreshRequired as EventListener);
+    
+    return () => {
+      window.removeEventListener('curriculum-changed', handleCurriculumChange as EventListener);
+      window.removeEventListener('levels-refresh-required', handleLevelsRefreshRequired as EventListener);
+    };
+  }, [fetchLevel, level?.careerTrack, user?.careerTrack]);
+
+  // Check if current level still exists (in case it was deleted by admin)
+  useEffect(() => {
+    if (level && levelId) {
+      // If we have level data but it's not active, it might have been deleted
+      if (!level.isActive) {
+        console.log('LevelLearnPage: Current level is not active, redirecting to training page');
+        navigate('/student/training');
+        return;
+      }
+      
+      // If the level ID doesn't match the level data, it might have been changed
+      if (level.id !== levelId) {
+        console.log('LevelLearnPage: Level ID mismatch, redirecting to training page');
+        navigate('/student/training');
+        return;
+      }
+    }
+  }, [level, levelId, navigate]);
 
   const updateLearnProgress = async (linksAccessed: string[]) => {
     if (!levelId) return;

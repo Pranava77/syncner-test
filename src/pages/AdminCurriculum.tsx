@@ -406,18 +406,39 @@ const AdminCurriculum: React.FC = () => {
           // Also clear local levels state to force immediate UI update
           setLevels([]);
           
+          // Call backend cache invalidation endpoint
+          try {
+            await apiService.invalidateCache();
+            console.log('Backend cache invalidation successful');
+          } catch (backendCacheError) {
+            console.warn('Backend cache invalidation failed:', backendCacheError);
+          }
+          
           // Dispatch a global event to notify all components
           if (level) {
             window.dispatchEvent(new CustomEvent('curriculum-changed', { 
               detail: { 
                 action: 'delete', 
                 track: selectedTrack,
-                levelOrder: level.order 
+                levelOrder: level.order,
+                levelId: level.id,
+                timestamp: Date.now()
+              } 
+            }));
+            
+            // Also dispatch a more specific event for immediate refresh
+            window.dispatchEvent(new CustomEvent('levels-refresh-required', { 
+              detail: { 
+                track: selectedTrack,
+                reason: 'level_deleted',
+                levelOrder: level.order,
+                levelId: level.id,
+                timestamp: Date.now()
               } 
             }));
           }
           
-          console.log('Cache cleared, local state reset, and global event dispatched. Changes should be visible immediately.');
+          console.log('Cache cleared, local state reset, and global events dispatched. Changes should be visible immediately.');
         } catch (cacheError) {
           console.warn('Could not clear cache:', cacheError);
         }

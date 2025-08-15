@@ -1,6 +1,6 @@
 import {  useEffect, useCallback, useMemo } from 'react';
 import { useAppSelector, useAppDispatch } from '../redux/store';
-import { fetchLevelsWithStatus, updateLevelStatus } from '../redux/slices/curriculumSlice';
+import { fetchLevelsWithStatus, updateLevelStatus, clearCache } from '../redux/slices/curriculumSlice';
 
 interface LearnItem {
   type: 'video' | 'reading' | 'slide' | 'other';
@@ -57,28 +57,44 @@ export const useLevels = (trackId?: string) => {
   // Check if cache is still valid
   const isCacheValid = useMemo(() => {
     if (!lastFetched) return false;
+    // If cacheExpiry is 0, it means cache was forcefully cleared
+    if (cacheExpiry === 0) return false;
     return Date.now() - lastFetched < cacheExpiry;
   }, [lastFetched, cacheExpiry]);
 
   const fetchLevels = useCallback(async () => {
     if (!trackId) return;
     
-    // Only fetch if cache is invalid or no data exists
-    if (!isCacheValid || levelsWithStatus.length === 0) {
+    // Always fetch if cache is invalid, no data exists, or cache was forcefully cleared
+    if (!isCacheValid || levelsWithStatus.length === 0 || cacheExpiry === 0) {
       try {
+        console.log('useLevels: Fetching levels due to cache invalidation or empty data');
         await dispatch(fetchLevelsWithStatus({ trackId })).unwrap();
       } catch (err) {
         console.error('Failed to fetch levels:', err);
       }
     }
-  }, [trackId, dispatch, isCacheValid, levelsWithStatus.length]);
+  }, [trackId, dispatch, isCacheValid, levelsWithStatus.length, cacheExpiry]);
 
   const refetch = useCallback(async () => {
     if (!trackId) return;
     try {
+      console.log('useLevels: Force refetching levels');
       await dispatch(fetchLevelsWithStatus({ trackId })).unwrap();
     } catch (err) {
       console.error('Failed to refetch levels:', err);
+    }
+  }, [trackId, dispatch]);
+
+  const forceRefresh = useCallback(async () => {
+    if (!trackId) return;
+    try {
+      console.log('useLevels: Force refreshing levels (bypassing cache)');
+      // Clear cache first, then fetch
+      dispatch(clearCache());
+      await dispatch(fetchLevelsWithStatus({ trackId })).unwrap();
+    } catch (err) {
+      console.error('Failed to force refresh levels:', err);
     }
   }, [trackId, dispatch]);
 
@@ -88,7 +104,21 @@ export const useLevels = (trackId?: string) => {
 
   useEffect(() => {
     fetchLevels();
-  }, [fetchLevels]);
+    
+    // Set up periodic refresh every 30 seconds to ensure data is always current
+    const intervalId = setInterval(() => {
+      if (trackId && !loading) {
+        console.log('useLevels: Periodic refresh check');
+        // Only refresh if cache is old or if we have no data
+        if (!isCacheValid || levelsWithStatus.length === 0) {
+          console.log('useLevels: Periodic refresh triggered');
+          refetch();
+        }
+      }
+    }, 30000); // 30 seconds
+    
+    return () => clearInterval(intervalId);
+  }, [fetchLevels, trackId, loading, isCacheValid, levelsWithStatus.length, refetch]);
 
   // Filter levels for the specific track
   const filteredLevels = useMemo(() => {
@@ -103,6 +133,7 @@ export const useLevels = (trackId?: string) => {
     loading,
     error,
     refetch,
+    forceRefresh,
     updateLevelSectionStatus,
     isCacheValid
   };

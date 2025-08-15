@@ -99,9 +99,10 @@ class ApiService {
 
   // Training endpoints
   async getLevels(trackId?: string) {
+    const timestamp = Date.now(); // Cache busting
     const url = trackId 
-      ? `${this.baseURL}/training/levels?track=${trackId}`
-      : `${this.baseURL}/training/levels`;
+      ? `${this.baseURL}/training/levels?track=${trackId}&_t=${timestamp}`
+      : `${this.baseURL}/training/levels?_t=${timestamp}`;
     const response = await fetch(url, {
       method: 'GET',
       headers: this.getHeaders(),
@@ -545,6 +546,16 @@ class ApiService {
       method: 'POST',
       credentials: 'include',
       body: formData,
+    });
+    return this.handleResponse(response);
+  }
+
+  // Cache management
+  async invalidateCache() {
+    const response = await fetch(`${this.baseURL}/curriculum/invalidate-cache`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      credentials: 'include',
     });
     return this.handleResponse(response);
   }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../redux/store';
 import { useLevels } from '../hooks/useLevels';
@@ -47,7 +47,7 @@ const StudentDashboard: React.FC = () => {
   const [showAIModal, setShowAIModal] = useState(false);
 
   // Use the optimized hook
-  const { levels, loading, error, refetch } = useLevels(user?.careerTrack);
+  const { levels, loading, error, refetch, forceRefresh } = useLevels(user?.careerTrack);
   
   // Define userTrack early to avoid linter errors
   const userTrack = user?.careerTrack || 'Unknown';
@@ -158,29 +158,38 @@ const StudentDashboard: React.FC = () => {
       }
     };
     
+    const handleLevelsRefreshRequired = (event: CustomEvent) => {
+      console.log('StudentDashboard: Immediate refresh required:', event.detail);
+      if (event.detail.track === user?.careerTrack) {
+        console.log('StudentDashboard: Force refreshing levels due to immediate refresh requirement');
+        // Force immediate refresh using the enhanced function
+        setTimeout(() => forceRefresh(), 100);
+      }
+    };
+    
     window.addEventListener('curriculum-changed', handleCurriculumChange as EventListener);
+    window.addEventListener('levels-refresh-required', handleLevelsRefreshRequired as EventListener);
     
     return () => {
       window.removeEventListener('curriculum-changed', handleCurriculumChange as EventListener);
+      window.removeEventListener('levels-refresh-required', handleLevelsRefreshRequired as EventListener);
     };
-  }, [dispatch, refetch, user?.careerTrack]);
+  }, [dispatch, refetch, forceRefresh, user?.careerTrack]);
 
   // Handle progress updates
-  const handleProgressUpdate = () => {
+  const handleProgressUpdate = useCallback(() => {
     // Clear cache and force fresh fetch in background
     dispatch(clearCache());
     setTimeout(() => {
       refetch();
     }, 100);
-  };
+  }, [dispatch, refetch]);
 
-
-
-  const handleStorageChange = (e: StorageEvent) => {
+  const handleStorageChange = useCallback((e: StorageEvent) => {
     if (e.key === 'level-progress-updated') {
       handleProgressUpdate();
     }
-  };
+  }, [handleProgressUpdate]);
 
 
 
@@ -197,6 +206,21 @@ const StudentDashboard: React.FC = () => {
       window.removeEventListener('storage', handleStorageChange);
     };
   }, [handleProgressUpdate, handleStorageChange, refetch]);
+
+  // Check if current level still exists (in case it was deleted by admin)
+  useEffect(() => {
+    if (levels.length > 0 && currentLevel) {
+      const levelExists = levels.find(level => level.id === currentLevel.id);
+      if (!levelExists) {
+        console.log('StudentDashboard: Current level no longer exists, updating current level');
+        // Update current level to the first available level
+        const firstLevel = levels[0];
+        if (firstLevel) {
+          setCurrentLevel(firstLevel);
+        }
+      }
+    }
+  }, [levels, currentLevel]);
 
   if (!user || !user.careerTrack) {
     return (

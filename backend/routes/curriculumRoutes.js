@@ -13,7 +13,8 @@ import {
   getContentByType,
   createContentItem,
   updateContentItem,
-  deleteContentItem
+  deleteContentItem,
+  invalidateCache
 } from '../controllers/curriculumController.js';
 import { protect } from '../middleware/auth.js';
 import { authorize } from '../middleware/auth.js';
@@ -114,6 +115,7 @@ router.get('/type/:type/track/:careerTrack', protect, getCurriculumByTypeAndTrac
 router.get('/', protect, authorize('admin'), getAllCurriculumItems);
 router.get('/stats', protect, authorize('admin'), getCurriculumStats);
 router.get('/:id', protect, authorize('admin'), getCurriculumItemById);
+router.post('/invalidate-cache', protect, authorize('admin'), invalidateCache);
 
 // Content-specific routes
 router.get('/content/:type', protect, authorize('admin'), getContentByType);

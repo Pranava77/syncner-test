@@ -199,6 +199,27 @@ const updateCurriculumItem = async (req, res) => {
   }
 };
 
+// @desc    Invalidate curriculum cache
+// @route   POST /api/curriculum/invalidate-cache
+// @access  Private/Admin
+const invalidateCache = async (req, res) => {
+  try {
+    // This endpoint can be used to clear any server-side caches
+    // For now, we'll just return success as the main cache clearing happens on the frontend
+    
+    res.status(200).json({
+      success: true,
+      message: 'Cache invalidation request received'
+    });
+  } catch (error) {
+    console.error('Cache invalidation error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error while invalidating cache'
+    });
+  }
+};
+
 // @desc    Delete curriculum item
 // @route   DELETE /api/curriculum/:id
 // @access  Private/Admin
@@ -528,6 +549,7 @@ export {
   getCurriculumItemById,
   createCurriculumItem,
   updateCurriculumItem,
+  invalidateCache,
   deleteCurriculumItem,
   getCurriculumStats,
   getCurriculumByTypeAndTrack,

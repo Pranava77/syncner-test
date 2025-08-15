@@ -164,6 +164,56 @@ const LevelExercisePage: React.FC = () => {
     fetchAllLevels();
   }, [fetchAllLevels]);
 
+  // Listen for curriculum changes from admin
+  useEffect(() => {
+    const handleCurriculumChange = (event: CustomEvent) => {
+      console.log('LevelExercisePage: Curriculum change detected:', event.detail);
+      // Check both level career track and user career track as fallback
+      if (event.detail.track === level?.careerTrack || event.detail.track === user?.careerTrack) {
+        console.log('LevelExercisePage: Refreshing level due to curriculum change in admin');
+        // Refresh the current level data
+        fetchLevel();
+      }
+    };
+    
+    const handleLevelsRefreshRequired = (event: CustomEvent) => {
+      console.log('LevelExercisePage: Immediate refresh required:', event.detail);
+      // Check both level career track and user career track as fallback
+      if (event.detail.track === level?.careerTrack || event.detail.track === user?.careerTrack) {
+        console.log('LevelExercisePage: Force refreshing level due to immediate refresh requirement');
+        // Force immediate refresh
+        setTimeout(() => fetchLevel(), 100);
+      }
+    };
+    
+    window.addEventListener('curriculum-changed', handleCurriculumChange as EventListener);
+    window.addEventListener('levels-refresh-required', handleLevelsRefreshRequired as EventListener);
+    
+    return () => {
+      window.removeEventListener('curriculum-changed', handleCurriculumChange as EventListener);
+      window.removeEventListener('levels-refresh-required', handleLevelsRefreshRequired as EventListener);
+    };
+  }, [fetchLevel, level?.careerTrack, user?.careerTrack]);
+
+  // Check if current level still exists (in case it was deleted by admin)
+  useEffect(() => {
+    if (level && levelId) {
+      // If we have level data but it's not active, it might have been deleted
+      if (!level.isActive) {
+        console.log('LevelExercisePage: Current level is not active, redirecting to training page');
+        navigate('/student/training');
+        return;
+      }
+      
+      // If the level ID doesn't match the level data, it might have been changed
+      if (level.id !== levelId) {
+        console.log('LevelExercisePage: Level ID mismatch, redirecting to training page');
+        navigate('/student/training');
+        return;
+      }
+    }
+  }, [level, levelId, navigate]);
+
   const statusColor = (status: string) => {
     if (status === 'Completed') {
       return {

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAppSelector } from '../redux/store';
 import LevelsSidebar from '../components/LevelsSidebar';
 import { useLevels } from '../hooks/useLevels';
@@ -59,9 +59,11 @@ const TrainingLevels: React.FC = () => {
   const { user } = useAppSelector((state) => state.auth);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const navigate = useNavigate();
-
+  const { levelId } = useParams(); // Get current level from URL params
+  const currentLevel = levelId;
+  
   // Use the optimized hook
-  const { levels, loading, error, refetch } = useLevels(user?.careerTrack);
+  const { levels, loading, error, refetch, forceRefresh } = useLevels(user?.careerTrack);
 
   // Memoized level completion map for efficient lookups
   const levelCompletionMap = useMemo(() => {
@@ -104,21 +106,18 @@ const TrainingLevels: React.FC = () => {
     });
   }, [levels, levelCompletionMap]);
 
-  // Handle progress updates
-  const handleProgressUpdate = () => {
+  // Handle progress updates from other components
+  const handleProgressUpdate = useCallback(() => {
     refetch();
-  };
+  }, [refetch]);
 
-  const handleStorageChange = (e: StorageEvent) => {
+  const handleStorageChange = useCallback((e: StorageEvent) => {
     if (e.key === 'level-progress-updated') {
       handleProgressUpdate();
     }
-  };
+  }, [handleProgressUpdate]);
 
   useEffect(() => {
-    window.addEventListener('progress-updated', handleProgressUpdate);
-    window.addEventListener('storage', handleStorageChange);
-    
     // Listen for curriculum changes from admin
     const handleCurriculumChange = (event: CustomEvent) => {
       console.log('Curriculum change detected:', event.detail);
@@ -128,14 +127,42 @@ const TrainingLevels: React.FC = () => {
       }
     };
     
+    const handleLevelsRefreshRequired = (event: CustomEvent) => {
+      console.log('Immediate refresh required:', event.detail);
+      if (event.detail.track === user?.careerTrack) {
+        console.log('Force refreshing levels due to immediate refresh requirement');
+        // Force immediate refresh using the enhanced function
+        setTimeout(() => forceRefresh(), 100);
+      }
+    };
+    
+    window.addEventListener('progress-updated', handleProgressUpdate);
+    window.addEventListener('storage', handleStorageChange);
     window.addEventListener('curriculum-changed', handleCurriculumChange as EventListener);
+    window.addEventListener('levels-refresh-required', handleLevelsRefreshRequired as EventListener);
     
     return () => {
       window.removeEventListener('progress-updated', handleProgressUpdate);
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('curriculum-changed', handleCurriculumChange as EventListener);
+      window.removeEventListener('levels-refresh-required', handleLevelsRefreshRequired as EventListener);
     };
-  }, [handleProgressUpdate, handleStorageChange, refetch, user?.careerTrack]);
+  }, [handleProgressUpdate, handleStorageChange, refetch, forceRefresh, user?.careerTrack]);
+
+  // Check if current level still exists (in case it was deleted by admin)
+  useEffect(() => {
+    if (levels.length > 0 && currentLevel) {
+      const levelExists = levels.find(level => level.id === currentLevel);
+      if (!levelExists) {
+        console.log('Current level no longer exists, redirecting to first available level');
+        // Redirect to the first available level
+        const firstLevel = levels[0];
+        if (firstLevel) {
+          navigate(`/student/training/${firstLevel.id}`);
+        }
+      }
+    }
+  }, [levels, currentLevel, navigate]);
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty.toLowerCase()) {
