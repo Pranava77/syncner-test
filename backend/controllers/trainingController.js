@@ -179,7 +179,8 @@ export const getAllLevels = async (req, res) => {
       filter.careerTrack = normalizedTrack;
     }
 
-    const curriculumItems = await Curriculum.find(filter).sort({ order: 'asc' });
+    // Ensure deterministic ordering within a level: first by level order, then by creation time
+    const curriculumItems = await Curriculum.find(filter).sort({ order: 1, createdAt: 1 });
     
     console.log(`Found ${curriculumItems.length} curriculum items for filter:`, filter);
     
