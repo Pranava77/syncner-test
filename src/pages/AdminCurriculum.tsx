@@ -136,6 +136,8 @@ const AdminCurriculum: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isReordering, setIsReordering] = useState(false);
   const [reorderMessage, setReorderMessage] = useState<string | null>(null);
+  const [isDeletingLevel, setIsDeletingLevel] = useState(false);
+  const [deleteMessage, setDeleteMessage] = useState<string | null>(null);
 
   useEffect(() => {
     fetchLevels();
@@ -358,6 +360,8 @@ const AdminCurriculum: React.FC = () => {
     if (window.confirm('Are you sure you want to delete this level?')) {
       try {
         setError(null);
+        setIsDeletingLevel(true);
+        setDeleteMessage('Deleting level...');
         // Find the level to get its title and career track
         const level = levels.find(l => l.id === id);
         
@@ -420,6 +424,9 @@ const AdminCurriculum: React.FC = () => {
         console.error('Error deleting level:', error);
         const errorMessage = error.message || 'Failed to delete level';
         setError(errorMessage);
+      } finally {
+        setIsDeletingLevel(false);
+        setDeleteMessage(null);
       }
     }
   };
@@ -1854,7 +1861,7 @@ const AdminCurriculum: React.FC = () => {
 
       {/* Reorder Loading Modal */}
       <AnimatePresence>
-        {isReordering && (
+        {(isReordering || isDeletingLevel) && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -1880,7 +1887,7 @@ const AdminCurriculum: React.FC = () => {
                 transition={{ scale: { duration: 1.2, repeat: Infinity, ease: 'easeInOut' } }}
               />
               <p className="text-sm" style={{ color: 'var(--color-text-primary)' }}>
-                {reorderMessage || 'Please wait...'}
+                {reorderMessage || deleteMessage || 'Please wait...'}
               </p>
             </motion.div>
           </motion.div>
