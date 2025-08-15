@@ -65,6 +65,11 @@ const TrainingLevels: React.FC = () => {
   // Use the optimized hook
   const { levels, loading, error, refetch, forceRefresh } = useLevels(user?.careerTrack);
 
+  // Ensure freshest data on mount
+  useEffect(() => {
+    forceRefresh();
+  }, [forceRefresh]);
+
   // Memoized level completion map for efficient lookups
   const levelCompletionMap = useMemo(() => {
     const map = new Map();

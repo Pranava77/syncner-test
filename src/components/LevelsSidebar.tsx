@@ -47,6 +47,11 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
   // Use the optimized hook
   const { levels, loading, error, refetch, forceRefresh, updateLevelSectionStatus } = useLevels(user?.careerTrack);
 
+  // Ensure freshest data on mount
+  useEffect(() => {
+    forceRefresh();
+  }, [forceRefresh]);
+
   // Listen for curriculum changes from admin
   useEffect(() => {
     const handleCurriculumChange = (event: CustomEvent) => {
