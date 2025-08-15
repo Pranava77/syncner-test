@@ -135,6 +135,7 @@ const AdminCurriculum: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isReordering, setIsReordering] = useState(false);
+  const [reorderMessage, setReorderMessage] = useState<string | null>(null);
 
   useEffect(() => {
     fetchLevels();
@@ -1686,6 +1687,7 @@ const AdminCurriculum: React.FC = () => {
                                 if (targetOrder < 1 || isReordering) return;
                                 try {
                                   setIsReordering(true);
+                                  setReorderMessage('Reordering levels...');
                                   const res = await apiService.get('/curriculum');
                                   const all = res.data || [];
                                   const track = level.careerTrack;
@@ -1706,6 +1708,7 @@ const AdminCurriculum: React.FC = () => {
                                   console.error('Reorder up failed:', e);
                                 } finally {
                                   setIsReordering(false);
+                                  setReorderMessage(null);
                                 }
                               }}
                               disabled={isReordering || level.order === 1}
@@ -1723,6 +1726,7 @@ const AdminCurriculum: React.FC = () => {
                                 if (isReordering) return;
                                 try {
                                   setIsReordering(true);
+                                  setReorderMessage('Reordering levels...');
                                   const res = await apiService.get('/curriculum');
                                   const all = res.data || [];
                                   const track = level.careerTrack;
@@ -1743,6 +1747,7 @@ const AdminCurriculum: React.FC = () => {
                                   console.error('Reorder down failed:', e);
                                 } finally {
                                   setIsReordering(false);
+                                  setReorderMessage(null);
                                 }
                               }}
                               disabled={
@@ -1864,6 +1869,41 @@ const AdminCurriculum: React.FC = () => {
           )}
         </div>
       </main>
+
+      {/* Reorder Loading Modal */}
+      <AnimatePresence>
+        {isReordering && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="border rounded-lg p-6 w-full max-w-sm text-center"
+              style={{
+                backgroundColor: 'var(--color-surface-elevated)',
+                borderColor: 'var(--color-border)',
+                boxShadow: 'var(--shadow-lg)'
+              }}
+            >
+              <motion.img
+                src={syncnerLogo}
+                alt="Syncner Logo"
+                className="w-10 h-10 mx-auto mb-3"
+                animate={{ scale: [1, 1.1, 1] }}
+                transition={{ scale: { duration: 1.2, repeat: Infinity, ease: 'easeInOut' } }}
+              />
+              <p className="text-sm" style={{ color: 'var(--color-text-primary)' }}>
+                {reorderMessage || 'Please wait...'}
+              </p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Level Modal */}
       <AnimatePresence>
