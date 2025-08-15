@@ -1681,7 +1681,6 @@ const AdminCurriculum: React.FC = () => {
                             <button
                               onClick={async () => {
                                 // Move level up (swap with previous order)
-                                if (!selectedTrack) return;
                                 const currentOrder = level.order;
                                 const targetOrder = currentOrder - 1;
                                 if (targetOrder < 1 || isReordering) return;
@@ -1689,8 +1688,9 @@ const AdminCurriculum: React.FC = () => {
                                   setIsReordering(true);
                                   const res = await apiService.get('/curriculum');
                                   const all = res.data || [];
-                                  const currItems = all.filter((i: any) => i.careerTrack === selectedTrack && i.order === currentOrder);
-                                  const targItems = all.filter((i: any) => i.careerTrack === selectedTrack && i.order === targetOrder);
+                                  const track = level.careerTrack;
+                                  const currItems = all.filter((i: any) => i.careerTrack === track && i.order === currentOrder);
+                                  const targItems = all.filter((i: any) => i.careerTrack === track && i.order === targetOrder);
                                   if (currItems.length === 0 || targItems.length === 0) return;
                                   const items = [
                                     ...currItems.map((i: any) => ({ id: i.id, order: targetOrder })),
@@ -1698,10 +1698,10 @@ const AdminCurriculum: React.FC = () => {
                                   ];
                                   await apiService.put('/curriculum/bulk-order', { items });
                                   dispatch(clearCache());
-                                  window.dispatchEvent(new CustomEvent('curriculum-changed', { detail: { track: selectedTrack, action: 'reorder', timestamp: Date.now() } }));
-                                  window.dispatchEvent(new CustomEvent('levels-refresh-required', { detail: { track: selectedTrack, reason: 'reorder', timestamp: Date.now() } }));
+                                  window.dispatchEvent(new CustomEvent('curriculum-changed', { detail: { track, action: 'reorder', timestamp: Date.now() } }));
+                                  window.dispatchEvent(new CustomEvent('levels-refresh-required', { detail: { track, reason: 'reorder', timestamp: Date.now() } }));
                                   await apiService.invalidateCache();
-                                  await fetchLevels(selectedTrack || undefined);
+                                  await fetchLevels(track);
                                 } catch (e) {
                                   console.error('Reorder up failed:', e);
                                 } finally {
@@ -1718,7 +1718,6 @@ const AdminCurriculum: React.FC = () => {
                             <button
                               onClick={async () => {
                                 // Move level down (swap with next order)
-                                if (!selectedTrack) return;
                                 const currentOrder = level.order;
                                 const targetOrder = currentOrder + 1;
                                 if (isReordering) return;
@@ -1726,8 +1725,9 @@ const AdminCurriculum: React.FC = () => {
                                   setIsReordering(true);
                                   const res = await apiService.get('/curriculum');
                                   const all = res.data || [];
-                                  const currItems = all.filter((i: any) => i.careerTrack === selectedTrack && i.order === currentOrder);
-                                  const targItems = all.filter((i: any) => i.careerTrack === selectedTrack && i.order === targetOrder);
+                                  const track = level.careerTrack;
+                                  const currItems = all.filter((i: any) => i.careerTrack === track && i.order === currentOrder);
+                                  const targItems = all.filter((i: any) => i.careerTrack === track && i.order === targetOrder);
                                   if (currItems.length === 0 || targItems.length === 0) return;
                                   const items = [
                                     ...currItems.map((i: any) => ({ id: i.id, order: targetOrder })),
@@ -1735,17 +1735,22 @@ const AdminCurriculum: React.FC = () => {
                                   ];
                                   await apiService.put('/curriculum/bulk-order', { items });
                                   dispatch(clearCache());
-                                  window.dispatchEvent(new CustomEvent('curriculum-changed', { detail: { track: selectedTrack, action: 'reorder', timestamp: Date.now() } }));
-                                  window.dispatchEvent(new CustomEvent('levels-refresh-required', { detail: { track: selectedTrack, reason: 'reorder', timestamp: Date.now() } }));
+                                  window.dispatchEvent(new CustomEvent('curriculum-changed', { detail: { track, action: 'reorder', timestamp: Date.now() } }));
+                                  window.dispatchEvent(new CustomEvent('levels-refresh-required', { detail: { track, reason: 'reorder', timestamp: Date.now() } }));
                                   await apiService.invalidateCache();
-                                  await fetchLevels(selectedTrack || undefined);
+                                  await fetchLevels(track);
                                 } catch (e) {
                                   console.error('Reorder down failed:', e);
                                 } finally {
                                   setIsReordering(false);
                                 }
                               }}
-                              disabled={isReordering /* last-level disable handled by lack of targItems */}
+                              disabled={
+                                isReordering ||
+                                level.order === Math.max(
+                                  ...levels.filter((l: any) => l.careerTrack === level.careerTrack).map((l: any) => l.order)
+                                )
+                              }
                               className="p-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                               style={{ color: 'var(--color-text-tertiary)' }}
                               title="Move Level Down"
