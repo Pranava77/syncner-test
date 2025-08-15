@@ -360,40 +360,10 @@ const AdminCurriculum: React.FC = () => {
         const level = levels.find(l => l.id === id);
         
         if (level) {
-          // Delete all curriculum items for this level (same order and career track)
-          const response = await apiService.get('/curriculum');
-          const curriculumItems = response.data || [];
-          const itemsToDelete = curriculumItems.filter((item: any) => 
-            item.order === level.order && item.careerTrack === level.careerTrack
-          );
-          
-          console.log(`Found ${itemsToDelete.length} items to delete for level ${level.order} in track ${level.careerTrack}`);
-          console.log('Items to delete:', itemsToDelete.map((item: any) => ({ id: item.id, type: item.type, title: item.title })));
-          
-          // Delete each item
-          for (const item of itemsToDelete) {
-            const itemId = item.id;
-            if (itemId) {
-              console.log(`Deleting ${item.type} item: ${item.title} (ID: ${itemId})`);
-              const deleteResponse = await apiService.delete(`/curriculum/${itemId}`);
-              console.log(`Delete response for ${itemId}:`, deleteResponse);
-            }
-          }
-          
-          // Wait a moment for deletion to complete
-          await new Promise(resolve => setTimeout(resolve, 1000));
-          
-          // Verify deletion by checking if items still exist
-          const verifyResponse = await apiService.get('/curriculum');
-          const remainingItems = verifyResponse.data?.filter((item: any) => 
-            item.order === level.order && item.careerTrack === level.careerTrack
-          ) || [];
-          
-          console.log(`Verification: ${remainingItems.length} items still exist for level ${level.order}`);
-          if (remainingItems.length > 0) {
-            console.warn('Some items may not have been deleted properly:', remainingItems);
-          }
-          
+          // Use bulk delete endpoint to remove all items for this level
+          console.log(`Bulk deleting all items for track ${level.careerTrack} level order ${level.order}`);
+          const bulkDeleteRes = await apiService.deleteLevelByTrackAndOrder(level.careerTrack, level.order);
+          console.log('Bulk delete result:', bulkDeleteRes);
           console.log('All items deleted. Now clearing cache...');
         }
         await fetchLevels(selectedTrack || undefined);

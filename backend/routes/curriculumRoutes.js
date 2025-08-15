@@ -116,6 +116,9 @@ router.get('/', protect, authorize('admin'), getAllCurriculumItems);
 router.get('/stats', protect, authorize('admin'), getCurriculumStats);
 router.get('/:id', protect, authorize('admin'), getCurriculumItemById);
 router.post('/invalidate-cache', protect, authorize('admin'), invalidateCache);
+// Bulk delete all items for a level (track + order)
+import { deleteLevelByTrackAndOrder } from '../controllers/curriculumController.js';
+router.delete('/level', protect, authorize('admin'), deleteLevelByTrackAndOrder);
 
 // Content-specific routes
 router.get('/content/:type', protect, authorize('admin'), getContentByType);

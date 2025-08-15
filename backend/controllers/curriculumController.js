@@ -220,6 +220,49 @@ const invalidateCache = async (req, res) => {
   }
 };
 
+// @desc    Delete all curriculum items for a level (by track + order)
+// @route   DELETE /api/curriculum/level
+// @access  Private/Admin
+const deleteLevelByTrackAndOrder = async (req, res) => {
+  try {
+    const { careerTrack, order } = req.query;
+
+    if (!careerTrack || !order) {
+      return res.status(400).json({
+        success: false,
+        message: 'careerTrack and order are required query parameters'
+      });
+    }
+
+    const normalizedCareerTrack = normalizeCareerTrack(careerTrack);
+    const levelOrder = parseInt(order, 10);
+    if (Number.isNaN(levelOrder) || levelOrder < 1) {
+      return res.status(400).json({
+        success: false,
+        message: 'order must be a positive integer'
+      });
+    }
+
+    // Delete all items for this level (any type) in the specified track and order
+    const result = await Curriculum.deleteMany({
+      careerTrack: normalizedCareerTrack,
+      order: levelOrder,
+    });
+
+    return res.status(200).json({
+      success: true,
+      deletedCount: result.deletedCount || 0,
+      message: `Deleted ${result.deletedCount || 0} items for track ${normalizedCareerTrack} level order ${levelOrder}`
+    });
+  } catch (error) {
+    console.error('Bulk delete level by track+order error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Server error while deleting level content'
+    });
+  }
+};
+
 // @desc    Delete curriculum item
 // @route   DELETE /api/curriculum/:id
 // @access  Private/Admin
@@ -550,6 +593,7 @@ export {
   createCurriculumItem,
   updateCurriculumItem,
   invalidateCache,
+  deleteLevelByTrackAndOrder,
   deleteCurriculumItem,
   getCurriculumStats,
   getCurriculumByTypeAndTrack,
