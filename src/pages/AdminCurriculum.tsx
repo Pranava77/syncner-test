@@ -1688,17 +1688,8 @@ const AdminCurriculum: React.FC = () => {
                                 try {
                                   setIsReordering(true);
                                   setReorderMessage('Reordering levels...');
-                                  const res = await apiService.get('/curriculum');
-                                  const all = res.data || [];
                                   const track = level.careerTrack;
-                                  const currItems = all.filter((i: any) => i.careerTrack === track && i.order === currentOrder);
-                                  const targItems = all.filter((i: any) => i.careerTrack === track && i.order === targetOrder);
-                                  if (currItems.length === 0 || targItems.length === 0) return;
-                                  const items = [
-                                    ...currItems.map((i: any) => ({ id: i.id, order: targetOrder })),
-                                    ...targItems.map((i: any) => ({ id: i.id, order: currentOrder })),
-                                  ];
-                                  await apiService.put('/curriculum/bulk-order', { items });
+                                  await apiService.reorderLevelsByTrack(track, currentOrder, targetOrder);
                                   dispatch(clearCache());
                                   window.dispatchEvent(new CustomEvent('curriculum-changed', { detail: { track, action: 'reorder', timestamp: Date.now() } }));
                                   window.dispatchEvent(new CustomEvent('levels-refresh-required', { detail: { track, reason: 'reorder', timestamp: Date.now() } }));
@@ -1727,17 +1718,8 @@ const AdminCurriculum: React.FC = () => {
                                 try {
                                   setIsReordering(true);
                                   setReorderMessage('Reordering levels...');
-                                  const res = await apiService.get('/curriculum');
-                                  const all = res.data || [];
                                   const track = level.careerTrack;
-                                  const currItems = all.filter((i: any) => i.careerTrack === track && i.order === currentOrder);
-                                  const targItems = all.filter((i: any) => i.careerTrack === track && i.order === targetOrder);
-                                  if (currItems.length === 0 || targItems.length === 0) return;
-                                  const items = [
-                                    ...currItems.map((i: any) => ({ id: i.id, order: targetOrder })),
-                                    ...targItems.map((i: any) => ({ id: i.id, order: currentOrder })),
-                                  ];
-                                  await apiService.put('/curriculum/bulk-order', { items });
+                                  await apiService.reorderLevelsByTrack(track, currentOrder, targetOrder);
                                   dispatch(clearCache());
                                   window.dispatchEvent(new CustomEvent('curriculum-changed', { detail: { track, action: 'reorder', timestamp: Date.now() } }));
                                   window.dispatchEvent(new CustomEvent('levels-refresh-required', { detail: { track, reason: 'reorder', timestamp: Date.now() } }));

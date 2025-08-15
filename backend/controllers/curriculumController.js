@@ -263,6 +263,62 @@ const deleteLevelByTrackAndOrder = async (req, res) => {
   }
 };
 
+// @desc    Reorder (swap) two levels by careerTrack and orders
+// @route   PUT /api/curriculum/level/reorder
+// @access  Private/Admin
+const reorderLevelsByTrack = async (req, res) => {
+  try {
+    const { careerTrack, from, to } = req.query;
+
+    if (!careerTrack || !from || !to) {
+      return res.status(400).json({
+        success: false,
+        message: 'careerTrack, from, and to are required query parameters'
+      });
+    }
+
+    const normalizedCareerTrack = normalizeCareerTrack(careerTrack);
+    const fromOrder = parseInt(from, 10);
+    const toOrder = parseInt(to, 10);
+    if ([fromOrder, toOrder].some((n) => Number.isNaN(n) || n < 1)) {
+      return res.status(400).json({
+        success: false,
+        message: 'from and to must be positive integers'
+      });
+    }
+
+    if (fromOrder === toOrder) {
+      return res.status(200).json({ success: true, message: 'No-op reorder' });
+    }
+
+    // Use a sentinel order to avoid collisions during swap
+    const sentinel = -Math.max(fromOrder, toOrder);
+
+    // Phase 1: move "from" level to sentinel
+    await Curriculum.updateMany(
+      { careerTrack: normalizedCareerTrack, order: fromOrder },
+      { $set: { order: sentinel } }
+    );
+
+    // Phase 2: move "to" level to "from"
+    await Curriculum.updateMany(
+      { careerTrack: normalizedCareerTrack, order: toOrder },
+      { $set: { order: fromOrder } }
+    );
+
+    // Phase 3: move sentinel to "to"
+    await Curriculum.updateMany(
+      { careerTrack: normalizedCareerTrack, order: sentinel },
+      { $set: { order: toOrder } }
+    );
+
+    return res.status(200).json({ success: true, message: 'Levels reordered successfully' });
+  } catch (error) {
+    console.error('Reorder levels error:', error);
+    return res.status(500).json({ success: false, message: 'Server error while reordering levels' });
+  }
+};
+
 // @desc    Delete curriculum item
 // @route   DELETE /api/curriculum/:id
 // @access  Private/Admin

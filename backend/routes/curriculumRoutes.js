@@ -125,7 +125,9 @@ router.put('/bulk-order', protect, authorize('admin'), [
 
 // Bulk delete all items for a level (track + order)
 import { deleteLevelByTrackAndOrder } from '../controllers/curriculumController.js';
+import { reorderLevelsByTrack } from '../controllers/curriculumController.js';
 router.delete('/level', protect, authorize('admin'), deleteLevelByTrackAndOrder);
+router.put('/level/reorder', protect, authorize('admin'), reorderLevelsByTrack);
 
 // Content-specific routes
 router.get('/content/:type', protect, authorize('admin'), getContentByType);

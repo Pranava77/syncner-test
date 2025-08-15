@@ -121,6 +121,16 @@ class ApiService {
     return this.handleResponse(response);
   }
 
+  async reorderLevelsByTrack(careerTrack: string, from: number, to: number) {
+    const params = new URLSearchParams({ careerTrack, from: String(from), to: String(to) });
+    const response = await fetch(`${this.baseURL}/curriculum/level/reorder?${params.toString()}`, {
+      method: 'PUT',
+      headers: this.getHeaders(),
+      credentials: 'include',
+    });
+    return this.handleResponse(response);
+  }
+
   async getLevel(levelId: string) {
     const response = await fetch(`${this.baseURL}/training/levels/${levelId}`, {
       method: 'GET',
