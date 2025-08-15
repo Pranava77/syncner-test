@@ -130,6 +130,7 @@ const AdminCurriculum: React.FC = () => {
   const [filterDifficulty, setFilterDifficulty] = useState<string>('all');
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
+  const [activeTrack, setActiveTrack] = useState<string | null>(null);
   const [showTrackSelection, setShowTrackSelection] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -149,6 +150,7 @@ const AdminCurriculum: React.FC = () => {
     try {
       const url = track ? `/curriculum?careerTrack=${track}` : '/curriculum';
       const response = await apiService.get(url);
+      if (track) setActiveTrack(track);
       
       // Handle different response formats
       let levelsData = [];
@@ -246,8 +248,14 @@ const AdminCurriculum: React.FC = () => {
       });
       
       // Convert map to array and sort by order
-      const uniqueLevels = Array.from(levelMap.values()).sort((a: Level, b: Level) => a.order - b.order);
-      
+      let uniqueLevels = Array.from(levelMap.values()).sort((a: Level, b: Level) => a.order - b.order);
+
+      // If we have an activeTrack context, ensure we only show that track even when the source URL returned all
+      const trackToShow = track || activeTrack;
+      if (trackToShow) {
+        uniqueLevels = uniqueLevels.filter((lvl: any) => lvl.careerTrack === trackToShow);
+      }
+
       setLevels(uniqueLevels);
       setLastUpdated(new Date());
       setFormError(''); // Clear any previous errors
