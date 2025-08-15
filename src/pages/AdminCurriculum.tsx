@@ -564,11 +564,31 @@ const AdminCurriculum: React.FC = () => {
         
         if (level) {
           // Find the specific content item to delete
-          const contentItems = level[type] || [];
+          const contentItems = (level as any)[type] || [];
           const itemToDelete = contentItems[index];
           
-          if (itemToDelete) {
+          if (itemToDelete?.id) {
+            // Fast path: backend now supplies id on grouped content
             await apiService.delete(`/curriculum/${itemToDelete.id}`);
+          } else {
+            // Fallback: resolve by (careerTrack + order + type + index)
+            const response = await apiService.get('/curriculum');
+            const curriculumItems = response.data || [];
+            const levelItems = curriculumItems
+              .filter((item: any) => 
+                item.careerTrack === level.careerTrack &&
+                item.order === level.order &&
+                item.type === type
+              )
+              .sort((a: any, b: any) => {
+                const aKey = a.createdAt || a._id;
+                const bKey = b.createdAt || b._id;
+                return String(aKey).localeCompare(String(bKey));
+              });
+            const fallbackItem = levelItems[index];
+            if (fallbackItem?.id) {
+              await apiService.delete(`/curriculum/${fallbackItem.id}`);
+            }
           }
         }
         await fetchLevels(selectedTrack || undefined);
@@ -611,16 +631,26 @@ const AdminCurriculum: React.FC = () => {
     try {
       if (editingContent && editingLevel) {
         // Find the specific content item to update
-        const response = await apiService.get('/curriculum');
-        const curriculumItems = response.data || [];
-        const levelItems = curriculumItems.filter((item: any) => 
-          item.title === editingLevel.title && 
-          item.careerTrack === editingLevel.careerTrack &&
-          item.type === editingContent.type
-        ).sort((a: any, b: any) => a.order - b.order);
+        // Resolve target item id: prefer id carried on level content, fallback to resolution by (track+order+type+index)
+        let itemToUpdate: any = (editingLevel as any)[editingContent.type]?.[editingContent.index];
+        if (!itemToUpdate?.id) {
+          const response = await apiService.get('/curriculum');
+          const curriculumItems = response.data || [];
+          const levelItems = curriculumItems
+            .filter((item: any) => 
+              item.careerTrack === editingLevel.careerTrack &&
+              item.order === editingLevel.order &&
+              item.type === editingContent.type
+            )
+            .sort((a: any, b: any) => {
+              const aKey = a.createdAt || a._id;
+              const bKey = b.createdAt || b._id;
+              return String(aKey).localeCompare(String(bKey));
+            });
+          itemToUpdate = levelItems[editingContent.index];
+        }
         
-        if (levelItems[editingContent.index]) {
-          const itemToUpdate = levelItems[editingContent.index];
+        if (itemToUpdate?.id) {
           const updateData: any = {
             title: contentForm.title,
             type: editingContent.type,
