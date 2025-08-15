@@ -449,7 +449,7 @@ const AdminCurriculum: React.FC = () => {
         setShowLevelModal(false);
         setLevelForm(defaultLevelForm);
         setFormError('');
-        await fetchLevels(selectedTrack || undefined);
+        await fetchLevels(editingLevel.careerTrack);
         
         // Clear the student training cache to ensure changes are reflected
         dispatch(clearCache());
@@ -733,7 +733,7 @@ const AdminCurriculum: React.FC = () => {
       setShowContentModal(false);
       setContentForm({});
       setFormError('');
-      await fetchLevels(selectedTrack || undefined);
+      await fetchLevels(editingLevel?.careerTrack || selectedTrack || undefined);
       
       // Clear the student training cache to ensure changes are reflected
       dispatch(clearCache());
