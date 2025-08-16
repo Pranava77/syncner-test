@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
+import {
   Cross1Icon,
-  PlusIcon,
-  XMarkIcon
+  PlusIcon
 } from '@radix-ui/react-icons';
 
 interface ReadFirst {
@@ -355,13 +354,13 @@ const LevelModal: React.FC<LevelModalProps> = ({
                     }}
                   >
                     {skill}
-                    <button
-                      type="button"
-                      onClick={() => removeSkill(skill)}
-                      className="ml-1 hover:bg-red-100 rounded-full p-0.5"
-                    >
-                      <XMarkIcon className="h-3 w-3" />
-                    </button>
+                                                    <button
+                                  type="button"
+                                  onClick={() => removeSkill(skill)}
+                                  className="ml-1 hover:bg-red-100 rounded-full p-0.5"
+                                >
+                                  <Cross1Icon className="h-3 w-3" />
+                                </button>
                   </span>
                 ))}
               </div>
@@ -415,13 +414,13 @@ const LevelModal: React.FC<LevelModalProps> = ({
                     }}
                   >
                     {prerequisite}
-                    <button
-                      type="button"
-                      onClick={() => removePrerequisite(prerequisite)}
-                      className="ml-1 hover:bg-red-100 rounded-full p-0.5"
-                    >
-                      <XMarkIcon className="h-3 w-3" />
-                    </button>
+                                                    <button
+                                  type="button"
+                                  onClick={() => removePrerequisite(prerequisite)}
+                                  className="ml-1 hover:bg-red-100 rounded-full p-0.5"
+                                >
+                                  <Cross1Icon className="h-3 w-3" />
+                                </button>
                   </span>
                 ))}
               </div>

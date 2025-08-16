@@ -1,9 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { 
-  PlusIcon, 
-  Pencil1Icon as EditIcon, 
-  TrashIcon, 
+import {
+  PlusIcon,
+  Pencil1Icon as EditIcon,
+  TrashIcon,
   ChevronUpIcon,
   ChevronDownIcon,
   FileTextIcon,
@@ -12,8 +12,7 @@ import {
   PlayIcon,
   LayersIcon,
   StarIcon,
-  ClockIcon,
-  ChevronUpIcon as ChevronUpIcon2
+  ClockIcon
 } from '@radix-ui/react-icons';
 
 interface Level {
@@ -222,7 +221,7 @@ const LevelCard: React.FC<LevelCardProps> = ({
                 }
               }}
             >
-              <ChevronUpIcon2 className="h-4 w-4" />
+                                        <ChevronUpIcon className="h-4 w-4" />
             </button>
             
             <button

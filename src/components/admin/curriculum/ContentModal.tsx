@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
+import {
   Cross1Icon,
-  PlusIcon,
-  XMarkIcon
+  PlusIcon
 } from '@radix-ui/react-icons';
 
 interface ContentForm {
@@ -537,13 +536,13 @@ const ContentModal: React.FC<ContentModalProps> = ({
                       }}
                     >
                       {resource}
-                      <button
-                        type="button"
-                        onClick={() => removeResource(resource)}
-                        className="ml-1 hover:bg-red-100 rounded-full p-0.5"
-                      >
-                        <XMarkIcon className="h-3 w-3" />
-                      </button>
+                                                        <button
+                                    type="button"
+                                    onClick={() => removeResource(resource)}
+                                    className="ml-1 hover:bg-red-100 rounded-full p-0.5"
+                                  >
+                                    <Cross1Icon className="h-3 w-3" />
+                                  </button>
                     </span>
                   ))}
                 </div>
