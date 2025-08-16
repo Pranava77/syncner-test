@@ -145,7 +145,7 @@ const AdminCurriculum: React.FC = () => {
     content: '',
     externalLink: '',
     question: '',
-    options: [],
+    options: ['', '', '', ''], // Initialize with 4 empty options for tests
     answer: '',
     description: '',
     resources: []
@@ -520,6 +520,7 @@ const AdminCurriculum: React.FC = () => {
       parsedForm.options = [];
       parsedForm.answer = '';
       
+      // Parse options and answer from content
       for (let i = 1; i < lines.length; i++) {
         const line = lines[i].trim();
         if (line.startsWith('A)') || line.startsWith('B)') || line.startsWith('C)') || line.startsWith('D)')) {
@@ -527,6 +528,11 @@ const AdminCurriculum: React.FC = () => {
         } else if (line.startsWith('Answer:') || line.startsWith('Correct Answer:')) {
           parsedForm.answer = line.split(':')[1]?.trim() || '';
         }
+      }
+      
+      // Ensure we have exactly 4 options, pad with empty strings if needed
+      while (parsedForm.options.length < 4) {
+        parsedForm.options.push('');
       }
     } else if (type === 'exercise') {
       parsedForm.description = item.content;
@@ -638,6 +644,10 @@ const AdminCurriculum: React.FC = () => {
       console.log('Test validation failed - no question');
       setFormError('Question is required for test items');
       return;
+    } else if (contentType === 'test' && (!contentForm.options || contentForm.options.length < 4 || contentForm.options.some((opt: string) => !opt.trim()))) {
+      console.log('Test validation failed - missing or empty options');
+      setFormError('All 4 options are required for test items');
+      return;
     } else if (contentType === 'exercise' && !contentForm.description) {
       console.log('Exercise validation failed - no description');
       setFormError('Description is required for exercise items');
@@ -694,10 +704,11 @@ const AdminCurriculum: React.FC = () => {
             updateData.description = contentForm.title.length >= 10 ? contentForm.title : 
               `${contentForm.title} - ${contentForm.content.substring(0, Math.max(0, 10 - contentForm.title.length))}`;
           } else if (contentType === 'test') {
-            // Format test content
+            // Format test content with proper structure
             let formattedContent = contentForm.question;
-            if (contentForm.options && contentForm.options.length > 0) {
-              formattedContent += '\n' + contentForm.options.map((opt: string, idx: number) => 
+            const formattedOptions = ensureTestOptions(contentForm.options || []);
+            if (formattedOptions.length > 0) {
+              formattedContent += '\n' + formattedOptions.map((opt: string, idx: number) => 
                 `${String.fromCharCode(65 + idx)}) ${opt}`
               ).join('\n');
             }
@@ -739,7 +750,7 @@ const AdminCurriculum: React.FC = () => {
                 ...(arr[editingContent.index] || {}),
                 id: itemToUpdate.id,
                 question: contentForm.question,
-                options: contentForm.options || [],
+                options: ensureTestOptions(contentForm.options || []),
                 answer: contentForm.answer || '',
                 order: updated.order,
               };
@@ -805,10 +816,11 @@ const AdminCurriculum: React.FC = () => {
           newContentData.description = contentForm.title.length >= 10 ? contentForm.title : 
             `${contentForm.title} - ${contentForm.content.substring(0, Math.max(0, 10 - contentForm.title.length))}`;
         } else if (contentType === 'test') {
-          // Format test content
+          // Format test content with proper structure
           let formattedContent = contentForm.question;
-          if (contentForm.options && contentForm.options.length > 0) {
-            formattedContent += '\n' + contentForm.options.map((opt: string, idx: number) => 
+          const formattedOptions = ensureTestOptions(contentForm.options || []);
+          if (formattedOptions.length > 0) {
+            formattedContent += '\n' + formattedOptions.map((opt: string, idx: number) => 
               `${String.fromCharCode(65 + idx)}) ${opt}`
             ).join('\n');
           }
@@ -858,7 +870,7 @@ const AdminCurriculum: React.FC = () => {
               {
                 id: newId,
                 question: contentForm.question,
-                options: contentForm.options || [],
+                options: ensureTestOptions(contentForm.options || []),
                 answer: contentForm.answer || '',
                 order: updated.order,
               }
@@ -992,6 +1004,15 @@ const AdminCurriculum: React.FC = () => {
     setEditingContent(null);
     setEditingLevel(null);
     setFormError('');
+  };
+
+  // Ensure test options are properly formatted
+  const ensureTestOptions = (options: string[]) => {
+    const formattedOptions = [...options];
+    while (formattedOptions.length < 4) {
+      formattedOptions.push('');
+    }
+    return formattedOptions.slice(0, 4); // Ensure exactly 4 options
   };
 
   // Close content modal and reset form
@@ -2483,6 +2504,31 @@ const AdminCurriculum: React.FC = () => {
                                               {item.options.length} option{item.options.length !== 1 ? 's' : ''}
                                             </span>
                                           </div>
+
+                                          {/* Options Preview */}
+                                          {item.options && item.options.length > 0 && (
+                                            <div className="grid grid-cols-2 gap-1 mb-2">
+                                              {item.options.slice(0, 4).map((option: string, optIdx: number) => (
+                                                <div
+                                                  key={optIdx}
+                                                  className="flex items-center gap-1 text-xs"
+                                                  style={{ color: 'var(--color-text-tertiary)' }}
+                                                >
+                                                  <span className="w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold"
+                                                    style={{
+                                                      backgroundColor: optIdx === 0 ? 'var(--color-accent-primary)' :
+                                                                      optIdx === 1 ? 'var(--color-accent-secondary)' :
+                                                                      optIdx === 2 ? 'var(--color-warning)' :
+                                                                      'var(--color-error)',
+                                                      color: 'var(--color-text-inverse)'
+                                                    }}>
+                                                    {String.fromCharCode(65 + optIdx)}
+                                                  </span>
+                                                  <span className="truncate">{option}</span>
+                                                </div>
+                                              ))}
+                                            </div>
+                                          )}
                                         </div>
                                       </div>
                                       
@@ -3481,32 +3527,176 @@ const AdminCurriculum: React.FC = () => {
                 )}
 
                 {editingContent?.type === 'test' && (
-                  <div>
+                  <div className="space-y-3">
                     <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
-                      Options (one per line)
+                      Multiple Choice Options *
                     </label>
-                    <textarea
-                      value={contentForm.options?.join('\n') || ''}
-                      onChange={(e) => setContentForm({ ...contentForm, options: e.target.value.split('\n').filter(s => s.trim()) })}
-                      rows={3}
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none resize-none"
-                      style={{
-                        backgroundColor: 'var(--color-secondary-bg)',
-                        borderColor: 'var(--color-border)',
-                        color: 'var(--color-text-primary)'
-                      }}
-                      onFocus={(e) => {
-                        e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
-                        e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.borderColor = 'var(--color-border)';
-                        e.currentTarget.style.boxShadow = 'none';
-                      }}
-                      placeholder="Option 1
-Option 2
-Option 3"
-                    />
+                    
+                    {/* Option A */}
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
+                        style={{
+                          backgroundColor: 'var(--color-accent-primary)',
+                          color: 'var(--color-text-inverse)'
+                        }}>
+                        A
+                      </div>
+                      <input
+                        type="text"
+                        value={contentForm.options?.[0] || ''}
+                        onChange={(e) => {
+                          const newOptions = [...(contentForm.options || [])];
+                          newOptions[0] = e.target.value;
+                          setContentForm({ ...contentForm, options: newOptions });
+                        }}
+                        className="flex-1 px-4 py-2 border rounded-lg focus:outline-none"
+                        style={{
+                          backgroundColor: 'var(--color-secondary-bg)',
+                          borderColor: 'var(--color-border)',
+                          color: 'var(--color-text-primary)'
+                        }}
+                        onFocus={(e) => {
+                          e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                          e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                        }}
+                        onBlur={(e) => {
+                          e.currentTarget.style.borderColor = 'var(--color-border)';
+                          e.currentTarget.style.boxShadow = 'none';
+                        }}
+                        placeholder="Enter option A"
+                      />
+                    </div>
+
+                    {/* Option B */}
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
+                        style={{
+                          backgroundColor: 'var(--color-accent-secondary)',
+                          color: 'var(--color-text-inverse)'
+                        }}>
+                        B
+                      </div>
+                      <input
+                        type="text"
+                        value={contentForm.options?.[1] || ''}
+                        onChange={(e) => {
+                          const newOptions = [...(contentForm.options || [])];
+                          newOptions[1] = e.target.value;
+                          setContentForm({ ...contentForm, options: newOptions });
+                        }}
+                        className="flex-1 px-4 py-2 border rounded-lg focus:outline-none"
+                        style={{
+                          backgroundColor: 'var(--color-secondary-bg)',
+                          borderColor: 'var(--color-border)',
+                          color: 'var(--color-text-primary)'
+                        }}
+                        onFocus={(e) => {
+                          e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                          e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                        }}
+                        onBlur={(e) => {
+                          e.currentTarget.style.borderColor = 'var(--color-border)';
+                          e.currentTarget.style.boxShadow = 'none';
+                        }}
+                        placeholder="Enter option B"
+                      />
+                    </div>
+
+                    {/* Option C */}
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
+                        style={{
+                          backgroundColor: 'var(--color-warning)',
+                          color: 'var(--color-text-inverse)'
+                        }}>
+                        C
+                      </div>
+                      <input
+                        type="text"
+                        value={contentForm.options?.[2] || ''}
+                        onChange={(e) => {
+                          const newOptions = [...(contentForm.options || [])];
+                          newOptions[2] = e.target.value;
+                          setContentForm({ ...contentForm, options: newOptions });
+                        }}
+                        className="flex-1 px-4 py-2 border rounded-lg focus:outline-none"
+                        style={{
+                          backgroundColor: 'var(--color-secondary-bg)',
+                          borderColor: 'var(--color-border)',
+                          color: 'var(--color-text-primary)'
+                        }}
+                        onFocus={(e) => {
+                          e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                          e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                        }}
+                        onBlur={(e) => {
+                          e.currentTarget.style.borderColor = 'var(--color-border)';
+                          e.currentTarget.style.boxShadow = 'none';
+                        }}
+                        placeholder="Enter option C"
+                      />
+                    </div>
+
+                    {/* Option D */}
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
+                        style={{
+                          backgroundColor: 'var(--color-error)',
+                          color: 'var(--color-text-inverse)'
+                        }}>
+                        D
+                      </div>
+                      <input
+                        type="text"
+                        value={contentForm.options?.[3] || ''}
+                        onChange={(e) => {
+                          const newOptions = [...(contentForm.options || [])];
+                          newOptions[3] = e.target.value;
+                          setContentForm({ ...contentForm, options: newOptions });
+                        }}
+                        className="flex-1 px-4 py-2 border rounded-lg focus:outline-none"
+                        style={{
+                          backgroundColor: 'var(--color-secondary-bg)',
+                          borderColor: 'var(--color-border)',
+                          color: 'var(--color-text-primary)'
+                        }}
+                        onFocus={(e) => {
+                          e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                          e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                        }}
+                        onBlur={(e) => {
+                          e.currentTarget.style.borderColor = 'var(--color-border)';
+                          e.currentTarget.style.boxShadow = 'none';
+                        }}
+                        placeholder="Enter option D"
+                      />
+                    </div>
+
+                    <p className="text-xs mt-2" style={{ color: 'var(--color-text-tertiary)' }}>
+                      All 4 options are required for multiple choice questions. Option A, B, C, and D must be filled.
+                    </p>
+                    
+                    {/* Validation Status */}
+                    {editingContent?.type === 'test' && (
+                      <div className="mt-3 p-2 rounded-lg text-xs"
+                        style={{
+                          backgroundColor: contentForm.options && contentForm.options.length === 4 && contentForm.options.every((opt: string) => opt.trim()) 
+                            ? 'var(--color-success-bg)' 
+                            : 'var(--color-warning-bg)',
+                          border: '1px solid',
+                          borderColor: contentForm.options && contentForm.options.length === 4 && contentForm.options.every((opt: string) => opt.trim()) 
+                            ? 'var(--color-success)' 
+                            : 'var(--color-warning)',
+                          color: contentForm.options && contentForm.options.length === 4 && contentForm.options.every((opt: string) => opt.trim()) 
+                            ? 'var(--color-success)' 
+                            : 'var(--color-warning)'
+                        }}
+                      >
+                        {contentForm.options && contentForm.options.length === 4 && contentForm.options.every((opt: string) => opt.trim()) 
+                          ? '✓ All options are filled correctly' 
+                          : `⚠ ${contentForm.options ? contentForm.options.filter((opt: string) => opt.trim()).length : 0}/4 options filled`}
+                      </div>
+                    )}
                   </div>
                 )}
 
