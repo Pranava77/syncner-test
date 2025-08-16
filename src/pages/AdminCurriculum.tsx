@@ -284,7 +284,7 @@ const AdminCurriculum: React.FC = () => {
     setEditingLevel(null);
     setLevelForm({
       ...defaultLevelForm,
-      careerTrack: selectedTrack || 'full-stack',
+      careerTrack: normalizeTrack(selectedTrack) || 'full-stack',
       order: levels.length + 1 // Auto-assign next order number
     });
     setShowLevelModal(true);
@@ -467,7 +467,8 @@ const AdminCurriculum: React.FC = () => {
 
   const handleAddContent = (type: 'learn' | 'test' | 'exercise', level: Level) => {
     setEditingContent({ type, item: null, index: -1 });
-    setEditingLevel(level);
+    // Ensure careerTrack is normalized for new content creation
+    setEditingLevel({ ...level, careerTrack: normalizeTrack(level.careerTrack) } as Level);
     setContentForm({
       title: '',
       order: 1,
