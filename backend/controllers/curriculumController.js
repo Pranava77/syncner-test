@@ -121,7 +121,8 @@ const groupCurriculumIntoLevels = (items) => {
     .filter(level => level.isActive)
     .sort((a, b) => a.order - b.order);
 
-
+  return levels;
+};
 
 // @desc    Get all curriculum items
 // @route   GET /api/curriculum
