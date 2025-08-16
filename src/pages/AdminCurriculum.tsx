@@ -20,7 +20,8 @@ import {
   DesktopIcon,
   RocketIcon,
   ImageIcon,
-  BarChartIcon
+  BarChartIcon,
+  ExternalLinkIcon
 } from '@radix-ui/react-icons';
 import apiService from '../services/api';
 import syncnerLogo from '../assets/syncner-logo.png';
@@ -1619,16 +1620,31 @@ const AdminCurriculum: React.FC = () => {
                       {/* Content Sections */}
                       <div className="space-y-3 mb-4">
                         {/* Learn Content */}
-                        <div className="rounded-lg p-3" style={{
+                        <div className="rounded-xl p-4 shadow-md" style={{
                           backgroundColor: 'var(--color-success-bg)',
                           borderColor: 'var(--color-success)',
                           border: '1px solid'
                         }}>
-                          <div className="flex items-center justify-between mb-2">
-                            <h4 className="text-sm font-medium flex items-center gap-1" style={{ color: 'var(--color-success)' }}>
-                              <BookOpenIcon className="h-3 w-3" style={{ color: 'var(--color-success)' }} />
-                              Learn Content ({level.learn?.length || 0})
-                            </h4>
+                          <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center gap-3">
+                              <div 
+                                className="w-8 h-8 rounded-lg flex items-center justify-center"
+                                style={{
+                                  backgroundColor: 'var(--color-success)',
+                                  color: 'var(--color-text-inverse)'
+                                }}
+                              >
+                                <BookOpenIcon className="h-4 w-4" />
+                              </div>
+                              <div>
+                                <h4 className="text-base font-semibold" style={{ color: 'var(--color-success)' }}>
+                                  Learn Content
+                                </h4>
+                                <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
+                                  {level.learn?.length || 0} resource{level.learn?.length !== 1 ? 's' : ''} available
+                                </p>
+                              </div>
+                            </div>
                             <button
                               onClick={() => {
                                 const updatedLevels = levels.map(l => 
@@ -1638,90 +1654,244 @@ const AdminCurriculum: React.FC = () => {
                                 );
                                 setLevels(updatedLevels);
                               }}
-                              className="p-1 transition-colors"
-                              style={{ color: 'var(--color-success)' }}
+                              className="p-2 rounded-lg transition-all duration-200 hover:scale-105"
+                              style={{ 
+                                backgroundColor: 'var(--color-success)',
+                                color: 'var(--color-text-inverse)'
+                              }}
                               onMouseEnter={(e) => {
-                                e.currentTarget.style.color = 'var(--color-success-hover)';
+                                e.currentTarget.style.backgroundColor = 'var(--color-success-hover)';
                               }}
                               onMouseLeave={(e) => {
-                                e.currentTarget.style.color = 'var(--color-success)';
+                                e.currentTarget.style.backgroundColor = 'var(--color-success)';
                               }}
                             >
-                              {level.learnExpanded ? <ChevronDownIcon className="h-3 w-3" style={{ color: 'var(--color-accent-primary)' }} /> : <ChevronRightIcon className="h-3 w-3" style={{ color: 'var(--color-accent-primary)' }} />}
+                              {level.learnExpanded ? <ChevronDownIcon className="h-4 w-4" /> : <ChevronRightIcon className="h-4 w-4" />}
                             </button>
                           </div>
+                          
                           {level.learnExpanded && (
-                            <div className="space-y-2">
+                            <div className="space-y-3">
                               {level.learn?.length > 0 ? (
                                 level.learn.map((item, idx) => (
-                                  <div key={idx} className="flex items-center justify-between rounded-lg p-2" style={{
-                                    backgroundColor: 'var(--color-success-bg-subtle)'
-                                  }}>
-                                    <div className="flex-1 min-w-0">
-                                      <p className="text-xs font-medium truncate" style={{ color: 'var(--color-text-primary)' }}>{item.title}</p>
-                                      {item.externalLink && (
-                                        <a 
-                                          href={item.externalLink} 
-                                          target="_blank" 
-                                          rel="noopener noreferrer"
-                                          className="text-xs block mt-1 hover:underline break-all"
-                                          style={{ color: 'var(--color-accent-primary)' }}
-                                          title={item.externalLink}
+                                  <div 
+                                    key={idx} 
+                                    className="group relative rounded-xl p-4 transition-all duration-200 hover:shadow-md cursor-pointer"
+                                    style={{
+                                      backgroundColor: 'var(--color-surface)',
+                                      border: '1px solid var(--color-border-subtle)'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                      e.currentTarget.style.borderColor = 'var(--color-success)';
+                                      e.currentTarget.style.transform = 'translateY(-2px)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                      e.currentTarget.style.borderColor = 'var(--color-border-subtle)';
+                                      e.currentTarget.style.transform = 'translateY(0)';
+                                    }}
+                                  >
+                                    {/* Content Header */}
+                                    <div className="flex items-start justify-between mb-3">
+                                      <div className="flex items-start gap-3 flex-1 min-w-0">
+                                                                                 {/* Icon */}
+                                         <div 
+                                           className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                                           style={{
+                                             backgroundColor: 'var(--color-success-bg)',
+                                             color: 'var(--color-success)'
+                                           }}
+                                         >
+                                           <BookOpenIcon className="h-5 w-5" />
+                                         </div>
+                                        
+                                        {/* Content Info */}
+                                        <div className="flex-1 min-w-0">
+                                          <h5 className="text-sm font-semibold mb-1 truncate" style={{ color: 'var(--color-text-primary)' }}>
+                                            {item.title}
+                                          </h5>
+                                          
+                                          {/* Order Badge */}
+                                          <div className="flex items-center gap-2 mb-2">
+                                            <span 
+                                              className="px-2 py-1 rounded-md text-xs font-medium"
+                                              style={{
+                                                backgroundColor: 'var(--color-tertiary-bg)',
+                                                color: 'var(--color-text-secondary)'
+                                              }}
+                                            >
+                                              Order: {item.order}
+                                            </span>
+                                            {item.externalLink && (
+                                              <span 
+                                                className="px-2 py-1 rounded-md text-xs font-medium"
+                                                style={{
+                                                  backgroundColor: 'var(--color-accent-tertiary)',
+                                                  color: 'var(--color-accent-primary)'
+                                                }}
+                                              >
+                                                External Link
+                                              </span>
+                                            )}
+                                          </div>
+                                        </div>
+                                      </div>
+                                      
+                                      {/* Action Buttons */}
+                                      <div className="flex items-center gap-2 flex-shrink-0">
+                                        <button
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleEditContent('learn', item, idx, level);
+                                          }}
+                                          className="p-2 rounded-lg transition-all duration-200 hover:scale-105"
+                                          title="Edit"
+                                          style={{ 
+                                            backgroundColor: 'var(--color-success)',
+                                            color: 'var(--color-text-inverse)'
+                                          }}
+                                          onMouseEnter={(e) => {
+                                            e.currentTarget.style.backgroundColor = 'var(--color-success-hover)';
+                                          }}
+                                          onMouseLeave={(e) => {
+                                            e.currentTarget.style.backgroundColor = 'var(--color-success)';
+                                          }}
                                         >
-                                          🔗 {item.externalLink}
-                                        </a>
-                                      )}
+                                          <EditIcon className="h-4 w-4" />
+                                        </button>
+                                        <button
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleDeleteContent(level.id, 'learn', idx);
+                                          }}
+                                          className="p-2 rounded-lg transition-all duration-200 hover:scale-105"
+                                          title="Delete"
+                                          style={{ 
+                                            backgroundColor: 'var(--color-error)',
+                                            color: 'var(--color-text-inverse)'
+                                          }}
+                                          onMouseEnter={(e) => {
+                                            e.currentTarget.style.backgroundColor = 'var(--color-error-hover)';
+                                          }}
+                                          onMouseLeave={(e) => {
+                                            e.currentTarget.style.backgroundColor = 'var(--color-error)';
+                                          }}
+                                        >
+                                          <TrashIcon className="h-4 w-4" />
+                                        </button>
+                                      </div>
                                     </div>
-                                    <div className="flex items-center gap-1 ml-2">
-                                      <button
-                                        onClick={() => handleEditContent('learn', item, idx, level)}
-                                        className="p-1 transition-colors"
-                                        title="Edit"
-                                        style={{ color: 'var(--color-success)' }}
-                                        onMouseEnter={(e) => {
-                                          e.currentTarget.style.color = 'var(--color-success-hover)';
-                                        }}
-                                        onMouseLeave={(e) => {
-                                          e.currentTarget.style.color = 'var(--color-success)';
-                                        }}
+
+                                    {/* External Link Display */}
+                                    {item.externalLink && (
+                                      <div 
+                                        className="mt-3 pt-3 border-t"
+                                        style={{ borderColor: 'var(--color-border-subtle)' }}
                                       >
-                                        <EditIcon className="h-3 w-3" style={{ color: 'var(--color-success)' }} />
-                                      </button>
-                                      <button
-                                        onClick={() => handleDeleteContent(level.id, 'learn', idx)}
-                                        className="p-1 transition-colors"
-                                        title="Delete"
-                                        style={{ color: 'var(--color-error)' }}
-                                        onMouseEnter={(e) => {
-                                          e.currentTarget.style.color = 'var(--color-error-hover)';
-                                        }}
-                                        onMouseLeave={(e) => {
-                                          e.currentTarget.style.color = 'var(--color-error)';
-                                        }}
-                                      >
-                                        <TrashIcon className="h-3 w-3" style={{ color: 'var(--color-error)' }} />
-                                      </button>
-                                    </div>
+                                        <div className="flex items-center justify-between">
+                                          <span 
+                                            className="text-xs font-medium"
+                                            style={{ color: 'var(--color-text-secondary)' }}
+                                          >
+                                            External Resource:
+                                          </span>
+                                          <a 
+                                            href={item.externalLink}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium transition-all duration-200 hover:scale-105"
+                                            style={{
+                                              backgroundColor: 'var(--color-accent-primary)',
+                                              color: 'var(--color-text-inverse)'
+                                            }}
+                                            onClick={(e) => e.stopPropagation()}
+                                            onMouseEnter={(e) => {
+                                              e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                                            }}
+                                            onMouseLeave={(e) => {
+                                              e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                                            }}
+                                          >
+                                            <span>Open</span>
+                                            <ExternalLinkIcon className="h-3 w-3" />
+                                          </a>
+                                        </div>
+                                        
+                                        {/* Link Preview */}
+                                        <div className="mt-2 p-2 rounded bg-opacity-50"
+                                          style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+                                        >
+                                          <p 
+                                            className="text-xs break-all font-mono"
+                                            style={{ color: 'var(--color-accent-primary)' }}
+                                          >
+                                            {item.externalLink}
+                                          </p>
+                                        </div>
+                                      </div>
+                                    )}
                                   </div>
                                 ))
                               ) : (
-                                <p className="text-xs text-center py-2" style={{ color: 'var(--color-text-tertiary)' }}>No learn content yet</p>
+                                <div 
+                                  className="text-center py-8 rounded-xl border-2 border-dashed"
+                                  style={{
+                                    backgroundColor: 'var(--color-surface)',
+                                    borderColor: 'var(--color-border-subtle)'
+                                  }}
+                                >
+                                  <div 
+                                    className="w-12 h-12 rounded-full mx-auto mb-3 flex items-center justify-center"
+                                    style={{
+                                      backgroundColor: 'var(--color-tertiary-bg)',
+                                      color: 'var(--color-text-muted)'
+                                    }}
+                                  >
+                                    <BookOpenIcon className="h-6 w-6" />
+                                  </div>
+                                  <p 
+                                    className="text-sm font-medium mb-2"
+                                    style={{ color: 'var(--color-text-secondary)' }}
+                                  >
+                                    No Learning Resources
+                                  </p>
+                                  <p 
+                                    className="text-xs"
+                                    style={{ color: 'var(--color-text-tertiary)' }}
+                                  >
+                                    Add your first learning resource to get started
+                                  </p>
+                                </div>
                               )}
                             </div>
                           )}
                         </div>
 
                         {/* Test Content */}
-                        <div className="rounded-lg p-3" style={{
+                        <div className="rounded-xl p-4 shadow-md" style={{
                           backgroundColor: 'var(--color-warning-bg)',
                           borderColor: 'var(--color-warning)',
                           border: '1px solid'
                         }}>
-                          <div className="flex items-center justify-between mb-2">
-                            <h4 className="text-sm font-medium flex items-center gap-1" style={{ color: 'var(--color-warning)' }}>
-                              <ClipboardIcon className="h-3 w-3" style={{ color: 'var(--color-warning)' }} />
-                              Test Content ({level.test?.length || 0})
-                            </h4>
+                          <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center gap-3">
+                              <div 
+                                className="w-8 h-8 rounded-lg flex items-center justify-center"
+                                style={{
+                                  backgroundColor: 'var(--color-warning)',
+                                  color: 'var(--color-text-inverse)'
+                                }}
+                              >
+                                <ClipboardIcon className="h-4 w-4" />
+                              </div>
+                              <div>
+                                <h4 className="text-base font-semibold" style={{ color: 'var(--color-warning)' }}>
+                                  Test Content
+                                </h4>
+                                <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
+                                  {level.test?.length || 0} question{level.test?.length !== 1 ? 's' : ''} available
+                                </p>
+                              </div>
+                            </div>
                             <button
                               onClick={() => {
                                 const updatedLevels = levels.map(l => 
@@ -1731,79 +1901,193 @@ const AdminCurriculum: React.FC = () => {
                                 );
                                 setLevels(updatedLevels);
                               }}
-                              className="p-1 transition-colors"
-                              style={{ color: 'var(--color-warning)' }}
+                              className="p-2 rounded-lg transition-all duration-200 hover:scale-105"
+                              style={{ 
+                                backgroundColor: 'var(--color-warning)',
+                                color: 'var(--color-text-inverse)'
+                              }}
                               onMouseEnter={(e) => {
-                                e.currentTarget.style.color = 'var(--color-warning-hover)';
+                                e.currentTarget.style.backgroundColor = 'var(--color-warning-hover)';
                               }}
                               onMouseLeave={(e) => {
-                                e.currentTarget.style.color = 'var(--color-warning)';
+                                e.currentTarget.style.backgroundColor = 'var(--color-warning)';
                               }}
                             >
-                              {level.testExpanded ? <ChevronDownIcon className="h-3 w-3" style={{ color: 'var(--color-warning)' }} /> : <ChevronRightIcon className="h-3 w-3" style={{ color: 'var(--color-warning)' }} />}
+                              {level.testExpanded ? <ChevronDownIcon className="h-4 w-4" /> : <ChevronRightIcon className="h-4 w-4" />}
                             </button>
                           </div>
+                          
                           {level.testExpanded && (
-                            <div className="space-y-2">
+                            <div className="space-y-3">
                               {level.test?.length > 0 ? (
                                 level.test.map((item, idx) => (
-                                  <div key={idx} className="flex items-center justify-between rounded-lg p-2" style={{
-                                    backgroundColor: 'var(--color-warning-bg-subtle)'
-                                  }}>
-                                    <div className="flex-1 min-w-0">
-                                      <p className="text-xs font-medium truncate" style={{ color: 'var(--color-text-primary)' }}>{item.question}</p>
-                                      <p className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>{item.options.length} options</p>
-                                    </div>
-                                    <div className="flex items-center gap-1 ml-2">
-                                      <button
-                                        onClick={() => handleEditContent('test', item, idx, level)}
-                                        className="p-1 transition-colors"
-                                        title="Edit"
-                                        style={{ color: 'var(--color-warning)' }}
-                                        onMouseEnter={(e) => {
-                                          e.currentTarget.style.color = 'var(--color-warning-hover)';
-                                        }}
-                                        onMouseLeave={(e) => {
-                                          e.currentTarget.style.color = 'var(--color-warning)';
-                                        }}
-                                      >
-                                        <EditIcon className="h-3 w-3" />
-                                      </button>
-                                      <button
-                                        onClick={() => handleDeleteContent(level.id, 'test', idx)}
-                                        className="p-1 transition-colors"
-                                        title="Delete"
-                                        style={{ color: 'var(--color-error)' }}
-                                        onMouseEnter={(e) => {
-                                          e.currentTarget.style.color = 'var(--color-error-hover)';
-                                        }}
-                                        onMouseLeave={(e) => {
-                                          e.currentTarget.style.color = 'var(--color-error)';
-                                        }}
-                                      >
-                                        <TrashIcon className="h-3 w-3" />
-                                      </button>
+                                  <div 
+                                    key={idx} 
+                                    className="group relative rounded-xl p-4 transition-all duration-200 hover:shadow-md cursor-pointer"
+                                    style={{
+                                      backgroundColor: 'var(--color-surface)',
+                                      border: '1px solid var(--color-border-subtle)'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                      e.currentTarget.style.borderColor = 'var(--color-warning)';
+                                      e.currentTarget.style.transform = 'translateY(-2px)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                      e.currentTarget.style.borderColor = 'var(--color-border-subtle)';
+                                      e.currentTarget.style.transform = 'translateY(0)';
+                                    }}
+                                  >
+                                    {/* Content Header */}
+                                    <div className="flex items-start justify-between mb-3">
+                                      <div className="flex items-start gap-3 flex-1 min-w-0">
+                                        {/* Icon */}
+                                        <div 
+                                          className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                                          style={{
+                                            backgroundColor: 'var(--color-warning-bg)',
+                                            color: 'var(--color-warning)'
+                                          }}
+                                        >
+                                          <ClipboardIcon className="h-5 w-5" />
+                                        </div>
+                                        
+                                        {/* Content Info */}
+                                        <div className="flex-1 min-w-0">
+                                          <h5 className="text-sm font-semibold mb-1 line-clamp-2" style={{ color: 'var(--color-text-primary)' }}>
+                                            {item.question}
+                                          </h5>
+                                          
+                                          {/* Order Badge */}
+                                          <div className="flex items-center gap-2 mb-2">
+                                            <span 
+                                              className="px-2 py-1 rounded-md text-xs font-medium"
+                                              style={{
+                                                backgroundColor: 'var(--color-tertiary-bg)',
+                                                color: 'var(--color-text-secondary)'
+                                              }}
+                                            >
+                                              Order: {item.order}
+                                            </span>
+                                            <span 
+                                              className="px-2 py-1 rounded-md text-xs font-medium"
+                                              style={{
+                                                backgroundColor: 'var(--color-warning-bg)',
+                                                color: 'var(--color-warning)'
+                                              }}
+                                            >
+                                              {item.options.length} option{item.options.length !== 1 ? 's' : ''}
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      
+                                      {/* Action Buttons */}
+                                      <div className="flex items-center gap-2 flex-shrink-0">
+                                        <button
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleEditContent('test', item, idx, level);
+                                          }}
+                                          className="p-2 rounded-lg transition-all duration-200 hover:scale-105"
+                                          title="Edit"
+                                          style={{ 
+                                            backgroundColor: 'var(--color-warning)',
+                                            color: 'var(--color-text-inverse)'
+                                          }}
+                                          onMouseEnter={(e) => {
+                                            e.currentTarget.style.backgroundColor = 'var(--color-warning-hover)';
+                                          }}
+                                          onMouseLeave={(e) => {
+                                            e.currentTarget.style.backgroundColor = 'var(--color-warning)';
+                                          }}
+                                        >
+                                          <EditIcon className="h-4 w-4" />
+                                        </button>
+                                        <button
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleDeleteContent(level.id, 'test', idx);
+                                          }}
+                                          className="p-2 rounded-lg transition-all duration-200 hover:scale-105"
+                                          title="Delete"
+                                          style={{ 
+                                            backgroundColor: 'var(--color-error)',
+                                            color: 'var(--color-text-inverse)'
+                                          }}
+                                          onMouseEnter={(e) => {
+                                            e.currentTarget.style.backgroundColor = 'var(--color-error-hover)';
+                                          }}
+                                          onMouseLeave={(e) => {
+                                            e.currentTarget.style.backgroundColor = 'var(--color-error)';
+                                          }}
+                                        >
+                                          <TrashIcon className="h-4 w-4" />
+                                        </button>
+                                      </div>
                                     </div>
                                   </div>
                                 ))
                               ) : (
-                                <p className="text-xs text-center py-2" style={{ color: 'var(--color-text-tertiary)' }}>No test content yet</p>
+                                <div 
+                                  className="text-center py-8 rounded-xl border-2 border-dashed"
+                                  style={{
+                                    backgroundColor: 'var(--color-surface)',
+                                    borderColor: 'var(--color-border-subtle)'
+                                  }}
+                                >
+                                  <div 
+                                    className="w-12 h-12 rounded-full mx-auto mb-3 flex items-center justify-center"
+                                    style={{
+                                      backgroundColor: 'var(--color-tertiary-bg)',
+                                      color: 'var(--color-text-muted)'
+                                    }}
+                                  >
+                                    <ClipboardIcon className="h-6 w-6" />
+                                  </div>
+                                  <p 
+                                    className="text-sm font-medium mb-2"
+                                    style={{ color: 'var(--color-text-secondary)' }}
+                                  >
+                                    No Test Questions
+                                  </p>
+                                  <p 
+                                    className="text-xs"
+                                    style={{ color: 'var(--color-text-tertiary)' }}
+                                  >
+                                    Add your first test question to get started
+                                  </p>
+                                </div>
                               )}
                             </div>
                           )}
                         </div>
 
                         {/* Exercise Content */}
-                        <div className="rounded-lg p-3" style={{
+                        <div className="rounded-xl p-4 shadow-md" style={{
                           backgroundColor: 'var(--color-accent-tertiary)',
                           borderColor: 'var(--color-accent-secondary)',
                           border: '1px solid'
                         }}>
-                          <div className="flex items-center justify-between mb-2">
-                            <h4 className="text-sm font-medium flex items-center gap-1" style={{ color: 'var(--color-accent-secondary)' }}>
-                              <PlayIcon className="h-3 w-3" style={{ color: 'var(--color-accent-secondary)' }} />
-                              Exercise Content ({level.exercise?.length || 0})
-                            </h4>
+                          <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center gap-3">
+                              <div 
+                                className="w-8 h-8 rounded-lg flex items-center justify-center"
+                                style={{
+                                  backgroundColor: 'var(--color-accent-secondary)',
+                                  color: 'var(--color-text-inverse)'
+                                }}
+                              >
+                                <PlayIcon className="h-4 w-4" />
+                              </div>
+                              <div>
+                                <h4 className="text-base font-semibold" style={{ color: 'var(--color-accent-secondary)' }}>
+                                  Exercise Content
+                                </h4>
+                                <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
+                                  {level.exercise?.length || 0} exercise{level.exercise?.length !== 1 ? 's' : ''} available
+                                </p>
+                              </div>
+                            </div>
                             <button
                               onClick={() => {
                                 const updatedLevels = levels.map(l => 
@@ -1813,63 +2097,169 @@ const AdminCurriculum: React.FC = () => {
                                 );
                                 setLevels(updatedLevels);
                               }}
-                              className="p-1 transition-colors"
-                              style={{ color: 'var(--color-accent-secondary)' }}
+                              className="p-2 rounded-lg transition-all duration-200 hover:scale-105"
+                              style={{ 
+                                backgroundColor: 'var(--color-accent-secondary)',
+                                color: 'var(--color-text-inverse)'
+                              }}
                               onMouseEnter={(e) => {
-                                e.currentTarget.style.color = 'var(--color-accent-primary)';
+                                e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
                               }}
                               onMouseLeave={(e) => {
-                                e.currentTarget.style.color = 'var(--color-accent-secondary)';
+                                e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
                               }}
                             >
-                              {level.exerciseExpanded ? <ChevronDownIcon className="h-3 w-3" style={{ color: 'var(--color-accent-secondary)' }} /> : <ChevronRightIcon className="h-3 w-3" style={{ color: 'var(--color-accent-secondary)' }} />}
+                              {level.exerciseExpanded ? <ChevronDownIcon className="h-4 w-4" /> : <ChevronRightIcon className="h-4 w-4" />}
                             </button>
                           </div>
+                          
                           {level.exerciseExpanded && (
-                            <div className="space-y-2">
+                            <div className="space-y-3">
                               {level.exercise?.length > 0 ? (
                                 level.exercise.map((item, idx) => (
-                                  <div key={idx} className="flex items-center justify-between rounded-lg p-2" style={{
-                                    backgroundColor: 'var(--color-accent-tertiary-subtle)'
-                                  }}>
-                                    <div className="flex-1 min-w-0">
-                                      <p className="text-xs font-medium truncate" style={{ color: 'var(--color-text-primary)' }}>{item.title}</p>
-                                      <p className="text-xs truncate" style={{ color: 'var(--color-text-tertiary)' }}>{item.description}</p>
-                                    </div>
-                                    <div className="flex items-center gap-1 ml-2">
-                                      <button
-                                        onClick={() => handleEditContent('exercise', item, idx, level)}
-                                        className="p-1 transition-colors"
-                                        title="Edit"
-                                        style={{ color: 'var(--color-accent-secondary)' }}
-                                        onMouseEnter={(e) => {
-                                          e.currentTarget.style.color = 'var(--color-accent-primary)';
-                                        }}
-                                        onMouseLeave={(e) => {
-                                          e.currentTarget.style.color = 'var(--color-accent-secondary)';
-                                        }}
-                                      >
-                                        <EditIcon className="h-3 w-3" />
-                                      </button>
-                                      <button
-                                        onClick={() => handleDeleteContent(level.id, 'exercise', idx)}
-                                        className="p-1 transition-colors"
-                                        title="Delete"
-                                        style={{ color: 'var(--color-error)' }}
-                                        onMouseEnter={(e) => {
-                                          e.currentTarget.style.color = 'var(--color-error-hover)';
-                                        }}
-                                        onMouseLeave={(e) => {
-                                          e.currentTarget.style.color = 'var(--color-error)';
-                                        }}
-                                      >
-                                        <TrashIcon className="h-3 w-3" />
-                                      </button>
+                                  <div 
+                                    key={idx} 
+                                    className="group relative rounded-xl p-4 transition-all duration-200 hover:shadow-md cursor-pointer"
+                                    style={{
+                                      backgroundColor: 'var(--color-surface)',
+                                      border: '1px solid var(--color-border-subtle)'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                      e.currentTarget.style.borderColor = 'var(--color-accent-secondary)';
+                                      e.currentTarget.style.transform = 'translateY(-2px)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                      e.currentTarget.style.borderColor = 'var(--color-border-subtle)';
+                                      e.currentTarget.style.transform = 'translateY(0)';
+                                    }}
+                                  >
+                                    {/* Content Header */}
+                                    <div className="flex items-start justify-between mb-3">
+                                      <div className="flex items-start gap-3 flex-1 min-w-0">
+                                        {/* Icon */}
+                                        <div 
+                                          className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                                          style={{
+                                            backgroundColor: 'var(--color-accent-tertiary)',
+                                            color: 'var(--color-accent-secondary)'
+                                          }}
+                                        >
+                                          <PlayIcon className="h-5 w-5" />
+                                        </div>
+                                        
+                                        {/* Content Info */}
+                                        <div className="flex-1 min-w-0">
+                                          <h5 className="text-sm font-semibold mb-1 truncate" style={{ color: 'var(--color-text-primary)' }}>
+                                            {item.title}
+                                          </h5>
+                                          
+                                          {/* Order Badge */}
+                                          <div className="flex items-center gap-2 mb-2">
+                                            <span 
+                                              className="px-2 py-1 rounded-md text-xs font-medium"
+                                              style={{
+                                                backgroundColor: 'var(--color-tertiary-bg)',
+                                                color: 'var(--color-text-secondary)'
+                                              }}
+                                            >
+                                              Order: {item.order}
+                                            </span>
+                                            {item.resources && item.resources.length > 0 && (
+                                              <span 
+                                                className="px-2 py-1 rounded-md text-xs font-medium"
+                                                style={{
+                                                  backgroundColor: 'var(--color-accent-tertiary)',
+                                                  color: 'var(--color-accent-primary)'
+                                                }}
+                                              >
+                                                {item.resources.length} resource{item.resources.length !== 1 ? 's' : ''}
+                                              </span>
+                                            )}
+                                          </div>
+                                          
+                                          {/* Description */}
+                                          <p className="text-xs line-clamp-2" style={{ color: 'var(--color-text-tertiary)' }}>
+                                            {item.description}
+                                          </p>
+                                        </div>
+                                      </div>
+                                      
+                                      {/* Action Buttons */}
+                                      <div className="flex items-center gap-2 flex-shrink-0">
+                                        <button
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleEditContent('exercise', item, idx, level);
+                                          }}
+                                          className="p-2 rounded-lg transition-all duration-200 hover:scale-105"
+                                          title="Edit"
+                                          style={{ 
+                                            backgroundColor: 'var(--color-accent-secondary)',
+                                            color: 'var(--color-text-inverse)'
+                                          }}
+                                          onMouseEnter={(e) => {
+                                            e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                                          }}
+                                          onMouseLeave={(e) => {
+                                            e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                                          }}
+                                        >
+                                          <EditIcon className="h-4 w-4" />
+                                        </button>
+                                        <button
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleDeleteContent(level.id, 'exercise', idx);
+                                          }}
+                                          className="p-2 rounded-lg transition-all duration-200 hover:scale-105"
+                                          title="Delete"
+                                          style={{ 
+                                            backgroundColor: 'var(--color-error)',
+                                            color: 'var(--color-text-inverse)'
+                                          }}
+                                          onMouseEnter={(e) => {
+                                            e.currentTarget.style.backgroundColor = 'var(--color-error-hover)';
+                                          }}
+                                          onMouseLeave={(e) => {
+                                            e.currentTarget.style.backgroundColor = 'var(--color-error)';
+                                          }}
+                                        >
+                                          <TrashIcon className="h-4 w-4" />
+                                        </button>
+                                      </div>
                                     </div>
                                   </div>
                                 ))
                               ) : (
-                                <p className="text-xs text-center py-2" style={{ color: 'var(--color-text-tertiary)' }}>No exercise content yet</p>
+                                <div 
+                                  className="text-center py-8 rounded-xl border-2 border-dashed"
+                                  style={{
+                                    backgroundColor: 'var(--color-surface)',
+                                    borderColor: 'var(--color-border-subtle)'
+                                  }}
+                                >
+                                  <div 
+                                    className="w-12 h-12 rounded-full mx-auto mb-3 flex items-center justify-center"
+                                    style={{
+                                      backgroundColor: 'var(--color-tertiary-bg)',
+                                      color: 'var(--color-text-muted)'
+                                    }}
+                                  >
+                                    <PlayIcon className="h-6 w-6" />
+                                  </div>
+                                  <p 
+                                    className="text-sm font-medium mb-2"
+                                    style={{ color: 'var(--color-text-secondary)' }}
+                                  >
+                                    No Exercises
+                                  </p>
+                                  <p 
+                                    className="text-xs"
+                                    style={{ color: 'var(--color-text-tertiary)' }}
+                                  >
+                                    Add your first exercise to get started
+                                  </p>
+                                </div>
                               )}
                             </div>
                           )}
