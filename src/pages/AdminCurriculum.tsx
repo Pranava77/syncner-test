@@ -150,7 +150,9 @@ const AdminCurriculum: React.FC = () => {
   const fetchLevels = async (track?: string) => {
     try {
       setLoading(true);
-      const response = await apiService.get(`/curriculum?careerTrack=${track || selectedTrack}&grouped=true`);
+      const chosenTrack = track || selectedTrack || '';
+      const url = `/curriculum?grouped=true${chosenTrack ? `&careerTrack=${chosenTrack}` : ''}`;
+      const response = await apiService.get(url);
       
       if (response.success) {
         // The backend now returns grouped levels structure, same as training endpoint
