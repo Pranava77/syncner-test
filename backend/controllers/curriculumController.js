@@ -68,6 +68,11 @@ const groupCurriculumIntoLevels = (items) => {
       resources: item.resources || []
     };
 
+    // For learn items, include external link if available
+    if (item.type === 'learn' && item.externalLink) {
+      contentItem.externalLink = item.externalLink;
+    }
+
     // For exercise items, process resources properly
     if (item.type === 'exercise') {
       // Convert resources to the format expected by frontend

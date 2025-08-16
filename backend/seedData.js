@@ -71,14 +71,7 @@ const seedData = async () => {
         tags: ['html', 'markup', 'structure'],
         prerequisites: ['Introduction to Web Development'],
         learningObjectives: ['Understand HTML tags', 'Learn semantic elements', 'Create forms'],
-        resources: [
-          {
-            title: 'HTML Documentation',
-            url: 'https://developer.mozilla.org/en-US/docs/Web/HTML',
-            type: 'document',
-            description: 'Official HTML documentation'
-          }
-        ],
+        externalLink: 'https://developer.mozilla.org/en-US/docs/Web/HTML',
         metadata: {
           createdBy: adminUser._id,
           version: 1
@@ -96,14 +89,7 @@ const seedData = async () => {
         tags: ['html', 'elements', 'semantic', 'html5'],
         prerequisites: ['Introduction to Web Development'],
         learningObjectives: ['Master HTML elements', 'Understand semantic HTML', 'Create accessible markup'],
-        resources: [
-          {
-            title: 'HTML5 Semantic Elements',
-            url: 'https://www.w3schools.com/html/html5_semantic_elements.asp',
-            type: 'document',
-            description: 'Guide to semantic HTML5 elements'
-          }
-        ],
+        externalLink: 'https://www.w3schools.com/html/html5_semantic_elements.asp',
         metadata: {
           createdBy: adminUser._id,
           version: 1

@@ -29,15 +29,10 @@ interface Level {
 }
 
 interface LearnItem {
-  type: 'video' | 'reading' | 'slide' | 'other' | 'learn';
+  id: string;
   title: string;
   content: string;
-  resources?: Array<{
-    title: string;
-    url: string;
-    type: string;
-    description: string;
-  }>;
+  externalLink?: string; // Only external link field for learn content
   order: number;
 }
 
@@ -246,17 +241,7 @@ const LevelLearnPage: React.FC = () => {
     }
   };
 
-  const getContentIcon = (type: string) => {
-    switch (type) {
-      case 'video': return <PlayIcon className="h-4 w-4" />;
-      case 'reading': return <ReaderIcon className="h-4 w-4" />;
-      case 'slide': return <FileTextIcon className="h-4 w-4" />;
-      case 'learn': return <ReaderIcon className="h-4 w-4" />;
-      default: return <FileTextIcon className="h-4 w-4" />;
-    }
-  };
-
-  const getContentColor = (type: string) => {
+  const getTypeColor = (type: string) => {
     switch (type) {
       case 'video': return 'var(--color-error)';
       case 'reading': return 'var(--color-accent-primary)';
@@ -266,20 +251,16 @@ const LevelLearnPage: React.FC = () => {
     }
   };
 
-  const generateYouTubeSearchUrl = (title: string, levelTitle: string) => {
-    const searchQuery = encodeURIComponent(`${title} ${levelTitle} tutorial`);
-    return `https://www.youtube.com/results?search_query=${searchQuery}`;
-  };
-
   const handleLearningCardClick = (item: LearnItem) => {
     let linkUrl = '';
     
-    // Check if item has resources with URLs
-    if (item.resources && item.resources.length > 0 && item.resources[0].url) {
-      linkUrl = item.resources[0].url;
+    // Check if item has external link
+    if (item.externalLink) {
+      linkUrl = item.externalLink;
     } else {
-      // Fallback to YouTube search
-      linkUrl = generateYouTubeSearchUrl(item.title, level?.title || '');
+      // No link available - show message or handle gracefully
+      console.log('No external link available for this item');
+      return; // Don't proceed if no link is available
     }
     
     // Track accessed link only if not already tracked (unique links only)
@@ -306,10 +287,10 @@ const LevelLearnPage: React.FC = () => {
   const getProgressPercentage = () => {
     const safeLinksLength = accessedLinks?.length || 0;
     
-    // Dynamic progress based on available links in the level
-    const totalAvailableLinks = level?.learn?.length || 1; // At least 1 to avoid division by zero
+    // Dynamic progress based on available external links in the level
+    const totalAvailableLinks = level?.learn?.filter(item => item.externalLink)?.length || 1; // At least 1 to avoid division by zero
     
-    // Progress is based on accessed links vs total available links
+    // Progress is based on accessed links vs total available external links
     return Math.min((safeLinksLength / totalAvailableLinks) * 100, 100);
   };
 
@@ -529,13 +510,13 @@ const LevelLearnPage: React.FC = () => {
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
                       <div 
-                        className="p-3 rounded-lg"
+                        className="w-12 h-12 rounded-lg flex items-center justify-center mr-4"
                         style={{
                           backgroundColor: 'var(--color-accent-tertiary)',
                           color: 'var(--color-accent-primary)'
                         }}
                       >
-                        {getContentIcon(item.type)}
+                        <ReaderIcon className="h-4 w-4" />
                       </div>
                       <div>
                         <h3 
@@ -573,31 +554,19 @@ const LevelLearnPage: React.FC = () => {
                     {item.content}
                   </div>
                   
-                  {item.resources && item.resources.length > 0 && (
+                  {item.externalLink && (
                     <div 
                       className="mt-4 pt-4 border-t"
                       style={{ borderColor: 'var(--color-border-subtle)' }}
                     >
-                      <h4 
-                        className="text-sm font-semibold mb-2"
-                        style={{ color: 'var(--color-text-primary)' }}
+                      <a 
+                        href={item.externalLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm font-semibold text-blue-600 hover:text-blue-800 hover:underline"
                       >
-                        Resources:
-                      </h4>
-                      <div className="flex flex-wrap gap-2">
-                        {item.resources.map((resource, idx) => (
-                          <span 
-                            key={idx} 
-                            className="px-2 py-1 rounded text-xs"
-                            style={{
-                              backgroundColor: 'var(--color-accent-tertiary)',
-                              color: 'var(--color-text-tertiary)'
-                            }}
-                          >
-                            {resource.title}
-                          </span>
-                        ))}
-                      </div>
+                        🔗 External Resource
+                      </a>
                     </div>
                   )}
                 </div>

@@ -51,14 +51,20 @@ const groupCurriculumIntoLevels = (items) => {
 
     // Create a clean object for each content item
     const contentItem = {
+      id: item._id.toString(),
       type: item.type,
-      title: item.title,
-      content: item.content,
+      title: item.title || '',
+      content: item.content || '',
       order: item.order,
-      videoUrl: item.videoUrl,
-      description: item.description,
+      externalLink: item.externalLink || '', // Include externalLink for learn content
+      description: item.description || '',
       resources: item.resources || []
     };
+
+    // For learn items, include external link if available
+    if (item.type === 'learn' && item.externalLink) {
+      contentItem.externalLink = item.externalLink;
+    }
 
     // For exercise items, process resources properly
     if (item.type === 'exercise') {
