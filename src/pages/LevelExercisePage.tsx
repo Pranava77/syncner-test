@@ -446,7 +446,7 @@ const LevelExercisePage: React.FC = () => {
           className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center"
           style={{ backgroundColor: 'var(--color-secondary-bg)' }}
         >
-          <div className="w-full max-w-5xl rounded-xl border shadow-lg p-6 text-center" style={{
+          <div className="w-full rounded-xl border shadow-lg p-6 text-center" style={{
             backgroundColor: 'var(--color-tertiary-bg)',
             borderColor: 'var(--color-border-subtle)'
           }}>
@@ -498,7 +498,7 @@ const LevelExercisePage: React.FC = () => {
           style={{ backgroundColor: 'var(--color-primary-bg)' }}
         >
           <div 
-            className="w-full max-w-5xl rounded-xl border shadow-lg p-6 text-center"
+            className="w-full rounded-xl border shadow-lg p-6 text-center"
             style={{
               backgroundColor: 'var(--color-accent-tertiary)',
               borderColor: 'var(--color-border)'
@@ -557,7 +557,7 @@ const LevelExercisePage: React.FC = () => {
           className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-12 max-w-full flex flex-col items-center"
           style={{ backgroundColor: 'var(--color-primary-bg)' }}
         >
-          <div className="w-full max-w-5xl rounded-xl border shadow-lg p-6 text-center" style={{
+          <div className="w-full rounded-xl border shadow-lg p-6 text-center" style={{
             backgroundColor: 'var(--color-tertiary-bg)',
             borderColor: 'var(--color-border-subtle)'
           }}>
@@ -608,7 +608,7 @@ const LevelExercisePage: React.FC = () => {
   const optionalExercises = processedExercises.filter(ex => !ex.isMandatory);
 
   const renderExerciseTable = (exercises: any[], title: string, startIndex: number = 0) => (
-    <div className="w-full max-w-5xl rounded-xl border shadow-lg p-6 mb-6" style={{
+    <div className="w-full rounded-xl border shadow-lg p-6 mb-6" style={{
       backgroundColor: 'var(--color-tertiary-bg)',
       borderColor: 'var(--color-border-subtle)'
     }}>
@@ -757,7 +757,7 @@ const LevelExercisePage: React.FC = () => {
         style={{ backgroundColor: 'var(--color-secondary-bg)' }}
       >
         {/* Level Header */}
-        <div className="w-full max-w-5xl rounded-xl border shadow-lg p-6 mb-8" style={{
+        <div className="w-full rounded-xl border shadow-lg p-6 mb-8" style={{
           backgroundColor: 'var(--color-tertiary-bg)',
           borderColor: 'var(--color-border-subtle)',
           boxShadow: 'var(--shadow-md)'
@@ -790,7 +790,7 @@ const LevelExercisePage: React.FC = () => {
         </div>
 
         {/* Exercise Progress Tracker */}
-        <div className="w-full max-w-5xl rounded-xl border shadow-lg p-6 mb-8" style={{
+        <div className="w-full rounded-xl border shadow-lg p-6 mb-8" style={{
           background: 'linear-gradient(135deg, var(--color-accent-tertiary) 0%, var(--color-tertiary-bg) 100%)',
           borderColor: 'var(--color-accent-primary)',
           boxShadow: 'var(--shadow-md)'
@@ -864,7 +864,7 @@ const LevelExercisePage: React.FC = () => {
         {optionalExercises.length > 0 && renderExerciseTable(optionalExercises, "Optional", mandatoryExercises.length)}
 
         {/* Action Buttons */}
-        <div className="w-full max-w-5xl flex flex-col sm:flex-row items-center justify-center gap-4 mt-8 mb-8">
+        <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-4 mt-8 mb-8">
           {hasExerciseLinks ? (
             isLastLevel ? (
               // No button for last level - just show the celebration card
@@ -929,7 +929,7 @@ const LevelExercisePage: React.FC = () => {
         {/* Bootcamp Completion Celebration */}
         {isLastLevel && hasExerciseLinks && (
           <div 
-            className="w-full max-w-5xl rounded-xl border shadow-lg p-8 mb-8 text-center"
+            className="w-full rounded-xl border shadow-lg p-8 mb-8 text-center"
             style={{
               background: 'linear-gradient(135deg, var(--color-success-bg), var(--color-accent-tertiary))',
               borderColor: 'var(--color-success)'

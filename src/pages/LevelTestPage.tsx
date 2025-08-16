@@ -518,7 +518,7 @@ const LevelTestPage: React.FC = () => {
           style={{ backgroundColor: 'var(--color-secondary-bg)' }}
         >
           <div 
-            className="w-full max-w-5xl rounded-xl border shadow-lg p-6 text-center"
+            className="w-full rounded-xl border shadow-lg p-6 text-center"
             style={{
               backgroundColor: 'var(--color-tertiary-bg)',
               borderColor: 'var(--color-border)'
@@ -577,7 +577,7 @@ const LevelTestPage: React.FC = () => {
           style={{ backgroundColor: 'var(--color-primary-bg)' }}
         >
           <div 
-            className="w-full max-w-5xl rounded-xl border shadow-lg p-6 text-center"
+            className="w-full rounded-xl border shadow-lg p-6 text-center"
             style={{
               background: 'linear-gradient(to right, rgba(34, 197, 94, 0.1), rgba(20, 184, 166, 0.1))',
               borderColor: 'rgba(34, 197, 94, 0.3)'
@@ -687,7 +687,7 @@ const LevelTestPage: React.FC = () => {
           style={{ backgroundColor: 'var(--color-primary-bg)' }}
         >
           <div 
-            className="w-full max-w-5xl rounded-2xl border shadow-2xl p-8 text-center"
+            className="w-full rounded-2xl border shadow-2xl p-8 text-center"
             style={{
               background: 'linear-gradient(to right, rgba(249, 115, 22, 0.1), rgba(239, 68, 68, 0.1))',
               borderColor: 'rgba(249, 115, 22, 0.3)'
@@ -770,7 +770,7 @@ const LevelTestPage: React.FC = () => {
           style={{ backgroundColor: 'var(--color-primary-bg)' }}
         >
           <div 
-            className="w-full max-w-5xl rounded-xl border shadow-lg p-6 text-center"
+            className="w-full rounded-xl border shadow-lg p-6 text-center"
             style={{
               backgroundColor: 'var(--color-accent-tertiary)',
               borderColor: 'var(--color-border)'
@@ -827,7 +827,7 @@ const LevelTestPage: React.FC = () => {
       >
         {/* Level Header */}
         <div 
-          className="w-full max-w-5xl rounded-xl border shadow-lg p-6 mb-8"
+          className="w-full rounded-xl border shadow-lg p-6 mb-8"
           style={{
             backgroundColor: 'var(--color-tertiary-bg)',
             borderColor: 'var(--color-border-subtle)',
@@ -869,7 +869,7 @@ const LevelTestPage: React.FC = () => {
 
         {/* Test Progress Section */}
         <div 
-          className="w-full max-w-5xl rounded-xl border shadow-lg p-6 mb-6"
+          className="w-full rounded-xl border shadow-lg p-6 mb-6"
           style={{
             background: 'linear-gradient(135deg, var(--color-accent-tertiary) 0%, var(--color-tertiary-bg) 100%)',
             borderColor: 'var(--color-accent-primary)',
@@ -934,7 +934,7 @@ const LevelTestPage: React.FC = () => {
 
         {/* Test Details Section */}
         <div 
-          className="w-full max-w-5xl rounded-xl border shadow-lg p-6 mb-8"
+          className="w-full rounded-xl border shadow-lg p-6 mb-8"
           style={{
             backgroundColor: 'var(--color-tertiary-bg)',
             borderColor: 'var(--color-border-subtle)',
@@ -1015,7 +1015,7 @@ const LevelTestPage: React.FC = () => {
           {!submitted ? (
             <>
         {/* Test Questions */}
-              <div className="w-full max-w-5xl space-y-6 pb-8">
+              <div className="w-full space-y-6 pb-8">
                 <form onSubmit={handleSubmit} className="space-y-6">
           {validQuestions.map((question, qIdx) => (
             <div 
@@ -1107,7 +1107,7 @@ const LevelTestPage: React.FC = () => {
             </>
           ) : (
             /* Results View */
-            <div className="w-full max-w-5xl space-y-6 pb-8">
+            <div className="w-full space-y-6 pb-8">
               {/* Results Header */}
               <div 
                 className="rounded-xl border shadow-lg p-6 text-center"

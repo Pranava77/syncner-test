@@ -348,7 +348,7 @@ const LevelLearnPage: React.FC = () => {
           </div>
         ) : !isLearnUnlocked ? (
           <div 
-            className="w-full max-w-5xl rounded-xl border shadow-lg p-6 text-center"
+            className="w-full rounded-xl border shadow-lg p-6 text-center"
             style={{
               backgroundColor: 'var(--color-surface)',
               borderColor: 'var(--color-border)',
@@ -391,7 +391,7 @@ const LevelLearnPage: React.FC = () => {
           <>
             {/* Level Header */}
             <div 
-              className="w-full max-w-5xl rounded-2xl border shadow-lg p-8 mb-8 overflow-hidden relative"
+              className="w-full rounded-2xl border shadow-lg p-8 mb-8 overflow-hidden relative"
               style={{
                 background: 'linear-gradient(135deg, var(--color-accent-tertiary) 0%, var(--color-surface) 100%)',
                 borderColor: 'var(--color-accent-primary)',
@@ -507,7 +507,7 @@ const LevelLearnPage: React.FC = () => {
 
             {/* Learn Progress Tracker */}
             <div 
-              className="w-full max-w-5xl rounded-xl border shadow-lg p-6 mb-8"
+              className="w-full rounded-xl border shadow-lg p-6 mb-8"
               style={{
                 background: 'linear-gradient(135deg, var(--color-accent-tertiary) 0%, var(--color-tertiary-bg) 100%)',
                 borderColor: 'var(--color-accent-primary)',
@@ -572,7 +572,7 @@ const LevelLearnPage: React.FC = () => {
             </div>
 
             {/* Learning Content */}
-            <div className="w-full max-w-5xl">
+            <div className="w-full">
               {/* Section Header */}
               <div className="mb-6">
                 <h2 
@@ -850,7 +850,7 @@ const LevelLearnPage: React.FC = () => {
       
 
             {/* Action Buttons */}
-            <div className="w-full max-w-5xl flex justify-between items-center mt-8">
+            <div className="w-full flex justify-between items-center mt-8">
               <button
                 onClick={() => navigate('/student/training')}
                 className="px-6 py-3 rounded-lg transition-all duration-200 hover:scale-105 font-medium"

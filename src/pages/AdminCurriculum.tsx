@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
+import { 
   PlusIcon, 
   Pencil1Icon as EditIcon, 
   TrashIcon, 
@@ -591,7 +591,7 @@ const AdminCurriculum: React.FC = () => {
           console.warn('Backend cache invalidation failed:', backendCacheError);
         }
         if (level) {
-          window.dispatchEvent(new CustomEvent('curriculum-changed', {
+        window.dispatchEvent(new CustomEvent('curriculum-changed', {
             detail: {
               action: 'content_deleted',
               track: level.careerTrack,
@@ -600,7 +600,7 @@ const AdminCurriculum: React.FC = () => {
               timestamp: Date.now()
             }
           }));
-          window.dispatchEvent(new CustomEvent('levels-refresh-required', {
+        window.dispatchEvent(new CustomEvent('levels-refresh-required', {
             detail: {
               track: level.careerTrack,
               reason: 'content_deleted',
@@ -610,7 +610,7 @@ const AdminCurriculum: React.FC = () => {
             }
           }));
         }
-
+        
         showSuccessMessage('Content deleted successfully');
       } catch (error: any) {
         console.error('Error deleting content:', error);
@@ -636,24 +636,24 @@ const AdminCurriculum: React.FC = () => {
     console.log('Content type determined:', contentType);
     console.log('Content form:', contentForm);
     
-    if (contentType === 'learn' && !contentForm.content) {
+            if (contentType === 'learn' && !contentForm.content) {
       console.log('Learn content validation failed - no content');
-      setFormError('Content is required for learn items');
-      return;
-    } else if (contentType === 'test' && !contentForm.question) {
+          setFormError('Content is required for learn items');
+          return;
+        } else if (contentType === 'test' && !contentForm.question) {
       console.log('Test validation failed - no question');
-      setFormError('Question is required for test items');
-      return;
+          setFormError('Question is required for test items');
+          return;
     } else if (contentType === 'test' && (!contentForm.options || contentForm.options.length < 4 || contentForm.options.some((opt: string) => !opt.trim()))) {
       console.log('Test validation failed - missing or empty options');
       setFormError('All 4 options are required for test items');
       return;
-    } else if (contentType === 'exercise' && !contentForm.description) {
+        } else if (contentType === 'exercise' && !contentForm.description) {
       console.log('Exercise validation failed - no description');
-      setFormError('Description is required for exercise items');
-      return;
-    }
-
+          setFormError('Description is required for exercise items');
+          return;
+        }
+        
     console.log('All validations passed, proceeding with submission');
 
     setIsSubmitting(true);
@@ -852,12 +852,12 @@ const AdminCurriculum: React.FC = () => {
           const updated = { ...lvl };
           if (contentType === 'learn') {
             const newLearnItem = {
-              id: newId,
+                id: newId,
               type: 'learn',
-              title: contentForm.title,
-              content: contentForm.content,
+                title: contentForm.title,
+                content: contentForm.content,
               externalLink: contentForm.externalLink || '',
-              order: updated.order,
+                order: updated.order,
             };
             updated.learn = [
               ...(updated.learn || []),
@@ -1366,9 +1366,9 @@ const AdminCurriculum: React.FC = () => {
               <div className="mb-8 space-y-6">
                 {/* Search Bar */}
                 <div className="relative">
-                  <div
+              <div 
                     className="relative rounded-2xl border-2 transition-all duration-300 overflow-hidden"
-                    style={{
+                style={{
                       backgroundColor: 'var(--color-surface)',
                       borderColor: 'var(--color-border)',
                       boxShadow: 'var(--shadow-sm)'
@@ -1407,8 +1407,8 @@ const AdminCurriculum: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                </div>
-
+                  </div>
+                  
                 {/* Filters Row */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   {/* Track Filter */}
@@ -1469,36 +1469,36 @@ const AdminCurriculum: React.FC = () => {
                         boxShadow: 'var(--shadow-sm)'
                       }}
                     >
-                      <select
-                        value={filterDifficulty}
-                        onChange={(e) => setFilterDifficulty(e.target.value)}
+                    <select
+                      value={filterDifficulty}
+                      onChange={(e) => setFilterDifficulty(e.target.value)}
                         className="w-full px-4 py-3 text-base font-medium transition-all duration-200 focus:outline-none appearance-none cursor-pointer"
-                        style={{
+                      style={{
                           backgroundColor: 'transparent',
-                          color: 'var(--color-text-primary)'
-                        }}
-                        onFocus={(e) => {
+                        color: 'var(--color-text-primary)'
+                      }}
+                      onFocus={(e) => {
                           e.currentTarget.parentElement!.style.borderColor = 'var(--color-accent-primary)';
                           e.currentTarget.parentElement!.style.boxShadow = 'var(--shadow-lg)';
                           e.currentTarget.parentElement!.style.transform = 'translateY(-2px)';
-                        }}
-                        onBlur={(e) => {
+                      }}
+                      onBlur={(e) => {
                           e.currentTarget.parentElement!.style.borderColor = 'var(--color-border)';
                           e.currentTarget.parentElement!.style.boxShadow = 'var(--shadow-sm)';
                           e.currentTarget.parentElement!.style.transform = 'translateY(0)';
-                        }}
-                      >
-                        <option value="all">All Difficulties</option>
-                        <option value="beginner">Beginner</option>
-                        <option value="intermediate">Intermediate</option>
-                        <option value="advanced">Advanced</option>
-                      </select>
+                      }}
+                    >
+                      <option value="all">All Difficulties</option>
+                      <option value="beginner">Beginner</option>
+                      <option value="intermediate">Intermediate</option>
+                      <option value="advanced">Advanced</option>
+                    </select>
                       <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
                         <ChevronDownIcon className="h-5 w-5" style={{ color: 'var(--color-text-secondary)' }} />
                       </div>
                     </div>
                   </div>
-
+                  
                   {/* Status Filter */}
                   <div className="group">
                     <label className="block text-sm font-semibold mb-3" style={{ color: 'var(--color-text-primary)' }}>
@@ -1711,16 +1711,16 @@ const AdminCurriculum: React.FC = () => {
                        >
                          <div className="flex items-start justify-between mb-4">
                            <div className="flex items-start gap-4 flex-1">
-                             {/* Level Number Badge */}
-                             <div 
+                          {/* Level Number Badge */}
+                          <div 
                                className="w-16 h-16 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0"
-                               style={{
+                            style={{ 
                                  background: 'linear-gradient(135deg, var(--color-accent-primary) 0%, var(--color-accent-secondary) 100%)',
-                                 color: 'var(--color-text-inverse)'
-                               }}
-                             >
+                              color: 'var(--color-text-inverse)' 
+                            }}
+                          >
                                <span className="text-2xl font-bold">{level.order}</span>
-                             </div>
+                          </div>
                              
                              {/* Level Info */}
                              <div className="flex-1 min-w-0">
@@ -1735,17 +1735,17 @@ const AdminCurriculum: React.FC = () => {
                                <div className="flex items-center gap-3 mb-4">
                                  <span 
                                    className="px-3 py-1 rounded-lg text-xs font-medium"
-                                   style={getDifficultyColor(level.difficulty)}
-                                 >
-                                   {level.difficulty}
+                            style={getDifficultyColor(level.difficulty)}
+                          >
+                            {level.difficulty}
                                  </span>
-                                 <span 
+                        <span 
                                    className={`px-3 py-1 rounded-lg text-xs font-medium ${getTrackColor(level.careerTrack)}`}
-                                   style={{ color: 'var(--color-text-inverse)' }}
-                                 >
-                                   {getTrackLabel(level.careerTrack)}
-                                 </span>
-                                 <span 
+                          style={{ color: 'var(--color-text-inverse)' }}
+                        >
+                          {getTrackLabel(level.careerTrack)}
+                        </span>
+                          <span 
                                    className="px-3 py-1 rounded-lg text-xs font-medium"
                                    style={{
                                      backgroundColor: 'var(--color-accent-tertiary)',
@@ -1753,14 +1753,14 @@ const AdminCurriculum: React.FC = () => {
                                    }}
                                  >
                                    {level.estimatedHours}h estimated
-                                 </span>
-                               </div>
-                             </div>
-                           </div>
+                          </span>
+                        </div>
+                      </div>
+                        </div>
                            
                            {/* Status Badge */}
                            <div className="flex items-center gap-2 flex-shrink-0">
-                             {level.isActive ? (
+                          {level.isActive ? (
                                                             <span 
                                className="px-3 py-1 rounded-lg text-sm font-medium flex items-center gap-2"
                                style={{
@@ -1769,9 +1769,9 @@ const AdminCurriculum: React.FC = () => {
                                }}
                              >
                                <CheckCircledIcon className="h-4 w-4" />
-                               Active
-                             </span>
-                             ) : (
+                              Active
+                            </span>
+                          ) : (
                                                             <span 
                                className="px-3 py-1 rounded-lg text-sm font-medium flex items-center gap-2"
                                style={{
@@ -1780,15 +1780,15 @@ const AdminCurriculum: React.FC = () => {
                                }}
                              >
                                <Cross1Icon className="h-4 w-4" />
-                               Inactive
-                             </span>
-                             )}
-                           </div>
-                         </div>
-                        
-                                                 {/* Skills */}
+                              Inactive
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Skills */}
                          {level.skills && level.skills.length > 0 && (
-                           <div className="mb-4">
+                        <div className="mb-4">
                              <div className="flex flex-wrap gap-2">
                                {level.skills.slice(0, 8).map((skill, idx) => (
                                  <span 
@@ -1799,30 +1799,30 @@ const AdminCurriculum: React.FC = () => {
                                      color: 'var(--color-text-inverse)'
                                    }}
                                  >
-                                   {skill}
-                                 </span>
-                               ))}
+                                {skill}
+                              </span>
+                            ))}
                                {level.skills.length > 8 && (
                                  <span 
                                    className="px-3 py-1 rounded-lg text-xs font-medium shadow-sm"
                                    style={{
-                                     backgroundColor: 'var(--color-tertiary-bg)',
+                                backgroundColor: 'var(--color-tertiary-bg)',
                                      color: 'var(--color-text-secondary)'
                                    }}
                                  >
                                    +{level.skills.length - 8} more
-                                 </span>
-                               )}
-                             </div>
-                           </div>
-                         )}
-                        
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
                                                  {/* Content Summary */}
                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div 
                             className="p-4 rounded-xl text-center shadow-md"
                             style={{
-                              backgroundColor: 'var(--color-success-bg)',
+                          backgroundColor: 'var(--color-success-bg)',
                               border: '1px solid var(--color-success)'
                             }}
                           >
@@ -1881,17 +1881,17 @@ const AdminCurriculum: React.FC = () => {
                          style={{ backgroundColor: 'var(--color-secondary-bg)' }}
                        >
                          <div className="flex items-center gap-3">
-                          <button
+                            <button
                             onClick={() => handleEditLevel(level)}
                             className="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105"
                             style={{
                               backgroundColor: 'var(--color-accent-primary)',
                               color: 'var(--color-text-inverse)'
                             }}
-                            onMouseEnter={(e) => {
+                              onMouseEnter={(e) => {
                               e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
-                            }}
-                            onMouseLeave={(e) => {
+                              }}
+                              onMouseLeave={(e) => {
                               e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
                             }}
                           >
@@ -1920,8 +1920,8 @@ const AdminCurriculum: React.FC = () => {
                           >
                             <TrashIcon className="h-4 w-4 inline mr-2" />
                             {isDeletingLevel ? 'Deleting...' : 'Delete Level'}
-                          </button>
-                        </div>
+                            </button>
+                          </div>
                         
                         {/* Level Reorder Controls */}
                         <div className="flex items-center gap-2">
@@ -1933,7 +1933,7 @@ const AdminCurriculum: React.FC = () => {
                             }}
                           >
                             #{level.order}
-                          </div>
+                                    </div>
                           
                           <div 
                             className="text-xs px-2 py-1 rounded"
@@ -1945,7 +1945,7 @@ const AdminCurriculum: React.FC = () => {
                             of {levels.filter((l: any) => l.careerTrack === level.careerTrack).length}
                           </div>
                           
-                          <button
+                                      <button
                             onClick={async () => {
                               // Move level up (swap with previous order)
                               const currentOrder = level.order;
@@ -1991,24 +1991,24 @@ const AdminCurriculum: React.FC = () => {
                               backgroundColor: 'var(--color-accent-tertiary)',
                               color: 'var(--color-accent-primary)'
                             }}
-                            onMouseEnter={(e) => {
+                                        onMouseEnter={(e) => {
                               if (!isReordering && level.order > 1) {
                                 e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
                                 e.currentTarget.style.color = 'var(--color-text-inverse)';
                               }
-                            }}
-                            onMouseLeave={(e) => {
+                                        }}
+                                        onMouseLeave={(e) => {
                               if (!isReordering && level.order > 1) {
                                 e.currentTarget.style.backgroundColor = 'var(--color-accent-tertiary)';
                                 e.currentTarget.style.color = 'var(--color-accent-primary)';
                               }
-                            }}
+                                        }}
                             title="Move Level Up"
-                          >
+                                      >
                             <ChevronUpIcon className="h-4 w-4" />
-                          </button>
+                                      </button>
                           
-                          <button
+                                      <button
                             onClick={async () => {
                               // Move level down (swap with next order)
                               const currentOrder = level.order;
@@ -2060,15 +2060,15 @@ const AdminCurriculum: React.FC = () => {
                               backgroundColor: 'var(--color-accent-tertiary)',
                               color: 'var(--color-accent-primary)'
                             }}
-                            onMouseEnter={(e) => {
+                                        onMouseEnter={(e) => {
                               const trackLevels = levels.filter((l: any) => l.careerTrack === level.careerTrack);
                               const maxOrder = Math.max(...trackLevels.map((l: any) => l.order));
                               if (!isReordering && level.order < maxOrder) {
                                 e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
                                 e.currentTarget.style.color = 'var(--color-text-inverse)';
                               }
-                            }}
-                            onMouseLeave={(e) => {
+                                        }}
+                                        onMouseLeave={(e) => {
                               const trackLevels = levels.filter((l: any) => l.careerTrack === level.careerTrack);
                               const maxOrder = Math.max(...trackLevels.map((l: any) => l.order));
                               if (!isReordering && level.order < maxOrder) {
@@ -2079,8 +2079,8 @@ const AdminCurriculum: React.FC = () => {
                             title="Move Level Down"
                           >
                             <ChevronDownIcon className="h-4 w-4" />
-                          </button>
-                        </div>
+                                      </button>
+                                    </div>
                         
                         <div className="flex flex-wrap items-center gap-3">
                           <button
@@ -2136,9 +2136,9 @@ const AdminCurriculum: React.FC = () => {
                             <PlusIcon className="h-4 w-4 inline mr-2" />
                             Add Exercise
                           </button>
+                                  </div>
                         </div>
-                      </div>
-                      
+
                                              {/* Content Sections */}
                        <div className="p-4 space-y-4">
                         {/* Learn Content Section */}
@@ -2163,7 +2163,7 @@ const AdminCurriculum: React.FC = () => {
                               <div>
                                 <h4 className="text-lg font-semibold" style={{ color: 'var(--color-success)' }}>
                                   Learning Resources
-                                </h4>
+                            </h4>
                                 <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
                                   {level.learn?.length || 0} resource{level.learn?.length !== 1 ? 's' : ''} available
                                 </p>
@@ -2229,7 +2229,7 @@ const AdminCurriculum: React.FC = () => {
                                         </div>
                                         
                                         {/* Content Info */}
-                                        <div className="flex-1 min-w-0">
+                                    <div className="flex-1 min-w-0">
                                           <h5 className="text-sm font-semibold mb-1 truncate" style={{ color: 'var(--color-text-primary)' }}>
                                             {item.title}
                                           </h5>
@@ -2256,53 +2256,53 @@ const AdminCurriculum: React.FC = () => {
                                                 External Link
                                               </span>
                                             )}
-                                          </div>
+                                    </div>
                                         </div>
                                       </div>
                                       
                                       {/* Action Buttons */}
                                       <div className="flex items-center gap-2 flex-shrink-0">
-                                        <button
+                                      <button
                                           onClick={(e) => {
                                             e.stopPropagation();
                                             handleEditContent('learn', item, idx, level);
                                           }}
                                           className="p-2 rounded-lg transition-all duration-200 hover:scale-105"
-                                          title="Edit"
+                                        title="Edit"
                                           style={{ 
                                             backgroundColor: 'var(--color-success)',
                                             color: 'var(--color-text-inverse)'
                                           }}
-                                          onMouseEnter={(e) => {
+                                        onMouseEnter={(e) => {
                                             e.currentTarget.style.backgroundColor = 'var(--color-success-hover)';
-                                          }}
-                                          onMouseLeave={(e) => {
+                                        }}
+                                        onMouseLeave={(e) => {
                                             e.currentTarget.style.backgroundColor = 'var(--color-success)';
-                                          }}
-                                        >
+                                        }}
+                                      >
                                           <EditIcon className="h-4 w-4" />
-                                        </button>
-                                        <button
+                                      </button>
+                                      <button
                                           onClick={(e) => {
                                             e.stopPropagation();
                                             handleDeleteContent(level.id, 'learn', idx);
                                           }}
                                           className="p-2 rounded-lg transition-all duration-200 hover:scale-105"
-                                          title="Delete"
+                                        title="Delete"
                                           style={{ 
                                             backgroundColor: 'var(--color-error)',
                                             color: 'var(--color-text-inverse)'
                                           }}
-                                          onMouseEnter={(e) => {
+                                        onMouseEnter={(e) => {
                                             e.currentTarget.style.backgroundColor = 'var(--color-error-hover)';
-                                          }}
-                                          onMouseLeave={(e) => {
+                                        }}
+                                        onMouseLeave={(e) => {
                                             e.currentTarget.style.backgroundColor = 'var(--color-error)';
-                                          }}
-                                        >
+                                        }}
+                                      >
                                           <TrashIcon className="h-4 w-4" />
-                                        </button>
-                                      </div>
+                                      </button>
+                                    </div>
                                     </div>
 
                                     {/* External Link Display */}
@@ -2412,7 +2412,7 @@ const AdminCurriculum: React.FC = () => {
                               <div>
                                 <h4 className="text-lg font-semibold" style={{ color: 'var(--color-warning)' }}>
                                   Test Questions
-                                </h4>
+                            </h4>
                                 <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
                                   {level.test?.length || 0} question{level.test?.length !== 1 ? 's' : ''} available
                                 </p>
@@ -2478,7 +2478,7 @@ const AdminCurriculum: React.FC = () => {
                                         </div>
                                         
                                         {/* Content Info */}
-                                        <div className="flex-1 min-w-0">
+                                    <div className="flex-1 min-w-0">
                                           <h5 className="text-sm font-semibold mb-1 line-clamp-2" style={{ color: 'var(--color-text-primary)' }}>
                                             {item.question}
                                           </h5>
@@ -2503,7 +2503,7 @@ const AdminCurriculum: React.FC = () => {
                                             >
                                               {item.options.length} option{item.options.length !== 1 ? 's' : ''}
                                             </span>
-                                          </div>
+                                    </div>
 
                                           {/* Options Preview */}
                                           {item.options && item.options.length > 0 && (
@@ -2534,46 +2534,46 @@ const AdminCurriculum: React.FC = () => {
                                       
                                       {/* Action Buttons */}
                                       <div className="flex items-center gap-2 flex-shrink-0">
-                                        <button
+                                      <button
                                           onClick={(e) => {
                                             e.stopPropagation();
                                             handleEditContent('test', item, idx, level);
                                           }}
                                           className="p-2 rounded-lg transition-all duration-200 hover:scale-105"
-                                          title="Edit"
+                                        title="Edit"
                                           style={{ 
                                             backgroundColor: 'var(--color-warning)',
                                             color: 'var(--color-text-inverse)'
                                           }}
-                                          onMouseEnter={(e) => {
+                                        onMouseEnter={(e) => {
                                             e.currentTarget.style.backgroundColor = 'var(--color-warning-hover)';
-                                          }}
-                                          onMouseLeave={(e) => {
+                                        }}
+                                        onMouseLeave={(e) => {
                                             e.currentTarget.style.backgroundColor = 'var(--color-warning)';
-                                          }}
-                                        >
+                                        }}
+                                      >
                                           <EditIcon className="h-4 w-4" />
-                                        </button>
-                                        <button
+                                      </button>
+                                      <button
                                           onClick={(e) => {
                                             e.stopPropagation();
                                             handleDeleteContent(level.id, 'test', idx);
                                           }}
                                           className="p-2 rounded-lg transition-all duration-200 hover:scale-105"
-                                          title="Delete"
+                                        title="Delete"
                                           style={{ 
                                             backgroundColor: 'var(--color-error)',
                                             color: 'var(--color-text-inverse)'
                                           }}
-                                          onMouseEnter={(e) => {
+                                        onMouseEnter={(e) => {
                                             e.currentTarget.style.backgroundColor = 'var(--color-error-hover)';
-                                          }}
-                                          onMouseLeave={(e) => {
+                                        }}
+                                        onMouseLeave={(e) => {
                                             e.currentTarget.style.backgroundColor = 'var(--color-error)';
-                                          }}
-                                        >
+                                        }}
+                                      >
                                           <TrashIcon className="h-4 w-4" />
-                                        </button>
+                                      </button>
                                       </div>
                                     </div>
                                   </div>
@@ -2611,7 +2611,7 @@ const AdminCurriculum: React.FC = () => {
                               )}
                             </div>
                           )}
-                        </div>
+                      </div>
 
                         {/* Exercise Content Section */}
                         <div 
@@ -2677,11 +2677,11 @@ const AdminCurriculum: React.FC = () => {
                                       backgroundColor: 'var(--color-surface)',
                                       border: '1px solid var(--color-border-subtle)'
                                     }}
-                                    onMouseEnter={(e) => {
+                              onMouseEnter={(e) => {
                                       e.currentTarget.style.borderColor = 'var(--color-accent-secondary)';
                                       e.currentTarget.style.transform = 'translateY(-2px)';
-                                    }}
-                                    onMouseLeave={(e) => {
+                              }}
+                              onMouseLeave={(e) => {
                                       e.currentTarget.style.borderColor = 'var(--color-border-subtle)';
                                       e.currentTarget.style.transform = 'translateY(0)';
                                     }}
@@ -2698,8 +2698,8 @@ const AdminCurriculum: React.FC = () => {
                                           }}
                                         >
                                           <PlayIcon className="h-5 w-5" />
-                                        </div>
-                                        
+                          </div>
+                          
                                         {/* Content Info */}
                                         <div className="flex-1 min-w-0">
                                           <h5 className="text-sm font-semibold mb-1 truncate" style={{ color: 'var(--color-text-primary)' }}>
@@ -2710,7 +2710,7 @@ const AdminCurriculum: React.FC = () => {
                                           <div className="flex items-center gap-2 mb-2">
                                             <span 
                                               className="px-2 py-1 rounded-md text-xs font-medium"
-                                              style={{
+                          style={{ 
                                                 backgroundColor: 'var(--color-tertiary-bg)',
                                                 color: 'var(--color-text-secondary)'
                                               }}
@@ -2739,47 +2739,47 @@ const AdminCurriculum: React.FC = () => {
                                       
                                       {/* Action Buttons */}
                                       <div className="flex items-center gap-2 flex-shrink-0">
-                                        <button
+                        <button
                                           onClick={(e) => {
                                             e.stopPropagation();
                                             handleEditContent('exercise', item, idx, level);
                                           }}
                                           className="p-2 rounded-lg transition-all duration-200 hover:scale-105"
                                           title="Edit"
-                                          style={{ 
+                          style={{ 
                                             backgroundColor: 'var(--color-accent-secondary)',
-                                            color: 'var(--color-text-inverse)'
-                                          }}
-                                          onMouseEnter={(e) => {
+                            color: 'var(--color-text-inverse)' 
+                          }}
+                          onMouseEnter={(e) => {
                                             e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
-                                          }}
-                                          onMouseLeave={(e) => {
+                          }}
+                          onMouseLeave={(e) => {
                                             e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
-                                          }}
-                                        >
+                          }}
+                        >
                                           <EditIcon className="h-4 w-4" />
-                                        </button>
-                                        <button
+                        </button>
+                        <button
                                           onClick={(e) => {
                                             e.stopPropagation();
                                             handleDeleteContent(level.id, 'exercise', idx);
                                           }}
                                           className="p-2 rounded-lg transition-all duration-200 hover:scale-105"
                                           title="Delete"
-                                          style={{ 
+                          style={{ 
                                             backgroundColor: 'var(--color-error)',
-                                            color: 'var(--color-text-inverse)'
-                                          }}
-                                          onMouseEnter={(e) => {
+                            color: 'var(--color-text-inverse)' 
+                          }}
+                          onMouseEnter={(e) => {
                                             e.currentTarget.style.backgroundColor = 'var(--color-error-hover)';
-                                          }}
-                                          onMouseLeave={(e) => {
+                          }}
+                          onMouseLeave={(e) => {
                                             e.currentTarget.style.backgroundColor = 'var(--color-error)';
-                                          }}
-                                        >
+                          }}
+                        >
                                           <TrashIcon className="h-4 w-4" />
-                                        </button>
-                                      </div>
+                        </button>
+                          </div>
                                     </div>
                                   </div>
                                 ))
@@ -3550,19 +3550,19 @@ const AdminCurriculum: React.FC = () => {
                           setContentForm({ ...contentForm, options: newOptions });
                         }}
                         className="flex-1 px-4 py-2 border rounded-lg focus:outline-none"
-                        style={{
-                          backgroundColor: 'var(--color-secondary-bg)',
-                          borderColor: 'var(--color-border)',
-                          color: 'var(--color-text-primary)'
-                        }}
-                        onFocus={(e) => {
-                          e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
-                          e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
-                        }}
-                        onBlur={(e) => {
-                          e.currentTarget.style.borderColor = 'var(--color-border)';
-                          e.currentTarget.style.boxShadow = 'none';
-                        }}
+                      style={{
+                        backgroundColor: 'var(--color-secondary-bg)',
+                        borderColor: 'var(--color-border)',
+                        color: 'var(--color-text-primary)'
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                        e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-border)';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
                         placeholder="Enter option A"
                       />
                     </div>
