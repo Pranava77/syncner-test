@@ -148,174 +148,27 @@ const AdminCurriculum: React.FC = () => {
   }, []);
 
   const fetchLevels = async (track?: string) => {
-    setLoading(true);
-    setError(null);
     try {
-      const url = track ? `/curriculum?careerTrack=${track}` : '/curriculum';
-      const response = await apiService.get(url);
-      if (track) setActiveTrack(track);
+      setLoading(true);
+      const response = await apiService.get(`/curriculum?careerTrack=${track || selectedTrack}&grouped=true`);
       
-      // Handle different response formats
-      let levelsData = [];
-      if (response && response.data) {
-        levelsData = Array.isArray(response.data) ? response.data : [response.data];
-      } else if (Array.isArray(response)) {
-        levelsData = response;
-      }
-      
-      // First, find all syllabus items (main levels)
-      const syllabusItems = levelsData.filter((item: any) => item.type === 'syllabus');
-      
-      // Create level map from syllabus items
-      const levelMap = new Map();
-      
-      syllabusItems.forEach((syllabus: any) => {
-        const levelKey = `${syllabus.order}-${syllabus.careerTrack}`;
+      if (response.success) {
+        // The backend now returns grouped levels structure, same as training endpoint
+        const levelsData = response.data;
         
-        levelMap.set(levelKey, {
-          id: syllabus.id || levelKey,
-          title: syllabus.title,
-          description: syllabus.description || syllabus.content || '',
-          difficulty: syllabus.difficulty || 'beginner',
-          duration: syllabus.duration || '',
-          careerTrack: syllabus.careerTrack,
-          skills: syllabus.tags || [],
-          prerequisites: syllabus.prerequisites || [],
-          readFirst: syllabus.readFirst || {
-            brief: '',
-            whyLearn: '',
-            whereUsed: '',
-            customExample: ''
-          },
-          learn: [],
-          test: [],
-          exercise: [],
-          order: syllabus.order || 1,
-          isActive: syllabus.isActive !== false,
-          estimatedHours: syllabus.estimatedDuration ? Math.ceil(syllabus.estimatedDuration / 60) : 1,
-          createdAt: syllabus.createdAt || new Date().toISOString(),
-          updatedAt: syllabus.updatedAt || new Date().toISOString()
-        });
-      });
-      
-      // Now add content items to their respective levels
-      const contentItems = levelsData.filter((item: any) => item.type !== 'syllabus');
-      
-      contentItems.forEach((item: any) => {
-        const levelKey = `${item.order}-${item.careerTrack}`;
-        let level = levelMap.get(levelKey);
-
-        // If there is no syllabus-created level yet, create a fallback level from the content item
-        if (!level) {
-          level = {
-            id: item.id || levelKey,
-            title: item.title,
-            description: item.description || item.content || '',
-            difficulty: item.difficulty || 'beginner',
-            duration: item.duration || '',
-            careerTrack: item.careerTrack,
-            skills: item.tags || [],
-            prerequisites: item.prerequisites || [],
-            readFirst: item.readFirst || {
-              brief: '',
-              whyLearn: '',
-              whereUsed: '',
-              customExample: ''
-            },
-            learn: [],
-            test: [],
-            exercise: [],
-            order: item.order || 1,
-            isActive: item.isActive !== false,
-            estimatedHours: item.estimatedDuration ? Math.ceil(item.estimatedDuration / 60) : 1,
-            createdAt: item.createdAt || new Date().toISOString(),
-            updatedAt: item.updatedAt || new Date().toISOString()
-          } as any;
-          levelMap.set(levelKey, level);
-        }
-
-        if (item.type === 'learn') {
-          level.learn.push({
-            id: item.id,
-            type: 'reading',
-            title: item.title,
-            content: item.content || '',
-            videoUrl: item.videoUrl || '',
-            order: item.order || 1
-          });
-        } else if (item.type === 'test') {
-          // Parse test content to extract question and options
-          const lines = (item.content || '').split('\n');
-          const question = lines[0] || item.title;
-          const options: string[] = [];
-          let answer = '';
-          
-          for (let i = 1; i < lines.length; i++) {
-            const line = lines[i].trim();
-            if (line.startsWith('A)') || line.startsWith('B)') || line.startsWith('C)') || line.startsWith('D)')) {
-              options.push(line.substring(2).trim());
-            } else if (line.startsWith('Answer:') || line.startsWith('Correct Answer:')) {
-              answer = line.split(':')[1]?.trim() || '';
-            }
-          }
-          
-          level.test.push({
-            id: item.id,
-            question: question,
-            options: options,
-            answer: answer,
-            order: item.order || 1
-          });
-        } else if (item.type === 'exercise') {
-          level.exercise.push({
-            id: item.id,
-            title: item.title,
-            description: item.content || item.description || '',
-            resources: item.resources || [],
-            order: item.order || 1
-          });
-        }
-      });
-      
-      // Convert map to array and sort by order
-      let uniqueLevels = Array.from(levelMap.values()).sort((a: Level, b: Level) => a.order - b.order);
-
-      // If we have an activeTrack context, ensure we only show that track even when the source URL returned all
-      const trackToShow = track || activeTrack;
-      if (trackToShow) {
-        uniqueLevels = uniqueLevels.filter((lvl: any) => lvl.careerTrack === trackToShow);
+        // Transform the data to match the expected format
+        const transformedLevels = levelsData.map((level: any) => ({
+          ...level,
+          learnExpanded: false,
+          testExpanded: false,
+          exerciseExpanded: false
+        }));
+        
+        setLevels(transformedLevels);
+        console.log('Fetched levels:', transformedLevels);
       }
-
-      // Apply pending auto-expansion (after a save) to ensure section is visible post-refetch
-      if (pendingExpand.levelId) {
-        uniqueLevels = uniqueLevels.map((lvl: any) => {
-          if (lvl.id !== pendingExpand.levelId) return lvl;
-          if (pendingExpand.section === 'learn') return { ...lvl, learnExpanded: true };
-          if (pendingExpand.section === 'test') return { ...lvl, testExpanded: true };
-          if (pendingExpand.section === 'exercise') return { ...lvl, exerciseExpanded: true };
-          return lvl;
-        });
-      }
-
-      setLevels(uniqueLevels);
-      setLastUpdated(new Date());
-      setFormError(''); // Clear any previous errors
-
-      // Scroll to the affected level card if any
-      if (pendingExpand.levelId) {
-        setTimeout(() => {
-          const el = document.getElementById(`level-${pendingExpand.levelId}`);
-          if (el) {
-            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }
-          setPendingExpand({ levelId: null });
-        }, 50);
-      }
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error fetching levels:', error);
-      const errorMessage = error.message || 'Failed to load levels. Please check your connection.';
-      setError(errorMessage);
-      setFormError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -628,7 +481,7 @@ const AdminCurriculum: React.FC = () => {
             await apiService.delete(`/curriculum/${itemToDelete.id}`);
           } else {
             // Fallback: resolve by (careerTrack + order + type + index)
-            const response = await apiService.get('/curriculum');
+            const response = await apiService.get('/curriculum?grouped=false');
             const curriculumItems = response.data || [];
             const levelItems = curriculumItems
               .filter((item: any) => 
@@ -690,7 +543,7 @@ const AdminCurriculum: React.FC = () => {
         // Resolve target item id: prefer id carried on level content, fallback to resolution by (track+order+type+index)
         let itemToUpdate: any = (editingLevel as any)[editingContent.type]?.[editingContent.index];
         if (!itemToUpdate?.id) {
-          const response = await apiService.get('/curriculum');
+          const response = await apiService.get('/curriculum?grouped=false');
           const curriculumItems = response.data || [];
           const levelItems = curriculumItems
             .filter((item: any) => 
