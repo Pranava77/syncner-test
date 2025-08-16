@@ -142,6 +142,7 @@ const AdminCurriculum: React.FC = () => {
   const [pendingExpand, setPendingExpand] = useState<{ levelId: string | null; section?: 'learn' | 'test' | 'exercise' }>({ levelId: null });
   const [isRefetching, setIsRefetching] = useState(false);
   const [refetchMessage, setRefetchMessage] = useState<string | null>(null);
+  const [trackCounts, setTrackCounts] = useState<Record<string, number>>({});
 
   // Normalize track ids coming from UI to API format
   const normalizeTrack = (track?: string | null) => {
@@ -163,9 +164,24 @@ const AdminCurriculum: React.FC = () => {
     return map[track] || track;
   };
 
-  // Avoid fetching all tracks on initial mount to prevent flashing wrong track
+  // On mount, fetch only counts per track (not full levels) to populate track cards
   useEffect(() => {
-    // Intentionally no fetch here; we fetch after a track is selected
+    const fetchCounts = async () => {
+      try {
+        const res = await apiService.get('/curriculum?grouped=true');
+        if (res.success && Array.isArray(res.data)) {
+          const counts: Record<string, number> = {};
+          res.data.forEach((lvl: any) => {
+            const key = normalizeTrack(lvl.careerTrack);
+            counts[key] = (counts[key] || 0) + 1;
+          });
+          setTrackCounts(counts);
+        }
+      } catch (e) {
+        console.warn('Failed to fetch track counts', e);
+      }
+    };
+    fetchCounts();
   }, []);
 
   const fetchLevels = async (track?: string) => {
@@ -873,11 +889,8 @@ const AdminCurriculum: React.FC = () => {
     }
   };
 
-  // Get track statistics
-  const trackStats = levels.reduce((acc: Record<string, number>, level: Level) => {
-    acc[level.careerTrack] = (acc[level.careerTrack] || 0) + 1;
-    return acc;
-  }, {});
+  // Use pre-fetched counts for track cards
+  const trackStats = trackCounts;
 
   // Filter levels based on search and filters
   const filteredLevels = levels.filter(level => {
