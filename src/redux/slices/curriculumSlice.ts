@@ -20,7 +20,7 @@ export const fetchLevelsWithStatus = createAsyncThunk(
       return { levels: [], status: [] };
     }
     
-    // Fetch both levels and status in parallel
+    // Fetch both levels and status in parallel for better performance
     const [levelsResponse, statusResponse] = await Promise.all([
       apiService.getLevels(trackId),
       apiService.getLevelsStatus()
@@ -41,7 +41,7 @@ interface CurriculumState {
   loading: boolean;
   error: string | null;
   lastFetched: number | null;
-  cacheExpiry: number; // 5 minutes cache
+  cacheExpiry: number; // Increased cache duration for better performance
 }
 
 const initialState: CurriculumState = {
@@ -50,7 +50,7 @@ const initialState: CurriculumState = {
   loading: false,
   error: null,
   lastFetched: null,
-  cacheExpiry: 5 * 60 * 1000, // 5 minutes
+  cacheExpiry: 10 * 60 * 1000, // 10 minutes (increased from 5 minutes)
 };
 
 const curriculumSlice = createSlice({
@@ -90,7 +90,7 @@ const curriculumSlice = createSlice({
         state.loading = false;
         state.lastFetched = Date.now();
         // Reset cache expiry to normal value after successful fetch
-        state.cacheExpiry = 5 * 60 * 1000; // 5 minutes
+        state.cacheExpiry = 10 * 60 * 1000; // 10 minutes
       })
       .addCase(fetchCurriculum.rejected, (state, action) => {
         state.loading = false;
@@ -103,7 +103,7 @@ const curriculumSlice = createSlice({
       .addCase(fetchLevelsWithStatus.fulfilled, (state, action) => {
         const { levels, status } = action.payload;
         
-        // Merge levels with their status
+        // Merge levels with their status - optimized for performance
         const levelsWithStatus = levels.map((level: any) => {
           const levelStatus = status.find((s: any) => s.id === level.id);
           return {
@@ -118,7 +118,7 @@ const curriculumSlice = createSlice({
         state.loading = false;
         state.lastFetched = Date.now();
         // Reset cache expiry to normal value after successful fetch
-        state.cacheExpiry = 5 * 60 * 1000; // 5 minutes
+        state.cacheExpiry = 10 * 60 * 1000; // 10 minutes
       })
       .addCase(fetchLevelsWithStatus.rejected, (state, action) => {
         state.loading = false;

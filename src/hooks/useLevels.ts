@@ -45,8 +45,8 @@ export interface Level {
   isCompleted?: boolean;
   completedSections?: {
     learn?: boolean;
-    test?: boolean;
     exercise?: boolean;
+    test?: boolean;
   };
 }
 
@@ -70,19 +70,30 @@ export const useLevels = (trackId?: string) => {
     return map[track] || track;
   }, []);
   
-  // Check if cache is still valid
+  // Check if cache is still valid - optimized cache validation
   const isCacheValid = useMemo(() => {
-    if (!lastFetched) return false;
+    if (!lastFetched || !trackId) return false;
     // If cacheExpiry is 0, it means cache was forcefully cleared
     if (cacheExpiry === 0) return false;
-    return Date.now() - lastFetched < cacheExpiry;
-  }, [lastFetched, cacheExpiry]);
+    // Check if we have data and cache is still fresh
+    return levelsWithStatus.length > 0 && Date.now() - lastFetched < cacheExpiry;
+  }, [lastFetched, cacheExpiry, levelsWithStatus.length, trackId]);
+
+  // Optimized loading state - only show loading when actually fetching, not when using cache
+  const isActuallyLoading = useMemo(() => {
+    // If we have valid cached data, don't show loading
+    if (isCacheValid && levelsWithStatus.length > 0) {
+      return false;
+    }
+    // Only show loading when we're actually fetching and have no data
+    return loading && levelsWithStatus.length === 0;
+  }, [loading, isCacheValid, levelsWithStatus.length]);
 
   const fetchLevels = useCallback(async () => {
     if (!trackId) return;
     
-    // Always fetch if cache is invalid, no data exists, or cache was forcefully cleared
-    if (!isCacheValid || levelsWithStatus.length === 0 || cacheExpiry === 0) {
+    // Only fetch if cache is invalid or no data exists
+    if (!isCacheValid) {
       try {
         console.log('useLevels: Fetching levels due to cache invalidation or empty data');
         await dispatch(fetchLevelsWithStatus({ trackId })).unwrap();
@@ -90,7 +101,7 @@ export const useLevels = (trackId?: string) => {
         console.error('Failed to fetch levels:', err);
       }
     }
-  }, [trackId, dispatch, isCacheValid, levelsWithStatus.length, cacheExpiry]);
+  }, [trackId, dispatch, isCacheValid]);
 
   const refetch = useCallback(async () => {
     if (!trackId) return;
@@ -119,26 +130,18 @@ export const useLevels = (trackId?: string) => {
   }, [dispatch]);
 
   useEffect(() => {
-    fetchLevels();
+    // Only fetch on mount if we don't have valid cached data
+    if (!isCacheValid) {
+      fetchLevels();
+    }
     
-    // Set up periodic refresh every 30 seconds to ensure data is always current
-    const intervalId = setInterval(() => {
-      if (trackId && !loading) {
-        console.log('useLevels: Periodic refresh check');
-        // Only refresh if cache is old or if we have no data
-        if (!isCacheValid || levelsWithStatus.length === 0) {
-          console.log('useLevels: Periodic refresh triggered');
-          refetch();
-        }
-      }
-    }, 30000); // 30 seconds
-    
-    return () => clearInterval(intervalId);
-  }, [fetchLevels, trackId, loading, isCacheValid, levelsWithStatus.length, refetch]);
+    // Remove the 30-second interval - it's unnecessary and causes performance issues
+    // Data will be refreshed when needed through events or manual refresh
+  }, [fetchLevels, isCacheValid]);
 
-  // Filter levels for the specific track
+  // Filter levels for the specific track - simplified memoization
   const filteredLevels = useMemo(() => {
-    if (!trackId) return [];
+    if (!trackId || levelsWithStatus.length === 0) return [];
     const normalizedTrackId = normalizeTrack(trackId);
     return levelsWithStatus
       .filter((level: Level) => normalizeTrack(level.careerTrack) === normalizedTrackId && level.isActive)
@@ -147,7 +150,7 @@ export const useLevels = (trackId?: string) => {
 
   return {
     levels: filteredLevels,
-    loading,
+    loading: isActuallyLoading, // Return optimized loading state
     error,
     refetch,
     forceRefresh,

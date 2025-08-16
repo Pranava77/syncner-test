@@ -65,12 +65,12 @@ const TrainingLevels: React.FC = () => {
   // Use the optimized hook
   const { levels, loading, error, refetch, forceRefresh } = useLevels(user?.careerTrack);
 
-  // Ensure freshest data on mount
-  useEffect(() => {
-    forceRefresh();
-  }, [forceRefresh]);
+  // Remove force refresh on mount - let the hook handle caching intelligently
+  // useEffect(() => {
+  //   forceRefresh();
+  // }, [forceRefresh]);
 
-  // Memoized level completion map for efficient lookups
+  // Memoized level completion map for efficient lookups - simplified dependencies
   const levelCompletionMap = useMemo(() => {
     const map = new Map();
     levels.forEach((level: Level) => {
@@ -84,7 +84,7 @@ const TrainingLevels: React.FC = () => {
     return map;
   }, [levels]);
 
-  // Memoized levels with unlock logic
+  // Memoized levels with unlock logic - simplified dependencies
   const levelsWithUnlockLogic = useMemo(() => {
     return levels.map((level: Level) => {
       // Level 1 is always unlocked
@@ -225,11 +225,11 @@ const TrainingLevels: React.FC = () => {
           <div className="max-w-7xl mx-auto">
             <div className="mb-8">
               <h1 
-          className="text-3xl lg:text-4xl font-bold mb-4"
-          style={{ color: 'var(--color-text-primary)' }}
-        >
-          Training Levels
-        </h1>
+                className="text-3xl lg:text-4xl font-bold mb-4"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                Training Levels
+              </h1>
               <p 
                 className="text-lg"
                 style={{ color: 'var(--color-text-tertiary)' }}
@@ -238,35 +238,61 @@ const TrainingLevels: React.FC = () => {
               </p>
             </div>
             
-            {/* Logo Loading Animation */}
-            <div className="flex items-center justify-center py-20">
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                className="text-center"
-              >
-                <motion.img
-                  src={syncnerLogo}
-                  alt="Syncner Logo"
-                  className="w-32 h-32 mx-auto mb-6"
-                  animate={{
-                    scale: [1, 1.1, 1],
+            {/* Skeleton Loading State - Faster perceived performance */}
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {[1, 2, 3, 4, 5, 6].map((index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="border rounded-lg p-6 relative animate-pulse"
+                  style={{
+                    backgroundColor: 'var(--color-surface)',
+                    borderColor: 'var(--color-border-subtle)'
                   }}
-                  transition={{
-                    scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
-                  }}
-                />
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.3 }}
-                  className="text-lg font-medium"
-                  style={{ color: 'var(--color-accent-primary)' }}
                 >
-                  Loading your training levels...
-                </motion.p>
-              </motion.div>
+                  {/* Skeleton Level Order */}
+                  <div 
+                    className="absolute top-2 right-2 w-8 h-6 rounded-full"
+                    style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
+                  />
+                  
+                  {/* Skeleton Level Number */}
+                  <div 
+                    className="w-20 h-8 rounded-lg mb-4"
+                    style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+                  />
+                  
+                  {/* Skeleton Title */}
+                  <div 
+                    className="w-3/4 h-6 rounded mb-3"
+                    style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
+                  />
+                  
+                  {/* Skeleton Description */}
+                  <div 
+                    className="w-full h-4 rounded mb-2"
+                    style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
+                  />
+                  <div 
+                    className="w-2/3 h-4 rounded"
+                    style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
+                  />
+                  
+                  {/* Skeleton Skills */}
+                  <div className="flex gap-2 mt-4">
+                    <div 
+                      className="w-16 h-6 rounded"
+                      style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
+                    />
+                    <div 
+                      className="w-20 h-6 rounded"
+                      style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
+                    />
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </div>
         </main>

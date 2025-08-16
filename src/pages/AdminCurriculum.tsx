@@ -2700,7 +2700,7 @@ const AdminCurriculum: React.FC = () => {
                 {editingContent?.type === 'learn' && (
                   <div>
                     <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
-                      External Link (Optional)
+                      External Link
                     </label>
                     <input
                       type="url"

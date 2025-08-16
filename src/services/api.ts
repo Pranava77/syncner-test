@@ -99,10 +99,10 @@ class ApiService {
 
   // Training endpoints
   async getLevels(trackId?: string) {
-    const timestamp = Date.now(); // Cache busting
+    // Remove cache busting timestamp - let browser handle caching naturally
     const url = trackId 
-      ? `${this.baseURL}/training/levels?track=${trackId}&_t=${timestamp}`
-      : `${this.baseURL}/training/levels?_t=${timestamp}`;
+      ? `${this.baseURL}/training/levels?track=${trackId}`
+      : `${this.baseURL}/training/levels`;
     const response = await fetch(url, {
       method: 'GET',
       headers: this.getHeaders(),
