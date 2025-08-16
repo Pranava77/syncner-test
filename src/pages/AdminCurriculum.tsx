@@ -1503,7 +1503,7 @@ const AdminCurriculum: React.FC = () => {
                     boxShadow: 'var(--shadow-lg)'
                   }}
                 >
-                  <div className="grid gap-6 grid-cols-1 xl:grid-cols-2 relative">
+                  <div className="grid gap-6 grid-cols-1 relative">
                     {filteredLevels.map((level, index) => {
                       console.log('Level data:', { 
                         id: level.id, 
@@ -1532,172 +1532,172 @@ const AdminCurriculum: React.FC = () => {
                         e.currentTarget.style.transform = 'translateY(0)';
                       }}
                     >
-                      {/* Level Header */}
-                      <div 
-                        className="p-6 border-b"
-                        style={{ borderColor: 'var(--color-border-subtle)' }}
-                      >
-                        <div className="flex items-start justify-between mb-4">
-                          <div className="flex items-start gap-4">
-                            {/* Level Number Badge */}
-                            <div 
-                              className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg"
-                              style={{
-                                background: 'linear-gradient(135deg, var(--color-accent-primary) 0%, var(--color-accent-secondary) 100%)',
-                                color: 'var(--color-text-inverse)'
-                              }}
-                            >
-                              <span className="text-2xl font-bold">{level.order}</span>
-                            </div>
-                            
-                            {/* Level Info */}
-                            <div className="flex-1 min-w-0">
-                              <h3 className="text-2xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>
-                                {level.title}
-                              </h3>
-                              <p className="text-base leading-relaxed mb-3" style={{ color: 'var(--color-text-secondary)' }}>
-                                {level.description}
-                              </p>
-                              
-                              {/* Badges Row */}
-                              <div className="flex items-center gap-3 mb-4">
-                                <span 
-                                  className="px-3 py-1 rounded-lg text-sm font-medium"
-                                  style={getDifficultyColor(level.difficulty)}
-                                >
-                                  {level.difficulty}
-                                </span>
-                                <span 
-                                  className={`px-3 py-1 rounded-lg text-sm font-medium ${getTrackColor(level.careerTrack)}`}
-                                  style={{ color: 'var(--color-text-inverse)' }}
-                                >
-                                  {getTrackLabel(level.careerTrack)}
-                                </span>
-                                <span 
-                                  className="px-3 py-1 rounded-lg text-sm font-medium"
-                                  style={{
-                                    backgroundColor: 'var(--color-accent-tertiary)',
-                                    color: 'var(--color-accent-primary)'
-                                  }}
-                                >
-                                  {level.estimatedHours}h estimated
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                          
-                          {/* Status Badge */}
-                          <div className="flex items-center gap-2">
-                            {level.isActive ? (
-                              <span 
-                                className="px-3 py-1 rounded-lg text-sm font-medium flex items-center gap-2"
-                                style={{
-                                  backgroundColor: 'var(--color-success)',
-                                  color: 'var(--color-text-inverse)'
-                                }}
-                              >
-                                <CheckCircledIcon className="h-4 w-4" />
-                                Active
-                              </span>
-                            ) : (
-                              <span 
-                                className="px-3 py-1 rounded-lg text-sm font-medium flex items-center gap-2"
-                                style={{
-                                  backgroundColor: 'var(--color-error)',
-                                  color: 'var(--color-text-inverse)'
-                                }}
-                              >
-                                <Cross1Icon className="h-4 w-4" />
-                                Inactive
-                              </span>
-                            )}
-                          </div>
-                        </div>
+                                             {/* Level Header */}
+                       <div 
+                         className="p-6 border-b"
+                         style={{ borderColor: 'var(--color-border-subtle)' }}
+                       >
+                         <div className="flex items-start justify-between mb-6">
+                           <div className="flex items-start gap-6 flex-1">
+                             {/* Level Number Badge */}
+                             <div 
+                               className="w-20 h-20 rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0"
+                               style={{
+                                 background: 'linear-gradient(135deg, var(--color-accent-primary) 0%, var(--color-accent-secondary) 100%)',
+                                 color: 'var(--color-text-inverse)'
+                               }}
+                             >
+                               <span className="text-3xl font-bold">{level.order}</span>
+                             </div>
+                             
+                             {/* Level Info */}
+                             <div className="flex-1 min-w-0">
+                               <h3 className="text-3xl font-bold mb-3" style={{ color: 'var(--color-text-primary)' }}>
+                                 {level.title}
+                               </h3>
+                               <p className="text-lg leading-relaxed mb-4" style={{ color: 'var(--color-text-secondary)' }}>
+                                 {level.description}
+                               </p>
+                               
+                               {/* Badges Row */}
+                               <div className="flex items-center gap-4 mb-4">
+                                 <span 
+                                   className="px-4 py-2 rounded-lg text-sm font-medium"
+                                   style={getDifficultyColor(level.difficulty)}
+                                 >
+                                   {level.difficulty}
+                                 </span>
+                                 <span 
+                                   className={`px-4 py-2 rounded-lg text-sm font-medium ${getTrackColor(level.careerTrack)}`}
+                                   style={{ color: 'var(--color-text-inverse)' }}
+                                 >
+                                   {getTrackLabel(level.careerTrack)}
+                                 </span>
+                                 <span 
+                                   className="px-4 py-2 rounded-lg text-sm font-medium"
+                                   style={{
+                                     backgroundColor: 'var(--color-accent-tertiary)',
+                                     color: 'var(--color-accent-primary)'
+                                   }}
+                                 >
+                                   {level.estimatedHours}h estimated
+                                 </span>
+                               </div>
+                             </div>
+                           </div>
+                           
+                           {/* Status Badge */}
+                           <div className="flex items-center gap-2 flex-shrink-0">
+                             {level.isActive ? (
+                               <span 
+                                 className="px-4 py-2 rounded-lg text-base font-medium flex items-center gap-2"
+                                 style={{
+                                   backgroundColor: 'var(--color-success)',
+                                   color: 'var(--color-text-inverse)'
+                                 }}
+                               >
+                                 <CheckCircledIcon className="h-5 w-5" />
+                                 Active
+                               </span>
+                             ) : (
+                               <span 
+                                 className="px-4 py-2 rounded-lg text-base font-medium flex items-center gap-2"
+                                 style={{
+                                   backgroundColor: 'var(--color-error)',
+                                   color: 'var(--color-text-inverse)'
+                                 }}
+                               >
+                                 <Cross1Icon className="h-5 w-5" />
+                                 Inactive
+                               </span>
+                             )}
+                           </div>
+                         </div>
                         
-                        {/* Skills */}
-                        {level.skills && level.skills.length > 0 && (
-                          <div className="mb-4">
-                            <div className="flex flex-wrap gap-2">
-                              {level.skills.slice(0, 5).map((skill, idx) => (
-                                <span 
-                                  key={idx} 
-                                  className="px-3 py-1 rounded-lg text-sm font-medium shadow-sm"
-                                  style={{
-                                    backgroundColor: 'var(--color-accent-primary)',
-                                    color: 'var(--color-text-inverse)'
-                                  }}
-                                >
-                                  {skill}
-                                </span>
-                              ))}
-                              {level.skills.length > 5 && (
-                                <span 
-                                  className="px-3 py-1 rounded-lg text-sm font-medium shadow-sm"
-                                  style={{
-                                    backgroundColor: 'var(--color-tertiary-bg)',
-                                    color: 'var(--color-text-secondary)'
-                                  }}
-                                >
-                                  +{level.skills.length - 5} more
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        )}
+                                                 {/* Skills */}
+                         {level.skills && level.skills.length > 0 && (
+                           <div className="mb-6">
+                             <div className="flex flex-wrap gap-3">
+                               {level.skills.slice(0, 8).map((skill, idx) => (
+                                 <span 
+                                   key={idx} 
+                                   className="px-4 py-2 rounded-lg text-sm font-medium shadow-sm"
+                                   style={{
+                                     backgroundColor: 'var(--color-accent-primary)',
+                                     color: 'var(--color-text-inverse)'
+                                   }}
+                                 >
+                                   {skill}
+                                 </span>
+                               ))}
+                               {level.skills.length > 8 && (
+                                 <span 
+                                   className="px-4 py-2 rounded-lg text-sm font-medium shadow-sm"
+                                   style={{
+                                     backgroundColor: 'var(--color-tertiary-bg)',
+                                     color: 'var(--color-text-secondary)'
+                                   }}
+                                 >
+                                   +{level.skills.length - 8} more
+                                 </span>
+                               )}
+                             </div>
+                           </div>
+                         )}
                         
                                                  {/* Content Summary */}
-                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                           <div 
-                            className="p-4 rounded-xl text-center shadow-md"
+                            className="p-6 rounded-xl text-center shadow-md"
                             style={{
                               backgroundColor: 'var(--color-success-bg)',
                               border: '1px solid var(--color-success)'
                             }}
                           >
-                            <div className="flex items-center justify-center mb-2">
-                              <BookOpenIcon className="h-6 w-6" style={{ color: 'var(--color-success)' }} />
+                            <div className="flex items-center justify-center mb-3">
+                              <BookOpenIcon className="h-8 w-8" style={{ color: 'var(--color-success)' }} />
                             </div>
-                            <div className="text-2xl font-bold" style={{ color: 'var(--color-success)' }}>
+                            <div className="text-3xl font-bold" style={{ color: 'var(--color-success)' }}>
                               {level.learn?.length || 0}
                             </div>
-                            <div className="text-sm font-medium" style={{ color: 'var(--color-success)' }}>
-                              Learn Items
+                            <div className="text-base font-medium" style={{ color: 'var(--color-success)' }}>
+                              Learning Resources
                             </div>
                           </div>
                           
                           <div 
-                            className="p-4 rounded-xl text-center shadow-md"
+                            className="p-6 rounded-xl text-center shadow-md"
                             style={{
                               backgroundColor: 'var(--color-warning-bg)',
                               border: '1px solid var(--color-warning)'
                             }}
                           >
-                            <div className="flex items-center justify-center mb-2">
-                              <ClipboardIcon className="h-6 w-6" style={{ color: 'var(--color-warning)' }} />
+                            <div className="flex items-center justify-center mb-3">
+                              <ClipboardIcon className="h-8 w-8" style={{ color: 'var(--color-warning)' }} />
                             </div>
-                            <div className="text-2xl font-bold" style={{ color: 'var(--color-warning)' }}>
+                            <div className="text-3xl font-bold" style={{ color: 'var(--color-warning)' }}>
                               {level.test?.length || 0}
                             </div>
-                            <div className="text-sm font-medium" style={{ color: 'var(--color-warning)' }}>
-                              Test Items
+                            <div className="text-base font-medium" style={{ color: 'var(--color-warning)' }}>
+                              Test Questions
                             </div>
                           </div>
                           
                           <div 
-                            className="p-4 rounded-xl text-center shadow-md"
+                            className="p-6 rounded-xl text-center shadow-md"
                             style={{
                               backgroundColor: 'var(--color-accent-secondary-bg)',
                               border: '1px solid var(--color-accent-secondary)'
                             }}
                           >
-                            <div className="flex items-center justify-center mb-2">
-                              <PlayIcon className="h-6 w-6" style={{ color: 'var(--color-accent-secondary)' }} />
+                            <div className="flex items-center justify-center mb-3">
+                              <PlayIcon className="h-8 w-8" style={{ color: 'var(--color-accent-secondary)' }} />
                             </div>
-                            <div className="text-2xl font-bold" style={{ color: 'var(--color-accent-secondary)' }}>
+                            <div className="text-3xl font-bold" style={{ color: 'var(--color-accent-secondary)' }}>
                               {level.exercise?.length || 0}
                             </div>
-                            <div className="text-sm font-medium" style={{ color: 'var(--color-accent-secondary)' }}>
-                              Exercises
+                            <div className="text-base font-medium" style={{ color: 'var(--color-accent-secondary)' }}>
+                              Practical Exercises
                             </div>
                           </div>
                         </div>
