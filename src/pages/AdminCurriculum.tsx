@@ -1785,100 +1785,100 @@ const AdminCurriculum: React.FC = () => {
                     </div>
                   ) : (
                     <div className="grid gap-6 grid-cols-1 relative">
-                      {filteredLevels.map((level, index) => {
-                      console.log('Level data:', { 
-                        id: level.id, 
-                        title: level.title, 
-                        order: level.order, 
-                        careerTrack: level.careerTrack
-                      });
-                      
-                      return (
-                    <motion.div
-                      key={level.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      className="group relative rounded-2xl border shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden"
-                      style={{
-                        backgroundColor: 'var(--color-surface)',
-                        borderColor: 'var(--color-border)'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
-                        e.currentTarget.style.transform = 'translateY(-4px)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.borderColor = 'var(--color-border)';
-                        e.currentTarget.style.transform = 'translateY(0)';
-                      }}
-                    >
-                                             {/* Level Header */}
-                       <div 
-                         className="p-4 border-b"
-                         style={{ borderColor: 'var(--color-border-subtle)' }}
-                       >
-                         <div className="flex items-start justify-between mb-4">
-                           <div className="flex items-start gap-4 flex-1">
-                          {/* Level Number Badge */}
-                          <div 
-                               className="w-16 h-16 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0"
-                            style={{ 
-                                 background: 'linear-gradient(135deg, var(--color-accent-primary) 0%, var(--color-accent-secondary) 100%)',
-                              color: 'var(--color-text-inverse)' 
+                                            {filteredLevels.map((level, index) => {
+                        console.log('Level data:', { 
+                          id: level.id, 
+                          title: level.title, 
+                          order: level.order, 
+                          careerTrack: level.careerTrack
+                        });
+                        
+                        return (
+                          <motion.div
+                            key={level.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: index * 0.1 }}
+                            className="group relative rounded-2xl border shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden"
+                            style={{
+                              backgroundColor: 'var(--color-surface)',
+                              borderColor: 'var(--color-border)'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                              e.currentTarget.style.transform = 'translateY(-4px)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.borderColor = 'var(--color-border)';
+                              e.currentTarget.style.transform = 'translateY(0)';
                             }}
                           >
-                               <span className="text-2xl font-bold">{level.order}</span>
-                          </div>
-                             
-                             {/* Level Info */}
-                             <div className="flex-1 min-w-0">
-                               <h3 className="text-xl font-bold mb-3" style={{ color: 'var(--color-text-primary)' }}>
-                                 {level.title}
-                               </h3>
-                               <p className="text-base leading-relaxed mb-4" style={{ color: 'var(--color-text-secondary)' }}>
-                                 {level.description}
-                               </p>
-                               
-                               {/* Badges Row */}
-                               <div className="flex items-center gap-3 mb-4">
-                                 <span 
-                                   className="px-3 py-1 rounded-lg text-xs font-medium"
-                            style={getDifficultyColor(level.difficulty)}
-                          >
-                            {level.difficulty}
-                                 </span>
-                        <span 
-                                   className={`px-3 py-1 rounded-lg text-xs font-medium ${getTrackColor(level.careerTrack)}`}
-                          style={{ color: 'var(--color-text-inverse)' }}
-                        >
-                          {getTrackLabel(level.careerTrack)}
-                        </span>
-                          <span 
-                                   className="px-3 py-1 rounded-lg text-xs font-medium"
-                                   style={{
-                                     backgroundColor: 'var(--color-accent-tertiary)',
-                                     color: 'var(--color-accent-primary)'
-                                   }}
-                                 >
-                                   {level.estimatedHours}h estimated
-                          </span>
-                        </div>
-                      </div>
-                        </div>
-                           
-                           {/* Status Badge */}
-                           <div className="flex items-center gap-2 flex-shrink-0">
-                          {level.isActive ? (
-                                                            <span 
-                               className="px-3 py-1 rounded-lg text-sm font-medium flex items-center gap-2"
-                               style={{
-                                 backgroundColor: 'var(--color-success)',
-                                 color: 'var(--color-text-inverse)'
-                               }}
-                             >
-                               <CheckCircledIcon className="h-4 w-4" />
-                              Active
+                            {/* Level Header */}
+                            <div 
+                              className="p-4 border-b"
+                              style={{ borderColor: 'var(--color-border-subtle)' }}
+                            >
+                              <div className="flex items-start justify-between mb-4">
+                                <div className="flex items-start gap-4 flex-1">
+                                  {/* Level Number Badge */}
+                                  <div 
+                                    className="w-16 h-16 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0"
+                                    style={{ 
+                                      background: 'linear-gradient(135deg, var(--color-accent-primary) 0%, var(--color-accent-secondary) 100%)',
+                                      color: 'var(--color-text-inverse)' 
+                                    }}
+                                  >
+                                    <span className="text-2xl font-bold">{level.order}</span>
+                                  </div>
+                                  
+                                  {/* Level Info */}
+                                  <div className="flex-1 min-w-0">
+                                    <h3 className="text-xl font-bold mb-3" style={{ color: 'var(--color-text-primary)' }}>
+                                      {level.title}
+                                    </h3>
+                                    <p className="text-base leading-relaxed mb-4" style={{ color: 'var(--color-text-secondary)' }}>
+                                      {level.description}
+                                    </p>
+                                    
+                                    {/* Badges Row */}
+                                    <div className="flex items-center gap-3 mb-4">
+                                      <span 
+                                        className="px-3 py-1 rounded-lg text-xs font-medium"
+                                        style={getDifficultyColor(level.difficulty)}
+                                      >
+                                        {level.difficulty}
+                                      </span>
+                                      <span 
+                                        className={`px-3 py-1 rounded-lg text-xs font-medium ${getTrackColor(level.careerTrack)}`}
+                                        style={{ color: 'var(--color-text-inverse)' }}
+                                      >
+                                        {getTrackLabel(level.careerTrack)}
+                                      </span>
+                                      <span 
+                                        className="px-3 py-1 rounded-lg text-xs font-medium"
+                                        style={{
+                                          backgroundColor: 'var(--color-accent-tertiary)',
+                                          color: 'var(--color-accent-primary)'
+                                        }}
+                                      >
+                                        {level.estimatedHours}h estimated
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                {/* Status Badge */}
+                                <div className="flex items-center gap-2 flex-shrink-0">
+                                  {level.isActive ? (
+                                    <span 
+                                      className="px-3 py-1 rounded-lg text-sm font-medium flex items-center gap-2"
+                                      style={{
+                                        backgroundColor: 'var(--color-success)',
+                                        color: 'var(--color-text-inverse)'
+                                      }}
+                                    >
+                                      <CheckCircledIcon className="h-4 w-4" />
+                                      Active
                             </span>
                           ) : (
                                                             <span 
