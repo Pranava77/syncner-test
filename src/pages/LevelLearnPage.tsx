@@ -563,9 +563,10 @@ const LevelLearnPage: React.FC = () => {
                         href={item.externalLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm font-semibold text-blue-600 hover:text-blue-800 hover:underline"
+                        className="text-sm font-semibold text-blue-600 hover:text-blue-800 hover:underline break-all"
+                        title={item.externalLink}
                       >
-                        🔗 External Resource
+                        🔗 {item.externalLink}
                       </a>
                     </div>
                   )}

@@ -1664,10 +1664,11 @@ const AdminCurriculum: React.FC = () => {
                                           href={item.externalLink} 
                                           target="_blank" 
                                           rel="noopener noreferrer"
-                                          className="text-xs block mt-1 hover:underline"
+                                          className="text-xs block mt-1 hover:underline break-all"
                                           style={{ color: 'var(--color-accent-primary)' }}
+                                          title={item.externalLink}
                                         >
-                                          🔗 External Link
+                                          🔗 {item.externalLink}
                                         </a>
                                       )}
                                     </div>
