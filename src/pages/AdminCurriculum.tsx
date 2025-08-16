@@ -1061,8 +1061,8 @@ const AdminCurriculum: React.FC = () => {
       style={{ backgroundColor: 'var(--color-primary-bg)' }}
     >
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto p-6 lg:p-12">
-        <div className="max-w-6xl mx-auto">
+      <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 xl:p-12">
+        <div className="w-full">
           {showTrackSelection ? (
             // Track Selection View
             <>
@@ -1147,7 +1147,7 @@ const AdminCurriculum: React.FC = () => {
               </div>
 
               {/* Track Selection Grid */}
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {[
                   { 
                     id: 'full-stack', 
@@ -1345,7 +1345,7 @@ const AdminCurriculum: React.FC = () => {
                   borderColor: 'var(--color-border-subtle)'
                 }}
               >
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   <div>
                     <label 
                       className="block text-sm font-medium mb-2"
@@ -1503,7 +1503,7 @@ const AdminCurriculum: React.FC = () => {
                     boxShadow: 'var(--shadow-lg)'
                   }}
                 >
-                  <div className="grid gap-6 grid-cols-1 relative">
+                  <div className="grid gap-6 grid-cols-1 xl:grid-cols-2 relative">
                     {filteredLevels.map((level, index) => {
                       console.log('Level data:', { 
                         id: level.id, 
@@ -1645,8 +1645,8 @@ const AdminCurriculum: React.FC = () => {
                           </div>
                         )}
                         
-                        {/* Content Summary */}
-                        <div className="grid grid-cols-3 gap-4">
+                                                 {/* Content Summary */}
+                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                           <div 
                             className="p-4 rounded-xl text-center shadow-md"
                             style={{
@@ -1703,12 +1703,12 @@ const AdminCurriculum: React.FC = () => {
                         </div>
                       </div>
                       
-                      {/* Action Buttons */}
-                      <div 
-                        className="p-6 flex items-center justify-between"
-                        style={{ backgroundColor: 'var(--color-secondary-bg)' }}
-                      >
-                        <div className="flex items-center gap-3">
+                                             {/* Action Buttons */}
+                       <div 
+                         className="p-6 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4"
+                         style={{ backgroundColor: 'var(--color-secondary-bg)' }}
+                       >
+                         <div className="flex items-center gap-3">
                           <button
                             onClick={() => handleEditLevel(level)}
                             className="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105"
@@ -1910,7 +1910,7 @@ const AdminCurriculum: React.FC = () => {
                           </button>
                         </div>
                         
-                        <div className="flex items-center gap-3">
+                        <div className="flex flex-wrap items-center gap-3">
                           <button
                             onClick={() => handleAddContent('learn', level)}
                             className="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105"
