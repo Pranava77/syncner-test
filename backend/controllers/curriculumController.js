@@ -63,7 +63,7 @@ const groupCurriculumIntoLevels = (items) => {
       title: item.title || '',
       content: item.content || '',
       order: item.order,
-      externalLink: item.externalLink || '', // Replace videoUrl with externalLink
+      externalLink: item.externalLink || '', // Include externalLink for learn content
       description: item.description || '',
       resources: item.resources || []
     };
@@ -107,33 +107,20 @@ const groupCurriculumIntoLevels = (items) => {
       
       contentItem.question = question;
       contentItem.options = options;
-      contentItem.answer = answer || 'A'; // Default to A if no answer specified
+      contentItem.answer = answer;
     }
 
-    switch (item.type) {
-      case 'learn':
-        level.learn.push(contentItem);
-        break;
-      case 'test':
-        level.test.push(contentItem);
-        break;
-      case 'exercise':
-        level.exercise.push(contentItem);
-        break;
-      case 'syllabus':
-        // Syllabus items are used as base for the level, not added to content arrays
-        break;
-      default:
-        break;
+    // Add the content item to the appropriate section
+    if (item.type === 'learn') {
+      level.learn.push(contentItem);
+    } else if (item.type === 'test') {
+      level.test.push(contentItem);
+    } else if (item.type === 'exercise') {
+      level.exercise.push(contentItem);
     }
   });
 
-  // Sort levels by order and filter active ones
-  const levels = Array.from(levelsMap.values())
-    .filter(level => level.isActive)
-    .sort((a, b) => a.order - b.order);
-
-  return levels;
+  return Array.from(levelsMap.values());
 };
 
 // @desc    Get all curriculum items
@@ -141,54 +128,36 @@ const groupCurriculumIntoLevels = (items) => {
 // @access  Private/Admin
 const getAllCurriculumItems = async (req, res) => {
   try {
-    const { type, careerTrack, isActive, search, sortBy = 'order', sortOrder = 'asc', grouped = 'false' } = req.query;
+    const { grouped = false, careerTrack, type } = req.query;
     
-    const filter = {};
-    if (type) filter.type = type;
+    let query = {};
+    
     if (careerTrack) {
-      // Normalize the career track value
-      filter.careerTrack = normalizeCareerTrack(careerTrack);
-    }
-    if (isActive !== undefined) filter.isActive = isActive === 'true';
-    
-    let query = Curriculum.find(filter);
-    
-    // Text search
-    if (search) {
-      query = query.find({
-        $text: { $search: search }
-      });
+      query.careerTrack = careerTrack;
     }
     
-    // Sorting
-    const sortOptions = {};
-    sortOptions[sortBy] = sortOrder === 'desc' ? -1 : 1;
-    query = query.sort(sortOptions);
+    if (type) {
+      query.type = type;
+    }
     
-    // Populate user information
-    query = query.populate('metadata.createdBy', 'name email')
-                 .populate('metadata.lastModifiedBy', 'name email');
+    const items = await Curriculum.find(query).sort({ order: 1, createdAt: 1 });
     
-    const curriculumItems = await query.exec();
-    
-    // If grouped=true, return levels structure (same as training endpoint)
     if (grouped === 'true') {
-      const levels = groupCurriculumIntoLevels(curriculumItems);
-      return res.status(200).json({
+      const groupedData = groupCurriculumIntoLevels(items);
+      res.json({
         success: true,
-        count: levels.length,
-        data: levels
+        count: groupedData.length,
+        data: groupedData
+      });
+    } else {
+      res.json({
+        success: true,
+        count: items.length,
+        data: items
       });
     }
-    
-    // Otherwise return individual items (original behavior)
-    res.status(200).json({
-      success: true,
-      count: curriculumItems.length,
-      data: curriculumItems
-    });
   } catch (error) {
-    console.error('Get curriculum items error:', error);
+    console.error('Get all curriculum items error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
@@ -225,7 +194,7 @@ const getCurriculumItemById = async (req, res) => {
   }
 };
 
-// @desc    Create new curriculum item
+// @desc    Create curriculum item
 // @route   POST /api/curriculum
 // @access  Private/Admin
 const createCurriculumItem = async (req, res) => {
@@ -243,6 +212,7 @@ const createCurriculumItem = async (req, res) => {
       description,
       type,
       content,
+      externalLink,
       order,
       isActive = true,
       careerTrack,
@@ -266,6 +236,7 @@ const createCurriculumItem = async (req, res) => {
       description,
       type,
       content,
+      externalLink,
       order,
       isActive,
       careerTrack,
@@ -344,126 +315,6 @@ const updateCurriculumItem = async (req, res) => {
   }
 };
 
-// @desc    Invalidate curriculum cache
-// @route   POST /api/curriculum/invalidate-cache
-// @access  Private/Admin
-const invalidateCache = async (req, res) => {
-  try {
-    // This endpoint can be used to clear any server-side caches
-    // For now, we'll just return success as the main cache clearing happens on the frontend
-    
-    res.status(200).json({
-      success: true,
-      message: 'Cache invalidation request received'
-    });
-  } catch (error) {
-    console.error('Cache invalidation error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error while invalidating cache'
-    });
-  }
-};
-
-// @desc    Delete all curriculum items for a level (by track + order)
-// @route   DELETE /api/curriculum/level
-// @access  Private/Admin
-const deleteLevelByTrackAndOrder = async (req, res) => {
-  try {
-    const { careerTrack, order } = req.query;
-
-    if (!careerTrack || !order) {
-      return res.status(400).json({
-        success: false,
-        message: 'careerTrack and order are required query parameters'
-      });
-    }
-
-    const normalizedCareerTrack = normalizeCareerTrack(careerTrack);
-    const levelOrder = parseInt(order, 10);
-    if (Number.isNaN(levelOrder) || levelOrder < 1) {
-      return res.status(400).json({
-        success: false,
-        message: 'order must be a positive integer'
-      });
-    }
-
-    // Delete all items for this level (any type) in the specified track and order
-    const result = await Curriculum.deleteMany({
-      careerTrack: normalizedCareerTrack,
-      order: levelOrder,
-    });
-
-    return res.status(200).json({
-      success: true,
-      deletedCount: result.deletedCount || 0,
-      message: `Deleted ${result.deletedCount || 0} items for track ${normalizedCareerTrack} level order ${levelOrder}`
-    });
-  } catch (error) {
-    console.error('Bulk delete level by track+order error:', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Server error while deleting level content'
-    });
-  }
-};
-
-// @desc    Reorder (swap) two levels by careerTrack and orders
-// @route   PUT /api/curriculum/level/reorder
-// @access  Private/Admin
-const reorderLevelsByTrack = async (req, res) => {
-  try {
-    const { careerTrack, from, to } = req.query;
-
-    if (!careerTrack || !from || !to) {
-      return res.status(400).json({
-        success: false,
-        message: 'careerTrack, from, and to are required query parameters'
-      });
-    }
-
-    const normalizedCareerTrack = normalizeCareerTrack(careerTrack);
-    const fromOrder = parseInt(from, 10);
-    const toOrder = parseInt(to, 10);
-    if ([fromOrder, toOrder].some((n) => Number.isNaN(n) || n < 1)) {
-      return res.status(400).json({
-        success: false,
-        message: 'from and to must be positive integers'
-      });
-    }
-
-    if (fromOrder === toOrder) {
-      return res.status(200).json({ success: true, message: 'No-op reorder' });
-    }
-
-    // Use a sentinel order to avoid collisions during swap
-    const sentinel = -Math.max(fromOrder, toOrder);
-
-    // Phase 1: move "from" level to sentinel
-    await Curriculum.updateMany(
-      { careerTrack: normalizedCareerTrack, order: fromOrder },
-      { $set: { order: sentinel } }
-    );
-
-    // Phase 2: move "to" level to "from"
-    await Curriculum.updateMany(
-      { careerTrack: normalizedCareerTrack, order: toOrder },
-      { $set: { order: fromOrder } }
-    );
-
-    // Phase 3: move sentinel to "to"
-    await Curriculum.updateMany(
-      { careerTrack: normalizedCareerTrack, order: sentinel },
-      { $set: { order: toOrder } }
-    );
-
-    return res.status(200).json({ success: true, message: 'Levels reordered successfully' });
-  } catch (error) {
-    console.error('Reorder levels error:', error);
-    return res.status(500).json({ success: false, message: 'Server error while reordering levels' });
-  }
-};
-
 // @desc    Delete curriculum item
 // @route   DELETE /api/curriculum/:id
 // @access  Private/Admin
@@ -478,7 +329,7 @@ const deleteCurriculumItem = async (req, res) => {
       });
     }
     
-    await Curriculum.findByIdAndDelete(req.params.id);
+    await curriculumItem.deleteOne();
     
     res.status(200).json({
       success: true,
@@ -493,16 +344,66 @@ const deleteCurriculumItem = async (req, res) => {
   }
 };
 
-// @desc    Get curriculum statistics
+// @desc    Get curriculum stats
 // @route   GET /api/curriculum/stats
 // @access  Private/Admin
 const getCurriculumStats = async (req, res) => {
   try {
-    const stats = await Curriculum.getStatistics();
+    const stats = await Curriculum.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalItems: { $sum: 1 },
+          totalLevels: { $addToSet: { track: '$careerTrack', order: '$order' } },
+          byType: {
+            $push: '$type'
+          },
+          byTrack: {
+            $push: '$careerTrack'
+          }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          totalItems: 1,
+          totalLevels: { $size: '$totalLevels' },
+          typeDistribution: {
+            $reduce: {
+              input: '$byType',
+              initialValue: {},
+              in: {
+                $mergeObjects: [
+                  '$$value',
+                  { $literal: { '$$this': { $add: [{ $indexOfArray: ['$byType', '$$this'] }, 1] } } }
+                ]
+              }
+            }
+          },
+          trackDistribution: {
+            $reduce: {
+              input: '$byTrack',
+              initialValue: {},
+              in: {
+                $mergeObjects: [
+                  '$$value',
+                  { $literal: { '$$this': { $add: [{ $indexOfArray: ['$byTrack', '$$this'] }, 1] } } }
+                ]
+              }
+            }
+          }
+        }
+      }
+    ]);
     
     res.status(200).json({
       success: true,
-      data: stats
+      data: stats[0] || {
+        totalItems: 0,
+        totalLevels: 0,
+        typeDistribution: {},
+        trackDistribution: {}
+      }
     });
   } catch (error) {
     console.error('Get curriculum stats error:', error);
@@ -513,23 +414,23 @@ const getCurriculumStats = async (req, res) => {
   }
 };
 
-// @desc    Get curriculum by type and career track
+// @desc    Get curriculum by type and track
 // @route   GET /api/curriculum/type/:type/track/:careerTrack
 // @access  Private
 const getCurriculumByTypeAndTrack = async (req, res) => {
   try {
     const { type, careerTrack } = req.params;
-    const { includeInactive = false } = req.query;
     
-    // Normalize the career track value
-    const normalizedCareerTrack = normalizeCareerTrack(careerTrack);
-    
-    const curriculumItems = await Curriculum.getByTypeAndTrack(type, normalizedCareerTrack, { includeInactive });
+    const items = await Curriculum.find({
+      type,
+      careerTrack: normalizeCareerTrack(careerTrack),
+      isActive: true
+    }).sort({ order: 1 });
     
     res.status(200).json({
       success: true,
-      count: curriculumItems.length,
-      data: curriculumItems
+      count: items.length,
+      data: items
     });
   } catch (error) {
     console.error('Get curriculum by type and track error:', error);
@@ -540,29 +441,30 @@ const getCurriculumByTypeAndTrack = async (req, res) => {
   }
 };
 
-// @desc    Bulk update curriculum order
+// @desc    Update curriculum order
 // @route   PUT /api/curriculum/bulk-order
 // @access  Private/Admin
 const updateCurriculumOrder = async (req, res) => {
   try {
     const { items } = req.body;
     
-    if (!Array.isArray(items)) {
+    if (!Array.isArray(items) || items.length === 0) {
       return res.status(400).json({
         success: false,
-        message: 'Items must be an array'
+        message: 'Items array is required and must not be empty'
       });
     }
     
     const updatePromises = items.map(item => 
-      Curriculum.findByIdAndUpdate(item.id, { order: item.order })
+      Curriculum.findByIdAndUpdate(item.id, { order: item.order }, { new: true })
     );
     
-    await Promise.all(updatePromises);
+    const updatedItems = await Promise.all(updatePromises);
     
     res.status(200).json({
       success: true,
-      message: 'Curriculum order updated successfully'
+      message: 'Curriculum order updated successfully',
+      data: updatedItems
     });
   } catch (error) {
     console.error('Update curriculum order error:', error);
@@ -573,7 +475,7 @@ const updateCurriculumOrder = async (req, res) => {
   }
 };
 
-// @desc    Toggle curriculum item active status
+// @desc    Toggle curriculum status
 // @route   PATCH /api/curriculum/:id/toggle
 // @access  Private/Admin
 const toggleCurriculumStatus = async (req, res) => {
@@ -589,11 +491,9 @@ const toggleCurriculumStatus = async (req, res) => {
     
     curriculumItem.isActive = !curriculumItem.isActive;
     curriculumItem.metadata.lastModifiedBy = req.user.id;
+    curriculumItem.metadata.lastModifiedAt = new Date();
     
     await curriculumItem.save();
-    
-    await curriculumItem.populate('metadata.createdBy', 'name email')
-                      .populate('metadata.lastModifiedBy', 'name email');
     
     res.status(200).json({
       success: true,
@@ -609,33 +509,26 @@ const toggleCurriculumStatus = async (req, res) => {
   }
 };
 
-// @desc    Get content by type and track
+// @desc    Get content by type
 // @route   GET /api/curriculum/content/:type
 // @access  Private/Admin
 const getContentByType = async (req, res) => {
   try {
     const { type } = req.params;
-    const { careerTrack, levelTitle, sortBy = 'order', sortOrder = 'asc' } = req.query;
+    const { careerTrack } = req.query;
     
-    const filter = { type };
+    let query = { type };
+    
     if (careerTrack) {
-      // Normalize the career track value
-      filter.careerTrack = normalizeCareerTrack(careerTrack);
+      query.careerTrack = normalizeCareerTrack(careerTrack);
     }
-    if (levelTitle) filter.title = levelTitle;
     
-    const sortOptions = {};
-    sortOptions[sortBy] = sortOrder === 'desc' ? -1 : 1;
-    
-    const content = await Curriculum.find(filter)
-      .sort(sortOptions)
-      .populate('metadata.createdBy', 'name email')
-      .populate('metadata.lastModifiedBy', 'name email');
+    const items = await Curriculum.find(query).sort({ order: 1 });
     
     res.status(200).json({
       success: true,
-      count: content.length,
-      data: content
+      count: items.length,
+      data: items
     });
   } catch (error) {
     console.error('Get content by type error:', error);
@@ -663,36 +556,46 @@ const createContentItem = async (req, res) => {
       title,
       type,
       content,
-      careerTrack,
-      difficulty,
-      order = 1,
+      order,
       isActive = true,
-      videoUrl,
-      resources
+      careerTrack,
+      difficulty = 'beginner',
+      estimatedDuration = 30,
+      tags = [],
+      prerequisites = [],
+      learningObjectives = [],
+      readFirst = {},
+      resources = []
     } = req.body;
     
-    const curriculumItem = new Curriculum({
+    // Set metadata
+    const metadata = {
+      createdBy: req.user.id,
+      version: 1
+    };
+    
+    const curriculumItem = await Curriculum.create({
       title,
       type,
       content,
-      careerTrack,
-      difficulty,
       order,
       isActive,
-      videoUrl,
+      careerTrack,
+      difficulty,
+      estimatedDuration,
+      tags,
+      prerequisites,
+      learningObjectives,
+      readFirst,
       resources,
-      metadata: {
-        createdBy: req.user.id,
-        createdAt: new Date(),
-        lastModifiedBy: req.user.id,
-        lastModifiedAt: new Date()
-      }
+      metadata
     });
     
-    await curriculumItem.save();
+    await curriculumItem.populate('metadata.createdBy', 'name email');
     
     res.status(201).json({
       success: true,
+      message: 'Content item created successfully',
       data: curriculumItem
     });
   } catch (error) {
@@ -784,6 +687,149 @@ const deleteContentItem = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Server error'
+    });
+  }
+};
+
+// @desc    Invalidate curriculum cache
+// @route   POST /api/curriculum/invalidate-cache
+// @access  Private/Admin
+const invalidateCache = async (req, res) => {
+  try {
+    // This endpoint can be used to clear any server-side caches
+    // For now, we'll just return success as the main cache clearing happens on the frontend
+    
+    res.status(200).json({
+      success: true,
+      message: 'Cache invalidation request received'
+    });
+  } catch (error) {
+    console.error('Cache invalidation error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error while invalidating cache'
+    });
+  }
+};
+
+// @desc    Delete all curriculum items for a level (by track + order)
+// @route   DELETE /api/curriculum/level
+// @access  Private/Admin
+const deleteLevelByTrackAndOrder = async (req, res) => {
+  try {
+    const { careerTrack, order } = req.query;
+
+    if (!careerTrack || !order) {
+      return res.status(400).json({
+        success: false,
+        message: 'careerTrack and order are required query parameters'
+      });
+    }
+
+    const normalizedCareerTrack = normalizeCareerTrack(careerTrack);
+    const levelOrder = parseInt(order, 10);
+    if (Number.isNaN(levelOrder) || levelOrder < 1) {
+      return res.status(400).json({
+        success: false,
+        message: 'order must be a positive integer'
+      });
+    }
+
+    // Delete all items for this level (any type) in the specified track and order
+    const result = await Curriculum.deleteMany({
+      careerTrack: normalizedCareerTrack,
+      order: levelOrder,
+    });
+
+    return res.status(200).json({
+      success: true,
+      deletedCount: result.deletedCount || 0,
+      message: `Deleted ${result.deletedCount || 0} items for track ${normalizedCareerTrack} level order ${levelOrder}`
+    });
+  } catch (error) {
+    console.error('Bulk delete level by track+order error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Server error while deleting level content'
+    });
+  }
+};
+
+// @desc    Reorder (swap) two levels by careerTrack and orders
+// @route   PUT /api/curriculum/level/reorder
+// @access  Private/Admin
+const reorderLevelsByTrack = async (req, res) => {
+  try {
+    const { careerTrack, from, to } = req.body;
+
+    if (!careerTrack || !from || !to) {
+      return res.status(400).json({
+        success: false,
+        message: 'careerTrack, from, and to are required'
+      });
+    }
+
+    const normalizedCareerTrack = normalizeCareerTrack(careerTrack);
+    const fromOrder = parseInt(from, 10);
+    const toOrder = parseInt(to, 10);
+
+    if (Number.isNaN(fromOrder) || Number.isNaN(toOrder) || fromOrder < 1 || toOrder < 1) {
+      return res.status(400).json({
+        success: false,
+        message: 'from and to must be positive integers'
+      });
+    }
+
+    // Find all items for both levels
+    const fromItems = await Curriculum.find({
+      careerTrack: normalizedCareerTrack,
+      order: fromOrder
+    });
+
+    const toItems = await Curriculum.find({
+      careerTrack: normalizedCareerTrack,
+      order: toOrder
+    });
+
+    if (fromItems.length === 0 && toItems.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Both levels not found'
+      });
+    }
+
+    // Swap the orders
+    const updatePromises = [];
+
+    if (fromItems.length > 0) {
+      updatePromises.push(
+        Curriculum.updateMany(
+          { careerTrack: normalizedCareerTrack, order: fromOrder },
+          { order: toOrder }
+        )
+      );
+    }
+
+    if (toItems.length > 0) {
+      updatePromises.push(
+        Curriculum.updateMany(
+          { careerTrack: normalizedCareerTrack, order: toOrder },
+          { order: fromOrder }
+        )
+      );
+    }
+
+    await Promise.all(updatePromises);
+
+    return res.status(200).json({
+      success: true,
+      message: `Swapped levels ${fromOrder} and ${toOrder} for track ${normalizedCareerTrack}`
+    });
+  } catch (error) {
+    console.error('Reorder levels by track error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Server error while reordering levels'
     });
   }
 };
