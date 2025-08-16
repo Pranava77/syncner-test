@@ -472,7 +472,7 @@ const AdminCurriculum: React.FC = () => {
     setContentForm({
       title: '',
       order: 1,
-      type: type === 'learn' ? 'reading' : undefined,
+      type: type === 'learn' ? 'learn' : undefined, // Fix: use 'learn' not 'reading'
       content: '',
       videoUrl: '',
       question: '',
@@ -750,7 +750,7 @@ const AdminCurriculum: React.FC = () => {
         // Create new content item
         const newContentData: any = {
           title: contentForm.title,
-          type: contentType,
+          type: contentType === 'learn' ? 'learn' : contentType, // Fix: use 'learn' not 'reading'
           careerTrack: editingLevel.careerTrack,
           difficulty: editingLevel.difficulty,
           order: editingLevel.order, // Use the level's order
@@ -788,7 +788,10 @@ const AdminCurriculum: React.FC = () => {
             `${contentForm.title} - ${contentForm.description.substring(0, Math.max(0, 10 - contentForm.title.length))}`;
         }
 
-        const createRes = await apiService.post('/curriculum', newContentData);
+        // Fix: Use the correct API service method
+        console.log('Creating curriculum item with data:', newContentData);
+        const createRes = await apiService.createCurriculumItem(newContentData);
+        console.log('Create response:', createRes);
 
         // Optimistic UI update: append new content immediately
         const newId = createRes?.data?.id || createRes?.id;
@@ -800,7 +803,7 @@ const AdminCurriculum: React.FC = () => {
               ...(updated.learn || []),
               {
                 id: newId,
-                type: 'reading',
+                type: 'learn', // Fix: use 'learn' not 'reading'
                 title: contentForm.title,
                 content: contentForm.content,
                 videoUrl: contentForm.videoUrl || '',
@@ -882,6 +885,12 @@ const AdminCurriculum: React.FC = () => {
       showSuccessMessage('Content saved successfully');
     } catch (error: any) {
       console.error('Error saving content:', error);
+      console.error('Error details:', {
+        message: error.message,
+        status: error.status,
+        response: error.response,
+        stack: error.stack
+      });
       const errorMessage = error.message || 'Failed to save content';
       setFormError(errorMessage);
       setError(errorMessage);

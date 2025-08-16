@@ -36,7 +36,6 @@ const curriculumValidation = [
     .isIn(['syllabus', 'learn', 'test', 'exercise'])
     .withMessage('Type must be syllabus, learn, test, or exercise'),
   body('content')
-    .optional()
     .trim()
     .isLength({ min: 10 })
     .withMessage('Content must be at least 10 characters'),
@@ -110,6 +109,48 @@ const curriculumValidation = [
     .withMessage('Resource type must be video, article, document, or external')
 ];
 
+// Custom validation for different content types
+const customContentValidation = (req, res, next) => {
+  const { type, content, question, options, answer, description } = req.body;
+  
+  if (type === 'learn') {
+    if (!content || content.trim().length < 10) {
+      return res.status(400).json({
+        success: false,
+        message: 'Learn content must be at least 10 characters'
+      });
+    }
+  } else if (type === 'test') {
+    if (!question || question.trim().length < 5) {
+      return res.status(400).json({
+        success: false,
+        message: 'Test question must be at least 5 characters'
+      });
+    }
+    if (!options || !Array.isArray(options) || options.length < 2) {
+      return res.status(400).json({
+        success: false,
+        message: 'Test must have at least 2 options'
+      });
+    }
+    if (!answer || !['A', 'B', 'C', 'D'].includes(answer)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Test answer must be A, B, C, or D'
+      });
+    }
+  } else if (type === 'exercise') {
+    if (!description || description.trim().length < 10) {
+      return res.status(400).json({
+        success: false,
+        message: 'Exercise description must be at least 10 characters'
+      });
+    }
+  }
+  
+  next();
+};
+
 // Public routes (for students to view curriculum)
 router.get('/type/:type/track/:careerTrack', protect, getCurriculumByTypeAndTrack);
 
@@ -134,14 +175,14 @@ router.put('/level/reorder', protect, authorize('admin'), reorderLevelsByTrack);
 // Content-specific routes
 router.get('/content/:type', protect, authorize('admin'), getContentByType);
 router.get('/content/:type/track/:careerTrack', protect, authorize('admin'), getContentByType);
-router.post('/content', protect, authorize('admin'), curriculumValidation, createContentItem);
-router.put('/content/:id', protect, authorize('admin'), curriculumValidation, updateContentItem);
+router.post('/content', protect, authorize('admin'), curriculumValidation, customContentValidation, createContentItem);
+router.put('/content/:id', protect, authorize('admin'), curriculumValidation, customContentValidation, updateContentItem);
 router.delete('/content/:id', protect, authorize('admin'), deleteContentItem);
 
 // Item routes (after bulk-order to avoid PUT /bulk-order hitting PUT /:id)
 router.get('/:id', protect, authorize('admin'), getCurriculumItemById);
-router.post('/', protect, authorize('admin'), curriculumValidation, createCurriculumItem);
-router.put('/:id', protect, authorize('admin'), curriculumValidation, updateCurriculumItem);
+router.post('/', protect, authorize('admin'), curriculumValidation, customContentValidation, createCurriculumItem);
+router.put('/:id', protect, authorize('admin'), curriculumValidation, customContentValidation, updateCurriculumItem);
 router.delete('/:id', protect, authorize('admin'), deleteCurriculumItem);
 
 router.patch('/:id/toggle', protect, authorize('admin'), toggleCurriculumStatus);
