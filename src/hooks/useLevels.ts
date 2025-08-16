@@ -54,6 +54,22 @@ export const useLevels = (trackId?: string) => {
   const dispatch = useAppDispatch();
   const { levelsWithStatus, loading, error, lastFetched, cacheExpiry } = useAppSelector((state) => state.curriculum);
   
+  // Normalize track ids to avoid legacy/value mismatches
+  const normalizeTrack = useCallback((track?: string) => {
+    if (!track) return '';
+    const map: Record<string, string> = {
+      'fullstack': 'full-stack',
+      'full-stack': 'full-stack',
+      'aiml': 'ai-ml',
+      'ai-ml': 'ai-ml',
+      'uiux': 'ui-ux',
+      'ui-ux': 'ui-ux',
+      'datascience': 'data-science',
+      'data-science': 'data-science'
+    };
+    return map[track] || track;
+  }, []);
+  
   // Check if cache is still valid
   const isCacheValid = useMemo(() => {
     if (!lastFetched) return false;
@@ -123,10 +139,11 @@ export const useLevels = (trackId?: string) => {
   // Filter levels for the specific track
   const filteredLevels = useMemo(() => {
     if (!trackId) return [];
+    const normalizedTrackId = normalizeTrack(trackId);
     return levelsWithStatus
-      .filter((level: Level) => level.careerTrack === trackId && level.isActive)
+      .filter((level: Level) => normalizeTrack(level.careerTrack) === normalizedTrackId && level.isActive)
       .sort((a: Level, b: Level) => a.order - b.order);
-  }, [levelsWithStatus, trackId]);
+  }, [levelsWithStatus, trackId, normalizeTrack]);
 
   return {
     levels: filteredLevels,
