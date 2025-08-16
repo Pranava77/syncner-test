@@ -574,7 +574,9 @@ const AdminCurriculum: React.FC = () => {
           if (contentType === 'learn') {
             updateData.content = contentForm.content;
             updateData.videoUrl = contentForm.videoUrl;
-            updateData.description = contentForm.title;
+            // Ensure description meets minimum length requirement (10 chars)
+            updateData.description = contentForm.title.length >= 10 ? contentForm.title : 
+              `${contentForm.title} - ${contentForm.content.substring(0, Math.max(0, 10 - contentForm.title.length))}`;
           } else if (contentType === 'test') {
             // Format test content
             let formattedContent = contentForm.question;
@@ -587,11 +589,15 @@ const AdminCurriculum: React.FC = () => {
               formattedContent += `\nAnswer: ${contentForm.answer}`;
             }
             updateData.content = formattedContent;
-            updateData.description = contentForm.title;
+            // Ensure description meets minimum length requirement (10 chars)
+            updateData.description = contentForm.title.length >= 10 ? contentForm.title : 
+              `${contentForm.title} - ${contentForm.question.substring(0, Math.max(0, 10 - contentForm.title.length))}`;
           } else if (contentType === 'exercise') {
-            updateData.content = contentForm.description;
+            updateData.content = contentForm.description; // Map description to content
             updateData.resources = contentForm.resources || [];
-            updateData.description = contentForm.title;
+            // Ensure description meets minimum length requirement (10 chars)
+            updateData.description = contentForm.title.length >= 10 ? contentForm.title : 
+              `${contentForm.title} - ${contentForm.description.substring(0, Math.max(0, 10 - contentForm.title.length))}`;
           }
 
           await apiService.put(`/curriculum/${itemToUpdate.id}`, updateData);
@@ -653,7 +659,9 @@ const AdminCurriculum: React.FC = () => {
         if (contentType === 'learn') {
           newContentData.content = contentForm.content;
           newContentData.videoUrl = contentForm.videoUrl;
-          newContentData.description = contentForm.title;
+          // Ensure description meets minimum length requirement (10 chars)
+          newContentData.description = contentForm.title.length >= 10 ? contentForm.title : 
+            `${contentForm.title} - ${contentForm.content.substring(0, Math.max(0, 10 - contentForm.title.length))}`;
         } else if (contentType === 'test') {
           // Format test content
           let formattedContent = contentForm.question;
@@ -666,11 +674,15 @@ const AdminCurriculum: React.FC = () => {
             formattedContent += `\nAnswer: ${contentForm.answer}`;
           }
           newContentData.content = formattedContent;
-          newContentData.description = contentForm.title;
+          // Ensure description meets minimum length requirement (10 chars)
+          newContentData.description = contentForm.title.length >= 10 ? contentForm.title : 
+            `${contentForm.title} - ${contentForm.question.substring(0, Math.max(0, 10 - contentForm.title.length))}`;
         } else if (contentType === 'exercise') {
-          newContentData.content = contentForm.description;
+          newContentData.content = contentForm.description; // Map description to content
           newContentData.resources = contentForm.resources || [];
-          newContentData.description = contentForm.title;
+          // Ensure description meets minimum length requirement (10 chars)
+          newContentData.description = contentForm.title.length >= 10 ? contentForm.title : 
+            `${contentForm.title} - ${contentForm.description.substring(0, Math.max(0, 10 - contentForm.title.length))}`;
         }
 
         const createRes = await apiService.post('/curriculum', newContentData);

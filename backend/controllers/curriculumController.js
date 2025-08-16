@@ -18,15 +18,22 @@ const groupCurriculumIntoLevels = (items) => {
         i.type === 'syllabus'
       );
       
-      // Use syllabus item if available, otherwise use the current item
-      const baseItem = syllabusItem || item;
+      // Find any existing item for this level to get the base info
+      const existingItem = items.find(i => 
+        i.careerTrack === item.careerTrack && 
+        i.order === item.order
+      );
       
+      // Use syllabus item if available, otherwise use any existing item, or finally the current item
+      const baseItem = syllabusItem || existingItem || item;
+      
+      // Create a new level with default values if no syllabus exists
       levelsMap.set(key, {
         id: baseItem._id.toString(), // Convert ObjectId to string for consistency
-        title: baseItem.title,
-        description: baseItem.description,
-        difficulty: baseItem.difficulty,
-        duration: baseItem.formattedDuration || `${Math.floor(baseItem.estimatedDuration / 60)}h ${baseItem.estimatedDuration % 60}m`,
+        title: baseItem.title || `Level ${baseItem.order}`,
+        description: baseItem.description || `Level ${baseItem.order} content`,
+        difficulty: baseItem.difficulty || 'beginner',
+        duration: baseItem.formattedDuration || `${Math.floor(baseItem.estimatedDuration || 30) / 60}h ${(baseItem.estimatedDuration || 30) % 60}m`,
         careerTrack: baseItem.careerTrack,
         skills: baseItem.tags || [], // Map tags to skills
         prerequisites: baseItem.prerequisites || [],
@@ -37,13 +44,13 @@ const groupCurriculumIntoLevels = (items) => {
           customExample: ''
         },
         order: baseItem.order,
-        isActive: baseItem.isActive,
-        estimatedHours: Math.ceil(baseItem.estimatedDuration / 60), // Convert minutes to hours, round up
+        isActive: baseItem.isActive !== undefined ? baseItem.isActive : true,
+        estimatedHours: Math.ceil((baseItem.estimatedDuration || 30) / 60), // Convert minutes to hours, round up
         learn: [],
         test: [],
         exercise: [],
-        createdAt: baseItem.createdAt,
-        updatedAt: baseItem.updatedAt
+        createdAt: baseItem.createdAt || new Date(),
+        updatedAt: baseItem.updatedAt || new Date()
       });
     }
 
@@ -53,11 +60,11 @@ const groupCurriculumIntoLevels = (items) => {
     const contentItem = {
       id: item._id.toString(),
       type: item.type,
-      title: item.title,
-      content: item.content,
+      title: item.title || '',
+      content: item.content || '',
       order: item.order,
-      videoUrl: item.videoUrl,
-      description: item.description,
+      videoUrl: item.videoUrl || '',
+      description: item.description || '',
       resources: item.resources || []
     };
 
