@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   PlusIcon, 
@@ -143,6 +143,26 @@ const AdminCurriculum: React.FC = () => {
   const [isRefetching, setIsRefetching] = useState(false);
   const [refetchMessage, setRefetchMessage] = useState<string | null>(null);
 
+  // Normalize track ids coming from UI to API format
+  const normalizeTrack = (track?: string | null) => {
+    if (!track) return '';
+    const map: Record<string, string> = {
+      'fullstack': 'full-stack',
+      'full-stack': 'full-stack',
+      'Full Stack': 'full-stack',
+      'aiml': 'ai-ml',
+      'ai-ml': 'ai-ml',
+      'AI/ML': 'ai-ml',
+      'uiux': 'ui-ux',
+      'ui-ux': 'ui-ux',
+      'UI/UX': 'ui-ux',
+      'datascience': 'data-science',
+      'data-science': 'data-science',
+      'Data Science': 'data-science'
+    };
+    return map[track] || track;
+  };
+
   useEffect(() => {
     fetchLevels();
   }, []);
@@ -150,13 +170,18 @@ const AdminCurriculum: React.FC = () => {
   const fetchLevels = async (track?: string) => {
     try {
       setLoading(true);
-      const chosenTrack = track || selectedTrack || '';
+      const chosenTrackRaw = track ?? selectedTrack ?? '';
+      const chosenTrack = normalizeTrack(chosenTrackRaw);
       const url = `/curriculum?grouped=true${chosenTrack ? `&careerTrack=${chosenTrack}` : ''}`;
       const response = await apiService.get(url);
       
       if (response.success) {
         // The backend now returns grouped levels structure, same as training endpoint
-        const levelsData = response.data;
+        let levelsData = response.data || [];
+        // Extra safety: filter client-side if backend ignores careerTrack
+        if (chosenTrack) {
+          levelsData = (levelsData || []).filter((lvl: any) => lvl.careerTrack === chosenTrack);
+        }
         
         // Transform the data to match the expected format
         const transformedLevels = levelsData.map((level: any) => ({
