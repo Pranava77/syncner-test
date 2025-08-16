@@ -171,6 +171,10 @@ const AdminCurriculum: React.FC = () => {
   const [isRefetching, setIsRefetching] = useState(false);
   const [refetchMessage, setRefetchMessage] = useState<string | null>(null);
   const [trackCounts, setTrackCounts] = useState<Record<string, number>>({});
+  const [filterStatus, setFilterStatus] = useState<string>('all');
+
+  // Available career tracks
+  const tracks = ['full-stack', 'ai-ml', 'ui-ux', 'data-science'];
 
   // Normalize track ids coming from UI to API format
   const normalizeTrack = (track?: string | null) => {
@@ -1337,93 +1341,209 @@ const AdminCurriculum: React.FC = () => {
                 </div>
               </div>
 
-              {/* Filters and Search */}
-              <div 
-                className="mb-6 p-4 rounded-lg border"
-                style={{
-                  backgroundColor: 'var(--color-tertiary-bg)',
-                  borderColor: 'var(--color-border-subtle)'
-                }}
-              >
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div>
-                    <label 
-                      className="block text-sm font-medium mb-2"
-                      style={{ color: 'var(--color-text-primary)' }}
-                    >
-                      Search
-                    </label>
+                            {/* Enhanced Search and Filters */}
+              <div className="mb-8 space-y-6">
+                {/* Search Bar */}
+                <div className="relative">
+                  <div
+                    className="relative rounded-2xl border-2 transition-all duration-300 overflow-hidden"
+                    style={{
+                      backgroundColor: 'var(--color-surface)',
+                      borderColor: 'var(--color-border)',
+                      boxShadow: 'var(--shadow-sm)'
+                    }}
+                  >
                     <input
                       type="text"
-                      placeholder="Search levels..."
+                      placeholder="Search levels by title, description, or skills..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full px-3 py-2 border rounded-lg focus:outline-none text-sm"
+                      className="w-full px-6 py-4 pl-14 text-base font-medium transition-all duration-200 focus:outline-none"
                       style={{
-                        backgroundColor: 'var(--color-secondary-bg)',
-                        borderColor: 'var(--color-border)',
+                        backgroundColor: 'transparent',
                         color: 'var(--color-text-primary)'
                       }}
                       onFocus={(e) => {
-                        e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
-                        e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                        e.currentTarget.parentElement!.style.borderColor = 'var(--color-accent-primary)';
+                        e.currentTarget.parentElement!.style.boxShadow = 'var(--shadow-lg)';
+                        e.currentTarget.parentElement!.style.transform = 'translateY(-2px)';
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = 'var(--color-border)';
-                        e.currentTarget.style.boxShadow = 'none';
+                        e.currentTarget.parentElement!.style.borderColor = 'var(--color-border)';
+                        e.currentTarget.parentElement!.style.boxShadow = 'var(--shadow-sm)';
+                        e.currentTarget.parentElement!.style.transform = 'translateY(0)';
                       }}
                     />
+                    <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+                      <div
+                        className="w-8 h-8 rounded-lg flex items-center justify-center"
+                        style={{
+                          backgroundColor: 'var(--color-accent-primary)',
+                          color: 'var(--color-text-inverse)'
+                        }}
+                      >
+                        <MagnifyingGlassIcon className="h-5 w-5" />
+                      </div>
+                    </div>
                   </div>
-                  
-                  <div>
-                    <label 
-                      className="block text-sm font-medium mb-2"
-                      style={{ color: 'var(--color-text-primary)' }}
+                </div>
+
+                {/* Filters Row */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {/* Track Filter */}
+                  <div className="group">
+                    <label className="block text-sm font-semibold mb-3" style={{ color: 'var(--color-text-primary)' }}>
+                      Career Track
+                    </label>
+                    <div
+                      className="relative rounded-xl border-2 transition-all duration-300 overflow-hidden"
+                      style={{
+                        backgroundColor: 'var(--color-surface)',
+                        borderColor: 'var(--color-border)',
+                        boxShadow: 'var(--shadow-sm)'
+                      }}
                     >
+                      <select
+                        value={selectedTrack || ''}
+                        onChange={(e) => setSelectedTrack(e.target.value || null)}
+                        className="w-full px-4 py-3 text-base font-medium transition-all duration-200 focus:outline-none appearance-none cursor-pointer"
+                        style={{
+                          backgroundColor: 'transparent',
+                          color: 'var(--color-text-primary)'
+                        }}
+                        onFocus={(e) => {
+                          e.currentTarget.parentElement!.style.borderColor = 'var(--color-accent-primary)';
+                          e.currentTarget.parentElement!.style.boxShadow = 'var(--shadow-lg)';
+                          e.currentTarget.parentElement!.style.transform = 'translateY(-2px)';
+                        }}
+                        onBlur={(e) => {
+                          e.currentTarget.parentElement!.style.borderColor = 'var(--color-border)';
+                          e.currentTarget.parentElement!.style.boxShadow = 'var(--shadow-sm)';
+                          e.currentTarget.parentElement!.style.transform = 'translateY(0)';
+                        }}
+                      >
+                        <option value="">All Tracks</option>
+                        {tracks.map((track) => (
+                          <option key={track} value={track}>
+                            {getTrackLabel(track)}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                        <ChevronDownIcon className="h-5 w-5" style={{ color: 'var(--color-text-secondary)' }} />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Difficulty Filter */}
+                  <div className="group">
+                    <label className="block text-sm font-semibold mb-3" style={{ color: 'var(--color-text-primary)' }}>
                       Difficulty
                     </label>
-                    <select
-                      value={filterDifficulty}
-                      onChange={(e) => setFilterDifficulty(e.target.value)}
-                      className="w-full px-3 py-2 border rounded-lg focus:outline-none text-sm"
+                    <div
+                      className="relative rounded-xl border-2 transition-all duration-300 overflow-hidden"
                       style={{
-                        backgroundColor: 'var(--color-secondary-bg)',
+                        backgroundColor: 'var(--color-surface)',
                         borderColor: 'var(--color-border)',
-                        color: 'var(--color-text-primary)'
-                      }}
-                      onFocus={(e) => {
-                        e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
-                        e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.borderColor = 'var(--color-border)';
-                        e.currentTarget.style.boxShadow = 'none';
+                        boxShadow: 'var(--shadow-sm)'
                       }}
                     >
-                      <option value="all">All Difficulties</option>
-                      <option value="beginner">Beginner</option>
-                      <option value="intermediate">Intermediate</option>
-                      <option value="advanced">Advanced</option>
-                    </select>
+                      <select
+                        value={filterDifficulty}
+                        onChange={(e) => setFilterDifficulty(e.target.value)}
+                        className="w-full px-4 py-3 text-base font-medium transition-all duration-200 focus:outline-none appearance-none cursor-pointer"
+                        style={{
+                          backgroundColor: 'transparent',
+                          color: 'var(--color-text-primary)'
+                        }}
+                        onFocus={(e) => {
+                          e.currentTarget.parentElement!.style.borderColor = 'var(--color-accent-primary)';
+                          e.currentTarget.parentElement!.style.boxShadow = 'var(--shadow-lg)';
+                          e.currentTarget.parentElement!.style.transform = 'translateY(-2px)';
+                        }}
+                        onBlur={(e) => {
+                          e.currentTarget.parentElement!.style.borderColor = 'var(--color-border)';
+                          e.currentTarget.parentElement!.style.boxShadow = 'var(--shadow-sm)';
+                          e.currentTarget.parentElement!.style.transform = 'translateY(0)';
+                        }}
+                      >
+                        <option value="all">All Difficulties</option>
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                      </select>
+                      <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                        <ChevronDownIcon className="h-5 w-5" style={{ color: 'var(--color-text-secondary)' }} />
+                      </div>
+                    </div>
                   </div>
-                  
-                  <div className="flex items-end">
+
+                  {/* Status Filter */}
+                  <div className="group">
+                    <label className="block text-sm font-semibold mb-3" style={{ color: 'var(--color-text-primary)' }}>
+                      Status
+                    </label>
+                    <div
+                      className="relative rounded-xl border-2 transition-all duration-300 overflow-hidden"
+                      style={{
+                        backgroundColor: 'var(--color-surface)',
+                        borderColor: 'var(--color-border)',
+                        boxShadow: 'var(--shadow-sm)'
+                      }}
+                    >
+                      <select
+                        value={filterStatus}
+                        onChange={(e) => setFilterStatus(e.target.value)}
+                        className="w-full px-4 py-3 text-base font-medium transition-all duration-200 focus:outline-none appearance-none cursor-pointer"
+                        style={{
+                          backgroundColor: 'transparent',
+                          color: 'var(--color-text-primary)'
+                        }}
+                        onFocus={(e) => {
+                          e.currentTarget.parentElement!.style.borderColor = 'var(--color-accent-primary)';
+                          e.currentTarget.parentElement!.style.boxShadow = 'var(--shadow-lg)';
+                          e.currentTarget.parentElement!.style.transform = 'translateY(-2px)';
+                        }}
+                        onBlur={(e) => {
+                          e.currentTarget.parentElement!.style.borderColor = 'var(--color-border)';
+                          e.currentTarget.parentElement!.style.boxShadow = 'var(--shadow-sm)';
+                          e.currentTarget.parentElement!.style.transform = 'translateY(0)';
+                        }}
+                      >
+                        <option value="all">All Statuses</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                      </select>
+                      <div className="absolute inset-y-0 right-0 pr-4 flex items-center justify-center pointer-events-none">
+                        <ChevronDownIcon className="h-5 w-5" style={{ color: 'var(--color-text-secondary)' }} />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex flex-col gap-3">
+                    {/* Refresh Button */}
                     <button
                       onClick={() => fetchLevels(selectedTrack || undefined)}
                       disabled={loading}
-                      className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg transition-colors font-medium disabled:opacity-50 text-sm"
+                      className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 disabled:opacity-50"
                       style={{ 
                         backgroundColor: 'var(--color-accent-primary)',
-                        color: 'var(--color-text-inverse)' 
+                        color: 'var(--color-text-inverse)',
+                        boxShadow: 'var(--shadow-sm)'
                       }}
                       onMouseEnter={(e) => {
                         if (!loading) {
                           e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                          e.currentTarget.style.transform = 'translateY(-2px)';
+                          e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
                         }
                       }}
                       onMouseLeave={(e) => {
                         if (!loading) {
                           e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                          e.currentTarget.style.transform = 'translateY(0)';
+                          e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
                         }
                       }}
                     >
@@ -1445,6 +1565,37 @@ const AdminCurriculum: React.FC = () => {
                         <ArrowClockwiseIcon className="h-4 w-4" />
                       )}
                       Refresh
+                    </button>
+
+                    {/* Clear Filters Button */}
+                    <button
+                      onClick={() => {
+                        setSearchTerm('');
+                        setFilterDifficulty('all');
+                        setFilterStatus('all');
+                        setSelectedTrack(null);
+                      }}
+                      className="w-full px-4 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
+                      style={{
+                        backgroundColor: 'var(--color-accent-tertiary)',
+                        color: 'var(--color-accent-primary)',
+                        border: '2px solid var(--color-accent-primary)',
+                        boxShadow: 'var(--shadow-sm)'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                        e.currentTarget.style.color = 'var(--color-text-inverse)';
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                        e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'var(--color-accent-tertiary)';
+                        e.currentTarget.style.color = 'var(--color-accent-primary)';
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+                      }}
+                    >
+                      Clear Filters
                     </button>
                   </div>
                 </div>
