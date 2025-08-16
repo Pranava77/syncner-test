@@ -172,7 +172,6 @@ const AdminCurriculum: React.FC = () => {
   const [refetchMessage, setRefetchMessage] = useState<string | null>(null);
   const [trackCounts, setTrackCounts] = useState<Record<string, number>>({});
   const [filterStatus, setFilterStatus] = useState<string>('all');
-  const [isInitialLoading, setIsInitialLoading] = useState(true);
 
   // Available career tracks
   const tracks = ['full-stack', 'ai-ml', 'ui-ux', 'data-science'];
@@ -201,7 +200,6 @@ const AdminCurriculum: React.FC = () => {
   useEffect(() => {
     const fetchCounts = async () => {
       try {
-        setIsInitialLoading(true);
         const res = await apiService.get('/curriculum?grouped=true');
         if (res.success && Array.isArray(res.data)) {
           const counts: Record<string, number> = {};
@@ -213,9 +211,6 @@ const AdminCurriculum: React.FC = () => {
         }
       } catch (e) {
         console.warn('Failed to fetch track counts', e);
-        setError('Failed to load curriculum data');
-      } finally {
-        setIsInitialLoading(false);
       }
     };
     fetchCounts();
@@ -652,7 +647,7 @@ const AdminCurriculum: React.FC = () => {
     } else if (contentType === 'test' && (!contentForm.options || contentForm.options.length < 4 || contentForm.options.some((opt: string) => !opt.trim()))) {
       console.log('Test validation failed - missing or empty options');
       setFormError('All 4 options are required for test items');
-      return;
+          return;
         } else if (contentType === 'exercise' && !contentForm.description) {
       console.log('Exercise validation failed - no description');
           setFormError('Description is required for exercise items');
@@ -1026,7 +1021,7 @@ const AdminCurriculum: React.FC = () => {
     resetContentForm();
   };
 
-  if (isInitialLoading || (loading && levels.length === 0)) {
+  if (loading && levels.length === 0) {
     return (
       <div 
         className="flex h-screen w-full"
@@ -1037,7 +1032,7 @@ const AdminCurriculum: React.FC = () => {
             <motion.img
               src={syncnerLogo}
               alt="Syncner Logo"
-              className="w-16 h-16 mx-auto mb-6"
+              className="w-12 h-12 mx-auto mb-4"
               animate={{
                 scale: [1, 1.1, 1],
                 rotate: [0, 5, -5, 0],
@@ -1047,20 +1042,11 @@ const AdminCurriculum: React.FC = () => {
                 rotate: { duration: 2, repeat: Infinity, ease: "easeInOut" }
               }}
             />
-            <h2 
-              className="text-2xl font-bold mb-3"
+            <p 
+              className="text-lg"
               style={{ color: 'var(--color-text-primary)' }}
             >
-              {isInitialLoading ? 'Loading Curriculum Data...' : 'Loading Curriculum Levels...'}
-            </h2>
-            <p 
-              className="text-lg mb-6"
-              style={{ color: 'var(--color-text-secondary)' }}
-            >
-              {isInitialLoading 
-                ? 'Fetching career track information and level counts...' 
-                : 'Retrieving training levels and content...'
-              }
+              Loading curriculum levels...
             </p>
             {error && (
               <div className="mt-4 p-3 rounded-lg text-sm max-w-md mx-auto" style={{
@@ -1187,138 +1173,94 @@ const AdminCurriculum: React.FC = () => {
 
               {/* Track Selection Grid */}
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {isInitialLoading ? (
-                  // Skeleton loading state
-                  Array.from({ length: 4 }).map((_, index) => (
+                {[
+                  { 
+                    id: 'full-stack', 
+                    name: 'Full Stack', 
+                    icon: DesktopIcon, 
+                    bgColor: 'var(--color-accent-primary)',
+                    borderColor: 'var(--color-accent-primary)'
+                  },
+                  { 
+                    id: 'ai-ml', 
+                    name: 'AI/ML', 
+                    icon: RocketIcon, 
+                    bgColor: 'var(--color-accent-secondary)',
+                    borderColor: 'var(--color-accent-secondary)'
+                  },
+                  { 
+                    id: 'ui-ux', 
+                    name: 'UI/UX', 
+                    icon: ImageIcon, 
+                    bgColor: 'var(--color-accent-primary)',
+                    borderColor: 'var(--color-accent-primary)'
+                  },
+                  { 
+                    id: 'data-science', 
+                    name: 'Data Science', 
+                    icon: BarChartIcon, 
+                    bgColor: 'var(--color-warning)',
+                    borderColor: 'var(--color-warning)'
+                  }
+                ].map((track, index) => {
+                  const IconComponent = track.icon;
+                  return (
                     <motion.div
-                      key={index}
+                      key={track.id}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      className="border rounded-xl p-6 animate-pulse"
+                      onClick={() => handleTrackSelect(track.id)}
+                      className="border rounded-xl p-6 cursor-pointer transition-all duration-300 group"
                       style={{
                         backgroundColor: 'var(--color-surface)',
                         borderColor: 'var(--color-border)'
                       }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-border)';
+                      }}
                     >
                       <div className="text-center">
-                        <div className="w-16 h-16 border-2 rounded-xl mx-auto mb-4"
-                          style={{
-                            backgroundColor: 'var(--color-tertiary-bg)',
-                            borderColor: 'var(--color-border)'
+                        <div className="w-16 h-16 border-2 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" style={{
+                          backgroundColor: track.bgColor,
+                          borderColor: track.borderColor
+                        }}>
+                          <IconComponent 
+                            className="h-8 w-8"
+                            style={{ color: 'var(--color-text-inverse)' }}
+                          />
+                        </div>
+                        <h3 
+                          className="text-lg font-heading mb-2"
+                          style={{ color: 'var(--color-text-primary)' }}
+                        >
+                          {track.name}
+                        </h3>
+                        <p 
+                          className="text-sm mb-4"
+                          style={{ color: 'var(--color-text-tertiary)' }}
+                        >
+                          {trackStats[track.id] || 0} levels available
+                        </p>
+                        <div 
+                          className="text-xs transition-colors"
+                          style={{ color: 'var(--color-text-tertiary)' }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.color = 'var(--color-accent-primary)';
                           }}
-                        />
-                        <div className="h-5 rounded mb-2 mx-auto"
-                          style={{
-                            backgroundColor: 'var(--color-tertiary-bg)',
-                            width: '80%'
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.color = 'var(--color-text-tertiary)';
                           }}
-                        />
-                        <div className="h-4 rounded mb-4 mx-auto"
-                          style={{
-                            backgroundColor: 'var(--color-tertiary-bg)',
-                            width: '60%'
-                          }}
-                        />
-                        <div className="h-3 rounded mx-auto"
-                          style={{
-                            backgroundColor: 'var(--color-tertiary-bg)',
-                            width: '70%'
-                          }}
-                        />
+                        >
+                          Click to manage levels
+                        </div>
                       </div>
                     </motion.div>
-                  ))
-                ) : (
-                  [
-                    { 
-                      id: 'full-stack', 
-                      name: 'Full Stack', 
-                      icon: DesktopIcon, 
-                      bgColor: 'var(--color-accent-primary)',
-                      borderColor: 'var(--color-accent-primary)'
-                    },
-                    { 
-                      id: 'ai-ml', 
-                      name: 'AI/ML', 
-                      icon: RocketIcon, 
-                      bgColor: 'var(--color-accent-secondary)',
-                      borderColor: 'var(--color-accent-secondary)'
-                    },
-                    { 
-                      id: 'ui-ux', 
-                      name: 'UI/UX', 
-                      icon: ImageIcon, 
-                      bgColor: 'var(--color-accent-primary)',
-                      borderColor: 'var(--color-accent-primary)'
-                    },
-                    { 
-                      id: 'data-science', 
-                      name: 'Data Science', 
-                      icon: BarChartIcon, 
-                      bgColor: 'var(--color-warning)',
-                      borderColor: 'var(--color-warning)'
-                    }
-                  ].map((track, index) => {
-                    const IconComponent = track.icon;
-                    return (
-                      <motion.div
-                        key={track.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                        onClick={() => handleTrackSelect(track.id)}
-                        className="border rounded-xl p-6 cursor-pointer transition-all duration-300 group"
-                        style={{
-                          backgroundColor: 'var(--color-surface)',
-                          borderColor: 'var(--color-border)'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.borderColor = 'var(--color-border)';
-                        }}
-                      >
-                        <div className="text-center">
-                          <div className="w-16 h-16 border-2 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" style={{
-                            backgroundColor: track.bgColor,
-                            borderColor: track.borderColor
-                          }}>
-                            <IconComponent 
-                              className="h-8 w-8"
-                              style={{ color: 'var(--color-text-inverse)' }}
-                            />
-                          </div>
-                          <h3 
-                            className="text-lg font-heading mb-2"
-                            style={{ color: 'var(--color-text-primary)' }}
-                          >
-                            {track.name}
-                          </h3>
-                          <p 
-                            className="text-sm mb-4"
-                            style={{ color: 'var(--color-text-tertiary)' }}
-                          >
-                            {trackCounts[track.id] || 0} levels available
-                          </p>
-                          <div 
-                            className="text-xs transition-colors"
-                            style={{ color: 'var(--color-text-tertiary)' }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.color = 'var(--color-accent-primary)';
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.color = 'var(--color-text-tertiary)';
-                            }}
-                          >
-                            Click to manage levels
-                          </div>
-                        </div>
-                      </motion.div>
-                    );
-                  })
-                )}
+                  );
+                })}
               </div>
             </>
           ) : (
@@ -1733,152 +1675,101 @@ const AdminCurriculum: React.FC = () => {
                     boxShadow: 'var(--shadow-lg)'
                   }}
                 >
-                  {loading ? (
-                    // Loading state for levels
-                    <div className="space-y-6">
-                      {Array.from({ length: 3 }).map((_, index) => (
-                        <motion.div
-                          key={index}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: index * 0.1 }}
-                          className="border rounded-2xl p-6 animate-pulse"
-                          style={{
-                            backgroundColor: 'var(--color-surface)',
-                            borderColor: 'var(--color-border)'
-                          }}
-                        >
-                          <div className="flex items-start gap-4">
-                            {/* Skeleton Level Number */}
-                            <div className="w-16 h-16 rounded-xl"
-                              style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
-                            />
-                            
-                            {/* Skeleton Level Content */}
-                            <div className="flex-1 space-y-3">
-                              <div className="h-6 rounded w-3/4"
-                                style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
-                              />
-                              <div className="h-4 rounded w-full"
-                                style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
-                              />
-                              <div className="h-4 rounded w-2/3"
-                                style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
-                              />
-                              
-                              {/* Skeleton Badges */}
-                              <div className="flex gap-3">
-                                <div className="h-6 rounded w-16"
-                                  style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
-                                />
-                                <div className="h-6 rounded w-20"
-                                  style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
-                                />
-                                <div className="h-6 rounded w-24"
-                                  style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        </motion.div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="grid gap-6 grid-cols-1 relative">
-                                            {filteredLevels.map((level, index) => {
-                        console.log('Level data:', { 
-                          id: level.id, 
-                          title: level.title, 
-                          order: level.order, 
-                          careerTrack: level.careerTrack
-                        });
-                        
-                        return (
-                          <motion.div
-                            key={level.id}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.1 }}
-                            className="group relative rounded-2xl border shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden"
-                            style={{
-                              backgroundColor: 'var(--color-surface)',
-                              borderColor: 'var(--color-border)'
-                            }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
-                              e.currentTarget.style.transform = 'translateY(-4px)';
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.borderColor = 'var(--color-border)';
-                              e.currentTarget.style.transform = 'translateY(0)';
+                  <div className="grid gap-6 grid-cols-1 relative">
+                    {filteredLevels.map((level, index) => {
+                      console.log('Level data:', { 
+                        id: level.id, 
+                        title: level.title, 
+                        order: level.order, 
+                        careerTrack: level.careerTrack
+                      });
+                      
+                      return (
+                    <motion.div
+                      key={level.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="group relative rounded-2xl border shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden"
+                      style={{
+                        backgroundColor: 'var(--color-surface)',
+                        borderColor: 'var(--color-border)'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                        e.currentTarget.style.transform = 'translateY(-4px)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-border)';
+                        e.currentTarget.style.transform = 'translateY(0)';
+                      }}
+                    >
+                                             {/* Level Header */}
+                       <div 
+                         className="p-4 border-b"
+                         style={{ borderColor: 'var(--color-border-subtle)' }}
+                       >
+                         <div className="flex items-start justify-between mb-4">
+                           <div className="flex items-start gap-4 flex-1">
+                          {/* Level Number Badge */}
+                          <div 
+                               className="w-16 h-16 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0"
+                            style={{ 
+                                 background: 'linear-gradient(135deg, var(--color-accent-primary) 0%, var(--color-accent-secondary) 100%)',
+                              color: 'var(--color-text-inverse)' 
                             }}
                           >
-                            {/* Level Header */}
-                            <div 
-                              className="p-4 border-b"
-                              style={{ borderColor: 'var(--color-border-subtle)' }}
-                            >
-                              <div className="flex items-start justify-between mb-4">
-                                <div className="flex items-start gap-4 flex-1">
-                                  {/* Level Number Badge */}
-                                  <div 
-                                    className="w-16 h-16 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0"
-                                    style={{ 
-                                      background: 'linear-gradient(135deg, var(--color-accent-primary) 0%, var(--color-accent-secondary) 100%)',
-                                      color: 'var(--color-text-inverse)' 
-                                    }}
-                                  >
-                                    <span className="text-2xl font-bold">{level.order}</span>
-                                  </div>
-                                  
-                                  {/* Level Info */}
-                                  <div className="flex-1 min-w-0">
-                                    <h3 className="text-xl font-bold mb-3" style={{ color: 'var(--color-text-primary)' }}>
-                                      {level.title}
-                                    </h3>
-                                    <p className="text-base leading-relaxed mb-4" style={{ color: 'var(--color-text-secondary)' }}>
-                                      {level.description}
-                                    </p>
-                                    
-                                    {/* Badges Row */}
-                                    <div className="flex items-center gap-3 mb-4">
-                                      <span 
-                                        className="px-3 py-1 rounded-lg text-xs font-medium"
-                                        style={getDifficultyColor(level.difficulty)}
-                                      >
-                                        {level.difficulty}
-                                      </span>
-                                      <span 
-                                        className={`px-3 py-1 rounded-lg text-xs font-medium ${getTrackColor(level.careerTrack)}`}
-                                        style={{ color: 'var(--color-text-inverse)' }}
-                                      >
-                                        {getTrackLabel(level.careerTrack)}
-                                      </span>
-                                      <span 
-                                        className="px-3 py-1 rounded-lg text-xs font-medium"
-                                        style={{
-                                          backgroundColor: 'var(--color-accent-tertiary)',
-                                          color: 'var(--color-accent-primary)'
-                                        }}
-                                      >
-                                        {level.estimatedHours}h estimated
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-                                
-                                {/* Status Badge */}
-                                <div className="flex items-center gap-2 flex-shrink-0">
-                                  {level.isActive ? (
-                                    <span 
-                                      className="px-3 py-1 rounded-lg text-sm font-medium flex items-center gap-2"
-                                      style={{
-                                        backgroundColor: 'var(--color-success)',
-                                        color: 'var(--color-text-inverse)'
-                                      }}
-                                    >
-                                      <CheckCircledIcon className="h-4 w-4" />
-                                      Active
+                               <span className="text-2xl font-bold">{level.order}</span>
+                          </div>
+                             
+                             {/* Level Info */}
+                             <div className="flex-1 min-w-0">
+                               <h3 className="text-xl font-bold mb-3" style={{ color: 'var(--color-text-primary)' }}>
+                                 {level.title}
+                               </h3>
+                               <p className="text-base leading-relaxed mb-4" style={{ color: 'var(--color-text-secondary)' }}>
+                                 {level.description}
+                               </p>
+                               
+                               {/* Badges Row */}
+                               <div className="flex items-center gap-3 mb-4">
+                                 <span 
+                                   className="px-3 py-1 rounded-lg text-xs font-medium"
+                            style={getDifficultyColor(level.difficulty)}
+                          >
+                            {level.difficulty}
+                                 </span>
+                        <span 
+                                   className={`px-3 py-1 rounded-lg text-xs font-medium ${getTrackColor(level.careerTrack)}`}
+                          style={{ color: 'var(--color-text-inverse)' }}
+                        >
+                          {getTrackLabel(level.careerTrack)}
+                        </span>
+                          <span 
+                                   className="px-3 py-1 rounded-lg text-xs font-medium"
+                                   style={{
+                                     backgroundColor: 'var(--color-accent-tertiary)',
+                                     color: 'var(--color-accent-primary)'
+                                   }}
+                                 >
+                                   {level.estimatedHours}h estimated
+                          </span>
+                        </div>
+                      </div>
+                        </div>
+                           
+                           {/* Status Badge */}
+                           <div className="flex items-center gap-2 flex-shrink-0">
+                          {level.isActive ? (
+                                                            <span 
+                               className="px-3 py-1 rounded-lg text-sm font-medium flex items-center gap-2"
+                               style={{
+                                 backgroundColor: 'var(--color-success)',
+                                 color: 'var(--color-text-inverse)'
+                               }}
+                             >
+                               <CheckCircledIcon className="h-4 w-4" />
+                              Active
                             </span>
                           ) : (
                                                             <span 

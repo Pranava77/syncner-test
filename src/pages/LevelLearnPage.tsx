@@ -419,13 +419,13 @@ const LevelLearnPage: React.FC = () => {
                       >
                         <span className="text-3xl font-bold">{level.order}</span>
                       </div>
-                      <div>
-                        <h1 
+                <div>
+                  <h1 
                           className="text-4xl font-bold mb-3"
-                          style={{ color: 'var(--color-text-primary)' }}
-                        >
+              style={{ color: 'var(--color-text-primary)' }}
+            >
                           {level.title}
-                        </h1>
+            </h1>
                         <p 
                           className="text-xl leading-relaxed"
                           style={{ color: 'var(--color-text-secondary)' }}
@@ -433,24 +433,24 @@ const LevelLearnPage: React.FC = () => {
                           {level.description}
                         </p>
                       </div>
-                    </div>
+                </div>
                     
                     {/* Skills and Prerequisites */}
                     <div className="flex flex-wrap gap-3 mb-4">
                       {level.skills?.slice(0, 3).map((skill, index) => (
-                        <span 
+                  <span 
                           key={index}
                           className="px-4 py-2 rounded-xl text-sm font-medium shadow-sm"
-                          style={{
+                    style={{
                             backgroundColor: 'var(--color-accent-primary)',
                             color: 'var(--color-text-inverse)'
-                          }}
-                        >
+                    }}
+                  >
                           {skill}
-                        </span>
+                  </span>
                       ))}
                       {level.skills && level.skills.length > 3 && (
-                        <span 
+                  <span 
                           className="px-4 py-2 rounded-xl text-sm font-medium shadow-sm"
                           style={{
                             backgroundColor: 'var(--color-tertiary-bg)',
@@ -478,8 +478,8 @@ const LevelLearnPage: React.FC = () => {
                     
                     <div 
                       className="px-6 py-4 rounded-2xl text-center shadow-lg"
-                      style={{
-                        backgroundColor: 'var(--color-accent-tertiary)',
+                    style={{
+                      backgroundColor: 'var(--color-accent-tertiary)',
                         color: 'var(--color-accent-primary)',
                         border: '2px solid var(--color-accent-primary)'
                       }}
@@ -526,11 +526,11 @@ const LevelLearnPage: React.FC = () => {
                     <ClockIcon className="h-6 w-6" />
                   </div>
                   <h2 
-                    className="text-xl font-bold"
-                    style={{ color: 'var(--color-text-primary)' }}
-                  >
-                    Learning Progress
-                  </h2>
+              className="text-xl font-bold"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              Learning Progress
+            </h2>
                 </div>
                 <div className="text-right">
                   <div 
@@ -591,20 +591,20 @@ const LevelLearnPage: React.FC = () => {
 
               {/* Learn Content Grid */}
               <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-1">
-                {level.learn.map((item, index) => (
+              {level.learn.map((item, index) => (
                   <motion.div 
-                    key={index}
+                  key={index}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1, duration: 0.3 }}
                     className="group relative rounded-2xl border shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer overflow-hidden"
-                    style={{
-                      backgroundColor: 'var(--color-surface)',
+                  style={{
+                    backgroundColor: 'var(--color-surface)',
                       borderColor: accessedLinks.includes(item.title) 
                         ? 'var(--color-success)' 
                         : 'var(--color-border)'
-                    }}
-                    onClick={() => handleLearningCardClick(item)}
+                  }}
+                  onClick={() => handleLearningCardClick(item)}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'translateY(-4px)';
                       e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
@@ -722,11 +722,11 @@ const LevelLearnPage: React.FC = () => {
                           ) : (
                             <div 
                               className="p-2 rounded-full transition-all duration-300 group-hover:scale-110"
-                              style={{
-                                backgroundColor: 'var(--color-accent-tertiary)',
-                                color: 'var(--color-accent-primary)'
-                              }}
-                            >
+                        style={{
+                          backgroundColor: 'var(--color-accent-tertiary)',
+                          color: 'var(--color-accent-primary)'
+                        }}
+                      >
                               <ChevronRightIcon className="h-5 w-5" />
                             </div>
                           )}
@@ -779,9 +779,9 @@ const LevelLearnPage: React.FC = () => {
                               style={{ color: 'var(--color-accent-primary)' }}
                             >
                               {item.externalLink}
-                            </p>
-                          </div>
-                        </div>
+                        </p>
+                      </div>
+                    </div>
                       )}
 
                       {/* Action Button */}
@@ -832,8 +832,8 @@ const LevelLearnPage: React.FC = () => {
                     </div>
                     <h3 
                       className="text-xl font-semibold mb-2"
-                      style={{ color: 'var(--color-text-primary)' }}
-                    >
+                        style={{ color: 'var(--color-text-primary)' }}
+                      >
                       No Learning Resources Available
                     </h3>
                     <p 
@@ -842,9 +842,9 @@ const LevelLearnPage: React.FC = () => {
                     >
                       This level doesn't have any learning resources yet. Check back later!
                     </p>
-                  </div>
-                )}
-              </div>
+                    </div>
+                  )}
+                </div>
             </div>
 
       
