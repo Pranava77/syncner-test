@@ -163,8 +163,9 @@ const AdminCurriculum: React.FC = () => {
     return map[track] || track;
   };
 
+  // Avoid fetching all tracks on initial mount to prevent flashing wrong track
   useEffect(() => {
-    fetchLevels();
+    // Intentionally no fetch here; we fetch after a track is selected
   }, []);
 
   const fetchLevels = async (track?: string) => {
@@ -172,6 +173,12 @@ const AdminCurriculum: React.FC = () => {
       setLoading(true);
       const chosenTrackRaw = track ?? selectedTrack ?? '';
       const chosenTrack = normalizeTrack(chosenTrackRaw);
+      // If no track selected, don't fetch to avoid initial flash of other tracks
+      if (!chosenTrack) {
+        setLevels([]);
+        setLoading(false);
+        return;
+      }
       const url = `/curriculum?grouped=true${chosenTrack ? `&careerTrack=${chosenTrack}` : ''}`;
       const response = await apiService.get(url);
       
@@ -885,6 +892,9 @@ const AdminCurriculum: React.FC = () => {
   const handleTrackSelect = (track: string) => {
     setSelectedTrack(track);
     setShowTrackSelection(false);
+    // Clear existing levels immediately to avoid showing previous track while loading
+    setLevels([]);
+    setLoading(true);
     fetchLevels(track);
   };
 
