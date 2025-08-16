@@ -203,50 +203,77 @@ const AdminCurriculum: React.FC = () => {
       
       contentItems.forEach((item: any) => {
         const levelKey = `${item.order}-${item.careerTrack}`;
-        const level = levelMap.get(levelKey);
-        
-        if (level) {
-          if (item.type === 'learn') {
-            level.learn.push({
-              id: item.id,
-              type: 'reading',
-              title: item.title,
-              content: item.content || '',
-              videoUrl: '',
-              order: item.order || 1
-            });
-          } else if (item.type === 'test') {
-            // Parse test content to extract question and options
-            const lines = (item.content || '').split('\n');
-            const question = lines[0] || item.title;
-            const options: string[] = [];
-            let answer = '';
-            
-            for (let i = 1; i < lines.length; i++) {
-              const line = lines[i].trim();
-              if (line.startsWith('A)') || line.startsWith('B)') || line.startsWith('C)') || line.startsWith('D)')) {
-                options.push(line.substring(2).trim());
-              } else if (line.startsWith('Answer:')) {
-                answer = line.split(':')[1]?.trim() || '';
-              }
+        let level = levelMap.get(levelKey);
+
+        // If there is no syllabus-created level yet, create a fallback level from the content item
+        if (!level) {
+          level = {
+            id: item.id || levelKey,
+            title: item.title,
+            description: item.description || item.content || '',
+            difficulty: item.difficulty || 'beginner',
+            duration: item.duration || '',
+            careerTrack: item.careerTrack,
+            skills: item.tags || [],
+            prerequisites: item.prerequisites || [],
+            readFirst: item.readFirst || {
+              brief: '',
+              whyLearn: '',
+              whereUsed: '',
+              customExample: ''
+            },
+            learn: [],
+            test: [],
+            exercise: [],
+            order: item.order || 1,
+            isActive: item.isActive !== false,
+            estimatedHours: item.estimatedDuration ? Math.ceil(item.estimatedDuration / 60) : 1,
+            createdAt: item.createdAt || new Date().toISOString(),
+            updatedAt: item.updatedAt || new Date().toISOString()
+          } as any;
+          levelMap.set(levelKey, level);
+        }
+
+        if (item.type === 'learn') {
+          level.learn.push({
+            id: item.id,
+            type: 'reading',
+            title: item.title,
+            content: item.content || '',
+            videoUrl: item.videoUrl || '',
+            order: item.order || 1
+          });
+        } else if (item.type === 'test') {
+          // Parse test content to extract question and options
+          const lines = (item.content || '').split('\n');
+          const question = lines[0] || item.title;
+          const options: string[] = [];
+          let answer = '';
+          
+          for (let i = 1; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (line.startsWith('A)') || line.startsWith('B)') || line.startsWith('C)') || line.startsWith('D)')) {
+              options.push(line.substring(2).trim());
+            } else if (line.startsWith('Answer:') || line.startsWith('Correct Answer:')) {
+              answer = line.split(':')[1]?.trim() || '';
             }
-            
-            level.test.push({
-              id: item.id,
-              question: question,
-              options: options,
-              answer: answer,
-              order: item.order || 1
-            });
-          } else if (item.type === 'exercise') {
-            level.exercise.push({
-              id: item.id,
-              title: item.title,
-              description: item.content || item.description || '',
-              resources: item.resources || [],
-              order: item.order || 1
-            });
           }
+          
+          level.test.push({
+            id: item.id,
+            question: question,
+            options: options,
+            answer: answer,
+            order: item.order || 1
+          });
+        } else if (item.type === 'exercise') {
+          level.exercise.push({
+            id: item.id,
+            title: item.title,
+            description: item.content || item.description || '',
+            resources: item.resources || [],
+            order: item.order || 1
+          });
         }
       });
       
