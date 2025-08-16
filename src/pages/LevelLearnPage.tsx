@@ -479,8 +479,8 @@ const LevelLearnPage: React.FC = () => {
                     <div 
                       className="px-6 py-4 rounded-2xl text-center shadow-lg"
                       style={{
-                        backgroundColor: 'var(--color-surface)',
-                        color: 'var(--color-text-primary)',
+                        backgroundColor: 'var(--color-accent-tertiary)',
+                        color: 'var(--color-accent-primary)',
                         border: '2px solid var(--color-accent-primary)'
                       }}
                     >
