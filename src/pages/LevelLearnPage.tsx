@@ -572,246 +572,82 @@ const LevelLearnPage: React.FC = () => {
             </div>
 
             {/* Learning Content */}
-            <div className="w-full max-w-5xl">
-              {/* Section Header */}
-              <div className="mb-6">
-                <h2 
-                  className="text-2xl font-bold mb-2"
-                  style={{ color: 'var(--color-text-primary)' }}
+            <div className="w-full max-w-5xl space-y-6">
+              {level.learn.map((item, index) => (
+                <div 
+                  key={index}
+                  className="rounded-xl border shadow-lg p-6 hover:shadow-xl transition-all duration-300 cursor-pointer"
+                  style={{
+                    backgroundColor: 'var(--color-surface)',
+                    borderColor: 'var(--color-border)'
+                  }}
+                  onClick={() => handleLearningCardClick(item)}
                 >
-                  Learning Resources
-                </h2>
-                <p 
-                  className="text-lg"
-                  style={{ color: 'var(--color-text-tertiary)' }}
-                >
-                  Click on any resource to start learning. Track your progress as you explore each topic.
-                </p>
-              </div>
-
-              {/* Learn Content Grid */}
-              <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-1">
-                {level.learn.map((item, index) => (
-                  <motion.div 
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1, duration: 0.3 }}
-                    className="group relative rounded-2xl border shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer overflow-hidden"
-                    style={{
-                      backgroundColor: 'var(--color-surface)',
-                      borderColor: accessedLinks.includes(item.title) 
-                        ? 'var(--color-success)' 
-                        : 'var(--color-border)'
-                    }}
-                    onClick={() => handleLearningCardClick(item)}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-4px)';
-                      e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.borderColor = accessedLinks.includes(item.title) 
-                        ? 'var(--color-success)' 
-                        : 'var(--color-border)';
-                    }}
-                  >
-                    {/* Progress Indicator */}
-                    {accessedLinks.includes(item.title) && (
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-3">
                       <div 
-                        className="absolute top-0 left-0 w-full h-1"
-                        style={{ backgroundColor: 'var(--color-success)' }}
-                      />
-                    )}
-
-                    {/* Card Content */}
-                    <div className="p-6">
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex items-start gap-4">
-                          {/* Icon Container */}
-                          <div 
-                            className={`w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-300 ${
-                              accessedLinks.includes(item.title) 
-                                ? 'scale-110' 
-                                : 'group-hover:scale-105'
-                            }`}
-                            style={{
-                              backgroundColor: accessedLinks.includes(item.title)
-                                ? 'var(--color-success)'
-                                : 'var(--color-accent-tertiary)',
-                              color: accessedLinks.includes(item.title)
-                                ? 'var(--color-text-inverse)'
-                                : 'var(--color-accent-primary)'
-                            }}
-                          >
-                            {accessedLinks.includes(item.title) ? (
-                              <CheckCircledIcon className="h-6 w-6" />
-                            ) : (
-                              <ReaderIcon className="h-6 w-6" />
-                            )}
-                          </div>
-
-                          {/* Content Info */}
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-3 mb-2">
-                              <h3 
-                                className="text-xl font-bold truncate"
-                                style={{ color: 'var(--color-text-primary)' }}
-                              >
-                                {item.title}
-                              </h3>
-                              {accessedLinks.includes(item.title) && (
-                                <span 
-                                  className="px-2 py-1 rounded-full text-xs font-semibold"
-                                  style={{
-                                    backgroundColor: 'var(--color-success)',
-                                    color: 'var(--color-text-inverse)'
-                                  }}
-                                >
-                                  Completed
-                                </span>
-                              )}
-                            </div>
-                            
-                            {/* Order Badge */}
-                            <div className="flex items-center gap-2 mb-3">
-                              <span 
-                                className="px-2 py-1 rounded-md text-xs font-medium"
-                                style={{
-                                  backgroundColor: 'var(--color-tertiary-bg)',
-                                  color: 'var(--color-text-secondary)'
-                                }}
-                              >
-                                Resource #{item.order}
-                              </span>
-                              {item.externalLink && (
-                                <span 
-                                  className="px-2 py-1 rounded-md text-xs font-medium"
-                                  style={{
-                                    backgroundColor: 'var(--color-accent-tertiary)',
-                                    color: 'var(--color-accent-primary)'
-                                  }}
-                                >
-                                  External Link
-                                </span>
-                              )}
-                            </div>
-
-                            {/* Content Preview */}
-                            <p 
-                              className="text-base leading-relaxed line-clamp-3"
-                              style={{ color: 'var(--color-text-secondary)' }}
-                            >
-                              {item.content}
-                            </p>
-                          </div>
-                        </div>
-
-                        {/* Action Indicators */}
-                        <div className="flex items-center gap-3">
-                          {accessedLinks.includes(item.title) ? (
-                            <div 
-                              className="p-2 rounded-full"
-                              style={{
-                                backgroundColor: 'var(--color-success)',
-                                color: 'var(--color-text-inverse)'
-                              }}
-                            >
-                              <CheckCircledIcon className="h-5 w-5" />
-                            </div>
-                          ) : (
-                            <div 
-                              className="p-2 rounded-full transition-all duration-300 group-hover:scale-110"
-                              style={{
-                                backgroundColor: 'var(--color-accent-tertiary)',
-                                color: 'var(--color-accent-primary)'
-                              }}
-                            >
-                              <ChevronRightIcon className="h-5 w-5" />
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* External Link Section */}
-                      {item.externalLink && (
-                        <div 
-                          className="mt-6 pt-4 border-t"
-                          style={{ borderColor: 'var(--color-border-subtle)' }}
-                        >
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <span 
-                                className="text-sm font-medium"
-                                style={{ color: 'var(--color-text-secondary)' }}
-                              >
-                                External Resource:
-                              </span>
-                            </div>
-                            <a 
-                              href={item.externalLink}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105"
-                              style={{
-                                backgroundColor: 'var(--color-accent-primary)',
-                                color: 'var(--color-text-inverse)'
-                              }}
-                              onClick={(e) => e.stopPropagation()}
-                              onMouseEnter={(e) => {
-                                e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
-                              }}
-                              onMouseLeave={(e) => {
-                                e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
-                              }}
-                            >
-                              <span>Open Resource</span>
-                              <ExternalLinkIcon className="h-4 w-4" />
-                            </a>
-                          </div>
-                          
-                          {/* Link Preview */}
-                          <div className="mt-3 p-3 rounded-lg bg-opacity-50"
-                            style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
-                          >
-                            <p 
-                              className="text-sm break-all font-mono"
-                              style={{ color: 'var(--color-accent-primary)' }}
-                            >
-                              {item.externalLink}
-                            </p>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Action Button */}
-                      <div className="mt-6 pt-4 border-t"
-                        style={{ borderColor: 'var(--color-border-subtle)' }}
+                        className="w-12 h-12 rounded-lg flex items-center justify-center mr-4"
+                        style={{
+                          backgroundColor: 'var(--color-accent-tertiary)',
+                          color: 'var(--color-accent-primary)'
+                        }}
                       >
-                        <button 
-                          className={`w-full py-3 px-6 rounded-xl font-semibold transition-all duration-200 ${
-                            accessedLinks.includes(item.title)
-                              ? 'cursor-default'
-                              : 'hover:scale-105'
-                          }`}
-                          style={{
-                            backgroundColor: accessedLinks.includes(item.title)
-                              ? 'var(--color-success)'
-                              : 'var(--color-accent-primary)',
-                            color: 'var(--color-text-inverse)'
-                          }}
-                          disabled={accessedLinks.includes(item.title)}
+                        <ReaderIcon className="h-4 w-4" />
+                      </div>
+                      <div>
+                        <h3 
+                          className="text-lg font-semibold mb-1"
+                          style={{ color: 'var(--color-text-primary)' }}
                         >
-                          {accessedLinks.includes(item.title) 
-                            ? '✓ Resource Completed' 
-                            : 'Start Learning'
-                          }
-                        </button>
+                          {item.title}
+                        </h3>
+                        <p 
+                          className="text-sm"
+                          style={{ color: 'var(--color-text-tertiary)' }}
+                        >
+                          Order: {item.order}
+                        </p>
                       </div>
                     </div>
-                  </motion.div>
-                ))}
-              </div>
+                    <div className="flex items-center gap-2">
+                      {accessedLinks.includes(item.title) && (
+                        <CheckCircledIcon 
+                          className="h-5 w-5" 
+                          style={{ color: 'var(--color-success)' }}
+                        />
+                      )}
+                      <ChevronRightIcon 
+                        className="h-4 w-4" 
+                        style={{ color: 'var(--color-text-tertiary)' }}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div 
+                    className="text-sm line-clamp-3"
+                    style={{ color: 'var(--color-text-tertiary)' }}
+                  >
+                    {item.content}
+                  </div>
+                  
+                  {item.externalLink && (
+                    <div 
+                      className="mt-4 pt-4 border-t"
+                      style={{ borderColor: 'var(--color-border-subtle)' }}
+                    >
+                      <a 
+                        href={item.externalLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm font-semibold text-blue-600 hover:text-blue-800 hover:underline break-all"
+                        title={item.externalLink}
+                      >
+                        🔗 {item.externalLink}
+                      </a>
+                    </div>
+                  )}
+                </div>
+              ))}
 
               {/* Empty State */}
               {level.learn.length === 0 && (
