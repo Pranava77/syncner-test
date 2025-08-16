@@ -478,7 +478,7 @@ const AdminCurriculum: React.FC = () => {
           
           if (itemToDelete?.id) {
             // Fast path: backend now supplies id on grouped content
-            await apiService.delete(`/curriculum/${itemToDelete.id}`);
+            await apiService.delete(`/curriculum/content/${itemToDelete.id}`);
           } else {
             // Fallback: resolve by (careerTrack + order + type + index)
             const response = await apiService.get('/curriculum?grouped=false');
@@ -496,7 +496,7 @@ const AdminCurriculum: React.FC = () => {
               });
             const fallbackItem = levelItems[index];
             if (fallbackItem?.id) {
-              await apiService.delete(`/curriculum/${fallbackItem.id}`);
+              await apiService.delete(`/curriculum/content/${fallbackItem.id}`);
             }
           }
         }
@@ -504,6 +504,15 @@ const AdminCurriculum: React.FC = () => {
         
         // Clear the student training cache to ensure changes are reflected
         dispatch(clearCache());
+        
+        // Dispatch events to notify other components of curriculum changes
+        window.dispatchEvent(new CustomEvent('curriculum-changed', {
+          detail: { track: selectedTrack }
+        }));
+        
+        window.dispatchEvent(new CustomEvent('levels-refresh-required', {
+          detail: { track: selectedTrack }
+        }));
         
         showSuccessMessage('Content deleted successfully');
       } catch (error: any) {
@@ -524,16 +533,28 @@ const AdminCurriculum: React.FC = () => {
 
     // Validate content based on type
     const contentType = editingContent?.type || 'learn';
-    if (contentType === 'learn' && !contentForm.content) {
-      setFormError('Content is required for learn items');
-      return;
-    } else if (contentType === 'test' && !contentForm.question) {
-      setFormError('Question is required for test items');
-      return;
-    } else if (contentType === 'exercise' && !contentForm.description) {
-      setFormError('Description is required for exercise items');
-      return;
-    }
+            if (contentType === 'learn' && !contentForm.content) {
+          setFormError('Content is required for learn items');
+          return;
+        } else if (contentType === 'test' && !contentForm.question) {
+          setFormError('Question is required for test items');
+          return;
+        } else if (contentType === 'exercise' && !contentForm.description) {
+          setFormError('Description is required for exercise items');
+          return;
+        }
+        
+        // Validate content length for backend requirements
+        if (contentType === 'learn' && contentForm.content && contentForm.content.length < 10) {
+          setFormError('Content must be at least 10 characters long');
+          return;
+        } else if (contentType === 'test' && contentForm.question && contentForm.question.length < 10) {
+          setFormError('Question must be at least 10 characters long');
+          return;
+        } else if (contentType === 'exercise' && contentForm.description && contentForm.description.length < 10) {
+          setFormError('Description must be at least 10 characters long');
+          return;
+        }
 
     setIsSubmitting(true);
     setError(null);
@@ -578,7 +599,7 @@ const AdminCurriculum: React.FC = () => {
             updateData.description = contentForm.title.length >= 10 ? contentForm.title : 
               `${contentForm.title} - ${contentForm.content.substring(0, Math.max(0, 10 - contentForm.title.length))}`;
           } else if (contentType === 'test') {
-            // Format test content
+            // Format test content - ensure it meets minimum length requirement
             let formattedContent = contentForm.question;
             if (contentForm.options && contentForm.options.length > 0) {
               formattedContent += '\n' + contentForm.options.map((opt: string, idx: number) => 
@@ -588,6 +609,12 @@ const AdminCurriculum: React.FC = () => {
             if (contentForm.answer) {
               formattedContent += `\nAnswer: ${contentForm.answer}`;
             }
+            
+            // If content is still too short, pad it with additional information
+            if (formattedContent.length < 10) {
+              formattedContent += `\nThis test covers ${contentForm.title} and includes multiple choice questions.`;
+            }
+            
             updateData.content = formattedContent;
             // Ensure description meets minimum length requirement (10 chars)
             updateData.description = contentForm.title.length >= 10 ? contentForm.title : 
@@ -600,7 +627,8 @@ const AdminCurriculum: React.FC = () => {
               `${contentForm.title} - ${contentForm.description.substring(0, Math.max(0, 10 - contentForm.title.length))}`;
           }
 
-          await apiService.put(`/curriculum/${itemToUpdate.id}`, updateData);
+          const updateRes = await apiService.put(`/curriculum/content/${itemToUpdate.id}`, updateData);
+          console.log('Content update response:', updateRes);
 
           // Optimistic UI update: reflect edited content immediately
           setLevels((prev: any[]) => prev.map((lvl: any) => {
@@ -663,7 +691,7 @@ const AdminCurriculum: React.FC = () => {
           newContentData.description = contentForm.title.length >= 10 ? contentForm.title : 
             `${contentForm.title} - ${contentForm.content.substring(0, Math.max(0, 10 - contentForm.title.length))}`;
         } else if (contentType === 'test') {
-          // Format test content
+          // Format test content - ensure it meets minimum length requirement
           let formattedContent = contentForm.question;
           if (contentForm.options && contentForm.options.length > 0) {
             formattedContent += '\n' + contentForm.options.map((opt: string, idx: number) => 
@@ -673,6 +701,12 @@ const AdminCurriculum: React.FC = () => {
           if (contentForm.answer) {
             formattedContent += `\nAnswer: ${contentForm.answer}`;
           }
+          
+          // If content is still too short, pad it with additional information
+          if (formattedContent.length < 10) {
+            formattedContent += `\nThis test covers ${contentForm.title} and includes multiple choice questions.`;
+          }
+          
           newContentData.content = formattedContent;
           // Ensure description meets minimum length requirement (10 chars)
           newContentData.description = contentForm.title.length >= 10 ? contentForm.title : 
@@ -685,10 +719,19 @@ const AdminCurriculum: React.FC = () => {
             `${contentForm.title} - ${contentForm.description.substring(0, Math.max(0, 10 - contentForm.title.length))}`;
         }
 
-        const createRes = await apiService.post('/curriculum', newContentData);
+        const createRes = await apiService.post('/curriculum/content', newContentData);
+        
+        console.log('Content creation response:', createRes);
 
-        // Optimistic UI update: append new content immediately
-        const newId = createRes?.data?.id || createRes?.id;
+        // Get the new item ID from the response
+        const newId = createRes?.data?.id || createRes?.data?._id || createRes?.id;
+        
+        if (!newId) {
+          console.error('No ID returned from content creation:', createRes);
+          throw new Error('Failed to get ID for newly created content');
+        }
+        
+        console.log('New content created with ID:', newId);
         setLevels((prev: any[]) => prev.map((lvl: any) => {
           if (lvl.id !== editingLevel.id) return lvl;
           const updated = { ...lvl };
@@ -743,13 +786,27 @@ const AdminCurriculum: React.FC = () => {
       // Small delay to allow DB write to be fully visible, then refetch targeted track
       setIsRefetching(true);
       setRefetchMessage('Finalizing changes...');
-      await new Promise(res => setTimeout(res, 250));
+      await new Promise(res => setTimeout(res, 1000)); // Increased delay for better reliability
       await fetchLevels(editingLevel?.careerTrack || selectedTrack || undefined);
       setIsRefetching(false);
       setRefetchMessage(null);
       
       // Clear the student training cache to ensure changes are reflected
       dispatch(clearCache());
+      
+      // Dispatch events to notify other components of curriculum changes
+      window.dispatchEvent(new CustomEvent('curriculum-changed', {
+        detail: { track: editingLevel?.careerTrack || selectedTrack }
+      }));
+      
+      window.dispatchEvent(new CustomEvent('levels-refresh-required', {
+        detail: { track: editingLevel?.careerTrack || selectedTrack }
+      }));
+      
+      // Force refresh the levels to ensure all changes are visible
+      setTimeout(() => {
+        fetchLevels(editingLevel?.careerTrack || selectedTrack || undefined);
+      }, 500);
       
       showSuccessMessage('Content saved successfully');
     } catch (error: any) {

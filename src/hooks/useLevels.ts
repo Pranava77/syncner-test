@@ -120,6 +120,45 @@ export const useLevels = (trackId?: string) => {
     return () => clearInterval(intervalId);
   }, [fetchLevels, trackId, loading, isCacheValid, levelsWithStatus.length, refetch]);
 
+  // Listen for curriculum changes from admin
+  useEffect(() => {
+    const handleCurriculumChange = (event: CustomEvent) => {
+      console.log('useLevels: Curriculum change detected:', event.detail);
+      if (event.detail.track === trackId) {
+        console.log('useLevels: Refreshing levels due to curriculum change in admin');
+        // Force immediate refresh when admin makes changes
+        forceRefresh();
+      }
+    };
+    
+    const handleLevelsRefreshRequired = (event: CustomEvent) => {
+      console.log('useLevels: Immediate refresh required:', event.detail);
+      if (event.detail.track === trackId) {
+        console.log('useLevels: Force refreshing levels due to immediate refresh requirement');
+        // Force immediate refresh using the enhanced function
+        setTimeout(() => forceRefresh(), 100);
+      }
+    };
+    
+    // Listen for storage changes (when admin clears cache)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'curriculum-cache-cleared' || e.key === 'level-progress-updated') {
+        console.log('useLevels: Storage change detected, refreshing levels');
+        forceRefresh();
+      }
+    };
+    
+    window.addEventListener('curriculum-changed', handleCurriculumChange as EventListener);
+    window.addEventListener('levels-refresh-required', handleLevelsRefreshRequired as EventListener);
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('curriculum-changed', handleCurriculumChange as EventListener);
+      window.removeEventListener('levels-refresh-required', handleLevelsRefreshRequired as EventListener);
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [forceRefresh, trackId]);
+
   // Filter levels for the specific track
   const filteredLevels = useMemo(() => {
     if (!trackId) return [];
