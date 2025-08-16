@@ -181,21 +181,21 @@ const AdminCurriculum: React.FC = () => {
   const [showLevelModal, setShowLevelModal] = useState(false);
   const [editingLevel, setEditingLevel] = useState<EditingLevel | null>(null);
   const [levelForm, setLevelForm] = useState<LevelForm>({
-    title: '',
-    description: '',
-    difficulty: 'beginner',
-    duration: '',
-    careerTrack: 'full-stack',
-    skills: [],
-    prerequisites: [],
-    estimatedHours: 1,
-    isActive: true,
-    readFirst: {
-      brief: '',
-      whyLearn: '',
-      whereUsed: '',
-      customExample: ''
-    }
+  title: '',
+  description: '',
+  difficulty: 'beginner',
+  duration: '',
+  careerTrack: 'full-stack',
+  skills: [],
+  prerequisites: [],
+  estimatedHours: 1,
+  isActive: true,
+  readFirst: {
+    brief: '',
+    whyLearn: '',
+    whereUsed: '',
+    customExample: ''
+  }
   });
   const [isSubmittingLevel, setIsSubmittingLevel] = useState(false);
   const [formError, setFormError] = useState('');
@@ -302,11 +302,11 @@ const AdminCurriculum: React.FC = () => {
         const response = await apiService.put(`/curriculum/${editingLevel.id}`, formData);
         
         if (response.success) {
-          dispatch(clearCache());
+        dispatch(clearCache());
           window.dispatchEvent(new CustomEvent('curriculum-changed', { detail: { type: 'level-updated' } }));
           window.dispatchEvent(new CustomEvent('levels-refresh-required'));
           setShowLevelModal(false);
-          showSuccessMessage('Level updated successfully');
+        showSuccessMessage('Level updated successfully');
         } else {
           setFormError(response.message || 'Failed to update level');
         }
@@ -325,7 +325,7 @@ const AdminCurriculum: React.FC = () => {
           window.dispatchEvent(new CustomEvent('curriculum-changed', { detail: { type: 'level-created' } }));
           window.dispatchEvent(new CustomEvent('levels-refresh-required'));
           setShowLevelModal(false);
-          showSuccessMessage('Level created successfully');
+        showSuccessMessage('Level created successfully');
         } else {
           setFormError(response.message || 'Failed to create level');
         }
@@ -349,7 +349,7 @@ const AdminCurriculum: React.FC = () => {
           window.dispatchEvent(new CustomEvent('curriculum-changed', { detail: { type: 'level-deleted' } }));
           window.dispatchEvent(new CustomEvent('levels-refresh-required'));
           showSuccessMessage('Level deleted successfully');
-        } else {
+          } else {
           setError(response.message || 'Failed to delete level');
         }
       } catch (error) {
@@ -448,30 +448,30 @@ const AdminCurriculum: React.FC = () => {
                     >
                       Manage training levels and content for {getTrackLabel(selectedTrack || '')} curriculum
                     </p>
-                  </div>
+                    </div>
 
                   <div className="flex items-center gap-4">
-                    <button
+                  <button
                       onClick={handleCreateLevel}
                       className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 hover:scale-105"
-                      style={{
-                        backgroundColor: 'var(--color-accent-primary)',
-                        color: 'var(--color-text-inverse)'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
-                      }}
-                    >
-                      <PlusIcon className="h-5 w-5" style={{ color: 'var(--color-text-inverse)' }} />
-                      Create Level
-                    </button>
-                  </div>
+                    style={{ 
+                      backgroundColor: 'var(--color-accent-primary)',
+                      color: 'var(--color-text-inverse)' 
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                    }}
+                  >
+                    <PlusIcon className="h-5 w-5" style={{ color: 'var(--color-text-inverse)' }} />
+                    Create Level
+                  </button>
                 </div>
               </div>
-
+                  </div>
+                  
               {/* Search and Filters */}
               <SearchAndFilters
                 searchTerm={searchTerm}
@@ -511,26 +511,26 @@ const AdminCurriculum: React.FC = () => {
                   >
                     Create your first training level for this track
                   </p>
-                  <button 
+                    <button 
                     onClick={handleCreateLevel}
-                    className="mt-4 px-4 py-2 rounded-lg transition-colors text-sm"
-                    style={{ 
-                      backgroundColor: 'var(--color-accent-primary)',
-                      color: 'var(--color-text-inverse)' 
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
-                    }}
-                  >
+                      className="mt-4 px-4 py-2 rounded-lg transition-colors text-sm"
+                      style={{ 
+                        backgroundColor: 'var(--color-accent-primary)',
+                        color: 'var(--color-text-inverse)' 
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                      }}
+                    >
                     Create Level
-                  </button>
+                    </button>
                 </div>
               ) : (
                 <div className="space-y-6">
-                  {filteredLevels.map((level, index) => (
+                    {filteredLevels.map((level, index) => (
                     <LevelCard
                       key={level.id}
                       level={level}
