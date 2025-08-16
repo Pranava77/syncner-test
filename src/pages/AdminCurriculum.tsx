@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
+import {
   PlusIcon, 
   Pencil1Icon as EditIcon, 
   TrashIcon, 
@@ -21,7 +21,8 @@ import {
   RocketIcon,
   ImageIcon,
   BarChartIcon,
-  ExternalLinkIcon
+  ExternalLinkIcon,
+  MagnifyingGlassIcon
 } from '@radix-ui/react-icons';
 import apiService from '../services/api';
 import syncnerLogo from '../assets/syncner-logo.png';
@@ -135,7 +136,21 @@ const AdminCurriculum: React.FC = () => {
   const [editingLevel, setEditingLevel] = useState<Level | null>(null);
   const [editingContent, setEditingContent] = useState<{ type: 'learn' | 'test' | 'exercise', item: any, index: number } | null>(null);
   const [levelForm, setLevelForm] = useState<LevelForm>(defaultLevelForm);
-  const [contentForm, setContentForm] = useState<any>({});
+  
+  // Default content form structure
+  const defaultContentForm = {
+    title: '',
+    order: 1,
+    content: '',
+    externalLink: '',
+    question: '',
+    options: [],
+    answer: '',
+    description: '',
+    resources: []
+  };
+  
+  const [contentForm, setContentForm] = useState<any>(defaultContentForm);
   const [formError, setFormError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterTrack, setFilterTrack] = useState<string>('all');
@@ -481,17 +496,8 @@ const AdminCurriculum: React.FC = () => {
     setEditingContent({ type, item: null, index: -1 });
     // Ensure careerTrack is normalized for new content creation
     setEditingLevel({ ...level, careerTrack: normalizeTrack(level.careerTrack) } as Level);
-    setContentForm({
-      title: '',
-      order: 1,
-      content: '',
-      externalLink: '',
-      question: '',
-      options: [],
-      answer: '',
-      description: '',
-      resources: []
-    });
+    // Reset to default content form structure
+    setContentForm({ ...defaultContentForm });
     setShowContentModal(true);
     setFormError('');
   };
@@ -823,20 +829,22 @@ const AdminCurriculum: React.FC = () => {
 
         // Optimistic UI update: append new content immediately
         const newId = createRes?.data?.id || createRes?.id;
+        
         setLevels((prev: any[]) => prev.map((lvl: any) => {
           if (lvl.id !== editingLevel.id) return lvl;
           const updated = { ...lvl };
           if (contentType === 'learn') {
+            const newLearnItem = {
+              id: newId,
+              type: 'learn',
+              title: contentForm.title,
+              content: contentForm.content,
+              externalLink: contentForm.externalLink || '',
+              order: updated.order,
+            };
             updated.learn = [
               ...(updated.learn || []),
-              {
-                id: newId,
-                type: 'learn',
-                title: contentForm.title,
-                content: contentForm.content,
-                externalLink: contentForm.externalLink || '',
-                order: updated.order,
-              }
+              newLearnItem
             ];
             updated.learnExpanded = true;
           } else if (contentType === 'test') {
@@ -971,6 +979,20 @@ const AdminCurriculum: React.FC = () => {
   const showSuccessMessage = (message: string) => {
     setSuccessMessage(message);
     setTimeout(() => setSuccessMessage(null), 3000);
+  };
+
+  // Reset content form to default state
+  const resetContentForm = () => {
+    setContentForm({ ...defaultContentForm });
+    setEditingContent(null);
+    setEditingLevel(null);
+    setFormError('');
+  };
+
+  // Close content modal and reset form
+  const handleCloseContentModal = () => {
+    setShowContentModal(false);
+    resetContentForm();
   };
 
   if (loading && levels.length === 0) {
@@ -3018,17 +3040,10 @@ const AdminCurriculum: React.FC = () => {
                   {editingContent ? `Edit ${editingContent.type}` : `Add Content`}
                 </h2>
                 <button
-                  onClick={() => setShowContentModal(false)}
-                  className="p-2 transition-colors"
-                  style={{ color: 'var(--color-text-tertiary)' }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color = 'var(--color-text-primary)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color = 'var(--color-text-tertiary)';
-                  }}
+                  onClick={handleCloseContentModal}
+                  className="text-gray-400 hover:text-gray-600 transition-colors"
                 >
-                  <Cross1Icon className="h-5 w-5" />
+                  <Cross1Icon className="h-6 w-6" />
                 </button>
               </div>
 
@@ -3095,7 +3110,9 @@ const AdminCurriculum: React.FC = () => {
                     <input
                       type="url"
                       value={contentForm.externalLink || ''}
-                      onChange={(e) => setContentForm({ ...contentForm, externalLink: e.target.value })}
+                      onChange={(e) => {
+                        setContentForm({ ...contentForm, externalLink: e.target.value });
+                      }}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none"
                       style={{
                         backgroundColor: 'var(--color-secondary-bg)',
@@ -3314,7 +3331,7 @@ Option 3"
                   </button>
                   <button
                     type="button"
-                    onClick={() => setShowContentModal(false)}
+                    onClick={handleCloseContentModal}
                     className="px-4 py-2 border rounded-lg transition-colors"
                     style={{
                       borderColor: 'var(--color-border)',
