@@ -17,8 +17,9 @@ interface ContentForm {
 
 interface EditingContent {
   type: 'learn' | 'test' | 'exercise';
-  item: any;
-  index: number;
+  item: any | null;
+  index: number; // -1 means creating new
+  level?: any | null;
 }
 
 export const useContentManagement = () => {
@@ -86,14 +87,15 @@ export const useContentManagement = () => {
   // Handle add content
   const handleAddContent = useCallback((type: 'learn' | 'test' | 'exercise', level: any) => {
     const defaultForm = getDefaultContentForm(type);
-    setContentForm({ ...defaultForm, order: (level[type]?.length || 0) + 1 });
-    setEditingContent({ type, item: { levelId: level.id }, index: -1 });
+    // Backend groups by level order, so content order must equal level.order
+    setContentForm({ ...defaultForm, order: level.order });
+    setEditingContent({ type, item: null, index: -1, level });
     setShowContentModal(true);
   }, []);
 
   // Handle edit content
   const handleEditContent = useCallback((type: 'learn' | 'test' | 'exercise', item: any, index: number, level: any) => {
-    setEditingContent({ type, item, index });
+    setEditingContent({ type, item, index, level });
     
     // Parse the content for test items
     if (type === 'test') {
@@ -143,19 +145,36 @@ export const useContentManagement = () => {
       setContentFormError('');
 
       const contentType = editingContent?.type || 'learn';
-      const level = editingContent?.item ? editingContent.item : null;
 
-      if (editingContent && editingContent.index >= 0 && level) {
-        // Update existing content
-        const updateData = {
-          ...formData,
+      // Update existing content (we must have content item id)
+      if (editingContent && editingContent.index >= 0 && editingContent.item && editingContent.item.id) {
+        const contentId = editingContent.item.id as string;
+
+        // Build update payload. For exercise, allow description/resources; for learn, include externalLink
+        const updateData: any = {
+          title: formData.title,
+          content: formData.content,
+          order: formData.order,
           type: contentType,
-          levelId: level.id,
-          action: 'updateContent',
-          contentIndex: editingContent.index
         };
+        if (contentType === 'learn') {
+          updateData.externalLink = formData.externalLink || '';
+          // Ensure content is non-empty to satisfy validation downstream if used
+          if (!updateData.content || updateData.content.trim().length < 10) {
+            const fallback = formData.title || formData.externalLink || 'Learning resource link';
+            updateData.content = `${fallback} - learning resource`;
+          }
+        } else if (contentType === 'exercise') {
+          updateData.description = formData.description || '';
+          updateData.resources = formData.resources || [];
+          if (!updateData.content || updateData.content.trim().length < 10) {
+            updateData.content = (updateData.description && updateData.description.length >= 10)
+              ? updateData.description
+              : `${formData.title || 'Exercise'} details`;
+          }
+        }
 
-        const response = await apiService.put(`/curriculum/${level.id}`, updateData);
+        const response = await apiService.updateCurriculumItem(contentId, updateData);
         
         if (response.success) {
           dispatch(clearCache());
@@ -169,15 +188,37 @@ export const useContentManagement = () => {
           return { success: false, message: response.message || 'Failed to update content' };
         }
       } else {
-        // Create new content
-        const newContentData = {
-          ...formData,
+        // Create new content using generic curriculum item creation endpoint
+        const level = editingContent?.level;
+        const newData: any = {
+          title: formData.title,
           type: contentType,
-          levelId: level?.id,
-          action: 'addContent'
+          order: level?.order,
+          careerTrack: level?.careerTrack,
+          // difficulty can be inherited from level if present
+          difficulty: level?.difficulty || 'beginner',
         };
 
-        const response = await apiService.createCurriculumItem(newContentData);
+        // Build content/body fields per type
+        if (contentType === 'learn') {
+          newData.externalLink = formData.externalLink || '';
+          newData.content = (formData.content && formData.content.trim().length >= 10)
+            ? formData.content
+            : `${formData.title || formData.externalLink || 'Learning resource'} - details inside`;
+        } else if (contentType === 'test') {
+          // ContentModal already formats content with question + A-D)
+          newData.content = formData.content;
+        } else if (contentType === 'exercise') {
+          newData.description = formData.description || '';
+          newData.resources = formData.resources || [];
+          newData.content = (formData.content && formData.content.trim().length >= 10)
+            ? formData.content
+            : (newData.description && newData.description.length >= 10)
+              ? newData.description
+              : `${formData.title || 'Exercise'} details`;
+        }
+
+        const response = await apiService.createCurriculumItem(newData);
         
         if (response.success) {
           dispatch(clearCache());
@@ -202,16 +243,9 @@ export const useContentManagement = () => {
   }, [editingContent, dispatch, resetContentForm]);
 
   // Handle delete content
-  const handleDeleteContent = useCallback(async (levelId: string, type: 'learn' | 'test' | 'exercise', index: number) => {
+  const handleDeleteContent = useCallback(async (contentId: string) => {
     try {
-      // For content deletion, we need to update the level by removing the content item
-      // This should be handled by updating the level with the content array minus the deleted item
-      // For now, we'll use a PUT request to update the level
-      const response = await apiService.put(`/curriculum/${levelId}`, {
-        action: 'deleteContent',
-        contentType: type,
-        contentIndex: index
-      });
+      const response = await apiService.deleteCurriculumItem(contentId);
       
       if (response.success) {
         dispatch(clearCache());

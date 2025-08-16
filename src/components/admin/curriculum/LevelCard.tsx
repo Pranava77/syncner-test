@@ -6,13 +6,9 @@ import {
   TrashIcon,
   ChevronUpIcon,
   ChevronDownIcon,
-  FileTextIcon,
   ReaderIcon as BookOpenIcon,
   ClipboardIcon,
   PlayIcon,
-  LayersIcon,
-  StarIcon,
-  ClockIcon,
   CheckCircledIcon,
   Cross1Icon,
   ChevronRightIcon
@@ -48,7 +44,7 @@ interface LevelCardProps {
   onDeleteLevel: (id: string) => void;
   onAddContent: (type: 'learn' | 'test' | 'exercise', level: Level) => void;
   onEditContent: (type: 'learn' | 'test' | 'exercise', item: any, index: number, level: Level) => void;
-  onDeleteContent: (levelId: string, type: 'learn' | 'test' | 'exercise', index: number) => void;
+  onDeleteContent: (contentId: string) => void;
   onToggleContentExpansion: (levelId: string, type: 'learn' | 'test' | 'exercise') => void;
   onMoveLevelUp: (track: string, currentOrder: number, targetOrder: number) => void;
   onMoveLevelDown: (track: string, currentOrder: number, targetOrder: number) => void;
@@ -98,7 +94,7 @@ const LevelCard: React.FC<LevelCardProps> = ({
   };
 
   const trackLevels = [level]; // This would need to be passed from parent
-  const maxOrder = Math.max(...trackLevels.map((l: any) => l.order));
+  // const maxOrder = Math.max(...trackLevels.map((l: any) => l.order));
 
   return (
     <motion.div
@@ -606,7 +602,7 @@ const LevelCard: React.FC<LevelCardProps> = ({
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            onDeleteContent(level.id, 'learn', idx);
+                            onDeleteContent(item.id);
                           }}
                           className="p-2 rounded-lg transition-all duration-200 hover:scale-105"
                           title="Delete"
@@ -791,7 +787,7 @@ const LevelCard: React.FC<LevelCardProps> = ({
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            onDeleteContent(level.id, 'test', idx);
+                            onDeleteContent(item.id);
                           }}
                           className="p-2 rounded-lg transition-all duration-200 hover:scale-105"
                           title="Delete"
@@ -976,7 +972,7 @@ const LevelCard: React.FC<LevelCardProps> = ({
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            onDeleteContent(level.id, 'exercise', idx);
+                            onDeleteContent(item.id);
                           }}
                           className="p-2 rounded-lg transition-all duration-200 hover:scale-105"
                           title="Delete"

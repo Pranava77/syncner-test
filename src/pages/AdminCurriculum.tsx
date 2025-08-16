@@ -571,7 +571,7 @@ const AdminCurriculum: React.FC = () => {
         editingContent={editingContent}
         isSubmitting={isSubmittingContent}
         formError={contentFormError}
-        level={editingContent ? levels.find(l => l.id === editingContent.item?.levelId) || null : null}
+        level={editingContent?.level || (editingContent?.item?.levelId ? levels.find(l => l.id === editingContent.item?.levelId) || null : null)}
       />
     </div>
   );
