@@ -594,29 +594,45 @@ const AdminCurriculum: React.FC = () => {
 
   const handleContentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Form submitted! Event:', e);
+    console.log('Form data:', contentForm);
     
     if (!contentForm.title) {
+      console.log('Title validation failed - no title');
       setFormError('Title is required');
       return;
     }
 
     // Validate content based on type
     const contentType = editingContent?.type || 'learn';
+    console.log('Content type determined:', contentType);
+    console.log('Content form:', contentForm);
+    
     if (contentType === 'learn' && !contentForm.content) {
+      console.log('Learn content validation failed - no content');
       setFormError('Content is required for learn items');
       return;
     } else if (contentType === 'test' && !contentForm.question) {
+      console.log('Test validation failed - no question');
       setFormError('Question is required for test items');
       return;
     } else if (contentType === 'exercise' && !contentForm.description) {
+      console.log('Exercise validation failed - no description');
       setFormError('Description is required for exercise items');
       return;
     }
 
+    console.log('All validations passed, proceeding with submission');
+
     setIsSubmitting(true);
     setError(null);
     try {
-      if (editingContent && editingLevel) {
+      console.log('handleContentSubmit - editingContent:', editingContent);
+      console.log('handleContentSubmit - editingLevel:', editingLevel);
+      
+      if (editingContent && editingContent.index >= 0 && editingLevel) {
+        // Update existing content item
+        console.log('Going to UPDATE path');
         // Find the specific content item to update
         // Resolve target item id: prefer id carried on level content, fallback to resolution by (track+order+type+index)
         let itemToUpdate: any = (editingLevel as any)[editingContent.type]?.[editingContent.index];
@@ -748,6 +764,7 @@ const AdminCurriculum: React.FC = () => {
         }
       } else if (editingLevel) {
         // Create new content item
+        console.log('Going to CREATE path');
         const newContentData: any = {
           title: contentForm.title,
           type: contentType === 'learn' ? 'learn' : contentType, // Fix: use 'learn' not 'reading'
@@ -901,6 +918,18 @@ const AdminCurriculum: React.FC = () => {
 
   // Use pre-fetched counts for track cards
   const trackStats = trackCounts;
+
+  // Debug logging for content modal
+  useEffect(() => {
+    if (showContentModal) {
+      console.log('Content modal opened:', {
+        editingContent,
+        editingLevel,
+        contentForm,
+        showContentModal
+      });
+    }
+  }, [showContentModal, editingContent, editingLevel, contentForm]);
 
   // Filter levels based on search and filters
   const filteredLevels = levels.filter(level => {
@@ -2548,11 +2577,15 @@ const AdminCurriculum: React.FC = () => {
       <AnimatePresence>
         {showContentModal && (
           <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
-            onClick={() => setShowContentModal(false)}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                setShowContentModal(false);
+              }
+            }}
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
