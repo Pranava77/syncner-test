@@ -97,18 +97,25 @@ const ContentModal: React.FC<ContentModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (editingContent?.type === 'test') {
+    const type = editingContent?.type || 'learn';
+
+    if (type === 'test') {
       // Format test content
       const testContent = `${form.question}\n${form.options.map((opt, idx) => `${String.fromCharCode(65 + idx)}) ${opt}`).join('\n')}`;
-      const testForm = {
-        ...form,
-        content: testContent
-      };
+      const testForm = { ...form, content: testContent };
       onSubmit(testForm);
-    } else {
-      onSubmit(form);
+      return;
     }
+
+    // Ensure backend-required content present for learn/exercise
+    if (!form.content || form.content.trim().length < 10) {
+      const fallback = form.title || (type === 'learn' ? form.externalLink : form.description) || 'Content';
+      const safeContent = `${fallback} - details`;
+      onSubmit({ ...form, content: safeContent });
+      return;
+    }
+
+    onSubmit(form);
   };
 
   const handleClose = () => {

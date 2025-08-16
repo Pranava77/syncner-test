@@ -311,11 +311,25 @@ const AdminCurriculum: React.FC = () => {
           setFormError(response.message || 'Failed to update level');
         }
       } else {
-        // Create new level
+        // Create new level - align with backend schema requirements
         const newLevelData = {
-          ...formData,
+          // required
+          title: formData.title,
+          description: formData.description,
           type: 'syllabus',
-          order: (levels.length + 1)
+          careerTrack: formData.careerTrack,
+          // required by schema: content
+          content: (formData.description && formData.description.trim().length >= 10)
+            ? formData.description
+            : `${formData.title} overview`,
+          // optional / mapped fields
+          order: (levels.length + 1),
+          isActive: formData.isActive,
+          difficulty: formData.difficulty || 'beginner',
+          estimatedDuration: Math.max(30, Math.round((formData.estimatedHours || 1) * 60)),
+          tags: formData.skills || [],
+          prerequisites: formData.prerequisites || [],
+          readFirst: formData.readFirst || {}
         };
 
         const response = await apiService.createCurriculumItem(newLevelData);
