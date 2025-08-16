@@ -1509,160 +1509,322 @@ const AdminCurriculum: React.FC = () => {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      className="border rounded-xl p-6 transition-all duration-300 group relative"
+                      className="group relative rounded-2xl border shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden"
                       style={{
                         backgroundColor: 'var(--color-surface)',
                         borderColor: 'var(--color-border)'
                       }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                        e.currentTarget.style.transform = 'translateY(-4px)';
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.borderColor = 'var(--color-border)';
+                        e.currentTarget.style.transform = 'translateY(0)';
                       }}
                     >
-                      {/* Level Order Indicator */}
-                      <div className="absolute top-2 right-2 text-xs px-2 py-1 rounded-full" style={{
-                        backgroundColor: 'var(--color-tertiary-bg)',
-                        color: 'var(--color-text-muted)'
-                      }}>
-                        #{level.order}
-                      </div>
-                      {/* Header with level number, difficulty and track */}
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-3">
-                          {/* Level Number Badge */}
-                          <div 
-                            className="px-3 py-1 rounded-lg font-bold text-sm"
-                            style={{ 
-                              backgroundColor: 'var(--color-accent-primary)',
-                              color: 'var(--color-text-inverse)' 
-                            }}
-                          >
-                            Level {level.order}
+                      {/* Level Header */}
+                      <div 
+                        className="p-6 border-b"
+                        style={{ borderColor: 'var(--color-border-subtle)' }}
+                      >
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex items-start gap-4">
+                            {/* Level Number Badge */}
+                            <div 
+                              className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg"
+                              style={{
+                                background: 'linear-gradient(135deg, var(--color-accent-primary) 0%, var(--color-accent-secondary) 100%)',
+                                color: 'var(--color-text-inverse)'
+                              }}
+                            >
+                              <span className="text-2xl font-bold">{level.order}</span>
+                            </div>
+                            
+                            {/* Level Info */}
+                            <div className="flex-1 min-w-0">
+                              <h3 className="text-2xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>
+                                {level.title}
+                              </h3>
+                              <p className="text-base leading-relaxed mb-3" style={{ color: 'var(--color-text-secondary)' }}>
+                                {level.description}
+                              </p>
+                              
+                              {/* Badges Row */}
+                              <div className="flex items-center gap-3 mb-4">
+                                <span 
+                                  className="px-3 py-1 rounded-lg text-sm font-medium"
+                                  style={getDifficultyColor(level.difficulty)}
+                                >
+                                  {level.difficulty}
+                                </span>
+                                <span 
+                                  className={`px-3 py-1 rounded-lg text-sm font-medium ${getTrackColor(level.careerTrack)}`}
+                                  style={{ color: 'var(--color-text-inverse)' }}
+                                >
+                                  {getTrackLabel(level.careerTrack)}
+                                </span>
+                                <span 
+                                  className="px-3 py-1 rounded-lg text-sm font-medium"
+                                  style={{
+                                    backgroundColor: 'var(--color-accent-tertiary)',
+                                    color: 'var(--color-accent-primary)'
+                                  }}
+                                >
+                                  {level.estimatedHours}h estimated
+                                </span>
+                              </div>
+                            </div>
                           </div>
-                          <div 
-                            className="px-2 py-1 rounded text-xs font-medium"
-                            style={getDifficultyColor(level.difficulty)}
-                          >
-                            {level.difficulty}
-                          </div>
-                        </div>
-                        <span 
-                          className={`px-2 py-1 rounded text-xs font-medium ${getTrackColor(level.careerTrack)}`}
-                          style={{ color: 'var(--color-text-inverse)' }}
-                        >
-                          {getTrackLabel(level.careerTrack)}
-                        </span>
-                      </div>
-
-                      {/* Title and Description */}
-                      <h3 className="text-lg font-heading mb-2" style={{ color: 'var(--color-text-primary)' }}>
-                        Level {level.order}: {level.title}
-                      </h3>
-                      <p className="text-sm mb-4 line-clamp-2" style={{ color: 'var(--color-text-tertiary)' }}>{level.description}</p>
-
-                      {/* Duration and Difficulty */}
-                      <div className="space-y-2 mb-4">
-                        <div 
-                          className="flex items-center gap-2 text-xs"
-                          style={{ color: 'var(--color-text-tertiary)' }}
-                        >
-                          <ClockIcon className="h-3 w-3" style={{ color: 'var(--color-accent-primary)' }} />
-                          <span>{level.estimatedHours}h estimated</span>
-                        </div>
-                        <div 
-                          className="flex items-center gap-2 text-xs"
-                          style={{ color: 'var(--color-text-tertiary)' }}
-                        >
-                          <span 
-                            className="px-2 py-1 rounded"
-                            style={getDifficultyColor(level.difficulty)}
-                          >
-                            {level.difficulty}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Content Counts */}
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-4 text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
-                          <span className="flex items-center gap-1">
-                            <BookOpenIcon className="h-3 w-3" style={{ color: 'var(--color-accent-primary)' }} />
-                            {level.learn?.length || 0} learn items
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <ClipboardIcon className="h-3 w-3" style={{ color: 'var(--color-accent-primary)' }} />
-                            {level.test?.length || 0} test items
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <PlayIcon className="h-3 w-3" style={{ color: 'var(--color-accent-primary)' }} />
-                            {level.exercise?.length || 0} exercises
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-1 text-xs">
-                          {level.isActive ? (
-                            <span className="flex items-center gap-1" style={{ color: 'var(--color-success)' }}>
-                              <CheckCircledIcon className="h-3 w-3" style={{ color: 'var(--color-success)' }} />
-                              Active
-                            </span>
-                          ) : (
-                            <span className="flex items-center gap-1" style={{ color: 'var(--color-error)' }}>
-                              <Cross1Icon className="h-3 w-3" style={{ color: 'var(--color-error)' }} />
-                              Inactive
-                            </span>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Skills */}
-                      {level.skills.length > 0 && (
-                        <div className="mb-4">
-                          <div className="flex flex-wrap gap-1">
-                            {level.skills.slice(0, 3).map((skill, idx) => (
-                              <span key={idx} className="px-2 py-1 text-xs rounded" style={{
-                                backgroundColor: 'var(--color-accent-tertiary)',
-                                color: 'var(--color-accent-primary)'
-                              }}>
-                                {skill}
-                              </span>
-                            ))}
-                            {level.skills.length > 3 && (
-                              <span className="px-2 py-1 text-xs rounded" style={{
-                                backgroundColor: 'var(--color-tertiary-bg)',
-                                color: 'var(--color-text-primary)'
-                              }}>
-                                +{level.skills.length - 3} more
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Content Sections */}
-                      <div className="space-y-3 mb-4">
-                        {/* Learn Content */}
-                        <div className="rounded-xl p-4 shadow-md" style={{
-                          backgroundColor: 'var(--color-success-bg)',
-                          borderColor: 'var(--color-success)',
-                          border: '1px solid'
-                        }}>
-                          <div className="flex items-center justify-between mb-4">
-                            <div className="flex items-center gap-3">
-                              <div 
-                                className="w-8 h-8 rounded-lg flex items-center justify-center"
+                          
+                          {/* Status Badge */}
+                          <div className="flex items-center gap-2">
+                            {level.isActive ? (
+                              <span 
+                                className="px-3 py-1 rounded-lg text-sm font-medium flex items-center gap-2"
                                 style={{
                                   backgroundColor: 'var(--color-success)',
                                   color: 'var(--color-text-inverse)'
                                 }}
                               >
-                                <BookOpenIcon className="h-4 w-4" />
+                                <CheckCircledIcon className="h-4 w-4" />
+                                Active
+                              </span>
+                            ) : (
+                              <span 
+                                className="px-3 py-1 rounded-lg text-sm font-medium flex items-center gap-2"
+                                style={{
+                                  backgroundColor: 'var(--color-error)',
+                                  color: 'var(--color-text-inverse)'
+                                }}
+                              >
+                                <Cross1Icon className="h-4 w-4" />
+                                Inactive
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        
+                        {/* Skills */}
+                        {level.skills && level.skills.length > 0 && (
+                          <div className="mb-4">
+                            <div className="flex flex-wrap gap-2">
+                              {level.skills.slice(0, 5).map((skill, idx) => (
+                                <span 
+                                  key={idx} 
+                                  className="px-3 py-1 rounded-lg text-sm font-medium shadow-sm"
+                                  style={{
+                                    backgroundColor: 'var(--color-accent-primary)',
+                                    color: 'var(--color-text-inverse)'
+                                  }}
+                                >
+                                  {skill}
+                                </span>
+                              ))}
+                              {level.skills.length > 5 && (
+                                <span 
+                                  className="px-3 py-1 rounded-lg text-sm font-medium shadow-sm"
+                                  style={{
+                                    backgroundColor: 'var(--color-tertiary-bg)',
+                                    color: 'var(--color-text-secondary)'
+                                  }}
+                                >
+                                  +{level.skills.length - 5} more
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                        
+                        {/* Content Summary */}
+                        <div className="grid grid-cols-3 gap-4">
+                          <div 
+                            className="p-4 rounded-xl text-center shadow-md"
+                            style={{
+                              backgroundColor: 'var(--color-success-bg)',
+                              border: '1px solid var(--color-success)'
+                            }}
+                          >
+                            <div className="flex items-center justify-center mb-2">
+                              <BookOpenIcon className="h-6 w-6" style={{ color: 'var(--color-success)' }} />
+                            </div>
+                            <div className="text-2xl font-bold" style={{ color: 'var(--color-success)' }}>
+                              {level.learn?.length || 0}
+                            </div>
+                            <div className="text-sm font-medium" style={{ color: 'var(--color-success)' }}>
+                              Learn Items
+                            </div>
+                          </div>
+                          
+                          <div 
+                            className="p-4 rounded-xl text-center shadow-md"
+                            style={{
+                              backgroundColor: 'var(--color-warning-bg)',
+                              border: '1px solid var(--color-warning)'
+                            }}
+                          >
+                            <div className="flex items-center justify-center mb-2">
+                              <ClipboardIcon className="h-6 w-6" style={{ color: 'var(--color-warning)' }} />
+                            </div>
+                            <div className="text-2xl font-bold" style={{ color: 'var(--color-warning)' }}>
+                              {level.test?.length || 0}
+                            </div>
+                            <div className="text-sm font-medium" style={{ color: 'var(--color-warning)' }}>
+                              Test Items
+                            </div>
+                          </div>
+                          
+                          <div 
+                            className="p-4 rounded-xl text-center shadow-md"
+                            style={{
+                              backgroundColor: 'var(--color-accent-secondary-bg)',
+                              border: '1px solid var(--color-accent-secondary)'
+                            }}
+                          >
+                            <div className="flex items-center justify-center mb-2">
+                              <PlayIcon className="h-6 w-6" style={{ color: 'var(--color-accent-secondary)' }} />
+                            </div>
+                            <div className="text-2xl font-bold" style={{ color: 'var(--color-accent-secondary)' }}>
+                              {level.exercise?.length || 0}
+                            </div>
+                            <div className="text-sm font-medium" style={{ color: 'var(--color-accent-secondary)' }}>
+                              Exercises
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Action Buttons */}
+                      <div 
+                        className="p-6 flex items-center justify-between"
+                        style={{ backgroundColor: 'var(--color-secondary-bg)' }}
+                      >
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={() => handleEditLevel(level)}
+                            className="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105"
+                            style={{
+                              backgroundColor: 'var(--color-accent-primary)',
+                              color: 'var(--color-text-inverse)'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                            }}
+                          >
+                            <EditIcon className="h-4 w-4 inline mr-2" />
+                            Edit Level
+                          </button>
+                          
+                          <button
+                            onClick={() => handleDeleteLevel(level.id)}
+                            disabled={isDeletingLevel}
+                            className="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105 disabled:opacity-50"
+                            style={{
+                              backgroundColor: 'var(--color-error)',
+                              color: 'var(--color-text-inverse)'
+                            }}
+                            onMouseEnter={(e) => {
+                              if (!isDeletingLevel) {
+                                e.currentTarget.style.backgroundColor = 'var(--color-error-hover)';
+                              }
+                            }}
+                            onMouseLeave={(e) => {
+                              if (!isDeletingLevel) {
+                                e.currentTarget.style.backgroundColor = 'var(--color-error)';
+                              }
+                            }}
+                          >
+                            <TrashIcon className="h-4 w-4 inline mr-2" />
+                            {isDeletingLevel ? 'Deleting...' : 'Delete Level'}
+                          </button>
+                        </div>
+                        
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={() => handleAddContent('learn', level)}
+                            className="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105"
+                            style={{
+                              backgroundColor: 'var(--color-success)',
+                              color: 'var(--color-text-inverse)'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.backgroundColor = 'var(--color-success-hover)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.backgroundColor = 'var(--color-success)';
+                            }}
+                          >
+                            <PlusIcon className="h-4 w-4 inline mr-2" />
+                            Add Learn
+                          </button>
+                          
+                          <button
+                            onClick={() => handleAddContent('test', level)}
+                            className="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105"
+                            style={{
+                              backgroundColor: 'var(--color-warning)',
+                              color: 'var(--color-text-inverse)'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.backgroundColor = 'var(--color-warning-hover)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.backgroundColor = 'var(--color-warning)';
+                            }}
+                          >
+                            <PlusIcon className="h-4 w-4 inline mr-2" />
+                            Add Test
+                          </button>
+                          
+                          <button
+                            onClick={() => handleAddContent('exercise', level)}
+                            className="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105"
+                            style={{
+                              backgroundColor: 'var(--color-accent-secondary)',
+                              color: 'var(--color-text-inverse)'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary-hover)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                            }}
+                          >
+                            <PlusIcon className="h-4 w-4 inline mr-2" />
+                            Add Exercise
+                          </button>
+                        </div>
+                      </div>
+                      
+                      {/* Content Sections */}
+                      <div className="p-6 space-y-6">
+                        {/* Learn Content Section */}
+                        <div 
+                          className="rounded-xl p-4 shadow-md"
+                          style={{
+                            backgroundColor: 'var(--color-success-bg)',
+                            border: '1px solid var(--color-success)'
+                          }}
+                        >
+                          <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center gap-3">
+                              <div 
+                                className="w-10 h-10 rounded-lg flex items-center justify-center"
+                                style={{
+                                  backgroundColor: 'var(--color-success)',
+                                  color: 'var(--color-text-inverse)'
+                                }}
+                              >
+                                <BookOpenIcon className="h-5 w-5" />
                               </div>
                               <div>
-                                <h4 className="text-base font-semibold" style={{ color: 'var(--color-success)' }}>
-                                  Learn Content
+                                <h4 className="text-lg font-semibold" style={{ color: 'var(--color-success)' }}>
+                                  Learning Resources
                                 </h4>
-                                <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
+                                <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
                                   {level.learn?.length || 0} resource{level.learn?.length !== 1 ? 's' : ''} available
                                 </p>
                               </div>
@@ -1715,23 +1877,23 @@ const AdminCurriculum: React.FC = () => {
                                     {/* Content Header */}
                                     <div className="flex items-start justify-between mb-3">
                                       <div className="flex items-start gap-3 flex-1 min-w-0">
-                                                                                 {/* Icon */}
-                                         <div 
-                                           className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
-                                           style={{
-                                             backgroundColor: 'var(--color-success-bg)',
-                                             color: 'var(--color-success)'
-                                           }}
-                                         >
-                                           <BookOpenIcon className="h-5 w-5" />
-                                         </div>
+                                        {/* Icon */}
+                                        <div 
+                                          className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                                          style={{
+                                            backgroundColor: 'var(--color-success-bg)',
+                                            color: 'var(--color-success)'
+                                          }}
+                                        >
+                                          <BookOpenIcon className="h-5 w-5" />
+                                        </div>
                                         
                                         {/* Content Info */}
                                         <div className="flex-1 min-w-0">
                                           <h5 className="text-sm font-semibold mb-1 truncate" style={{ color: 'var(--color-text-primary)' }}>
                                             {item.title}
                                           </h5>
-                                          
+                                           
                                           {/* Order Badge */}
                                           <div className="flex items-center gap-2 mb-2">
                                             <span 
@@ -1888,28 +2050,30 @@ const AdminCurriculum: React.FC = () => {
                           )}
                         </div>
 
-                        {/* Test Content */}
-                        <div className="rounded-xl p-4 shadow-md" style={{
-                          backgroundColor: 'var(--color-warning-bg)',
-                          borderColor: 'var(--color-warning)',
-                          border: '1px solid'
-                        }}>
+                        {/* Test Content Section */}
+                        <div 
+                          className="rounded-xl p-4 shadow-md"
+                          style={{
+                            backgroundColor: 'var(--color-warning-bg)',
+                            border: '1px solid var(--color-warning)'
+                          }}
+                        >
                           <div className="flex items-center justify-between mb-4">
                             <div className="flex items-center gap-3">
                               <div 
-                                className="w-8 h-8 rounded-lg flex items-center justify-center"
+                                className="w-10 h-10 rounded-lg flex items-center justify-center"
                                 style={{
                                   backgroundColor: 'var(--color-warning)',
                                   color: 'var(--color-text-inverse)'
                                 }}
                               >
-                                <ClipboardIcon className="h-4 w-4" />
+                                <ClipboardIcon className="h-5 w-5" />
                               </div>
                               <div>
-                                <h4 className="text-base font-semibold" style={{ color: 'var(--color-warning)' }}>
-                                  Test Content
+                                <h4 className="text-lg font-semibold" style={{ color: 'var(--color-warning)' }}>
+                                  Test Questions
                                 </h4>
-                                <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
+                                <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
                                   {level.test?.length || 0} question{level.test?.length !== 1 ? 's' : ''} available
                                 </p>
                               </div>
@@ -1978,7 +2142,7 @@ const AdminCurriculum: React.FC = () => {
                                           <h5 className="text-sm font-semibold mb-1 line-clamp-2" style={{ color: 'var(--color-text-primary)' }}>
                                             {item.question}
                                           </h5>
-                                          
+                                           
                                           {/* Order Badge */}
                                           <div className="flex items-center gap-2 mb-2">
                                             <span 
@@ -2084,28 +2248,30 @@ const AdminCurriculum: React.FC = () => {
                           )}
                         </div>
 
-                        {/* Exercise Content */}
-                        <div className="rounded-xl p-4 shadow-md" style={{
-                          backgroundColor: 'var(--color-accent-tertiary)',
-                          borderColor: 'var(--color-accent-secondary)',
-                          border: '1px solid'
-                        }}>
+                        {/* Exercise Content Section */}
+                        <div 
+                          className="rounded-xl p-4 shadow-md"
+                          style={{
+                            backgroundColor: 'var(--color-accent-secondary-bg)',
+                            border: '1px solid var(--color-accent-secondary)'
+                          }}
+                        >
                           <div className="flex items-center justify-between mb-4">
                             <div className="flex items-center gap-3">
                               <div 
-                                className="w-8 h-8 rounded-lg flex items-center justify-center"
+                                className="w-10 h-10 rounded-lg flex items-center justify-center"
                                 style={{
                                   backgroundColor: 'var(--color-accent-secondary)',
                                   color: 'var(--color-text-inverse)'
                                 }}
                               >
-                                <PlayIcon className="h-4 w-4" />
+                                <PlayIcon className="h-5 w-5" />
                               </div>
                               <div>
-                                <h4 className="text-base font-semibold" style={{ color: 'var(--color-accent-secondary)' }}>
-                                  Exercise Content
+                                <h4 className="text-lg font-semibold" style={{ color: 'var(--color-accent-secondary)' }}>
+                                  Practical Exercises
                                 </h4>
-                                <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
+                                <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
                                   {level.exercise?.length || 0} exercise{level.exercise?.length !== 1 ? 's' : ''} available
                                 </p>
                               </div>
@@ -2162,7 +2328,7 @@ const AdminCurriculum: React.FC = () => {
                                         <div 
                                           className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
                                           style={{
-                                            backgroundColor: 'var(--color-accent-tertiary)',
+                                            backgroundColor: 'var(--color-accent-secondary-bg)',
                                             color: 'var(--color-accent-secondary)'
                                           }}
                                         >
@@ -2174,7 +2340,7 @@ const AdminCurriculum: React.FC = () => {
                                           <h5 className="text-sm font-semibold mb-1 truncate" style={{ color: 'var(--color-text-primary)' }}>
                                             {item.title}
                                           </h5>
-                                          
+                                           
                                           {/* Order Badge */}
                                           <div className="flex items-center gap-2 mb-2">
                                             <span 
@@ -2198,7 +2364,7 @@ const AdminCurriculum: React.FC = () => {
                                               </span>
                                             )}
                                           </div>
-                                          
+                                           
                                           {/* Description */}
                                           <p className="text-xs line-clamp-2" style={{ color: 'var(--color-text-tertiary)' }}>
                                             {item.description}
@@ -2285,175 +2451,6 @@ const AdminCurriculum: React.FC = () => {
                               )}
                             </div>
                           )}
-                        </div>
-                      </div>
-
-                      {/* Admin Controls */}
-                      <div className="border-t pt-4" style={{ borderColor: 'var(--color-border-subtle)' }}>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            {/* Level Reorder Controls */}
-                            <button
-                              onClick={async () => {
-                                // Move level up (swap with previous order)
-                                const currentOrder = level.order;
-                                const targetOrder = currentOrder - 1;
-                                if (targetOrder < 1 || isReordering) return;
-                                try {
-                                  setIsReordering(true);
-                                  setReorderMessage('Reordering levels...');
-                                  const track = level.careerTrack;
-                                  await apiService.reorderLevelsByTrack(track, currentOrder, targetOrder);
-                                  dispatch(clearCache());
-                                  window.dispatchEvent(new CustomEvent('curriculum-changed', { detail: { track, action: 'reorder', timestamp: Date.now() } }));
-                                  window.dispatchEvent(new CustomEvent('levels-refresh-required', { detail: { track, reason: 'reorder', timestamp: Date.now() } }));
-                                  await apiService.invalidateCache();
-                                  await fetchLevels(track);
-                                } catch (e) {
-                                  console.error('Reorder up failed:', e);
-                                } finally {
-                                  setIsReordering(false);
-                                  setReorderMessage(null);
-                                }
-                              }}
-                              disabled={isReordering || level.order === 1}
-                              className="p-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                              style={{ color: 'var(--color-text-tertiary)' }}
-                              title="Move Level Up"
-                            >
-                              ↑
-                            </button>
-                            <button
-                              onClick={async () => {
-                                // Move level down (swap with next order)
-                                const currentOrder = level.order;
-                                const targetOrder = currentOrder + 1;
-                                if (isReordering) return;
-                                try {
-                                  setIsReordering(true);
-                                  setReorderMessage('Reordering levels...');
-                                  const track = level.careerTrack;
-                                  await apiService.reorderLevelsByTrack(track, currentOrder, targetOrder);
-                                  dispatch(clearCache());
-                                  window.dispatchEvent(new CustomEvent('curriculum-changed', { detail: { track, action: 'reorder', timestamp: Date.now() } }));
-                                  window.dispatchEvent(new CustomEvent('levels-refresh-required', { detail: { track, reason: 'reorder', timestamp: Date.now() } }));
-                                  await apiService.invalidateCache();
-                                  await fetchLevels(track);
-                                } catch (e) {
-                                  console.error('Reorder down failed:', e);
-                                } finally {
-                                  setIsReordering(false);
-                                  setReorderMessage(null);
-                                }
-                              }}
-                              disabled={
-                                isReordering ||
-                                level.order === Math.max(
-                                  ...levels.filter((l: any) => l.careerTrack === level.careerTrack).map((l: any) => l.order)
-                                )
-                              }
-                              className="p-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                              style={{ color: 'var(--color-text-tertiary)' }}
-                              title="Move Level Down"
-                            >
-                              ↓
-                            </button>
-                            <button
-                              onClick={() => {
-                                if (!level.id) {
-                                  setError('Level ID not found. Please refresh the page.');
-                                  return;
-                                }
-                                handleEditLevel(level);
-                              }}
-                              className="p-2 transition-colors"
-                              style={{ color: 'var(--color-text-tertiary)' }}
-                              onMouseEnter={(e) => {
-                                e.currentTarget.style.color = 'var(--color-accent-primary)';
-                              }}
-                              onMouseLeave={(e) => {
-                                e.currentTarget.style.color = 'var(--color-text-tertiary)';
-                              }}
-                              title="Edit Level"
-                            >
-                              <EditIcon className="h-4 w-4" />
-                            </button>
-                            <button
-                              onClick={() => {
-                                if (!level.id) {
-                                  setError('Level ID not found. Please refresh the page.');
-                                  return;
-                                }
-                                handleDeleteLevel(level.id);
-                              }}
-                              className="p-2 transition-colors"
-                              style={{ color: 'var(--color-text-tertiary)' }}
-                              onMouseEnter={(e) => {
-                                e.currentTarget.style.color = 'var(--color-error)';
-                              }}
-                              onMouseLeave={(e) => {
-                                e.currentTarget.style.color = 'var(--color-text-tertiary)';
-                              }}
-                              title="Delete Level"
-                            >
-                              <TrashIcon className="h-4 w-4" />
-                            </button>
-                          </div>
-                          
-                          {/* Content Management Buttons */}
-                          <div className="flex items-center gap-1">
-                                                    <button
-                          onClick={() => handleAddContent('learn', level)}
-                          className="px-2 py-1 text-xs rounded transition-colors"
-                          style={{ 
-                            backgroundColor: 'var(--color-success)',
-                            color: 'var(--color-text-inverse)' 
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = 'var(--color-success-hover)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = 'var(--color-success)';
-                          }}
-                          title="Add Learn Content"
-                        >
-                          +Learn
-                        </button>
-                        <button
-                          onClick={() => handleAddContent('test', level)}
-                          className="px-2 py-1 text-xs rounded transition-colors"
-                          style={{ 
-                            backgroundColor: 'var(--color-warning)',
-                            color: 'var(--color-text-inverse)' 
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = 'var(--color-warning-hover)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = 'var(--color-warning)';
-                          }}
-                          title="Add Test Content"
-                        >
-                          +Test
-                        </button>
-                        <button
-                          onClick={() => handleAddContent('exercise', level)}
-                          className="px-2 py-1 text-xs rounded transition-colors"
-                          style={{ 
-                            backgroundColor: 'var(--color-accent-secondary)',
-                            color: 'var(--color-text-inverse)' 
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
-                          }}
-                          title="Add Exercise Content"
-                        >
-                          +Exercise
-                        </button>
-                          </div>
                         </div>
                       </div>
                     </motion.div>
