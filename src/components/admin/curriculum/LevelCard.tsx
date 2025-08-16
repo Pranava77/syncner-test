@@ -43,6 +43,7 @@ interface Level {
 
 interface LevelCardProps {
   level: Level;
+  levels: Level[];
   onEditLevel: (level: Level) => void;
   onDeleteLevel: (id: string) => void;
   onAddContent: (type: 'learn' | 'test' | 'exercise', level: Level) => void;
@@ -56,6 +57,7 @@ interface LevelCardProps {
 
 const LevelCard: React.FC<LevelCardProps> = ({
   level,
+  levels,
   onEditLevel,
   onDeleteLevel,
   onAddContent,
@@ -175,8 +177,9 @@ const LevelCard: React.FC<LevelCardProps> = ({
             </div>
           </div>
           
-          {/* Status Badge */}
-          <div className="flex items-center gap-2 flex-shrink-0">
+          {/* Status Badge and Reorder Controls */}
+          <div className="flex items-center gap-4 flex-shrink-0">
+            {/* Status Badge */}
             {level.isActive ? (
               <span 
                 className="px-3 py-1 rounded-lg text-sm font-medium flex items-center gap-2"
@@ -200,6 +203,78 @@ const LevelCard: React.FC<LevelCardProps> = ({
                 Inactive
               </span>
             )}
+
+            {/* Level Reorder Controls */}
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2">
+                <div
+                  className="px-3 py-1 rounded-lg text-sm font-medium text-center min-w-[60px]"
+                  style={{
+                    backgroundColor: 'var(--color-accent-tertiary)',
+                    color: 'var(--color-accent-primary)'
+                  }}
+                >
+                  #{level.order}
+                </div>
+                <div
+                  className="text-xs px-2 py-1 rounded"
+                  style={{
+                    backgroundColor: 'var(--color-tertiary-bg)',
+                    color: 'var(--color-text-secondary)'
+                  }}
+                >
+                  of {levels?.length || 1}
+                </div>
+              </div>
+
+              <button
+                onClick={() => onMoveLevelUp(level.careerTrack, level.order, level.order - 1)}
+                disabled={isReordering || level.order === 1}
+                className="p-2 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{
+                  backgroundColor: 'var(--color-accent-tertiary)',
+                  color: 'var(--color-accent-primary)'
+                }}
+                onMouseEnter={(e) => {
+                  if (!isReordering && level.order !== 1) {
+                    e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                    e.currentTarget.style.color = 'var(--color-text-inverse)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isReordering && level.order !== 1) {
+                    e.currentTarget.style.backgroundColor = 'var(--color-accent-tertiary)';
+                    e.currentTarget.style.color = 'var(--color-text-inverse)';
+                  }
+                }}
+              >
+                <ChevronUpIcon className="h-4 w-4" />
+              </button>
+
+              <button
+                onClick={() => onMoveLevelDown(level.careerTrack, level.order, level.order + 1)}
+                disabled={isReordering || level.order >= (levels?.length || 1)}
+                className="p-2 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{
+                  backgroundColor: 'var(--color-accent-tertiary)',
+                  color: 'var(--color-accent-primary)'
+                }}
+                onMouseEnter={(e) => {
+                  if (!isReordering && level.order < (levels?.length || 1)) {
+                    e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                    e.currentTarget.style.color = 'var(--color-text-inverse)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isReordering && level.order < (levels?.length || 1)) {
+                    e.currentTarget.style.backgroundColor = 'var(--color-accent-tertiary)';
+                    e.currentTarget.style.color = 'var(--color-text-inverse)';
+                  }
+                }}
+              >
+                <ChevronDownIcon className="h-4 w-4" />
+              </button>
+            </div>
           </div>
         </div>
 

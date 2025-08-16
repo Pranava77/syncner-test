@@ -87,7 +87,7 @@ export const useContentManagement = () => {
   const handleAddContent = useCallback((type: 'learn' | 'test' | 'exercise', level: any) => {
     const defaultForm = getDefaultContentForm(type);
     setContentForm({ ...defaultForm, order: (level[type]?.length || 0) + 1 });
-    setEditingContent(null);
+    setEditingContent({ type, item: { levelId: level.id }, index: -1 });
     setShowContentModal(true);
   }, []);
 
@@ -150,7 +150,9 @@ export const useContentManagement = () => {
         const updateData = {
           ...formData,
           type: contentType,
-          levelId: level.id
+          levelId: level.id,
+          action: 'updateContent',
+          contentIndex: editingContent.index
         };
 
         const response = await apiService.put(`/curriculum/${level.id}`, updateData);
@@ -171,7 +173,8 @@ export const useContentManagement = () => {
         const newContentData = {
           ...formData,
           type: contentType,
-          levelId: level?.id
+          levelId: level?.id,
+          action: 'addContent'
         };
 
         const response = await apiService.createCurriculumItem(newContentData);
@@ -201,7 +204,14 @@ export const useContentManagement = () => {
   // Handle delete content
   const handleDeleteContent = useCallback(async (levelId: string, type: 'learn' | 'test' | 'exercise', index: number) => {
     try {
-      const response = await apiService.delete(`/curriculum/${levelId}?type=${type}&index=${index}`);
+      // For content deletion, we need to update the level by removing the content item
+      // This should be handled by updating the level with the content array minus the deleted item
+      // For now, we'll use a PUT request to update the level
+      const response = await apiService.put(`/curriculum/${levelId}`, {
+        action: 'deleteContent',
+        contentType: type,
+        contentIndex: index
+      });
       
       if (response.success) {
         dispatch(clearCache());

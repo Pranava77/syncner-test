@@ -534,6 +534,7 @@ const AdminCurriculum: React.FC = () => {
                     <LevelCard
                       key={level.id}
                       level={level}
+                      levels={filteredLevels}
                       onEditLevel={handleEditLevel}
                       onDeleteLevel={handleDeleteLevel}
                       onAddContent={handleAddContent}
@@ -570,7 +571,7 @@ const AdminCurriculum: React.FC = () => {
         editingContent={editingContent}
         isSubmitting={isSubmittingContent}
         formError={contentFormError}
-        level={editingContent?.item || null}
+        level={editingContent ? levels.find(l => l.id === editingContent.item?.levelId) || null : null}
       />
     </div>
   );
