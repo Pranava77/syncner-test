@@ -507,177 +507,67 @@ const LevelLearnPage: React.FC = () => {
 
             {/* Learn Progress Tracker */}
             <div 
-              className="w-full max-w-5xl rounded-2xl border shadow-lg p-8 mb-8 overflow-hidden relative"
+              className="w-full max-w-5xl rounded-xl border shadow-lg p-6 mb-8"
               style={{
                 background: 'linear-gradient(135deg, var(--color-accent-tertiary) 0%, var(--color-tertiary-bg) 100%)',
                 borderColor: 'var(--color-accent-primary)',
-                boxShadow: 'var(--shadow-lg)'
+                boxShadow: 'var(--shadow-md)'
               }}
             >
-              {/* Background Pattern */}
-              <div className="absolute top-0 right-0 w-32 h-32 opacity-10">
-                <div className="w-full h-full rounded-full"
-                  style={{ backgroundColor: 'var(--color-accent-primary)' }}
-                />
-              </div>
-              
-              <div className="relative z-10">
-                {/* Header */}
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-4">
-                    <div 
-                      className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg"
-                      style={{
-                        backgroundColor: 'var(--color-accent-primary)',
-                        color: 'var(--color-text-inverse)'
-                      }}
-                    >
-                      <ClockIcon className="h-8 w-8" />
-                    </div>
-                    <div>
-                      <h2 
-                        className="text-2xl font-bold mb-1"
-                        style={{ color: 'var(--color-text-primary)' }}
-                      >
-                        Learning Progress
-                      </h2>
-                      <p 
-                        className="text-base"
-                        style={{ color: 'var(--color-text-secondary)' }}
-                      >
-                        Track your journey through this level
-                      </p>
-                    </div>
-                  </div>
-                  
-                  {/* Progress Percentage */}
-                  <div className="text-right">
-                    <div 
-                      className="text-4xl font-bold mb-1"
-                      style={{ color: 'var(--color-accent-primary)' }}
-                    >
-                      {Math.round(getProgressPercentage()) || 0}%
-                    </div>
-                    <div 
-                      className="text-sm font-medium"
-                      style={{ color: 'var(--color-text-secondary)' }}
-                    >
-                      Complete
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Progress Bar */}
-                <div className="mb-6">
-                  <div className="flex justify-between text-sm mb-3" 
-                    style={{ color: 'var(--color-text-secondary)' }}
-                  >
-                    <span className="font-medium">Progress</span>
-                    <span className="font-medium">{Math.round(getProgressPercentage()) || 0}%</span>
-                  </div>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
                   <div 
-                    className="w-full rounded-full h-3 shadow-inner"
-                    style={{ backgroundColor: 'var(--color-border)' }}
-                  >
-                    <motion.div 
-                      className="h-3 rounded-full transition-all duration-1000 ease-out"
-                      style={{ 
-                        background: 'linear-gradient(90deg, var(--color-accent-primary) 0%, var(--color-accent-secondary) 100%)',
-                        width: `${getProgressPercentage() || 0}%` 
-                      }}
-                      initial={{ width: 0 }}
-                      animate={{ width: `${getProgressPercentage() || 0}%` }}
-                    />
-                  </div>
-                </div>
-                
-                {/* Stats Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {/* Time Spent */}
-                  <div 
-                    className="text-center p-4 rounded-xl"
+                    className="p-2 rounded-lg"
                     style={{
-                      backgroundColor: 'var(--color-surface)',
-                      border: '1px solid var(--color-border-subtle)'
-                    }}
-                  >
-                    <div 
-                      className="text-2xl font-bold mb-1"
-                      style={{ color: 'var(--color-accent-primary)' }}
-                    >
-                      {Math.floor(learnProgress.timeSpent / 60)}m {learnProgress.timeSpent % 60}s
-                    </div>
-                    <div 
-                      className="text-sm font-medium"
-                      style={{ color: 'var(--color-text-secondary)' }}
-                    >
-                      Time Spent
-                    </div>
-                  </div>
-                  
-                  {/* Resources Accessed */}
-                  <div 
-                    className="text-center p-4 rounded-xl"
-                    style={{
-                      backgroundColor: 'var(--color-surface)',
-                      border: '1px solid var(--color-border-subtle)'
-                    }}
-                  >
-                    <div 
-                      className="text-2xl font-bold mb-1"
-                      style={{ color: 'var(--color-success)' }}
-                    >
-                      {learnProgress.linksAccessed.length}
-                    </div>
-                    <div 
-                      className="text-sm font-medium"
-                      style={{ color: 'var(--color-text-secondary)' }}
-                    >
-                      Resources Accessed
-                    </div>
-                  </div>
-                  
-                  {/* Total Resources */}
-                  <div 
-                    className="text-center p-4 rounded-xl"
-                    style={{
-                      backgroundColor: 'var(--color-surface)',
-                      border: '1px solid var(--color-border-subtle)'
-                    }}
-                  >
-                    <div 
-                      className="text-2xl font-bold mb-1"
-                      style={{ color: 'var(--color-text-primary)' }}
-                    >
-                      {level?.learn?.length || 0}
-                    </div>
-                    <div 
-                      className="text-sm font-medium"
-                      style={{ color: 'var(--color-text-secondary)' }}
-                    >
-                      Total Resources
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Progress Message */}
-                {getProgressPercentage() === 100 && (
-                  <div 
-                    className="mt-6 p-4 rounded-xl text-center"
-                    style={{
-                      backgroundColor: 'var(--color-success)',
+                      backgroundColor: 'var(--color-accent-primary)',
                       color: 'var(--color-text-inverse)'
                     }}
                   >
-                    <div className="flex items-center justify-center gap-2 mb-2">
-                      <CheckCircledIcon className="h-6 w-6" />
-                      <span className="font-semibold">Congratulations!</span>
-                    </div>
-                    <p className="text-sm">
-                      You've completed all learning resources in this level. You're ready to take the test!
-                    </p>
+                    <ClockIcon className="h-6 w-6" />
                   </div>
-                )}
+                  <h2 
+                    className="text-xl font-bold"
+                    style={{ color: 'var(--color-text-primary)' }}
+                  >
+                    Learning Progress
+                  </h2>
+                </div>
+                <div className="text-right">
+                  <div 
+                    className="text-2xl font-bold"
+                    style={{ color: 'var(--color-accent-primary)' }}
+                  >
+                    {Math.round(getProgressPercentage()) || 0}%
+                  </div>
+                  <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>Progress</div>
+                </div>
+              </div>
+              
+              <div className="mb-4">
+                <div className="flex justify-between text-sm mb-1" style={{ color: 'var(--color-text-tertiary)' }}>
+                  <span>Progress</span>
+                  <span>{Math.round(getProgressPercentage()) || 0}%</span>
+                </div>
+                <div 
+                  className="w-full rounded-full h-2"
+                  style={{ backgroundColor: 'var(--color-border)' }}
+                >
+                  <div 
+                    className="h-2 rounded-full transition-all duration-500"
+                    style={{ 
+                      background: 'linear-gradient(90deg, var(--color-accent-primary) 0%, var(--color-accent-secondary) 100%)',
+                      width: `${getProgressPercentage() || 0}%` 
+                    }}
+                  ></div>
+                </div>
+              </div>
+              
+              <div 
+                className="flex items-center justify-between text-sm"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >
+                <span>Time spent: {Math.floor(learnProgress.timeSpent / 60)}m {learnProgress.timeSpent % 60}s</span>
+                <span>{learnProgress.linksAccessed.length} of {level?.learn?.length || 1} resources accessed</span>
               </div>
             </div>
 
