@@ -22,7 +22,8 @@ import {
   ImageIcon,
   BarChartIcon,
   ExternalLinkIcon,
-  MagnifyingGlassIcon
+  MagnifyingGlassIcon,
+  ChevronUpIcon
 } from '@radix-ui/react-icons';
 import apiService from '../services/api';
 import syncnerLogo from '../assets/syncner-logo.png';
@@ -1739,6 +1740,144 @@ const AdminCurriculum: React.FC = () => {
                           >
                             <TrashIcon className="h-4 w-4 inline mr-2" />
                             {isDeletingLevel ? 'Deleting...' : 'Delete Level'}
+                          </button>
+                        </div>
+                        
+                        {/* Level Reorder Controls */}
+                        <div className="flex items-center gap-2">
+                          <div 
+                            className="px-3 py-1 rounded-lg text-sm font-medium text-center min-w-[60px]"
+                            style={{
+                              backgroundColor: 'var(--color-tertiary-bg)',
+                              color: 'var(--color-text-secondary)'
+                            }}
+                          >
+                            #{level.order}
+                          </div>
+                          
+                          <div 
+                            className="text-xs px-2 py-1 rounded"
+                            style={{
+                              backgroundColor: 'var(--color-border-subtle)',
+                              color: 'var(--color-text-tertiary)'
+                            }}
+                          >
+                            of {levels.filter((l: any) => l.careerTrack === level.careerTrack).length}
+                          </div>
+                          
+                          <button
+                            onClick={async () => {
+                              // Move level up (swap with previous order)
+                              const currentOrder = level.order;
+                              const targetOrder = currentOrder - 1;
+                              if (targetOrder < 1 || isReordering) return;
+                              
+                              try {
+                                setIsReordering(true);
+                                setReorderMessage('Moving level up...');
+                                const track = level.careerTrack;
+                                
+                                await apiService.reorderLevelsByTrack(track, currentOrder, targetOrder);
+                                dispatch(clearCache());
+                                window.dispatchEvent(new CustomEvent('curriculum-changed', { 
+                                  detail: { track, action: 'reorder', timestamp: Date.now() } 
+                                }));
+                                window.dispatchEvent(new CustomEvent('levels-refresh-required', { 
+                                  detail: { track, reason: 'reorder', timestamp: Date.now() } 
+                                }));
+                                await apiService.invalidateCache();
+                                await fetchLevels(track);
+                              } catch (e) {
+                                console.error('Reorder up failed:', e);
+                                setError('Failed to reorder level. Please try again.');
+                              } finally {
+                                setIsReordering(false);
+                                setReorderMessage(null);
+                              }
+                            }}
+                            disabled={isReordering || level.order === 1}
+                            className="p-2 rounded-lg transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                            style={{ 
+                              backgroundColor: 'var(--color-accent-tertiary)',
+                              color: 'var(--color-accent-primary)'
+                            }}
+                            onMouseEnter={(e) => {
+                              if (!isReordering && level.order > 1) {
+                                e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                                e.currentTarget.style.color = 'var(--color-text-inverse)';
+                              }
+                            }}
+                            onMouseLeave={(e) => {
+                              if (!isReordering && level.order > 1) {
+                                e.currentTarget.style.backgroundColor = 'var(--color-accent-tertiary)';
+                                e.currentTarget.style.color = 'var(--color-accent-primary)';
+                              }
+                            }}
+                            title="Move Level Up"
+                          >
+                            <ChevronUpIcon className="h-4 w-4" />
+                          </button>
+                          
+                          <button
+                            onClick={async () => {
+                              // Move level down (swap with next order)
+                              const currentOrder = level.order;
+                              const targetOrder = currentOrder + 1;
+                              if (isReordering) return;
+                              
+                              // Check if this is the last level in the track
+                              const trackLevels = levels.filter((l: any) => l.careerTrack === level.careerTrack);
+                              const maxOrder = Math.max(...trackLevels.map((l: any) => l.order));
+                              if (currentOrder >= maxOrder) return;
+                              
+                              try {
+                                setIsReordering(true);
+                                setReorderMessage('Moving level down...');
+                                const track = level.careerTrack;
+                                
+                                await apiService.reorderLevelsByTrack(track, currentOrder, targetOrder);
+                                dispatch(clearCache());
+                                window.dispatchEvent(new CustomEvent('curriculum-changed', { 
+                                  detail: { track, action: 'reorder', timestamp: Date.now() } 
+                                }));
+                                window.dispatchEvent(new CustomEvent('levels-refresh-required', { 
+                                  detail: { track, reason: 'reorder', timestamp: Date.now() } 
+                                }));
+                                await apiService.invalidateCache();
+                                await fetchLevels(track);
+                              } catch (e) {
+                                console.error('Reorder down failed:', e);
+                                setError('Failed to reorder level. Please try again.');
+                              } finally {
+                                setIsReordering(false);
+                                setReorderMessage(null);
+                              }
+                            }}
+                            disabled={isReordering || level.order >= Math.max(...levels.filter((l: any) => l.careerTrack === level.careerTrack).map((l: any) => l.order))}
+                            className="p-2 rounded-lg transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                            style={{ 
+                              backgroundColor: 'var(--color-accent-tertiary)',
+                              color: 'var(--color-accent-primary)'
+                            }}
+                            onMouseEnter={(e) => {
+                              const trackLevels = levels.filter((l: any) => l.careerTrack === level.careerTrack);
+                              const maxOrder = Math.max(...trackLevels.map((l: any) => l.order));
+                              if (!isReordering && level.order < maxOrder) {
+                                e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                                e.currentTarget.style.color = 'var(--color-text-inverse)';
+                              }
+                            }}
+                            onMouseLeave={(e) => {
+                              const trackLevels = levels.filter((l: any) => l.careerTrack === level.careerTrack);
+                              const maxOrder = Math.max(...trackLevels.map((l: any) => l.order));
+                              if (!isReordering && level.order < maxOrder) {
+                                e.currentTarget.style.backgroundColor = 'var(--color-accent-tertiary)';
+                                e.currentTarget.style.color = 'var(--color-accent-primary)';
+                              }
+                            }}
+                            title="Move Level Down"
+                          >
+                            <ChevronDownIcon className="h-4 w-4" />
                           </button>
                         </div>
                         
