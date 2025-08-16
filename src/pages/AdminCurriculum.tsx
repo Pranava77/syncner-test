@@ -1504,7 +1504,15 @@ const AdminCurriculum: React.FC = () => {
                   }}
                 >
                   <div className="grid gap-6 grid-cols-1 relative">
-                    {filteredLevels.map((level, index) => (
+                    {filteredLevels.map((level, index) => {
+                      console.log('Level data:', { 
+                        id: level.id, 
+                        title: level.title, 
+                        order: level.order, 
+                        careerTrack: level.careerTrack
+                      });
+                      
+                      return (
                     <motion.div
                       key={level.id}
                       initial={{ opacity: 0, y: 20 }}
@@ -1772,12 +1780,22 @@ const AdminCurriculum: React.FC = () => {
                               const targetOrder = currentOrder - 1;
                               if (targetOrder < 1 || isReordering) return;
                               
+                              console.log('Moving level up:', { 
+                                levelId: level.id, 
+                                currentOrder, 
+                                targetOrder, 
+                                track: level.careerTrack 
+                              });
+                              
                               try {
                                 setIsReordering(true);
                                 setReorderMessage('Moving level up...');
                                 const track = level.careerTrack;
                                 
-                                await apiService.reorderLevelsByTrack(track, currentOrder, targetOrder);
+                                console.log('Calling API with:', { track, from: currentOrder, to: targetOrder });
+                                const result = await apiService.reorderLevelsByTrack(track, currentOrder, targetOrder);
+                                console.log('API result:', result);
+                                
                                 dispatch(clearCache());
                                 window.dispatchEvent(new CustomEvent('curriculum-changed', { 
                                   detail: { track, action: 'reorder', timestamp: Date.now() } 
@@ -1830,12 +1848,23 @@ const AdminCurriculum: React.FC = () => {
                               const maxOrder = Math.max(...trackLevels.map((l: any) => l.order));
                               if (currentOrder >= maxOrder) return;
                               
+                              console.log('Moving level down:', { 
+                                levelId: level.id, 
+                                currentOrder, 
+                                targetOrder, 
+                                track: level.careerTrack,
+                                maxOrder 
+                              });
+                              
                               try {
                                 setIsReordering(true);
                                 setReorderMessage('Moving level down...');
                                 const track = level.careerTrack;
                                 
-                                await apiService.reorderLevelsByTrack(track, currentOrder, targetOrder);
+                                console.log('Calling API with:', { track, from: currentOrder, to: targetOrder });
+                                const result = await apiService.reorderLevelsByTrack(track, currentOrder, targetOrder);
+                                console.log('API result:', result);
+                                
                                 dispatch(clearCache());
                                 window.dispatchEvent(new CustomEvent('curriculum-changed', { 
                                   detail: { track, action: 'reorder', timestamp: Date.now() } 
@@ -2593,7 +2622,8 @@ const AdminCurriculum: React.FC = () => {
                         </div>
                       </div>
                     </motion.div>
-                    ))}
+                  );
+                })}
                   </div>
                 </div>
               )}

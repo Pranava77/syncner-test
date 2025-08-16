@@ -761,8 +761,11 @@ const deleteLevelByTrackAndOrder = async (req, res) => {
 const reorderLevelsByTrack = async (req, res) => {
   try {
     const { careerTrack, from, to } = req.body;
+    
+    console.log('Reorder request received:', { careerTrack, from, to, body: req.body });
 
     if (!careerTrack || !from || !to) {
+      console.log('Missing required fields:', { careerTrack, from, to });
       return res.status(400).json({
         success: false,
         message: 'careerTrack, from, and to are required'
@@ -772,26 +775,37 @@ const reorderLevelsByTrack = async (req, res) => {
     const normalizedCareerTrack = normalizeCareerTrack(careerTrack);
     const fromOrder = parseInt(from, 10);
     const toOrder = parseInt(to, 10);
+    
+    console.log('Parsed values:', { normalizedCareerTrack, fromOrder, toOrder });
 
     if (Number.isNaN(fromOrder) || Number.isNaN(toOrder) || fromOrder < 1 || toOrder < 1) {
+      console.log('Invalid order values:', { fromOrder, toOrder });
       return res.status(400).json({
         success: false,
         message: 'from and to must be positive integers'
       });
     }
 
-    // Find all items for both levels
-    const fromItems = await Curriculum.find({
+    // Find the syllabus items (levels) for both orders
+    const fromLevel = await Curriculum.findOne({
       careerTrack: normalizedCareerTrack,
+      type: 'syllabus',
       order: fromOrder
     });
 
-    const toItems = await Curriculum.find({
+    const toLevel = await Curriculum.findOne({
       careerTrack: normalizedCareerTrack,
+      type: 'syllabus',
       order: toOrder
     });
+    
+    console.log('Found levels:', { 
+      fromLevel: fromLevel ? { id: fromLevel._id, order: fromLevel.order } : null,
+      toLevel: toLevel ? { id: toLevel._id, order: toLevel.order } : null
+    });
 
-    if (fromItems.length === 0 && toItems.length === 0) {
+    if (!fromLevel && !toLevel) {
+      console.log('No levels found for reordering');
       return res.status(404).json({
         success: false,
         message: 'Both levels not found'
@@ -801,25 +815,28 @@ const reorderLevelsByTrack = async (req, res) => {
     // Swap the orders
     const updatePromises = [];
 
-    if (fromItems.length > 0) {
+    if (fromLevel) {
+      console.log('Updating fromLevel:', fromLevel._id, 'to order:', toOrder);
       updatePromises.push(
-        Curriculum.updateMany(
-          { careerTrack: normalizedCareerTrack, order: fromOrder },
+        Curriculum.findByIdAndUpdate(
+          fromLevel._id,
           { order: toOrder }
         )
       );
     }
 
-    if (toItems.length > 0) {
+    if (toLevel) {
+      console.log('Updating toLevel:', toLevel._id, 'to order:', fromOrder);
       updatePromises.push(
-        Curriculum.updateMany(
-          { careerTrack: normalizedCareerTrack, order: toOrder },
+        Curriculum.findByIdAndUpdate(
+          toLevel._id,
           { order: fromOrder }
         )
       );
     }
 
     await Promise.all(updatePromises);
+    console.log('Reorder completed successfully');
 
     return res.status(200).json({
       success: true,

@@ -122,11 +122,11 @@ class ApiService {
   }
 
   async reorderLevelsByTrack(careerTrack: string, from: number, to: number) {
-    const params = new URLSearchParams({ careerTrack, from: String(from), to: String(to) });
-    const response = await fetch(`${this.baseURL}/curriculum/level/reorder?${params.toString()}`, {
+    const response = await fetch(`${this.baseURL}/curriculum/level/reorder`, {
       method: 'PUT',
       headers: this.getHeaders(),
       credentials: 'include',
+      body: JSON.stringify({ careerTrack, from, to })
     });
     return this.handleResponse(response);
   }
