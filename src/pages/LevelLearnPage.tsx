@@ -393,13 +393,13 @@ const LevelLearnPage: React.FC = () => {
             <div 
               className="w-full max-w-5xl rounded-2xl border shadow-lg p-8 mb-8 overflow-hidden relative"
               style={{
-                background: 'linear-gradient(135deg, var(--color-surface) 0%, var(--color-tertiary-bg) 100%)',
-                borderColor: 'var(--color-border-subtle)',
+                background: 'linear-gradient(135deg, var(--color-accent-tertiary) 0%, var(--color-surface) 100%)',
+                borderColor: 'var(--color-accent-primary)',
                 boxShadow: 'var(--shadow-lg)'
               }}
             >
               {/* Background Pattern */}
-              <div className="absolute top-0 right-0 w-40 h-40 opacity-5">
+              <div className="absolute top-0 right-0 w-40 h-40 opacity-10">
                 <div className="w-full h-full rounded-full"
                   style={{ backgroundColor: 'var(--color-accent-primary)' }}
                 />
@@ -411,23 +411,23 @@ const LevelLearnPage: React.FC = () => {
                     {/* Level Number and Title */}
                     <div className="flex items-center gap-4 mb-4">
                       <div 
-                        className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg"
+                        className="w-20 h-20 rounded-2xl flex items-center justify-center shadow-lg"
                         style={{
                           background: 'linear-gradient(135deg, var(--color-accent-primary) 0%, var(--color-accent-secondary) 100%)',
                           color: 'var(--color-text-inverse)'
                         }}
                       >
-                        <span className="text-2xl font-bold">{level.order}</span>
+                        <span className="text-3xl font-bold">{level.order}</span>
                       </div>
                       <div>
                         <h1 
-                          className="text-3xl font-bold mb-2"
+                          className="text-4xl font-bold mb-3"
                           style={{ color: 'var(--color-text-primary)' }}
                         >
                           {level.title}
                         </h1>
                         <p 
-                          className="text-lg leading-relaxed"
+                          className="text-xl leading-relaxed"
                           style={{ color: 'var(--color-text-secondary)' }}
                         >
                           {level.description}
@@ -440,10 +440,10 @@ const LevelLearnPage: React.FC = () => {
                       {level.skills?.slice(0, 3).map((skill, index) => (
                         <span 
                           key={index}
-                          className="px-3 py-1 rounded-lg text-sm font-medium"
+                          className="px-4 py-2 rounded-xl text-sm font-medium shadow-sm"
                           style={{
-                            backgroundColor: 'var(--color-accent-tertiary)',
-                            color: 'var(--color-accent-primary)'
+                            backgroundColor: 'var(--color-accent-primary)',
+                            color: 'var(--color-text-inverse)'
                           }}
                         >
                           {skill}
@@ -451,7 +451,7 @@ const LevelLearnPage: React.FC = () => {
                       ))}
                       {level.skills && level.skills.length > 3 && (
                         <span 
-                          className="px-3 py-1 rounded-lg text-sm font-medium"
+                          className="px-4 py-2 rounded-xl text-sm font-medium shadow-sm"
                           style={{
                             backgroundColor: 'var(--color-tertiary-bg)',
                             color: 'var(--color-text-secondary)'
@@ -464,41 +464,41 @@ const LevelLearnPage: React.FC = () => {
                   </div>
                   
                   {/* Right Side Badges */}
-                  <div className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-4">
                     <div 
-                      className="px-4 py-3 rounded-xl text-center shadow-md"
+                      className="px-6 py-4 rounded-2xl text-center shadow-lg"
                       style={{
-                        backgroundColor: 'var(--color-accent-tertiary)',
-                        color: 'var(--color-accent-primary)'
+                        backgroundColor: 'var(--color-accent-primary)',
+                        color: 'var(--color-text-inverse)'
                       }}
                     >
-                      <div className="text-sm font-medium mb-1">Difficulty</div>
-                      <div className="text-lg font-bold capitalize">{level.difficulty}</div>
+                      <div className="text-sm font-medium mb-2">Difficulty</div>
+                      <div className="text-2xl font-bold capitalize">{level.difficulty}</div>
                     </div>
                     
                     <div 
-                      className="px-4 py-3 rounded-xl text-center shadow-md"
+                      className="px-6 py-4 rounded-2xl text-center shadow-lg"
                       style={{
-                        backgroundColor: 'var(--color-tertiary-bg)',
-                        color: 'var(--color-text-primary)'
+                        backgroundColor: 'var(--color-surface)',
+                        color: 'var(--color-text-primary)',
+                        border: '2px solid var(--color-accent-primary)'
                       }}
                     >
-                      <div className="text-sm font-medium mb-1">Track</div>
-                      <div className="text-lg font-bold capitalize">
+                      <div className="text-sm font-medium mb-2">Track</div>
+                      <div className="text-2xl font-bold capitalize">
                         {level.careerTrack.replace('-', ' ')}
                       </div>
                     </div>
                     
                     <div 
-                      className="px-4 py-3 rounded-xl text-center shadow-md"
+                      className="px-6 py-4 rounded-2xl text-center shadow-lg"
                       style={{
-                        backgroundColor: 'var(--color-surface)',
-                        color: 'var(--color-text-primary)',
-                        border: '1px solid var(--color-border-subtle)'
+                        backgroundColor: 'var(--color-accent-secondary)',
+                        color: 'var(--color-text-inverse)'
                       }}
                     >
-                      <div className="text-sm font-medium mb-1">Duration</div>
-                      <div className="text-lg font-bold">{level.duration}</div>
+                      <div className="text-sm font-medium mb-2">Duration</div>
+                      <div className="text-2xl font-bold">{level.duration}</div>
                     </div>
                   </div>
                 </div>
