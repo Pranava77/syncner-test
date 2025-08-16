@@ -39,6 +39,10 @@ const curriculumValidation = [
     .trim()
     .isLength({ min: 10 })
     .withMessage('Content must be at least 10 characters'),
+  body('externalLink')
+    .optional()
+    .isURL()
+    .withMessage('External link must be a valid URL'),
   body('careerTrack')
     .isIn(['full-stack', 'ai-ml', 'ui-ux', 'data-science'])
     .withMessage('Career track must be full-stack, ai-ml, ui-ux, or data-science'),
@@ -111,7 +115,7 @@ const curriculumValidation = [
 
 // Custom validation for different content types
 const customContentValidation = (req, res, next) => {
-  const { type, content, question, options, answer, description } = req.body;
+  const { type, content, question, options, answer, description, externalLink } = req.body;
   
   if (type === 'learn') {
     if (!content || content.trim().length < 10) {
@@ -119,6 +123,17 @@ const customContentValidation = (req, res, next) => {
         success: false,
         message: 'Learn content must be at least 10 characters'
       });
+    }
+    // Validate external link if provided
+    if (externalLink && externalLink.trim()) {
+      try {
+        new URL(externalLink);
+      } catch {
+        return res.status(400).json({
+          success: false,
+          message: 'External link must be a valid URL'
+        });
+      }
     }
   } else if (type === 'test') {
     if (!question || question.trim().length < 5) {

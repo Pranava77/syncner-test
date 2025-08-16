@@ -23,6 +23,22 @@ const curriculumItemSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  externalLink: {
+    type: String,
+    trim: true,
+    validate: {
+      validator: function(v) {
+        if (!v) return true; // Allow empty
+        try {
+          new URL(v);
+          return true;
+        } catch {
+          return false;
+        }
+      },
+      message: 'External link must be a valid URL'
+    }
+  },
   order: { 
     type: Number, 
     default: 1 

@@ -59,10 +59,9 @@ interface Level {
 
 interface LearnItem {
   id: string;
-  type: 'video' | 'reading' | 'slide' | 'other';
   title: string;
   content: string;
-  videoUrl?: string;
+  externalLink?: string;
   order: number;
 }
 
@@ -94,6 +93,18 @@ interface LevelForm {
   isActive: boolean;
   order?: number;
   readFirst?: ReadFirst;
+}
+
+interface ContentForm {
+  title: string;
+  order: number;
+  content: string;
+  externalLink?: string; // Replace videoUrl with externalLink for learn content
+  question: string;
+  options: string[];
+  answer: string;
+  description: string;
+  resources: string[];
 }
 
 const defaultLevelForm: LevelForm = {
@@ -472,9 +483,8 @@ const AdminCurriculum: React.FC = () => {
     setContentForm({
       title: '',
       order: 1,
-      type: type === 'learn' ? 'learn' : undefined, // Fix: use 'learn' not 'reading'
       content: '',
-      videoUrl: '',
+      externalLink: '',
       question: '',
       options: [],
       answer: '',
@@ -667,7 +677,7 @@ const AdminCurriculum: React.FC = () => {
 
           if (contentType === 'learn') {
             updateData.content = contentForm.content;
-            updateData.videoUrl = contentForm.videoUrl;
+            updateData.externalLink = contentForm.externalLink;
             // Ensure description meets minimum length requirement (10 chars)
             updateData.description = contentForm.title.length >= 10 ? contentForm.title : 
               `${contentForm.title} - ${contentForm.content.substring(0, Math.max(0, 10 - contentForm.title.length))}`;
@@ -707,7 +717,7 @@ const AdminCurriculum: React.FC = () => {
                 id: itemToUpdate.id,
                 title: contentForm.title,
                 content: contentForm.content,
-                videoUrl: contentForm.videoUrl || '',
+                externalLink: contentForm.externalLink || '',
                 order: updated.order,
               };
               updated.learn = arr;
@@ -767,7 +777,7 @@ const AdminCurriculum: React.FC = () => {
         console.log('Going to CREATE path');
         const newContentData: any = {
           title: contentForm.title,
-          type: contentType === 'learn' ? 'learn' : contentType, // Fix: use 'learn' not 'reading'
+          type: contentType === 'learn' ? 'learn' : contentType,
           careerTrack: editingLevel.careerTrack,
           difficulty: editingLevel.difficulty,
           order: editingLevel.order, // Use the level's order
@@ -778,7 +788,7 @@ const AdminCurriculum: React.FC = () => {
 
         if (contentType === 'learn') {
           newContentData.content = contentForm.content;
-          newContentData.videoUrl = contentForm.videoUrl;
+          newContentData.externalLink = contentForm.externalLink;
           // Ensure description meets minimum length requirement (10 chars)
           newContentData.description = contentForm.title.length >= 10 ? contentForm.title : 
             `${contentForm.title} - ${contentForm.content.substring(0, Math.max(0, 10 - contentForm.title.length))}`;
@@ -820,10 +830,10 @@ const AdminCurriculum: React.FC = () => {
               ...(updated.learn || []),
               {
                 id: newId,
-                type: 'learn', // Fix: use 'learn' not 'reading'
+                type: 'learn',
                 title: contentForm.title,
                 content: contentForm.content,
-                videoUrl: contentForm.videoUrl || '',
+                externalLink: contentForm.externalLink || '',
                 order: updated.order,
               }
             ];
@@ -1649,7 +1659,17 @@ const AdminCurriculum: React.FC = () => {
                                   }}>
                                     <div className="flex-1 min-w-0">
                                       <p className="text-xs font-medium truncate" style={{ color: 'var(--color-text-primary)' }}>{item.title}</p>
-                                      <p className="text-xs truncate" style={{ color: 'var(--color-text-tertiary)' }}>{item.type}</p>
+                                      {item.externalLink && (
+                                        <a 
+                                          href={item.externalLink} 
+                                          target="_blank" 
+                                          rel="noopener noreferrer"
+                                          className="text-xs block mt-1 hover:underline"
+                                          style={{ color: 'var(--color-accent-primary)' }}
+                                        >
+                                          🔗 External Link
+                                        </a>
+                                      )}
                                     </div>
                                     <div className="flex items-center gap-1 ml-2">
                                       <button
@@ -2651,39 +2671,6 @@ const AdminCurriculum: React.FC = () => {
                 {editingContent?.type === 'learn' && (
                   <div>
                     <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
-                      Type
-                    </label>
-                    <select
-                      value={contentForm.type || 'reading'}
-                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setContentForm({ ...contentForm, type: e.target.value })}
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none"
-                      style={{
-                        backgroundColor: 'var(--color-secondary-bg)',
-                        borderColor: 'var(--color-border)',
-                        color: 'var(--color-text-primary)'
-                      }}
-                      onFocus={(e) => {
-                        e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
-                        e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.borderColor = 'var(--color-border)';
-                        e.currentTarget.style.boxShadow = 'none';
-                      }}
-                    >
-                      <option value="reading">Reading</option>
-                      <option value="video">Video</option>
-                      <option value="slide">Slide</option>
-                      <option value="other">Other</option>
-                    </select>
-                  </div>
-                )}
-
-
-
-                {editingContent?.type === 'learn' && (
-                  <div>
-                    <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
                       Content *
                     </label>
                     <textarea
@@ -2706,6 +2693,37 @@ const AdminCurriculum: React.FC = () => {
                       }}
                       placeholder="Enter content"
                     />
+                  </div>
+                )}
+
+                {editingContent?.type === 'learn' && (
+                  <div>
+                    <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
+                      External Link (Optional)
+                    </label>
+                    <input
+                      type="url"
+                      value={contentForm.externalLink || ''}
+                      onChange={(e) => setContentForm({ ...contentForm, externalLink: e.target.value })}
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none"
+                      style={{
+                        backgroundColor: 'var(--color-secondary-bg)',
+                        borderColor: 'var(--color-border)',
+                        color: 'var(--color-text-primary)'
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                        e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-accent-tertiary)';
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-border)';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
+                      placeholder="https://example.com (optional)"
+                    />
+                    <p className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
+                      Add a link to external resources, videos, or additional reading material
+                    </p>
                   </div>
                 )}
 

@@ -63,7 +63,7 @@ const groupCurriculumIntoLevels = (items) => {
       title: item.title || '',
       content: item.content || '',
       order: item.order,
-      videoUrl: item.videoUrl || '',
+      externalLink: item.externalLink || '', // Replace videoUrl with externalLink
       description: item.description || '',
       resources: item.resources || []
     };
