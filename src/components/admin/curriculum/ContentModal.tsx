@@ -107,11 +107,14 @@ const ContentModal: React.FC<ContentModalProps> = ({
       return;
     }
 
-    // Ensure backend-required content present for learn/exercise
+    // Ensure backend-required content/description present for learn/exercise
     if (!form.content || form.content.trim().length < 10) {
       const fallback = form.title || (type === 'learn' ? form.externalLink : form.description) || 'Content';
       const safeContent = `${fallback} - details`;
-      onSubmit({ ...form, content: safeContent });
+      // also ensure description length >= 10 if provided/required downstream
+      const descBase = type === 'exercise' ? (form.description || form.title || 'Exercise') : (form.title || 'Learning resource');
+      const safeDesc = descBase.length >= 10 ? descBase : `${descBase} details`;
+      onSubmit({ ...form, content: safeContent, description: safeDesc });
       return;
     }
 

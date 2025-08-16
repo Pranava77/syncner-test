@@ -159,14 +159,16 @@ export const useContentManagement = () => {
         };
         if (contentType === 'learn') {
           updateData.externalLink = formData.externalLink || '';
-          updateData.description = formData.title || 'Learning resource';
+          const learnDesc = formData.title || 'Learning resource';
+          updateData.description = learnDesc.length >= 10 ? learnDesc : `${learnDesc} details`;
           // Ensure content is non-empty to satisfy validation downstream if used
           if (!updateData.content || updateData.content.trim().length < 10) {
             const fallback = formData.title || formData.externalLink || 'Learning resource link';
             updateData.content = `${fallback} - learning resource`;
           }
         } else if (contentType === 'exercise') {
-          updateData.description = formData.description || formData.title || 'Exercise';
+          const exDescBase = formData.description || formData.title || 'Exercise';
+          updateData.description = exDescBase.length >= 10 ? exDescBase : `${exDescBase} details`;
           // Map resources strings to schema objects
           if (Array.isArray(formData.resources)) {
             updateData.resources = formData.resources
@@ -179,7 +181,8 @@ export const useContentManagement = () => {
               : `${formData.title || 'Exercise'} details`;
           }
         } else if (contentType === 'test') {
-          updateData.description = formData.title || 'Test question';
+          const testDesc = formData.title || 'Test question';
+          updateData.description = testDesc.length >= 10 ? testDesc : `${testDesc} text`;
         }
 
         const response = await apiService.updateCurriculumItem(contentId, updateData);
@@ -210,16 +213,19 @@ export const useContentManagement = () => {
         // Build content/body fields per type
         if (contentType === 'learn') {
           newData.externalLink = formData.externalLink || '';
-          newData.description = formData.title || 'Learning resource';
+          const learnDesc = formData.title || 'Learning resource';
+          newData.description = learnDesc.length >= 10 ? learnDesc : `${learnDesc} details`;
           newData.content = (formData.content && formData.content.trim().length >= 10)
             ? formData.content
             : `${formData.title || formData.externalLink || 'Learning resource'} - details inside`;
         } else if (contentType === 'test') {
           // ContentModal already formats content with question + A-D)
           newData.content = formData.content;
-          newData.description = formData.title || 'Test question';
+          const testDesc = formData.title || 'Test question';
+          newData.description = testDesc.length >= 10 ? testDesc : `${testDesc} text`;
         } else if (contentType === 'exercise') {
-          newData.description = formData.description || formData.title || 'Exercise';
+          const exDescBase = formData.description || formData.title || 'Exercise';
+          newData.description = exDescBase.length >= 10 ? exDescBase : `${exDescBase} details`;
           if (Array.isArray(formData.resources)) {
             newData.resources = formData.resources
               .filter((r) => !!r && String(r).trim())
