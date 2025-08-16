@@ -1534,47 +1534,47 @@ const AdminCurriculum: React.FC = () => {
                     >
                                              {/* Level Header */}
                        <div 
-                         className="p-6 border-b"
+                         className="p-4 border-b"
                          style={{ borderColor: 'var(--color-border-subtle)' }}
                        >
-                         <div className="flex items-start justify-between mb-6">
-                           <div className="flex items-start gap-6 flex-1">
+                         <div className="flex items-start justify-between mb-4">
+                           <div className="flex items-start gap-4 flex-1">
                              {/* Level Number Badge */}
                              <div 
-                               className="w-20 h-20 rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0"
+                               className="w-16 h-16 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0"
                                style={{
                                  background: 'linear-gradient(135deg, var(--color-accent-primary) 0%, var(--color-accent-secondary) 100%)',
                                  color: 'var(--color-text-inverse)'
                                }}
                              >
-                               <span className="text-3xl font-bold">{level.order}</span>
+                               <span className="text-2xl font-bold">{level.order}</span>
                              </div>
                              
                              {/* Level Info */}
                              <div className="flex-1 min-w-0">
-                               <h3 className="text-3xl font-bold mb-3" style={{ color: 'var(--color-text-primary)' }}>
+                               <h3 className="text-xl font-bold mb-3" style={{ color: 'var(--color-text-primary)' }}>
                                  {level.title}
                                </h3>
-                               <p className="text-lg leading-relaxed mb-4" style={{ color: 'var(--color-text-secondary)' }}>
+                               <p className="text-base leading-relaxed mb-4" style={{ color: 'var(--color-text-secondary)' }}>
                                  {level.description}
                                </p>
                                
                                {/* Badges Row */}
-                               <div className="flex items-center gap-4 mb-4">
+                               <div className="flex items-center gap-3 mb-4">
                                  <span 
-                                   className="px-4 py-2 rounded-lg text-sm font-medium"
+                                   className="px-3 py-1 rounded-lg text-xs font-medium"
                                    style={getDifficultyColor(level.difficulty)}
                                  >
                                    {level.difficulty}
                                  </span>
                                  <span 
-                                   className={`px-4 py-2 rounded-lg text-sm font-medium ${getTrackColor(level.careerTrack)}`}
+                                   className={`px-3 py-1 rounded-lg text-xs font-medium ${getTrackColor(level.careerTrack)}`}
                                    style={{ color: 'var(--color-text-inverse)' }}
                                  >
                                    {getTrackLabel(level.careerTrack)}
                                  </span>
                                  <span 
-                                   className="px-4 py-2 rounded-lg text-sm font-medium"
+                                   className="px-3 py-1 rounded-lg text-xs font-medium"
                                    style={{
                                      backgroundColor: 'var(--color-accent-tertiary)',
                                      color: 'var(--color-accent-primary)'
@@ -1589,39 +1589,39 @@ const AdminCurriculum: React.FC = () => {
                            {/* Status Badge */}
                            <div className="flex items-center gap-2 flex-shrink-0">
                              {level.isActive ? (
-                               <span 
-                                 className="px-4 py-2 rounded-lg text-base font-medium flex items-center gap-2"
-                                 style={{
-                                   backgroundColor: 'var(--color-success)',
-                                   color: 'var(--color-text-inverse)'
-                                 }}
-                               >
-                                 <CheckCircledIcon className="h-5 w-5" />
-                                 Active
-                               </span>
+                                                            <span 
+                               className="px-3 py-1 rounded-lg text-sm font-medium flex items-center gap-2"
+                               style={{
+                                 backgroundColor: 'var(--color-success)',
+                                 color: 'var(--color-text-inverse)'
+                               }}
+                             >
+                               <CheckCircledIcon className="h-4 w-4" />
+                               Active
+                             </span>
                              ) : (
-                               <span 
-                                 className="px-4 py-2 rounded-lg text-base font-medium flex items-center gap-2"
-                                 style={{
-                                   backgroundColor: 'var(--color-error)',
-                                   color: 'var(--color-text-inverse)'
-                                 }}
-                               >
-                                 <Cross1Icon className="h-5 w-5" />
-                                 Inactive
-                               </span>
+                                                            <span 
+                               className="px-3 py-1 rounded-lg text-sm font-medium flex items-center gap-2"
+                               style={{
+                                 backgroundColor: 'var(--color-error)',
+                                 color: 'var(--color-text-inverse)'
+                               }}
+                             >
+                               <Cross1Icon className="h-4 w-4" />
+                               Inactive
+                             </span>
                              )}
                            </div>
                          </div>
                         
                                                  {/* Skills */}
                          {level.skills && level.skills.length > 0 && (
-                           <div className="mb-6">
-                             <div className="flex flex-wrap gap-3">
+                           <div className="mb-4">
+                             <div className="flex flex-wrap gap-2">
                                {level.skills.slice(0, 8).map((skill, idx) => (
                                  <span 
                                    key={idx} 
-                                   className="px-4 py-2 rounded-lg text-sm font-medium shadow-sm"
+                                   className="px-3 py-1 rounded-lg text-xs font-medium shadow-sm"
                                    style={{
                                      backgroundColor: 'var(--color-accent-primary)',
                                      color: 'var(--color-text-inverse)'
@@ -1632,7 +1632,7 @@ const AdminCurriculum: React.FC = () => {
                                ))}
                                {level.skills.length > 8 && (
                                  <span 
-                                   className="px-4 py-2 rounded-lg text-sm font-medium shadow-sm"
+                                   className="px-3 py-1 rounded-lg text-xs font-medium shadow-sm"
                                    style={{
                                      backgroundColor: 'var(--color-tertiary-bg)',
                                      color: 'var(--color-text-secondary)'
@@ -1646,57 +1646,57 @@ const AdminCurriculum: React.FC = () => {
                          )}
                         
                                                  {/* Content Summary */}
-                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div 
-                            className="p-6 rounded-xl text-center shadow-md"
+                            className="p-4 rounded-xl text-center shadow-md"
                             style={{
                               backgroundColor: 'var(--color-success-bg)',
                               border: '1px solid var(--color-success)'
                             }}
                           >
-                            <div className="flex items-center justify-center mb-3">
-                              <BookOpenIcon className="h-8 w-8" style={{ color: 'var(--color-success)' }} />
+                            <div className="flex items-center justify-center mb-2">
+                              <BookOpenIcon className="h-6 w-6" style={{ color: 'var(--color-success)' }} />
                             </div>
-                            <div className="text-3xl font-bold" style={{ color: 'var(--color-success)' }}>
+                            <div className="text-2xl font-bold" style={{ color: 'var(--color-success)' }}>
                               {level.learn?.length || 0}
                             </div>
-                            <div className="text-base font-medium" style={{ color: 'var(--color-success)' }}>
+                            <div className="text-sm font-medium" style={{ color: 'var(--color-success)' }}>
                               Learning Resources
                             </div>
                           </div>
                           
                           <div 
-                            className="p-6 rounded-xl text-center shadow-md"
+                            className="p-4 rounded-xl text-center shadow-md"
                             style={{
                               backgroundColor: 'var(--color-warning-bg)',
                               border: '1px solid var(--color-warning)'
                             }}
                           >
-                            <div className="flex items-center justify-center mb-3">
-                              <ClipboardIcon className="h-8 w-8" style={{ color: 'var(--color-warning)' }} />
+                            <div className="flex items-center justify-center mb-2">
+                              <ClipboardIcon className="h-6 w-6" style={{ color: 'var(--color-warning)' }} />
                             </div>
-                            <div className="text-3xl font-bold" style={{ color: 'var(--color-warning)' }}>
+                            <div className="text-2xl font-bold" style={{ color: 'var(--color-warning)' }}>
                               {level.test?.length || 0}
                             </div>
-                            <div className="text-base font-medium" style={{ color: 'var(--color-warning)' }}>
+                            <div className="text-sm font-medium" style={{ color: 'var(--color-warning)' }}>
                               Test Questions
                             </div>
                           </div>
                           
                           <div 
-                            className="p-6 rounded-xl text-center shadow-md"
+                            className="p-4 rounded-xl text-center shadow-md"
                             style={{
                               backgroundColor: 'var(--color-accent-secondary-bg)',
                               border: '1px solid var(--color-accent-secondary)'
                             }}
                           >
-                            <div className="flex items-center justify-center mb-3">
-                              <PlayIcon className="h-8 w-8" style={{ color: 'var(--color-accent-secondary)' }} />
+                            <div className="flex items-center justify-center mb-2">
+                              <PlayIcon className="h-6 w-6" style={{ color: 'var(--color-accent-secondary)' }} />
                             </div>
-                            <div className="text-3xl font-bold" style={{ color: 'var(--color-accent-secondary)' }}>
+                            <div className="text-2xl font-bold" style={{ color: 'var(--color-accent-secondary)' }}>
                               {level.exercise?.length || 0}
                             </div>
-                            <div className="text-base font-medium" style={{ color: 'var(--color-accent-secondary)' }}>
+                            <div className="text-sm font-medium" style={{ color: 'var(--color-accent-secondary)' }}>
                               Practical Exercises
                             </div>
                           </div>
@@ -1705,7 +1705,7 @@ const AdminCurriculum: React.FC = () => {
                       
                                              {/* Action Buttons */}
                        <div 
-                         className="p-6 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4"
+                         className="p-4 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4"
                          style={{ backgroundColor: 'var(--color-secondary-bg)' }}
                        >
                          <div className="flex items-center gap-3">
@@ -1967,8 +1967,8 @@ const AdminCurriculum: React.FC = () => {
                         </div>
                       </div>
                       
-                      {/* Content Sections */}
-                      <div className="p-6 space-y-6">
+                                             {/* Content Sections */}
+                       <div className="p-4 space-y-4">
                         {/* Learn Content Section */}
                         <div 
                           className="rounded-xl p-4 shadow-md"
