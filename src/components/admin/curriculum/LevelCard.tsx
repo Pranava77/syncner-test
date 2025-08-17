@@ -9,6 +9,7 @@ import {
   ReaderIcon as BookOpenIcon,
   ClipboardIcon,
   PlayIcon,
+  ExternalLinkIcon,
   CheckCircledIcon,
   Cross1Icon,
   ChevronRightIcon
@@ -550,7 +551,11 @@ const LevelCard: React.FC<LevelCardProps> = ({
                           <h5 className="text-sm font-semibold mb-1 truncate" style={{ color: 'var(--color-text-primary)' }}>
                             {item.title}
                           </h5>
-                          
+                          {item.description && (
+                            <p className="text-xs text-ellipsis overflow-hidden whitespace-nowrap mb-1" style={{ color: 'var(--color-text-secondary)' }}>
+                              {item.description}
+                            </p>
+                          )}
                           {/* Order Badge */}
                           <div className="flex items-center gap-2 mb-2">
                             <span 
@@ -564,13 +569,15 @@ const LevelCard: React.FC<LevelCardProps> = ({
                             </span>
                             {item.externalLink && (
                               <span 
-                                className="px-2 py-1 rounded-md text-xs font-medium"
+                                className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium truncate max-w-[50%]"
+                                title={item.externalLink}
                                 style={{
                                   backgroundColor: 'var(--color-accent-tertiary)',
                                   color: 'var(--color-accent-primary)'
                                 }}
                               >
-                                External Link
+                                <ExternalLinkIcon className="h-3 w-3" />
+                                <span className="truncate">{item.externalLink}</span>
                               </span>
                             )}
                           </div>
