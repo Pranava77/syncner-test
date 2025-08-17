@@ -34,11 +34,11 @@ const TrackSelection: React.FC<TrackSelectionProps> = ({
 
   const getTrackColor = (track: string) => {
     switch (track) {
-      case 'full-stack': return 'var(--color-accent-primary)';
-      case 'ai-ml': return 'var(--color-accent-secondary)';
-      case 'ui-ux': return 'var(--color-accent-tertiary)';
-      case 'data-science': return 'var(--color-warning)';
-      default: return 'var(--color-accent-primary)';
+      case 'full-stack': return '#3B82F6'; // Blue
+      case 'ai-ml': return '#8B5CF6'; // Purple
+      case 'ui-ux': return '#EF4444'; // Red
+      case 'data-science': return '#10B981'; // Green
+      default: return '#3B82F6'; // Blue fallback
     }
   };
 
