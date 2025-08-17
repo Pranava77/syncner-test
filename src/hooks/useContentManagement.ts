@@ -176,6 +176,8 @@ export const useContentManagement = () => {
           // include required fields for validation
           careerTrack: normalizeTrack(editingContent.level?.careerTrack),
           difficulty: editingContent.level?.difficulty || 'beginner',
+          // Ensure description is always set
+          description: formData.description || formData.title || 'Content description'
         };
         if (contentType === 'learn') {
           updateData.externalLink = formData.externalLink || '';
@@ -195,15 +197,30 @@ export const useContentManagement = () => {
               .filter((r) => !!r && String(r).trim())
               .map((r) => (typeof r === 'string' ? { title: r.trim(), type: 'external' } : r));
           }
+          // For exercises, use description as content if content is empty
           if (!updateData.content || updateData.content.trim().length < 10) {
-            updateData.content = (updateData.description && updateData.description.length >= 10)
-              ? updateData.description
-              : `${formData.title || 'Exercise'} details`;
+            updateData.content = updateData.description || `${formData.title || 'Exercise'} details`;
           }
         } else if (contentType === 'test') {
           const testDesc = formData.title || 'Test question';
           updateData.description = testDesc.length >= 10 ? testDesc : `${testDesc} text`;
+          // For tests, ensure content is properly formatted
+          if (!updateData.content || updateData.content.trim().length < 10) {
+            updateData.content = `${formData.title || 'Test question'} - multiple choice options`;
+          }
         }
+
+        // Debug: Log what we're sending to the backend
+        console.log('Content Update Payload:', {
+          contentType,
+          updateData,
+          formData: {
+            title: formData.title,
+            content: formData.content,
+            description: formData.description,
+            resources: formData.resources
+          }
+        });
 
         const response = await apiService.updateCurriculumItem(contentId, updateData);
         
