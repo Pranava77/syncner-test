@@ -163,9 +163,15 @@ export const useContentManagement = () => {
         // Build update payload. For exercise, allow description/resources; for learn, include externalLink
         const updateData: any = {
           title: formData.title,
-          content: formData.content,
+          // Ensure content is always provided and meets minimum length requirement
+          content: (formData.content && formData.content.trim().length >= 10) 
+            ? formData.content 
+            : (formData.description && formData.description.trim().length >= 10)
+              ? formData.description
+              : `${formData.title || 'Content'} details`,
           // use the parent level's order to keep the item within the same level
           order: editingContent.level?.order ?? formData.order,
+          // Backend expects: syllabus, learn, test, or exercise
           type: contentType,
           // include required fields for validation
           careerTrack: normalizeTrack(editingContent.level?.careerTrack),
@@ -229,12 +235,13 @@ export const useContentManagement = () => {
           newData.externalLink = formData.externalLink || '';
           const learnDesc = formData.title || 'Learning resource';
           newData.description = learnDesc.length >= 10 ? learnDesc : `${learnDesc} details`;
+          // Ensure content is always provided and meets minimum length
           newData.content = (formData.content && formData.content.trim().length >= 10)
             ? formData.content
             : `${formData.title || formData.externalLink || 'Learning resource'} - details inside`;
         } else if (contentType === 'test') {
           // ContentModal already formats content with question + A-D)
-          newData.content = formData.content;
+          newData.content = formData.content || `${formData.title || 'Test question'} - multiple choice options`;
           const testDesc = formData.title || 'Test question';
           newData.description = testDesc.length >= 10 ? testDesc : `${testDesc} text`;
         } else if (contentType === 'exercise') {
@@ -245,6 +252,7 @@ export const useContentManagement = () => {
               .filter((r) => !!r && String(r).trim())
               .map((r) => (typeof r === 'string' ? { title: r.trim(), type: 'external' } : r));
           }
+          // Ensure content is always provided and meets minimum length
           newData.content = (formData.content && formData.content.trim().length >= 10)
             ? formData.content
             : (newData.description && newData.description.length >= 10)
