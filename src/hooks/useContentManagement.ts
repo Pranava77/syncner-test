@@ -51,6 +51,7 @@ export const useContentManagement = () => {
   });
   const [isSubmittingContent, setIsSubmittingContent] = useState(false);
   const [contentFormError, setContentFormError] = useState('');
+  const [deletingContentId, setDeletingContentId] = useState<string | null>(null);
 
   // Default content form for different types
   const getDefaultContentForm = (type: 'learn' | 'test' | 'exercise'): ContentForm => {
@@ -304,6 +305,7 @@ export const useContentManagement = () => {
   // Handle delete content
   const handleDeleteContent = useCallback(async (contentId: string) => {
     try {
+      setDeletingContentId(contentId);
       const response = await apiService.deleteCurriculumItem(contentId);
       
       if (response.success) {
@@ -318,6 +320,8 @@ export const useContentManagement = () => {
       console.error('Error deleting content:', error);
       const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
       return { success: false, message: errorMessage };
+    } finally {
+      setDeletingContentId(null);
     }
   }, [dispatch]);
 
@@ -344,6 +348,7 @@ export const useContentManagement = () => {
     contentForm,
     isSubmittingContent,
     contentFormError,
+    deletingContentId,
 
     // Actions
     handleAddContent,

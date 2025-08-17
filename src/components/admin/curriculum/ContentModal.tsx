@@ -217,7 +217,8 @@ const ContentModal: React.FC<ContentModalProps> = ({
                   type="text"
                   value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg border transition-colors focus:outline-none focus:ring-2"
+                  disabled={isSubmitting}
+                  className="w-full px-4 py-3 rounded-lg border transition-colors focus:outline-none focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{
                     backgroundColor: 'var(--color-secondary-bg)',
                     borderColor: 'var(--color-border)',
@@ -236,7 +237,8 @@ const ContentModal: React.FC<ContentModalProps> = ({
                   type="number"
                   value={form.order}
                   onChange={(e) => setForm({ ...form, order: parseInt(e.target.value) || 1 })}
-                  className="w-full px-4 py-3 rounded-lg border transition-colors focus:outline-none focus:ring-2"
+                  disabled={isSubmitting}
+                  className="w-full px-4 py-3 rounded-lg border transition-colors focus:outline-none focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{
                     backgroundColor: 'var(--color-secondary-bg)',
                     borderColor: 'var(--color-border)',
@@ -258,7 +260,8 @@ const ContentModal: React.FC<ContentModalProps> = ({
                   type="url"
                   value={form.externalLink}
                   onChange={(e) => setForm({ ...form, externalLink: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg border transition-colors focus:outline-none focus:ring-2"
+                  disabled={isSubmitting}
+                  className="w-full px-4 py-3 rounded-lg border transition-colors focus:outline-none focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{
                     backgroundColor: 'var(--color-secondary-bg)',
                     borderColor: 'var(--color-border)',
@@ -278,8 +281,9 @@ const ContentModal: React.FC<ContentModalProps> = ({
                   <textarea
                     value={form.question}
                     onChange={(e) => setForm({ ...form, question: e.target.value })}
+                    disabled={isSubmitting}
                     rows={3}
-                    className="w-full px-4 py-3 rounded-lg border transition-colors focus:outline-none focus:ring-2"
+                    className="w-full px-4 py-3 rounded-lg border transition-colors focus:outline-none focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     style={{
                       backgroundColor: 'var(--color-secondary-bg)',
                       borderColor: 'var(--color-border)',
@@ -312,7 +316,8 @@ const ContentModal: React.FC<ContentModalProps> = ({
                         newOptions[0] = e.target.value;
                         setForm({ ...form, options: ensureTestOptions(newOptions) });
                       }}
-                      className="flex-1 px-4 py-2 border rounded-lg focus:outline-none"
+                      disabled={isSubmitting}
+                      className="flex-1 px-4 py-2 border rounded-lg focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                       style={{
                         backgroundColor: 'var(--color-secondary-bg)',
                         borderColor: 'var(--color-border)',
@@ -340,7 +345,8 @@ const ContentModal: React.FC<ContentModalProps> = ({
                         newOptions[1] = e.target.value;
                         setForm({ ...form, options: ensureTestOptions(newOptions) });
                       }}
-                      className="flex-1 px-4 py-2 border rounded-lg focus:outline-none"
+                      disabled={isSubmitting}
+                      className="flex-1 px-4 py-2 border rounded-lg focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                       style={{
                         backgroundColor: 'var(--color-secondary-bg)',
                         borderColor: 'var(--color-border)',
@@ -368,7 +374,8 @@ const ContentModal: React.FC<ContentModalProps> = ({
                         newOptions[2] = e.target.value;
                         setForm({ ...form, options: ensureTestOptions(newOptions) });
                       }}
-                      className="flex-1 px-4 py-2 border rounded-lg focus:outline-none"
+                      disabled={isSubmitting}
+                      className="flex-1 px-4 py-2 border rounded-lg focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                       style={{
                         backgroundColor: 'var(--color-secondary-bg)',
                         borderColor: 'var(--color-border)',
@@ -396,7 +403,8 @@ const ContentModal: React.FC<ContentModalProps> = ({
                         newOptions[3] = e.target.value;
                         setForm({ ...form, options: ensureTestOptions(newOptions) });
                       }}
-                      className="flex-1 px-4 py-2 border rounded-lg focus:outline-none"
+                      disabled={isSubmitting}
+                      className="flex-1 px-4 py-2 border rounded-lg focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                       style={{
                         backgroundColor: 'var(--color-secondary-bg)',
                         borderColor: 'var(--color-border)',
@@ -439,7 +447,8 @@ const ContentModal: React.FC<ContentModalProps> = ({
                   <select
                     value={form.answer}
                     onChange={(e) => setForm({ ...form, answer: e.target.value })}
-                    className="w-full px-4 py-3 rounded-lg border transition-colors focus:outline-none focus:ring-2"
+                    disabled={isSubmitting}
+                    className="w-full px-4 py-3 rounded-lg border transition-colors focus:outline-none focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     style={{
                       backgroundColor: 'var(--color-secondary-bg)',
                       borderColor: 'var(--color-border)',
@@ -467,8 +476,9 @@ const ContentModal: React.FC<ContentModalProps> = ({
                   <textarea
                     value={form.description}
                     onChange={(e) => setForm({ ...form, description: e.target.value })}
+                    disabled={isSubmitting}
                     rows={5}
-                    className="w-full px-4 py-4 rounded-xl border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50"
+                    className="w-full px-4 py-4 rounded-xl border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
                     style={{
                       backgroundColor: 'var(--color-secondary-bg)',
                       borderColor: 'var(--color-border)',
@@ -492,8 +502,9 @@ const ContentModal: React.FC<ContentModalProps> = ({
                   <textarea
                     value={form.content}
                     onChange={(e) => setForm({ ...form, content: e.target.value })}
+                    disabled={isSubmitting}
                     rows={4}
-                    className="w-full px-4 py-4 rounded-xl border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50"
+                    className="w-full px-4 py-4 rounded-xl border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
                     style={{
                       backgroundColor: 'var(--color-secondary-bg)',
                       borderColor: 'var(--color-border)',
@@ -532,7 +543,8 @@ const ContentModal: React.FC<ContentModalProps> = ({
                         type="url"
                         value={newResource}
                         onChange={(e) => setNewResource(e.target.value)}
-                        className="flex-1 px-4 py-3 rounded-lg border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50"
+                        disabled={isSubmitting}
+                        className="flex-1 px-4 py-3 rounded-lg border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
                         style={{
                           backgroundColor: 'var(--color-surface)',
                           borderColor: 'var(--color-border)',
@@ -544,7 +556,8 @@ const ContentModal: React.FC<ContentModalProps> = ({
                       <button
                         type="button"
                         onClick={addResource}
-                        className="px-4 py-3 rounded-lg font-medium transition-all duration-200 hover:scale-105"
+                        disabled={isSubmitting}
+                        className="px-4 py-3 rounded-lg font-medium transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                         style={{
                           backgroundColor: 'var(--color-accent-primary)',
                           color: 'var(--color-text-inverse)'
@@ -586,7 +599,8 @@ const ContentModal: React.FC<ContentModalProps> = ({
                               <button
                                 type="button"
                                 onClick={() => removeResource(resource)}
-                                className="ml-2 p-1 rounded-lg transition-all duration-200 hover:bg-red-50 hover:scale-110"
+                                disabled={isSubmitting}
+                                className="ml-2 p-1 rounded-lg transition-all duration-200 hover:bg-red-50 hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed"
                                 style={{ color: 'var(--color-error)' }}
                               >
                                 <Cross1Icon className="h-4 w-4" />
@@ -617,7 +631,8 @@ const ContentModal: React.FC<ContentModalProps> = ({
               <button
                 type="button"
                 onClick={handleClose}
-                className="px-6 py-3 rounded-lg font-medium transition-colors"
+                disabled={isSubmitting}
+                className="px-6 py-3 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{
                   backgroundColor: 'var(--color-secondary-bg)',
                   color: 'var(--color-text-primary)',
@@ -635,7 +650,7 @@ const ContentModal: React.FC<ContentModalProps> = ({
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-6 py-3 rounded-lg font-medium transition-colors disabled:opacity-50"
+                className="px-6 py-3 rounded-lg font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{
                   backgroundColor: typeColor,
                   color: 'var(--color-text-inverse)'
@@ -651,7 +666,17 @@ const ContentModal: React.FC<ContentModalProps> = ({
                   }
                 }}
               >
-                {isSubmitting ? 'Saving...' : (editingContent ? 'Update' : 'Create')}
+                {isSubmitting ? (
+                  <div className="flex items-center gap-2">
+                    <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    {editingContent ? 'Updating...' : 'Creating...'}
+                  </div>
+                ) : (
+                  editingContent ? 'Update' : 'Create'
+                )}
               </button>
             </div>
           </form>

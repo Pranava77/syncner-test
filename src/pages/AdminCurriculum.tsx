@@ -167,7 +167,8 @@ const AdminCurriculum: React.FC = () => {
     setContentFormError,
     getDefaultContentForm,
     resetContentForm,
-    ensureTestOptions
+    ensureTestOptions,
+    deletingContentId
   } = useContentManagement();
 
   const {
@@ -417,6 +418,44 @@ const AdminCurriculum: React.FC = () => {
     );
   };
 
+  // Enhanced content handlers with loading states
+  const handleAddContentWithLoading = (type: 'learn' | 'test' | 'exercise', level: Level) => {
+    setLoadingOpen(true);
+    setLoadingMessage(`Adding ${type} content...`);
+    handleAddContent(type, level);
+    setLoadingOpen(false);
+    setLoadingMessage('');
+  };
+
+  const handleEditContentWithLoading = (type: 'learn' | 'test' | 'exercise', item: any, index: number, level: Level) => {
+    setLoadingOpen(true);
+    setLoadingMessage(`Editing ${type} content...`);
+    handleEditContent(type, item, index, level);
+    setLoadingOpen(false);
+    setLoadingMessage('');
+  };
+
+  const handleDeleteContentWithLoading = async (contentId: string) => {
+    if (window.confirm('Are you sure you want to delete this content? This action cannot be undone.')) {
+      try {
+        setLoadingOpen(true);
+        setLoadingMessage('Deleting content...');
+        const result = await handleDeleteContent(contentId);
+        if (result.success) {
+          showSuccessMessage(result.message);
+        } else {
+          setError(result.message);
+        }
+      } catch (error) {
+        console.error('Error deleting content:', error);
+        setError('Failed to delete content');
+      } finally {
+        setLoadingOpen(false);
+        setLoadingMessage('');
+      }
+    }
+  };
+
   // Level reordering functions
   const handleMoveLevelUp = async (track: string, currentOrder: number, targetOrder: number) => {
     setLoadingOpen(true);
@@ -650,13 +689,14 @@ const AdminCurriculum: React.FC = () => {
                       levels={filteredLevels}
                       onEditLevel={handleEditLevel}
                       onDeleteLevel={handleDeleteLevel}
-                      onAddContent={handleAddContent}
-                      onEditContent={handleEditContent}
-                      onDeleteContent={handleDeleteContent}
+                      onAddContent={handleAddContentWithLoading}
+                      onEditContent={handleEditContentWithLoading}
+                      onDeleteContent={handleDeleteContentWithLoading}
                       onToggleContentExpansion={handleToggleContentExpansion}
                       onMoveLevelUp={handleMoveLevelUp}
                       onMoveLevelDown={handleMoveLevelDown}
                       isReordering={isReordering}
+                      deletingContentId={deletingContentId}
                     />
                   ))}
                 </div>
