@@ -751,11 +751,15 @@ const LevelCard: React.FC<LevelCardProps> = ({
                         {/* Content Info */}
                         <div className="flex-1 min-w-0">
                           <h5 className="text-sm font-semibold mb-1 truncate" style={{ color: 'var(--color-text-primary)' }}>
-                            {item.title}
+                            {item.title || 'Test Question'}
                           </h5>
+                          {/* Question preview */}
+                          <p className="text-xs mb-2 truncate" style={{ color: 'var(--color-text-secondary)' }}>
+                            {(item.question) ? item.question : (item.content ? String(item.content).split('\n')[0] : '')}
+                          </p>
                           
-                          {/* Order Badge */}
-                          <div className="flex items-center gap-2 mb-2">
+                          {/* Badges Row */}
+                          <div className="flex flex-wrap items-center gap-2 mb-2">
                             <span 
                               className="px-2 py-1 rounded-md text-xs font-medium"
                               style={{
@@ -765,7 +769,41 @@ const LevelCard: React.FC<LevelCardProps> = ({
                             >
                               Order: {item.order}
                             </span>
+                            {item.answer && (
+                              <span
+                                className="px-2 py-1 rounded-md text-xs font-medium"
+                                style={{ backgroundColor: 'var(--color-success-bg)', color: 'var(--color-success)', border: '1px solid var(--color-success)' }}
+                              >
+                                Answer: {item.answer}
+                              </span>
+                            )}
                           </div>
+
+                          {/* Options preview */}
+                          {Array.isArray(item.options) && item.options.length > 0 && (
+                            <div className="grid grid-cols-2 gap-2 mt-2 pr-2">
+                              {item.options.slice(0,4).map((opt: string, idx: number) => {
+                                const letters = ['A','B','C','D'];
+                                const letter = letters[idx] || '?';
+                                const isCorrect = (item.answer && item.answer.toUpperCase().trim().startsWith(letter));
+                                return (
+                                  <div key={idx} className="flex items-center gap-2 min-w-0">
+                                    <span
+                                      className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0"
+                                      style={{
+                                        backgroundColor: isCorrect ? 'var(--color-success)' : 'var(--color-accent-tertiary)',
+                                        color: 'var(--color-text-inverse)'
+                                      }}
+                                      title={isCorrect ? 'Correct' : ''}
+                                    >
+                                      {letter}
+                                    </span>
+                                    <span className="text-xs truncate" style={{ color: 'var(--color-text-secondary)' }} title={opt}>{opt}</span>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          )}
                         </div>
                       </div>
                       

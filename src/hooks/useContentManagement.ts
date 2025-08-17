@@ -23,6 +23,16 @@ interface EditingContent {
 }
 
 export const useContentManagement = () => {
+  const normalizeTrack = (track?: string) => {
+    if (!track) return '' as any;
+    const map: Record<string,string> = {
+      'fullstack': 'full-stack', 'full-stack': 'full-stack', 'Full Stack': 'full-stack',
+      'aiml': 'ai-ml', 'ai-ml': 'ai-ml', 'AI/ML': 'ai-ml',
+      'uiux': 'ui-ux', 'ui-ux': 'ui-ux', 'UI/UX': 'ui-ux',
+      'datascience': 'data-science', 'data-science': 'data-science', 'Data Science': 'data-science',
+    };
+    return map[track] || track;
+  };
   const dispatch = useAppDispatch();
 
   // State
@@ -154,8 +164,12 @@ export const useContentManagement = () => {
         const updateData: any = {
           title: formData.title,
           content: formData.content,
-          order: formData.order,
+          // use the parent level's order to keep the item within the same level
+          order: editingContent.level?.order ?? formData.order,
           type: contentType,
+          // include required fields for validation
+          careerTrack: normalizeTrack(editingContent.level?.careerTrack),
+          difficulty: editingContent.level?.difficulty || 'beginner',
         };
         if (contentType === 'learn') {
           updateData.externalLink = formData.externalLink || '';
