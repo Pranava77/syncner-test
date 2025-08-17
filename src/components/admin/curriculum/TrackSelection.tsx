@@ -92,7 +92,7 @@ const TrackSelection: React.FC<TrackSelectionProps> = ({
       </div>
 
       {/* Track Selection Grid */}
-      <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {tracks.map((track) => (
           <motion.div
             key={track}
@@ -107,7 +107,7 @@ const TrackSelection: React.FC<TrackSelectionProps> = ({
             onClick={() => onTrackSelect(track)}
           >
             <div 
-              className="relative rounded-2xl border shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden h-full flex"
+              className="relative rounded-2xl border shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden"
               style={{
                 backgroundColor: 'var(--color-surface)',
                 borderColor: 'var(--color-border)'
@@ -119,7 +119,7 @@ const TrackSelection: React.FC<TrackSelectionProps> = ({
                 style={{ backgroundColor: getTrackColor(track) }}
               />
               
-              <div className="relative z-10 p-6 flex-1 flex flex-col">
+              <div className="relative z-10 p-6">
                 {/* Track Icon */}
                 <div 
                   className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110"
@@ -133,14 +133,14 @@ const TrackSelection: React.FC<TrackSelectionProps> = ({
 
                 {/* Track Info */}
                 <h3 
-                  className="text-lg sm:text-xl font-bold mb-1"
+                  className="text-xl font-bold mb-2"
                   style={{ color: 'var(--color-text-primary)' }}
                 >
                   {getTrackLabel(track)}
                 </h3>
                 
                 <p 
-                  className="text-xs sm:text-sm mb-3"
+                  className="text-sm mb-4"
                   style={{ color: 'var(--color-text-tertiary)' }}
                 >
                   {trackCounts[track] || 0} levels available
@@ -148,7 +148,7 @@ const TrackSelection: React.FC<TrackSelectionProps> = ({
 
                 {/* Level Count Badge */}
                 <div 
-                  className="mt-auto inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-medium self-start"
+                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
                   style={{
                     backgroundColor: getTrackColor(track),
                     color: 'var(--color-text-inverse)'
@@ -159,7 +159,7 @@ const TrackSelection: React.FC<TrackSelectionProps> = ({
 
                 {/* Hover Indicator */}
                 <div 
-                  className="absolute bottom-0 left-0 w-full h-1 transition-all duration-300 group-hover:scale-x-100"
+                  className="absolute bottom-0 left-0 w-full h-1 transition-all duration-300"
                   style={{ 
                     backgroundColor: getTrackColor(track),
                     transform: 'scaleX(0)',

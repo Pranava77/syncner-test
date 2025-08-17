@@ -312,7 +312,7 @@ const AdminCurriculum: React.FC = () => {
           window.dispatchEvent(new CustomEvent('levels-refresh-required'));
           setShowLevelModal(false);
         showSuccessMessage('Level updated successfully');
-        } else {
+      } else {
           setFormError(response.message || 'Failed to update level');
         }
       } else {
@@ -446,8 +446,8 @@ const AdminCurriculum: React.FC = () => {
     };
   }, [selectedTrack, fetchLevels]);
 
-  return (
-    <div 
+    return (
+      <div 
       className="min-h-screen flex flex-col"
       style={{ backgroundColor: 'var(--color-primary-bg)' }}
     >
