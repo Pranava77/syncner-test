@@ -45,6 +45,7 @@ import {
 import useCurriculumManagement from '../hooks/useCurriculumManagement';
 import useContentManagement from '../hooks/useContentManagement';
 import useLevelReordering from '../hooks/useLevelReordering';
+import LoadingModal from '../components/LoadingModal';
 
 interface ReadFirst {
   brief?: string;
@@ -199,6 +200,8 @@ const AdminCurriculum: React.FC = () => {
   });
   const [isSubmittingLevel, setIsSubmittingLevel] = useState(false);
   const [formError, setFormError] = useState('');
+  const [loadingOpen, setLoadingOpen] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterDifficulty, setFilterDifficulty] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
@@ -294,6 +297,8 @@ const AdminCurriculum: React.FC = () => {
 
   const handleLevelSubmit = async (formData: LevelForm) => {
     try {
+      setLoadingOpen(true);
+      setLoadingMessage(editingLevel ? 'Updating level...' : 'Creating level...');
       setIsSubmittingLevel(true);
       setFormError('');
 
@@ -350,12 +355,16 @@ const AdminCurriculum: React.FC = () => {
       setFormError(errorMessage);
     } finally {
       setIsSubmittingLevel(false);
+      setLoadingOpen(false);
+      setLoadingMessage('');
     }
   };
 
   const handleDeleteLevel = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this level? This action cannot be undone.')) {
       try {
+        setLoadingOpen(true);
+        setLoadingMessage('Deleting level...');
         const response = await apiService.delete(`/curriculum/${id}`);
         
         if (response.success) {
@@ -370,6 +379,9 @@ const AdminCurriculum: React.FC = () => {
         console.error('Error deleting level:', error);
         const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
         setError(errorMessage);
+      } finally {
+        setLoadingOpen(false);
+        setLoadingMessage('');
       }
     }
   };
@@ -387,21 +399,29 @@ const AdminCurriculum: React.FC = () => {
 
   // Level reordering functions
   const handleMoveLevelUp = async (track: string, currentOrder: number, targetOrder: number) => {
+    setLoadingOpen(true);
+    setLoadingMessage('Reordering levels...');
     const result = await moveLevelUp(track, currentOrder, targetOrder);
     if (result.success) {
       showSuccessMessage(result.message);
     } else {
       setError(result.message);
     }
+    setLoadingOpen(false);
+    setLoadingMessage('');
   };
 
   const handleMoveLevelDown = async (track: string, currentOrder: number, targetOrder: number) => {
+    setLoadingOpen(true);
+    setLoadingMessage('Reordering levels...');
     const result = await moveLevelDown(track, currentOrder, targetOrder);
     if (result.success) {
       showSuccessMessage(result.message);
     } else {
       setError(result.message);
     }
+    setLoadingOpen(false);
+    setLoadingMessage('');
   };
 
   // Initialize on mount
@@ -602,6 +622,7 @@ const AdminCurriculum: React.FC = () => {
         formError={contentFormError}
         level={editingContent?.level || (editingContent?.item?.levelId ? levels.find(l => l.id === editingContent.item?.levelId) || null : null)}
       />
+      <LoadingModal open={loadingOpen} message={loadingMessage} />
     </div>
   );
 };
