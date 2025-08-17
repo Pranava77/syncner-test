@@ -411,6 +411,21 @@ const AdminCurriculum: React.FC = () => {
     }
   }, [selectedTrack, fetchLevels]);
 
+  // Refresh levels when content/levels change elsewhere
+  useEffect(() => {
+    const refresh = () => {
+      if (selectedTrack) {
+        fetchLevels(selectedTrack);
+      }
+    };
+    window.addEventListener('levels-refresh-required', refresh as EventListener);
+    window.addEventListener('curriculum-changed', refresh as EventListener);
+    return () => {
+      window.removeEventListener('levels-refresh-required', refresh as EventListener);
+      window.removeEventListener('curriculum-changed', refresh as EventListener);
+    };
+  }, [selectedTrack, fetchLevels]);
+
   return (
     <div 
       className="min-h-screen flex flex-col"
