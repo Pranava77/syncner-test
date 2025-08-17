@@ -458,103 +458,145 @@ const ContentModal: React.FC<ContentModalProps> = ({
             )}
 
             {contentType === 'exercise' && (
-              <div>
-                <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
-                  Description *
-                </label>
-                <textarea
-                  value={form.description}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
-                  rows={4}
-                  className="w-full px-4 py-3 rounded-lg border transition-colors focus:outline-none focus:ring-2"
-                  style={{
-                    backgroundColor: 'var(--color-secondary-bg)',
-                    borderColor: 'var(--color-border)',
-                    color: 'var(--color-text-primary)'
-                  }}
-                  placeholder="Describe the exercise and what students need to do"
-                  required
-                />
-              </div>
-            )}
-
-            {/* General Content */}
-            <div>
-              <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
-                Content
-              </label>
-              <textarea
-                value={form.content}
-                onChange={(e) => setForm({ ...form, content: e.target.value })}
-                rows={4}
-                className="w-full px-4 py-3 rounded-lg border transition-colors focus:outline-none focus:ring-2"
-                style={{
-                  backgroundColor: 'var(--color-secondary-bg)',
-                  borderColor: 'var(--color-border)',
-                  color: 'var(--color-text-primary)'
-                }}
-                placeholder={`Enter ${typeLabel.toLowerCase()} content`}
-              />
-            </div>
-
-            {/* Resources (for exercises) */}
-            {contentType === 'exercise' && (
-              <div>
-                <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
-                  Resources
-                </label>
-                <div className="flex gap-2 mb-3">
-                  <input
-                    type="text"
-                    value={newResource}
-                    onChange={(e) => setNewResource(e.target.value)}
-                    className="flex-1 px-4 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2"
+              <div className="space-y-6">
+                {/* Exercise Description */}
+                <div>
+                  <label className="block text-sm font-medium mb-3" style={{ color: 'var(--color-text-primary)' }}>
+                    Exercise Description *
+                  </label>
+                  <textarea
+                    value={form.description}
+                    onChange={(e) => setForm({ ...form, description: e.target.value })}
+                    rows={5}
+                    className="w-full px-4 py-4 rounded-xl border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50"
                     style={{
                       backgroundColor: 'var(--color-secondary-bg)',
                       borderColor: 'var(--color-border)',
-                      color: 'var(--color-text-primary)'
+                      color: 'var(--color-text-primary)',
+                      fontSize: '14px',
+                      lineHeight: '1.5'
                     }}
-                    placeholder="Add a resource URL"
-                    onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addResource())}
+                    placeholder="Describe the exercise in detail. What should students do? What are the learning objectives? What deliverables are expected?"
+                    required
                   />
-                  <button
-                    type="button"
-                    onClick={addResource}
-                    className="px-4 py-2 rounded-lg font-medium transition-colors"
-                    style={{
-                      backgroundColor: 'var(--color-accent-primary)',
-                      color: 'var(--color-text-inverse)'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
-                    }}
-                  >
-                    <PlusIcon className="h-4 w-4" />
-                  </button>
+                  <p className="text-xs mt-2" style={{ color: 'var(--color-text-tertiary)' }}>
+                    Provide clear instructions and expectations for students to complete this exercise.
+                  </p>
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  {form.resources.map((resource, index) => (
-                    <span
-                      key={index}
-                      className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm"
-                      style={{
-                        backgroundColor: 'var(--color-accent-tertiary)',
-                        color: 'var(--color-accent-primary)'
-                      }}
-                    >
-                      {resource}
-                                                        <button
-                                    type="button"
-                                    onClick={() => removeResource(resource)}
-                                    className="ml-1 hover:bg-red-100 rounded-full p-0.5"
-                                  >
-                                    <Cross1Icon className="h-3 w-3" />
-                                  </button>
-                    </span>
-                  ))}
+
+                {/* Exercise Content */}
+                <div>
+                  <label className="block text-sm font-medium mb-3" style={{ color: 'var(--color-text-primary)' }}>
+                    Exercise Content
+                  </label>
+                  <textarea
+                    value={form.content}
+                    onChange={(e) => setForm({ ...form, content: e.target.value })}
+                    rows={4}
+                    className="w-full px-4 py-4 rounded-xl border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50"
+                    style={{
+                      backgroundColor: 'var(--color-secondary-bg)',
+                      borderColor: 'var(--color-border)',
+                      color: 'var(--color-text-primary)',
+                      fontSize: '14px',
+                      lineHeight: '1.5'
+                    }}
+                    placeholder="Additional content, code examples, or detailed instructions for the exercise"
+                  />
+                  <p className="text-xs mt-2" style={{ color: 'var(--color-text-tertiary)' }}>
+                    Optional: Add code snippets, examples, or additional context to help students understand the exercise better.
+                  </p>
+                </div>
+
+                {/* Resources Section */}
+                <div className="bg-gray-50 rounded-xl p-6" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'var(--color-accent-primary)' }}>
+                      <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-sm" style={{ color: 'var(--color-text-primary)' }}>
+                        Reference Resources
+                      </h4>
+                      <p className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                        Add helpful links, documentation, or resources for students
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <div className="flex gap-2">
+                      <input
+                        type="url"
+                        value={newResource}
+                        onChange={(e) => setNewResource(e.target.value)}
+                        className="flex-1 px-4 py-3 rounded-lg border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-opacity-50"
+                        style={{
+                          backgroundColor: 'var(--color-surface)',
+                          borderColor: 'var(--color-border)',
+                          color: 'var(--color-text-primary)'
+                        }}
+                        placeholder="https://example.com/resource"
+                        onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addResource())}
+                      />
+                      <button
+                        type="button"
+                        onClick={addResource}
+                        className="px-4 py-3 rounded-lg font-medium transition-all duration-200 hover:scale-105"
+                        style={{
+                          backgroundColor: 'var(--color-accent-primary)',
+                          color: 'var(--color-text-inverse)'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                        }}
+                      >
+                        <PlusIcon className="h-4 w-4" />
+                      </button>
+                    </div>
+                    
+                    {form.resources.length > 0 && (
+                      <div className="space-y-2">
+                        <p className="text-xs font-medium" style={{ color: 'var(--color-text-secondary)' }}>
+                          Added Resources ({form.resources.length}):
+                        </p>
+                        <div className="space-y-2">
+                          {form.resources.map((resource, index) => (
+                            <div
+                              key={index}
+                              className="flex items-center justify-between p-3 rounded-lg border transition-all duration-200 hover:border-opacity-60"
+                              style={{
+                                backgroundColor: 'var(--color-surface)',
+                                borderColor: 'var(--color-border-subtle)'
+                              }}
+                            >
+                              <div className="flex items-center gap-3 flex-1 min-w-0">
+                                <div className="w-6 h-6 rounded flex items-center justify-center text-xs font-medium" style={{ backgroundColor: 'var(--color-accent-tertiary)' }}>
+                                  {index + 1}
+                                </div>
+                                <span className="text-sm truncate" style={{ color: 'var(--color-text-primary)' }}>
+                                  {resource}
+                                </span>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => removeResource(resource)}
+                                className="ml-2 p-1 rounded-lg transition-all duration-200 hover:bg-red-50 hover:scale-110"
+                                style={{ color: 'var(--color-error)' }}
+                              >
+                                <Cross1Icon className="h-4 w-4" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             )}
