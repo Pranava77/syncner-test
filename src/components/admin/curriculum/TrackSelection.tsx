@@ -115,12 +115,9 @@ const TrackSelection: React.FC<TrackSelectionProps> = ({
               }}
             >
               {/* Background Pattern */}
-              <div 
-                className="absolute top-0 right-0 w-24 h-24 opacity-5 rounded-full"
-                style={{ backgroundColor: getTrackColor(track) }}
-              />
+              {/* Removed circular background pattern */}
               
-              <div className="relative z-10 p-6 h-full flex flex-col">
+              <div className="relative z-10 p-6 h-full flex flex-col items-center text-center">
                 {/* Track Icon */}
                 <div 
                   className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110"
@@ -133,7 +130,7 @@ const TrackSelection: React.FC<TrackSelectionProps> = ({
                 </div>
 
                 {/* Track Info */}
-                <div className="flex-1">
+                <div className="flex-1 flex flex-col items-center">
                   <h3 
                     className="text-xl font-bold mb-3"
                     style={{ color: 'var(--color-text-primary)' }}
