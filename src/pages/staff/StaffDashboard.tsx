@@ -30,7 +30,6 @@ import {
 } from '@radix-ui/react-icons';
 import StudentTracking from './staff/StudentTracking';
 import Leaderboard from './staff/Leaderboard';
-import StaffProfile from './staff/StaffProfile';
 import syncnerLogo from '../assets/syncner-logo.png';
 import ThemeSwitcher from '../components/ThemeSwitcher';
 import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
@@ -63,7 +62,6 @@ const StaffDashboard: React.FC = () => {
     { path: '/staff', icon: HomeIcon, label: 'Dashboard' },
     { path: '/staff/students', icon: Users, label: 'Student Tracking' },
     { path: '/staff/leaderboard', icon: StarIcon, label: 'Leaderboard' },
-    { path: '/staff/profile', icon: IdCardIcon, label: 'Staff Profile' },
   ];
 
   const isActive = (path: string) => window.location.pathname === path;
@@ -417,7 +415,7 @@ const StaffDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Content - Exact Layout.tsx Design */}
+      {/* Main Content - Design */}
       <div className="flex-1 overflow-hidden">
         <main 
           className="h-full overflow-y-auto scroll-smooth"
@@ -427,7 +425,6 @@ const StaffDashboard: React.FC = () => {
             <Route path="/" element={<StaffMainDashboard />} />
             <Route path="/students" element={<StudentTracking />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
-            <Route path="/profile" element={<StaffProfile />} />
           </Routes>
         </main>
       </div>
