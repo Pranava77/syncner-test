@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../redux/store';
-import { logoutUser } from '../redux/slices/authSlice';
+import { useAppDispatch, useAppSelector } from '../../redux/store';
+import { logoutUser } from '../../redux/slices/authSlice';
 import { useNavigate, Routes, Route, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -26,10 +26,10 @@ import {
   TargetIcon as Target,
   ArrowTopRightIcon as TrendingUp
 } from '@radix-ui/react-icons';
-import StudentTracking from './staff/StudentTracking';
-import Leaderboard from './staff/Leaderboard';
-import syncnerLogo from '../assets/syncner-logo.png';
-import ThemeSwitcher from '../components/ThemeSwitcher';
+import StudentTracking from './StudentTracking';
+import Leaderboard from './Leaderboard';
+import syncnerLogo from '../../assets/syncner-logo.png';
+import ThemeSwitcher from '../../components/ThemeSwitcher';
 import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
 
 const COLORS = ['#00B8D9', '#FFBB28', '#FF8042', '#A259F7', '#F95F62', '#00C49F'];
