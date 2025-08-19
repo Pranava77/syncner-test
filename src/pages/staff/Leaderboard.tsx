@@ -155,101 +155,105 @@ const StudentDetails: React.FC = () => {
           <div className="lg:col-span-2">
             {/* Student Details Card */}
             <div 
-              className="p-6 rounded-xl shadow-lg mb-6"
+              className="p-6 rounded-xl shadow-sm mb-6"
               style={{
                 backgroundColor: 'var(--color-surface)',
-                boxShadow: 'var(--shadow-lg)'
+                boxShadow: 'var(--shadow-sm)',
+                borderColor: 'var(--color-border)'
               }}
             >
               <h2 
-                className="text-xl font-semibold mb-4"
+                className="text-lg font-semibold mb-6"
                 style={{ color: 'var(--color-text-primary)' }}
               >
                 Student Details
               </h2>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="font-medium" style={{ color: 'var(--color-text-secondary)' }}>Roll number:</span>
-                  <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{studentData.rollNumber}</span>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
+                  <span className="font-label text-sm" style={{ color: 'var(--color-text-secondary)' }}>Roll number:</span>
+                  <span className="font-medium" style={{ color: 'var(--color-text-primary)' }}>{studentData.rollNumber}</span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="font-medium" style={{ color: 'var(--color-text-secondary)' }}>Student Name:</span>
-                  <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{studentData.studentName}</span>
+                <div className="flex justify-between items-center py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
+                  <span className="font-label text-sm" style={{ color: 'var(--color-text-secondary)' }}>Student Name:</span>
+                  <span className="font-medium" style={{ color: 'var(--color-text-primary)' }}>{studentData.studentName}</span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="font-medium opacity-70" style={{ color: 'var(--color-text-secondary)' }}>Course & Dept:</span>
-                  <span className="font-semibold opacity-70" style={{ color: 'var(--color-text-secondary)' }}>{studentData.courseDept}</span>
+                <div className="flex justify-between items-center py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
+                  <span className="font-label text-sm opacity-70" style={{ color: 'var(--color-text-secondary)' }}>Course & Dept:</span>
+                  <span className="font-medium opacity-70" style={{ color: 'var(--color-text-secondary)' }}>{studentData.courseDept}</span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="font-medium opacity-70" style={{ color: 'var(--color-text-secondary)' }}>Batch:</span>
-                  <span className="font-semibold opacity-70" style={{ color: 'var(--color-text-secondary)' }}>{studentData.batch}</span>
+                <div className="flex justify-between items-center py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
+                  <span className="font-label text-sm opacity-70" style={{ color: 'var(--color-text-secondary)' }}>Batch:</span>
+                  <span className="font-medium opacity-70" style={{ color: 'var(--color-text-secondary)' }}>{studentData.batch}</span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="font-medium" style={{ color: 'var(--color-text-secondary)' }}>Enrolled Career Track:</span>
+                <div className="flex justify-between items-center py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
+                  <span className="font-label text-sm" style={{ color: 'var(--color-text-secondary)' }}>Enrolled Career Track:</span>
                   <span 
                     className="px-3 py-1 rounded-lg text-sm font-medium"
                     style={{ 
-                      backgroundColor: '#8B5CF6',
-                      color: 'white'
+                      backgroundColor: 'var(--color-accent-primary)',
+                      color: 'var(--color-text-inverse)'
                     }}
                   >
                     {studentData.enrolledCareerTrack}
                   </span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="font-medium" style={{ color: 'var(--color-text-secondary)' }}>Enrolled Date:</span>
-                  <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{studentData.enrolledDate}</span>
+                <div className="flex justify-between items-center py-2">
+                  <span className="font-label text-sm" style={{ color: 'var(--color-text-secondary)' }}>Enrolled Date:</span>
+                  <span className="font-medium" style={{ color: 'var(--color-text-primary)' }}>{studentData.enrolledDate}</span>
                 </div>
               </div>
             </div>
 
             {/* Summary Statistics Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
               {[
-                { label: 'Avg Attendance', value: studentData.summaryStats.avgAttendance, subtitle: 'Great/Good/Poor' },
-                { label: 'Progress', value: studentData.summaryStats.progress, subtitle: 'Great/Good/Poor' },
-                { label: 'Leaderboard', value: studentData.summaryStats.leaderboard, subtitle: '(Career Track Specific)' }
+                { label: 'Avg Attendance', value: studentData.summaryStats.avgAttendance, subtitle: 'Great/Good/Poor', icon: '📊' },
+                { label: 'Progress', value: studentData.summaryStats.progress, subtitle: 'Great/Good/Poor', icon: '📈' },
+                { label: 'Leaderboard', value: studentData.summaryStats.leaderboard, subtitle: '(Career Track Specific)', icon: '🏆' }
               ].map((stat, index) => (
                 <motion.div
                   key={index}
-                  className="p-4 rounded-lg text-center"
+                  className="p-6 rounded-xl shadow-sm text-center flex flex-col items-center"
                   style={{
-                    backgroundColor: '#F3F4F6',
-                    color: '#374151'
+                    backgroundColor: 'var(--color-surface)',
+                    boxShadow: 'var(--shadow-sm)',
+                    borderColor: 'var(--color-border)'
                   }}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <div className="text-2xl font-bold mb-1">{stat.value}%</div>
-                  <div className="text-sm font-medium">{stat.label}</div>
-                  <div className="text-xs opacity-70">{stat.subtitle}</div>
+                  <div className="text-4xl mb-2">{stat.icon}</div>
+                  <div className="text-3xl font-bold mb-2" style={{ color: 'var(--color-accent-primary)' }}>{stat.value}%</div>
+                  <div className="text-sm font-label mb-1" style={{ color: 'var(--color-text-primary)' }}>{stat.label}</div>
+                  <div className="text-xs opacity-70" style={{ color: 'var(--color-text-tertiary)' }}>{stat.subtitle}</div>
                 </motion.div>
               ))}
             </div>
 
             {/* Learning Timeline */}
             <div 
-              className="p-6 rounded-xl shadow-lg"
+              className="p-6 rounded-xl shadow-sm"
               style={{
                 backgroundColor: 'var(--color-surface)',
-                boxShadow: 'var(--shadow-lg)'
+                boxShadow: 'var(--shadow-sm)',
+                borderColor: 'var(--color-border)'
               }}
             >
-              <div className="flex items-center justify-between mb-6">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
                 <h2 
-                  className="text-xl font-semibold"
+                  className="text-lg font-semibold"
                   style={{ color: 'var(--color-text-primary)' }}
                 >
                   Learning Timeline:
                 </h2>
-                <div className="flex gap-4">
+                <div className="flex flex-col sm:flex-row gap-3">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>From:</span>
+                    <span className="text-sm font-label" style={{ color: 'var(--color-text-secondary)' }}>From:</span>
                     <select
                       value={fromDate}
                       onChange={(e) => setFromDate(e.target.value)}
-                      className="px-3 py-1 border rounded text-sm"
+                      className="px-3 py-2 border rounded-lg text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)]"
                       style={{
                         borderColor: 'var(--color-border)',
                         backgroundColor: 'var(--color-secondary-bg)',
@@ -262,11 +266,11 @@ const StudentDetails: React.FC = () => {
                     </select>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>To:</span>
+                    <span className="text-sm font-label" style={{ color: 'var(--color-text-secondary)' }}>To:</span>
                     <select
                       value={toDate}
                       onChange={(e) => setToDate(e.target.value)}
-                      className="px-3 py-1 border rounded text-sm"
+                      className="px-3 py-2 border rounded-lg text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)]"
                       style={{
                         borderColor: 'var(--color-border)',
                         backgroundColor: 'var(--color-secondary-bg)',
@@ -306,40 +310,40 @@ const StudentDetails: React.FC = () => {
 
                       {/* Level Content */}
                       <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-3">
-                          <h3 
-                            className="text-lg font-semibold"
-                            style={{ color: 'var(--color-text-primary)' }}
-                          >
-                            Level {level.level}: {level.courseName}
-                          </h3>
-                        </div>
+                                                 <div className="flex items-center gap-2 mb-3">
+                           <h3 
+                             className="text-base font-semibold"
+                             style={{ color: 'var(--color-text-primary)' }}
+                           >
+                             Level {level.level}: {level.courseName}
+                           </h3>
+                         </div>
 
-                        <div className="space-y-2">
-                                                     {/* Learn */}
-                           <div className="flex items-center gap-2">
-                             <FileTextIcon className="w-4 h-4" style={{ color: getStatusColor(level.learn.completed ? 'completed' : 'pending') }} />
-                             <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                         <div className="space-y-3">
+                           {/* Learn */}
+                           <div className="flex items-center gap-3 p-2 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
+                             <FileTextIcon className="w-4 h-4 flex-shrink-0" style={{ color: getStatusColor(level.learn.completed ? 'completed' : 'pending') }} />
+                             <span className="text-sm font-label" style={{ color: 'var(--color-text-secondary)' }}>
                                <strong>Learn:</strong> {level.learn.startTime} -- {level.learn.endTime}
                              </span>
                            </div>
 
-                          {/* Test */}
-                          <div className="flex items-center gap-2">
-                            <TargetIcon className="w-4 h-4" style={{ color: getStatusColor(level.test.completed ? 'completed' : 'pending') }} />
-                            <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                              <strong>Test ({level.test.score}% - {level.test.attempts} attempts):</strong> {level.test.startTime} -- {level.test.endTime}
-                            </span>
-                          </div>
+                           {/* Test */}
+                           <div className="flex items-center gap-3 p-2 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
+                             <TargetIcon className="w-4 h-4 flex-shrink-0" style={{ color: getStatusColor(level.test.completed ? 'completed' : 'pending') }} />
+                             <span className="text-sm font-label" style={{ color: 'var(--color-text-secondary)' }}>
+                               <strong>Test ({level.test.score}% - {level.test.attempts} attempts):</strong> {level.test.startTime} -- {level.test.endTime}
+                             </span>
+                           </div>
 
-                          {/* Exercise */}
-                          <div className="flex items-center gap-2">
-                            <FileTextIcon className="w-4 h-4" style={{ color: getStatusColor(level.exercise.completed ? 'completed' : 'in-progress') }} />
-                            <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                              <strong>Exercise:</strong> {level.exercise.startTime} -- {level.exercise.endTime}
-                            </span>
-                          </div>
-                        </div>
+                           {/* Exercise */}
+                           <div className="flex items-center gap-3 p-2 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
+                             <FileTextIcon className="w-4 h-4 flex-shrink-0" style={{ color: getStatusColor(level.exercise.completed ? 'completed' : 'in-progress') }} />
+                             <span className="text-sm font-label" style={{ color: 'var(--color-text-secondary)' }}>
+                               <strong>Exercise:</strong> {level.exercise.startTime} -- {level.exercise.endTime}
+                             </span>
+                           </div>
+                         </div>
                       </div>
                     </div>
                   </motion.div>
@@ -350,91 +354,94 @@ const StudentDetails: React.FC = () => {
 
           {/* Right Column - Performance and Portfolio */}
           <div className="lg:col-span-1">
-            {/* Profile Icon */}
-            <div 
-              className="p-6 rounded-xl shadow-lg mb-6 text-center"
-              style={{
-                backgroundColor: 'var(--color-surface)',
-                boxShadow: 'var(--shadow-lg)'
-              }}
-            >
-              <div 
-                className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold"
-                style={{ 
-                  backgroundColor: '#F97316',
-                  color: 'white'
-                }}
-              >
-                {studentData.profileInitial}
-              </div>
-            </div>
+                         {/* Profile Icon */}
+             <div 
+               className="p-6 rounded-xl shadow-sm mb-6 text-center"
+               style={{
+                 backgroundColor: 'var(--color-surface)',
+                 boxShadow: 'var(--shadow-sm)',
+                 borderColor: 'var(--color-border)'
+               }}
+             >
+               <div 
+                 className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold"
+                 style={{ 
+                   backgroundColor: 'var(--color-accent-primary)',
+                   color: 'var(--color-text-inverse)'
+                 }}
+               >
+                 {studentData.profileInitial}
+               </div>
+             </div>
 
-            {/* Radar Chart */}
-            <div 
-              className="p-6 rounded-xl shadow-lg mb-6"
-              style={{
-                backgroundColor: 'var(--color-surface)',
-                boxShadow: 'var(--shadow-lg)'
-              }}
-            >
-              <h3 
-                className="text-lg font-semibold mb-4 text-center"
-                style={{ color: 'var(--color-text-primary)' }}
-              >
-                Performance Analysis
-              </h3>
-              <div className="w-full h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <RadarChart data={radarData}>
-                    <PolarGrid stroke="#E5E7EB" />
-                    <PolarAngleAxis 
-                      dataKey="subject" 
-                      tick={{ fill: '#6B7280', fontSize: 12 }}
-                    />
-                    <PolarRadiusAxis 
-                      angle={90} 
-                      domain={[0, 100]} 
-                      tick={{ fill: '#6B7280', fontSize: 10 }}
-                    />
-                    <Radar
-                      name="Performance"
-                      dataKey="A"
-                      stroke="#3B82F6"
-                      fill="#3B82F6"
-                      fillOpacity={0.3}
-                    />
-                  </RadarChart>
-                </ResponsiveContainer>
-              </div>
-              <p className="text-center text-sm opacity-70 mt-2" style={{ color: 'var(--color-text-secondary)' }}>
-                (Optional)
-              </p>
-            </div>
+                         {/* Radar Chart */}
+             <div 
+               className="p-6 rounded-xl shadow-sm mb-6"
+               style={{
+                 backgroundColor: 'var(--color-surface)',
+                 boxShadow: 'var(--shadow-sm)',
+                 borderColor: 'var(--color-border)'
+               }}
+             >
+               <h3 
+                 className="text-base font-semibold mb-4 text-center"
+                 style={{ color: 'var(--color-text-primary)' }}
+               >
+                 Performance Analysis
+               </h3>
+               <div className="w-full h-64">
+                 <ResponsiveContainer width="100%" height="100%">
+                   <RadarChart data={radarData}>
+                     <PolarGrid stroke="var(--color-border)" />
+                     <PolarAngleAxis 
+                       dataKey="subject" 
+                       tick={{ fill: 'var(--color-text-secondary)', fontSize: 12 }}
+                     />
+                     <PolarRadiusAxis 
+                       angle={90} 
+                       domain={[0, 100]} 
+                       tick={{ fill: 'var(--color-text-secondary)', fontSize: 10 }}
+                     />
+                     <Radar
+                       name="Performance"
+                       dataKey="A"
+                       stroke="var(--color-accent-primary)"
+                       fill="var(--color-accent-primary)"
+                       fillOpacity={0.3}
+                     />
+                   </RadarChart>
+                 </ResponsiveContainer>
+               </div>
+               <p className="text-center text-sm opacity-70 mt-2" style={{ color: 'var(--color-text-tertiary)' }}>
+                 (Optional)
+               </p>
+             </div>
 
-            {/* View Portfolio Button */}
-            <div 
-              className="p-6 rounded-xl shadow-lg text-center"
-              style={{
-                backgroundColor: 'var(--color-surface)',
-                boxShadow: 'var(--shadow-lg)'
-              }}
-            >
-              <button 
-                className="w-full px-4 py-2 rounded-lg font-medium transition-colors"
-                style={{
-                  backgroundColor: '#6B7280',
-                  color: 'white'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#4B5563';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = '#6B7280';
-                }}
-              >
-                View Portfolio
-              </button>
-            </div>
+                         {/* View Portfolio Button */}
+             <div 
+               className="p-6 rounded-xl shadow-sm text-center"
+               style={{
+                 backgroundColor: 'var(--color-surface)',
+                 boxShadow: 'var(--shadow-sm)',
+                 borderColor: 'var(--color-border)'
+               }}
+             >
+               <button 
+                 className="w-full px-4 py-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-offset-1"
+                 style={{
+                   backgroundColor: 'var(--color-accent-primary)',
+                   color: 'var(--color-text-inverse)'
+                 }}
+                 onMouseEnter={(e) => {
+                   e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                 }}
+                 onMouseLeave={(e) => {
+                   e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                 }}
+               >
+                 View Portfolio
+               </button>
+             </div>
           </div>
         </div>
       </motion.div>
