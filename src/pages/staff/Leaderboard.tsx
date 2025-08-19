@@ -1,68 +1,72 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
-  StarIcon,
   PersonIcon,
-  BarChartIcon,
   CheckCircledIcon,
   ClockIcon,
-  MagnifyingGlassIcon,
   CalendarIcon,
+  StarIcon,
   TargetIcon,
-  CheckIcon,
-  PlayIcon,
-  FileTextIcon,
-  BarChartIcon as ChartIcon
+  BarChartIcon,
+  RocketIcon,
+  FileTextIcon
 } from '@radix-ui/react-icons';
-import syncnerLogo from '../../assets/syncner-logo.png';
+import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
-const StudentProfile: React.FC = () => {
+const StudentDetails: React.FC = () => {
   const [studentData, setStudentData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [fromDate, setFromDate] = useState('');
-  const [toDate, setToDate] = useState('');
+  const [fromDate, setFromDate] = useState('dd-mm-yyyy');
+  const [toDate, setToDate] = useState('dd-mm-yyyy');
 
   // Mock student data - replace with actual API calls
   useEffect(() => {
     setTimeout(() => {
       setStudentData({
         rollNumber: '713315104704',
-        name: 'Ramesh',
-        careerTrack: 'Full Stack Development',
-        enrolledDate: '21-03-2025',
-        courseDept: 'B.E / IT',
+        studentName: 'Ramesh',
+        courseDept: 'B.E IT',
         batch: '2023-2027',
+        enrolledCareerTrack: 'Full Stack Development',
+        enrolledDate: '21-03-2025',
+        profileInitial: 'M',
         performance: {
           performance: 85,
-          communication: 78,
-          collaboration: 92,
-          problemSolving: 88,
-          creativity: 75
+          potential: 90,
+          contribution: 78,
+          creativity: 82,
+          skill: 88,
+          teamwork: 80
         },
-        attendance: 80,
-        progress: 80,
-        leaderboardRank: 80,
-        timeline: [
+        summaryStats: {
+          avgAttendance: 80,
+          progress: 80,
+          leaderboard: 80
+        },
+        learningTimeline: [
           {
             level: 3,
-            title: 'Introduction to HTML',
-            learn: { status: 'completed', attempts: 1, score: null, startDate: '10/08/2025 10:00 AM', endDate: '10/08/2025 11:30 AM' },
-            test: { status: 'completed', attempts: 2, score: 80, startDate: '12/08/2025 02:00 PM', endDate: '12/08/2025 03:00 PM' },
-            exercise: { status: 'in-progress', attempts: null, score: null, startDate: '14/08/2025 00:03 PM', endDate: null }
+            courseName: 'Introduction to HTML',
+            status: 'in-progress',
+            learn: { completed: true, startTime: 'Start date and time', endTime: 'End Date and Time' },
+            test: { completed: true, score: 80, attempts: 2, startTime: 'Start date and time', endTime: 'End Date and Time' },
+            exercise: { completed: false, startTime: '14/08/2025 09:03 PM', endTime: 'In-Progress' }
           },
           {
             level: 2,
-            title: 'Introduction to HTML',
-            learn: { status: 'completed', attempts: 1, score: null, startDate: '05/08/2025 09:00 AM', endDate: '05/08/2025 10:30 AM' },
-            test: { status: 'completed', attempts: 2, score: 85, startDate: '07/08/2025 01:00 PM', endDate: '07/08/2025 02:00 PM' },
-            exercise: { status: 'completed', attempts: null, score: null, startDate: '08/08/2025 11:00 AM', endDate: '08/08/2025 12:30 PM' }
+            courseName: 'Introduction to HTML',
+            status: 'completed',
+            learn: { completed: true, startTime: 'Start date and time', endTime: 'End Date and Time' },
+            test: { completed: true, score: 80, attempts: 2, startTime: 'Start date and time', endTime: 'End Date and Time' },
+            exercise: { completed: true, startTime: 'Start date and time', endTime: 'End Date and Time' }
           },
           {
             level: 1,
-            title: 'Introduction to HTML',
-            learn: { status: 'completed', attempts: 1, score: null, startDate: '01/08/2025 08:00 AM', endDate: '01/08/2025 09:30 AM' },
-            test: { status: 'completed', attempts: 2, score: 90, startDate: '03/08/2025 12:00 PM', endDate: '03/08/2025 01:00 PM' },
-            exercise: { status: 'completed', attempts: null, score: null, startDate: '04/08/2025 10:00 AM', endDate: '04/08/2025 11:30 AM' }
+            courseName: 'Introduction to HTML',
+            status: 'completed',
+            learn: { completed: true, startTime: 'Start date and time', endTime: 'End Date and Time' },
+            test: { completed: true, score: 80, attempts: 2, startTime: 'Start date and time', endTime: 'End Date and Time' },
+            exercise: { completed: true, startTime: 'Start date and time', endTime: 'End Date and Time' }
           }
         ]
       });
@@ -70,28 +74,36 @@ const StudentProfile: React.FC = () => {
     }, 1000);
   }, []);
 
-  const getPerformanceColor = (score: number) => {
-    if (score >= 90) return 'var(--color-success)';
-    if (score >= 80) return 'var(--color-accent-primary)';
-    if (score >= 70) return 'var(--color-warning)';
-    return 'var(--color-error)';
-  };
-
-  const getPerformanceLabel = (score: number) => {
-    if (score >= 90) return 'Great';
-    if (score >= 80) return 'Good';
-    if (score >= 70) return 'Average';
-    return 'Poor';
-  };
+  const radarData = [
+    { subject: 'Performance', A: studentData?.performance?.performance || 0, fullMark: 100 },
+    { subject: 'Potential', A: studentData?.performance?.potential || 0, fullMark: 100 },
+    { subject: 'Contribution', A: studentData?.performance?.contribution || 0, fullMark: 100 },
+    { subject: 'Creativity', A: studentData?.performance?.creativity || 0, fullMark: 100 },
+    { subject: 'Skill', A: studentData?.performance?.skill || 0, fullMark: 100 },
+    { subject: 'Teamwork', A: studentData?.performance?.teamwork || 0, fullMark: 100 }
+  ];
 
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'completed':
-        return <CheckIcon className="w-4 h-4 text-green-500" />;
+        return <CheckCircledIcon className="w-5 h-5" style={{ color: '#10B981' }} />;
       case 'in-progress':
-        return <PlayIcon className="w-4 h-4 text-blue-500" />;
+        return <div className="w-5 h-5 rounded-full border-2 border-yellow-400 bg-yellow-400 flex items-center justify-center">
+          <div className="w-2 h-2 rounded-full bg-white"></div>
+        </div>;
       default:
-        return <ClockIcon className="w-4 h-4 text-gray-400" />;
+        return <ClockIcon className="w-5 h-5" style={{ color: '#6B7280' }} />;
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'completed':
+        return '#10B981';
+      case 'in-progress':
+        return '#F59E0B';
+      default:
+        return '#6B7280';
     }
   };
 
@@ -99,21 +111,9 @@ const StudentProfile: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
         <div className="text-center">
-          <motion.img
-            src={syncnerLogo}
-            alt="Syncner Logo"
-            className="w-16 h-16 mx-auto mb-4"
-            animate={{
-              scale: [1, 1.1, 1],
-              rotate: [0, 5, -5, 0],
-            }}
-            transition={{
-              scale: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
-              rotate: { duration: 2, repeat: Infinity, ease: "easeInOut" }
-            }}
-          />
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: 'var(--color-accent-primary)' }}></div>
           <p className="text-lg" style={{ color: 'var(--color-text-primary)' }}>
-            Loading student profile...
+            Loading student details...
           </p>
         </div>
       </div>
@@ -133,314 +133,313 @@ const StudentProfile: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
-      {/* Breadcrumbs */}
-      <div className="p-6 pb-4">
-        <nav className="flex items-center space-x-2 text-sm">
-          <span style={{ color: 'var(--color-text-tertiary)' }}>Staffs</span>
-          <span style={{ color: 'var(--color-text-tertiary)' }}>→</span>
-          <span style={{ color: 'var(--color-text-tertiary)' }}>Student Profile</span>
-          <span style={{ color: 'var(--color-text-tertiary)' }}>→</span>
-          <span style={{ color: 'var(--color-text-primary)' }}>{studentData.name}</span>
-        </nav>
-      </div>
+    <div className="p-6 lg:p-8" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="max-w-7xl mx-auto"
+      >
+        {/* Header */}
+        <div className="mb-8">
+          <h1 
+            className="text-3xl font-heading font-bold mb-2"
+            style={{ color: 'var(--color-text-primary)' }}
+          >
+            Student Details
+          </h1>
+        </div>
 
-      {/* Header with Search */}
-      <div className="px-6 pb-6 flex justify-between items-center">
-        <h1 className="text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>
-          Student Profile
-        </h1>
-        <div className="flex items-center space-x-4">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search Student..."
-              className="pl-10 pr-4 py-2 rounded-lg border text-sm"
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column - Student Details */}
+          <div className="lg:col-span-2">
+            {/* Student Details Card */}
+            <div 
+              className="p-6 rounded-xl shadow-lg mb-6"
               style={{
-                backgroundColor: 'var(--color-secondary-bg)',
-                borderColor: 'var(--color-border)',
-                color: 'var(--color-text-primary)'
+                backgroundColor: 'var(--color-surface)',
+                boxShadow: 'var(--shadow-lg)'
               }}
-            />
-            <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" style={{ color: 'var(--color-text-tertiary)' }} />
-          </div>
-          <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium" style={{ backgroundColor: 'var(--color-accent-primary)', color: 'var(--color-text-inverse)' }}>
-            M
-          </div>
-        </div>
-      </div>
-
-      <div className="flex gap-6 px-6">
-        {/* Left Sub-Sidebar */}
-        <div className="w-64 flex-shrink-0">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-            <h3 className="text-sm font-medium mb-4" style={{ color: 'var(--color-text-tertiary)' }}>
-              Staffs → Student Timeline
-            </h3>
-            <div className="space-y-2">
-              <button className="w-full text-left px-3 py-2 rounded-md text-sm transition-colors" style={{ color: 'var(--color-text-primary)' }}>
-                Dashboard
-              </button>
-              <button className="w-full text-left px-3 py-2 rounded-md text-sm font-medium transition-colors" style={{ 
-                backgroundColor: 'var(--color-accent-tertiary)',
-                color: 'var(--color-accent-primary)'
-              }}>
-                Leaderboards
-              </button>
-              <button className="w-full text-left px-3 py-2 rounded-md text-sm transition-colors" style={{ color: 'var(--color-text-primary)' }}>
-                Staff Profile
-              </button>
-              <button className="w-full text-left px-3 py-2 rounded-md text-sm transition-colors" style={{ color: 'var(--color-text-primary)' }}>
-                Sign-out
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Main Content */}
-        <div className="flex-1 space-y-6">
-          {/* Student Details Section */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm">
-            <h2 className="text-xl font-semibold mb-6" style={{ color: 'var(--color-text-primary)' }}>
-              Student Details
-            </h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1" style={{ color: 'var(--color-text-tertiary)' }}>
-                    Roll number
-                  </label>
-                  <p className="text-sm" style={{ color: 'var(--color-text-primary)' }}>
-                    {studentData.rollNumber}
-                  </p>
+            >
+              <h2 
+                className="text-xl font-semibold mb-4"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                Student Details
+              </h2>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="font-medium" style={{ color: 'var(--color-text-secondary)' }}>Roll number:</span>
+                  <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{studentData.rollNumber}</span>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1" style={{ color: 'var(--color-text-tertiary)' }}>
-                    Student Name
-                  </label>
-                  <p className="text-sm" style={{ color: 'var(--color-text-primary)' }}>
-                    {studentData.name}
-                  </p>
+                <div className="flex justify-between items-center">
+                  <span className="font-medium" style={{ color: 'var(--color-text-secondary)' }}>Student Name:</span>
+                  <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{studentData.studentName}</span>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1" style={{ color: 'var(--color-text-tertiary)' }}>
-                    Enrolled Career Track
-                  </label>
-                  <p className="text-sm px-3 py-1 rounded-full inline-block" style={{ 
-                    backgroundColor: '#8B5CF6',
-                    color: 'white'
-                  }}>
-                    {studentData.careerTrack}
-                  </p>
+                <div className="flex justify-between items-center">
+                  <span className="font-medium opacity-70" style={{ color: 'var(--color-text-secondary)' }}>Course & Dept:</span>
+                  <span className="font-semibold opacity-70" style={{ color: 'var(--color-text-secondary)' }}>{studentData.courseDept}</span>
                 </div>
-              </div>
-              
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1" style={{ color: 'var(--color-text-tertiary)' }}>
-                    Enrolled Date
-                  </label>
-                  <p className="text-sm" style={{ color: 'var(--color-text-primary)' }}>
-                    {studentData.enrolledDate}
-                  </p>
+                <div className="flex justify-between items-center">
+                  <span className="font-medium opacity-70" style={{ color: 'var(--color-text-secondary)' }}>Batch:</span>
+                  <span className="font-semibold opacity-70" style={{ color: 'var(--color-text-secondary)' }}>{studentData.batch}</span>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1" style={{ color: 'var(--color-text-tertiary)' }}>
-                    Course & Dept
-                  </label>
-                  <p className="text-sm" style={{ color: 'var(--color-text-primary)' }}>
-                    {studentData.courseDept}
-                  </p>
+                <div className="flex justify-between items-center">
+                  <span className="font-medium" style={{ color: 'var(--color-text-secondary)' }}>Enrolled Career Track:</span>
+                  <span 
+                    className="px-3 py-1 rounded-lg text-sm font-medium"
+                    style={{ 
+                      backgroundColor: '#8B5CF6',
+                      color: 'white'
+                    }}
+                  >
+                    {studentData.enrolledCareerTrack}
+                  </span>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1" style={{ color: 'var(--color-text-tertiary)' }}>
-                    Batch
-                  </label>
-                  <p className="text-sm" style={{ color: 'var(--color-text-primary)' }}>
-                    {studentData.batch}
-                  </p>
+                <div className="flex justify-between items-center">
+                  <span className="font-medium" style={{ color: 'var(--color-text-secondary)' }}>Enrolled Date:</span>
+                  <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{studentData.enrolledDate}</span>
                 </div>
               </div>
             </div>
 
-            {/* Performance Chart Placeholder */}
-            <div className="mb-6">
-              <h3 className="text-lg font-medium mb-4" style={{ color: 'var(--color-text-primary)' }}>
-                Performance Metrics
+            {/* Summary Statistics Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              {[
+                { label: 'Avg Attendance', value: studentData.summaryStats.avgAttendance, subtitle: 'Great/Good/Poor' },
+                { label: 'Progress', value: studentData.summaryStats.progress, subtitle: 'Great/Good/Poor' },
+                { label: 'Leaderboard', value: studentData.summaryStats.leaderboard, subtitle: '(Career Track Specific)' }
+              ].map((stat, index) => (
+                <motion.div
+                  key={index}
+                  className="p-4 rounded-lg text-center"
+                  style={{
+                    backgroundColor: '#F3F4F6',
+                    color: '#374151'
+                  }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <div className="text-2xl font-bold mb-1">{stat.value}%</div>
+                  <div className="text-sm font-medium">{stat.label}</div>
+                  <div className="text-xs opacity-70">{stat.subtitle}</div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Learning Timeline */}
+            <div 
+              className="p-6 rounded-xl shadow-lg"
+              style={{
+                backgroundColor: 'var(--color-surface)',
+                boxShadow: 'var(--shadow-lg)'
+              }}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h2 
+                  className="text-xl font-semibold"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  Learning Timeline:
+                </h2>
+                <div className="flex gap-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>From:</span>
+                    <select
+                      value={fromDate}
+                      onChange={(e) => setFromDate(e.target.value)}
+                      className="px-3 py-1 border rounded text-sm"
+                      style={{
+                        borderColor: 'var(--color-border)',
+                        backgroundColor: 'var(--color-secondary-bg)',
+                        color: 'var(--color-text-primary)'
+                      }}
+                    >
+                      <option value="dd-mm-yyyy">dd-mm-yyyy</option>
+                      <option value="01-01-2025">01-01-2025</option>
+                      <option value="01-02-2025">01-02-2025</option>
+                    </select>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>To:</span>
+                    <select
+                      value={toDate}
+                      onChange={(e) => setToDate(e.target.value)}
+                      className="px-3 py-1 border rounded text-sm"
+                      style={{
+                        borderColor: 'var(--color-border)',
+                        backgroundColor: 'var(--color-secondary-bg)',
+                        color: 'var(--color-text-primary)'
+                      }}
+                    >
+                      <option value="dd-mm-yyyy">dd-mm-yyyy</option>
+                      <option value="31-12-2025">31-12-2025</option>
+                      <option value="31-01-2026">31-01-2026</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+                             <div className="space-y-6">
+                 {studentData.learningTimeline.map((level: any, index: number) => (
+                   <motion.div
+                     key={level.level}
+                     className="relative"
+                     initial={{ opacity: 0, x: -20 }}
+                     animate={{ opacity: 1, x: 0 }}
+                     transition={{ delay: index * 0.1 }}
+                   >
+                    {/* Vertical Line */}
+                    {index < studentData.learningTimeline.length - 1 && (
+                      <div 
+                        className="absolute left-6 top-8 w-0.5 h-16"
+                        style={{ backgroundColor: 'var(--color-border)' }}
+                      />
+                    )}
+
+                    <div className="flex items-start gap-4">
+                      {/* Level Icon */}
+                      <div className="flex-shrink-0">
+                        {getStatusIcon(level.status)}
+                      </div>
+
+                      {/* Level Content */}
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-3">
+                          <h3 
+                            className="text-lg font-semibold"
+                            style={{ color: 'var(--color-text-primary)' }}
+                          >
+                            Level {level.level}: {level.courseName}
+                          </h3>
+                        </div>
+
+                        <div className="space-y-2">
+                                                     {/* Learn */}
+                           <div className="flex items-center gap-2">
+                             <FileTextIcon className="w-4 h-4" style={{ color: getStatusColor(level.learn.completed ? 'completed' : 'pending') }} />
+                             <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                               <strong>Learn:</strong> {level.learn.startTime} -- {level.learn.endTime}
+                             </span>
+                           </div>
+
+                          {/* Test */}
+                          <div className="flex items-center gap-2">
+                            <TargetIcon className="w-4 h-4" style={{ color: getStatusColor(level.test.completed ? 'completed' : 'pending') }} />
+                            <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                              <strong>Test ({level.test.score}% - {level.test.attempts} attempts):</strong> {level.test.startTime} -- {level.test.endTime}
+                            </span>
+                          </div>
+
+                          {/* Exercise */}
+                          <div className="flex items-center gap-2">
+                            <FileTextIcon className="w-4 h-4" style={{ color: getStatusColor(level.exercise.completed ? 'completed' : 'in-progress') }} />
+                            <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                              <strong>Exercise:</strong> {level.exercise.startTime} -- {level.exercise.endTime}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column - Performance and Portfolio */}
+          <div className="lg:col-span-1">
+            {/* Profile Icon */}
+            <div 
+              className="p-6 rounded-xl shadow-lg mb-6 text-center"
+              style={{
+                backgroundColor: 'var(--color-surface)',
+                boxShadow: 'var(--shadow-lg)'
+              }}
+            >
+              <div 
+                className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold"
+                style={{ 
+                  backgroundColor: '#F97316',
+                  color: 'white'
+                }}
+              >
+                {studentData.profileInitial}
+              </div>
+            </div>
+
+            {/* Radar Chart */}
+            <div 
+              className="p-6 rounded-xl shadow-lg mb-6"
+              style={{
+                backgroundColor: 'var(--color-surface)',
+                boxShadow: 'var(--shadow-lg)'
+              }}
+            >
+              <h3 
+                className="text-lg font-semibold mb-4 text-center"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                Performance Analysis
               </h3>
-              <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 h-48 flex items-center justify-center">
-                <div className="text-center">
-                  <ChartIcon className="w-12 h-12 mx-auto mb-2" style={{ color: 'var(--color-text-tertiary)' }} />
-                  <p className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
-                    Performance Radar Chart
-                  </p>
-                  <p className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
-                    Performance: {studentData.performance.performance}% | 
-                    Communication: {studentData.performance.communication}% | 
-                    Collaboration: {studentData.performance.collaboration}% | 
-                    Problem Solving: {studentData.performance.problemSolving}% | 
-                    Creativity: {studentData.performance.creativity}%
-                  </p>
-                </div>
+              <div className="w-full h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <RadarChart data={radarData}>
+                    <PolarGrid stroke="#E5E7EB" />
+                    <PolarAngleAxis 
+                      dataKey="subject" 
+                      tick={{ fill: '#6B7280', fontSize: 12 }}
+                    />
+                    <PolarRadiusAxis 
+                      angle={90} 
+                      domain={[0, 100]} 
+                      tick={{ fill: '#6B7280', fontSize: 10 }}
+                    />
+                    <Radar
+                      name="Performance"
+                      dataKey="A"
+                      stroke="#3B82F6"
+                      fill="#3B82F6"
+                      fillOpacity={0.3}
+                    />
+                  </RadarChart>
+                </ResponsiveContainer>
               </div>
+              <p className="text-center text-sm opacity-70 mt-2" style={{ color: 'var(--color-text-secondary)' }}>
+                (Optional)
+              </p>
             </div>
 
             {/* View Portfolio Button */}
-            <button className="px-6 py-2 rounded-lg transition-colors font-medium" style={{ 
-              backgroundColor: 'var(--color-accent-primary)',
-              color: 'var(--color-text-inverse)' 
-            }}>
-              View Portfolio
-            </button>
-          </div>
-
-          {/* Summary Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm text-center">
-              <div className="text-3xl font-bold mb-2" style={{ color: getPerformanceColor(studentData.attendance) }}>
-                {studentData.attendance}%
-              </div>
-              <div className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
-                Avg Attendance ({getPerformanceLabel(studentData.attendance)})
-              </div>
-            </div>
-            
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm text-center">
-              <div className="text-3xl font-bold mb-2" style={{ color: getPerformanceColor(studentData.progress) }}>
-                {studentData.progress}%
-              </div>
-              <div className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
-                Progress ({getPerformanceLabel(studentData.progress)})
-              </div>
-            </div>
-            
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm text-center">
-              <div className="text-3xl font-bold mb-2" style={{ color: getPerformanceColor(studentData.leaderboardRank) }}>
-                {studentData.leaderboardRank}%
-              </div>
-              <div className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
-                Leaderboard (Career Track Specific)
-              </div>
-            </div>
-          </div>
-
-          {/* Learning Timeline Section */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm">
-            <h2 className="text-xl font-semibold mb-6" style={{ color: 'var(--color-text-primary)' }}>
-              Learning Timeline
-            </h2>
-            
-            {/* Date Range Pickers */}
-            <div className="flex gap-4 mb-6">
-              <div>
-                <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-tertiary)' }}>
-                  From:
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="dd-mm-yyyy"
-                    value={fromDate}
-                    onChange={(e) => setFromDate(e.target.value)}
-                    className="pl-10 pr-4 py-2 rounded-lg border text-sm w-32"
-                    style={{
-                      backgroundColor: 'var(--color-secondary-bg)',
-                      borderColor: 'var(--color-border)',
-                      color: 'var(--color-text-primary)'
-                    }}
-                  />
-                  <CalendarIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" style={{ color: 'var(--color-text-tertiary)' }} />
-                </div>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-tertiary)' }}>
-                  To:
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="dd-mm-yyyy"
-                    value={toDate}
-                    onChange={(e) => setToDate(e.target.value)}
-                    className="pl-10 pr-4 py-2 rounded-lg border text-sm w-32"
-                    style={{
-                      backgroundColor: 'var(--color-secondary-bg)',
-                      borderColor: 'var(--color-border)',
-                      color: 'var(--color-text-primary)'
-                    }}
-                  />
-                  <CalendarIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" style={{ color: 'var(--color-text-tertiary)' }} />
-                </div>
-              </div>
-            </div>
-
-            {/* Course Levels */}
-            <div className="space-y-6">
-              {studentData.timeline.map((level: any, index: number) => (
-                <div key={level.level} className="border rounded-lg p-4" style={{ borderColor: 'var(--color-border)' }}>
-                  <h3 className="text-lg font-medium mb-4" style={{ color: 'var(--color-text-primary)' }}>
-                    Level {level.level}: {level.title}
-                  </h3>
-                  
-                  <div className="space-y-3">
-                    {/* Learn */}
-                    <div className="flex items-center justify-between p-3 rounded-md" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
-                      <div className="flex items-center space-x-3">
-                        {getStatusIcon(level.learn.status)}
-                        <span className="font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                          Learn
-                        </span>
-                      </div>
-                      <div className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
-                        {level.learn.startDate} — {level.learn.endDate}
-                      </div>
-                    </div>
-
-                    {/* Test */}
-                    <div className="flex items-center justify-between p-3 rounded-md" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
-                      <div className="flex items-center space-x-3">
-                        {getStatusIcon(level.test.status)}
-                        <span className="font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                          Test ({level.test.score}% - {level.test.attempts} attempts)
-                        </span>
-                      </div>
-                      <div className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
-                        {level.test.startDate} — {level.test.endDate}
-                      </div>
-                    </div>
-
-                    {/* Exercise */}
-                    <div className="flex items-center justify-between p-3 rounded-md" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
-                      <div className="flex items-center space-x-3">
-                        {getStatusIcon(level.exercise.status)}
-                        <span className="font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                          Exercise
-                        </span>
-                        {level.exercise.status === 'in-progress' && (
-                          <span className="text-xs px-2 py-1 rounded-full" style={{ 
-                            backgroundColor: 'var(--color-accent-tertiary)',
-                            color: 'var(--color-accent-primary)'
-                          }}>
-                            In-Progress
-                          </span>
-                        )}
-                      </div>
-                      <div className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
-                        {level.exercise.startDate}
-                        {level.exercise.endDate && ` — ${level.exercise.endDate}`}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+            <div 
+              className="p-6 rounded-xl shadow-lg text-center"
+              style={{
+                backgroundColor: 'var(--color-surface)',
+                boxShadow: 'var(--shadow-lg)'
+              }}
+            >
+              <button 
+                className="w-full px-4 py-2 rounded-lg font-medium transition-colors"
+                style={{
+                  backgroundColor: '#6B7280',
+                  color: 'white'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#4B5563';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#6B7280';
+                }}
+              >
+                View Portfolio
+              </button>
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };
 
-export default StudentProfile;
+export default StudentDetails;
