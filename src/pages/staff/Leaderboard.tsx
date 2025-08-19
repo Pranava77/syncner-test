@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
-  TrophyIcon,
   StarIcon,
   PersonIcon,
   BarChartIcon,
@@ -111,11 +110,11 @@ const Leaderboard: React.FC = () => {
   const getRankIcon = (rank: number) => {
     switch (rank) {
       case 1:
-        return <TrophyIcon className="w-6 h-6" style={{ color: '#FFD700' }} />;
+        return <StarIcon className="w-6 h-6" style={{ color: '#FFD700' }} />;
       case 2:
-        return <TrophyIcon className="w-6 h-6" style={{ color: '#C0C0C0' }} />;
+        return <StarIcon className="w-6 h-6" style={{ color: '#C0C0C0' }} />;
       case 3:
-        return <TrophyIcon className="w-6 h-6" style={{ color: '#CD7F32' }} />;
+        return <StarIcon className="w-6 h-6" style={{ color: '#CD7F32' }} />;
       default:
         return <span className="text-lg font-bold" style={{ color: 'var(--color-text-tertiary)' }}>#{rank}</span>;
     }
