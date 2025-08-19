@@ -1,397 +1,245 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import {
-  PersonIcon,
-  EnvelopeClosedIcon,
-  CalendarIcon,
-  CheckCircledIcon,
-  StarIcon,
-  BarChartIcon,
-  ArrowLeftIcon,
-  Pencil1Icon
-} from '@radix-ui/react-icons';
-import { useNavigate } from 'react-router-dom';
-import syncnerLogo from '../../assets/syncner-logo.png';
+import apiService from '../../services/api';
+import { useAppSelector } from '../../redux/store';
+
+interface StaffProfileData {
+  name: string;
+  email: string;
+  role: string;
+  phone?: string;
+  location?: string;
+  department?: string;
+  college?: string;
+}
 
 const StaffProfile: React.FC = () => {
-  const [staffData, setStaffData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  const { user } = useAppSelector((state) => state.auth);
+  const [profileData, setProfileData] = useState<StaffProfileData>({
+    name: '',
+    email: '',
+    role: '',
+    phone: '',
+    location: '',
+    department: '',
+    college: ''
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState('');
 
-  // Mock data - replace with actual API calls
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setStaffData({
-        id: 1,
-        name: 'Dr. Sarah Wilson',
-        email: 'sarah.wilson@syncner.edu',
-        department: 'Computer Science',
-        college: 'Engineering & Technology',
-        role: 'Staff',
-        careerTrack: 'Full Stack Development',
-        isActive: true,
-        joinDate: '2023-01-15',
-        lastActive: '2 hours ago',
-        totalStudents: 45,
-        avgStudentProgress: 78,
-        completedSessions: 156,
-        rating: 4.8,
-        bio: 'Experienced computer science educator with expertise in full-stack development, web technologies, and software engineering principles. Passionate about helping students develop practical skills for the modern tech industry.',
-        expertise: [
-          'JavaScript/TypeScript',
-          'React & Node.js',
-          'Database Design',
-          'API Development',
-          'DevOps & Deployment',
-          'Software Architecture'
-        ],
-        achievements: [
-          'Excellence in Teaching Award 2023',
-          'Best Student Outcomes 2023',
-          'Innovation in Curriculum Award 2022'
-        ],
-        contactInfo: {
-          phone: '+1 (555) 123-4567',
-          office: 'Room 301, Computer Science Building',
-          officeHours: 'Monday-Friday 9:00 AM - 5:00 PM'
+    const fetchData = async () => {
+      try {
+        const profileRes = await apiService.getMe();
+        if (profileRes.success && profileRes.data.user) {
+          const userData = profileRes.data.user;
+          setProfileData({
+            name: userData.name || '',
+            email: userData.email || '',
+            role: userData.role || '',
+            phone: userData.phone || '',
+            location: userData.location || '',
+            department: userData.department || '',
+            college: userData.college || ''
+          });
         }
-      });
-      setLoading(false);
-    }, 1000);
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
+    };
+    fetchData();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="p-6 lg:p-8">
-        <div className="flex items-center justify-center h-64">
-          <div className="flex items-center gap-3">
-            <motion.img
-              src={syncnerLogo}
-              alt="Syncner Logo"
-              className="w-8 h-8"
-              animate={{
-                scale: [1, 1.1, 1],
-                rotate: [0, 5, -5, 0],
-              }}
-              transition={{
-                scale: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
-                rotate: { duration: 2, repeat: Infinity, ease: "easeInOut" }
-              }}
-            />
-            <span className="text-lg" style={{ color: 'var(--color-text-tertiary)' }}>Loading profile...</span>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setProfileData({ ...profileData, [e.target.name]: e.target.value });
+  };
+
+  const handleSave = async () => {
+    setIsLoading(true);
+    setMessage('');
+    try {
+      const allowedFields = ['name', 'phone', 'location', 'department', 'college'];
+      const updateData: any = {};
+      allowedFields.forEach(field => {
+        if (profileData[field as keyof StaffProfileData] !== undefined) {
+          updateData[field] = profileData[field as keyof StaffProfileData];
+        }
+      });
+      await apiService.updateProfile(updateData);
+      setMessage('Profile updated successfully!');
+    } catch (error) {
+      setMessage('Failed to update profile');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
-    <div className="p-4 lg:p-8">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        {/* Header with Back Button */}
-        <div className="flex items-center gap-4 mb-8">
+    <div 
+      className="min-h-screen p-4"
+      style={{ 
+        backgroundColor: 'var(--color-primary-bg)',
+        color: 'var(--color-text-primary)'
+      }}
+    >
+      <div className="max-w-2xl mx-auto">
+        <h1 
+          className="text-3xl font-heading mb-8"
+          style={{ color: 'var(--color-text-primary)' }}
+        >
+          Staff Profile
+        </h1>
+        
+        <div 
+          className="border rounded-lg p-6 space-y-4"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            borderColor: 'var(--color-border)'
+          }}
+        >
+          <div>
+            <label className="block text-sm font-label mb-2">Name</label>
+            <input
+              type="text"
+              name="name"
+              value={profileData.name}
+              onChange={handleChange}
+              className="w-full border rounded px-3 py-2"
+              style={{ 
+                backgroundColor: 'var(--color-secondary-bg)',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-text-primary)'
+              }}
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-label mb-2">Email</label>
+            <input
+              type="email"
+              name="email"
+              value={profileData.email}
+              disabled
+              className="w-full border rounded px-3 py-2"
+              style={{ 
+                backgroundColor: 'var(--color-secondary-bg)',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-text-muted)'
+              }}
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-label mb-2">Role</label>
+            <input
+              type="text"
+              name="role"
+              value={profileData.role}
+              disabled
+              className="w-full border rounded px-3 py-2"
+              style={{ 
+                backgroundColor: 'var(--color-secondary-bg)',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-text-muted)'
+              }}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-label mb-2">Department</label>
+            <input
+              type="text"
+              name="department"
+              value={profileData.department}
+              onChange={handleChange}
+              className="w-full border rounded px-3 py-2"
+              style={{ 
+                backgroundColor: 'var(--color-secondary-bg)',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-text-primary)'
+              }}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-label mb-2">College</label>
+            <input
+              type="text"
+              name="college"
+              value={profileData.college}
+              onChange={handleChange}
+              className="w-full border rounded px-3 py-2"
+              style={{ 
+                backgroundColor: 'var(--color-secondary-bg)',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-text-primary)'
+              }}
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-label mb-2">Phone</label>
+            <input
+              type="tel"
+              name="phone"
+              value={profileData.phone}
+              onChange={handleChange}
+              className="w-full border rounded px-3 py-2"
+              style={{ 
+                backgroundColor: 'var(--color-secondary-bg)',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-text-primary)'
+              }}
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-label mb-2">Location</label>
+            <input
+              type="text"
+              name="location"
+              value={profileData.location}
+              onChange={handleChange}
+              className="w-full border rounded px-3 py-2"
+              style={{ 
+                backgroundColor: 'var(--color-secondary-bg)',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-text-primary)'
+              }}
+            />
+          </div>
+          
+          {message && (
+            <div className="p-3 rounded" style={{
+              backgroundColor: message.includes('success') ? 'var(--color-success-bg)' : 'var(--color-error-bg)',
+              color: message.includes('success') ? 'var(--color-success)' : 'var(--color-error)'
+            }}>
+              {message}
+            </div>
+          )}
+          
           <button
-            onClick={() => navigate('/staff/dashboard')}
-            className="p-2 rounded-lg transition-colors hover:bg-opacity-10"
+            onClick={handleSave}
+            disabled={isLoading}
+            className="w-full py-2 px-4 rounded transition-colors disabled:opacity-50"
             style={{ 
               backgroundColor: 'var(--color-accent-primary)',
               color: 'var(--color-text-inverse)' 
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+              if (!isLoading) {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+              }
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+              if (!isLoading) {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+              }
             }}
           >
-            <ArrowLeftIcon className="w-5 h-5" />
+            {isLoading ? 'Saving...' : 'Save Changes'}
           </button>
-          <div>
-            <h1 
-              className="text-3xl font-heading font-bold mb-2"
-              style={{ color: 'var(--color-text-primary)' }}
-            >
-              Staff Profile
-            </h1>
-            <p 
-              className="font-label text-lg"
-              style={{ color: 'var(--color-text-tertiary)' }}
-            >
-              View your staff profile and performance metrics
-            </p>
-          </div>
         </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column - Profile Info */}
-          <div className="lg:col-span-1 space-y-6">
-            {/* Profile Card */}
-            <motion.div
-              className="rounded-xl shadow-sm p-6"
-              style={{
-                backgroundColor: 'var(--color-surface)',
-                boxShadow: 'var(--shadow-sm)'
-              }}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.1 }}
-            >
-              <div className="text-center mb-6">
-                <div className="w-24 h-24 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--color-accent-tertiary)' }}>
-                  <PersonIcon className="w-12 h-12" style={{ color: 'var(--color-accent-primary)' }} />
-                </div>
-                <h2 className="text-xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>
-                  {staffData.name}
-                </h2>
-                <p className="text-sm mb-3" style={{ color: 'var(--color-text-tertiary)' }}>
-                  {staffData.role} • {staffData.department}
-                </p>
-                <div className="flex items-center justify-center gap-2">
-                  <StarIcon className="w-4 h-4" style={{ color: '#FFD700' }} />
-                  <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                    {staffData.rating}/5.0
-                  </span>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <EnvelopeClosedIcon className="w-4 h-4" style={{ color: 'var(--color-text-tertiary)' }} />
-                  <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>
-                    {staffData.email}
-                  </span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <BarChartIcon className="w-4 h-4" style={{ color: 'var(--color-text-tertiary)' }} />
-                  <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>
-                    {staffData.college}
-                  </span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <PersonIcon className="w-4 h-4" style={{ color: 'var(--color-text-tertiary)' }} />
-                  <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>
-                    {staffData.department}
-                  </span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CalendarIcon className="w-4 h-4" style={{ color: 'var(--color-text-tertiary)' }} />
-                  <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>
-                    Joined {new Date(staffData.joinDate).toLocaleDateString()}
-                  </span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircledIcon className="w-4 h-4" style={{ color: 'var(--color-success)' }} />
-                  <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>
-                    {staffData.isActive ? 'Active' : 'Inactive'}
-                  </span>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Stats Card */}
-            <motion.div
-              className="rounded-xl shadow-sm p-6"
-              style={{
-                backgroundColor: 'var(--color-surface)',
-                boxShadow: 'var(--shadow-sm)'
-              }}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              <h3 className="text-lg font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
-                Performance Metrics
-              </h3>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>Total Students</span>
-                  <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-                    {staffData.totalStudents}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>Avg Student Progress</span>
-                  <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-                    {staffData.avgStudentProgress}%
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>Completed Sessions</span>
-                  <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-                    {staffData.completedSessions}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>Last Active</span>
-                  <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-                    {staffData.lastActive}
-                  </span>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Contact Information */}
-            <motion.div
-              className="rounded-xl shadow-sm p-6"
-              style={{
-                backgroundColor: 'var(--color-surface)',
-                boxShadow: 'var(--shadow-sm)'
-              }}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 }}
-            >
-              <h3 className="text-lg font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
-                Contact Information
-              </h3>
-              <div className="space-y-3">
-                <div className="text-sm">
-                  <span style={{ color: 'var(--color-text-tertiary)' }}>Phone: </span>
-                  <span style={{ color: 'var(--color-text-primary)' }}>{staffData.contactInfo.phone}</span>
-                </div>
-                <div className="text-sm">
-                  <span style={{ color: 'var(--color-text-tertiary)' }}>Office: </span>
-                  <span style={{ color: 'var(--color-text-primary)' }}>{staffData.contactInfo.office}</span>
-                </div>
-                <div className="text-sm">
-                  <span style={{ color: 'var(--color-text-tertiary)' }}>Office Hours: </span>
-                  <span style={{ color: 'var(--color-text-primary)' }}>{staffData.contactInfo.officeHours}</span>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Right Column - Details */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Bio Section */}
-            <motion.div
-              className="rounded-xl shadow-sm p-6"
-              style={{
-                backgroundColor: 'var(--color-surface)',
-                boxShadow: 'var(--shadow-sm)'
-              }}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-                  Biography
-                </h3>
-                <div className="p-2 rounded-lg" style={{ backgroundColor: 'var(--color-accent-tertiary)' }}>
-                  <Pencil1Icon className="w-4 h-4" style={{ color: 'var(--color-accent-primary)' }} />
-                </div>
-              </div>
-              <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-                {staffData.bio}
-              </p>
-            </motion.div>
-
-            {/* Expertise Section */}
-            <motion.div
-              className="rounded-xl shadow-sm p-6"
-              style={{
-                backgroundColor: 'var(--color-surface)',
-                boxShadow: 'var(--shadow-sm)'
-              }}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.5 }}
-            >
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-                  Areas of Expertise
-                </h3>
-                <div className="p-2 rounded-lg" style={{ backgroundColor: 'var(--color-accent-tertiary)' }}>
-                  <Pencil1Icon className="w-4 h-4" style={{ color: 'var(--color-accent-primary)' }} />
-                </div>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {staffData.expertise.map((skill: string, index: number) => (
-                  <span
-                    key={index}
-                    className="px-3 py-1 rounded-full text-xs font-medium"
-                    style={{
-                      backgroundColor: 'var(--color-accent-tertiary)',
-                      color: 'var(--color-accent-primary)'
-                    }}
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Achievements Section */}
-            <motion.div
-              className="rounded-xl shadow-sm p-6"
-              style={{
-                backgroundColor: 'var(--color-surface)',
-                boxShadow: 'var(--shadow-sm)'
-              }}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.6 }}
-            >
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-                  Achievements & Recognition
-                </h3>
-                <div className="p-2 rounded-lg" style={{ backgroundColor: 'var(--color-accent-tertiary)' }}>
-                  <Pencil1Icon className="w-4 h-4" style={{ color: 'var(--color-accent-primary)' }} />
-                </div>
-              </div>
-              <div className="space-y-3">
-                {staffData.achievements.map((achievement: string, index: number) => (
-                  <div key={index} className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--color-accent-primary)' }} />
-                    <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                      {achievement}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Career Track Section */}
-            <motion.div
-              className="rounded-xl shadow-sm p-6"
-              style={{
-                backgroundColor: 'var(--color-surface)',
-                boxShadow: 'var(--shadow-sm)'
-              }}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.7 }}
-            >
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-                  Career Track Focus
-                </h3>
-                <div className="p-2 rounded-lg" style={{ backgroundColor: 'var(--color-accent-tertiary)' }}>
-                  <Pencil1Icon className="w-4 h-4" style={{ color: 'var(--color-accent-primary)' }} />
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <BarChartIcon className="w-6 h-6" style={{ color: 'var(--color-accent-primary)' }} />
-                <div>
-                  <div className="font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                    {staffData.careerTrack}
-                  </div>
-                  <div className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
-                    Specialized track for student development
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </motion.div>
+      </div>
     </div>
   );
 };
