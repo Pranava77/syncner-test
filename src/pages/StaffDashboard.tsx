@@ -54,10 +54,10 @@ const StaffDashboard: React.FC = () => {
   };
 
   const staffNavItems = [
-    { path: '/staff/dashboard', icon: HomeIcon, label: 'Dashboard' },
-    { path: '/staff/dashboard/students', icon: Users, label: 'Student Tracking' },
-    { path: '/staff/dashboard/leaderboard', icon: StarIcon, label: 'Leaderboard' },
-    { path: '/staff/dashboard/profile', icon: IdCardIcon, label: 'Staff Profile' },
+    { path: '/staff', icon: HomeIcon, label: 'Dashboard' },
+    { path: '/staff/students', icon: Users, label: 'Student Tracking' },
+    { path: '/staff/leaderboard', icon: StarIcon, label: 'Leaderboard' },
+    { path: '/staff/profile', icon: IdCardIcon, label: 'Staff Profile' },
   ];
 
   const isActive = (path: string) => window.location.pathname === path;
@@ -113,7 +113,7 @@ const StaffDashboard: React.FC = () => {
             className="h-10 w-10 object-contain cursor-pointer"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            onClick={() => navigate('/staff/dashboard')}
+            onClick={() => navigate('/staff')}
             style={{ zIndex: 10 }}
           />
           {!sidebarCollapsed && (
@@ -181,7 +181,7 @@ const StaffDashboard: React.FC = () => {
           <div className="flex flex-col items-center gap-4 pb-6">
             <ThemeSwitcher variant="icon" size="md" className="mb-2 p-2 rounded-lg bg-[var(--color-accent-primary)]" />
             <Link
-              to="/staff/dashboard/profile"
+              to="/staff/profile"
               className="flex items-center justify-center w-10 h-10 rounded-md mb-2"
               style={{ backgroundColor: 'var(--color-accent-primary)' }}
               title="Profile"
@@ -226,8 +226,8 @@ const StaffDashboard: React.FC = () => {
             
             {/* Unified Profile Section - clickable - Exact Layout.tsx Design */}
             <Link
-              to="/staff/dashboard/profile"
-              className="flex items-center gap-3 w-full px-3 py-2 mb-3 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-offset-1 focus:ring-offset-[var(--color-secondary-bg)] group hover:bg-[var(--color-tertiary-bg)]"
+              to="/staff/profile"
+              className="flex items-center gap-3 w-full px-3 py-2 mb-3 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-offset-1 focus:ring-offset-[var(--color-secondary-bg)] group hover:bg-[var(--color-secondary-bg)] group hover:bg-[var(--color-tertiary-bg)]"
               tabIndex={0}
               aria-label="View profile"
             >
@@ -374,7 +374,7 @@ const StaffDashboard: React.FC = () => {
           
           {/* Unified Profile Section - clickable - Exact Layout.tsx Design */}
           <Link
-            to="/staff/dashboard/profile"
+            to="/staff/profile"
             onClick={closeMobileMenu}
             className="flex items-center gap-3 w-full px-3 py-2 mb-3 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-offset-1 focus:ring-offset-[var(--color-primary-bg)] group hover:bg-[var(--color-tertiary-bg)]"
             tabIndex={0}
@@ -547,7 +547,7 @@ const StaffMainDashboard: React.FC = () => {
             backgroundColor: 'var(--color-surface)',
             boxShadow: 'var(--shadow-sm)'
           }}
-          onClick={() => navigate('/staff/dashboard/students')}
+                      onClick={() => navigate('/staff/students')}
           onMouseEnter={(e) => {
             e.currentTarget.style.transform = 'translateY(-2px)';
             e.currentTarget.style.boxShadow = 'var(--shadow-md)';
@@ -571,7 +571,7 @@ const StaffMainDashboard: React.FC = () => {
             backgroundColor: 'var(--color-surface)',
             boxShadow: 'var(--shadow-sm)'
           }}
-          onClick={() => navigate('/staff/dashboard/leaderboard')}
+                      onClick={() => navigate('/staff/leaderboard')}
           onMouseEnter={(e) => {
             e.currentTarget.style.transform = 'translateY(-2px)';
             e.currentTarget.style.boxShadow = 'var(--shadow-md)';

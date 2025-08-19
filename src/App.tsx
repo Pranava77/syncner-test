@@ -156,7 +156,8 @@ function App() {
               </motion.div>
             } />
           </Route>
-          <Route path="/staff/dashboard" element={
+          {/* Staff routes */}
+          <Route path="/staff/*" element={
             <ProtectedRoute>
               <StaffDashboard />
             </ProtectedRoute>

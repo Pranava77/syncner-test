@@ -7,7 +7,7 @@ export const getDefaultRoute = (user: User | null): string => {
     case 'admin':
       return '/admin';
     case 'staff':
-      return '/staff/dashboard';
+      return '/staff';
     case 'student':
     default:
       return '/student/dashboard';
