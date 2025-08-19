@@ -4,7 +4,6 @@ import { logoutUser } from '../redux/slices/authSlice';
 import { useNavigate, Routes, Route, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  PersonIcon,
   BarChartIcon,
   DashboardIcon,
   ExitIcon,
@@ -14,7 +13,6 @@ import {
   GearIcon,
   LightningBoltIcon,
   FileTextIcon,
-  IdCardIcon,
   ChatBubbleIcon,
   StarIcon,
   GroupIcon as Users,
