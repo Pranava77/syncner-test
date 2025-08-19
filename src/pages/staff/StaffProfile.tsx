@@ -6,13 +6,17 @@ import {
   CalendarIcon,
   CheckCircledIcon,
   StarIcon,
-  BarChartIcon
+  BarChartIcon,
+  ArrowLeftIcon,
+  Pencil1Icon
 } from '@radix-ui/react-icons';
+import { useNavigate } from 'react-router-dom';
 import syncnerLogo from '../../assets/syncner-logo.png';
 
 const StaffProfile: React.FC = () => {
   const [staffData, setStaffData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   // Mock data - replace with actual API calls
   useEffect(() => {
@@ -46,7 +50,12 @@ const StaffProfile: React.FC = () => {
           'Excellence in Teaching Award 2023',
           'Best Student Outcomes 2023',
           'Innovation in Curriculum Award 2022'
-        ]
+        ],
+        contactInfo: {
+          phone: '+1 (555) 123-4567',
+          office: 'Room 301, Computer Science Building',
+          officeHours: 'Monday-Friday 9:00 AM - 5:00 PM'
+        }
       });
       setLoading(false);
     }, 1000);
@@ -78,37 +87,55 @@ const StaffProfile: React.FC = () => {
   }
 
   return (
-    <div className="p-6 lg:p-8">
+    <div className="p-4 lg:p-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        {/* Header */}
-        <div className="mb-8">
-          <h1 
-            className="text-3xl font-heading font-bold mb-2"
-            style={{ color: 'var(--color-text-primary)' }}
+        {/* Header with Back Button */}
+        <div className="flex items-center gap-4 mb-8">
+          <button
+            onClick={() => navigate('/staff/dashboard')}
+            className="p-2 rounded-lg transition-colors hover:bg-opacity-10"
+            style={{ 
+              backgroundColor: 'var(--color-accent-primary)',
+              color: 'var(--color-text-inverse)' 
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+            }}
           >
-            Staff Profile
-          </h1>
-          <p 
-            className="font-label text-lg"
-            style={{ color: 'var(--color-text-tertiary)' }}
-          >
-            View your staff profile and performance metrics
-          </p>
+            <ArrowLeftIcon className="w-5 h-5" />
+          </button>
+          <div>
+            <h1 
+              className="text-3xl font-heading font-bold mb-2"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              Staff Profile
+            </h1>
+            <p 
+              className="font-label text-lg"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
+              View your staff profile and performance metrics
+            </p>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Profile Info */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 space-y-6">
             {/* Profile Card */}
             <motion.div
-              className="rounded-xl shadow-lg p-6 mb-6"
+              className="rounded-xl shadow-sm p-6"
               style={{
                 backgroundColor: 'var(--color-surface)',
-                boxShadow: 'var(--shadow-lg)'
+                boxShadow: 'var(--shadow-sm)'
               }}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -168,10 +195,10 @@ const StaffProfile: React.FC = () => {
 
             {/* Stats Card */}
             <motion.div
-              className="rounded-xl shadow-lg p-6"
+              className="rounded-xl shadow-sm p-6"
               style={{
                 backgroundColor: 'var(--color-surface)',
-                boxShadow: 'var(--shadow-lg)'
+                boxShadow: 'var(--shadow-sm)'
               }}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -207,24 +234,59 @@ const StaffProfile: React.FC = () => {
                 </div>
               </div>
             </motion.div>
+
+            {/* Contact Information */}
+            <motion.div
+              className="rounded-xl shadow-sm p-6"
+              style={{
+                backgroundColor: 'var(--color-surface)',
+                boxShadow: 'var(--shadow-sm)'
+              }}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <h3 className="text-lg font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
+                Contact Information
+              </h3>
+              <div className="space-y-3">
+                <div className="text-sm">
+                  <span style={{ color: 'var(--color-text-tertiary)' }}>Phone: </span>
+                  <span style={{ color: 'var(--color-text-primary)' }}>{staffData.contactInfo.phone}</span>
+                </div>
+                <div className="text-sm">
+                  <span style={{ color: 'var(--color-text-tertiary)' }}>Office: </span>
+                  <span style={{ color: 'var(--color-text-primary)' }}>{staffData.contactInfo.office}</span>
+                </div>
+                <div className="text-sm">
+                  <span style={{ color: 'var(--color-text-tertiary)' }}>Office Hours: </span>
+                  <span style={{ color: 'var(--color-text-primary)' }}>{staffData.contactInfo.officeHours}</span>
+                </div>
+              </div>
+            </motion.div>
           </div>
 
           {/* Right Column - Details */}
           <div className="lg:col-span-2 space-y-6">
             {/* Bio Section */}
             <motion.div
-              className="rounded-xl shadow-lg p-6"
+              className="rounded-xl shadow-sm p-6"
               style={{
                 backgroundColor: 'var(--color-surface)',
-                boxShadow: 'var(--shadow-lg)'
+                boxShadow: 'var(--shadow-sm)'
               }}
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 }}
+              transition={{ delay: 0.4 }}
             >
-              <h3 className="text-lg font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
-                Biography
-              </h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                  Biography
+                </h3>
+                <div className="p-2 rounded-lg" style={{ backgroundColor: 'var(--color-accent-tertiary)' }}>
+                  <Pencil1Icon className="w-4 h-4" style={{ color: 'var(--color-accent-primary)' }} />
+                </div>
+              </div>
               <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
                 {staffData.bio}
               </p>
@@ -232,18 +294,23 @@ const StaffProfile: React.FC = () => {
 
             {/* Expertise Section */}
             <motion.div
-              className="rounded-xl shadow-lg p-6"
+              className="rounded-xl shadow-sm p-6"
               style={{
                 backgroundColor: 'var(--color-surface)',
-                boxShadow: 'var(--shadow-lg)'
+                boxShadow: 'var(--shadow-sm)'
               }}
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4 }}
+              transition={{ delay: 0.5 }}
             >
-              <h3 className="text-lg font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
-                Areas of Expertise
-              </h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                  Areas of Expertise
+                </h3>
+                <div className="p-2 rounded-lg" style={{ backgroundColor: 'var(--color-accent-tertiary)' }}>
+                  <Pencil1Icon className="w-4 h-4" style={{ color: 'var(--color-accent-primary)' }} />
+                </div>
+              </div>
               <div className="flex flex-wrap gap-2">
                 {staffData.expertise.map((skill: string, index: number) => (
                   <span
@@ -262,18 +329,23 @@ const StaffProfile: React.FC = () => {
 
             {/* Achievements Section */}
             <motion.div
-              className="rounded-xl shadow-lg p-6"
+              className="rounded-xl shadow-sm p-6"
               style={{
                 backgroundColor: 'var(--color-surface)',
-                boxShadow: 'var(--shadow-lg)'
+                boxShadow: 'var(--shadow-sm)'
               }}
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.5 }}
+              transition={{ delay: 0.6 }}
             >
-              <h3 className="text-lg font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
-                Achievements & Recognition
-              </h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                  Achievements & Recognition
+                </h3>
+                <div className="p-2 rounded-lg" style={{ backgroundColor: 'var(--color-accent-tertiary)' }}>
+                  <Pencil1Icon className="w-4 h-4" style={{ color: 'var(--color-accent-primary)' }} />
+                </div>
+              </div>
               <div className="space-y-3">
                 {staffData.achievements.map((achievement: string, index: number) => (
                   <div key={index} className="flex items-center gap-3">
@@ -288,18 +360,23 @@ const StaffProfile: React.FC = () => {
 
             {/* Career Track Section */}
             <motion.div
-              className="rounded-xl shadow-lg p-6"
+              className="rounded-xl shadow-sm p-6"
               style={{
                 backgroundColor: 'var(--color-surface)',
-                boxShadow: 'var(--shadow-lg)'
+                boxShadow: 'var(--shadow-sm)'
               }}
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.6 }}
+              transition={{ delay: 0.7 }}
             >
-              <h3 className="text-lg font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
-                Career Track Focus
-              </h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                  Career Track Focus
+                </h3>
+                <div className="p-2 rounded-lg" style={{ backgroundColor: 'var(--color-accent-tertiary)' }}>
+                  <Pencil1Icon className="w-4 h-4" style={{ color: 'var(--color-accent-primary)' }} />
+                </div>
+              </div>
               <div className="flex items-center gap-3">
                 <BarChartIcon className="w-6 h-6" style={{ color: 'var(--color-accent-primary)' }} />
                 <div>
