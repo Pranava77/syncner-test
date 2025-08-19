@@ -207,9 +207,9 @@ const StudentDetails: React.FC = () => {
             {/* Summary Statistics Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
               {[
-                { label: 'Avg Attendance', value: studentData.summaryStats.avgAttendance, subtitle: 'Great/Good/Poor', icon: '📊' },
-                { label: 'Progress', value: studentData.summaryStats.progress, subtitle: 'Great/Good/Poor', icon: '📈' },
-                { label: 'Leaderboard', value: studentData.summaryStats.leaderboard, subtitle: '(Career Track Specific)', icon: '🏆' }
+                { label: 'Avg Attendance', value: studentData.summaryStats.avgAttendance, subtitle: 'Great/Good/Poor', icon: BarChartIcon },
+                { label: 'Progress', value: studentData.summaryStats.progress, subtitle: 'Great/Good/Poor', icon: RocketIcon },
+                { label: 'Leaderboard', value: studentData.summaryStats.leaderboard, subtitle: '(Career Track Specific)', icon: StarIcon }
               ].map((stat, index) => (
                 <motion.div
                   key={index}
@@ -223,7 +223,9 @@ const StudentDetails: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <div className="text-4xl mb-2">{stat.icon}</div>
+                  <div className="text-4xl mb-2">
+                    {React.createElement(stat.icon, { className: "w-8 h-8" })}
+                  </div>
                   <div className="text-3xl font-bold mb-2" style={{ color: 'var(--color-accent-primary)' }}>{stat.value}%</div>
                   <div className="text-sm font-label mb-1" style={{ color: 'var(--color-text-primary)' }}>{stat.label}</div>
                   <div className="text-xs opacity-70" style={{ color: 'var(--color-text-tertiary)' }}>{stat.subtitle}</div>
@@ -285,65 +287,192 @@ const StudentDetails: React.FC = () => {
                 </div>
               </div>
 
-                             <div className="space-y-6">
-                 {studentData.learningTimeline.map((level: any, index: number) => (
-                   <motion.div
-                     key={level.level}
-                     className="relative"
-                     initial={{ opacity: 0, x: -20 }}
-                     animate={{ opacity: 1, x: 0 }}
-                     transition={{ delay: index * 0.1 }}
-                   >
-                    {/* Vertical Line */}
+                                           <div className="space-y-8">
+                {studentData.learningTimeline.map((level: any, index: number) => (
+                  <motion.div
+                    key={level.level}
+                    className="relative group"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    {/* Modern Vertical Line with Gradient */}
                     {index < studentData.learningTimeline.length - 1 && (
-                      <div 
-                        className="absolute left-6 top-8 w-0.5 h-16"
-                        style={{ backgroundColor: 'var(--color-border)' }}
-                      />
+                      <div className="absolute left-8 top-12 w-0.5 h-20">
+                        <div 
+                          className="w-full h-full rounded-full"
+                          style={{ 
+                            background: 'linear-gradient(to bottom, var(--color-accent-primary), var(--color-border))'
+                          }}
+                        />
+                      </div>
                     )}
 
-                    <div className="flex items-start gap-4">
-                      {/* Level Icon */}
-                      <div className="flex-shrink-0">
-                        {getStatusIcon(level.status)}
+                    <div className="flex items-start gap-6">
+                      {/* Modern Status Icon with Ring */}
+                      <div className="flex-shrink-0 relative">
+                        <div className="w-16 h-16 rounded-full flex items-center justify-center border-4 transition-all duration-300 group-hover:scale-110"
+                          style={{ 
+                            backgroundColor: 'var(--color-surface)',
+                            borderColor: getStatusColor(level.status)
+                          }}
+                        >
+                          {getStatusIcon(level.status)}
+                        </div>
+                        {/* Glow Effect */}
+                        <div className="absolute inset-0 w-16 h-16 rounded-full opacity-20 blur-md transition-all duration-300 group-hover:opacity-40"
+                          style={{ backgroundColor: getStatusColor(level.status) }}
+                        />
                       </div>
 
-                      {/* Level Content */}
+                      {/* Enhanced Level Content */}
                       <div className="flex-1">
-                                                 <div className="flex items-center gap-2 mb-3">
-                           <h3 
-                             className="text-base font-semibold"
-                             style={{ color: 'var(--color-text-primary)' }}
-                           >
-                             Level {level.level}: {level.courseName}
-                           </h3>
-                         </div>
+                        {/* Level Header with Badge */}
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
+                            style={{ 
+                              backgroundColor: getStatusColor(level.status) + '20',
+                              color: getStatusColor(level.status)
+                            }}
+                          >
+                            Level {level.level}
+                          </div>
+                          <h3 
+                            className="text-lg font-semibold"
+                            style={{ color: 'var(--color-text-primary)' }}
+                          >
+                            {level.courseName}
+                          </h3>
+                        </div>
 
-                         <div className="space-y-3">
-                           {/* Learn */}
-                           <div className="flex items-center gap-3 p-2 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
-                             <FileTextIcon className="w-4 h-4 flex-shrink-0" style={{ color: getStatusColor(level.learn.completed ? 'completed' : 'pending') }} />
-                             <span className="text-sm font-label" style={{ color: 'var(--color-text-secondary)' }}>
-                               <strong>Learn:</strong> {level.learn.startTime} -- {level.learn.endTime}
-                             </span>
-                           </div>
+                        {/* Modern Timeline Items */}
+                        <div className="space-y-4">
+                          {/* Learn */}
+                          <div className="group/item relative overflow-hidden rounded-xl p-4 transition-all duration-300 hover:scale-[1.02]"
+                            style={{ 
+                              backgroundColor: 'var(--color-secondary-bg)',
+                              border: `1px solid ${level.learn.completed ? 'var(--color-success)' : 'var(--color-border)'}`
+                            }}
+                          >
+                            <div className="flex items-center gap-4">
+                              <div className="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 group-hover/item:scale-110"
+                                style={{ 
+                                  backgroundColor: level.learn.completed ? 'var(--color-success)' : 'var(--color-tertiary-bg)',
+                                  color: level.learn.completed ? 'white' : 'var(--color-text-secondary)'
+                                }}
+                              >
+                                <FileTextIcon className="w-5 h-5" />
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                                    Learn
+                                  </span>
+                                  {level.learn.completed && (
+                                    <span className="px-2 py-0.5 rounded-full text-xs font-medium"
+                                      style={{ 
+                                        backgroundColor: 'var(--color-success)',
+                                        color: 'white'
+                                      }}
+                                    >
+                                      ✓ Completed
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                                  {level.learn.startTime} → {level.learn.endTime}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
 
-                           {/* Test */}
-                           <div className="flex items-center gap-3 p-2 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
-                             <TargetIcon className="w-4 h-4 flex-shrink-0" style={{ color: getStatusColor(level.test.completed ? 'completed' : 'pending') }} />
-                             <span className="text-sm font-label" style={{ color: 'var(--color-text-secondary)' }}>
-                               <strong>Test ({level.test.score}% - {level.test.attempts} attempts):</strong> {level.test.startTime} -- {level.test.endTime}
-                             </span>
-                           </div>
+                          {/* Test */}
+                          <div className="group/item relative overflow-hidden rounded-xl p-4 transition-all duration-300 hover:scale-[1.02]"
+                            style={{ 
+                              backgroundColor: 'var(--color-secondary-bg)',
+                              border: `1px solid ${level.test.completed ? 'var(--color-success)' : 'var(--color-border)'}`
+                            }}
+                          >
+                            <div className="flex items-center gap-4">
+                              <div className="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 group-hover/item:scale-110"
+                                style={{ 
+                                  backgroundColor: level.test.completed ? 'var(--color-success)' : 'var(--color-tertiary-bg)',
+                                  color: level.test.completed ? 'white' : 'var(--color-text-secondary)'
+                                }}
+                              >
+                                <TargetIcon className="w-5 h-5" />
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                                    Test
+                                  </span>
+                                  {level.test.completed && (
+                                    <span className="px-2 py-0.5 rounded-full text-xs font-medium"
+                                      style={{ 
+                                        backgroundColor: 'var(--color-success)',
+                                        color: 'white'
+                                      }}
+                                    >
+                                      {level.test.score}%
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                                  {level.test.attempts} attempts • {level.test.startTime} → {level.test.endTime}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
 
-                           {/* Exercise */}
-                           <div className="flex items-center gap-3 p-2 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
-                             <FileTextIcon className="w-4 h-4 flex-shrink-0" style={{ color: getStatusColor(level.exercise.completed ? 'completed' : 'in-progress') }} />
-                             <span className="text-sm font-label" style={{ color: 'var(--color-text-secondary)' }}>
-                               <strong>Exercise:</strong> {level.exercise.startTime} -- {level.exercise.endTime}
-                             </span>
-                           </div>
-                         </div>
+                          {/* Exercise */}
+                          <div className="group/item relative overflow-hidden rounded-xl p-4 transition-all duration-300 hover:scale-[1.02]"
+                            style={{ 
+                              backgroundColor: 'var(--color-secondary-bg)',
+                              border: `1px solid ${level.exercise.completed ? 'var(--color-success)' : 'var(--color-accent-primary)'}`
+                            }}
+                          >
+                            <div className="flex items-center gap-4">
+                              <div className="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 group-hover/item:scale-110"
+                                style={{ 
+                                  backgroundColor: level.exercise.completed ? 'var(--color-success)' : 'var(--color-accent-primary)',
+                                  color: 'white'
+                                }}
+                              >
+                                <FileTextIcon className="w-5 h-5" />
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                                    Exercise
+                                  </span>
+                                  {level.exercise.completed ? (
+                                    <span className="px-2 py-0.5 rounded-full text-xs font-medium"
+                                      style={{ 
+                                        backgroundColor: 'var(--color-success)',
+                                        color: 'white'
+                                      }}
+                                    >
+                                      ✓ Completed
+                                    </span>
+                                  ) : (
+                                    <span className="px-2 py-0.5 rounded-full text-xs font-medium animate-pulse"
+                                      style={{ 
+                                        backgroundColor: 'var(--color-accent-primary)',
+                                        color: 'white'
+                                      }}
+                                    >
+                                      In Progress
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                                  {level.exercise.startTime} → {level.exercise.endTime}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </motion.div>
@@ -412,9 +541,7 @@ const StudentDetails: React.FC = () => {
                    </RadarChart>
                  </ResponsiveContainer>
                </div>
-               <p className="text-center text-sm opacity-70 mt-2" style={{ color: 'var(--color-text-tertiary)' }}>
-                 (Optional)
-               </p>
+
              </div>
 
                          {/* View Portfolio Button */}
