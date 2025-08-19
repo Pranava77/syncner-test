@@ -22,7 +22,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { fetchCurrentUser, restoreSession } from './redux/slices/authSlice';
 import AdminStaff from './pages/AdminStaff';
 import TrainingLevels from './pages/TrainingLevels';
-import StaffDashboard from './pages/StaffDashboard';
+import StaffSidebar from './pages/staff/StaffSidebar';
 import AdminUsers from './pages/AdminUsers';
 import AdminAdmin from './pages/AdminAdmin';
 import AdminCurriculum from './pages/AdminCurriculum';
@@ -159,7 +159,7 @@ function App() {
           {/* Staff routes */}
           <Route path="/staff/*" element={
             <ProtectedRoute>
-              <StaffDashboard />
+              <StaffSidebar />
             </ProtectedRoute>
           } />
         </Routes>
