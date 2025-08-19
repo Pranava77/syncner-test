@@ -134,12 +134,12 @@ const StudentDetails: React.FC = () => {
 
   return (
     <div className="p-6 lg:p-8" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="max-w-7xl mx-auto"
-      >
+              <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="w-full"
+        >
         {/* Header */}
         <div className="mb-8">
           <h1 
@@ -224,7 +224,10 @@ const StudentDetails: React.FC = () => {
                   transition={{ delay: index * 0.1 }}
                 >
                   <div className="text-4xl mb-2">
-                    {React.createElement(stat.icon, { className: "w-8 h-8" })}
+                    {React.createElement(stat.icon, { 
+                      className: "w-8 h-8",
+                      style: { color: 'var(--color-accent-primary)' }
+                    })}
                   </div>
                   <div className="text-3xl font-bold mb-2" style={{ color: 'var(--color-accent-primary)' }}>{stat.value}%</div>
                   <div className="text-sm font-label mb-1" style={{ color: 'var(--color-text-primary)' }}>{stat.label}</div>
@@ -483,25 +486,7 @@ const StudentDetails: React.FC = () => {
 
           {/* Right Column - Performance and Portfolio */}
           <div className="lg:col-span-1">
-                         {/* Profile Icon */}
-             <div 
-               className="p-6 rounded-xl shadow-sm mb-6 text-center"
-               style={{
-                 backgroundColor: 'var(--color-surface)',
-                 boxShadow: 'var(--shadow-sm)',
-                 borderColor: 'var(--color-border)'
-               }}
-             >
-               <div 
-                 className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold"
-                 style={{ 
-                   backgroundColor: 'var(--color-accent-primary)',
-                   color: 'var(--color-text-inverse)'
-                 }}
-               >
-                 {studentData.profileInitial}
-               </div>
-             </div>
+            
 
                          {/* Radar Chart */}
              <div 
