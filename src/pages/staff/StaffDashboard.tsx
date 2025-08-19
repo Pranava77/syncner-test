@@ -184,20 +184,7 @@ const StaffDashboard: React.FC = () => {
         {sidebarCollapsed ? (
           <div className="flex flex-col items-center gap-4 pb-6">
             <ThemeSwitcher variant="icon" size="md" className="mb-2 p-2 rounded-lg bg-[var(--color-accent-primary)]" />
-            <Link
-              to="/staff/profile"
-              className="flex items-center justify-center w-10 h-10 rounded-md mb-2"
-              style={{ backgroundColor: 'var(--color-accent-primary)' }}
-              title="Profile"
-              aria-label="View profile"
-            >
-              <span 
-                className="text-base font-heading"
-                style={{ color: 'var(--color-text-inverse)' }}
-              >
-                {user?.name?.charAt(0) || 'S'}
-              </span>
-            </Link>
+
             <button
               onClick={handleLogout}
               disabled={isLoggingOut}
@@ -228,30 +215,7 @@ const StaffDashboard: React.FC = () => {
               <ThemeSwitcher variant="full-width" className="w-full" />
             </div>
             
-            {/* Unified Profile Section - clickable - Exact Layout.tsx Design */}
-            <Link
-              to="/staff/profile"
-              className="flex items-center gap-3 w-full px-3 py-2 mb-3 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-offset-1 focus:ring-offset-[var(--color-secondary-bg)] group hover:bg-[var(--color-tertiary-bg)]"
-              tabIndex={0}
-              aria-label="View profile"
-            >
-              <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium border-2 transition-colors group-hover:border-[var(--color-accent-primary)]" style={{ 
-                backgroundColor: 'var(--color-accent-primary)', 
-                borderColor: 'var(--color-accent-primary)',
-                color: 'var(--color-text-inverse)' 
-              }}>
-                {user?.name?.charAt(0) || 'S'}
-              </div>
-              <div className="flex flex-col flex-1 min-w-0">
-                <span className="text-sm font-medium truncate" style={{ color: 'var(--color-text-primary)' }}>
-                  {user?.name || 'Staff Member'}
-                </span>
-                <span className="text-xs capitalize truncate opacity-70" style={{ color: 'var(--color-text-secondary)' }}>
-                  staff
-                </span>
-              </div>
-              <PersonIcon className="h-4 h-4 opacity-60 group-hover:opacity-80 transition-opacity" style={{ color: 'var(--color-text-secondary)' }} />
-            </Link>
+
             
             <button
               onClick={handleLogout}
@@ -376,27 +340,7 @@ const StaffDashboard: React.FC = () => {
             <ThemeSwitcher variant="full-width" className="w-full" />
           </div>
           
-          {/* Unified Profile Section - clickable - Exact Layout.tsx Design */}
-          <Link
-            to="/staff/profile"
-            onClick={closeMobileMenu}
-            className="flex items-center gap-3 w-full px-3 py-2 mb-3 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-offset-1 focus:ring-offset-[var(--color-primary-bg)] group hover:bg-[var(--color-tertiary-bg)]"
-            tabIndex={0}
-            aria-label="View profile"
-          >
-            <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium border-2 transition-colors group-hover:border-[var(--color-accent-primary)]" style={{ 
-              backgroundColor: 'var(--color-accent-primary)', 
-              borderColor: 'var(--color-accent-primary)',
-              color: 'var(--color-text-inverse)' 
-            }}>
-              {user?.name?.charAt(0) || 'S'}
-            </div>
-            <div className="flex flex-col flex-1 min-w-0">
-              <span className="text-sm font-medium truncate" style={{ color: 'var(--color-text-primary)' }}>{user?.name || 'Staff Member'}</span>
-              <span className="text-xs capitalize truncate opacity-70" style={{ color: 'var(--color-text-secondary)' }}>staff</span>
-            </div>
-            <PersonIcon className="h-4 h-4 opacity-60 group-hover:opacity-80 transition-opacity" style={{ color: 'var(--color-text-secondary)' }} />
-          </Link>
+
           <button
             onClick={() => {
               handleLogout();
