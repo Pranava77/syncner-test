@@ -34,7 +34,7 @@ import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer, B
 
 const COLORS = ['#00B8D9', '#FFBB28', '#FF8042', '#A259F7', '#F95F62', '#00C49F'];
 
-const StaffDashboard: React.FC = () => {
+const StaffSidebar: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.auth);
@@ -50,7 +50,7 @@ const StaffDashboard: React.FC = () => {
       await dispatch(logoutUser());
       navigate('/login');
     } catch (error) {
-      console.error('StaffDashboard: Logout failed:', error);
+      console.error('StaffSidebar: Logout failed:', error);
     } finally {
       setIsLoggingOut(false);
     }
@@ -338,7 +338,7 @@ const StaffDashboard: React.FC = () => {
             <ThemeSwitcher variant="full-width" className="w-full" />
           </div>
           
-
+          
           <button
             onClick={() => {
               handleLogout();
@@ -735,4 +735,4 @@ const StaffMainDashboard: React.FC = () => {
   );
 };
 
-export default StaffDashboard;
+export default StaffSidebar;
