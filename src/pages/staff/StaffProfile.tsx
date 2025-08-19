@@ -3,8 +3,6 @@ import { motion } from 'framer-motion';
 import {
   PersonIcon,
   EnvelopeClosedIcon,
-  BuildingIcon,
-  MapPinIcon,
   CalendarIcon,
   CheckCircledIcon,
   StarIcon,
@@ -142,13 +140,13 @@ const StaffProfile: React.FC = () => {
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <BuildingIcon className="w-4 h-4" style={{ color: 'var(--color-text-tertiary)' }} />
+                  <BarChartIcon className="w-4 h-4" style={{ color: 'var(--color-text-tertiary)' }} />
                   <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>
                     {staffData.college}
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <MapPinIcon className="w-4 h-4" style={{ color: 'var(--color-text-tertiary)' }} />
+                  <PersonIcon className="w-4 h-4" style={{ color: 'var(--color-text-tertiary)' }} />
                   <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>
                     {staffData.department}
                   </span>
