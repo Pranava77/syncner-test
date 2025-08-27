@@ -30,6 +30,7 @@ import {
 import StudentTracking from './StudentTracking';
 import Leaderboard from './Leaderboard';
 import StaffProfile from './StaffProfile';
+import StudentDetails from './StudentDetails';
 import syncnerLogo from '../../assets/syncner-logo.png';
 import ThemeSwitcher from '../../components/ThemeSwitcher';
 import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
