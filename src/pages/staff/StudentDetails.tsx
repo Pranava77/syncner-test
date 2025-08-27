@@ -204,9 +204,30 @@ const StudentDetails: React.FC = () => {
               {/* Performance Overview Cards */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 {[
-                  { label: 'Consistency', value: selectedStudent.summaryStats.consistency, subtitle: 'Streak Days', icon: BarChartIcon },
-                  { label: 'Progress', value: selectedStudent.summaryStats.progress, subtitle: 'Course Completion', icon: RocketIcon },
-                  { label: 'Leaderboard', value: selectedStudent.summaryStats.leaderboard, subtitle: 'Points Rank', icon: StarIcon }
+                  { 
+                    label: 'Consistency', 
+                    value: selectedStudent.summaryStats.consistency, 
+                    subtitle: 'Current Streak', 
+                    icon: BarChartIcon,
+                    isStreak: true,
+                    unit: 'days'
+                  },
+                  { 
+                    label: 'Progress', 
+                    value: selectedStudent.summaryStats.progress, 
+                    subtitle: 'Course Completion', 
+                    icon: RocketIcon,
+                    isStreak: false,
+                    unit: '%'
+                  },
+                  { 
+                    label: 'Leaderboard', 
+                    value: selectedStudent.summaryStats.leaderboard, 
+                    subtitle: 'Points Rank', 
+                    icon: StarIcon,
+                    isStreak: false,
+                    unit: '%'
+                  }
                 ].map((stat, index) => (
                   <motion.div
                     key={index}
@@ -220,9 +241,16 @@ const StudentDetails: React.FC = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
                   >
-                    <div className="text-4xl font-bold mb-2" style={{ color: 'var(--color-accent-primary)' }}>{stat.value}%</div>
+                    <div className="text-4xl font-bold mb-2" style={{ color: 'var(--color-accent-primary)' }}>
+                      {stat.value}{stat.unit}
+                    </div>
                     <div className="text-sm font-medium mb-1" style={{ color: 'var(--color-text-primary)' }}>{stat.label}</div>
                     <div className="text-xs opacity-70" style={{ color: 'var(--color-text-tertiary)' }}>{stat.subtitle}</div>
+                    {stat.isStreak && (
+                      <div className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
+                        {selectedStudent.summaryStats.consistency > 0 ? 'Active streak' : 'No active streak'}
+                      </div>
+                    )}
                   </motion.div>
                 ))}
               </div>
