@@ -1,6 +1,7 @@
 import express from 'express';
 import User from '../models/User.js';
 import UserProgress from '../models/UserProgress.js';
+import Track from '../models/Track.js';
 import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -70,9 +71,13 @@ router.get('/students', protect, ensureStaff, async (req, res) => {
           .select('currentLevel completedLevels totalPoints streakDays')
           .lean();
         
+        // Get the actual track structure to calculate accurate completion rate
+        const track = await Track.findOne({ name: student.careerTrack }).lean();
+        const totalLevels = track ? track.levels.length : 10; // Fallback to 10 if track not found
+        
         return {
           ...student,
-          progress: progress ? Math.round((progress.completedLevels.length / 10) * 100) : 0, // Assuming 10 levels per track
+          progress: progress ? Math.round((progress.completedLevels.length / totalLevels) * 100) : 0,
           currentLevel: progress ? `Level ${progress.currentLevel}` : 'Level 1',
           totalPoints: progress?.totalPoints || 0,
           streakDays: progress?.streakDays || 0,
@@ -130,9 +135,13 @@ router.get('/students/:id', protect, ensureStaff, async (req, res) => {
     const progress = await UserProgress.findOne({ user: id })
       .lean();
     
+    // Get the actual track structure to calculate accurate completion rate
+    const track = await Track.findOne({ name: student.careerTrack }).lean();
+    const totalLevels = track ? track.levels.length : 10; // Fallback to 10 if track not found
+    
     // Calculate performance metrics
     const performance = {
-      performance: progress ? Math.round((progress.completedLevels.length / 10) * 100) : 0,
+      performance: progress ? Math.round((progress.completedLevels.length / totalLevels) * 100) : 0,
       potential: 90, // This could be calculated based on various factors
       contribution: 78, // This could be calculated based on community participation
       creativity: 82, // This could be calculated based on exercise submissions
@@ -143,14 +152,14 @@ router.get('/students/:id', protect, ensureStaff, async (req, res) => {
     // Calculate summary stats
     const summaryStats = {
       consistency: progress?.streakDays || 0,
-      progress: progress ? Math.round((progress.completedLevels.length / 10) * 100) : 0,
+      progress: progress ? Math.round((progress.completedLevels.length / totalLevels) * 100) : 0,
       leaderboard: progress ? Math.round((progress.totalPoints / 1000) * 100) : 0
     };
     
     // Build learning timeline
     const learningTimeline = progress?.completedLevels.map((level, index) => ({
-      level: 10 - index, // Reverse order to show latest first
-      courseName: `Level ${10 - index}`, // This should come from actual curriculum data
+      level: totalLevels - index, // Reverse order to show latest first, using actual total levels
+      courseName: `Level ${totalLevels - index}`, // This should come from actual curriculum data
       status: 'completed',
       learn: { 
         completed: level.completedSections?.learn || false, 
@@ -212,24 +221,50 @@ router.get('/analytics', protect, ensureStaff, async (req, res) => {
     const totalStudents = await User.countDocuments({ role: 'student' });
     const activeStudents = await User.countDocuments({ role: 'student', isActive: true });
     
-    // Get progress statistics
-    const progressStats = await UserProgress.aggregate([
-      {
-        $group: {
-          _id: null,
-          avgProgress: { $avg: { $divide: [{ $size: '$completedLevels' }, 10] } },
-          totalPoints: { $sum: '$totalPoints' },
-          avgStreakDays: { $avg: '$streakDays' }
-        }
-      }
+    // Get progress statistics with dynamic track-based calculations
+    const studentsWithTracks = await User.aggregate([
+      { $match: { role: 'student' } },
+      { $lookup: { from: 'tracks', localField: 'careerTrack', foreignField: 'name', as: 'track' } },
+      { $unwind: { path: '$track', preserveNullAndEmptyArrays: true } }
     ]);
+
+    // Calculate progress for each student based on their actual track
+    let totalProgress = 0;
+    let totalPoints = 0;
+    let totalStreakDays = 0;
+    let studentsWithProgress = 0;
+
+    for (const student of studentsWithTracks) {
+      const progress = await UserProgress.findOne({ user: student._id }).lean();
+      if (progress) {
+        const totalLevels = student.track ? student.track.levels.length : 10;
+        const studentProgress = progress.completedLevels.length / totalLevels;
+        totalProgress += studentProgress;
+        totalPoints += progress.totalPoints || 0;
+        totalStreakDays += progress.streakDays || 0;
+        studentsWithProgress++;
+      }
+    }
+
+    const avgProgress = studentsWithProgress > 0 ? totalProgress / studentsWithProgress : 0;
+    const avgPoints = studentsWithProgress > 0 ? totalPoints / studentsWithProgress : 0;
+    const avgStreakDays = studentsWithProgress > 0 ? totalStreakDays / studentsWithProgress : 0;
     
-    // Get career track distribution
+    // Get career track distribution with actual level counts
     const trackDistribution = await User.aggregate([
       { $match: { role: 'student' } },
-      { $group: { _id: '$careerTrack', count: { $sum: 1 } } },
+      { $lookup: { from: 'tracks', localField: 'careerTrack', foreignField: 'name', as: 'track' } },
+      { $unwind: { path: '$track', preserveNullAndEmptyArrays: true } },
+      { $group: { 
+        _id: '$careerTrack', 
+        count: { $sum: 1 },
+        totalLevels: { $first: '$track.levels' }
+      }},
       { $sort: { count: -1 } }
     ]);
+    
+    // Get track structure information
+    const trackStructure = await Track.find({ isActive: true }).select('name displayName levels difficulty').lean();
     
     const analytics = {
       totalStudents,
@@ -238,11 +273,18 @@ router.get('/analytics', protect, ensureStaff, async (req, res) => {
       studentRetention: Math.round((activeStudents / totalStudents) * 100),
       trackDistribution: trackDistribution.map(track => ({
         track: track._id,
-        count: track.count
+        count: track.count,
+        totalLevels: track.totalLevels ? track.totalLevels.length : 10
       })),
-      avgProgress: progressStats[0] ? Math.round(progressStats[0].avgProgress * 100) : 0,
-      avgPoints: progressStats[0] ? Math.round(progressStats[0].totalPoints / totalStudents) : 0,
-      avgStreakDays: progressStats[0] ? Math.round(progressStats[0].avgStreakDays) : 0
+      trackStructure: trackStructure.map(track => ({
+        name: track.name,
+        displayName: track.displayName,
+        totalLevels: track.levels.length,
+        difficulty: track.difficulty
+      })),
+      avgProgress: Math.round(avgProgress * 100),
+      avgPoints: Math.round(avgPoints),
+      avgStreakDays: Math.round(avgStreakDays)
     };
     
     res.status(200).json({

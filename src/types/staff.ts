@@ -101,6 +101,7 @@ export interface StaffAnalytics {
   completionRate: number;
   studentRetention: number;
   trackDistribution: TrackDistribution[];
+  trackStructure: TrackStructure[];
   avgProgress: number;
   avgPoints: number;
   avgStreakDays: number;
@@ -109,6 +110,14 @@ export interface StaffAnalytics {
 export interface TrackDistribution {
   track: string;
   count: number;
+  totalLevels: number;
+}
+
+export interface TrackStructure {
+  name: string;
+  displayName: string;
+  totalLevels: number;
+  difficulty: string;
 }
 
 export interface StaffAnalyticsResponse {
