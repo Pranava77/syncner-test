@@ -9,7 +9,7 @@ import {
   MagnifyingGlassIcon,
   ChevronDownIcon,
   ChevronRightIcon,
-  TrophyIcon,
+  StarFilledIcon,
   TargetIcon,
   RocketIcon
 } from '@radix-ui/react-icons';
@@ -464,7 +464,7 @@ const StudentTracking: React.FC = () => {
                           <td colSpan={6} className="px-6 py-6">
                             <div className="bg-white rounded-xl p-6 shadow-sm" style={{ backgroundColor: 'var(--color-surface)' }}>
                               <div className="flex items-center gap-3 mb-6">
-                                <TrophyIcon className="w-6 h-6" style={{ color: 'var(--color-accent-primary)' }} />
+                                <StarFilledIcon className="w-6 h-6" style={{ color: 'var(--color-accent-primary)' }} />
                                 <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>
                                   {student.name}'s Leaderboard Performance
                                 </h3>
