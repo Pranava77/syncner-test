@@ -147,6 +147,7 @@ const Layout: React.FC = () => {
     { path: '/student/dashboard', icon: HomeIcon, label: 'Dashboard' },
     { path: '/student/training/current', icon: LightningBoltIcon, label: 'Training' },
     { path: '/student/projects', icon: FileTextIcon, label: 'Projects' },
+    { path: '/student/portfolio', icon: IdCardIcon, label: 'Portfolio' },
     { path: '/student/my-resume', icon: IdCardIcon, label: 'My Resume', locked: true },
     { path: '/student/mock-interview', icon: ChatBubbleIcon, label: 'Mock Interview', locked: true },
     { path: '/student/leaderboard', icon: StarIcon, label: 'Leaderboard', locked: true },
