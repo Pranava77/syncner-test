@@ -1,7 +1,7 @@
 import express from 'express';
 import User from '../models/User.js';
 import UserProgress from '../models/UserProgress.js';
-import { auth } from '../middleware/auth.js';
+import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -24,7 +24,7 @@ const ensureStaff = async (req, res, next) => {
 };
 
 // Get all students with pagination and filtering
-router.get('/students', auth, ensureStaff, async (req, res) => {
+router.get('/students', protect, ensureStaff, async (req, res) => {
   try {
     const { page = 1, limit = 20, search, status, careerTrack, sortBy = 'lastActive', sortOrder = 'desc' } = req.query;
     
@@ -73,7 +73,7 @@ router.get('/students', auth, ensureStaff, async (req, res) => {
         return {
           ...student,
           progress: progress ? Math.round((progress.completedLevels.length / 10) * 100) : 0, // Assuming 10 levels per track
-          currentLevel: progress?.currentLevel || 'Level 1',
+          currentLevel: progress ? `Level ${progress.currentLevel}` : 'Level 1',
           totalPoints: progress?.totalPoints || 0,
           streakDays: progress?.streakDays || 0,
           status: student.isActive ? 'active' : 'inactive'
@@ -104,7 +104,7 @@ router.get('/students', auth, ensureStaff, async (req, res) => {
 });
 
 // Get detailed student information
-router.get('/students/:id', auth, ensureStaff, async (req, res) => {
+router.get('/students/:id', protect, ensureStaff, async (req, res) => {
   try {
     const { id } = req.params;
     
@@ -128,7 +128,6 @@ router.get('/students/:id', auth, ensureStaff, async (req, res) => {
     
     // Get detailed progress data
     const progress = await UserProgress.findOne({ user: id })
-      .populate('careerTrack')
       .lean();
     
     // Calculate performance metrics
@@ -173,9 +172,9 @@ router.get('/students/:id', auth, ensureStaff, async (req, res) => {
     })) || [];
     
     // Add current level if not completed
-    if (progress?.currentLevel && progress.currentLevel !== 'Level 1') {
+    if (progress?.currentLevel && progress.currentLevel !== 1) {
       learningTimeline.unshift({
-        level: parseInt(progress.currentLevel.replace('Level ', '')),
+        level: progress.currentLevel,
         courseName: `Level ${progress.currentLevel}`,
         status: 'in-progress',
         learn: { completed: false, startTime: new Date(), endTime: 'In Progress' },
@@ -208,7 +207,7 @@ router.get('/students/:id', auth, ensureStaff, async (req, res) => {
 });
 
 // Get staff dashboard analytics
-router.get('/analytics', auth, ensureStaff, async (req, res) => {
+router.get('/analytics', protect, ensureStaff, async (req, res) => {
   try {
     const totalStudents = await User.countDocuments({ role: 'student' });
     const activeStudents = await User.countDocuments({ role: 'student', isActive: true });
