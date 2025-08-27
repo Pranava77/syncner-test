@@ -303,24 +303,14 @@ const StudentTracking: React.FC = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => navigate(`/staff/students/${student._id}`)}
-                          className="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors hover:bg-[var(--color-accent-tertiary)]"
-                          style={{ color: 'var(--color-accent-primary)' }}
-                        >
-                          <StarFilledIcon className="w-4 h-4" />
-                          View Details
-                        </button>
-                        <button
-                          onClick={() => navigate(`/staff/student-portfolio`, { state: { studentId: student._id, studentName: student.name } })}
-                          className="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors hover:bg-[var(--color-accent-tertiary)]"
-                          style={{ color: 'var(--color-accent-secondary)' }}
-                        >
-                          <PersonIcon className="w-4 h-4" />
-                          View Portfolio
-                        </button>
-                      </div>
+                      <button
+                        onClick={() => navigate(`/staff/students/${student._id}`)}
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors hover:bg-[var(--color-accent-tertiary)]"
+                        style={{ color: 'var(--color-accent-primary)' }}
+                      >
+                        <StarFilledIcon className="w-4 h-4" />
+                        View Details
+                      </button>
                     </td>
                   </motion.tr>
                 ))}

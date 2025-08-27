@@ -30,7 +30,6 @@ import LevelLearnPage from './pages/LevelLearnPage';
 import LevelTestPage from './pages/LevelTestPage';
 import LevelExercisePage from './pages/LevelExercisePage';
 import ProjectsPage from './pages/ProjectsPage';
-import PortfolioPage from './pages/PortfolioPage';
 
 function AdminWrapper() {
   return (
@@ -125,7 +124,6 @@ function App() {
             <Route path="training/:levelId/test" element={<LevelTestPage />} />
             <Route path="training/:levelId/exercise" element={<LevelExercisePage />} />
             <Route path="projects" element={<ProjectsPage />} />
-            <Route path="portfolio" element={<PortfolioPage />} />
             <Route path="profile" element={
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -162,12 +160,6 @@ function App() {
           <Route path="/staff/*" element={
             <ProtectedRoute>
               <StaffSidebar />
-            </ProtectedRoute>
-          } />
-          {/* Staff can view student portfolios */}
-          <Route path="/staff/student-portfolio" element={
-            <ProtectedRoute>
-              <PortfolioPage />
             </ProtectedRoute>
           } />
         </Routes>
