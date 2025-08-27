@@ -320,16 +320,7 @@ router.get('/analytics', protect, ensureStaff, async (req, res) => {
       { $unwind: { path: '$track', preserveNullAndEmptyArrays: true } }
     ]);
 
-    // Calculate student retention: percentage of students who have been active in the last 30 days
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    
-    const recentlyActiveStudents = await User.countDocuments({
-      role: 'student',
-      lastActive: { $gte: thirtyDaysAgo }
-    });
-    
-    const studentRetention = totalStudents > 0 ? Math.round((recentlyActiveStudents / totalStudents) * 100) : 0;
+
     
     // Calculate actual completion rate based on student progress
     let studentsWithCompletedLevels = 0;
@@ -391,7 +382,6 @@ router.get('/analytics', protect, ensureStaff, async (req, res) => {
       totalStudents,
       activeStudents,
       completionRate: Math.round((activeStudents / totalStudents) * 100),
-      studentRetention: Math.round((activeStudents / totalStudents) * 100),
       trackDistribution: trackDistribution.map(track => ({
         track: track._id,
         count: track.count,

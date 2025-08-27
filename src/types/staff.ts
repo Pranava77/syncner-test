@@ -105,7 +105,6 @@ export interface StaffAnalytics {
   totalStudents: number;
   activeStudents: number;
   completionRate: number;
-  studentRetention: number;
   trackDistribution: TrackDistribution[];
   trackStructure: TrackStructure[];
   avgProgress: number;

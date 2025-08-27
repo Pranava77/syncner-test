@@ -508,7 +508,6 @@ const StaffMainDashboard: React.FC = () => {
   const userCount = analytics?.totalStudents ?? 0;
   const activeStudents = analytics?.activeStudents ?? 0;
   const completionRate = analytics?.completionRate ?? 0;
-  const studentRetention = analytics?.studentRetention ?? 0;
   const trackDistribution = analytics?.trackDistribution ?? [];
   const avgProgress = analytics?.avgProgress ?? 0;
 
@@ -683,39 +682,7 @@ const StaffMainDashboard: React.FC = () => {
           </div>
         </div>
 
-        <div 
-          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
-          style={{
-            backgroundColor: 'var(--color-surface)',
-            boxShadow: 'var(--shadow-sm)'
-          }}
-        >
-          <div 
-            className="p-3 rounded-lg"
-            style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
-          >
-            <Target 
-              className="h-6 w-6" 
-              style={{ color: 'var(--color-accent-primary)' }}
-            />
-          </div>
-          <div>
-            <p 
-              className="text-sm"
-              style={{ color: 'var(--color-text-tertiary)' }}
-            >Student Retention</p>
-            <p 
-              className="text-2xl font-bold"
-              style={{ color: 'var(--color-text-primary)' }}
-            >{studentRetention}%</p>
-            <p 
-              className="text-xs flex items-center mt-1"
-              style={{ color: 'var(--color-text-tertiary)' }}
-            >
-              Active in last 30 days
-            </p>
-          </div>
-        </div>
+
 
         <div 
           className="rounded-xl shadow-sm p-6 flex items-center gap-4"
