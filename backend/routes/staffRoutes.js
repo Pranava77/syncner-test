@@ -79,10 +79,25 @@ router.get('/students', protect, ensureStaff, async (req, res) => {
         const totalLevels = track ? track.levels.length : 10; // Fallback to 10 if track not found
         
         // Calculate attendance statistics
-        const today = new Date();
-        const enrollmentDate = progress?.createdAt || new Date();
-        const totalDays = Math.ceil((today.getTime() - enrollmentDate.getTime()) / (1000 * 60 * 60 * 24));
-        const presentDays = progress?.dailyActivity ? progress.dailyActivity.filter(entry => entry.isPresent).length : 0;
+        let presentDays = 0;
+        let totalDays = 1;
+        
+        if (progress?.attendanceStats?.presentDays !== undefined) {
+          // Use pre-calculated attendance stats if available
+          presentDays = progress.attendanceStats.presentDays;
+          totalDays = progress.attendanceStats.totalDays || 1;
+        } else if (progress?.dailyActivity) {
+          // Fallback to calculating from daily activity
+          presentDays = progress.dailyActivity.filter(entry => entry.isPresent).length;
+          const today = new Date();
+          const enrollmentDate = progress.createdAt || new Date();
+          totalDays = Math.ceil((today.getTime() - enrollmentDate.getTime()) / (1000 * 60 * 60 * 24));
+        } else {
+          // If no attendance data exists, estimate based on completion
+          presentDays = progress ? Math.min(progress.completedLevels.length * 2, 30) : 0;
+          totalDays = Math.max(1, presentDays);
+        }
+        
         const attendancePercentage = totalDays > 0 ? Math.round((presentDays / totalDays) * 100) : 0;
         
         return {
@@ -170,14 +185,22 @@ router.get('/students/:id', protect, ensureStaff, async (req, res) => {
     };
     
     // Calculate attendance statistics for consistency
-    const today = new Date();
-    const enrollmentDate = progress?.createdAt || student.createdAt || new Date();
-    const totalDays = Math.ceil((today.getTime() - enrollmentDate.getTime()) / (1000 * 60 * 60 * 24));
-    const presentDays = progress?.dailyActivity ? progress.dailyActivity.filter(entry => entry.isPresent).length : 0;
+    let presentDays = 0;
+    
+    if (progress?.attendanceStats?.presentDays !== undefined) {
+      // Use pre-calculated attendance stats if available
+      presentDays = progress.attendanceStats.presentDays;
+    } else if (progress?.dailyActivity) {
+      // Fallback to calculating from daily activity
+      presentDays = progress.dailyActivity.filter(entry => entry.isPresent).length;
+    } else {
+      // If no attendance data exists, estimate based on completion
+      presentDays = progress ? Math.min(progress.completedLevels.length * 2, 30) : 0;
+    }
     
     // Calculate summary stats
     const summaryStats = {
-      consistency: presentDays || 0,
+      consistency: presentDays,
       progress: progress ? Math.round((progress.completedLevels.length / totalLevels) * 100) : 0,
       leaderboard: progress ? Math.round((progress.totalPoints / 1000) * 100) : 0
     };
