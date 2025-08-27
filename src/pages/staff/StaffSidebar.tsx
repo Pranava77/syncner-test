@@ -579,17 +579,17 @@ const StaffMainDashboard: React.FC = () => {
               </>
             )}
           </button>
-          <button
-            onClick={exportData}
-            className="px-5 py-2 rounded-lg transition-colors font-medium flex items-center gap-2 shadow"
-            style={{ 
-              backgroundColor: 'var(--color-accent-primary)',
-              color: 'var(--color-text-inverse)' 
-            }}
-          >
-            <DownloadIcon className="h-5 w-5" />
-            Export CSV
-          </button>
+        <button
+          onClick={exportData}
+          className="px-5 py-2 rounded-lg transition-colors font-medium flex items-center gap-2 shadow"
+          style={{ 
+            backgroundColor: 'var(--color-accent-primary)',
+            color: 'var(--color-text-inverse)' 
+          }}
+        >
+          <DownloadIcon className="h-5 w-5" />
+          Export CSV
+        </button>
         </div>
       </div>
 
