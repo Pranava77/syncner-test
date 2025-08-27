@@ -7,7 +7,6 @@ import {
   CheckCircledIcon,
   ClockIcon,
   StarIcon,
-  MagnifyingGlassIcon,
   ArrowLeftIcon,
   TargetIcon,
   RocketIcon,
@@ -23,7 +22,6 @@ const StudentDetails: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [fromDate, setFromDate] = useState('dd-mm-yyyy');
   const [toDate, setToDate] = useState('dd-mm-yyyy');
-  const [searchTerm, setSearchTerm] = useState('');
 
   // Mock student data - replace with actual API calls
   useEffect(() => {
@@ -161,21 +159,6 @@ const StudentDetails: React.FC = () => {
                 }}
               >
                 {studentData.profileInitial}
-              </div>
-              <div className="relative">
-                <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" style={{ color: 'var(--color-text-tertiary)' }} />
-                <input
-                  type="text"
-                  placeholder="Search Student..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-4 py-2 w-64 border rounded-lg transition-colors text-sm"
-                  style={{
-                    borderColor: 'var(--color-border)',
-                    backgroundColor: 'var(--color-secondary-bg)',
-                    color: 'var(--color-text-primary)'
-                  }}
-                />
               </div>
             </div>
           </div>
