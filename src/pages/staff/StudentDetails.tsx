@@ -92,8 +92,7 @@ const StudentDetails: React.FC = () => {
     clearError
   } = useStaff();
   
-  const [fromDate, setFromDate] = useState('dd-mm-yyyy');
-  const [toDate, setToDate] = useState('dd-mm-yyyy');
+
 
   // Fetch student details when component mounts or studentId changes
   useEffect(() => {
@@ -329,49 +328,13 @@ const StudentDetails: React.FC = () => {
                   borderColor: 'var(--color-border)'
                 }}
               >
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+                <div className="mb-6">
                   <h2 
                     className="text-xl font-bold"
                     style={{ color: 'var(--color-text-primary)' }}
                   >
-                    Learning Timeline:
+                    Learning Timeline
                   </h2>
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>From:</span>
-                      <select
-                        value={fromDate}
-                        onChange={(e) => setFromDate(e.target.value)}
-                        className="px-3 py-2 border rounded-lg text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)]"
-                        style={{
-                          borderColor: 'var(--color-border)',
-                          backgroundColor: 'var(--color-secondary-bg)',
-                          color: 'var(--color-text-primary)'
-                        }}
-                      >
-                        <option value="dd-mm-yyyy">dd-mm-yyyy</option>
-                        <option value="01-01-2025">01-01-2025</option>
-                        <option value="01-02-2025">01-02-2025</option>
-                      </select>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>To:</span>
-                      <select
-                        value={toDate}
-                        onChange={(e) => setToDate(e.target.value)}
-                        className="px-3 py-2 border rounded-lg text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)]"
-                        style={{
-                          borderColor: 'var(--color-border)',
-                          backgroundColor: 'var(--color-secondary-bg)',
-                          color: 'var(--color-text-primary)'
-                        }}
-                      >
-                        <option value="dd-mm-yyyy">dd-mm-yyyy</option>
-                        <option value="31-12-2025">31-12-2025</option>
-                        <option value="31-01-2026">31-01-2026</option>
-                      </select>
-                    </div>
-                  </div>
                 </div>
 
                 <div className="space-y-8">
