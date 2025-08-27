@@ -112,11 +112,9 @@ const StudentDetails: React.FC = () => {
   }, [error, clearError]);
 
   const radarData = selectedStudent ? [
-    { subject: 'Skill', A: selectedStudent.performance.skill, fullMark: 100 },
-    { subject: 'Creativity', A: selectedStudent.performance.creativity, fullMark: 100 },
-    { subject: 'Performance', A: selectedStudent.performance.performance, fullMark: 100 },
-    { subject: 'Potential', A: selectedStudent.performance.potential, fullMark: 100 },
-    { subject: 'Contribution', A: selectedStudent.performance.contribution, fullMark: 100 }
+    { subject: 'Attendance', A: selectedStudent.summaryStats.consistency, fullMark: 100 },
+    { subject: 'Progress', A: selectedStudent.summaryStats.progress, fullMark: 100 },
+    { subject: 'Leaderboard', A: selectedStudent.summaryStats.leaderboard, fullMark: 100 }
   ] : [];
 
   const getStatusIcon = (status: string) => {
@@ -562,7 +560,7 @@ const StudentDetails: React.FC = () => {
                     className="text-lg font-semibold mb-4 text-center"
                     style={{ color: 'var(--color-text-primary)' }}
                   >
-                    Skill Analysis
+                    Student Metrics Overview
                   </h3>
                 </div>
                 <div className="w-full h-64">
@@ -571,25 +569,29 @@ const StudentDetails: React.FC = () => {
                       <PolarGrid stroke="var(--color-border)" />
                       <PolarAngleAxis 
                         dataKey="subject" 
-                        tick={{ fill: 'var(--color-text-secondary)', fontSize: 12 }}
+                        tick={{ fill: 'var(--color-text-secondary)', fontSize: 12, fontWeight: 500 }}
                       />
                       <PolarRadiusAxis 
                         angle={90} 
                         domain={[0, 100]} 
                         tick={{ fill: 'var(--color-text-secondary)', fontSize: 10 }}
+                        tickFormatter={(value) => `${value}%`}
                       />
                       <Radar
-                        name="Performance"
+                        name="Student Metrics"
                         dataKey="A"
                         stroke="var(--color-accent-primary)"
                         fill="var(--color-accent-primary)"
                         fillOpacity={0.3}
+                        strokeWidth={2}
                       />
                     </RadarChart>
                   </ResponsiveContainer>
                 </div>
                 <div className="text-center mt-2">
-                  <span className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>(Optional)</span>
+                  <span className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
+                    Attendance • Progress • Leaderboard Performance
+                  </span>
                 </div>
               </div>
 
