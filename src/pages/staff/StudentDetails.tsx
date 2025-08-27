@@ -205,9 +205,9 @@ const StudentDetails: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 {[
                   { 
-                    label: 'Consistency', 
+                    label: 'Attendance', 
                     value: selectedStudent.summaryStats.consistency, 
-                    subtitle: 'Current Streak', 
+                    subtitle: 'Present Days', 
                     icon: BarChartIcon,
                     isStreak: true,
                     unit: 'days'
@@ -248,7 +248,7 @@ const StudentDetails: React.FC = () => {
                     <div className="text-xs opacity-70" style={{ color: 'var(--color-text-tertiary)' }}>{stat.subtitle}</div>
                     {stat.isStreak && (
                       <div className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
-                        {selectedStudent.summaryStats.consistency > 0 ? 'Active streak' : 'No active streak'}
+                        {selectedStudent.summaryStats.consistency > 0 ? `${selectedStudent.summaryStats.consistency} days present` : 'No attendance data'}
                       </div>
                     )}
                   </motion.div>

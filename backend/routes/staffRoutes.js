@@ -169,9 +169,15 @@ router.get('/students/:id', protect, ensureStaff, async (req, res) => {
       teamwork: 80 // This could be calculated based on collaborative activities
     };
     
+    // Calculate attendance statistics for consistency
+    const today = new Date();
+    const enrollmentDate = progress?.createdAt || student.createdAt || new Date();
+    const totalDays = Math.ceil((today.getTime() - enrollmentDate.getTime()) / (1000 * 60 * 60 * 24));
+    const presentDays = progress?.dailyActivity ? progress.dailyActivity.filter(entry => entry.isPresent).length : 0;
+    
     // Calculate summary stats
     const summaryStats = {
-      consistency: progress?.streakDays || 0,
+      consistency: presentDays || 0,
       progress: progress ? Math.round((progress.completedLevels.length / totalLevels) * 100) : 0,
       leaderboard: progress ? Math.round((progress.totalPoints / 1000) * 100) : 0
     };
