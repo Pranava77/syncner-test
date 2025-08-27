@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   PersonIcon,
   BarChartIcon,
   CheckCircledIcon,
   ClockIcon,
   StarIcon,
-  MagnifyingGlassIcon
+  MagnifyingGlassIcon,
+  ChevronDownIcon,
+  ChevronRightIcon,
+  TrophyIcon,
+  TargetIcon,
+  RocketIcon
 } from '@radix-ui/react-icons';
 import syncnerLogo from '../../assets/syncner-logo.png';
 
@@ -15,6 +20,7 @@ const StudentTracking: React.FC = () => {
   const [filterStatus, setFilterStatus] = useState('all');
   const [students, setStudents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [expandedStudents, setExpandedStudents] = useState<Set<number>>(new Set());
 
   // Mock data - replace with actual API calls
   useEffect(() => {
@@ -29,7 +35,20 @@ const StudentTracking: React.FC = () => {
           status: 'active',
           lastActive: '2 hours ago',
           track: 'Full Stack',
-          level: 'Intermediate'
+          level: 'Intermediate',
+          leaderboardData: {
+            rank: 3,
+            score: 2450,
+            totalStudents: 45,
+            trackRank: 2,
+            trackTotal: 18,
+            achievements: ['First Place Quiz', 'Perfect Score', 'Early Bird'],
+            recentActivity: [
+              { type: 'quiz', score: 95, date: '2 hours ago' },
+              { type: 'exercise', completed: true, date: '1 day ago' },
+              { type: 'test', score: 88, date: '3 days ago' }
+            ]
+          }
         },
         {
           id: 2,
@@ -39,7 +58,20 @@ const StudentTracking: React.FC = () => {
           status: 'active',
           lastActive: '1 day ago',
           track: 'Frontend',
-          level: 'Beginner'
+          level: 'Beginner',
+          leaderboardData: {
+            rank: 12,
+            score: 1800,
+            totalStudents: 45,
+            trackRank: 5,
+            trackTotal: 15,
+            achievements: ['Quick Learner', 'Consistent'],
+            recentActivity: [
+              { type: 'quiz', score: 78, date: '1 day ago' },
+              { type: 'exercise', completed: true, date: '2 days ago' },
+              { type: 'test', score: 72, date: '1 week ago' }
+            ]
+          }
         },
         {
           id: 3,
@@ -49,7 +81,20 @@ const StudentTracking: React.FC = () => {
           status: 'completed',
           lastActive: '3 days ago',
           track: 'Backend',
-          level: 'Advanced'
+          level: 'Advanced',
+          leaderboardData: {
+            rank: 1,
+            score: 3200,
+            totalStudents: 45,
+            trackRank: 1,
+            trackTotal: 12,
+            achievements: ['Track Champion', 'Perfect Score', 'Speed Demon', 'Mentor'],
+            recentActivity: [
+              { type: 'quiz', score: 100, date: '3 days ago' },
+              { type: 'exercise', completed: true, date: '1 week ago' },
+              { type: 'test', score: 95, date: '2 weeks ago' }
+            ]
+          }
         }
       ]);
       setLoading(false);
@@ -61,6 +106,16 @@ const StudentTracking: React.FC = () => {
     student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (filterStatus !== 'all' && student.status === filterStatus)
   );
+
+  const toggleStudentExpansion = (studentId: number) => {
+    const newExpanded = new Set(expandedStudents);
+    if (newExpanded.has(studentId)) {
+      newExpanded.delete(studentId);
+    } else {
+      newExpanded.add(studentId);
+    }
+    setExpandedStudents(newExpanded);
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -76,6 +131,15 @@ const StudentTracking: React.FC = () => {
     if (progress >= 60) return 'var(--color-accent-primary)';
     if (progress >= 40) return 'var(--color-warning)';
     return 'var(--color-error)';
+  };
+
+  const getRankColor = (rank: number) => {
+    if (rank === 1) return '#FFD700'; // Gold
+    if (rank === 2) return '#C0C0C0'; // Silver
+    if (rank === 3) return '#CD7F32'; // Bronze
+    if (rank <= 10) return 'var(--color-accent-primary)';
+    if (rank <= 25) return 'var(--color-success)';
+    return 'var(--color-text-tertiary)';
   };
 
   return (
@@ -296,79 +360,224 @@ const StudentTracking: React.FC = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-text-tertiary)' }}>
                     Last Active
                   </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-text-tertiary)' }}>
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y" style={{ borderColor: 'var(--color-border)' }}>
                 {filteredStudents.map((student, index) => (
-                  <motion.tr
-                    key={student.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    style={{ backgroundColor: 'transparent' }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = 'var(--color-secondary-bg)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = 'transparent';
-                    }}
-                  >
-                    <td className="px-6 py-4">
-                      <div>
-                        <div className="font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                          {student.name}
-                        </div>
-                        <div className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
-                          {student.email}
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div>
-                        <div className="font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                          {student.track}
-                        </div>
-                        <div className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
-                          {student.level}
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center">
-                        <div className="flex-1 mr-3">
-                          <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div
-                              className="h-2 rounded-full transition-all duration-300"
-                              style={{
-                                width: `${student.progress}%`,
-                                backgroundColor: getProgressColor(student.progress)
-                              }}
-                            />
+                  <React.Fragment key={student.id}>
+                    <motion.tr
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      style={{ backgroundColor: 'transparent' }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'var(--color-secondary-bg)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                      }}
+                    >
+                      <td className="px-6 py-4">
+                        <div>
+                          <div className="font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                            {student.name}
+                          </div>
+                          <div className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
+                            {student.email}
                           </div>
                         </div>
-                        <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                          {student.progress}%
+                      </td>
+                      <td className="px-6 py-4">
+                        <div>
+                          <div className="font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                            {student.track}
+                          </div>
+                          <div className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
+                            {student.level}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center">
+                          <div className="flex-1 mr-3">
+                            <div className="w-full bg-gray-200 rounded-full h-2">
+                              <div
+                                className="h-2 rounded-full transition-all duration-300"
+                                style={{
+                                  width: `${student.progress}%`,
+                                  backgroundColor: getProgressColor(student.progress)
+                                }}
+                              />
+                            </div>
+                          </div>
+                          <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                            {student.progress}%
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span
+                          className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                          style={{
+                            backgroundColor: getStatusColor(student.status) + '20',
+                            color: getStatusColor(student.status)
+                          }}
+                        >
+                          {student.status.charAt(0).toUpperCase() + student.status.slice(1)}
                         </span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span
-                        className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-                        style={{
-                          backgroundColor: getStatusColor(student.status) + '20',
-                          color: getStatusColor(student.status)
-                        }}
-                      >
-                        {student.status.charAt(0).toUpperCase() + student.status.slice(1)}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
-                      <div className="flex items-center">
-                        <ClockIcon className="w-4 h-4 mr-2" />
-                        {student.lastActive}
-                      </div>
-                    </td>
-                  </motion.tr>
+                      </td>
+                      <td className="px-6 py-4 text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
+                        <div className="flex items-center">
+                          <ClockIcon className="w-4 h-4 mr-2" />
+                          {student.lastActive}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <button
+                          onClick={() => toggleStudentExpansion(student.id)}
+                          className="flex items-center gap-2 px-3 py-1 rounded-lg transition-colors hover:bg-[var(--color-accent-tertiary)]"
+                          style={{ color: 'var(--color-accent-primary)' }}
+                        >
+                          {expandedStudents.has(student.id) ? (
+                            <ChevronDownIcon className="w-4 h-4" />
+                          ) : (
+                            <ChevronRightIcon className="w-4 h-4" />
+                          )}
+                          Leaderboard
+                        </button>
+                      </td>
+                    </motion.tr>
+                    
+                    {/* Expanded Leaderboard Section */}
+                    <AnimatePresence>
+                      {expandedStudents.has(student.id) && (
+                        <motion.tr
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.3 }}
+                          style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
+                        >
+                          <td colSpan={6} className="px-6 py-6">
+                            <div className="bg-white rounded-xl p-6 shadow-sm" style={{ backgroundColor: 'var(--color-surface)' }}>
+                              <div className="flex items-center gap-3 mb-6">
+                                <TrophyIcon className="w-6 h-6" style={{ color: 'var(--color-accent-primary)' }} />
+                                <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                                  {student.name}'s Leaderboard Performance
+                                </h3>
+                              </div>
+                              
+                              {/* Leaderboard Stats Grid */}
+                              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                                {/* Overall Rank */}
+                                <div className="text-center p-4 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
+                                  <div className="text-2xl font-bold mb-1" style={{ color: getRankColor(student.leaderboardData.rank) }}>
+                                    #{student.leaderboardData.rank}
+                                  </div>
+                                  <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                                    Overall Rank
+                                  </div>
+                                  <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                                    of {student.leaderboardData.totalStudents} students
+                                  </div>
+                                </div>
+                                
+                                {/* Track Rank */}
+                                <div className="text-center p-4 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
+                                  <div className="text-2xl font-bold mb-1" style={{ color: getRankColor(student.leaderboardData.trackRank) }}>
+                                    #{student.leaderboardData.trackRank}
+                                  </div>
+                                  <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                                    Track Rank
+                                  </div>
+                                  <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                                    of {student.leaderboardData.trackTotal} in {student.track}
+                                  </div>
+                                </div>
+                                
+                                {/* Total Score */}
+                                <div className="text-center p-4 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
+                                  <div className="text-2xl font-bold mb-1" style={{ color: 'var(--color-accent-primary)' }}>
+                                    {student.leaderboardData.score}
+                                  </div>
+                                  <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                                    Total Score
+                                  </div>
+                                  <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                                    Points earned
+                                  </div>
+                                </div>
+                                
+                                {/* Progress */}
+                                <div className="text-center p-4 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
+                                  <div className="text-2xl font-bold mb-1" style={{ color: 'var(--color-success)' }}>
+                                    {student.progress}%
+                                  </div>
+                                  <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                                    Progress
+                                  </div>
+                                  <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                                    Course completion
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              {/* Achievements and Recent Activity */}
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {/* Achievements */}
+                                <div>
+                                  <h4 className="font-semibold mb-3" style={{ color: 'var(--color-text-primary)' }}>
+                                    Achievements
+                                  </h4>
+                                  <div className="space-y-2">
+                                    {student.leaderboardData.achievements.map((achievement, idx) => (
+                                      <div key={idx} className="flex items-center gap-2 p-2 rounded-lg" style={{ backgroundColor: 'var(--color-accent-tertiary)' }}>
+                                        <StarIcon className="w-4 h-4" style={{ color: 'var(--color-accent-primary)' }} />
+                                        <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>
+                                          {achievement}
+                                        </span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                                
+                                {/* Recent Activity */}
+                                <div>
+                                  <h4 className="font-semibold mb-3" style={{ color: 'var(--color-text-primary)' }}>
+                                    Recent Activity
+                                  </h4>
+                                  <div className="space-y-2">
+                                    {student.leaderboardData.recentActivity.map((activity, idx) => (
+                                      <div key={idx} className="flex items-center gap-3 p-2 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
+                                        <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'var(--color-accent-tertiary)' }}>
+                                          {activity.type === 'quiz' && <TargetIcon className="w-4 h-4" style={{ color: 'var(--color-accent-primary)' }} />}
+                                          {activity.type === 'exercise' && <RocketIcon className="w-4 h-4" style={{ color: 'var(--color-success)' }} />}
+                                          {activity.type === 'test' && <BarChartIcon className="w-4 h-4" style={{ color: 'var(--color-warning)' }} />}
+                                        </div>
+                                        <div className="flex-1">
+                                          <div className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                                            {activity.type.charAt(0).toUpperCase() + activity.type.slice(1)}
+                                            {activity.score && ` - ${activity.score}%`}
+                                            {activity.completed && ' - Completed'}
+                                          </div>
+                                          <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                                            {activity.date}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                        </motion.tr>
+                      )}
+                    </AnimatePresence>
+                  </React.Fragment>
                 ))}
               </tbody>
             </table>
