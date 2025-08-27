@@ -34,6 +34,7 @@ import StudentDetails from './StudentDetails';
 import syncnerLogo from '../../assets/syncner-logo.png';
 import ThemeSwitcher from '../../components/ThemeSwitcher';
 import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
+import { useStaff } from '../../hooks/useStaff';
 
 const COLORS = ['#00B8D9', '#FFBB28', '#FF8042', '#A259F7', '#F95F62', '#00C49F'];
 
@@ -439,27 +440,12 @@ const StaffSidebar: React.FC = () => {
 
 // Main Dashboard Component - Exact AdminDashboard Replication
 const StaffMainDashboard: React.FC = () => {
-  const [analytics, setAnalytics] = useState<any>(null);
-  const [analyticsLoading, setAnalyticsLoading] = useState(true);
+  const { analytics, analyticsLoading, error, getAnalytics } = useStaff();
 
-  // Mock analytics data - replace with actual API calls
+  // Fetch analytics data on component mount
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setAnalytics({
-        totalStudents: 45,
-        activeStudents: 38,
-        completionRate: 72,
-        studentRetention: 84,
-        trackDistribution: [
-          { track: 'Full Stack', count: 18 },
-          { track: 'Frontend', count: 15 },
-          { track: 'Backend', count: 12 }
-        ]
-      });
-      setAnalyticsLoading(false);
-    }, 1000);
-  }, []);
+    getAnalytics();
+  }, [getAnalytics]);
 
   const exportData = () => {
     alert('CSV export functionality would be implemented here');
@@ -490,12 +476,43 @@ const StaffMainDashboard: React.FC = () => {
     );
   }
 
+  // Show error state if analytics failed to load
+  if (error) {
+    return (
+      <div 
+        className="min-h-screen flex items-center justify-center"
+        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+      >
+        <div className="text-center">
+          <p 
+            className="text-lg text-red-500 mb-4"
+          >
+            Error loading analytics: {error}
+          </p>
+          <button
+            onClick={() => getAnalytics()}
+            className="px-4 py-2 rounded-lg transition-colors font-medium"
+            style={{ 
+              backgroundColor: 'var(--color-accent-primary)',
+              color: 'var(--color-text-inverse)' 
+            }}
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   // Fallbacks for missing analytics
   const userCount = analytics?.totalStudents ?? 0;
   const activeStudents = analytics?.activeStudents ?? 0;
   const completionRate = analytics?.completionRate ?? 0;
-  const studentRetention = analytics?.studentRetention;
+  const studentRetention = analytics?.studentRetention ?? 0;
   const trackDistribution = analytics?.trackDistribution ?? [];
+  const avgProgress = analytics?.avgProgress ?? 0;
+  const avgPoints = analytics?.avgPoints ?? 0;
+  const avgStreakDays = analytics?.avgStreakDays ?? 0;
 
   if (!analytics) {
     return (
@@ -536,21 +553,48 @@ const StaffMainDashboard: React.FC = () => {
             Comprehensive insights into student performance and progress
           </p>
         </div>
-        <button
-          onClick={exportData}
-          className="px-5 py-2 rounded-lg transition-colors font-medium flex items-center gap-2 shadow"
-          style={{ 
-            backgroundColor: 'var(--color-accent-primary)',
-            color: 'var(--color-text-inverse)' 
-          }}
-        >
-          <DownloadIcon className="h-5 w-5" />
-          Export CSV
-        </button>
+        <div className="flex gap-3">
+          <button
+            onClick={() => getAnalytics()}
+            disabled={analyticsLoading}
+            className="px-4 py-2 rounded-lg transition-colors font-medium flex items-center gap-2 shadow disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{ 
+              backgroundColor: 'var(--color-accent-secondary)',
+              color: 'var(--color-text-primary)' 
+            }}
+          >
+            {analyticsLoading ? (
+              <>
+                <motion.div
+                  className="w-4 h-4 border-2 border-current border-t-transparent rounded-full"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                />
+                Loading...
+              </>
+            ) : (
+              <>
+                <RocketIcon className="h-4 w-4" />
+                Refresh
+              </>
+            )}
+          </button>
+          <button
+            onClick={exportData}
+            className="px-5 py-2 rounded-lg transition-colors font-medium flex items-center gap-2 shadow"
+            style={{ 
+              backgroundColor: 'var(--color-accent-primary)',
+              color: 'var(--color-text-inverse)' 
+            }}
+          >
+            <DownloadIcon className="h-5 w-5" />
+            Export CSV
+          </button>
+        </div>
       </div>
 
       {/* Analytics Cards - Exact AdminDashboard Design */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-10">
         <div 
           className="rounded-xl shadow-sm p-6 flex items-center gap-4"
           style={{
@@ -639,6 +683,118 @@ const StaffMainDashboard: React.FC = () => {
               <TrendingUp className="h-3 w-3 mr-1" />
               +5.1% from last month
             </p>
+          </div>
+        </div>
+
+        <div 
+          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
+          <div 
+            className="p-3 rounded-lg"
+            style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+          >
+            <Target 
+              className="h-6 w-6" 
+              style={{ color: 'var(--color-accent-primary)' }}
+            />
+          </div>
+          <div>
+            <p 
+              className="text-sm"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >Student Retention</p>
+            <p 
+              className="text-2xl font-bold"
+              style={{ color: 'var(--color-text-primary)' }}
+            >{studentRetention}%</p>
+          </div>
+        </div>
+
+        <div 
+          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
+          <div 
+            className="p-3 rounded-lg"
+            style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+          >
+            <Target 
+              className="h-6 w-6" 
+              style={{ color: 'var(--color-accent-primary)' }}
+            />
+          </div>
+          <div>
+            <p 
+              className="text-sm"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >Avg Progress</p>
+            <p 
+              className="text-2xl font-bold"
+              style={{ color: 'var(--color-text-primary)' }}
+            >{avgProgress}%</p>
+          </div>
+        </div>
+
+        <div 
+          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
+          <div 
+            className="p-3 rounded-lg"
+            style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+          >
+            <Target 
+              className="h-6 w-6" 
+              style={{ color: 'var(--color-accent-primary)' }}
+            />
+          </div>
+          <div>
+            <p 
+              className="text-sm"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >Avg Points</p>
+            <p 
+              className="text-2xl font-bold"
+              style={{ color: 'var(--color-text-primary)' }}
+            >{avgPoints}</p>
+          </div>
+        </div>
+
+        <div 
+          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
+          <div 
+            className="p-3 rounded-lg"
+            style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+          >
+            <LightningBoltIcon 
+              className="h-6 w-6" 
+              style={{ color: 'var(--color-accent-primary)' }}
+            />
+          </div>
+          <div>
+            <p 
+              className="text-sm"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >Avg Streak Days</p>
+            <p 
+              className="text-2xl font-bold"
+              style={{ color: 'var(--color-text-primary)' }}
+            >{avgStreakDays}</p>
           </div>
         </div>
       </div>
