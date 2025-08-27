@@ -61,7 +61,6 @@ const StaffSidebar: React.FC = () => {
   const staffNavItems = [
     { path: '/staff', icon: HomeIcon, label: 'Dashboard' },
     { path: '/staff/students', icon: Users, label: 'Student Tracking' },
-    { path: '/staff/leaderboard', icon: StarIcon, label: 'Leaderboard' },
   ];
 
   const isActive = (path: string) => window.location.pathname === path;
@@ -428,7 +427,7 @@ const StaffSidebar: React.FC = () => {
           <Routes>
             <Route path="/" element={<StaffMainDashboard />} />
             <Route path="/students" element={<StudentTracking />} />
-            <Route path="/leaderboard" element={<Leaderboard />} />
+            <Route path="/students/:studentId" element={<StudentDetails />} />
             <Route path="/profile" element={<StaffProfile />} />
           </Routes>
         </main>
