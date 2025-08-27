@@ -98,20 +98,21 @@ router.get('/students', protect, ensureStaff, async (req, res) => {
           const enrollmentDate = student.createdAt || new Date();
           totalDays = Math.ceil((today.getTime() - enrollmentDate.getTime()) / (1000 * 60 * 60 * 24));
           
-          // Estimate attendance based on student activity and progress
-          if (progress && progress.completedLevels && progress.completedLevels.length > 0) {
-            // Student has completed levels, estimate they were active on those days plus some additional days
-            const completionDays = progress.completedLevels.length;
-            const additionalActivityDays = Math.floor(completionDays * 0.3); // Assume 30% additional activity days
-            presentDays = Math.min(completionDays + additionalActivityDays, totalDays);
-          } else if (progress && progress.lastActivity) {
-            // Student has some activity but no completed levels
-            const lastActivityDate = new Date(progress.lastActivity);
-            const daysSinceLastActivity = Math.ceil((today.getTime() - lastActivityDate.getTime()) / (1000 * 60 * 60 * 24));
-            presentDays = Math.max(1, Math.min(5, totalDays - daysSinceLastActivity)); // Assume 1-5 days of activity
+          // Use only actual attendance data, no progress-based estimation
+          if (progress?.attendanceStats?.presentDays !== undefined) {
+            // Use pre-calculated attendance stats if available
+            presentDays = progress.attendanceStats.presentDays;
+            totalDays = progress.attendanceStats.totalDays || 1;
+          } else if (progress?.dailyActivity) {
+            // Calculate from daily activity data
+            presentDays = progress.dailyActivity.filter(entry => entry.isPresent).length;
+            const today = new Date();
+            const enrollmentDate = progress?.createdAt || student.createdAt || new Date();
+            totalDays = Math.ceil((today.getTime() - enrollmentDate.getTime()) / (1000 * 60 * 60 * 24));
           } else {
-            // No progress data at all, assume minimal attendance based on enrollment time
-            presentDays = Math.min(3, Math.max(1, Math.floor(totalDays * 0.1))); // 10% of enrollment time, min 1, max 3
+            // No attendance data available, set to 0
+            presentDays = 0;
+            totalDays = 1;
           }
         }
         
@@ -221,20 +222,21 @@ router.get('/students/:id', protect, ensureStaff, async (req, res) => {
       const enrollmentDate = student.createdAt || new Date();
       totalDays = Math.ceil((today.getTime() - enrollmentDate.getTime()) / (1000 * 60 * 60 * 24));
       
-      // Estimate attendance based on student activity and progress
-      if (progress && progress.completedLevels && progress.completedLevels.length > 0) {
-        // Student has completed levels, estimate they were active on those days plus some additional days
-        const completionDays = progress.completedLevels.length;
-        const additionalActivityDays = Math.floor(completionDays * 0.3); // Assume 30% additional activity days
-        presentDays = Math.min(completionDays + additionalActivityDays, totalDays);
-      } else if (progress && progress.lastActivity) {
-        // Student has some activity but no completed levels
-        const lastActivityDate = new Date(progress.lastActivity);
-        const daysSinceLastActivity = Math.ceil((today.getTime() - lastActivityDate.getTime()) / (1000 * 60 * 60 * 24));
-        presentDays = Math.max(1, Math.min(5, totalDays - daysSinceLastActivity)); // Assume 1-5 days of activity
+      // Use only actual attendance data, no progress-based estimation
+      if (progress?.attendanceStats?.presentDays !== undefined) {
+        // Use pre-calculated attendance stats if available
+        presentDays = progress.attendanceStats.presentDays;
+        totalDays = progress.attendanceStats.totalDays || 1;
+      } else if (progress?.dailyActivity) {
+        // Calculate from daily activity data
+        presentDays = progress.dailyActivity.filter(entry => entry.isPresent).length;
+        const today = new Date();
+        const enrollmentDate = progress?.createdAt || student.createdAt || new Date();
+        totalDays = Math.ceil((today.getTime() - enrollmentDate.getTime()) / (1000 * 60 * 60 * 24));
       } else {
-        // No progress data at all, assume minimal attendance based on enrollment time
-        presentDays = Math.min(3, Math.max(1, Math.floor(totalDays * 0.1))); // 10% of enrollment time, min 1, max 3
+        // No attendance data available, set to 0
+        presentDays = 0;
+        totalDays = 1;
       }
     }
     
