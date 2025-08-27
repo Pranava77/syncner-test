@@ -1,3 +1,10 @@
+import { 
+  StudentsApiResponse, 
+  StudentDetailsApiResponse, 
+  StaffAnalyticsApiResponse, 
+  StudentFilters 
+} from '../types/staff';
+
 const API_BASE_URL =  'https://syncner-test.onrender.com/api';
 
 class ApiService {
@@ -429,10 +436,33 @@ class ApiService {
     return this.handleResponse(response);
   }
 
-  async getStudents(filters?: any) {
-    const queryParams = filters ? new URLSearchParams(filters).toString() : '';
-    const url = queryParams ? `${this.baseURL}/admin/users?${queryParams}` : `${this.baseURL}/admin/users`;
-    const response = await fetch(url, {
+  // Staff endpoints
+  async getStudents(filters: StudentFilters = {}, page: number = 1, limit: number = 20): Promise<StudentsApiResponse> {
+    const queryParams = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+      ...filters
+    });
+
+    const response = await fetch(`${this.baseURL}/staff/students?${queryParams}`, {
+      method: 'GET',
+      headers: this.getHeaders(),
+      credentials: 'include',
+    });
+    return this.handleResponse(response);
+  }
+
+  async getStudentDetails(studentId: string): Promise<StudentDetailsApiResponse> {
+    const response = await fetch(`${this.baseURL}/staff/students/${studentId}`, {
+      method: 'GET',
+      headers: this.getHeaders(),
+      credentials: 'include',
+    });
+    return this.handleResponse(response);
+  }
+
+  async getStaffAnalytics(): Promise<StaffAnalyticsApiResponse> {
+    const response = await fetch(`${this.baseURL}/staff/analytics`, {
       method: 'GET',
       headers: this.getHeaders(),
       credentials: 'include',

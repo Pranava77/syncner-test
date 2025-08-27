@@ -13,79 +13,47 @@ import {
   FileTextIcon
 } from '@radix-ui/react-icons';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer } from 'recharts';
+import { useStaff } from '../../hooks/useStaff';
 import syncnerLogo from '../../assets/syncner-logo.png';
 
 const StudentDetails: React.FC = () => {
   const { studentId } = useParams();
   const navigate = useNavigate();
-  const [studentData, setStudentData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const {
+    selectedStudent,
+    studentDetailsLoading,
+    error,
+    getStudentDetails,
+    clearError
+  } = useStaff();
+  
   const [fromDate, setFromDate] = useState('dd-mm-yyyy');
   const [toDate, setToDate] = useState('dd-mm-yyyy');
 
-  // Mock student data - replace with actual API calls
+  // Fetch student details when component mounts or studentId changes
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setStudentData({
-        rollNumber: '713315104704',
-        studentName: 'Ramesh',
-        courseDept: 'B.E IT',
-        batch: '2023-2027',
-        enrolledCareerTrack: 'Full Stack Development',
-        enrolledDate: '21-03-2025',
-        profileInitial: 'R',
-        performance: {
-          performance: 85,
-          potential: 90,
-          contribution: 78,
-          creativity: 82,
-          skill: 88,
-          teamwork: 80
-        },
-        summaryStats: {
-          consistency: 80,
-          progress: 80,
-          leaderboard: 80
-        },
-        learningTimeline: [
-          {
-            level: 3,
-            courseName: 'Introduction to HTML',
-            status: 'in-progress',
-            learn: { completed: true, startTime: 'Start date and time', endTime: 'End Date and Time' },
-            test: { completed: true, score: 80, attempts: 2, startTime: 'Start date and time', endTime: 'End Date and Time' },
-            exercise: { completed: false, startTime: '14/08/2025 09:03 PM', endTime: 'In-Progress' }
-          },
-          {
-            level: 2,
-            courseName: 'Introduction to HTML',
-            status: 'completed',
-            learn: { completed: true, startTime: 'Start date and time', endTime: 'End Date and Time' },
-            test: { completed: true, score: 80, attempts: 2, startTime: 'Start date and time', endTime: 'End Date and Time' },
-            exercise: { completed: true, startTime: 'Start date and time', endTime: 'End Date and Time' }
-          },
-          {
-            level: 1,
-            courseName: 'Introduction to HTML',
-            status: 'completed',
-            learn: { completed: true, startTime: 'Start date and time', endTime: 'End Date and Time' },
-            test: { completed: true, score: 80, attempts: 2, startTime: 'Start date and time', endTime: 'End Date and Time' },
-            exercise: { completed: true, startTime: 'Start date and time', endTime: 'End Date and Time' }
-          }
-        ]
-      });
-      setLoading(false);
-    }, 1000);
-  }, [studentId]);
+    if (studentId) {
+      getStudentDetails(studentId);
+    }
+  }, [studentId, getStudentDetails]);
 
-  const radarData = [
-    { subject: 'Skill', A: studentData?.performance?.skill || 0, fullMark: 100 },
-    { subject: 'Creativity', A: studentData?.performance?.creativity || 0, fullMark: 100 },
-    { subject: 'Performance', A: studentData?.performance?.performance || 0, fullMark: 100 },
-    { subject: 'Potential', A: studentData?.performance?.potential || 0, fullMark: 100 },
-    { subject: 'Contribution', A: studentData?.performance?.contribution || 0, fullMark: 100 }
-  ];
+  // Clear error when component unmounts or error changes
+  useEffect(() => {
+    if (error) {
+      const timeoutId = setTimeout(() => {
+        clearError();
+      }, 5000);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [error, clearError]);
+
+  const radarData = selectedStudent ? [
+    { subject: 'Skill', A: selectedStudent.performance.skill, fullMark: 100 },
+    { subject: 'Creativity', A: selectedStudent.performance.creativity, fullMark: 100 },
+    { subject: 'Performance', A: selectedStudent.performance.performance, fullMark: 100 },
+    { subject: 'Potential', A: selectedStudent.performance.potential, fullMark: 100 },
+    { subject: 'Contribution', A: selectedStudent.performance.contribution, fullMark: 100 }
+  ] : [];
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -111,7 +79,7 @@ const StudentDetails: React.FC = () => {
     }
   };
 
-  if (loading) {
+  if (studentDetailsLoading && !selectedStudent) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
         <div className="text-center">
@@ -124,7 +92,26 @@ const StudentDetails: React.FC = () => {
     );
   }
 
-  if (!studentData) {
+  if (error && !selectedStudent) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
+        <div className="text-center">
+          <p className="text-lg mb-4" style={{ color: 'var(--color-text-primary)' }}>
+            {error}
+          </p>
+          <button
+            onClick={() => navigate('/staff/students')}
+            className="px-4 py-2 rounded-lg transition-colors hover:bg-[var(--color-accent-tertiary)]"
+            style={{ color: 'var(--color-accent-primary)' }}
+          >
+            Back to Students
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!selectedStudent) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
         <div className="text-center">
@@ -181,19 +168,19 @@ const StudentDetails: React.FC = () => {
                 <div className="space-y-4">
                   <div className="flex justify-between items-center py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
                     <span className="font-medium text-sm" style={{ color: 'var(--color-text-secondary)' }}>Roll number:</span>
-                    <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{studentData.rollNumber}</span>
+                    <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{selectedStudent._id}</span>
                   </div>
                   <div className="flex justify-between items-center py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
                     <span className="font-medium text-sm" style={{ color: 'var(--color-text-secondary)' }}>Student Name:</span>
-                    <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{studentData.studentName}</span>
+                    <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{selectedStudent.name}</span>
                   </div>
                   <div className="flex justify-between items-center py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
                     <span className="font-medium text-sm opacity-70" style={{ color: 'var(--color-text-secondary)' }}>Course & Dept:</span>
-                    <span className="font-medium opacity-70" style={{ color: 'var(--color-text-secondary)' }}>{studentData.courseDept}</span>
+                    <span className="font-medium opacity-70" style={{ color: 'var(--color-text-secondary)' }}>{selectedStudent.department || 'N/A'}</span>
                   </div>
                   <div className="flex justify-between items-center py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
                     <span className="font-medium text-sm opacity-70" style={{ color: 'var(--color-text-secondary)' }}>Batch:</span>
-                    <span className="font-medium opacity-70" style={{ color: 'var(--color-text-secondary)' }}>{studentData.batch}</span>
+                    <span className="font-medium opacity-70" style={{ color: 'var(--color-text-secondary)' }}>{selectedStudent.batch || 'N/A'}</span>
                   </div>
                   <div className="flex justify-between items-center py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
                     <span className="font-medium text-sm" style={{ color: 'var(--color-text-secondary)' }}>Enrolled Career Track:</span>
@@ -204,12 +191,12 @@ const StudentDetails: React.FC = () => {
                         color: 'var(--color-text-inverse)'
                       }}
                     >
-                      {studentData.enrolledCareerTrack}
+                      {selectedStudent.careerTrack}
                     </span>
                   </div>
                   <div className="flex justify-between items-center py-2">
                     <span className="font-medium text-sm" style={{ color: 'var(--color-text-secondary)' }}>Enrolled Date:</span>
-                    <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{studentData.enrolledDate}</span>
+                    <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{selectedStudent.enrolledDate}</span>
                   </div>
                 </div>
               </div>
@@ -217,9 +204,9 @@ const StudentDetails: React.FC = () => {
               {/* Performance Overview Cards */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 {[
-                  { label: 'Consistency', value: studentData.summaryStats.consistency, subtitle: 'Great/Good/Poor', icon: BarChartIcon },
-                  { label: 'Progress', value: studentData.summaryStats.progress, subtitle: 'Great/Good/Poor', icon: RocketIcon },
-                  { label: 'Leaderboard', value: studentData.summaryStats.leaderboard, subtitle: '(Career Track Specific)', icon: StarIcon }
+                  { label: 'Consistency', value: selectedStudent.summaryStats.consistency, subtitle: 'Streak Days', icon: BarChartIcon },
+                  { label: 'Progress', value: selectedStudent.summaryStats.progress, subtitle: 'Course Completion', icon: RocketIcon },
+                  { label: 'Leaderboard', value: selectedStudent.summaryStats.leaderboard, subtitle: 'Points Rank', icon: StarIcon }
                 ].map((stat, index) => (
                   <motion.div
                     key={index}
@@ -295,7 +282,7 @@ const StudentDetails: React.FC = () => {
                 </div>
 
                 <div className="space-y-8">
-                  {studentData.learningTimeline.map((level: any, index: number) => (
+                  {selectedStudent.learningTimeline.map((level, index) => (
                     <motion.div
                       key={level.level}
                       className="relative group"
@@ -304,7 +291,7 @@ const StudentDetails: React.FC = () => {
                       transition={{ delay: index * 0.1 }}
                     >
                       {/* Modern Vertical Line with Gradient */}
-                      {index < studentData.learningTimeline.length - 1 && (
+                      {index < selectedStudent.learningTimeline.length - 1 && (
                         <div className="absolute left-8 top-12 w-0.5 h-20">
                           <div 
                             className="w-full h-full rounded-full"
@@ -500,7 +487,6 @@ const StudentDetails: React.FC = () => {
                 }}
               >
                 <div className="relative">
-               
                   <h3 
                     className="text-lg font-semibold mb-4 text-center"
                     style={{ color: 'var(--color-text-primary)' }}

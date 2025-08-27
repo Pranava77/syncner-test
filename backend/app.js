@@ -33,6 +33,7 @@ import aiRoutes from './routes/aiRoutes.js';
 import attendanceRoutes from './routes/attendanceRoutes.js';
 import curriculumRoutes from './routes/curriculumRoutes.js';
 import progressRoutes from './routes/progressRoutes.js';
+import staffRoutes from './routes/staffRoutes.js';
 
 // Import middleware
 import { errorHandler } from './middleware/errorHandler.js';
@@ -131,6 +132,7 @@ app.use('/api/ai', aiRoutes);
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api/curriculum', curriculumRoutes);
 app.use('/api/progress', progressRoutes);
+app.use('/api/staff', staffRoutes);
 
 // Health check endpoint
 const serverStartTime = Date.now();
