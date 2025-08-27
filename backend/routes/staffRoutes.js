@@ -78,6 +78,13 @@ router.get('/students', protect, ensureStaff, async (req, res) => {
         const track = await Track.findOne({ name: normalizedCareerTrack }).lean();
         const totalLevels = track ? track.levels.length : 10; // Fallback to 10 if track not found
         
+        // Calculate attendance statistics
+        const today = new Date();
+        const enrollmentDate = progress?.createdAt || new Date();
+        const totalDays = Math.ceil((today.getTime() - enrollmentDate.getTime()) / (1000 * 60 * 60 * 24));
+        const presentDays = progress?.dailyActivity ? progress.dailyActivity.filter(entry => entry.isPresent).length : 0;
+        const attendancePercentage = totalDays > 0 ? Math.round((presentDays / totalDays) * 100) : 0;
+        
         return {
           ...student,
           careerTrack: normalizedCareerTrack, // Use normalized value
@@ -85,7 +92,13 @@ router.get('/students', protect, ensureStaff, async (req, res) => {
           currentLevel: progress ? `Level ${progress.currentLevel}` : 'Level 1',
           totalPoints: progress?.totalPoints || 0,
           streakDays: progress?.streakDays || 0,
-          status: student.isActive ? 'active' : 'inactive'
+          status: student.isActive ? 'active' : 'inactive',
+          // Attendance information
+          currentStreak: progress?.attendanceStats?.currentStreak || 0,
+          longestStreak: progress?.attendanceStats?.longestStreak || 0,
+          attendancePercentage: attendancePercentage,
+          totalDays: totalDays,
+          presentDays: presentDays
         };
       })
     );
@@ -264,6 +277,13 @@ router.get('/analytics', protect, ensureStaff, async (req, res) => {
     let totalPoints = 0;
     let totalStreakDays = 0;
     let studentsWithProgress = 0;
+    
+    // Attendance statistics
+    let totalAttendancePercentage = 0;
+    let totalCurrentStreak = 0;
+    let totalLongestStreak = 0;
+    let totalPresentDays = 0;
+    let totalEnrollmentDays = 0;
 
     for (const student of studentsWithTracks) {
       const progress = await UserProgress.findOne({ user: student._id }).lean();
@@ -273,6 +293,20 @@ router.get('/analytics', protect, ensureStaff, async (req, res) => {
         totalProgress += studentProgress;
         totalPoints += progress.totalPoints || 0;
         totalStreakDays += progress.streakDays || 0;
+        
+        // Calculate attendance statistics
+        const today = new Date();
+        const enrollmentDate = progress.createdAt || new Date();
+        const totalDays = Math.ceil((today.getTime() - enrollmentDate.getTime()) / (1000 * 60 * 60 * 24));
+        const presentDays = progress.dailyActivity ? progress.dailyActivity.filter(entry => entry.isPresent).length : 0;
+        const attendancePercentage = totalDays > 0 ? (presentDays / totalDays) * 100 : 0;
+        
+        totalAttendancePercentage += attendancePercentage;
+        totalCurrentStreak += progress.attendanceStats?.currentStreak || 0;
+        totalLongestStreak += progress.attendanceStats?.longestStreak || 0;
+        totalPresentDays += presentDays;
+        totalEnrollmentDays += Math.max(1, totalDays);
+        
         studentsWithProgress++;
       }
     }
@@ -280,6 +314,11 @@ router.get('/analytics', protect, ensureStaff, async (req, res) => {
     const avgProgress = studentsWithProgress > 0 ? totalProgress / studentsWithProgress : 0;
     const avgPoints = studentsWithProgress > 0 ? totalPoints / studentsWithProgress : 0;
     const avgStreakDays = studentsWithProgress > 0 ? totalStreakDays / studentsWithProgress : 0;
+    const avgAttendancePercentage = studentsWithProgress > 0 ? totalAttendancePercentage / studentsWithProgress : 0;
+    const avgCurrentStreak = studentsWithProgress > 0 ? totalCurrentStreak / studentsWithProgress : 0;
+    const avgLongestStreak = studentsWithProgress > 0 ? totalLongestStreak / studentsWithProgress : 0;
+    const avgPresentDays = studentsWithProgress > 0 ? totalPresentDays / studentsWithProgress : 0;
+    const avgEnrollmentDays = studentsWithProgress > 0 ? totalEnrollmentDays / studentsWithProgress : 0;
     
     // Get career track distribution with actual level counts
     const trackDistribution = await User.aggregate([
@@ -325,7 +364,12 @@ router.get('/analytics', protect, ensureStaff, async (req, res) => {
       })),
       avgProgress: Math.round(avgProgress * 100),
       avgPoints: Math.round(avgPoints),
-      avgStreakDays: Math.round(avgStreakDays)
+      avgStreakDays: Math.round(avgStreakDays),
+      avgAttendancePercentage: Math.round(avgAttendancePercentage),
+      avgCurrentStreak: Math.round(avgCurrentStreak),
+      avgLongestStreak: Math.round(avgLongestStreak),
+      avgPresentDays: Math.round(avgPresentDays),
+      avgEnrollmentDays: Math.round(avgEnrollmentDays)
     };
     
     res.status(200).json({

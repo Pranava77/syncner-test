@@ -594,7 +594,7 @@ const StaffMainDashboard: React.FC = () => {
       </div>
 
       {/* Analytics Cards - Exact AdminDashboard Design */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 mb-10">
         <div 
           className="rounded-xl shadow-sm p-6 flex items-center gap-4"
           style={{
@@ -828,6 +828,108 @@ const StaffMainDashboard: React.FC = () => {
               className="text-2xl font-bold"
               style={{ color: 'var(--color-text-primary)' }}
             >{analytics?.trackStructure?.length || 0}</p>
+          </div>
+        </div>
+
+        <div 
+          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
+          <div 
+            className="p-3 rounded-lg"
+            style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+          >
+            <Target 
+              className="h-6 w-6" 
+              style={{ color: 'var(--color-accent-primary)' }}
+            />
+          </div>
+          <div>
+            <p 
+              className="text-sm"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >Avg Attendance</p>
+            <p 
+              className="text-2xl font-bold"
+              style={{ color: 'var(--color-text-primary)' }}
+            >{analytics?.avgAttendancePercentage || 0}%</p>
+            <p 
+              className="text-xs flex items-center mt-1"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
+              Present days / Total days
+            </p>
+          </div>
+        </div>
+
+        <div 
+          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
+          <div 
+            className="p-3 rounded-lg"
+            style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+          >
+            <LightningBoltIcon 
+              className="h-6 w-6" 
+              style={{ color: 'var(--color-accent-primary)' }}
+            />
+          </div>
+          <div>
+            <p 
+              className="text-sm"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >Avg Current Streak</p>
+            <p 
+              className="text-2xl font-bold"
+              style={{ color: 'var(--color-text-primary)' }}
+            >{analytics?.avgCurrentStreak || 0}</p>
+            <p 
+              className="text-xs flex items-center mt-1"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
+              Days in current streak
+            </p>
+          </div>
+        </div>
+
+        <div 
+          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
+          <div 
+            className="p-3 rounded-lg"
+            style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+          >
+            <Target 
+              className="h-6 w-6" 
+              style={{ color: 'var(--color-accent-primary)' }}
+            />
+          </div>
+          <div>
+            <p 
+              className="text-sm"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >Avg Longest Streak</p>
+            <p 
+              className="text-2xl font-bold"
+              style={{ color: 'var(--color-text-primary)' }}
+            >{analytics?.avgLongestStreak || 0}</p>
+            <p 
+              className="text-xs flex items-center mt-1"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
+              Best streak achieved
+            </p>
           </div>
         </div>
       </div>

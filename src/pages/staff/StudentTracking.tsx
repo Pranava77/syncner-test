@@ -222,6 +222,12 @@ const StudentTracking: React.FC = () => {
                     Progress
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-text-secondary)' }}>
+                    Attendance
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-text-secondary)' }}>
+                    Streak
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-text-secondary)' }}>
                     Status
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-text-secondary)' }}>
@@ -283,6 +289,26 @@ const StudentTracking: React.FC = () => {
                         <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
                           {student.progress}%
                         </span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div>
+                        <div className="font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                          {student.attendancePercentage}%
+                        </div>
+                        <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                          {student.presentDays}/{student.totalDays} days
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div>
+                        <div className="font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                          {student.currentStreak} days
+                        </div>
+                        <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                          Best: {student.longestStreak} days
+                        </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">

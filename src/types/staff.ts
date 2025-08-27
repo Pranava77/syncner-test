@@ -17,6 +17,12 @@ export interface Student {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+  // Attendance and streak information
+  currentStreak: number;
+  longestStreak: number;
+  attendancePercentage: number;
+  totalDays: number;
+  presentDays: number;
 }
 
 export interface StudentDetails extends Student {
@@ -105,6 +111,12 @@ export interface StaffAnalytics {
   avgProgress: number;
   avgPoints: number;
   avgStreakDays: number;
+  // Attendance and streak metrics
+  avgAttendancePercentage: number;
+  avgCurrentStreak: number;
+  avgLongestStreak: number;
+  avgPresentDays: number;
+  avgEnrollmentDays: number;
 }
 
 export interface TrackDistribution {

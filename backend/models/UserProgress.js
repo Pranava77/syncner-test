@@ -108,6 +108,45 @@ const userProgressSchema = new mongoose.Schema({
   lastActivity: {
     type: Date,
     default: Date.now
+  },
+  dailyActivity: [{
+    date: {
+      type: Date,
+      required: true
+    },
+    totalMinutes: {
+      type: Number,
+      default: 0
+    },
+    activities: [{
+      type: String,
+      required: true
+    }],
+    isPresent: {
+      type: Boolean,
+      default: false
+    }
+  }],
+  attendanceStats: {
+    totalDays: {
+      type: Number,
+      default: 0
+    },
+    presentDays: {
+      type: Number,
+      default: 0
+    },
+    currentStreak: {
+      type: Number,
+      default: 0
+    },
+    longestStreak: {
+      type: Number,
+      default: 0
+    },
+    lastPresentDate: {
+      type: Date
+    }
   }
 }, {
   timestamps: true
@@ -377,6 +416,120 @@ userProgressSchema.statics.getOrCreate = async function(userId, careerTrack) {
   }
   
   return progress;
+};
+
+// Method to mark daily attendance and update streaks
+userProgressSchema.methods.markDailyAttendance = function(date = new Date(), totalMinutes = 0, activities = []) {
+  const dateStr = date.toDateString();
+  
+  // Check if we already have an entry for this date
+  let dailyEntry = this.dailyActivity.find(entry => 
+    entry.date.toDateString() === dateStr
+  );
+  
+  if (!dailyEntry) {
+    // Create new daily entry
+    dailyEntry = {
+      date: date,
+      totalMinutes: totalMinutes,
+      activities: activities,
+      isPresent: totalMinutes > 0
+    };
+    this.dailyActivity.push(dailyEntry);
+  } else {
+    // Update existing entry
+    dailyEntry.totalMinutes = totalMinutes;
+    dailyEntry.activities = activities;
+    dailyEntry.isPresent = totalMinutes > 0;
+  }
+  
+  // Update attendance statistics
+  this.updateAttendanceStats();
+  
+  return this.save();
+};
+
+// Method to update attendance statistics
+userProgressSchema.methods.updateAttendanceStats = function() {
+  const today = new Date();
+  const enrollmentDate = this.createdAt;
+  
+  // Calculate total days from enrollment
+  const totalDays = Math.ceil((today.getTime() - enrollmentDate.getTime()) / (1000 * 60 * 60 * 24));
+  
+  // Count present days (days with activity)
+  const presentDays = this.dailyActivity.filter(entry => entry.isPresent).length;
+  
+  // Calculate current streak
+  let currentStreak = 0;
+  let longestStreak = this.attendanceStats.longestStreak || 0;
+  let lastPresentDate = null;
+  
+  // Sort daily activity by date (newest first)
+  const sortedActivity = [...this.dailyActivity].sort((a, b) => b.date - a.date);
+  
+  for (let i = 0; i < sortedActivity.length; i++) {
+    const entry = sortedActivity[i];
+    if (entry.isPresent) {
+      if (currentStreak === 0) {
+        // Start of a streak
+        currentStreak = 1;
+        lastPresentDate = entry.date;
+        
+        // Check if this is part of a longer streak
+        let streakLength = 1;
+        for (let j = i + 1; j < sortedActivity.length; j++) {
+          const nextEntry = sortedActivity[j];
+          const dayDiff = Math.ceil((entry.date.getTime() - nextEntry.date.getTime()) / (1000 * 60 * 60 * 24));
+          
+          if (dayDiff === 1 && nextEntry.isPresent) {
+            streakLength++;
+          } else {
+            break;
+          }
+        }
+        
+        if (streakLength > longestStreak) {
+          longestStreak = streakLength;
+        }
+      } else {
+        // Continue current streak
+        currentStreak++;
+      }
+    } else {
+      // Break in streak
+      break;
+    }
+  }
+  
+  // Update attendance stats
+  this.attendanceStats = {
+    totalDays: Math.max(1, totalDays),
+    presentDays: presentDays,
+    currentStreak: currentStreak,
+    longestStreak: longestStreak,
+    lastPresentDate: lastPresentDate
+  };
+  
+  // Update last activity
+  this.lastActivity = today;
+};
+
+// Method to get attendance percentage
+userProgressSchema.methods.getAttendancePercentage = function() {
+  if (this.attendanceStats.totalDays === 0) return 0;
+  return Math.round((this.attendanceStats.presentDays / this.attendanceStats.totalDays) * 100);
+};
+
+// Method to get streak information
+userProgressSchema.methods.getStreakInfo = function() {
+  return {
+    currentStreak: this.attendanceStats.currentStreak || 0,
+    longestStreak: this.attendanceStats.longestStreak || 0,
+    attendancePercentage: this.getAttendancePercentage(),
+    totalDays: this.attendanceStats.totalDays || 0,
+    presentDays: this.attendanceStats.presentDays || 0
+  };
 };
 
 export default mongoose.model('UserProgress', userProgressSchema); 
