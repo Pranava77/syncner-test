@@ -512,7 +512,7 @@ const StaffMainDashboard: React.FC = () => {
   const trackDistribution = analytics?.trackDistribution ?? [];
   const avgProgress = analytics?.avgProgress ?? 0;
   const avgPoints = analytics?.avgPoints ?? 0;
-  const avgStreakDays = analytics?.avgStreakDays ?? 0;
+  const avgPresentDays = analytics?.avgPresentDays ?? 0;
 
   if (!analytics) {
     return (
@@ -795,11 +795,11 @@ const StaffMainDashboard: React.FC = () => {
             <p 
               className="text-sm"
               style={{ color: 'var(--color-text-tertiary)' }}
-            >Avg Streak Days</p>
+            >Avg Present Days</p>
             <p 
               className="text-2xl font-bold"
               style={{ color: 'var(--color-text-primary)' }}
-            >{avgStreakDays}</p>
+            >{avgPresentDays}</p>
           </div>
         </div>
 
