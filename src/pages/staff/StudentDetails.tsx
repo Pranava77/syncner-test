@@ -34,7 +34,7 @@ const StudentDetails: React.FC = () => {
         batch: '2023-2027',
         enrolledCareerTrack: 'Full Stack Development',
         enrolledDate: '21-03-2025',
-        profileInitial: 'M',
+        profileInitial: 'R',
         performance: {
           performance: 85,
           potential: 90,
