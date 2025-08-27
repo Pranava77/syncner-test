@@ -90,12 +90,12 @@ router.get('/students', protect, ensureStaff, async (req, res) => {
           // Fallback to calculating from daily activity
           presentDays = progress.dailyActivity.filter(entry => entry.isPresent).length;
           const today = new Date();
-          const enrollmentDate = progress.createdAt || new Date();
+          const enrollmentDate = progress?.createdAt || student.createdAt || new Date();
           totalDays = Math.ceil((today.getTime() - enrollmentDate.getTime()) / (1000 * 60 * 60 * 24));
         } else {
           // If no attendance data exists, use only enrollment time - no progress-based estimation
           const today = new Date();
-          const enrollmentDate = progress.createdAt || new Date();
+          const enrollmentDate = student.createdAt || new Date();
           totalDays = Math.ceil((today.getTime() - enrollmentDate.getTime()) / (1000 * 60 * 60 * 24));
           presentDays = 0; // No attendance data means 0 present days
         }
@@ -198,7 +198,7 @@ router.get('/students/:id', protect, ensureStaff, async (req, res) => {
       // Fallback to calculating from daily activity
       presentDays = progress.dailyActivity.filter(entry => entry.isPresent).length;
       const today = new Date();
-      const enrollmentDate = progress.createdAt || new Date();
+      const enrollmentDate = progress?.createdAt || student.createdAt || new Date();
       totalDays = Math.ceil((today.getTime() - enrollmentDate.getTime()) / (1000 * 60 * 60 * 24));
     } else {
       // If no attendance data exists, use only enrollment time - no progress-based estimation
