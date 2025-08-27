@@ -71,12 +71,16 @@ router.get('/students', protect, ensureStaff, async (req, res) => {
           .select('currentLevel completedLevels totalPoints streakDays')
           .lean();
         
+        // Normalize career track to handle legacy "fullstack" vs "full-stack"
+        const normalizedCareerTrack = student.careerTrack === 'fullstack' ? 'full-stack' : student.careerTrack;
+        
         // Get the actual track structure to calculate accurate completion rate
-        const track = await Track.findOne({ name: student.careerTrack }).lean();
+        const track = await Track.findOne({ name: normalizedCareerTrack }).lean();
         const totalLevels = track ? track.levels.length : 10; // Fallback to 10 if track not found
         
         return {
           ...student,
+          careerTrack: normalizedCareerTrack, // Use normalized value
           progress: progress ? Math.round((progress.completedLevels.length / totalLevels) * 100) : 0,
           currentLevel: progress ? `Level ${progress.currentLevel}` : 'Level 1',
           totalPoints: progress?.totalPoints || 0,
@@ -135,8 +139,11 @@ router.get('/students/:id', protect, ensureStaff, async (req, res) => {
     const progress = await UserProgress.findOne({ user: id })
       .lean();
     
+    // Normalize career track to handle legacy "fullstack" vs "full-stack"
+    const normalizedCareerTrack = student.careerTrack === 'fullstack' ? 'full-stack' : student.careerTrack;
+    
     // Get the actual track structure to calculate accurate completion rate
-    const track = await Track.findOne({ name: student.careerTrack }).lean();
+    const track = await Track.findOne({ name: normalizedCareerTrack }).lean();
     const totalLevels = track ? track.levels.length : 10; // Fallback to 10 if track not found
     
     // Calculate performance metrics
@@ -228,6 +235,30 @@ router.get('/analytics', protect, ensureStaff, async (req, res) => {
       { $unwind: { path: '$track', preserveNullAndEmptyArrays: true } }
     ]);
 
+    // Calculate student retention: percentage of students who have been active in the last 30 days
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    
+    const recentlyActiveStudents = await User.countDocuments({
+      role: 'student',
+      lastActive: { $gte: thirtyDaysAgo }
+    });
+    
+    const studentRetention = totalStudents > 0 ? Math.round((recentlyActiveStudents / totalStudents) * 100) : 0;
+    
+    // Calculate actual completion rate based on student progress
+    let studentsWithCompletedLevels = 0;
+    
+    for (const student of studentsWithTracks) {
+      const progress = await UserProgress.findOne({ user: student._id }).lean();
+      if (progress && progress.completedLevels.length > 0) {
+        studentsWithCompletedLevels++;
+      }
+    }
+    
+    // Calculate completion rate: percentage of students who have completed at least one level
+    const completionRate = totalStudents > 0 ? Math.round((studentsWithCompletedLevels / totalStudents) * 100) : 0;
+    
     // Calculate progress for each student based on their actual track
     let totalProgress = 0;
     let totalPoints = 0;
@@ -255,8 +286,18 @@ router.get('/analytics', protect, ensureStaff, async (req, res) => {
       { $match: { role: 'student' } },
       { $lookup: { from: 'tracks', localField: 'careerTrack', foreignField: 'name', as: 'track' } },
       { $unwind: { path: '$track', preserveNullAndEmptyArrays: true } },
+      // Normalize career track values to handle legacy "fullstack" vs "full-stack"
+      { $addFields: {
+        normalizedCareerTrack: {
+          $cond: {
+            if: { $eq: ['$careerTrack', 'fullstack'] },
+            then: 'full-stack',
+            else: '$careerTrack'
+          }
+        }
+      }},
       { $group: { 
-        _id: '$careerTrack', 
+        _id: '$normalizedCareerTrack', 
         count: { $sum: 1 },
         totalLevels: { $first: '$track.levels' }
       }},

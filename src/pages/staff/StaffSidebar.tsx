@@ -671,17 +671,16 @@ const StaffMainDashboard: React.FC = () => {
             <p 
               className="text-sm"
               style={{ color: 'var(--color-text-tertiary)' }}
-            >Completion Rate</p>
+            >Course Completion</p>
             <p 
               className="text-2xl font-bold"
               style={{ color: 'var(--color-text-primary)' }}
             >{completionRate}%</p>
             <p 
               className="text-xs flex items-center mt-1"
-              style={{ color: 'var(--color-accent-primary)' }}
+              style={{ color: 'var(--color-text-tertiary)' }}
             >
-              <TrendingUp className="h-3 w-3 mr-1" />
-              +5.1% from last month
+              Students who completed at least one level
             </p>
           </div>
         </div>
@@ -711,6 +710,12 @@ const StaffMainDashboard: React.FC = () => {
               className="text-2xl font-bold"
               style={{ color: 'var(--color-text-primary)' }}
             >{studentRetention}%</p>
+            <p 
+              className="text-xs flex items-center mt-1"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
+              Active in last 30 days
+            </p>
           </div>
         </div>
 
@@ -979,77 +984,7 @@ const StaffMainDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Track Structure Information */}
-      {analytics?.trackStructure && analytics.trackStructure.length > 0 && (
-        <div className="mb-12">
-          <h2 
-            className="text-lg font-semibold mb-6"
-            style={{ color: 'var(--color-text-primary)' }}
-          >
-            Track Structure Overview
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {analytics.trackStructure.map((track, index) => (
-              <div
-                key={track.name}
-                className="rounded-xl shadow-sm p-6"
-                style={{
-                  backgroundColor: 'var(--color-surface)',
-                  boxShadow: 'var(--shadow-sm)'
-                }}
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <h3 
-                    className="text-lg font-semibold"
-                    style={{ color: 'var(--color-text-primary)' }}
-                  >
-                    {track.displayName}
-                  </h3>
-                  <span 
-                    className="px-3 py-1 rounded-full text-xs font-medium"
-                    style={{ 
-                      backgroundColor: 'var(--color-accent-tertiary)',
-                      color: 'var(--color-accent-primary)' 
-                    }}
-                  >
-                    {track.difficulty}
-                  </span>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span 
-                      className="text-sm"
-                      style={{ color: 'var(--color-text-tertiary)' }}
-                    >
-                      Total Levels:
-                    </span>
-                    <span 
-                      className="font-semibold"
-                      style={{ color: 'var(--color-text-primary)' }}
-                    >
-                      {track.totalLevels}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span 
-                      className="text-sm"
-                      style={{ color: 'var(--color-text-tertiary)' }}
-                    >
-                      Students:
-                    </span>
-                    <span 
-                      className="font-semibold"
-                      style={{ color: 'var(--color-text-primary)' }}
-                    >
-                      {analytics.trackDistribution.find(t => t.track === track.name)?.count || 0}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+
     </div>
   );
 };
