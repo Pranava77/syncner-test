@@ -93,9 +93,11 @@ router.get('/students', protect, ensureStaff, async (req, res) => {
           const enrollmentDate = progress.createdAt || new Date();
           totalDays = Math.ceil((today.getTime() - enrollmentDate.getTime()) / (1000 * 60 * 60 * 24));
         } else {
-          // If no attendance data exists, estimate based on completion
-          presentDays = progress ? Math.min(progress.completedLevels.length * 2, 30) : 0;
-          totalDays = Math.max(1, presentDays);
+          // If no attendance data exists, use only enrollment time - no progress-based estimation
+          const today = new Date();
+          const enrollmentDate = progress.createdAt || new Date();
+          totalDays = Math.ceil((today.getTime() - enrollmentDate.getTime()) / (1000 * 60 * 60 * 24));
+          presentDays = 0; // No attendance data means 0 present days
         }
         
         const attendancePercentage = totalDays > 0 ? Math.round((presentDays / totalDays) * 100) : 0;
@@ -199,9 +201,11 @@ router.get('/students/:id', protect, ensureStaff, async (req, res) => {
       const enrollmentDate = progress.createdAt || new Date();
       totalDays = Math.ceil((today.getTime() - enrollmentDate.getTime()) / (1000 * 60 * 60 * 24));
     } else {
-      // If no attendance data exists, estimate based on completion
-      presentDays = progress ? Math.min(progress.completedLevels.length * 2, 30) : 0;
-      totalDays = Math.max(1, presentDays);
+      // If no attendance data exists, use only enrollment time - no progress-based estimation
+      const today = new Date();
+      const enrollmentDate = student.createdAt || new Date();
+      totalDays = Math.ceil((today.getTime() - enrollmentDate.getTime()) / (1000 * 60 * 60 * 24));
+      presentDays = 0; // No attendance data means 0 present days
     }
     
     // Calculate attendance percentage for consistency (0-100 scale)
