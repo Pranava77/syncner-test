@@ -150,26 +150,6 @@ const StudentDetails: React.FC = () => {
               <ArrowLeftIcon className="w-4 h-4" />
               Back to Students
             </button>
-            <div className="flex items-center gap-3">
-              <div 
-                className="w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold"
-                style={{ 
-                  backgroundColor: 'var(--color-accent-primary)',
-                  color: 'var(--color-text-inverse)'
-                }}
-              >
-                {studentData.profileInitial}
-              </div>
-            </div>
-          </div>
-          <div 
-            className="w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold"
-            style={{ 
-              backgroundColor: 'var(--color-accent-primary)',
-              color: 'var(--color-text-inverse)'
-            }}
-          >
-            M
           </div>
         </div>
       </div>
