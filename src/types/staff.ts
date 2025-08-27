@@ -109,13 +109,6 @@ export interface StaffAnalytics {
   trackDistribution: TrackDistribution[];
   trackStructure: TrackStructure[];
   avgProgress: number;
-  avgPoints: number;
-  // Attendance and streak metrics
-  avgAttendancePercentage: number;
-  avgCurrentStreak: number;
-  avgLongestStreak: number;
-  avgPresentDays: number;
-  avgEnrollmentDays: number;
 }
 
 export interface TrackDistribution {

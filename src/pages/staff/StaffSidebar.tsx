@@ -511,8 +511,6 @@ const StaffMainDashboard: React.FC = () => {
   const studentRetention = analytics?.studentRetention ?? 0;
   const trackDistribution = analytics?.trackDistribution ?? [];
   const avgProgress = analytics?.avgProgress ?? 0;
-  const avgPoints = analytics?.avgPoints ?? 0;
-  const avgPresentDays = analytics?.avgPresentDays ?? 0;
 
   if (!analytics) {
     return (
@@ -747,61 +745,9 @@ const StaffMainDashboard: React.FC = () => {
           </div>
         </div>
 
-        <div 
-          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
-          style={{
-            backgroundColor: 'var(--color-surface)',
-            boxShadow: 'var(--shadow-sm)'
-          }}
-        >
-          <div 
-            className="p-3 rounded-lg"
-            style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
-          >
-            <Target 
-              className="h-6 w-6" 
-              style={{ color: 'var(--color-accent-primary)' }}
-            />
-          </div>
-          <div>
-            <p 
-              className="text-sm"
-              style={{ color: 'var(--color-text-tertiary)' }}
-            >Avg Points</p>
-            <p 
-              className="text-2xl font-bold"
-              style={{ color: 'var(--color-text-primary)' }}
-            >{avgPoints}</p>
-          </div>
-        </div>
 
-        <div 
-          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
-          style={{
-            backgroundColor: 'var(--color-surface)',
-            boxShadow: 'var(--shadow-sm)'
-          }}
-        >
-          <div 
-            className="p-3 rounded-lg"
-            style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
-          >
-            <LightningBoltIcon 
-              className="h-6 w-6" 
-              style={{ color: 'var(--color-accent-primary)' }}
-            />
-          </div>
-          <div>
-            <p 
-              className="text-sm"
-              style={{ color: 'var(--color-text-tertiary)' }}
-            >Avg Present Days</p>
-            <p 
-              className="text-2xl font-bold"
-              style={{ color: 'var(--color-text-primary)' }}
-            >{avgPresentDays}</p>
-          </div>
-        </div>
+
+
 
         <div 
           className="rounded-xl shadow-sm p-6 flex items-center gap-4"
@@ -831,107 +777,11 @@ const StaffMainDashboard: React.FC = () => {
           </div>
         </div>
 
-        <div 
-          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
-          style={{
-            backgroundColor: 'var(--color-surface)',
-            boxShadow: 'var(--shadow-sm)'
-          }}
-        >
-          <div 
-            className="p-3 rounded-lg"
-            style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
-          >
-            <Target 
-              className="h-6 w-6" 
-              style={{ color: 'var(--color-accent-primary)' }}
-            />
-          </div>
-          <div>
-            <p 
-              className="text-sm"
-              style={{ color: 'var(--color-text-tertiary)' }}
-            >Avg Attendance</p>
-            <p 
-              className="text-2xl font-bold"
-              style={{ color: 'var(--color-text-primary)' }}
-            >{analytics?.avgAttendancePercentage || 0}%</p>
-            <p 
-              className="text-xs flex items-center mt-1"
-              style={{ color: 'var(--color-text-tertiary)' }}
-            >
-              Present days / Total days
-            </p>
-          </div>
-        </div>
 
-        <div 
-          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
-          style={{
-            backgroundColor: 'var(--color-surface)',
-            boxShadow: 'var(--shadow-sm)'
-          }}
-        >
-          <div 
-            className="p-3 rounded-lg"
-            style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
-          >
-            <LightningBoltIcon 
-              className="h-6 w-6" 
-              style={{ color: 'var(--color-accent-primary)' }}
-            />
-          </div>
-          <div>
-            <p 
-              className="text-sm"
-              style={{ color: 'var(--color-text-tertiary)' }}
-            >Avg Current Streak</p>
-            <p 
-              className="text-2xl font-bold"
-              style={{ color: 'var(--color-text-primary)' }}
-            >{analytics?.avgCurrentStreak || 0}</p>
-            <p 
-              className="text-xs flex items-center mt-1"
-              style={{ color: 'var(--color-text-tertiary)' }}
-            >
-              Days in current streak
-            </p>
-          </div>
-        </div>
 
-        <div 
-          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
-          style={{
-            backgroundColor: 'var(--color-surface)',
-            boxShadow: 'var(--shadow-sm)'
-          }}
-        >
-          <div 
-            className="p-3 rounded-lg"
-            style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
-          >
-            <Target 
-              className="h-6 w-6" 
-              style={{ color: 'var(--color-accent-primary)' }}
-            />
-          </div>
-          <div>
-            <p 
-              className="text-sm"
-              style={{ color: 'var(--color-text-tertiary)' }}
-            >Avg Longest Streak</p>
-            <p 
-              className="text-2xl font-bold"
-              style={{ color: 'var(--color-text-primary)' }}
-            >{analytics?.avgLongestStreak || 0}</p>
-            <p 
-              className="text-xs flex items-center mt-1"
-              style={{ color: 'var(--color-text-tertiary)' }}
-            >
-              Best streak achieved
-            </p>
-          </div>
-        </div>
+
+
+
       </div>
 
       {/* Students by Track Charts - Combined Row - Exact AdminDashboard Design */}
