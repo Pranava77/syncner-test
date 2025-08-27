@@ -500,15 +500,7 @@ const StudentDetails: React.FC = () => {
                 }}
               >
                 <div className="relative">
-                  <div 
-                    className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold absolute -top-2 -right-2"
-                    style={{ 
-                      backgroundColor: 'var(--color-accent-primary)',
-                      color: 'var(--color-text-inverse)'
-                    }}
-                  >
-                    {studentData.profileInitial}
-                  </div>
+               
                   <h3 
                     className="text-lg font-semibold mb-4 text-center"
                     style={{ color: 'var(--color-text-primary)' }}
