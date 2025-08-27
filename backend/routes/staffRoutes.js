@@ -186,21 +186,30 @@ router.get('/students/:id', protect, ensureStaff, async (req, res) => {
     
     // Calculate attendance statistics for consistency
     let presentDays = 0;
+    let totalDays = 1;
     
     if (progress?.attendanceStats?.presentDays !== undefined) {
       // Use pre-calculated attendance stats if available
       presentDays = progress.attendanceStats.presentDays;
+      totalDays = progress.attendanceStats.totalDays || 1;
     } else if (progress?.dailyActivity) {
       // Fallback to calculating from daily activity
       presentDays = progress.dailyActivity.filter(entry => entry.isPresent).length;
+      const today = new Date();
+      const enrollmentDate = progress.createdAt || new Date();
+      totalDays = Math.ceil((today.getTime() - enrollmentDate.getTime()) / (1000 * 60 * 60 * 24));
     } else {
       // If no attendance data exists, estimate based on completion
       presentDays = progress ? Math.min(progress.completedLevels.length * 2, 30) : 0;
+      totalDays = Math.max(1, presentDays);
     }
+    
+    // Calculate attendance percentage for consistency (0-100 scale)
+    const attendancePercentage = totalDays > 0 ? Math.round((presentDays / totalDays) * 100) : 0;
     
     // Calculate summary stats
     const summaryStats = {
-      consistency: presentDays,
+      consistency: attendancePercentage, // Now normalized to 0-100
       progress: progress ? Math.round((progress.completedLevels.length / totalLevels) * 100) : 0,
       leaderboard: progress ? Math.round((progress.totalPoints / 1000) * 100) : 0
     };

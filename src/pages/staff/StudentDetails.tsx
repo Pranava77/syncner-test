@@ -269,10 +269,10 @@ const StudentDetails: React.FC = () => {
                   { 
                     label: 'Attendance', 
                     value: selectedStudent.summaryStats.consistency, 
-                    subtitle: 'Present Days', 
+                    subtitle: 'Attendance Rate', 
                     icon: BarChartIcon,
                     isStreak: true,
-                    unit: 'days'
+                    unit: '%'
                   },
                   { 
                     label: 'Progress', 
@@ -310,7 +310,7 @@ const StudentDetails: React.FC = () => {
                     <div className="text-xs opacity-70" style={{ color: 'var(--color-text-tertiary)' }}>{stat.subtitle}</div>
                     {stat.isStreak && (
                       <div className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
-                        {selectedStudent.summaryStats.consistency > 0 ? `${selectedStudent.summaryStats.consistency} days present` : 'No attendance data'}
+                        {selectedStudent.summaryStats.consistency > 0 ? `${selectedStudent.summaryStats.consistency}% attendance rate` : 'No attendance data'}
                       </div>
                     )}
                   </motion.div>
