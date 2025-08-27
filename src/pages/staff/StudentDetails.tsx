@@ -243,7 +243,7 @@ const StudentDetails: React.FC = () => {
                 ].map((stat, index) => (
                   <motion.div
                     key={index}
-                    className="p-6 rounded-xl shadow-sm text-center flex flex-col items-center relative"
+                    className="p-6 rounded-xl shadow-sm text-center flex flex-col items-center"
                     style={{
                       backgroundColor: 'var(--color-surface)',
                       boxShadow: 'var(--shadow-sm)',
@@ -253,15 +253,6 @@ const StudentDetails: React.FC = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
                   >
-                    <div 
-                      className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold absolute -top-2 -right-2"
-                      style={{ 
-                        backgroundColor: 'var(--color-accent-primary)',
-                        color: 'var(--color-text-inverse)'
-                      }}
-                    >
-                      {studentData.profileInitial}
-                    </div>
                     <div className="text-4xl font-bold mb-2" style={{ color: 'var(--color-accent-primary)' }}>{stat.value}%</div>
                     <div className="text-sm font-medium mb-1" style={{ color: 'var(--color-text-primary)' }}>{stat.label}</div>
                     <div className="text-xs opacity-70" style={{ color: 'var(--color-text-tertiary)' }}>{stat.subtitle}</div>
