@@ -16,6 +16,71 @@ import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Responsi
 import { useStaff } from '../../hooks/useStaff';
 import syncnerLogo from '../../assets/syncner-logo.png';
 
+// Utility function to format dates and times
+const formatDateTime = (dateValue: string | Date | null | undefined): string => {
+  if (!dateValue) return 'Not Available';
+  
+  // Handle text values
+  if (typeof dateValue === 'string') {
+    if (dateValue === 'In Progress' || dateValue === 'Not Started') {
+      return dateValue;
+    }
+  }
+  
+  try {
+    const date = new Date(dateValue);
+    if (isNaN(date.getTime())) return 'Invalid Date';
+    
+    // Format as "DD MMM YYYY, HH:MM AM/PM"
+    return date.toLocaleDateString('en-US', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    }) + ', ' + date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+  } catch (error) {
+    return 'Invalid Date';
+  }
+};
+
+// Utility function to get relative time (e.g., "2 days ago")
+const getRelativeTime = (dateValue: string | Date | null | undefined): string => {
+  if (!dateValue) return '';
+  
+  // Handle text values
+  if (typeof dateValue === 'string') {
+    if (dateValue === 'In Progress' || dateValue === 'Not Started') {
+      return '';
+    }
+  }
+  
+  try {
+    const date = new Date(dateValue);
+    if (isNaN(date.getTime())) return '';
+    
+    const now = new Date();
+    const diffInMs = now.getTime() - date.getTime();
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+    const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+    const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+    
+    if (diffInDays > 0) {
+      return diffInDays === 1 ? '1 day ago' : `${diffInDays} days ago`;
+    } else if (diffInHours > 0) {
+      return diffInHours === 1 ? '1 hour ago' : `${diffInHours} hours ago`;
+    } else if (diffInMinutes > 0) {
+      return diffInMinutes === 1 ? '1 minute ago' : `${diffInMinutes} minutes ago`;
+    } else {
+      return 'Just now';
+    }
+  } catch (error) {
+    return '';
+  }
+};
+
 const StudentDetails: React.FC = () => {
   const { studentId } = useParams();
   const navigate = useNavigate();
@@ -402,8 +467,13 @@ const StudentDetails: React.FC = () => {
                                     )}
                                   </div>
                                   <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                                    {level.learn.startTime} → {level.learn.endTime}
+                                    {formatDateTime(level.learn.startTime)} → {formatDateTime(level.learn.endTime)}
                                   </div>
+                                  {getRelativeTime(level.learn.endTime) && (
+                                    <div className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
+                                      {getRelativeTime(level.learn.endTime)}
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                             </div>
@@ -441,8 +511,13 @@ const StudentDetails: React.FC = () => {
                                     )}
                                   </div>
                                   <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                                    {level.test.startTime} → {level.test.endTime}
+                                    {formatDateTime(level.test.startTime)} → {formatDateTime(level.test.endTime)}
                                   </div>
+                                  {getRelativeTime(level.test.endTime) && (
+                                    <div className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
+                                      {getRelativeTime(level.test.endTime)}
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                             </div>
@@ -489,8 +564,13 @@ const StudentDetails: React.FC = () => {
                                     )}
                                   </div>
                                   <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                                    {level.exercise.startTime} → {level.exercise.endTime}
+                                    {formatDateTime(level.exercise.startTime)} → {formatDateTime(level.exercise.endTime)}
                                   </div>
+                                  {getRelativeTime(level.exercise.endTime) && (
+                                    <div className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
+                                      {getRelativeTime(level.exercise.endTime)}
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                             </div>
