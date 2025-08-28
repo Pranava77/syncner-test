@@ -81,19 +81,39 @@ router.get('/students', protect, ensureStaff, async (req, res) => {
         const track = await Track.findOne({ name: normalizedCareerTrack }).lean();
         const totalLevels = track ? track.levels.length : 10; // Fallback to 10 if track not found
         
+        // Initialize default values for students with no progress
+        const defaultProgress = {
+          currentLevel: 1,
+          completedLevels: [],
+          totalPoints: 0,
+          streakDays: 0,
+          attendanceStats: {
+            presentDays: 0,
+            totalDays: 1,
+            currentStreak: 0,
+            longestStreak: 0
+          },
+          dailyActivity: [],
+          lastActivity: student.createdAt || new Date(),
+          createdAt: student.createdAt || new Date()
+        };
+        
+        // Use default progress if none exists
+        const studentProgress = progress || defaultProgress;
+        
         // Calculate attendance statistics
         let presentDays = 0;
         let totalDays = 1;
         
-        if (progress?.attendanceStats?.presentDays !== undefined) {
+        if (studentProgress?.attendanceStats?.presentDays !== undefined) {
           // Use pre-calculated attendance stats if available
-          presentDays = progress.attendanceStats.presentDays;
-          totalDays = progress.attendanceStats.totalDays || 1;
-        } else if (progress?.dailyActivity) {
+          presentDays = studentProgress.attendanceStats.presentDays;
+          totalDays = studentProgress.attendanceStats.totalDays || 1;
+        } else if (studentProgress?.dailyActivity && studentProgress.dailyActivity.length > 0) {
           // Fallback to calculating from daily activity
-          presentDays = progress.dailyActivity.filter(entry => entry.isPresent).length;
+          presentDays = studentProgress.dailyActivity.filter(entry => entry.isPresent).length;
           const today = new Date();
-          const enrollmentDate = progress?.createdAt || student.createdAt || new Date();
+          const enrollmentDate = studentProgress?.createdAt || student.createdAt || new Date();
           totalDays = Math.ceil((today.getTime() - enrollmentDate.getTime()) / (1000 * 60 * 60 * 24));
         } else {
           // If no attendance data exists, provide a more realistic estimate
@@ -109,9 +129,9 @@ router.get('/students', protect, ensureStaff, async (req, res) => {
             // Base attendance on student engagement patterns
             let baseAttendance = 0;
             
-            if (progress?.lastActivity) {
+            if (studentProgress?.lastActivity) {
               // Student has recent activity
-              const lastActivityDate = new Date(progress.lastActivity);
+              const lastActivityDate = new Date(studentProgress.lastActivity);
               const daysSinceLastActivity = Math.ceil((today.getTime() - lastActivityDate.getTime()) / (1000 * 60 * 60 * 24));
               
               if (daysSinceLastActivity <= 7) {
@@ -137,22 +157,22 @@ router.get('/students', protect, ensureStaff, async (req, res) => {
         
         // Calculate comprehensive leaderboard score for students list
         let leaderboardScore = 0;
-        if (progress && progress.completedLevels) {
+        if (studentProgress && studentProgress.completedLevels) {
           // Base score from progress (40% weight)
-          const progressScore = Math.round((progress.completedLevels.length / totalLevels) * 100);
+          const progressScore = Math.round((studentProgress.completedLevels.length / totalLevels) * 100);
           
           // Attendance score (30% weight)
           const attendanceScore = attendancePercentage;
           
           // Consistency/streak bonus (30% weight)
           let consistencyScore = 0;
-          if (progress.attendanceStats?.currentStreak) {
-            const streak = progress.attendanceStats.currentStreak;
+          if (studentProgress.attendanceStats?.currentStreak) {
+            const streak = studentProgress.attendanceStats.currentStreak;
             if (streak >= 2) {
               consistencyScore = Math.min(100, streak * 25); // Cap at 100%
             }
-          } else if (progress.attendanceStats?.longestStreak) {
-            const longestStreak = progress.attendanceStats.longestStreak;
+          } else if (studentProgress.attendanceStats?.longestStreak) {
+            const longestStreak = studentProgress.attendanceStats.longestStreak;
             if (longestStreak >= 2) {
               consistencyScore = Math.min(100, longestStreak * 20); // Cap at 100%
             }
@@ -169,14 +189,14 @@ router.get('/students', protect, ensureStaff, async (req, res) => {
         return {
           ...student,
           careerTrack: normalizedCareerTrack, // Use normalized value
-          progress: progress && progress.completedLevels ? Math.round((progress.completedLevels.length / totalLevels) * 100) : 0,
-          currentLevel: progress ? `Level ${progress.currentLevel}` : 'Level 1',
-          totalPoints: progress?.totalPoints || 0,
-          streakDays: progress?.streakDays || 0,
+          progress: studentProgress && studentProgress.completedLevels ? Math.round((studentProgress.completedLevels.length / totalLevels) * 100) : 0,
+          currentLevel: studentProgress ? `Level ${studentProgress.currentLevel}` : 'Level 1',
+          totalPoints: studentProgress?.totalPoints || 0,
+          streakDays: studentProgress?.streakDays || 0,
           status: student.isActive ? 'active' : 'inactive',
           // Attendance information
-          currentStreak: progress?.attendanceStats?.currentStreak || 0,
-          longestStreak: progress.attendanceStats?.longestStreak || 0,
+          currentStreak: studentProgress?.attendanceStats?.currentStreak || 0,
+          longestStreak: studentProgress?.attendanceStats?.longestStreak || 0,
           attendancePercentage: attendancePercentage,
           totalDays: totalDays,
           presentDays: presentDays,
