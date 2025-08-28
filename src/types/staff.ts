@@ -44,7 +44,7 @@ export interface PerformanceMetrics {
 }
 
 export interface SummaryStats {
-  consistency: number | null;
+  consistency: number;
   progress: number;
   leaderboard: number;
 }
