@@ -60,22 +60,22 @@ export interface LearningLevel {
 
 export interface LearningSection {
   completed: boolean;
-  startTime: string;
-  endTime: string;
+  startTime?: string;
+  endTime?: string;
 }
 
 export interface TestSection {
   completed: boolean;
   score: number;
   attempts: number;
-  startTime: string;
-  endTime: string;
+  startTime?: string;
+  endTime?: string;
 }
 
 export interface ExerciseSection {
   completed: boolean;
-  startTime: string;
-  endTime: string;
+  startTime?: string;
+  endTime?: string;
 }
 
 export interface StudentFilters {
