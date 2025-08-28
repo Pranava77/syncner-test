@@ -15,7 +15,7 @@ import {
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer } from 'recharts';
 import { useStaff } from '../../hooks/useStaff';
 import syncnerLogo from '../../assets/syncner-logo.png';
-import StudentPortfolio from '../../components/StudentPortfolio';
+
 
 // Utility function to format dates and times
 const formatDateTime = (dateValue: string | Date | null | undefined): string => {
@@ -85,7 +85,7 @@ const getRelativeTime = (dateValue: string | Date | null | undefined): string =>
 const StudentDetails: React.FC = () => {
   const { studentId } = useParams();
   const navigate = useNavigate();
-  const [showPortfolio, setShowPortfolio] = useState(false);
+
   const {
     selectedStudent,
     studentDetailsLoading,
@@ -618,7 +618,7 @@ const StudentDetails: React.FC = () => {
                   onMouseLeave={(e) => {
                     e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
                   }}
-                  onClick={() => setShowPortfolio(true)}
+                  onClick={() => navigate(`/staff/students/${studentId}/portfolio`)}
                 >
                   View Portfolio
                 </button>
@@ -628,13 +628,7 @@ const StudentDetails: React.FC = () => {
         </motion.div>
       </div>
 
-      {/* Portfolio Modal */}
-      {showPortfolio && selectedStudent && (
-        <StudentPortfolio
-          student={selectedStudent}
-          onClose={() => setShowPortfolio(false)}
-        />
-      )}
+
     </div>
   );
 };

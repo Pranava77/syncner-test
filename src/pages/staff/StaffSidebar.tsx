@@ -31,6 +31,7 @@ import StudentTracking from './StudentTracking';
 import Leaderboard from './Leaderboard';
 import StaffProfile from './StaffProfile';
 import StudentDetails from './StudentDetails';
+import StudentPortfolio from '../../components/StudentPortfolio';
 import syncnerLogo from '../../assets/syncner-logo.png';
 import ThemeSwitcher from '../../components/ThemeSwitcher';
 import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
@@ -430,6 +431,7 @@ const StaffSidebar: React.FC = () => {
             <Route path="/" element={<StaffMainDashboard />} />
             <Route path="/students" element={<StudentTracking />} />
             <Route path="/students/:studentId" element={<StudentDetails />} />
+            <Route path="/students/:studentId/portfolio" element={<StudentPortfolio />} />
             <Route path="/profile" element={<StaffProfile />} />
           </Routes>
         </main>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   CheckCircledIcon,
   ClockIcon,
@@ -11,14 +12,11 @@ import {
   TargetIcon,
   RocketIcon,
   PersonIcon,
-  IdCardIcon
+  IdCardIcon,
+  ArrowLeftIcon
 } from '@radix-ui/react-icons';
 import { StudentDetails } from '../types/staff';
-
-interface StudentPortfolioProps {
-  student: StudentDetails;
-  onClose: () => void;
-}
+import { useStaff } from '../hooks/useStaff';
 
 interface PortfolioTab {
   id: 'topics' | 'projects';
@@ -26,9 +24,58 @@ interface PortfolioTab {
   active: boolean;
 }
 
-const StudentPortfolio: React.FC<StudentPortfolioProps> = ({ student, onClose }) => {
+const StudentPortfolio: React.FC = () => {
+  const navigate = useNavigate();
+  const { studentId } = useParams();
+  const { selectedStudent, studentDetailsLoading, error, getStudentDetails } = useStaff();
   const [activeTab, setActiveTab] = useState<'topics' | 'projects'>('topics');
   const [expandedLevels, setExpandedLevels] = useState<Set<number>>(new Set());
+
+  // Fetch student details when component mounts
+  React.useEffect(() => {
+    if (studentId) {
+      getStudentDetails(studentId);
+    }
+  }, [studentId, getStudentDetails]);
+
+  // Handle back navigation
+  const handleBack = () => {
+    navigate(`/staff/students/${studentId}`);
+  };
+
+  if (studentDetailsLoading || !selectedStudent) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: 'var(--color-accent-primary)' }}></div>
+          <p className="text-lg" style={{ color: 'var(--color-text-primary)' }}>
+            Loading portfolio...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
+        <div className="text-center">
+          <p className="text-lg mb-4" style={{ color: 'var(--color-text-primary)' }}>
+            {error}
+          </p>
+          <button
+            onClick={handleBack}
+            className="px-4 py-2 rounded-lg transition-colors hover:bg-[var(--color-accent-tertiary)]"
+            style={{ color: 'var(--color-accent-primary)' }}
+          >
+            Back to Student Details
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const student = selectedStudent;
 
   const toggleLevelExpansion = (level: number) => {
     const newExpanded = new Set(expandedLevels);
@@ -111,35 +158,33 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({ student, onClose })
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backgroundColor: 'var(--color-overlay-bg)' }}>
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.9 }}
-        className="rounded-2xl w-full max-w-7xl max-h-[90vh] overflow-hidden"
-        style={{
-          backgroundColor: 'var(--color-surface-elevated)',
-          boxShadow: 'var(--shadow-lg)',
-          borderColor: 'var(--color-border)'
-        }}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-surface)' }}>
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
+      {/* Top Header/Navigation */}
+      <div className="border-b" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-surface)' }}>
+        <div className="flex items-center justify-between px-6 py-4">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={handleBack}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors hover:bg-[var(--color-accent-tertiary)]"
+              style={{ color: 'var(--color-accent-primary)' }}
+            >
+              <ArrowLeftIcon className="w-4 h-4" />
+              Back to Student Details
+            </button>
+          </div>
           <h2 className="text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>Student Portfolio</h2>
-          <button
-            onClick={onClose}
-            className="p-2 rounded-lg transition-colors hover:bg-[var(--color-accent-tertiary)]"
-            style={{ color: 'var(--color-text-secondary)' }}
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
         </div>
+      </div>
 
-        <div className="flex h-[calc(90vh-120px)]">
+      <div className="p-6 lg:p-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Sidebar */}
-          <div className="w-80 border-r p-6 overflow-y-auto" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-secondary-bg)' }}>
+          <div className="lg:col-span-1 border-r p-6 overflow-y-auto" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-secondary-bg)' }}>
             {/* Profile Header */}
             <div className="text-center mb-6">
               <div className="w-24 h-24 rounded-lg mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: 'var(--color-accent-primary)' }}>
@@ -270,7 +315,7 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({ student, onClose })
           </div>
 
           {/* Main Content */}
-          <div className="flex-1 p-6 overflow-y-auto" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
+          <div className="lg:col-span-2 p-6 overflow-y-auto" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
             {/* Introduction */}
             <div className="mb-8">
               <h3 className="text-xl font-bold mb-4 px-4 py-2 rounded-lg inline-block" style={{ 
