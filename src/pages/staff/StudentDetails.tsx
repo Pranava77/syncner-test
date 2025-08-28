@@ -112,7 +112,7 @@ const StudentDetails: React.FC = () => {
   }, [error, clearError]);
 
   const radarData = selectedStudent ? [
-    { subject: 'Attendance', A: selectedStudent.summaryStats.consistency, fullMark: 100 },
+    { subject: 'Attendance', A: selectedStudent.summaryStats.consistency || 0, fullMark: 100 },
     { subject: 'Progress', A: selectedStudent.summaryStats.progress, fullMark: 100 },
     { subject: 'Leaderboard', A: selectedStudent.summaryStats.leaderboard, fullMark: 100 }
   ] : [];
@@ -304,13 +304,13 @@ const StudentDetails: React.FC = () => {
                     transition={{ delay: index * 0.1 }}
                   >
                     <div className="text-4xl font-bold mb-2" style={{ color: 'var(--color-accent-primary)' }}>
-                      {stat.value}{stat.unit}
+                      {stat.value !== null ? `${stat.value}${stat.unit}` : 'N/A'}
                     </div>
                     <div className="text-sm font-medium mb-1" style={{ color: 'var(--color-text-primary)' }}>{stat.label}</div>
                     <div className="text-xs opacity-70" style={{ color: 'var(--color-text-tertiary)' }}>{stat.subtitle}</div>
                     {stat.isStreak && (
                       <div className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
-                        {selectedStudent.summaryStats.consistency > 0 ? `${selectedStudent.summaryStats.consistency}% attendance rate` : 'No attendance data'}
+                        {selectedStudent.summaryStats.consistency !== null ? `${selectedStudent.summaryStats.consistency}% attendance rate` : 'No attendance data available'}
                       </div>
                     )}
                   </motion.div>
@@ -590,7 +590,7 @@ const StudentDetails: React.FC = () => {
                 </div>
                 <div className="text-center mt-2">
                   <span className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
-                    Attendance • Progress • Overall Score (Progress + Attendance + Consistency)
+                    {selectedStudent.summaryStats.consistency !== null ? 'Attendance • Progress • Overall Score' : 'Progress • Overall Score (Attendance data not available)'}
                   </span>
                 </div>
               </div>
