@@ -23,6 +23,8 @@ export interface Student {
   attendancePercentage: number;
   totalDays: number;
   presentDays: number;
+  // Leaderboard score
+  leaderboardScore: number;
 }
 
 export interface StudentDetails extends Student {

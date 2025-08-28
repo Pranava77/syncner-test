@@ -285,7 +285,7 @@ const StudentDetails: React.FC = () => {
                   { 
                     label: 'Leaderboard', 
                     value: selectedStudent.summaryStats.leaderboard, 
-                    subtitle: 'Points Rank', 
+                    subtitle: 'Overall Score', 
                     icon: StarIcon,
                     isStreak: false,
                     unit: '%'
@@ -590,7 +590,7 @@ const StudentDetails: React.FC = () => {
                 </div>
                 <div className="text-center mt-2">
                   <span className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
-                    Attendance • Progress • Leaderboard Performance
+                    Attendance • Progress • Overall Score (Progress + Attendance + Consistency)
                   </span>
                 </div>
               </div>

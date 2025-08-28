@@ -118,6 +118,37 @@ router.get('/students', protect, ensureStaff, async (req, res) => {
         
         const attendancePercentage = totalDays > 0 ? Math.round((presentDays / totalDays) * 100) : 0;
         
+        // Calculate comprehensive leaderboard score for students list
+        let leaderboardScore = 0;
+        if (progress) {
+          // Base score from progress (40% weight)
+          const progressScore = Math.round((progress.completedLevels.length / totalLevels) * 100);
+          
+          // Attendance score (30% weight)
+          const attendanceScore = attendancePercentage;
+          
+          // Consistency/streak bonus (30% weight)
+          let consistencyScore = 0;
+          if (progress.attendanceStats?.currentStreak) {
+            const streak = progress.attendanceStats.currentStreak;
+            if (streak >= 2) {
+              consistencyScore = Math.min(100, streak * 25); // Cap at 100%
+            }
+          } else if (progress.attendanceStats?.longestStreak) {
+            const longestStreak = progress.attendanceStats.longestStreak;
+            if (longestStreak >= 2) {
+              consistencyScore = Math.min(100, longestStreak * 20); // Cap at 100%
+            }
+          }
+          
+          // Calculate weighted leaderboard score
+          leaderboardScore = Math.round(
+            (progressScore * 0.4) + 
+            (attendanceScore * 0.3) + 
+            (consistencyScore * 0.3)
+          );
+        }
+        
         return {
           ...student,
           careerTrack: normalizedCareerTrack, // Use normalized value
@@ -128,10 +159,12 @@ router.get('/students', protect, ensureStaff, async (req, res) => {
           status: student.isActive ? 'active' : 'inactive',
           // Attendance information
           currentStreak: progress?.attendanceStats?.currentStreak || 0,
-          longestStreak: progress?.attendanceStats?.longestStreak || 0,
+          longestStreak: progress.attendanceStats?.longestStreak || 0,
           attendancePercentage: attendancePercentage,
           totalDays: totalDays,
-          presentDays: presentDays
+          presentDays: presentDays,
+          // Leaderboard score
+          leaderboardScore: leaderboardScore
         };
       })
     );
@@ -243,11 +276,45 @@ router.get('/students/:id', protect, ensureStaff, async (req, res) => {
     // Calculate attendance percentage for consistency (0-100 scale)
     const attendancePercentage = totalDays > 0 ? Math.round((presentDays / totalDays) * 100) : 0;
     
+    // Calculate comprehensive leaderboard score based on attendance, progress, and consistency
+    let leaderboardScore = 0;
+    
+    if (progress) {
+      // Base score from progress (40% weight)
+      const progressScore = Math.round((progress.completedLevels.length / totalLevels) * 100);
+      
+      // Attendance score (30% weight)
+      const attendanceScore = attendancePercentage;
+      
+      // Consistency/streak bonus (30% weight)
+      let consistencyScore = 0;
+      if (progress.attendanceStats?.currentStreak) {
+        const streak = progress.attendanceStats.currentStreak;
+        if (streak >= 2) {
+          // Bonus for continuous attendance: 2+ days = 100%, 1 day = 50%
+          consistencyScore = Math.min(100, streak * 25); // Cap at 100%
+        }
+      } else if (progress.attendanceStats?.longestStreak) {
+        // Use longest streak if current streak not available
+        const longestStreak = progress.attendanceStats.longestStreak;
+        if (longestStreak >= 2) {
+          consistencyScore = Math.min(100, longestStreak * 20); // Cap at 100%
+        }
+      }
+      
+      // Calculate weighted leaderboard score
+      leaderboardScore = Math.round(
+        (progressScore * 0.4) + 
+        (attendanceScore * 0.3) + 
+        (consistencyScore * 0.3)
+      );
+    }
+    
     // Calculate summary stats
     const summaryStats = {
-      consistency: attendancePercentage, // Now normalized to 0-100
+      consistency: attendancePercentage, // Attendance rate (0-100 scale)
       progress: progress ? Math.round((progress.completedLevels.length / totalLevels) * 100) : 0,
-      leaderboard: progress ? Math.round((progress.totalPoints / 1000) * 100) : 0
+      leaderboard: leaderboardScore // Comprehensive leaderboard score
     };
     
     // Build learning timeline
