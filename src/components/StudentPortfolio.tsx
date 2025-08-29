@@ -4,7 +4,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import {
   CheckCircledIcon,
   ClockIcon,
-  StarIcon,
   ChevronDownIcon,
   ChevronRightIcon,
   EyeOpenIcon,
@@ -12,16 +11,16 @@ import {
   TargetIcon,
   RocketIcon,
   PersonIcon,
-  IdCardIcon,
   ArrowLeftIcon,
   Share1Icon,
-  DownloadIcon
+  DownloadIcon,
+  BarChartIcon
 } from '@radix-ui/react-icons';
 import { StudentDetails } from '../types/staff';
 import { useStaff } from '../hooks/useStaff';
 
 interface PortfolioTab {
-  id: 'topics' | 'projects';
+  id: 'topics';
   label: string;
   active: boolean;
 }
@@ -30,7 +29,7 @@ const StudentPortfolio: React.FC = () => {
   const navigate = useNavigate();
   const { studentId } = useParams();
   const { selectedStudent, studentDetailsLoading, error, getStudentDetails } = useStaff();
-  const [activeTab, setActiveTab] = useState<'topics' | 'projects'>('topics');
+  const [activeTab, setActiveTab] = useState<'topics'>('topics');
   const [expandedLevels, setExpandedLevels] = useState<Set<number>>(new Set());
 
   // Fetch student details when component mounts
@@ -213,8 +212,7 @@ const StudentPortfolio: React.FC = () => {
   };
 
   const tabs: PortfolioTab[] = [
-    { id: 'topics', label: 'Topics Covered', active: activeTab === 'topics' },
-    { id: 'projects', label: 'Projects', active: activeTab === 'projects' }
+    { id: 'topics', label: 'Topics Covered', active: activeTab === 'topics' }
   ];
 
   return (
@@ -278,136 +276,175 @@ const StudentPortfolio: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
+          {/* Student Overview Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div 
+              className="rounded-xl shadow-sm p-6 flex items-center gap-4"
+              style={{
+                backgroundColor: 'var(--color-surface)',
+                boxShadow: 'var(--shadow-sm)'
+              }}
+            >
+              <div 
+                className="p-3 rounded-lg"
+                style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+              >
+                <PersonIcon className="h-6 w-6" style={{ color: 'var(--color-accent-primary)' }} />
+              </div>
+              <div>
+                <p className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>Student</p>
+                <p className="text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>{student.name}</p>
+              </div>
+            </div>
+
+            <div 
+              className="rounded-xl shadow-sm p-6 flex items-center gap-4"
+              style={{
+                backgroundColor: 'var(--color-surface)',
+                boxShadow: 'var(--shadow-sm)'
+              }}
+            >
+              <div 
+                className="p-3 rounded-lg"
+                style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+              >
+                <TargetIcon className="h-6 w-6" style={{ color: 'var(--color-accent-primary)' }} />
+              </div>
+              <div>
+                <p className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>Career Track</p>
+                <p className="text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>{student.careerTrack}</p>
+              </div>
+            </div>
+
+            <div 
+              className="rounded-xl shadow-sm p-6 flex items-center gap-4"
+              style={{
+                backgroundColor: 'var(--color-surface)',
+                boxShadow: 'var(--shadow-sm)'
+              }}
+            >
+              <div 
+                className="p-3 rounded-lg"
+                style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+              >
+                <RocketIcon className="h-6 w-6" style={{ color: 'var(--color-accent-primary)' }} />
+              </div>
+              <div>
+                <p className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>Progress</p>
+                <p className="text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>{calculateCompletionPercentage()}%</p>
+              </div>
+            </div>
+
+            <div 
+              className="rounded-xl shadow-sm p-6 flex items-center gap-4"
+              style={{
+                backgroundColor: 'var(--color-surface)',
+                boxShadow: 'var(--shadow-sm)'
+              }}
+            >
+              <div 
+                className="p-3 rounded-lg"
+                style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+              >
+                <BarChartIcon className="h-6 w-6" style={{ color: 'var(--color-accent-primary)' }} />
+              </div>
+              <div>
+                <p className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>Attendance</p>
+                <p className="text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>{student.summaryStats.consistency}%</p>
+              </div>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left Sidebar */}
-            <div className="lg:col-span-1 border-r p-6 overflow-y-auto" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-secondary-bg)' }}>
-              {/* Profile Header */}
-              <div className="text-center mb-6">
-                <div className="w-24 h-24 rounded-lg mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: 'var(--color-accent-primary)' }}>
-                  <PersonIcon className="w-12 h-12" style={{ color: 'var(--color-text-inverse)' }} />
-                </div>
-                <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>{student.name}</h3>
-                <p className="mb-3 flex items-center justify-center gap-2" style={{ color: 'var(--color-text-secondary)' }}>
-                  <span className="w-4 h-4">📍</span>
-                  {student.department || 'N/A'}, {student.batch || 'N/A'}
-                </p>
-                
-                {/* Completion Badge and Progress */}
-                <div className="mb-4">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium mb-3" style={{ backgroundColor: 'var(--color-success-bg)', color: 'var(--color-success)' }}>
-                    <CheckCircledIcon className="w-4 h-4" />
-                    {calculateCompletionPercentage()}% completed
+            <div className="lg:col-span-1">
+              {/* Student Details Card */}
+              <div 
+                className="p-6 rounded-xl shadow-sm mb-6"
+                style={{
+                  backgroundColor: 'var(--color-surface)',
+                  boxShadow: 'var(--shadow-sm)',
+                  borderColor: 'var(--color-border)'
+                }}
+              >
+                <h3 className="text-lg font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>Student Information</h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
+                    <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Roll Number:</span>
+                    <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{student._id}</span>
                   </div>
-                  <div className="w-full rounded-full h-2" style={{ backgroundColor: 'var(--color-border-subtle)' }}>
-                    <div 
-                      className="h-2 rounded-full transition-all duration-500"
-                      style={{ 
-                        width: `${calculateCompletionPercentage()}%`,
-                        backgroundColor: 'var(--color-success)'
-                      }}
-                    ></div>
+                  <div className="flex justify-between items-center py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
+                    <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Department:</span>
+                    <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{student.department || 'N/A'}</span>
                   </div>
-                </div>
-                
-                {/* Status Pills */}
-                <div className="space-y-2 mb-6">
-                  <div className="px-3 py-2 rounded-lg text-sm" style={{ backgroundColor: 'var(--color-accent-tertiary)', color: 'var(--color-accent-primary)' }}>
-                    Track: {student.careerTrack}
+                  <div className="flex justify-between items-center py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
+                    <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Batch:</span>
+                    <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{student.batch || 'N/A'}</span>
                   </div>
-                  <div className="px-3 py-2 rounded-lg text-sm" style={{ backgroundColor: 'var(--color-tertiary-bg)', color: 'var(--color-text-secondary)' }}>
-                    Duration: {student.learningTimeline.length} months
+                  <div className="flex justify-between items-center py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
+                    <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Enrolled Date:</span>
+                    <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{student.enrolledDate}</span>
                   </div>
-                  <div className="px-3 py-2 rounded-lg text-sm" style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-text-tertiary)' }}>
-                    Last verified: {formatDate(new Date().toISOString())}
-                  </div>
-                </div>
-
-                {/* Skills */}
-                <div className="mb-6">
-                  <h4 className="text-sm font-semibold mb-3 text-left" style={{ color: 'var(--color-text-secondary)' }}>SKILLS</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {getSkillsForTrack().map((skill) => (
-                      <span
-                        key={skill}
-                        className="px-3 py-1 rounded-full text-xs"
-                        style={{ 
-                          backgroundColor: 'var(--color-surface)', 
-                          color: 'var(--color-text-secondary)',
-                          borderColor: 'var(--color-border)',
-                          border: '1px solid'
-                        }}
-                      >
-                        {skill}
-                      </span>
-                    ))}
+                  <div className="flex justify-between items-center py-2">
+                    <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Last Active:</span>
+                    <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{formatDate(new Date().toISOString())}</span>
                   </div>
                 </div>
               </div>
 
-              {/* Recommended Roles */}
-              <div className="mb-6">
-                <h4 className="text-sm font-semibold mb-3" style={{ color: 'var(--color-text-secondary)' }}>RECOMMENDED ROLES</h4>
+              {/* Skills Card */}
+              <div 
+                className="p-6 rounded-xl shadow-sm mb-6"
+                style={{
+                  backgroundColor: 'var(--color-surface)',
+                  boxShadow: 'var(--shadow-sm)',
+                  borderColor: 'var(--color-border)'
+                }}
+              >
+                <h3 className="text-lg font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>Skills</h3>
+                <div className="flex flex-wrap gap-2">
+                  {getSkillsForTrack().map((skill) => (
+                    <span
+                      key={skill}
+                      className="px-3 py-1 rounded-lg text-sm"
+                      style={{ 
+                        backgroundColor: 'var(--color-accent-tertiary)', 
+                        color: 'var(--color-accent-primary)'
+                      }}
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Recommended Roles Card */}
+              <div 
+                className="p-6 rounded-xl shadow-sm"
+                style={{
+                  backgroundColor: 'var(--color-surface)',
+                  boxShadow: 'var(--shadow-sm)',
+                  borderColor: 'var(--color-border)'
+                }}
+              >
+                <h3 className="text-lg font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>Recommended Roles</h3>
                 <div className="space-y-2">
                   {getRecommendedRoles().map((role) => (
                     <div
                       key={role}
-                      className="flex items-center justify-between p-3 rounded-lg"
-                      style={{ backgroundColor: 'var(--color-surface)' }}
+                      className="p-2 rounded-lg text-sm"
+                      style={{ 
+                        backgroundColor: 'var(--color-secondary-bg)',
+                        color: 'var(--color-text-secondary)'
+                      }}
                     >
-                      <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{role}</span>
-                      <span style={{ color: 'var(--color-text-muted)' }}>⋯</span>
+                      {role}
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Performance Metrics */}
-              <div className="mb-6">
-                <h4 className="text-sm font-semibold mb-3" style={{ color: 'var(--color-text-secondary)' }}>PERFORMANCE</h4>
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center p-2 rounded" style={{ backgroundColor: 'var(--color-surface)' }}>
-                    <span className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>Attendance</span>
-                    <span className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>{student.summaryStats.consistency}%</span>
-                  </div>
-                  <div className="flex justify-between items-center p-2 rounded" style={{ backgroundColor: 'var(--color-surface)' }}>
-                    <span className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>Progress</span>
-                    <span className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>{student.summaryStats.progress}%</span>
-                  </div>
-                  <div className="flex justify-between items-center p-2 rounded" style={{ backgroundColor: 'var(--color-surface)' }}>
-                    <span className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>Leaderboard</span>
-                    <span className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>{student.summaryStats.leaderboard}%</span>
-                  </div>
-                </div>
-              </div>
 
-              {/* Career Readiness */}
-              <div className="mb-6">
-                <h4 className="text-sm font-semibold mb-3" style={{ color: 'var(--color-text-secondary)' }}>CAREER READINESS</h4>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between p-2 rounded" style={{ backgroundColor: 'var(--color-success-bg)' }}>
-                    <span className="text-xs" style={{ color: 'var(--color-success)' }}>Portfolio Ready</span>
-                    <span className="text-sm font-medium" style={{ color: 'var(--color-success)' }}>✓</span>
-                  </div>
-                  <div className="flex items-center justify-between p-2 rounded" style={{ backgroundColor: 'var(--color-success-bg)' }}>
-                    <span className="text-xs" style={{ color: 'var(--color-success)' }}>Skills Verified</span>
-                    <span className="text-sm font-medium" style={{ color: 'var(--color-success)' }}>✓</span>
-                  </div>
-                  <div className="flex items-center justify-between p-2 rounded" style={{ backgroundColor: 'var(--color-warning-bg)' }}>
-                    <span className="text-xs" style={{ color: 'var(--color-warning)' }}>Industry Ready</span>
-                    <span className="text-sm font-medium" style={{ color: 'var(--color-warning)' }}>~</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Certificate ID */}
-              <div>
-                <h4 className="text-sm font-semibold mb-3" style={{ color: 'var(--color-text-secondary)' }}>CERTIFICATE ID</h4>
-                <div className="p-3 rounded-lg" style={{ backgroundColor: 'var(--color-surface)' }}>
-                  <p className="text-sm font-mono" style={{ color: 'var(--color-text-secondary)' }}>
-                    SYNCNER-2025-{student._id.slice(-8).toUpperCase()}-{Math.random().toString(36).substr(2, 6).toUpperCase()}
-                  </p>
-                </div>
-              </div>
             </div>
 
             {/* Main Content */}
@@ -651,100 +688,13 @@ const StudentPortfolio: React.FC = () => {
                       ))}
                     </div>
 
-                    {/* Strengths & Areas for Improvement */}
-                    <div className="p-6 rounded-lg" style={{ 
-                      backgroundColor: 'var(--color-secondary-bg)',
-                      borderColor: 'var(--color-border)',
-                      border: '1px solid',
-                      boxShadow: 'var(--shadow-sm)'
-                    }}>
-                      <h4 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--color-text-primary)' }}>
-                        <TargetIcon className="w-5 h-5" style={{ color: 'var(--color-accent-primary)' }} />
-                        Strengths & Areas for Improvement
-                      </h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                          <h5 className="font-medium mb-3" style={{ color: 'var(--color-success)' }}>Strengths</h5>
-                          <div className="space-y-2">
-                            {['Consistent attendance', 'Strong problem-solving skills', 'Good communication'].map((strength, index) => (
-                              <div key={index} className="flex items-center gap-2 text-sm">
-                                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--color-success)' }}></div>
-                                <span style={{ color: 'var(--color-text-secondary)' }}>{strength}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                        <div>
-                          <h5 className="font-medium mb-3" style={{ color: 'var(--color-warning)' }}>Areas for Improvement</h5>
-                          <div className="space-y-2">
-                            {['Advanced project work', 'Industry experience', 'Specialized certifications'].map((area, index) => (
-                              <div key={index} className="flex items-center gap-2 text-sm">
-                                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--color-warning)' }}></div>
-                                <span style={{ color: 'var(--color-text-secondary)' }}>{area}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
 
-                    {/* Learning Achievements */}
-                    <div className="p-6 rounded-lg" style={{ 
-                      backgroundColor: 'var(--color-secondary-bg)',
-                      borderColor: 'var(--color-border)',
-                      border: '1px solid',
-                      boxShadow: 'var(--shadow-sm)'
-                    }}>
-                      <h4 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--color-text-primary)' }}>
-                        <StarIcon className="w-5 h-5" style={{ color: 'var(--color-success)' }} />
-                        Learning Achievements
-                      </h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="p-4 rounded-lg border" style={{ 
-                          backgroundColor: 'var(--color-surface)', 
-                          borderColor: 'var(--color-success)'
-                        }}>
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--color-success)' }}>
-                              <CheckCircledIcon className="w-5 h-5" style={{ color: 'var(--color-text-inverse)' }} />
-                            </div>
-                            <div>
-                              <h5 className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Consistent Learner</h5>
-                              <p className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>Maintained {student.summaryStats.consistency}% attendance</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="p-4 rounded-lg border" style={{ 
-                          backgroundColor: 'var(--color-surface)', 
-                          borderColor: 'var(--color-accent-primary)'
-                        }}>
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--color-accent-primary)' }}>
-                              <RocketIcon className="w-5 h-5" style={{ color: 'var(--color-text-inverse)' }} />
-                            </div>
-                            <div>
-                              <h5 className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Fast Learner</h5>
-                              <p className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>Completed {student.learningTimeline.filter(l => l.status === 'completed').length} levels</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+
+
                   </div>
                 )}
 
-                {/* Projects Content */}
-                {activeTab === 'projects' && (
-                  <div className="text-center py-12">
-                    <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
-                      <TargetIcon className="w-8 h-8" style={{ color: 'var(--color-text-muted)' }} />
-                    </div>
-                    <h4 className="text-lg font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>Projects Coming Soon</h4>
-                    <p style={{ color: 'var(--color-text-tertiary)' }}>
-                      Student projects will be displayed here once they are completed and submitted.
-                    </p>
-                  </div>
-                )}
+
               </div>
             </div>
           </div>
