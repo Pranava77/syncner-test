@@ -267,231 +267,223 @@ const StudentPortfolio: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Left Sidebar */}
-            <div className="lg:col-span-1">
-              <ThemeContainer variant="surface" className="rounded-xl shadow-sm p-6 mb-6">
-                {/* Recommended Roles */}
-                <div className="mb-6">
-                  <h4 className="text-sm font-semibold mb-3" style={{ color: 'var(--color-text-secondary)' }}>RECOMMENDED ROLES</h4>
-                  <div className="space-y-2">
-                    {getRecommendedRoles().map((role, index) => (
-                      <div
-                        key={role}
-                        className="group relative p-3 rounded-lg transition-all duration-200 cursor-pointer"
-                        style={{ 
-                          backgroundColor: 'var(--color-surface)',
-                          border: '1px solid',
-                          borderColor: 'var(--color-border)'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
-                          e.currentTarget.style.backgroundColor = 'var(--color-accent-tertiary)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.borderColor = 'var(--color-border)';
-                          e.currentTarget.style.backgroundColor = 'var(--color-surface)';
-                        }}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--color-accent-primary)' }}></div>
-                            <span className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>{role}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs px-2 py-1 rounded-full" style={{ 
-                              backgroundColor: 'var(--color-success-bg)', 
-                              color: 'var(--color-success)' 
-                            }}>
-                              Match
-                            </span>
-                            <RocketIcon className="w-4 h-4 transition-transform group-hover:scale-110" style={{ color: 'var(--color-accent-primary)' }} />
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+          <div className="max-w-4xl mx-auto">
+            <ThemeContainer variant="surface" className="rounded-xl shadow-sm p-6">
+              {/* Profile Row */}
+              <div className="flex items-center gap-6 mb-8">
+                <div className="w-20 h-20 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'var(--color-accent-primary)' }}>
+                  <PersonIcon className="w-12 h-12" style={{ color: 'var(--color-text-inverse)' }} />
                 </div>
-
-                {/* Certificate ID */}
-                <div>
-                  <h4 className="text-sm font-semibold mb-3" style={{ color: 'var(--color-text-secondary)' }}>CERTIFICATE ID</h4>
-                  <div className="relative group">
-                    <div className="p-4 rounded-lg border-2 transition-all duration-200 cursor-pointer" 
-                         style={{ 
-                           backgroundColor: 'var(--color-surface)',
-                           borderColor: 'var(--color-border)',
-                           borderStyle: 'dashed'
-                         }}
-                         onMouseEnter={(e) => {
-                           e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
-                           e.currentTarget.style.backgroundColor = 'var(--color-accent-tertiary)';
-                         }}
-                         onMouseLeave={(e) => {
-                           e.currentTarget.style.borderColor = 'var(--color-border)';
-                           e.currentTarget.style.backgroundColor = 'var(--color-surface)';
-                         }}
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <div className="w-3 h-3 rounded-full" style={{ backgroundColor: 'var(--color-success)' }}></div>
-                          <span className="text-xs font-medium" style={{ color: 'var(--color-success)' }}>VERIFIED</span>
-                        </div>
-                        <CheckCircledIcon className="w-4 h-4" style={{ color: 'var(--color-success)' }} />
-                      </div>
-                      <p className="text-sm font-mono break-all" style={{ color: 'var(--color-text-secondary)' }}>
-                        SYNCNER-2025-{student._id.slice(-8).toUpperCase()}-{Math.random().toString(36).substr(2, 6).toUpperCase()}
-                      </p>
-                      <div className="mt-2 pt-2 border-t" style={{ borderColor: 'var(--color-border)' }}>
-                        <p className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
-                          Generated on {new Date().toLocaleDateString()}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </ThemeContainer>
-            </div>
-
-            {/* Main Content */}
-            <div className="lg:col-span-2">
-              <ThemeContainer variant="surface" className="rounded-xl shadow-sm p-6">
-                {/* Profile Row */}
-                <div className="flex items-center gap-6 mb-8">
-                  <div className="w-20 h-20 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'var(--color-accent-primary)' }}>
-                    <PersonIcon className="w-12 h-12" style={{ color: 'var(--color-text-inverse)' }} />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="text-2xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>{student.name}</h4>
-                    <p className="flex items-center gap-2 text-lg mb-3" style={{ color: 'var(--color-text-secondary)' }}>
-                      <span className="w-4 h-4">📍</span>
-                      {student.department || 'N/A'}, {student.batch || 'N/A'}
-                    </p>
-                    
-                    {/* Completion Badge and Progress */}
-                    <div className="mb-4">
-                      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-3" style={{ backgroundColor: 'var(--color-success-bg)', color: 'var(--color-success)' }}>
-                        <CheckCircledIcon className="w-4 h-4" />
-                        {calculateCompletionPercentage()}% completed
-                      </div>
-                      <div className="w-full rounded-full h-3" style={{ backgroundColor: 'var(--color-border-subtle)' }}>
-                        <div 
-                          className="h-3 rounded-full transition-all duration-500"
-                          style={{ 
-                            width: `${calculateCompletionPercentage()}%`,
-                            backgroundColor: 'var(--color-success)'
-                          }}
-                        ></div>
-                      </div>
-                    </div>
-
-                    {/* Status Pills */}
-                    <div className="flex flex-wrap gap-2">
-                      <div className="px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: 'var(--color-accent-tertiary)', color: 'var(--color-accent-primary)' }}>
-                        {student.careerTrack}
-                      </div>
-                      <div className="px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: 'var(--color-secondary-bg)', color: 'var(--color-text-secondary)' }}>
-                        {student.batch || 'N/A'}
-                      </div>
-                      <div className="px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: 'var(--color-success-bg)', color: 'var(--color-success)' }}>
-                        Active
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Introduction */}
-                <div className="mb-8">
-                  <h3 className="text-xl font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>Introduction</h3>
-                  <p className="text-base leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-                    {student.name} is a dedicated student pursuing {student.careerTrack} with a strong focus on practical learning and skill development. 
-                    Currently enrolled in batch {student.batch || 'N/A'} at {student.department || 'N/A'} department, 
-                    {student.name} has demonstrated consistent progress and commitment to mastering the curriculum.
+                <div className="flex-1">
+                  <h4 className="text-2xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>{student.name}</h4>
+                  <p className="flex items-center gap-2 text-lg mb-3" style={{ color: 'var(--color-text-secondary)' }}>
+                    <span className="w-4 h-4">📍</span>
+                    {student.department || 'N/A'}, {student.batch || 'N/A'}
                   </p>
-                </div>
+                  
+                  {/* Completion Badge and Progress */}
+                  <div className="mb-4">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-3" style={{ backgroundColor: 'var(--color-success-bg)', color: 'var(--color-success)' }}>
+                      <CheckCircledIcon className="w-4 h-4" />
+                      {calculateCompletionPercentage()}% completed
+                    </div>
+                    <div className="w-full rounded-full h-3" style={{ backgroundColor: 'var(--color-border-subtle)' }}>
+                      <div 
+                        className="h-3 rounded-full transition-all duration-500"
+                        style={{ 
+                          width: `${calculateCompletionPercentage()}%`,
+                          backgroundColor: 'var(--color-success)'
+                        }}
+                      ></div>
+                    </div>
+                  </div>
 
-                {/* Learning Levels */}
-                <div className="space-y-4">
-                  <h3 className="text-xl font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>Learning Journey</h3>
-                  {student.learningTimeline.map((level, index) => (
-                    <ThemeContainer 
-                      key={index}
-                      variant="secondary" 
-                      className="rounded-lg border transition-all duration-200"
-                      style={{ borderColor: 'var(--color-border)' }}
+                  {/* Status Pills */}
+                  <div className="flex flex-wrap gap-2">
+                    <div className="px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: 'var(--color-accent-tertiary)', color: 'var(--color-accent-primary)' }}>
+                      {student.careerTrack}
+                    </div>
+                    <div className="px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: 'var(--color-secondary-bg)', color: 'var(--color-text-secondary)' }}>
+                      {student.batch || 'N/A'}
+                    </div>
+                    <div className="px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: 'var(--color-success-bg)', color: 'var(--color-success)' }}>
+                      Active
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Introduction */}
+              <div className="mb-8">
+                <h3 className="text-xl font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>Introduction</h3>
+                <p className="text-base leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+                  {student.name} is a dedicated student pursuing {student.careerTrack} with a strong focus on practical learning and skill development. 
+                  Currently enrolled in batch {student.batch || 'N/A'} at {student.department || 'N/A'} department, 
+                  {student.name} has demonstrated consistent progress and commitment to mastering the curriculum.
+                </p>
+              </div>
+
+              {/* Recommended Roles */}
+              <div className="mb-8">
+                <h3 className="text-xl font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>Recommended Roles</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {getRecommendedRoles().map((role, index) => (
+                    <div
+                      key={role}
+                      className="group relative p-4 rounded-lg transition-all duration-200 cursor-pointer"
+                      style={{ 
+                        backgroundColor: 'var(--color-surface)',
+                        border: '1px solid',
+                        borderColor: 'var(--color-border)'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                        e.currentTarget.style.backgroundColor = 'var(--color-accent-tertiary)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-border)';
+                        e.currentTarget.style.backgroundColor = 'var(--color-surface)';
+                      }}
                     >
-                      <div
-                        className="flex items-center justify-between p-4 cursor-pointer"
-                        onClick={() => toggleLevelExpansion(index)}
-                      >
+                      <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ 
-                            backgroundColor: level.status === 'completed' ? 'var(--color-success)' : 
-                                          level.status === 'in-progress' ? 'var(--color-warning)' : 'var(--color-text-muted)'
-                          }}>
-                            {level.status === 'completed' ? (
-                              <CheckCircledIcon className="w-5 h-5" style={{ color: 'var(--color-text-inverse)' }} />
-                            ) : level.status === 'in-progress' ? (
-                              <ClockIcon className="w-5 h-5" style={{ color: 'var(--color-text-inverse)' }} />
-                            ) : (
-                              <EyeOpenIcon className="w-5 h-5" style={{ color: 'var(--color-text-inverse)' }} />
-                            )}
-                          </div>
-                          <div>
-                            <h4 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-                              {level.courseName}
-                            </h4>
-                            <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                              Level {level.level}
-                            </p>
-                          </div>
+                          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--color-accent-primary)' }}></div>
+                          <span className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>{role}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="text-sm px-2 py-1 rounded-full" style={{ 
-                            backgroundColor: level.status === 'completed' ? 'var(--color-success-bg)' : 
-                                          level.status === 'in-progress' ? 'var(--color-warning-bg)' : 'var(--color-tertiary-bg)',
-                            color: level.status === 'completed' ? 'var(--color-success)' : 
-                                   level.status === 'in-progress' ? 'var(--color-warning)' : 'var(--color-text-secondary)'
+                          <span className="text-xs px-2 py-1 rounded-full" style={{ 
+                            backgroundColor: 'var(--color-success-bg)', 
+                            color: 'var(--color-success)' 
                           }}>
-                            {level.status}
+                            Match
                           </span>
-                          {expandedLevels.has(index) ? (
-                            <ChevronDownIcon className="w-4 h-4" style={{ color: 'var(--color-text-secondary)' }} />
-                          ) : (
-                            <ChevronRightIcon className="w-4 h-4" style={{ color: 'var(--color-text-secondary)' }} />
-                          )}
+                          <RocketIcon className="w-4 h-4 transition-transform group-hover:scale-110" style={{ color: 'var(--color-accent-primary)' }} />
                         </div>
                       </div>
-                      
-                      {expandedLevels.has(index) && (
-                        <ThemeContainer variant="surface" className="p-4 border-t rounded-t-none">
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div className="text-center p-3 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
-                              <div className="text-lg font-bold" style={{ color: 'var(--color-accent-primary)' }}>
-                                {level.learn?.completed ? '✓' : '○'}
-                              </div>
-                              <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Learning</div>
-                            </div>
-                            <div className="text-center p-3 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
-                              <div className="text-lg font-bold" style={{ color: 'var(--color-accent-primary)' }}>
-                                {level.test?.completed ? '✓' : '○'}
-                              </div>
-                              <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Test</div>
-                            </div>
-                            <div className="text-center p-3 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
-                              <div className="text-lg font-bold" style={{ color: 'var(--color-accent-primary)' }}>
-                                {level.exercise?.completed ? '✓' : '○'}
-                              </div>
-                              <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Exercise</div>
-                            </div>
-                          </div>
-                        </ThemeContainer>
-                      )}
-                    </ThemeContainer>
+                    </div>
                   ))}
                 </div>
-              </ThemeContainer>
-            </div>
+              </div>
+
+              {/* Certificate ID */}
+              <div className="mb-8">
+                <h3 className="text-xl font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>Certificate ID</h3>
+                <div className="relative group">
+                  <div className="p-6 rounded-lg border-2 transition-all duration-200 cursor-pointer" 
+                       style={{ 
+                         backgroundColor: 'var(--color-surface)',
+                         borderColor: 'var(--color-border)',
+                         borderStyle: 'dashed'
+                       }}
+                       onMouseEnter={(e) => {
+                         e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                         e.currentTarget.style.backgroundColor = 'var(--color-accent-tertiary)';
+                       }}
+                       onMouseLeave={(e) => {
+                         e.currentTarget.style.borderColor = 'var(--color-border)';
+                         e.currentTarget.style.backgroundColor = 'var(--color-surface)';
+                       }}
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: 'var(--color-success)' }}></div>
+                        <span className="text-sm font-medium" style={{ color: 'var(--color-success)' }}>VERIFIED</span>
+                      </div>
+                      <CheckCircledIcon className="w-5 h-5" style={{ color: 'var(--color-success)' }} />
+                    </div>
+                    <p className="text-base font-mono break-all mb-3" style={{ color: 'var(--color-text-secondary)' }}>
+                      SYNCNER-2025-{student._id.slice(-8).toUpperCase()}-{Math.random().toString(36).substr(2, 6).toUpperCase()}
+                    </p>
+                    <div className="pt-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
+                      <p className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
+                        Generated on {new Date().toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Learning Levels */}
+              <div className="space-y-4">
+                <h3 className="text-xl font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>Learning Journey</h3>
+                {student.learningTimeline.map((level, index) => (
+                  <ThemeContainer 
+                    key={index}
+                    variant="secondary" 
+                    className="rounded-lg border transition-all duration-200"
+                    style={{ borderColor: 'var(--color-border)' }}
+                  >
+                    <div
+                      className="flex items-center justify-between p-4 cursor-pointer"
+                      onClick={() => toggleLevelExpansion(index)}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ 
+                          backgroundColor: level.status === 'completed' ? 'var(--color-success)' : 
+                                        level.status === 'in-progress' ? 'var(--color-warning)' : 'var(--color-text-muted)'
+                        }}>
+                          {level.status === 'completed' ? (
+                            <CheckCircledIcon className="w-5 h-5" style={{ color: 'var(--color-text-inverse)' }} />
+                          ) : level.status === 'in-progress' ? (
+                            <ClockIcon className="w-5 h-5" style={{ color: 'var(--color-text-inverse)' }} />
+                          ) : (
+                            <EyeOpenIcon className="w-5 h-5" style={{ color: 'var(--color-text-inverse)' }} />
+                          )}
+                        </div>
+                        <div>
+                          <h4 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                            {level.courseName}
+                          </h4>
+                          <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                            Level {level.level}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm px-2 py-1 rounded-full" style={{ 
+                          backgroundColor: level.status === 'completed' ? 'var(--color-success-bg)' : 
+                                        level.status === 'in-progress' ? 'var(--color-warning-bg)' : 'var(--color-tertiary-bg)',
+                          color: level.status === 'completed' ? 'var(--color-success)' : 
+                                 level.status === 'in-progress' ? 'var(--color-warning)' : 'var(--color-text-secondary)'
+                        }}>
+                          {level.status}
+                        </span>
+                        {expandedLevels.has(index) ? (
+                          <ChevronDownIcon className="w-4 h-4" style={{ color: 'var(--color-text-secondary)' }} />
+                        ) : (
+                          <ChevronRightIcon className="w-4 h-4" style={{ color: 'var(--color-text-secondary)' }} />
+                        )}
+                      </div>
+                    </div>
+                    
+                    {expandedLevels.has(index) && (
+                      <ThemeContainer variant="surface" className="p-4 border-t rounded-t-none">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div className="text-center p-3 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
+                            <div className="text-lg font-bold" style={{ color: 'var(--color-accent-primary)' }}>
+                              {level.learn?.completed ? '✓' : '○'}
+                            </div>
+                            <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Learning</div>
+                          </div>
+                          <div className="text-center p-3 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
+                            <div className="text-lg font-bold" style={{ color: 'var(--color-accent-primary)' }}>
+                              {level.test?.completed ? '✓' : '○'}
+                            </div>
+                            <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Test</div>
+                          </div>
+                          <div className="text-center p-3 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
+                            <div className="text-lg font-bold" style={{ color: 'var(--color-accent-primary)' }}>
+                              {level.exercise?.completed ? '✓' : '○'}
+                            </div>
+                            <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Exercise</div>
+                          </div>
+                        </div>
+                      </ThemeContainer>
+                    )}
+                  </ThemeContainer>
+                ))}
+              </div>
+            </ThemeContainer>
           </div>
         </motion.div>
       </div>
