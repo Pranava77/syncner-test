@@ -437,39 +437,185 @@ const StudentPortfolio: React.FC = () => {
                   
                   // Generate dynamic tasks based on level data
                   const getTasksForLevel = () => {
-                    const baseTasks = [
-                      { title: `Task: Complete ${level.courseName} learning module`, brief: `Brief: Master core concepts` },
-                      { title: `Task: Take ${level.courseName} assessment`, brief: `Brief: Test your knowledge` },
-                      { title: `Task: Practice ${level.courseName} exercises`, brief: `Brief: Apply what you learned` }
-                    ];
+                    interface Task {
+                      title: string;
+                      brief: string;
+                      status: 'completed' | 'in-progress' | 'not-started';
+                      type: string;
+                    }
                     
-                    // Add level-specific tasks
-                    if (level.courseName?.toLowerCase().includes('web')) {
-                      baseTasks.push(
-                        { title: 'Task: Build a responsive website', brief: 'Brief: Create HTML/CSS layout' },
-                        { title: 'Task: Implement JavaScript features', brief: 'Brief: Add interactivity' }
-                      );
-                    } else if (level.courseName?.toLowerCase().includes('data')) {
-                      baseTasks.push(
-                        { title: 'Task: Analyze dataset', brief: 'Brief: Perform data exploration' },
-                        { title: 'Task: Create visualizations', brief: 'Brief: Build charts and graphs' }
-                      );
-                    } else if (level.courseName?.toLowerCase().includes('mobile')) {
-                      baseTasks.push(
-                        { title: 'Task: Design mobile UI', brief: 'Brief: Create app interface' },
-                        { title: 'Task: Implement navigation', brief: 'Brief: Add routing and navigation' }
-                      );
-                    } else if (level.courseName?.toLowerCase().includes('cyber')) {
-                      baseTasks.push(
-                        { title: 'Task: Security assessment', brief: 'Brief: Identify vulnerabilities' },
-                        { title: 'Task: Penetration testing', brief: 'Brief: Test security measures' }
-                      );
+                    const baseTasks: Task[] = [];
+                    
+                    // Add core learning tasks based on actual completion status
+                    if (level.learn) {
+                      baseTasks.push({
+                        title: `Task: Complete ${level.courseName || 'Learning Module'} content`,
+                        brief: level.learn.completed ? 'Brief: Content mastered successfully' : 'Brief: Continue learning core concepts',
+                        status: level.learn.completed ? 'completed' : 'in-progress',
+                        type: 'learning'
+                      });
+                    }
+                    
+                    if (level.test) {
+                      baseTasks.push({
+                        title: `Task: Take ${level.courseName || 'Module'} assessment`,
+                        brief: level.test.completed ? `Brief: Assessment completed with ${assessmentScore}% score` : 'Brief: Test your knowledge',
+                        status: level.test.completed ? 'completed' : 'in-progress',
+                        type: 'assessment'
+                      });
+                    }
+                    
+                    if (level.exercise) {
+                      baseTasks.push({
+                        title: `Task: Practice ${level.courseName || 'Module'} exercises`,
+                        brief: level.exercise.completed ? 'Brief: Practical exercises completed' : 'Brief: Apply what you learned',
+                        status: level.exercise.completed ? 'completed' : 'in-progress',
+                        type: 'practice'
+                      });
+                    }
+                    
+                    // Add course-specific advanced tasks based on career track and completion status
+                    const isWebDev = level.courseName?.toLowerCase().includes('web') || student.careerTrack === 'web-development';
+                    const isDataScience = level.courseName?.toLowerCase().includes('data') || student.careerTrack === 'data-science';
+                    const isMobileDev = level.courseName?.toLowerCase().includes('mobile') || student.careerTrack === 'mobile-development';
+                    const isCyberSec = level.courseName?.toLowerCase().includes('cyber') || student.careerTrack === 'cybersecurity';
+                    
+                    if (isWebDev) {
+                      if (level.learn?.completed) {
+                        baseTasks.push({
+                          title: 'Task: Build responsive website layout',
+                          brief: 'Brief: Create HTML/CSS responsive design',
+                          status: level.test?.completed ? 'completed' : 'in-progress',
+                          type: 'project'
+                        });
+                      }
+                      if (level.test?.completed) {
+                        baseTasks.push({
+                          title: 'Task: Implement JavaScript functionality',
+                          brief: 'Brief: Add interactive features and DOM manipulation',
+                          status: level.exercise?.completed ? 'completed' : 'in-progress',
+                          type: 'project'
+                        });
+                      }
+                      if (level.exercise?.completed) {
+                        baseTasks.push({
+                          title: 'Task: Create full-stack application',
+                          brief: 'Brief: Integrate frontend with backend API',
+                          status: 'completed',
+                          type: 'capstone'
+                        });
+                      }
+                    } else if (isDataScience) {
+                      if (level.learn?.completed) {
+                        baseTasks.push({
+                          title: 'Task: Perform exploratory data analysis',
+                          brief: 'Brief: Analyze dataset and identify patterns',
+                          status: level.test?.completed ? 'completed' : 'in-progress',
+                          type: 'analysis'
+                        });
+                      }
+                      if (level.test?.completed) {
+                        baseTasks.push({
+                          title: 'Task: Create data visualizations',
+                          brief: 'Brief: Build charts and interactive dashboards',
+                          status: level.exercise?.completed ? 'completed' : 'in-progress',
+                          type: 'visualization'
+                        });
+                      }
+                      if (level.exercise?.completed) {
+                        baseTasks.push({
+                          title: 'Task: Build machine learning model',
+                          brief: 'Brief: Train and evaluate predictive model',
+                          status: 'completed',
+                          type: 'capstone'
+                        });
+                      }
+                    } else if (isMobileDev) {
+                      if (level.learn?.completed) {
+                        baseTasks.push({
+                          title: 'Task: Design mobile app interface',
+                          brief: 'Brief: Create wireframes and UI mockups',
+                          status: level.test?.completed ? 'completed' : 'in-progress',
+                          type: 'design'
+                        });
+                      }
+                      if (level.test?.completed) {
+                        baseTasks.push({
+                          title: 'Task: Implement app navigation',
+                          brief: 'Brief: Add routing and state management',
+                          status: level.exercise?.completed ? 'completed' : 'in-progress',
+                          type: 'development'
+                        });
+                      }
+                      if (level.exercise?.completed) {
+                        baseTasks.push({
+                          title: 'Task: Deploy mobile application',
+                          brief: 'Brief: Build and publish to app stores',
+                          status: 'completed',
+                          type: 'capstone'
+                        });
+                      }
+                    } else if (isCyberSec) {
+                      if (level.learn?.completed) {
+                        baseTasks.push({
+                          title: 'Task: Conduct security assessment',
+                          brief: 'Brief: Identify system vulnerabilities',
+                          status: level.test?.completed ? 'completed' : 'in-progress',
+                          type: 'assessment'
+                        });
+                      }
+                      if (level.test?.completed) {
+                        baseTasks.push({
+                          title: 'Task: Perform penetration testing',
+                          brief: 'Brief: Test security measures and controls',
+                          status: level.exercise?.completed ? 'completed' : 'in-progress',
+                          type: 'testing'
+                        });
+                      }
+                      if (level.exercise?.completed) {
+                        baseTasks.push({
+                          title: 'Task: Create security report',
+                          brief: 'Brief: Document findings and recommendations',
+                          status: 'completed',
+                          type: 'capstone'
+                        });
+                      }
                     } else {
-                      // Generic tasks for other courses
-                      baseTasks.push(
-                        { title: `Task: ${level.courseName} project`, brief: 'Brief: Apply learned concepts' },
-                        { title: `Task: ${level.courseName} documentation`, brief: 'Brief: Document your work' }
-                      );
+                      // Generic advanced tasks for other courses
+                      if (level.learn?.completed) {
+                        baseTasks.push({
+                          title: `Task: ${level.courseName || 'Module'} project planning`,
+                          brief: 'Brief: Plan and design project structure',
+                          status: level.test?.completed ? 'completed' : 'in-progress',
+                          type: 'planning'
+                        });
+                      }
+                      if (level.test?.completed) {
+                        baseTasks.push({
+                          title: `Task: ${level.courseName || 'Module'} implementation`,
+                          brief: 'Brief: Build and develop project',
+                          status: level.exercise?.completed ? 'completed' : 'in-progress',
+                          type: 'development'
+                        });
+                      }
+                      if (level.exercise?.completed) {
+                        baseTasks.push({
+                          title: `Task: ${level.courseName || 'Module'} documentation`,
+                          brief: 'Brief: Document and present final project',
+                          status: 'completed',
+                          type: 'capstone'
+                        });
+                      }
+                    }
+                    
+                    // Add optional/extra credit tasks based on student performance
+                    if (assessmentScore >= 90) {
+                      baseTasks.push({
+                        title: 'Task: Advanced challenge (Optional)',
+                        brief: 'Brief: Take on extra difficult problems',
+                        status: 'not-started',
+                        type: 'optional'
+                      });
                     }
                     
                     return baseTasks;
@@ -600,36 +746,112 @@ const StudentPortfolio: React.FC = () => {
                           <div className="mb-4">
                             <h5 className="text-lg font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>Tasks</h5>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              {tasks.map((task, taskIndex) => (
-                                <div key={taskIndex} className="p-4 rounded-lg border transition-all duration-200 hover:shadow-md" 
-                                     style={{ 
-                                       backgroundColor: 'var(--color-surface)',
-                                       borderColor: 'var(--color-border)'
-                                     }}>
-                                  <div className="flex items-center justify-between">
-                                    <div>
-                                      <h6 className="font-medium mb-1" style={{ color: 'var(--color-text-primary)' }}>
-                                        {task.title}
-                                      </h6>
-                                      <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                                        {task.brief}
-                                      </p>
+                              {tasks.map((task, taskIndex) => {
+                                // Get status-based styling
+                                const getStatusStyle = (status: string) => {
+                                  switch (status) {
+                                    case 'completed':
+                                      return {
+                                        bg: 'var(--color-success-bg)',
+                                        color: 'var(--color-success)',
+                                        border: 'var(--color-success)',
+                                        icon: '✓'
+                                      };
+                                    case 'in-progress':
+                                      return {
+                                        bg: 'var(--color-warning-bg)',
+                                        color: 'var(--color-warning)',
+                                        border: 'var(--color-warning)',
+                                        icon: '⟳'
+                                      };
+                                    case 'not-started':
+                                      return {
+                                        bg: 'var(--color-tertiary-bg)',
+                                        color: 'var(--color-text-secondary)',
+                                        border: 'var(--color-border)',
+                                        icon: '○'
+                                      };
+                                    default:
+                                      return {
+                                        bg: 'var(--color-surface)',
+                                        color: 'var(--color-text-secondary)',
+                                        border: 'var(--color-border)',
+                                        icon: '○'
+                                      };
+                                  }
+                                };
+                                
+                                const statusStyle = getStatusStyle(task.status);
+                                
+                                return (
+                                  <div key={taskIndex} className="p-4 rounded-lg border transition-all duration-200 hover:shadow-md relative" 
+                                       style={{ 
+                                         backgroundColor: 'var(--color-surface)',
+                                         borderColor: statusStyle.border,
+                                         borderWidth: '2px'
+                                       }}>
+                                    {/* Status indicator */}
+                                    <div className="absolute top-2 right-2">
+                                      <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
+                                           style={{ 
+                                             backgroundColor: statusStyle.bg,
+                                             color: statusStyle.color
+                                           }}>
+                                        {statusStyle.icon}
+                                      </div>
                                     </div>
-                                    <button className="px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-[var(--color-accent-tertiary)]"
-                                            style={{ 
-                                              backgroundColor: 'var(--color-secondary-bg)',
-                                              color: 'var(--color-text-secondary)'
-                                            }}>
-                                      View
-                                    </button>
+                                    
+                                    <div className="flex items-start justify-between pr-8">
+                                      <div className="flex-1">
+                                        <h6 className="font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
+                                          {task.title}
+                                        </h6>
+                                        <p className="text-sm mb-3" style={{ color: 'var(--color-text-secondary)' }}>
+                                          {task.brief}
+                                        </p>
+                                        
+                                        {/* Task type badge */}
+                                        <div className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium"
+                                             style={{ 
+                                               backgroundColor: 'var(--color-accent-tertiary)',
+                                               color: 'var(--color-accent-primary)'
+                                             }}>
+                                          {task.type}
+                                        </div>
+                                      </div>
+                                      
+                                      <button className="px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-[var(--color-accent-tertiary)] flex-shrink-0"
+                                              style={{ 
+                                                backgroundColor: task.status === 'completed' ? 'var(--color-success-bg)' : 'var(--color-secondary-bg)',
+                                                color: task.status === 'completed' ? 'var(--color-success)' : 'var(--color-text-secondary)',
+                                                border: '1px solid',
+                                                borderColor: task.status === 'completed' ? 'var(--color-success)' : 'var(--color-border)'
+                                              }}>
+                                        {task.status === 'completed' ? 'View' : task.status === 'in-progress' ? 'Continue' : 'Start'}
+                                      </button>
+                                    </div>
                                   </div>
-                                </div>
-                              ))}
+                                );
+                              })}
                             </div>
                             
-                            {/* Optional Tasks Note */}
-                            <div className="text-center mt-6 p-4" style={{ color: 'var(--color-text-secondary)' }}>
-                              Will also be showing optional tasks
+                            {/* Dynamic summary based on actual completion */}
+                            <div className="mt-6 p-4 rounded-lg text-center" 
+                                 style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
+                              <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                                {completedTasks === totalTasks ? (
+                                  'All tasks completed! 🎉'
+                                ) : completedTasks > 0 ? (
+                                  `${completedTasks} of ${totalTasks} tasks completed. Keep going! 💪`
+                                ) : (
+                                  'Ready to start your learning journey! 🚀'
+                                )}
+                              </p>
+                              {completedTasks < totalTasks && (
+                                <p className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
+                                  Will also be showing optional tasks
+                                </p>
+                              )}
                             </div>
                           </div>
                         </ThemeContainer>
