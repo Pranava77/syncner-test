@@ -280,73 +280,7 @@ const StudentPortfolio: React.FC = () => {
             {/* Left Sidebar */}
             <div className="lg:col-span-1">
               <ThemeContainer variant="surface" className="rounded-xl shadow-sm p-6 mb-6">
-              {/* Profile Header */}
-              <div className="mb-6">
-                {/* Profile Row */}
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-16 h-16 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'var(--color-accent-primary)' }}>
-                    <PersonIcon className="w-10 h-10" style={{ color: 'var(--color-text-inverse)' }} />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold" style={{ color: 'var(--color-text-primary)' }}>{student.name}</h3>
-                    <p className="flex items-center gap-2 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                      <span className="w-3 h-3">📍</span>
-                      {student.department || 'N/A'}, {student.batch || 'N/A'}
-                    </p>
-                  </div>
-                </div>
-                
-                {/* Completion Badge and Progress */}
-                <div className="mb-4">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium mb-3" style={{ backgroundColor: 'var(--color-success-bg)', color: 'var(--color-success)' }}>
-                    <CheckCircledIcon className="w-4 h-4" />
-                    {calculateCompletionPercentage()}% completed
-                  </div>
-                  <div className="w-full rounded-full h-2" style={{ backgroundColor: 'var(--color-border-subtle)' }}>
-                    <div 
-                      className="h-2 rounded-full transition-all duration-500"
-                      style={{ 
-                        width: `${calculateCompletionPercentage()}%`,
-                        backgroundColor: 'var(--color-success)'
-                      }}
-                    ></div>
-                  </div>
-                </div>
-                
-                {/* Status Pills */}
-                <div className="space-y-2 mb-6">
-                  <div className="px-3 py-2 rounded-lg text-sm" style={{ backgroundColor: 'var(--color-accent-tertiary)', color: 'var(--color-accent-primary)' }}>
-                    Track: {student.careerTrack}
-                  </div>
-                  <div className="px-3 py-2 rounded-lg text-sm" style={{ backgroundColor: 'var(--color-tertiary-bg)', color: 'var(--color-text-secondary)' }}>
-                    Duration: {student.learningTimeline.length} months
-                  </div>
-                  <div className="px-3 py-2 rounded-lg text-sm" style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-text-tertiary)' }}>
-                    Last verified: {formatDate(new Date().toISOString())}
-                  </div>
-                </div>
 
-                {/* Skills */}
-                <div className="mb-6">
-                  <h4 className="text-sm font-semibold mb-3" style={{ color: 'var(--color-text-secondary)' }}>SKILLS</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {getSkillsForTrack().map((skill) => (
-                      <span
-                        key={skill}
-                        className="px-3 py-1 rounded-full text-xs"
-                        style={{ 
-                          backgroundColor: 'var(--color-surface)', 
-                          color: 'var(--color-text-secondary)',
-                          borderColor: 'var(--color-border)',
-                          border: '1px solid'
-                        }}
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
 
               {/* Recommended Roles */}
               <div className="mb-6">
@@ -447,6 +381,81 @@ const StudentPortfolio: React.FC = () => {
                 </div>
               </ThemeContainer>
 
+              {/* Profile Section */}
+              <ThemeContainer variant="surface" className="rounded-xl shadow-sm p-6 mb-6">
+                <h3 className="text-xl font-bold mb-6" style={{ color: 'var(--color-text-primary)' }}>
+                  Student Profile
+                </h3>
+                
+                {/* Profile Row */}
+                <div className="flex items-center gap-6 mb-6">
+                  <div className="w-20 h-20 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'var(--color-accent-primary)' }}>
+                    <PersonIcon className="w-12 h-12" style={{ color: 'var(--color-text-inverse)' }} />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-2xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>{student.name}</h4>
+                    <p className="flex items-center gap-2 text-lg mb-3" style={{ color: 'var(--color-text-secondary)' }}>
+                      <span className="w-4 h-4">📍</span>
+                      {student.department || 'N/A'}, {student.batch || 'N/A'}
+                    </p>
+                    
+                    {/* Completion Badge and Progress */}
+                    <div className="mb-4">
+                      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-3" style={{ backgroundColor: 'var(--color-success-bg)', color: 'var(--color-success)' }}>
+                        <CheckCircledIcon className="w-4 h-4" />
+                        {calculateCompletionPercentage()}% completed
+                      </div>
+                      <div className="w-full rounded-full h-3" style={{ backgroundColor: 'var(--color-border-subtle)' }}>
+                        <div 
+                          className="h-3 rounded-full transition-all duration-500"
+                          style={{ 
+                            width: `${calculateCompletionPercentage()}%`,
+                            backgroundColor: 'var(--color-success)'
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Status Pills - Horizontal Layout */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="p-4 rounded-lg text-center" style={{ backgroundColor: 'var(--color-accent-tertiary)' }}>
+                    <div className="text-sm font-medium mb-1" style={{ color: 'var(--color-text-tertiary)' }}>Career Track</div>
+                    <div className="text-lg font-bold" style={{ color: 'var(--color-accent-primary)' }}>{student.careerTrack}</div>
+                  </div>
+                  <div className="p-4 rounded-lg text-center" style={{ backgroundColor: 'var(--color-tertiary-bg)' }}>
+                    <div className="text-sm font-medium mb-1" style={{ color: 'var(--color-text-tertiary)' }}>Duration</div>
+                    <div className="text-lg font-bold" style={{ color: 'var(--color-text-secondary)' }}>{student.learningTimeline.length} months</div>
+                  </div>
+                  <div className="p-4 rounded-lg text-center" style={{ backgroundColor: 'var(--color-surface)' }}>
+                    <div className="text-sm font-medium mb-1" style={{ color: 'var(--color-text-tertiary)' }}>Last Verified</div>
+                    <div className="text-lg font-bold" style={{ color: 'var(--color-text-secondary)' }}>{formatDate(new Date().toISOString())}</div>
+                  </div>
+                </div>
+
+                {/* Skills */}
+                <div className="mt-6">
+                  <h4 className="text-lg font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>Skills</h4>
+                  <div className="flex flex-wrap gap-3">
+                    {getSkillsForTrack().map((skill) => (
+                      <span
+                        key={skill}
+                        className="px-4 py-2 rounded-full text-sm font-medium"
+                        style={{ 
+                          backgroundColor: 'var(--color-accent-tertiary)', 
+                          color: 'var(--color-accent-primary)',
+                          borderColor: 'var(--color-accent-primary)',
+                          border: '1px solid'
+                        }}
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </ThemeContainer>
+
 
 
               {/* Portfolio Section */}
@@ -459,36 +468,7 @@ const StudentPortfolio: React.FC = () => {
 
                 {/* Topics Covered Content */}
                 <div className="space-y-6">
-                    {/* Progress Overview */}
-                    <ThemeContainer variant="secondary" className="rounded-lg p-6">
-                      <h4 className="text-lg font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>Learning Progress Overview</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <div className="text-center">
-                          <div className="text-2xl font-bold" style={{ color: 'var(--color-accent-primary)' }}>
-                            {student.learningTimeline.filter(l => l.status === 'completed').length}
-                          </div>
-                          <div className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>Completed</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-2xl font-bold" style={{ color: 'var(--color-warning)' }}>
-                            {student.learningTimeline.filter(l => l.status === 'in-progress').length}
-                          </div>
-                          <div className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>In Progress</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-2xl font-bold" style={{ color: 'var(--color-text-secondary)' }}>
-                            {student.learningTimeline.filter(l => l.status === 'not-started').length}
-                          </div>
-                          <div className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>Not Started</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-2xl font-bold" style={{ color: 'var(--color-accent-primary)' }}>
-                            {calculateCompletionPercentage()}%
-                          </div>
-                          <div className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>Overall</div>
-                        </div>
-                      </div>
-                    </ThemeContainer>
+
 
                     {/* Learning Levels */}
                     <div className="space-y-4">
