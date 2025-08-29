@@ -406,50 +406,63 @@ const StudentPortfolio: React.FC = () => {
               <div className="space-y-6">
                 <h3 className="text-xl font-semibold mb-6" style={{ color: 'var(--color-text-primary)' }}>Learning Journey</h3>
                 {student.learningTimeline.map((level, index) => {
-                  // Calculate dynamic values based on actual data
-                  const completionDate = level.learn?.completed || level.test?.completed || level.exercise?.completed 
-                    ? new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000) // Random date within last 30 days
-                    : null;
-                  
-                  // Calculate actual assessment score based on completed sections
-                  const calculateAssessmentScore = () => {
-                    let totalScore = 0;
-                    let completedSections = 0;
-                    
-                    if (level.learn?.completed) {
-                      totalScore += Math.floor(Math.random() * 15) + 85; // 85-100 for learning
-                      completedSections++;
+                  // Get real completion date from backend data
+                  const getCompletionDate = () => {
+                    if (level.exercise?.completed && level.exercise?.endTime) {
+                      return new Date(level.exercise.endTime);
+                    } else if (level.test?.completed && level.test?.endTime) {
+                      return new Date(level.test.endTime);
+                    } else if (level.learn?.completed && level.learn?.endTime) {
+                      return new Date(level.learn.endTime);
                     }
-                    if (level.test?.completed) {
-                      totalScore += Math.floor(Math.random() * 20) + 80; // 80-100 for test
-                      completedSections++;
-                    }
-                    if (level.exercise?.completed) {
-                      totalScore += Math.floor(Math.random() * 15) + 85; // 85-100 for exercise
-                      completedSections++;
-                    }
-                    
-                    return completedSections > 0 ? Math.round(totalScore / completedSections) : 0;
+                    return null;
                   };
                   
-                  const assessmentScore = calculateAssessmentScore();
+                  const completionDate = getCompletionDate();
                   
-                  // Calculate actual time spent based on completion status
-                  const calculateTimeSpent = () => {
+                  // Get real assessment score from backend data
+                  const getAssessmentScore = () => {
+                    if (level.test?.completed && level.test.score) {
+                      return level.test.score;
+                    }
+                    return 0;
+                  };
+                  
+                  const assessmentScore = getAssessmentScore();
+                  
+                  // Calculate real time spent from backend start/end times
+                  const getTimeSpent = () => {
                     let totalHours = 0;
                     let totalMinutes = 0;
                     
-                    if (level.learn?.completed) {
-                      totalHours += Math.floor(Math.random() * 2) + 3; // 3-5 hours for learning
-                      totalMinutes += Math.floor(Math.random() * 60);
+                    if (level.learn?.startTime && level.learn?.endTime) {
+                      const startTime = new Date(level.learn.startTime);
+                      const endTime = new Date(level.learn.endTime);
+                      const diffMs = endTime.getTime() - startTime.getTime();
+                      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                      const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+                      totalHours += diffHours;
+                      totalMinutes += diffMinutes;
                     }
-                    if (level.test?.completed) {
-                      totalHours += Math.floor(Math.random() * 1) + 1; // 1-2 hours for test
-                      totalMinutes += Math.floor(Math.random() * 60);
+                    
+                    if (level.test?.startTime && level.test?.endTime) {
+                      const startTime = new Date(level.test.startTime);
+                      const endTime = new Date(level.test.endTime);
+                      const diffMs = endTime.getTime() - startTime.getTime();
+                      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                      const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+                      totalHours += diffHours;
+                      totalMinutes += diffMinutes;
                     }
-                    if (level.exercise?.completed) {
-                      totalHours += Math.floor(Math.random() * 2) + 2; // 2-4 hours for exercise
-                      totalMinutes += Math.floor(Math.random() * 60);
+                    
+                    if (level.exercise?.startTime && level.exercise?.endTime) {
+                      const startTime = new Date(level.exercise.startTime);
+                      const endTime = new Date(level.exercise.endTime);
+                      const diffMs = endTime.getTime() - startTime.getTime();
+                      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                      const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+                      totalHours += diffHours;
+                      totalMinutes += diffMinutes;
                     }
                     
                     // Convert excess minutes to hours
@@ -461,16 +474,16 @@ const StudentPortfolio: React.FC = () => {
                     return { hours: totalHours, minutes: totalMinutes };
                   };
                   
-                  const timeData = calculateTimeSpent();
+                  const timeData = getTimeSpent();
                   const timeSpent = timeData.hours;
                   const minutesSpent = timeData.minutes;
                   
-                  // Calculate actual completed tasks based on real data
+                  // Calculate real completed tasks based on backend data
                   const calculateCompletedTasks = () => {
                     let completed = 0;
                     let total = 0;
                     
-                    // Core learning tasks
+                    // Core learning tasks based on actual completion status
                     if (level.learn) {
                       total++;
                       if (level.learn.completed) completed++;
@@ -484,7 +497,7 @@ const StudentPortfolio: React.FC = () => {
                       if (level.exercise.completed) completed++;
                     }
                     
-                    // Add advanced tasks based on completion status
+                    // Add advanced tasks based on actual completion status
                     if (level.learn?.completed) {
                       total++;
                       if (level.test?.completed) completed++;
@@ -498,8 +511,8 @@ const StudentPortfolio: React.FC = () => {
                       completed++; // Capstone task is always completed if exercise is done
                     }
                     
-                    // Add optional task for high performers
-                    if (assessmentScore >= 90) {
+                    // Add optional task for high performers based on actual test scores
+                    if (level.test?.completed && level.test.score >= 90) {
                       total++;
                       // Optional task is not started by default
                     }
