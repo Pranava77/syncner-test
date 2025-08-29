@@ -10,9 +10,7 @@ import {
   ArrowLeftIcon,
   TargetIcon,
   RocketIcon,
-  FileTextIcon,
-  Share1Icon,
-  DownloadIcon
+  FileTextIcon
 } from '@radix-ui/react-icons';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer } from 'recharts';
 import { useStaff } from '../../hooks/useStaff';
@@ -88,75 +86,7 @@ const StudentDetails: React.FC = () => {
   const { studentId } = useParams();
   const navigate = useNavigate();
 
-  // Share functionality
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: `Student Details - ${selectedStudent?.name}`,
-          text: `View details for ${selectedStudent?.name} from ${selectedStudent?.department} department`,
-          url: window.location.href,
-        });
-      } catch (error) {
-        console.log('Error sharing:', error);
-      }
-    } else {
-      // Fallback for browsers that don't support Web Share API
-      try {
-        await navigator.clipboard.writeText(window.location.href);
-        alert('Link copied to clipboard!');
-      } catch (error) {
-        console.log('Error copying to clipboard:', error);
-        // Final fallback
-        const textArea = document.createElement('textarea');
-        textArea.value = window.location.href;
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
-        alert('Link copied to clipboard!');
-      }
-    }
-  };
 
-  // Download PDF functionality
-  const handleDownloadPDF = async () => {
-    try {
-      // Create a simple PDF-like content
-      const content = `
-        Student Details Report
-        =====================
-        
-        Student Name: ${selectedStudent?.name}
-        Roll Number: ${selectedStudent?._id}
-        Department: ${selectedStudent?.department || 'N/A'}
-        Batch: ${selectedStudent?.batch || 'N/A'}
-        Career Track: ${selectedStudent?.careerTrack}
-        Enrolled Date: ${selectedStudent?.enrolledDate}
-        
-        Performance Summary:
-        - Attendance: ${selectedStudent?.summaryStats.consistency}%
-        - Progress: ${selectedStudent?.summaryStats.progress}%
-        - Leaderboard: ${selectedStudent?.summaryStats.leaderboard}%
-        
-        Generated on: ${new Date().toLocaleDateString()}
-      `;
-      
-      // Create blob and download
-      const blob = new Blob([content], { type: 'text/plain' });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `student-details-${selectedStudent?.name}-${new Date().toISOString().split('T')[0]}.txt`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error('Error downloading PDF:', error);
-      alert('Error downloading file. Please try again.');
-    }
-  };
 
   const {
     selectedStudent,
@@ -275,38 +205,7 @@ const StudentDetails: React.FC = () => {
             </button>
           </div>
           
-          {/* Action Buttons */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={handleShare}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors hover:bg-[var(--color-accent-tertiary)]"
-              style={{ 
-                backgroundColor: 'var(--color-surface)',
-                color: 'var(--color-accent-primary)',
-                borderColor: 'var(--color-border)',
-                border: '1px solid'
-              }}
-              title="Share student details"
-            >
-              <Share1Icon className="w-4 h-4" />
-              Share
-            </button>
-            
-            <button
-              onClick={handleDownloadPDF}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors hover:bg-[var(--color-accent-tertiary)]"
-              style={{ 
-                backgroundColor: 'var(--color-accent-primary)',
-                color: 'var(--color-text-inverse)',
-                borderColor: 'var(--color-accent-primary)',
-                border: '1px solid'
-              }}
-              title="Download student details as PDF"
-            >
-              <DownloadIcon className="w-4 h-4" />
-              Download PDF
-            </button>
-          </div>
+
         </div>
       </div>
 

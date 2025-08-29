@@ -13,7 +13,9 @@ import {
   RocketIcon,
   PersonIcon,
   IdCardIcon,
-  ArrowLeftIcon
+  ArrowLeftIcon,
+  Share1Icon,
+  DownloadIcon
 } from '@radix-ui/react-icons';
 import { StudentDetails } from '../types/staff';
 import { useStaff } from '../hooks/useStaff';
@@ -76,6 +78,94 @@ const StudentPortfolio: React.FC = () => {
   }
 
   const student = selectedStudent;
+
+  // Share functionality
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `Student Portfolio - ${student.name}`,
+          text: `View portfolio for ${student.name} from ${student.department || 'N/A'} department`,
+          url: window.location.href,
+        });
+      } catch (error) {
+        console.log('Error sharing:', error);
+      }
+    } else {
+      // Fallback for browsers that don't support Web Share API
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        alert('Portfolio link copied to clipboard!');
+      } catch (error) {
+        console.log('Error copying to clipboard:', error);
+        // Final fallback
+        const textArea = document.createElement('textarea');
+        textArea.value = window.location.href;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        alert('Portfolio link copied to clipboard!');
+      }
+    }
+  };
+
+  // Download PDF functionality
+  const handleDownloadPDF = async () => {
+    try {
+      // Create a comprehensive portfolio report
+      const content = `
+        Student Portfolio Report
+        ========================
+        
+        Student Information:
+        - Name: ${student.name}
+        - Roll Number: ${student._id}
+        - Department: ${student.department || 'N/A'}
+        - Batch: ${student.batch || 'N/A'}
+        - Career Track: ${student.careerTrack}
+        - Enrolled Date: ${student.enrolledDate}
+        
+        Performance Summary:
+        - Attendance: ${student.summaryStats.consistency}%
+        - Progress: ${student.summaryStats.progress}%
+        - Leaderboard: ${student.summaryStats.leaderboard}%
+        - Overall Completion: ${calculateCompletionPercentage()}%
+        
+        Learning Journey:
+        - Total Levels: ${student.learningTimeline.length}
+        - Completed: ${student.learningTimeline.filter(l => l.status === 'completed').length}
+        - In Progress: ${student.learningTimeline.filter(l => l.status === 'in-progress').length}
+        - Not Started: ${student.learningTimeline.filter(l => l.status === 'not-started').length}
+        
+        Skills: ${getSkillsForTrack().join(', ')}
+        
+        Recommended Roles: ${getRecommendedRoles().join(', ')}
+        
+        Career Readiness:
+        - Portfolio Ready: ✓
+        - Skills Verified: ✓
+        - Industry Ready: ~
+        
+        Generated on: ${new Date().toLocaleDateString()}
+        Generated from: Student Portfolio Page
+      `;
+      
+      // Create blob and download
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `student-portfolio-${student.name}-${new Date().toISOString().split('T')[0]}.txt`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading portfolio:', error);
+      alert('Error downloading portfolio. Please try again.');
+    }
+  };
 
   const toggleLevelExpansion = (level: number) => {
     const newExpanded = new Set(expandedLevels);
@@ -142,7 +232,43 @@ const StudentPortfolio: React.FC = () => {
               Back to Student Details
             </button>
           </div>
-          <h2 className="text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>Student Portfolio</h2>
+          
+          <div className="flex items-center gap-4">
+            <h2 className="text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>Student Portfolio</h2>
+            
+            {/* Action Buttons */}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={handleShare}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors hover:bg-[var(--color-accent-tertiary)]"
+                style={{ 
+                  backgroundColor: 'var(--color-surface)',
+                  color: 'var(--color-accent-primary)',
+                  borderColor: 'var(--color-border)',
+                  border: '1px solid'
+                }}
+                title="Share portfolio"
+              >
+                <Share1Icon className="w-4 h-4" />
+                Share
+              </button>
+              
+              <button
+                onClick={handleDownloadPDF}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors hover:bg-[var(--color-accent-tertiary)]"
+                style={{ 
+                  backgroundColor: 'var(--color-accent-primary)',
+                  color: 'var(--color-text-inverse)',
+                  borderColor: 'var(--color-accent-primary)',
+                  border: '1px solid'
+                }}
+                title="Download portfolio as PDF"
+              >
+                <DownloadIcon className="w-4 h-4" />
+                Download PDF
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
