@@ -430,10 +430,11 @@ const StudentPortfolio: React.FC = () => {
                   
                   const assessmentScore = getAssessmentScore();
                   
-                  // Calculate real time spent from backend start/end times
+                  // Get real time spent from backend data (only if timestamps exist)
                   const getTimeSpent = () => {
                     let totalHours = 0;
                     let totalMinutes = 0;
+                    let hasRealTimeData = false;
                     
                     if (level.learn?.startTime && level.learn?.endTime) {
                       const startTime = new Date(level.learn.startTime);
@@ -443,6 +444,7 @@ const StudentPortfolio: React.FC = () => {
                       const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
                       totalHours += diffHours;
                       totalMinutes += diffMinutes;
+                      hasRealTimeData = true;
                     }
                     
                     if (level.test?.startTime && level.test?.endTime) {
@@ -453,6 +455,7 @@ const StudentPortfolio: React.FC = () => {
                       const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
                       totalHours += diffHours;
                       totalMinutes += diffMinutes;
+                      hasRealTimeData = true;
                     }
                     
                     if (level.exercise?.startTime && level.exercise?.endTime) {
@@ -463,6 +466,7 @@ const StudentPortfolio: React.FC = () => {
                       const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
                       totalHours += diffHours;
                       totalMinutes += diffMinutes;
+                      hasRealTimeData = true;
                     }
                     
                     // Convert excess minutes to hours
@@ -471,12 +475,13 @@ const StudentPortfolio: React.FC = () => {
                       totalMinutes = totalMinutes % 60;
                     }
                     
-                    return { hours: totalHours, minutes: totalMinutes };
+                    return { hours: totalHours, minutes: totalMinutes, hasRealTimeData };
                   };
                   
                   const timeData = getTimeSpent();
                   const timeSpent = timeData.hours;
                   const minutesSpent = timeData.minutes;
+                  const hasRealTimeData = timeData.hasRealTimeData;
                   
                   // Calculate real completed tasks based on backend data
                   const calculateCompletedTasks = () => {
@@ -535,11 +540,11 @@ const StudentPortfolio: React.FC = () => {
                     
                     const baseTasks: Task[] = [];
                     
-                    // Add core learning tasks based on actual completion status
+                    // Add core learning tasks based on actual completion status from backend
                     if (level.learn) {
                       baseTasks.push({
-                        title: `Task: Complete ${level.courseName || 'Learning Module'} content`,
-                        brief: level.learn.completed ? 'Brief: Content mastered successfully' : 'Brief: Continue learning core concepts',
+                        title: `Learning: ${level.courseName || 'Module Content'}`,
+                        brief: level.learn.completed ? 'Content mastered successfully' : 'Continue learning core concepts',
                         status: level.learn.completed ? 'completed' : 'in-progress',
                         type: 'learning'
                       });
@@ -547,8 +552,8 @@ const StudentPortfolio: React.FC = () => {
                     
                     if (level.test) {
                       baseTasks.push({
-                        title: `Task: Take ${level.courseName || 'Module'} assessment`,
-                        brief: level.test.completed ? `Brief: Assessment completed with ${assessmentScore}% score` : 'Brief: Test your knowledge',
+                        title: `Assessment: ${level.courseName || 'Module Test'}`,
+                        brief: level.test.completed ? `Test completed with ${level.test.score || 0}% score` : 'Take assessment to test knowledge',
                         status: level.test.completed ? 'completed' : 'in-progress',
                         type: 'assessment'
                       });
@@ -556,152 +561,37 @@ const StudentPortfolio: React.FC = () => {
                     
                     if (level.exercise) {
                       baseTasks.push({
-                        title: `Task: Practice ${level.courseName || 'Module'} exercises`,
-                        brief: level.exercise.completed ? 'Brief: Practical exercises completed' : 'Brief: Apply what you learned',
+                        title: `Exercise: ${level.courseName || 'Module Practice'}`,
+                        brief: level.exercise.completed ? 'Practical exercises completed' : 'Apply what you learned',
                         status: level.exercise.completed ? 'completed' : 'in-progress',
                         type: 'practice'
                       });
                     }
                     
-                    // Add course-specific advanced tasks based on career track and completion status
-                    const isWebDev = level.courseName?.toLowerCase().includes('web') || student.careerTrack === 'web-development';
-                    const isDataScience = level.courseName?.toLowerCase().includes('data') || student.careerTrack === 'data-science';
-                    const isMobileDev = level.courseName?.toLowerCase().includes('mobile') || student.careerTrack === 'mobile-development';
-                    const isCyberSec = level.courseName?.toLowerCase().includes('cyber') || student.careerTrack === 'cybersecurity';
-                    
-                    if (isWebDev) {
-                      if (level.learn?.completed) {
-                        baseTasks.push({
-                          title: 'Task: Build responsive website layout',
-                          brief: 'Brief: Create HTML/CSS responsive design',
-                          status: level.test?.completed ? 'completed' : 'in-progress',
-                          type: 'project'
-                        });
-                      }
-                      if (level.test?.completed) {
-                        baseTasks.push({
-                          title: 'Task: Implement JavaScript functionality',
-                          brief: 'Brief: Add interactive features and DOM manipulation',
-                          status: level.exercise?.completed ? 'completed' : 'in-progress',
-                          type: 'project'
-                        });
-                      }
-                      if (level.exercise?.completed) {
-                        baseTasks.push({
-                          title: 'Task: Create full-stack application',
-                          brief: 'Brief: Integrate frontend with backend API',
-                          status: 'completed',
-                          type: 'capstone'
-                        });
-                      }
-                    } else if (isDataScience) {
-                      if (level.learn?.completed) {
-                        baseTasks.push({
-                          title: 'Task: Perform exploratory data analysis',
-                          brief: 'Brief: Analyze dataset and identify patterns',
-                          status: level.test?.completed ? 'completed' : 'in-progress',
-                          type: 'analysis'
-                        });
-                      }
-                      if (level.test?.completed) {
-                        baseTasks.push({
-                          title: 'Task: Create data visualizations',
-                          brief: 'Brief: Build charts and interactive dashboards',
-                          status: level.exercise?.completed ? 'completed' : 'in-progress',
-                          type: 'visualization'
-                        });
-                      }
-                      if (level.exercise?.completed) {
-                        baseTasks.push({
-                          title: 'Task: Build machine learning model',
-                          brief: 'Brief: Train and evaluate predictive model',
-                          status: 'completed',
-                          type: 'capstone'
-                        });
-                      }
-                    } else if (isMobileDev) {
-                      if (level.learn?.completed) {
-                        baseTasks.push({
-                          title: 'Task: Design mobile app interface',
-                          brief: 'Brief: Create wireframes and UI mockups',
-                          status: level.test?.completed ? 'completed' : 'in-progress',
-                          type: 'design'
-                        });
-                      }
-                      if (level.test?.completed) {
-                        baseTasks.push({
-                          title: 'Task: Implement app navigation',
-                          brief: 'Brief: Add routing and state management',
-                          status: level.exercise?.completed ? 'completed' : 'in-progress',
-                          type: 'development'
-                        });
-                      }
-                      if (level.exercise?.completed) {
-                        baseTasks.push({
-                          title: 'Task: Deploy mobile application',
-                          brief: 'Brief: Build and publish to app stores',
-                          status: 'completed',
-                          type: 'capstone'
-                        });
-                      }
-                    } else if (isCyberSec) {
-                      if (level.learn?.completed) {
-                        baseTasks.push({
-                          title: 'Task: Conduct security assessment',
-                          brief: 'Brief: Identify system vulnerabilities',
-                          status: level.test?.completed ? 'completed' : 'in-progress',
-                          type: 'assessment'
-                        });
-                      }
-                      if (level.test?.completed) {
-                        baseTasks.push({
-                          title: 'Task: Perform penetration testing',
-                          brief: 'Brief: Test security measures and controls',
-                          status: level.exercise?.completed ? 'completed' : 'in-progress',
-                          type: 'testing'
-                        });
-                      }
-                      if (level.exercise?.completed) {
-                        baseTasks.push({
-                          title: 'Task: Create security report',
-                          brief: 'Brief: Document findings and recommendations',
-                          status: 'completed',
-                          type: 'capstone'
-                        });
-                      }
-                    } else {
-                      // Generic advanced tasks for other courses
-                      if (level.learn?.completed) {
-                        baseTasks.push({
-                          title: `Task: ${level.courseName || 'Module'} project planning`,
-                          brief: 'Brief: Plan and design project structure',
-                          status: level.test?.completed ? 'completed' : 'in-progress',
-                          type: 'planning'
-                        });
-                      }
-                      if (level.test?.completed) {
-                        baseTasks.push({
-                          title: `Task: ${level.courseName || 'Module'} implementation`,
-                          brief: 'Brief: Build and develop project',
-                          status: level.exercise?.completed ? 'completed' : 'in-progress',
-                          type: 'development'
-                        });
-                      }
-                      if (level.exercise?.completed) {
-                        baseTasks.push({
-                          title: `Task: ${level.courseName || 'Module'} documentation`,
-                          brief: 'Brief: Document and present final project',
-                          status: 'completed',
-                          type: 'capstone'
-                        });
-                      }
+                    // Only add advanced tasks if they have real completion data
+                    if (level.learn?.completed && level.test?.completed) {
+                      baseTasks.push({
+                        title: `Project: ${level.courseName || 'Module Project'}`,
+                        brief: 'Apply learned concepts in a practical project',
+                        status: level.exercise?.completed ? 'completed' : 'in-progress',
+                        type: 'project'
+                      });
                     }
                     
-                    // Add optional/extra credit tasks based on student performance
-                    if (assessmentScore >= 90) {
+                    if (level.test?.completed && level.exercise?.completed) {
                       baseTasks.push({
-                        title: 'Task: Advanced challenge (Optional)',
-                        brief: 'Brief: Take on extra difficult problems',
+                        title: `Capstone: ${level.courseName || 'Module Final'}`,
+                        brief: 'Complete final comprehensive project',
+                        status: 'completed',
+                        type: 'capstone'
+                      });
+                    }
+                    
+                    // Add optional task only for students with real high scores
+                    if (level.test?.completed && level.test.score && level.test.score >= 90) {
+                      baseTasks.push({
+                        title: 'Advanced Challenge (Optional)',
+                        brief: 'Take on extra difficult problems for high performers',
                         status: 'not-started',
                         type: 'optional'
                       });
