@@ -19,17 +19,13 @@ import { StudentDetails } from '../types/staff';
 import { useStaff } from '../hooks/useStaff';
 import ThemeContainer from './ThemeContainer';
 
-interface PortfolioTab {
-  id: 'topics' | 'projects';
-  label: string;
-  active: boolean;
-}
+
 
 const StudentPortfolio: React.FC = () => {
   const navigate = useNavigate();
   const { studentId } = useParams();
   const { selectedStudent, studentDetailsLoading, error, getStudentDetails } = useStaff();
-  const [activeTab, setActiveTab] = useState<'topics' | 'projects'>('topics');
+
   const [expandedLevels, setExpandedLevels] = useState<Set<number>>(new Set());
 
   // Fetch student details when component mounts
@@ -211,10 +207,7 @@ const StudentPortfolio: React.FC = () => {
     return roles[student.careerTrack as keyof typeof roles] || ['Software Developer', 'Developer', 'Engineer'];
   };
 
-  const tabs: PortfolioTab[] = [
-    { id: 'topics', label: 'Topics Covered', active: activeTab === 'topics' },
-    { id: 'projects', label: 'Projects', active: activeTab === 'projects' }
-  ];
+
 
   return (
     <ThemeContainer variant="primary" className="min-h-screen">
@@ -288,15 +281,20 @@ const StudentPortfolio: React.FC = () => {
             <div className="lg:col-span-1">
               <ThemeContainer variant="surface" className="rounded-xl shadow-sm p-6 mb-6">
               {/* Profile Header */}
-              <div className="text-center mb-6">
-                <div className="w-24 h-24 rounded-lg mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: 'var(--color-accent-primary)' }}>
-                  <PersonIcon className="w-12 h-12" style={{ color: 'var(--color-text-inverse)' }} />
+              <div className="mb-6">
+                {/* Profile Row */}
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-16 h-16 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'var(--color-accent-primary)' }}>
+                    <PersonIcon className="w-10 h-10" style={{ color: 'var(--color-text-inverse)' }} />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold" style={{ color: 'var(--color-text-primary)' }}>{student.name}</h3>
+                    <p className="flex items-center gap-2 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                      <span className="w-3 h-3">📍</span>
+                      {student.department || 'N/A'}, {student.batch || 'N/A'}
+                    </p>
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>{student.name}</h3>
-                <p className="mb-3 flex items-center justify-center gap-2" style={{ color: 'var(--color-text-secondary)' }}>
-                  <span className="w-4 h-4">📍</span>
-                  {student.department || 'N/A'}, {student.batch || 'N/A'}
-                </p>
                 
                 {/* Completion Badge and Progress */}
                 <div className="mb-4">
@@ -330,7 +328,7 @@ const StudentPortfolio: React.FC = () => {
 
                 {/* Skills */}
                 <div className="mb-6">
-                  <h4 className="text-sm font-semibold mb-3 text-left" style={{ color: 'var(--color-text-secondary)' }}>SKILLS</h4>
+                  <h4 className="text-sm font-semibold mb-3" style={{ color: 'var(--color-text-secondary)' }}>SKILLS</h4>
                   <div className="flex flex-wrap gap-2">
                     {getSkillsForTrack().map((skill) => (
                       <span
@@ -441,32 +439,10 @@ const StudentPortfolio: React.FC = () => {
                   Portfolio
                 </h3>
                 
-                {/* Tabs */}
-                <div className="flex gap-2 mb-6">
-                  {tabs.map((tab) => (
-                    <button
-                      key={tab.id}
-                      onClick={() => setActiveTab(tab.id)}
-                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                        tab.active
-                          ? 'text-white'
-                          : 'hover:bg-[var(--color-accent-tertiary)]'
-                      }`}
-                      style={{
-                        backgroundColor: tab.active ? 'var(--color-accent-primary)' : 'var(--color-surface)',
-                        color: tab.active ? 'var(--color-text-inverse)' : 'var(--color-text-secondary)',
-                        borderColor: 'var(--color-border)',
-                        border: '1px solid'
-                      }}
-                    >
-                      {tab.label}
-                    </button>
-                  ))}
-                </div>
+
 
                 {/* Topics Covered Content */}
-                {activeTab === 'topics' && (
-                  <div className="space-y-6">
+                <div className="space-y-6">
                     {/* Progress Overview */}
                     <ThemeContainer variant="secondary" className="rounded-lg p-6">
                       <h4 className="text-lg font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>Learning Progress Overview</h4>
@@ -582,20 +558,6 @@ const StudentPortfolio: React.FC = () => {
 
 
                   </div>
-                )}
-
-                {/* Projects Content */}
-                {activeTab === 'projects' && (
-                  <div className="text-center py-12">
-                    <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
-                      <RocketIcon className="w-8 h-8" style={{ color: 'var(--color-text-muted)' }} />
-                    </div>
-                    <h4 className="text-lg font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>Projects Coming Soon</h4>
-                    <p style={{ color: 'var(--color-text-tertiary)' }}>
-                      Student projects will be displayed here once they are completed and submitted.
-                    </p>
-                  </div>
-                )}
               </ThemeContainer>
             </div>
           </div>
