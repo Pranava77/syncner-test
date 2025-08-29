@@ -1,6 +1,5 @@
 import express from 'express';
-import { protect } from '../middleware/auth.js';
-import { ensureStaff } from '../middleware/auth.js';
+import { protect, authorize } from '../middleware/auth.js';
 import User from '../models/User.js';
 import UserProgress from '../models/UserProgress.js';
 import Track from '../models/Track.js';
@@ -21,7 +20,7 @@ const router = express.Router();
  */
 
 // Get all students with pagination and filtering
-router.get('/students', protect, ensureStaff, async (req, res) => {
+router.get('/students', protect, authorize('staff', 'admin'), async (req, res) => {
   try {
     const { page = 1, limit = 20, search, status, careerTrack, sortBy = 'lastActive', sortOrder = 'desc' } = req.query;
     
@@ -262,7 +261,7 @@ router.get('/students', protect, ensureStaff, async (req, res) => {
 });
 
 // Get detailed student information
-router.get('/students/:id', protect, ensureStaff, async (req, res) => {
+router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, res) => {
   try {
     const { id } = req.params;
     
@@ -495,7 +494,7 @@ router.get('/students/:id', protect, ensureStaff, async (req, res) => {
 });
 
 // Get staff dashboard analytics
-router.get('/analytics', protect, ensureStaff, async (req, res) => {
+router.get('/analytics', protect, authorize('staff', 'admin'), async (req, res) => {
   try {
     const totalStudents = await User.countDocuments({ role: 'student' });
     const activeStudents = await User.countDocuments({ role: 'student', isActive: true });
