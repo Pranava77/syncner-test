@@ -496,7 +496,7 @@ const StudentPortfolio: React.FC = () => {
                     let completed = 0;
                     let total = 0;
                     
-                    // Core learning tasks based on actual completion status
+                    // Only count real tasks from backend data
                     if (level.learn) {
                       total++;
                       if (level.learn.completed) completed++;
@@ -508,26 +508,6 @@ const StudentPortfolio: React.FC = () => {
                     if (level.exercise) {
                       total++;
                       if (level.exercise.completed) completed++;
-                    }
-                    
-                    // Add advanced tasks based on actual completion status
-                    if (level.learn?.completed) {
-                      total++;
-                      if (level.test?.completed) completed++;
-                    }
-                    if (level.test?.completed) {
-                      total++;
-                      if (level.exercise?.completed) completed++;
-                    }
-                    if (level.exercise?.completed) {
-                      total++;
-                      completed++; // Capstone task is always completed if exercise is done
-                    }
-                    
-                    // Add optional task for high performers based on actual test scores
-                    if (level.test?.completed && level.test.score >= 90) {
-                      total++;
-                      // Optional task is not started by default
                     }
                     
                     return { completed, total };
@@ -576,34 +556,7 @@ const StudentPortfolio: React.FC = () => {
                       });
                     }
                     
-                    // Only add advanced tasks if they have real completion data
-                    if (level.learn?.completed && level.test?.completed) {
-                      baseTasks.push({
-                        title: `Project: ${level.courseName || 'Module Project'}`,
-                        brief: 'Apply learned concepts in a practical project',
-                        status: level.exercise?.completed ? 'completed' : 'in-progress',
-                        type: 'project'
-                      });
-                    }
-                    
-                    if (level.test?.completed && level.exercise?.completed) {
-                      baseTasks.push({
-                        title: `Capstone: ${level.courseName || 'Module Final'}`,
-                        brief: 'Complete final comprehensive project',
-                        status: 'completed',
-                        type: 'capstone'
-                      });
-                    }
-                    
-                    // Add optional task only for students with real high scores
-                    if (level.test?.completed && level.test.score && level.test.score >= 90) {
-                      baseTasks.push({
-                        title: 'Advanced Challenge (Optional)',
-                        brief: 'Take on extra difficult problems for high performers',
-                        status: 'not-started',
-                        type: 'optional'
-                      });
-                    }
+                    // Only show real tasks from backend data - no fake generated tasks
                     
                     return baseTasks;
                   };
@@ -836,7 +789,7 @@ const StudentPortfolio: React.FC = () => {
                               </p>
                               {completedTasks < totalTasks && (
                                 <p className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
-                                  Will also be showing optional tasks
+                                  Complete current tasks to unlock more content
                                 </p>
                               )}
                             </div>
