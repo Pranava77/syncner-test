@@ -4,12 +4,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import {
   CheckCircledIcon,
   ClockIcon,
-  StarIcon,
   ChevronDownIcon,
   ChevronRightIcon,
   EyeOpenIcon,
   CalendarIcon,
-  TargetIcon,
   RocketIcon,
   PersonIcon,
   IdCardIcon,
@@ -369,43 +367,7 @@ const StudentPortfolio: React.FC = () => {
                 </div>
               </div>
 
-              {/* Performance Metrics */}
-              <div className="mb-6">
-                <h4 className="text-sm font-semibold mb-3" style={{ color: 'var(--color-text-secondary)' }}>PERFORMANCE</h4>
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center p-2 rounded" style={{ backgroundColor: 'var(--color-surface)' }}>
-                    <span className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>Attendance</span>
-                    <span className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>{student.summaryStats.consistency}%</span>
-                  </div>
-                  <div className="flex justify-between items-center p-2 rounded" style={{ backgroundColor: 'var(--color-surface)' }}>
-                    <span className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>Progress</span>
-                    <span className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>{student.summaryStats.progress}%</span>
-                  </div>
-                  <div className="flex justify-between items-center p-2 rounded" style={{ backgroundColor: 'var(--color-surface)' }}>
-                    <span className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>Leaderboard</span>
-                    <span className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>{student.summaryStats.leaderboard}%</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Career Readiness */}
-              <div className="mb-6">
-                <h4 className="text-sm font-semibold mb-3" style={{ color: 'var(--color-text-secondary)' }}>CAREER READINESS</h4>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between p-2 rounded" style={{ backgroundColor: 'var(--color-success-bg)' }}>
-                    <span className="text-xs" style={{ color: 'var(--color-success)' }}>Portfolio Ready</span>
-                    <span className="text-sm font-medium" style={{ color: 'var(--color-success)' }}>✓</span>
-                  </div>
-                  <div className="flex items-center justify-between p-2 rounded" style={{ backgroundColor: 'var(--color-success-bg)' }}>
-                    <span className="text-xs" style={{ color: 'var(--color-success)' }}>Skills Verified</span>
-                    <span className="text-sm font-medium" style={{ color: 'var(--color-success)' }}>✓</span>
-                  </div>
-                  <div className="flex items-center justify-between p-2 rounded" style={{ backgroundColor: 'var(--color-warning-bg)' }}>
-                    <span className="text-xs" style={{ color: 'var(--color-warning)' }}>Industry Ready</span>
-                    <span className="text-sm font-medium" style={{ color: 'var(--color-warning)' }}>~</span>
-                  </div>
-                </div>
-              </div>
+              
 
               {/* Certificate ID */}
               <div>
@@ -616,75 +578,9 @@ const StudentPortfolio: React.FC = () => {
                       ))}
                     </div>
 
-                    {/* Strengths & Areas for Improvement */}
-                    <ThemeContainer variant="secondary" className="rounded-lg p-6">
-                      <h4 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--color-text-primary)' }}>
-                        <TargetIcon className="w-5 h-5" style={{ color: 'var(--color-accent-primary)' }} />
-                        Strengths & Areas for Improvement
-                      </h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                          <h5 className="font-medium mb-3" style={{ color: 'var(--color-success)' }}>Strengths</h5>
-                          <div className="space-y-2">
-                            {['Consistent attendance', 'Strong problem-solving skills', 'Good communication'].map((strength, index) => (
-                              <div key={index} className="flex items-center gap-2 text-sm">
-                                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--color-success)' }}></div>
-                                <span style={{ color: 'var(--color-text-secondary)' }}>{strength}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                        <div>
-                          <h5 className="font-medium mb-3" style={{ color: 'var(--color-warning)' }}>Areas for Improvement</h5>
-                          <div className="space-y-2">
-                            {['Advanced project work', 'Industry experience', 'Specialized certifications'].map((area, index) => (
-                              <div key={index} className="flex items-center gap-2 text-sm">
-                                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--color-warning)' }}></div>
-                                <span style={{ color: 'var(--color-text-secondary)' }}>{area}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </ThemeContainer>
 
-                    {/* Learning Achievements */}
-                    <ThemeContainer variant="secondary" className="rounded-lg p-6">
-                      <h4 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--color-text-primary)' }}>
-                        <StarIcon className="w-5 h-5" style={{ color: 'var(--color-success)' }} />
-                        Learning Achievements
-                      </h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="p-4 rounded-lg border" style={{ 
-                          backgroundColor: 'var(--color-surface)', 
-                          borderColor: 'var(--color-success)'
-                        }}>
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--color-success)' }}>
-                              <CheckCircledIcon className="w-5 h-5" style={{ color: 'var(--color-text-inverse)' }} />
-                            </div>
-                            <div>
-                              <h5 className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Consistent Learner</h5>
-                              <p className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>Maintained {student.summaryStats.consistency}% attendance</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="p-4 rounded-lg border" style={{ 
-                          backgroundColor: 'var(--color-surface)', 
-                          borderColor: 'var(--color-accent-primary)'
-                        }}>
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--color-accent-primary)' }}>
-                              <RocketIcon className="w-5 h-5" style={{ color: 'var(--color-text-inverse)' }} />
-                            </div>
-                            <div>
-                              <h5 className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Fast Learner</h5>
-                              <p className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>Completed {student.learningTimeline.filter(l => l.status === 'completed').length} levels</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </ThemeContainer>
+
+
                   </div>
                 )}
 
@@ -692,7 +588,7 @@ const StudentPortfolio: React.FC = () => {
                 {activeTab === 'projects' && (
                   <div className="text-center py-12">
                     <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
-                      <TargetIcon className="w-8 h-8" style={{ color: 'var(--color-text-muted)' }} />
+                      <RocketIcon className="w-8 h-8" style={{ color: 'var(--color-text-muted)' }} />
                     </div>
                     <h4 className="text-lg font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>Projects Coming Soon</h4>
                     <p style={{ color: 'var(--color-text-tertiary)' }}>
