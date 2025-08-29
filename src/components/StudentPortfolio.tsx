@@ -368,22 +368,9 @@ const StudentPortfolio: React.FC = () => {
 
             {/* Main Content */}
             <div className="lg:col-span-2">
-              {/* Comprehensive Portfolio Section */}
-              <ThemeContainer variant="surface" className="rounded-xl shadow-sm p-6">
-                <h3 className="text-2xl font-bold mb-8" style={{ color: 'var(--color-text-primary)' }}>
-                  Student Portfolio
-                </h3>
-                
-                {/* Introduction */}
-                <div className="mb-8">
-                  <h4 className="text-lg font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>Introduction</h4>
-                  <div className="p-4 rounded-lg" style={{ backgroundColor: 'var(--color-accent-tertiary)' }}>
-                    <p style={{ color: 'var(--color-accent-primary)' }}>
-                      {student.careerTrack} developer in the making, passionate about solving real business problems with code. 
-                      Skilled in various technologies and ready to contribute to impactful projects.
-                    </p>
-                  </div>
-                </div>
+
+
+
                 
                 {/* Profile Row */}
                 <div className="flex items-center gap-6 mb-8">
@@ -452,89 +439,117 @@ const StudentPortfolio: React.FC = () => {
                     ))}
                   </div>
                 </div>
+              </ThemeContainer>
 
-                {/* Learning Journey */}
+
+
+              {/* Comprehensive Portfolio Section */}
+              <ThemeContainer variant="surface" className="rounded-xl shadow-sm p-6">
+                <h3 className="text-2xl font-bold mb-8" style={{ color: 'var(--color-text-primary)' }}>
+                  Student Portfolio
+                </h3>
+                
+                {/* Introduction */}
                 <div className="mb-8">
-                  <h4 className="text-lg font-semibold mb-6" style={{ color: 'var(--color-text-primary)' }}>Learning Journey</h4>
-                  <div className="space-y-4">
-                    {student.learningTimeline.map((level, index) => (
-                      <ThemeContainer 
-                        key={index}
-                        variant="secondary" 
-                        className="rounded-lg border transition-all duration-200"
-                        style={{ borderColor: 'var(--color-border)' }}
-                      >
-                        <div
-                          className="flex items-center justify-between p-4 cursor-pointer"
-                          onClick={() => toggleLevelExpansion(index)}
-                        >
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ 
-                              backgroundColor: level.status === 'completed' ? 'var(--color-success)' : 
-                                            level.status === 'in-progress' ? 'var(--color-warning)' : 'var(--color-text-muted)'
-                            }}>
-                              {level.status === 'completed' ? (
-                                <CheckCircledIcon className="w-5 h-5" style={{ color: 'var(--color-text-inverse)' }} />
-                              ) : level.status === 'in-progress' ? (
-                                <ClockIcon className="w-5 h-5" style={{ color: 'var(--color-text-inverse)' }} />
-                              ) : (
-                                <EyeOpenIcon className="w-5 h-5" style={{ color: 'var(--color-text-inverse)' }} />
-                              )}
-                            </div>
-                            <div>
-                              <h4 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-                                {level.courseName}
-                              </h4>
-                              <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                                Level {level.level}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm px-2 py-1 rounded-full" style={{ 
-                              backgroundColor: level.status === 'completed' ? 'var(--color-success-bg)' : 
-                                            level.status === 'in-progress' ? 'var(--color-warning-bg)' : 'var(--color-tertiary-bg)',
-                              color: level.status === 'completed' ? 'var(--color-success)' : 
-                                     level.status === 'in-progress' ? 'var(--color-warning)' : 'var(--color-text-secondary)'
-                            }}>
-                              {level.status}
-                            </span>
-                            {expandedLevels.has(index) ? (
-                              <ChevronDownIcon className="w-4 h-4" style={{ color: 'var(--color-text-secondary)' }} />
-                            ) : (
-                              <ChevronRightIcon className="w-4 h-4" style={{ color: 'var(--color-text-secondary)' }} />
-                            )}
-                          </div>
-                        </div>
-                        
-                        {expandedLevels.has(index) && (
-                          <ThemeContainer variant="surface" className="p-4 border-t rounded-t-none">
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                              <div className="text-center p-3 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
-                                <div className="text-lg font-bold" style={{ color: 'var(--color-accent-primary)' }}>
-                                  {level.learn?.completed ? '✓' : '○'}
-                                </div>
-                                <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Learning</div>
-                              </div>
-                              <div className="text-center p-3 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
-                                <div className="text-lg font-bold" style={{ color: 'var(--color-accent-primary)' }}>
-                                  {level.test?.completed ? '✓' : '○'}
-                                </div>
-                                <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Test</div>
-                              </div>
-                              <div className="text-center p-3 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
-                                <div className="text-lg font-bold" style={{ color: 'var(--color-accent-primary)' }}>
-                                  {level.exercise?.completed ? '✓' : '○'}
-                                </div>
-                                <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Exercise</div>
-                              </div>
-                            </div>
-                          </ThemeContainer>
-                        )}
-                      </ThemeContainer>
-                    ))}
+                  <h4 className="text-lg font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>Introduction</h4>
+                  <div className="p-4 rounded-lg" style={{ backgroundColor: 'var(--color-accent-tertiary)' }}>
+                    <p style={{ color: 'var(--color-accent-primary)' }}>
+                      {student.careerTrack} developer in the making, passionate about solving real business problems with code. 
+                      Skilled in various technologies and ready to contribute to impactful projects.
+                    </p>
                   </div>
                 </div>
+                
+
+
+                {/* Topics Covered Content */}
+                <div className="space-y-6">
+
+
+                    {/* Learning Levels */}
+                    <div className="space-y-4">
+                      {student.learningTimeline.map((level, index) => (
+                        <ThemeContainer 
+                          key={index}
+                          variant="secondary" 
+                          className="rounded-lg border transition-all duration-200"
+                          style={{ borderColor: 'var(--color-border)' }}
+                        >
+                          <div
+                            className="flex items-center justify-between p-4 cursor-pointer"
+                            onClick={() => toggleLevelExpansion(index)}
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ 
+                                backgroundColor: level.status === 'completed' ? 'var(--color-success)' : 
+                                              level.status === 'in-progress' ? 'var(--color-warning)' : 'var(--color-text-muted)'
+                              }}>
+                                {level.status === 'completed' ? (
+                                  <CheckCircledIcon className="w-5 h-5" style={{ color: 'var(--color-text-inverse)' }} />
+                                ) : level.status === 'in-progress' ? (
+                                  <ClockIcon className="w-5 h-5" style={{ color: 'var(--color-text-inverse)' }} />
+                                ) : (
+                                  <EyeOpenIcon className="w-5 h-5" style={{ color: 'var(--color-text-inverse)' }} />
+                                )}
+                              </div>
+                              <div>
+                                <h4 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                                  {level.courseName}
+                                </h4>
+                                <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                                  Level {level.level}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm px-2 py-1 rounded-full" style={{ 
+                                backgroundColor: level.status === 'completed' ? 'var(--color-success-bg)' : 
+                                              level.status === 'in-progress' ? 'var(--color-warning-bg)' : 'var(--color-tertiary-bg)',
+                                color: level.status === 'completed' ? 'var(--color-success)' : 
+                                       level.status === 'in-progress' ? 'var(--color-warning)' : 'var(--color-text-secondary)'
+                              }}>
+                                {level.status}
+                              </span>
+                              {expandedLevels.has(index) ? (
+                                <ChevronDownIcon className="w-4 h-4" style={{ color: 'var(--color-text-secondary)' }} />
+                              ) : (
+                                <ChevronRightIcon className="w-4 h-4" style={{ color: 'var(--color-text-secondary)' }} />
+                              )}
+                            </div>
+                          </div>
+                          
+                          {expandedLevels.has(index) && (
+                            <ThemeContainer variant="surface" className="p-4 border-t rounded-t-none">
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div className="text-center p-3 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
+                                  <div className="text-lg font-bold" style={{ color: 'var(--color-accent-primary)' }}>
+                                    {level.learn?.completed ? '✓' : '○'}
+                                  </div>
+                                  <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Learning</div>
+                                </div>
+                                <div className="text-center p-3 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
+                                  <div className="text-lg font-bold" style={{ color: 'var(--color-accent-primary)' }}>
+                                    {level.test?.completed ? '✓' : '○'}
+                                  </div>
+                                  <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Test</div>
+                                </div>
+                                <div className="text-center p-3 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
+                                  <div className="text-lg font-bold" style={{ color: 'var(--color-accent-primary)' }}>
+                                    {level.exercise?.completed ? '✓' : '○'}
+                                  </div>
+                                  <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Exercise</div>
+                                </div>
+                              </div>
+                            </ThemeContainer>
+                          )}
+                        </ThemeContainer>
+                      ))}
+                    </div>
+
+
+
+
+                  </div>
               </ThemeContainer>
             </div>
           </div>
