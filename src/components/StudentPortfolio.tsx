@@ -266,7 +266,7 @@ const StudentPortfolio: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="max-w-4xl mx-auto">
+          <div className="w-full">
             <ThemeContainer variant="surface" className="rounded-xl shadow-sm p-6">
               {/* Profile Row */}
               <div className="flex items-center gap-6 mb-8">
