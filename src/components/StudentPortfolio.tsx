@@ -19,6 +19,10 @@ import { StudentDetails } from '../types/staff';
 import { useStaff } from '../hooks/useStaff';
 import ThemeContainer from './ThemeContainer';
 
+// Note: Backend generates fake timestamps instead of real data
+// This causes dates and times to change on every refresh
+// The frontend handles this gracefully by showing available data
+
 const StudentPortfolio: React.FC = () => {
   const navigate = useNavigate();
   const { studentId } = useParams();
@@ -436,7 +440,9 @@ const StudentPortfolio: React.FC = () => {
                     let totalMinutes = 0;
                     let hasRealTimeData = false;
                     
-                    if (level.learn?.startTime && level.learn?.endTime) {
+                    // Only calculate from real timestamps (not fake ones)
+                    if (level.learn?.startTime && level.learn?.endTime && 
+                        isRealTimestamp(level.learn.startTime) && isRealTimestamp(level.learn.endTime)) {
                       const startTime = new Date(level.learn.startTime);
                       const endTime = new Date(level.learn.endTime);
                       const diffMs = endTime.getTime() - startTime.getTime();
@@ -447,7 +453,8 @@ const StudentPortfolio: React.FC = () => {
                       hasRealTimeData = true;
                     }
                     
-                    if (level.test?.startTime && level.test?.endTime) {
+                    if (level.test?.startTime && level.test?.endTime && 
+                        isRealTimestamp(level.test.startTime) && isRealTimestamp(level.test.endTime)) {
                       const startTime = new Date(level.test.startTime);
                       const endTime = new Date(level.test.endTime);
                       const diffMs = endTime.getTime() - startTime.getTime();
@@ -458,7 +465,8 @@ const StudentPortfolio: React.FC = () => {
                       hasRealTimeData = true;
                     }
                     
-                    if (level.exercise?.startTime && level.exercise?.endTime) {
+                    if (level.exercise?.startTime && level.exercise?.endTime && 
+                        isRealTimestamp(level.exercise.startTime) && isRealTimestamp(level.exercise.endTime)) {
                       const startTime = new Date(level.exercise.startTime);
                       const endTime = new Date(level.exercise.endTime);
                       const diffMs = endTime.getTime() - startTime.getTime();

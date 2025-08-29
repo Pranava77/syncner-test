@@ -1,28 +1,24 @@
 import express from 'express';
+import { protect } from '../middleware/auth.js';
+import { ensureStaff } from '../middleware/auth.js';
 import User from '../models/User.js';
 import UserProgress from '../models/UserProgress.js';
 import Track from '../models/Track.js';
-import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
 
-// Middleware to ensure user is staff
-const ensureStaff = async (req, res, next) => {
-  try {
-    if (req.user.role !== 'staff' && req.user.role !== 'admin') {
-      return res.status(403).json({
-        success: false,
-        message: 'Access denied. Staff privileges required.'
-      });
-    }
-    next();
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Error verifying staff privileges'
-    });
-  }
-};
+/*
+ * IMPORTANT: Fixed fake data generation issue
+ * 
+ * Previously, this route was generating fake timestamps for in-progress levels:
+ * - startTime: new Date() (created "now" timestamp on every request)
+ * - endTime: 'In Progress' (fake string instead of real data)
+ * 
+ * FIXED: Now uses real data from UserProgress model:
+ * - startTime: Uses actual lastAttemptAt, submittedAt, or completedAt when available
+ * - endTime: Uses actual completion dates or null for incomplete sections
+ * - No more fake timestamps that change on every refresh
+ */
 
 // Get all students with pagination and filtering
 router.get('/students', protect, ensureStaff, async (req, res) => {
@@ -447,13 +443,31 @@ router.get('/students/:id', protect, ensureStaff, async (req, res) => {
     
     // Add current level if not completed
     if (progress?.currentLevel && progress.currentLevel !== 1) {
+      // Find the current level progress data
+      const currentLevelProgress = progress.completedLevels.find(
+        level => level.levelOrder === progress.currentLevel
+      );
       learningTimeline.unshift({
         level: progress.currentLevel,
         courseName: `Level ${progress.currentLevel}`,
         status: 'in-progress',
-        learn: { completed: false, startTime: new Date(), endTime: 'In Progress' },
-        test: { completed: false, score: 0, attempts: 0, startTime: new Date(), endTime: 'Not Started' },
-        exercise: { completed: false, startTime: new Date(), endTime: 'In Progress' }
+        learn: { 
+          completed: currentLevelProgress?.completedSections?.learn || false, 
+          startTime: currentLevelProgress?.learnProgress?.timeSpent ? currentLevelProgress.completedAt : null, 
+          endTime: currentLevelProgress?.learnProgress?.isCompleted ? currentLevelProgress.completedAt : null 
+        },
+        test: { 
+          completed: currentLevelProgress?.completedSections?.test || false, 
+          score: currentLevelProgress?.testProgress?.attempts?.[0]?.score || 0, 
+          attempts: currentLevelProgress?.testProgress?.attempts?.length || 0, 
+          startTime: currentLevelProgress?.testProgress?.lastAttemptAt || null, 
+          endTime: currentLevelProgress?.testProgress?.isCompleted ? currentLevelProgress.completedAt : null 
+        },
+        exercise: { 
+          completed: currentLevelProgress?.completedSections?.exercise || false, 
+          startTime: currentLevelProgress?.exerciseSubmissions?.[0]?.submittedAt || null, 
+          endTime: currentLevelProgress?.completedSections?.exercise ? currentLevelProgress.completedAt : null 
+        }
       });
     }
     
