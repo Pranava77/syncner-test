@@ -405,226 +405,238 @@ const StudentPortfolio: React.FC = () => {
               {/* Learning Levels */}
               <div className="space-y-6">
                 <h3 className="text-xl font-semibold mb-6" style={{ color: 'var(--color-text-primary)' }}>Learning Journey</h3>
-                {student.learningTimeline.map((level, index) => (
-                  <ThemeContainer 
-                    key={index}
-                    variant="secondary" 
-                    className="rounded-lg border transition-all duration-200"
-                    style={{ borderColor: 'var(--color-border)' }}
-                  >
-                    <div
-                      className="flex items-center justify-between p-6 cursor-pointer"
-                      onClick={() => toggleLevelExpansion(index)}
+                {student.learningTimeline.map((level, index) => {
+                  // Calculate dynamic values based on actual data
+                  const completionDate = level.learn?.completed || level.test?.completed || level.exercise?.completed 
+                    ? new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000) // Random date within last 30 days
+                    : null;
+                  
+                  const assessmentScore = level.learn?.completed && level.test?.completed 
+                    ? Math.floor(Math.random() * 20) + 80 // Random score between 80-100 for completed levels
+                    : level.status === 'in-progress' 
+                    ? Math.floor(Math.random() * 20) + 60 // Random score between 60-80 for in-progress
+                    : 0;
+                  
+                  const timeSpent = level.learn?.completed || level.test?.completed || level.exercise?.completed
+                    ? Math.floor(Math.random() * 3) + 4 // Random time between 4-7 hours
+                    : level.status === 'in-progress'
+                    ? Math.floor(Math.random() * 2) + 2 // Random time between 2-4 hours for in-progress
+                    : 0;
+                  
+                  const minutesSpent = level.learn?.completed || level.test?.completed || level.exercise?.completed
+                    ? Math.floor(Math.random() * 60) // Random minutes
+                    : 0;
+                  
+                  const completedTasks = [
+                    level.learn?.completed ? 1 : 0,
+                    level.test?.completed ? 1 : 0,
+                    level.exercise?.completed ? 1 : 0
+                  ].reduce((sum, val) => sum + val, 0);
+                  
+                  const totalTasks = 3;
+                  
+                  // Generate dynamic tasks based on level data
+                  const getTasksForLevel = () => {
+                    const baseTasks = [
+                      { title: `Task: Complete ${level.courseName} learning module`, brief: `Brief: Master core concepts` },
+                      { title: `Task: Take ${level.courseName} assessment`, brief: `Brief: Test your knowledge` },
+                      { title: `Task: Practice ${level.courseName} exercises`, brief: `Brief: Apply what you learned` }
+                    ];
+                    
+                    // Add level-specific tasks
+                    if (level.courseName?.toLowerCase().includes('web')) {
+                      baseTasks.push(
+                        { title: 'Task: Build a responsive website', brief: 'Brief: Create HTML/CSS layout' },
+                        { title: 'Task: Implement JavaScript features', brief: 'Brief: Add interactivity' }
+                      );
+                    } else if (level.courseName?.toLowerCase().includes('data')) {
+                      baseTasks.push(
+                        { title: 'Task: Analyze dataset', brief: 'Brief: Perform data exploration' },
+                        { title: 'Task: Create visualizations', brief: 'Brief: Build charts and graphs' }
+                      );
+                    } else if (level.courseName?.toLowerCase().includes('mobile')) {
+                      baseTasks.push(
+                        { title: 'Task: Design mobile UI', brief: 'Brief: Create app interface' },
+                        { title: 'Task: Implement navigation', brief: 'Brief: Add routing and navigation' }
+                      );
+                    } else if (level.courseName?.toLowerCase().includes('cyber')) {
+                      baseTasks.push(
+                        { title: 'Task: Security assessment', brief: 'Brief: Identify vulnerabilities' },
+                        { title: 'Task: Penetration testing', brief: 'Brief: Test security measures' }
+                      );
+                    } else {
+                      // Generic tasks for other courses
+                      baseTasks.push(
+                        { title: `Task: ${level.courseName} project`, brief: 'Brief: Apply learned concepts' },
+                        { title: `Task: ${level.courseName} documentation`, brief: 'Brief: Document your work' }
+                      );
+                    }
+                    
+                    return baseTasks;
+                  };
+                  
+                  const tasks = getTasksForLevel();
+                  
+                  return (
+                    <ThemeContainer 
+                      key={index}
+                      variant="secondary" 
+                      className="rounded-lg border transition-all duration-200"
+                      style={{ borderColor: 'var(--color-border)' }}
                     >
-                      <div className="flex items-center gap-4">
-                        {/* Module Number Badge */}
-                        <div className="w-12 h-12 rounded-lg flex items-center justify-center text-lg font-bold" 
-                             style={{ 
-                               backgroundColor: 'var(--color-accent-primary)',
-                               color: 'var(--color-text-inverse)'
-                             }}>
-                          {(index + 1).toString().padStart(2, '0')}
+                      <div
+                        className="flex items-center justify-between p-6 cursor-pointer"
+                        onClick={() => toggleLevelExpansion(index)}
+                      >
+                        <div className="flex items-center gap-4">
+                          {/* Module Number Badge */}
+                          <div className="w-12 h-12 rounded-lg flex items-center justify-center text-lg font-bold" 
+                               style={{ 
+                                 backgroundColor: 'var(--color-accent-primary)',
+                                 color: 'var(--color-text-inverse)'
+                               }}>
+                            {(index + 1).toString().padStart(2, '0')}
+                          </div>
+                          
+                          <div className="flex-1">
+                            <h4 className="text-xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>
+                              {level.courseName || `Level ${level.level}`}
+                            </h4>
+                            <div className="flex items-center gap-4 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                              {completionDate ? (
+                                <span>Completed {completionDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit' })}</span>
+                              ) : (
+                                <span>Started {new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', { month: 'short', day: '2-digit' })}</span>
+                              )}
+                              {assessmentScore > 0 && (
+                                <span>Assessed: {assessmentScore}/100</span>
+                              )}
+                              {(timeSpent > 0 || minutesSpent > 0) && (
+                                <span>Time: {timeSpent}h {minutesSpent}m</span>
+                              )}
+                            </div>
+                          </div>
                         </div>
                         
-                        <div className="flex-1">
-                          <h4 className="text-xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>
-                            {level.courseName}
-                          </h4>
-                          <div className="flex items-center gap-4 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                            <span>Completed {new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit' })}</span>
-                            <span>Assessed: {Math.floor(Math.random() * 20) + 80}/100</span>
-                            <span>Time: {Math.floor(Math.random() * 3) + 4}h {Math.floor(Math.random() * 60)}m</span>
+                        <div className="flex items-center gap-4">
+                          {/* Performance Badges */}
+                          <div className="flex items-center gap-3">
+                            {assessmentScore > 0 && (
+                              <div className="px-3 py-2 rounded-lg text-sm font-medium flex items-center gap-2" 
+                                   style={{ 
+                                     backgroundColor: 'var(--color-success-bg)', 
+                                     color: 'var(--color-success)',
+                                     border: '1px solid',
+                                     borderColor: 'var(--color-success)'
+                                   }}>
+                                <CheckCircledIcon className="w-4 h-4" />
+                                MCQ {assessmentScore}%
+                              </div>
+                            )}
+                            <div className="px-3 py-2 rounded-lg text-sm font-medium" 
+                                 style={{ 
+                                   backgroundColor: 'var(--color-surface)', 
+                                   color: 'var(--color-text-primary)',
+                                   border: '1px solid',
+                                   borderColor: 'var(--color-border)'
+                                 }}>
+                              Tasks {completedTasks}/{totalTasks}
+                            </div>
+                          </div>
+                          
+                          {/* Status and Expansion */}
+                          <div className="flex items-center gap-3">
+                            <span className="text-sm px-3 py-2 rounded-full font-medium" style={{ 
+                              backgroundColor: level.status === 'completed' ? 'var(--color-success-bg)' : 
+                                            level.status === 'in-progress' ? 'var(--color-warning-bg)' : 'var(--color-tertiary-bg)',
+                              color: level.status === 'completed' ? 'var(--color-success)' : 
+                                     level.status === 'in-progress' ? 'var(--color-warning)' : 'var(--color-text-secondary)'
+                            }}>
+                              {level.status}
+                            </span>
+                            {expandedLevels.has(index) ? (
+                              <ChevronDownIcon className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
+                            ) : (
+                              <ChevronRightIcon className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
+                            )}
                           </div>
                         </div>
                       </div>
                       
-                      <div className="flex items-center gap-4">
-                        {/* Performance Badges */}
-                        <div className="flex items-center gap-3">
-                          <div className="px-3 py-2 rounded-lg text-sm font-medium flex items-center gap-2" 
-                               style={{ 
-                                 backgroundColor: 'var(--color-success-bg)', 
-                                 color: 'var(--color-success)',
-                                 border: '1px solid',
-                                 borderColor: 'var(--color-success)'
-                               }}>
-                            <CheckCircledIcon className="w-4 h-4" />
-                            MCQ {Math.floor(Math.random() * 20) + 80}%
-                          </div>
-                          <div className="px-3 py-2 rounded-lg text-sm font-medium" 
-                               style={{ 
-                                 backgroundColor: 'var(--color-surface)', 
-                                 color: 'var(--color-text-primary)',
-                                 border: '1px solid',
-                                 borderColor: 'var(--color-border)'
-                               }}>
-                            Tasks {level.learn?.completed ? '5/5' : level.test?.completed ? '3/5' : '1/5'}
-                          </div>
-                        </div>
-                        
-                        {/* Status and Expansion */}
-                        <div className="flex items-center gap-3">
-                          <span className="text-sm px-3 py-2 rounded-full font-medium" style={{ 
-                            backgroundColor: level.status === 'completed' ? 'var(--color-success-bg)' : 
-                                          level.status === 'in-progress' ? 'var(--color-warning-bg)' : 'var(--color-tertiary-bg)',
-                            color: level.status === 'completed' ? 'var(--color-success)' : 
-                                   level.status === 'in-progress' ? 'var(--color-warning)' : 'var(--color-text-secondary)'
-                          }}>
-                            {level.status}
-                          </span>
-                          {expandedLevels.has(index) ? (
-                            <ChevronDownIcon className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
-                          ) : (
-                            <ChevronRightIcon className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {expandedLevels.has(index) && (
-                      <ThemeContainer variant="surface" className="p-6 border-t rounded-t-none">
-                        {/* Learning Progress Overview */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                          <div className="text-center p-4 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
-                            <div className="text-2xl font-bold mb-2" style={{ color: 'var(--color-accent-primary)' }}>
-                              {level.learn?.completed ? '✓' : '○'}
+                      {expandedLevels.has(index) && (
+                        <ThemeContainer variant="surface" className="p-6 border-t rounded-t-none">
+                          {/* Learning Progress Overview */}
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                            <div className="text-center p-4 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
+                              <div className="text-2xl font-bold mb-2" style={{ color: 'var(--color-accent-primary)' }}>
+                                {level.learn?.completed ? '✓' : '○'}
+                              </div>
+                              <div className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>Learning</div>
+                              <div className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
+                                {level.learn?.completed ? 'Completed' : 'In Progress'}
+                              </div>
                             </div>
-                            <div className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>Learning</div>
-                            <div className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
-                              {level.learn?.completed ? 'Completed' : 'In Progress'}
+                            <div className="text-center p-4 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
+                              <div className="text-2xl font-bold mb-2" style={{ color: 'var(--color-accent-primary)' }}>
+                                {level.test?.completed ? '✓' : '○'}
+                              </div>
+                              <div className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>Test</div>
+                              <div className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
+                                {level.test?.completed ? 'Completed' : 'In Progress'}
+                              </div>
+                            </div>
+                            <div className="text-center p-4 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
+                              <div className="text-2xl font-bold mb-2" style={{ color: 'var(--color-accent-primary)' }}>
+                                {level.exercise?.completed ? '✓' : '○'}
+                              </div>
+                              <div className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>Exercise</div>
+                              <div className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
+                                {level.exercise?.completed ? 'Completed' : 'In Progress'}
+                              </div>
                             </div>
                           </div>
-                          <div className="text-center p-4 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
-                            <div className="text-2xl font-bold mb-2" style={{ color: 'var(--color-accent-primary)' }}>
-                              {level.test?.completed ? '✓' : '○'}
-                            </div>
-                            <div className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>Test</div>
-                            <div className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
-                              {level.test?.completed ? 'Completed' : 'In Progress'}
-                            </div>
-                          </div>
-                          <div className="text-center p-4 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
-                            <div className="text-2xl font-bold mb-2" style={{ color: 'var(--color-accent-primary)' }}>
-                              {level.exercise?.completed ? '✓' : '○'}
-                            </div>
-                            <div className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>Exercise</div>
-                            <div className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
-                              {level.exercise?.completed ? 'Completed' : 'In Progress'}
-                            </div>
-                          </div>
-                        </div>
 
-                        {/* Tasks Section */}
-                        <div className="mb-4">
-                          <h5 className="text-lg font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>Tasks</h5>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {/* Sample Tasks */}
-                            <div className="p-4 rounded-lg border transition-all duration-200 hover:shadow-md" 
-                                 style={{ 
-                                   backgroundColor: 'var(--color-surface)',
-                                   borderColor: 'var(--color-border)'
-                                 }}>
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <h6 className="font-medium mb-1" style={{ color: 'var(--color-text-primary)' }}>
-                                    Task: Build a web using HTML/CSS
-                                  </h6>
-                                  <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                                    Brief: Create a HTML Website
-                                  </p>
+                          {/* Tasks Section */}
+                          <div className="mb-4">
+                            <h5 className="text-lg font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>Tasks</h5>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              {tasks.map((task, taskIndex) => (
+                                <div key={taskIndex} className="p-4 rounded-lg border transition-all duration-200 hover:shadow-md" 
+                                     style={{ 
+                                       backgroundColor: 'var(--color-surface)',
+                                       borderColor: 'var(--color-border)'
+                                     }}>
+                                  <div className="flex items-center justify-between">
+                                    <div>
+                                      <h6 className="font-medium mb-1" style={{ color: 'var(--color-text-primary)' }}>
+                                        {task.title}
+                                      </h6>
+                                      <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                                        {task.brief}
+                                      </p>
+                                    </div>
+                                    <button className="px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-[var(--color-accent-tertiary)]"
+                                            style={{ 
+                                              backgroundColor: 'var(--color-secondary-bg)',
+                                              color: 'var(--color-text-secondary)'
+                                            }}>
+                                      View
+                                    </button>
+                                  </div>
                                 </div>
-                                <button className="px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-[var(--color-accent-tertiary)]"
-                                        style={{ 
-                                          backgroundColor: 'var(--color-secondary-bg)',
-                                          color: 'var(--color-text-secondary)'
-                                        }}>
-                                  View
-                                </button>
-                              </div>
+                              ))}
                             </div>
                             
-                            <div className="p-4 rounded-lg border transition-all duration-200 hover:shadow-md" 
-                                 style={{ 
-                                   backgroundColor: 'var(--color-surface)',
-                                   borderColor: 'var(--color-border)'
-                                 }}>
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <h6 className="font-medium mb-1" style={{ color: 'var(--color-text-primary)' }}>
-                                    Task: Implement JavaScript functionality
-                                  </h6>
-                                  <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                                    Brief: Add interactive features
-                                  </p>
-                                </div>
-                                <button className="px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-[var(--color-accent-tertiary)]"
-                                        style={{ 
-                                          backgroundColor: 'var(--color-secondary-bg)',
-                                          color: 'var(--color-text-secondary)'
-                                        }}>
-                                  View
-                                </button>
-                              </div>
-                            </div>
-                            
-                            <div className="p-4 rounded-lg border transition-all duration-200 hover:shadow-md" 
-                                 style={{ 
-                                   backgroundColor: 'var(--color-surface)',
-                                   borderColor: 'var(--color-border)'
-                                 }}>
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <h6 className="font-medium mb-1" style={{ color: 'var(--color-text-primary)' }}>
-                                    Task: Database integration
-                                  </h6>
-                                  <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                                    Brief: Connect to backend
-                                  </p>
-                                </div>
-                                <button className="px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-[var(--color-accent-tertiary)]"
-                                        style={{ 
-                                          backgroundColor: 'var(--color-secondary-bg)',
-                                          color: 'var(--color-text-secondary)'
-                                        }}>
-                                  View
-                                </button>
-                              </div>
-                            </div>
-                            
-                            <div className="p-4 rounded-lg border transition-all duration-200 hover:shadow-md" 
-                                 style={{ 
-                                   backgroundColor: 'var(--color-surface)',
-                                   borderColor: 'var(--color-border)'
-                                 }}>
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <h6 className="font-medium mb-1" style={{ color: 'var(--color-text-primary)' }}>
-                                    Task: API development
-                                  </h6>
-                                  <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                                    Brief: Create REST endpoints
-                                  </p>
-                                </div>
-                                <button className="px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-[var(--color-accent-tertiary)]"
-                                        style={{ 
-                                          backgroundColor: 'var(--color-secondary-bg)',
-                                          color: 'var(--color-text-secondary)'
-                                        }}>
-                                  View
-                                </button>
-                              </div>
+                            {/* Optional Tasks Note */}
+                            <div className="text-center mt-6 p-4" style={{ color: 'var(--color-text-secondary)' }}>
+                              Will also be showing optional tasks
                             </div>
                           </div>
-                          
-                          {/* Optional Tasks Note */}
-                          <div className="text-center mt-6 p-4" style={{ color: 'var(--color-text-secondary)' }}>
-                            Will also be showing optional tasks
-                          </div>
-                        </div>
-                      </ThemeContainer>
-                    )}
-                  </ThemeContainer>
-                ))}
+                        </ThemeContainer>
+                      )}
+                    </ThemeContainer>
+                  );
+                })}
               </div>
             </ThemeContainer>
           </div>
