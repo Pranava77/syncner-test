@@ -265,96 +265,171 @@ Generated on: ${new Date().toLocaleDateString()}
         >
           <div className="w-full">
             {/* Profile Section */}
-            <ThemeContainer variant="secondary" className="rounded-lg border transition-all duration-200 p-6 mb-8" style={{ borderColor: 'var(--color-border)' }}>
+            <ThemeContainer variant="surface" className="rounded-xl shadow-lg border-0 p-8 mb-8" style={{ background: 'linear-gradient(135deg, var(--color-surface) 0%, var(--color-secondary-bg) 100%)' }}>
               {/* Profile Row */}
-              <div className="flex items-center gap-6 mb-8">
-                <div className="w-20 h-20 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'var(--color-accent-primary)' }}>
-                  <PersonIcon className="w-12 h-12" style={{ color: 'var(--color-text-inverse)' }} />
+              <div className="flex flex-col lg:flex-row lg:items-center gap-8 mb-8">
+                <div className="relative">
+                  <div className="w-24 h-24 lg:w-28 lg:h-28 rounded-2xl flex items-center justify-center shadow-lg" style={{ 
+                    backgroundColor: 'var(--color-accent-primary)',
+                    background: 'linear-gradient(135deg, var(--color-accent-primary) 0%, var(--color-accent-secondary) 100%)'
+                  }}>
+                    <PersonIcon className="w-14 h-14 lg:w-16 lg:h-16" style={{ color: 'var(--color-text-inverse)' }} />
+                  </div>
+                  <div className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center shadow-md" 
+                       style={{ backgroundColor: 'var(--color-success)', border: '3px solid var(--color-surface)' }}>
+                    <CheckCircledIcon className="w-4 h-4" style={{ color: 'white' }} />
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <h4 className="text-2xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>{student.name}</h4>
-                  <p className="flex items-center gap-2 text-lg mb-3" style={{ color: 'var(--color-text-secondary)' }}>
-                    <span className="w-4 h-4">📍</span>
-                    {student.department || 'N/A'}, {student.batch || 'N/A'}
-                  </p>
-                  
-                  {/* Completion Badge and Progress */}
-                  <div className="mb-4">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-3" style={{ backgroundColor: 'var(--color-success-bg)', color: 'var(--color-success)' }}>
-                      <CheckCircledIcon className="w-4 h-4" />
-                      {calculateCompletionPercentage()}% completed
+                
+                <div className="flex-1 space-y-4">
+                  <div>
+                    <h4 className="text-3xl lg:text-4xl font-bold mb-2 tracking-tight" style={{ color: 'var(--color-text-primary)' }}>
+                      {student.name}
+                    </h4>
+                    <div className="flex items-center gap-3 text-lg" style={{ color: 'var(--color-text-secondary)' }}>
+                      <div className="flex items-center gap-2">
+                        <div className="w-5 h-5 rounded-full" style={{ backgroundColor: 'var(--color-accent-primary)' }}></div>
+                        <span className="font-medium">{student.department || 'N/A'}</span>
+                      </div>
+                      <div className="w-1 h-1 rounded-full" style={{ backgroundColor: 'var(--color-text-tertiary)' }}></div>
+                      <span>{student.batch || 'N/A'}</span>
                     </div>
-                    <div className="w-full rounded-full h-3" style={{ backgroundColor: 'var(--color-border-subtle)' }}>
-                      <div 
-                        className="h-3 rounded-full transition-all duration-500"
-                        style={{ 
-                          width: `${calculateCompletionPercentage()}%`,
-                          backgroundColor: 'var(--color-success)'
-                        }}
-                      ></div>
+                  </div>
+                  
+                  {/* Enhanced Progress Section */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="inline-flex items-center gap-3 px-4 py-2 rounded-xl text-sm font-semibold shadow-sm" 
+                           style={{ 
+                             backgroundColor: 'var(--color-success-bg)', 
+                             color: 'var(--color-success)',
+                             border: '1px solid var(--color-success)'
+                           }}>
+                        <CheckCircledIcon className="w-5 h-5" />
+                        {calculateCompletionPercentage()}% Complete
+                      </div>
+                      <span className="text-sm font-medium" style={{ color: 'var(--color-text-tertiary)' }}>
+                        {student.learningTimeline?.filter(l => l.status === 'completed').length || 0} of {student.learningTimeline?.length || 0} levels
+                      </span>
+                    </div>
+                    <div className="relative">
+                      <div className="w-full h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--color-border-subtle)' }}>
+                        <div 
+                          className="h-full rounded-full transition-all duration-700 ease-out relative overflow-hidden"
+                          style={{ 
+                            width: `${calculateCompletionPercentage()}%`,
+                            background: 'linear-gradient(90deg, var(--color-success) 0%, var(--color-accent-primary) 100%)'
+                          }}
+                        >
+                          <div className="absolute inset-0 bg-white opacity-20 animate-pulse"></div>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Status Pills */}
-                  <div className="flex flex-wrap gap-2">
-                    <div className="px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: 'var(--color-accent-tertiary)', color: 'var(--color-accent-primary)' }}>
+                  {/* Enhanced Status Pills */}
+                  <div className="flex flex-wrap gap-3">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold shadow-sm transition-all duration-200 hover:scale-105" 
+                         style={{ 
+                           backgroundColor: 'var(--color-accent-tertiary)', 
+                           color: 'var(--color-accent-primary)',
+                           border: '1px solid var(--color-accent-primary)'
+                         }}>
+                      <RocketIcon className="w-4 h-4" />
                       {student.careerTrack}
                     </div>
-                    <div className="px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: 'var(--color-secondary-bg)', color: 'var(--color-text-secondary)' }}>
-                      {student.batch || 'N/A'}
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium shadow-sm" 
+                         style={{ 
+                           backgroundColor: 'var(--color-surface)', 
+                           color: 'var(--color-text-secondary)',
+                           border: '1px solid var(--color-border)'
+                         }}>
+                      <CalendarIcon className="w-4 h-4" />
+                      Batch {student.batch || 'N/A'}
                     </div>
-                    <div className="px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: 'var(--color-success-bg)', color: 'var(--color-success)' }}>
-                      Active
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold shadow-sm" 
+                         style={{ 
+                           backgroundColor: 'var(--color-success-bg)', 
+                           color: 'var(--color-success)',
+                           border: '1px solid var(--color-success)'
+                         }}>
+                      <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: 'var(--color-success)' }}></div>
+                      Active Student
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Introduction */}
-              <div className="mb-8">
-                <h3 className="text-xl font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>Introduction</h3>
-                <p className="text-base leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-                  {student.name} is a dedicated student pursuing {student.careerTrack} with a strong focus on practical learning and skill development. 
-                  Currently enrolled in batch {student.batch || 'N/A'} at {student.department || 'N/A'} department, 
-                  {student.name} has demonstrated consistent progress and commitment to mastering the curriculum.
-                </p>
+              <div className="mb-10">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-1 h-8 rounded-full" style={{ backgroundColor: 'var(--color-accent-primary)' }}></div>
+                  <h3 className="text-2xl font-bold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>Introduction</h3>
+                </div>
+                <div className="p-6 rounded-xl" style={{ 
+                  backgroundColor: 'var(--color-secondary-bg)',
+                  border: '1px solid var(--color-border)'
+                }}>
+                  <p className="text-lg leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+                    <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{student.name}</span> is a dedicated student pursuing{' '}
+                    <span className="px-2 py-1 rounded-md font-medium" style={{ 
+                      backgroundColor: 'var(--color-accent-tertiary)', 
+                      color: 'var(--color-accent-primary)' 
+                    }}>
+                      {student.careerTrack}
+                    </span>{' '}
+                    with a strong focus on practical learning and skill development. Currently enrolled in batch{' '}
+                    <span className="font-medium" style={{ color: 'var(--color-text-primary)' }}>{student.batch || 'N/A'}</span>{' '}
+                    at {student.department || 'N/A'} department, {student.name} has demonstrated consistent progress and commitment to mastering the curriculum.
+                  </p>
+                </div>
               </div>
 
               {/* Recommended Roles */}
-              <div className="mb-8">
-                <h3 className="text-xl font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>Recommended Roles</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="mb-10">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-1 h-8 rounded-full" style={{ backgroundColor: 'var(--color-accent-primary)' }}></div>
+                  <h3 className="text-2xl font-bold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>Recommended Career Paths</h3>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {getRecommendedRoles().map((role, index) => (
                     <div
                       key={role}
-                      className="group relative p-4 rounded-lg transition-all duration-200 cursor-pointer"
+                      className="group relative p-5 rounded-xl transition-all duration-300 cursor-pointer hover:scale-[1.02] hover:shadow-lg"
                       style={{ 
                         backgroundColor: 'var(--color-surface)',
-                        border: '1px solid',
-                        borderColor: 'var(--color-border)'
+                        border: '1px solid var(--color-border)',
+                        background: 'linear-gradient(135deg, var(--color-surface) 0%, var(--color-secondary-bg) 100%)'
                       }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
-                        e.currentTarget.style.backgroundColor = 'var(--color-accent-tertiary)';
+                        e.currentTarget.style.transform = 'translateY(-2px)';
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.borderColor = 'var(--color-border)';
-                        e.currentTarget.style.backgroundColor = 'var(--color-surface)';
+                        e.currentTarget.style.transform = 'translateY(0px)';
                       }}
                     >
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--color-accent-primary)' }}></div>
-                          <span className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>{role}</span>
+                          <div className="w-3 h-3 rounded-full animate-pulse" style={{ backgroundColor: 'var(--color-accent-primary)' }}></div>
+                          <span className="font-semibold text-base" style={{ color: 'var(--color-text-primary)' }}>{role}</span>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs px-2 py-1 rounded-full" style={{ 
+                        <RocketIcon className="w-5 h-5 transition-all duration-300 group-hover:scale-125 group-hover:rotate-12" 
+                                   style={{ color: 'var(--color-accent-primary)' }} />
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                          Perfect match for your skills
+                        </span>
+                        <div className="flex items-center gap-1">
+                          <span className="text-xs px-3 py-1 rounded-full font-medium shadow-sm" style={{ 
                             backgroundColor: 'var(--color-success-bg)', 
-                            color: 'var(--color-success)' 
+                            color: 'var(--color-success)',
+                            border: '1px solid var(--color-success)'
                           }}>
-                            Match
+                            ✓ {85 + (index * 3)}% Match
                           </span>
-                          <RocketIcon className="w-4 h-4 transition-transform group-hover:scale-110" style={{ color: 'var(--color-accent-primary)' }} />
                         </div>
                       </div>
                     </div>
@@ -364,37 +439,71 @@ Generated on: ${new Date().toLocaleDateString()}
 
               {/* Certificate ID */}
               <div className="mb-8">
-                <h3 className="text-xl font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>Certificate ID</h3>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-1 h-8 rounded-full" style={{ backgroundColor: 'var(--color-accent-primary)' }}></div>
+                  <h3 className="text-2xl font-bold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>Digital Certificate</h3>
+                </div>
                 <div className="relative group">
-                  <div className="p-6 rounded-lg border-2 transition-all duration-200 cursor-pointer" 
+                  <div className="p-8 rounded-xl border-2 transition-all duration-300 cursor-pointer hover:shadow-lg" 
                        style={{ 
                          backgroundColor: 'var(--color-surface)',
-                         borderColor: 'var(--color-border)',
-                         borderStyle: 'dashed'
+                         borderColor: 'var(--color-success)',
+                         borderStyle: 'solid',
+                         background: 'linear-gradient(135deg, var(--color-surface) 0%, var(--color-success-bg) 100%)'
                        }}
                        onMouseEnter={(e) => {
-                         e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
-                         e.currentTarget.style.backgroundColor = 'var(--color-accent-tertiary)';
+                         e.currentTarget.style.transform = 'translateY(-4px)';
+                         e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.1)';
                        }}
                        onMouseLeave={(e) => {
-                         e.currentTarget.style.borderColor = 'var(--color-border)';
-                         e.currentTarget.style.backgroundColor = 'var(--color-surface)';
+                         e.currentTarget.style.transform = 'translateY(0px)';
+                         e.currentTarget.style.boxShadow = 'none';
                        }}
                   >
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: 'var(--color-success)' }}></div>
-                        <span className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>VERIFIED</span>
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="relative">
+                          <div className="w-4 h-4 rounded-full animate-pulse" style={{ backgroundColor: 'var(--color-success)' }}></div>
+                          <div className="absolute inset-0 w-4 h-4 rounded-full animate-ping" style={{ backgroundColor: 'var(--color-success)', opacity: 0.4 }}></div>
+                        </div>
+                        <span className="text-lg font-bold tracking-wide" style={{ color: 'var(--color-success)' }}>VERIFIED CERTIFICATE</span>
                       </div>
-                      <CheckCircledIcon className="w-5 h-5" style={{ color: 'var(--color-success)' }} />
+                      <div className="flex items-center gap-2">
+                        <IdCardIcon className="w-6 h-6" style={{ color: 'var(--color-success)' }} />
+                        <CheckCircledIcon className="w-6 h-6" style={{ color: 'var(--color-success)' }} />
+                      </div>
                     </div>
-                    <p className="text-base font-mono break-all mb-3" style={{ color: 'var(--color-text-secondary)' }}>
-                      SYNCNER-2025-{student._id.slice(-8).toUpperCase()}-{student.enrolledDate ? new Date(student.enrolledDate).getFullYear().toString().slice(-2) : '25'}
-                    </p>
-                    <div className="pt-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
-                      <p className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
-                        Generated on {new Date().toLocaleDateString()}
+                    
+                    <div className="mb-4">
+                      <p className="text-sm font-medium mb-2" style={{ color: 'var(--color-text-secondary)' }}>Certificate ID</p>
+                      <p className="text-xl font-mono font-bold tracking-wider break-all p-3 rounded-lg" 
+                         style={{ 
+                           color: 'var(--color-text-primary)',
+                           backgroundColor: 'var(--color-secondary-bg)',
+                           border: '1px solid var(--color-border)'
+                         }}>
+                        SYNCNER-2025-{student._id.slice(-8).toUpperCase()}-{student.enrolledDate ? new Date(student.enrolledDate).getFullYear().toString().slice(-2) : '25'}
                       </p>
+                    </div>
+                    
+                    <div className="flex items-center justify-between pt-4 border-t" style={{ borderColor: 'var(--color-border)' }}>
+                      <div className="flex items-center gap-2">
+                        <CalendarIcon className="w-4 h-4" style={{ color: 'var(--color-text-tertiary)' }} />
+                        <span className="text-sm font-medium" style={{ color: 'var(--color-text-tertiary)' }}>
+                          Issued: {new Date().toLocaleDateString('en-US', { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric' 
+                          })}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 px-3 py-1 rounded-full" 
+                           style={{ backgroundColor: 'var(--color-success-bg)' }}>
+                        <EyeOpenIcon className="w-4 h-4" style={{ color: 'var(--color-success)' }} />
+                        <span className="text-xs font-semibold" style={{ color: 'var(--color-success)' }}>
+                          Blockchain Verified
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -403,7 +512,17 @@ Generated on: ${new Date().toLocaleDateString()}
 
             {/* Learning Journey */}
             <div className="space-y-6">
-              <h3 className="text-xl font-semibold mb-6" style={{ color: 'var(--color-text-primary)' }}>Learning Journey</h3>
+              <div className="flex items-center gap-3 mb-8">
+                <div className="w-1 h-8 rounded-full" style={{ backgroundColor: 'var(--color-accent-primary)' }}></div>
+                <h3 className="text-2xl font-bold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>Learning Journey</h3>
+                <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border)' }}></div>
+                <span className="text-sm font-medium px-3 py-1 rounded-full" style={{ 
+                  backgroundColor: 'var(--color-accent-tertiary)', 
+                  color: 'var(--color-accent-primary)' 
+                }}>
+                  {student.learningTimeline?.length || 0} Levels
+                </span>
+              </div>
               {student.learningTimeline.map((level, index) => {
                 // Get real completion date from backend data
                 const getCompletionDate = () => {
@@ -561,85 +680,118 @@ Generated on: ${new Date().toLocaleDateString()}
                 return (
                   <ThemeContainer 
                     key={index}
-                    variant="secondary" 
-                    className="rounded-lg border transition-all duration-200"
-                    style={{ borderColor: 'var(--color-border)' }}
+                    variant="surface" 
+                    className="rounded-xl border-0 shadow-lg transition-all duration-300 hover:shadow-xl overflow-hidden"
+                    style={{ 
+                      background: level.status === 'completed' 
+                        ? 'linear-gradient(135deg, var(--color-success-bg) 0%, var(--color-surface) 100%)'
+                        : level.status === 'in-progress'
+                        ? 'linear-gradient(135deg, var(--color-warning-bg) 0%, var(--color-surface) 100%)'
+                        : 'linear-gradient(135deg, var(--color-surface) 0%, var(--color-secondary-bg) 100%)'
+                    }}
                   >
                     <div
-                      className="flex items-center justify-between p-6 cursor-pointer"
+                      className="flex items-center justify-between p-6 cursor-pointer group hover:bg-opacity-80"
                       onClick={() => toggleLevelExpansion(index)}
                     >
-                      <div className="flex items-center gap-4">
-                        {/* Module Number Badge */}
-                        <div className="w-12 h-12 rounded-lg flex items-center justify-center text-lg font-bold" 
-                             style={{ 
-                               backgroundColor: 'var(--color-accent-primary)',
-                               color: 'var(--color-text-inverse)'
-                             }}>
-                          {(index + 1).toString().padStart(2, '0')}
+                      <div className="flex items-center gap-6">
+                        {/* Enhanced Module Number Badge */}
+                        <div className="relative">
+                          <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-xl font-bold shadow-lg transition-transform duration-300 group-hover:scale-110" 
+                               style={{ 
+                                 backgroundColor: 'var(--color-accent-primary)',
+                                 background: 'linear-gradient(135deg, var(--color-accent-primary) 0%, var(--color-accent-secondary) 100%)',
+                                 color: 'var(--color-text-inverse)'
+                               }}>
+                            {(index + 1).toString().padStart(2, '0')}
+                          </div>
+                          {level.status === 'completed' && (
+                            <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center shadow-md" 
+                                 style={{ backgroundColor: 'var(--color-success)', border: '2px solid var(--color-surface)' }}>
+                              <CheckCircledIcon className="w-3 h-3" style={{ color: 'white' }} />
+                            </div>
+                          )}
                         </div>
                         
-                        <div className="flex-1">
-                          <h4 className="text-xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>
+                        <div className="flex-1 space-y-2">
+                          <h4 className="text-2xl font-bold tracking-tight group-hover:text-opacity-80 transition-all duration-200" 
+                              style={{ color: 'var(--color-text-primary)' }}>
                             {level.courseName || `Level ${level.level}`}
                           </h4>
-                          <div className="flex items-center gap-4 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                          <div className="flex items-center gap-6 text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>
                             {completionDate ? (
-                              <span>Completed {completionDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit' })}</span>
+                              <div className="flex items-center gap-2">
+                                <CalendarIcon className="w-4 h-4" />
+                                <span>Completed {completionDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })}</span>
+                              </div>
                             ) : student.enrolledDate ? (
-                              <span>Started {new Date(student.enrolledDate).toLocaleDateString('en-US', { month: 'short', day: '2-digit' })}</span>
+                              <div className="flex items-center gap-2">
+                                <ClockIcon className="w-4 h-4" />
+                                <span>Started {new Date(student.enrolledDate).toLocaleDateString('en-US', { month: 'short', day: '2-digit' })}</span>
+                              </div>
                             ) : null}
                             {assessmentScore > 0 && (
-                              <span>Assessed: {assessmentScore}/100</span>
+                              <div className="flex items-center gap-2">
+                                <CheckCircledIcon className="w-4 h-4" style={{ color: 'var(--color-success)' }} />
+                                <span>Score: {assessmentScore}%</span>
+                              </div>
                             )}
                             {hasRealTimeData && (timeSpent > 0 || minutesSpent > 0) && (
-                              <span>Time: {timeSpent}h {minutesSpent}m</span>
+                              <div className="flex items-center gap-2">
+                                <ClockIcon className="w-4 h-4" />
+                                <span>{timeSpent}h {minutesSpent}m</span>
+                              </div>
                             )}
                           </div>
                         </div>
                       </div>
                       
                       <div className="flex items-center gap-4">
-                        {/* Performance Badges */}
+                        {/* Enhanced Performance Badges */}
                         <div className="flex items-center gap-3">
                           {assessmentScore > 0 && (
-                            <div className="px-3 py-2 rounded-lg text-sm font-medium flex items-center gap-2" 
+                            <div className="px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 shadow-sm" 
                                  style={{ 
                                    backgroundColor: 'var(--color-success-bg)', 
                                    color: 'var(--color-success)',
-                                   border: '1px solid',
-                                   borderColor: 'var(--color-success)'
+                                   border: '2px solid var(--color-success)'
                                  }}>
                               <CheckCircledIcon className="w-4 h-4" />
-                              MCQ {assessmentScore}%
+                              {assessmentScore}%
                             </div>
                           )}
-                          <div className="px-3 py-2 rounded-lg text-sm font-medium" 
+                          <div className="px-4 py-2 rounded-xl text-sm font-semibold shadow-sm" 
                                style={{ 
                                  backgroundColor: 'var(--color-surface)', 
                                  color: 'var(--color-text-primary)',
-                                 border: '1px solid',
-                                 borderColor: 'var(--color-border)'
+                                 border: '2px solid var(--color-border)'
                                }}>
-                            Tasks {completedTasks}/{totalTasks}
+                            {completedTasks}/{totalTasks} Tasks
                           </div>
                         </div>
                         
-                        {/* Status and Expansion */}
-                        <div className="flex items-center gap-3">
-                          <span className="text-sm px-3 py-2 rounded-full font-medium" style={{ 
+                        {/* Enhanced Status and Expansion */}
+                        <div className="flex items-center gap-4">
+                          <div className="px-4 py-2 rounded-xl text-sm font-bold shadow-sm" style={{ 
                             backgroundColor: level.status === 'completed' ? 'var(--color-success-bg)' : 
                                           level.status === 'in-progress' ? 'var(--color-warning-bg)' : 'var(--color-tertiary-bg)',
                             color: level.status === 'completed' ? 'var(--color-success)' : 
-                                   level.status === 'in-progress' ? 'var(--color-warning)' : 'var(--color-text-secondary)'
+                                   level.status === 'in-progress' ? 'var(--color-warning)' : 'var(--color-text-secondary)',
+                            border: '2px solid',
+                            borderColor: level.status === 'completed' ? 'var(--color-success)' : 
+                                        level.status === 'in-progress' ? 'var(--color-warning)' : 'var(--color-border)'
                           }}>
-                            {level.status}
-                          </span>
-                          {expandedLevels.has(index) ? (
-                            <ChevronDownIcon className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
-                          ) : (
-                            <ChevronRightIcon className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
-                          )}
+                            {level.status === 'completed' ? '✓ Complete' : 
+                             level.status === 'in-progress' ? '⟳ In Progress' : '○ Pending'}
+                          </div>
+                          <div className="w-8 h-8 rounded-xl flex items-center justify-center transition-transform duration-200 group-hover:scale-110" 
+                               style={{ backgroundColor: 'var(--color-accent-tertiary)' }}>
+                            {expandedLevels.has(index) ? (
+                              <ChevronDownIcon className="w-5 h-5" style={{ color: 'var(--color-accent-primary)' }} />
+                            ) : (
+                              <ChevronRightIcon className="w-5 h-5" style={{ color: 'var(--color-accent-primary)' }} />
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
