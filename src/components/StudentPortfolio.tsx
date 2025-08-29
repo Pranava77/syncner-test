@@ -741,7 +741,7 @@ const StudentPortfolio: React.FC = () => {
                                       </div>
                                     </div>
                                     
-                                    <div className="flex items-start justify-between pr-8">
+                                    <div className="flex items-start justify-between">
                                       <div className="flex-1">
                                         <h6 className="font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
                                           {task.title}
@@ -760,15 +760,7 @@ const StudentPortfolio: React.FC = () => {
                                         </div>
                                       </div>
                                       
-                                      <button className="px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-[var(--color-accent-tertiary)] flex-shrink-0"
-                                              style={{ 
-                                                backgroundColor: task.status === 'completed' ? 'var(--color-success-bg)' : 'var(--color-secondary-bg)',
-                                                color: task.status === 'completed' ? 'var(--color-success)' : 'var(--color-text-secondary)',
-                                                border: '1px solid',
-                                                borderColor: task.status === 'completed' ? 'var(--color-success)' : 'var(--color-border)'
-                                              }}>
-                                        {task.status === 'completed' ? 'View' : task.status === 'in-progress' ? 'Continue' : 'Start'}
-                                      </button>
+
                                     </div>
                                   </div>
                                 );
