@@ -271,7 +271,7 @@ const StudentPortfolio: React.FC = () => {
           transition={{ duration: 0.5 }}
         >
           <div className="w-full">
-            <ThemeContainer variant="surface" className="rounded-xl shadow-sm p-6">
+            <ThemeContainer variant="secondary" className="rounded-lg border transition-all duration-200 p-6" style={{ borderColor: 'var(--color-border)' }}>
               {/* Profile Row */}
               <div className="flex items-center gap-6 mb-8">
                 <div className="w-20 h-20 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'var(--color-accent-primary)' }}>
@@ -390,7 +390,7 @@ const StudentPortfolio: React.FC = () => {
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
                         <div className="w-3 h-3 rounded-full" style={{ backgroundColor: 'var(--color-success)' }}></div>
-                        <span className="text-sm font-medium" style={{ color: 'var(--color-success)' }}>VERIFIED</span>
+                        <span className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>VERIFIED</span>
                       </div>
                       <CheckCircledIcon className="w-5 h-5" style={{ color: 'var(--color-success)' }} />
                     </div>
@@ -405,6 +405,7 @@ const StudentPortfolio: React.FC = () => {
                   </div>
                 </div>
               </div>
+            </ThemeContainer>
 
               {/* Learning Levels */}
               <div className="space-y-6">
