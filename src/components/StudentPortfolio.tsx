@@ -440,9 +440,9 @@ const StudentPortfolio: React.FC = () => {
                     let totalMinutes = 0;
                     let hasRealTimeData = false;
                     
-                    // Only calculate from real timestamps (not fake ones)
+                    // Calculate time from learn section if both timestamps exist
                     if (level.learn?.startTime && level.learn?.endTime && 
-                        isRealTimestamp(level.learn.startTime) && isRealTimestamp(level.learn.endTime)) {
+                        level.learn.startTime !== 'In Progress' && level.learn.endTime !== 'In Progress') {
                       const startTime = new Date(level.learn.startTime);
                       const endTime = new Date(level.learn.endTime);
                       const diffMs = endTime.getTime() - startTime.getTime();
@@ -454,7 +454,7 @@ const StudentPortfolio: React.FC = () => {
                     }
                     
                     if (level.test?.startTime && level.test?.endTime && 
-                        isRealTimestamp(level.test.startTime) && isRealTimestamp(level.test.endTime)) {
+                        level.test.startTime !== 'In Progress' && level.test.endTime !== 'Not Started') {
                       const startTime = new Date(level.test.startTime);
                       const endTime = new Date(level.test.endTime);
                       const diffMs = endTime.getTime() - startTime.getTime();
@@ -466,7 +466,7 @@ const StudentPortfolio: React.FC = () => {
                     }
                     
                     if (level.exercise?.startTime && level.exercise?.endTime && 
-                        isRealTimestamp(level.exercise.startTime) && isRealTimestamp(level.exercise.endTime)) {
+                        level.exercise.startTime !== 'In Progress' && level.exercise.endTime !== 'In Progress') {
                       const startTime = new Date(level.exercise.startTime);
                       const endTime = new Date(level.exercise.endTime);
                       const diffMs = endTime.getTime() - startTime.getTime();
