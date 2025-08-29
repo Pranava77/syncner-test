@@ -19,6 +19,7 @@ import {
 } from '@radix-ui/react-icons';
 import { StudentDetails } from '../types/staff';
 import { useStaff } from '../hooks/useStaff';
+import ThemeContainer from './ThemeContainer';
 
 interface PortfolioTab {
   id: 'topics' | 'projects';
@@ -218,57 +219,63 @@ const StudentPortfolio: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
-      {/* Top Header/Navigation */}
-      <div className="border-b" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-surface)' }}>
-        <div className="flex items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={handleBack}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors hover:bg-[var(--color-accent-tertiary)]"
-              style={{ color: 'var(--color-accent-primary)' }}
+    <ThemeContainer variant="primary" className="min-h-screen">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8 p-6 lg:p-8">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={handleBack}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors hover:bg-[var(--color-accent-tertiary)]"
+            style={{ color: 'var(--color-accent-primary)' }}
+          >
+            <ArrowLeftIcon className="w-4 h-4" />
+            Back to Student Details
+          </button>
+          <div>
+            <h1 
+              className="text-3xl font-heading"
+              style={{ color: 'var(--color-text-primary)' }}
             >
-              <ArrowLeftIcon className="w-4 h-4" />
-              Back to Student Details
-            </button>
+              Student Portfolio
+            </h1>
+            <p 
+              className="mt-1 font-label"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
+              Comprehensive overview of {student.name}'s learning journey and achievements
+            </p>
           </div>
+        </div>
+        
+        {/* Action Buttons */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleShare}
+            className="px-4 py-2 rounded-lg transition-colors font-medium flex items-center gap-2 shadow"
+            style={{ 
+              backgroundColor: 'var(--color-surface)',
+              color: 'var(--color-accent-primary)',
+              borderColor: 'var(--color-border)',
+              border: '1px solid'
+            }}
+            title="Share portfolio"
+          >
+            <Share1Icon className="h-4 w-4" />
+            Share
+          </button>
           
-          <div className="flex items-center gap-4">
-            <h2 className="text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>Student Portfolio</h2>
-            
-            {/* Action Buttons */}
-            <div className="flex items-center gap-3">
-              <button
-                onClick={handleShare}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors hover:bg-[var(--color-accent-tertiary)]"
-                style={{ 
-                  backgroundColor: 'var(--color-surface)',
-                  color: 'var(--color-accent-primary)',
-                  borderColor: 'var(--color-border)',
-                  border: '1px solid'
-                }}
-                title="Share portfolio"
-              >
-                <Share1Icon className="w-4 h-4" />
-                Share
-              </button>
-              
-              <button
-                onClick={handleDownloadPDF}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors hover:bg-[var(--color-accent-tertiary)]"
-                style={{ 
-                  backgroundColor: 'var(--color-accent-primary)',
-                  color: 'var(--color-text-inverse)',
-                  borderColor: 'var(--color-accent-primary)',
-                  border: '1px solid'
-                }}
-                title="Download portfolio as PDF"
-              >
-                <DownloadIcon className="w-4 h-4" />
-                Download PDF
-              </button>
-            </div>
-          </div>
+          <button
+            onClick={handleDownloadPDF}
+            className="px-5 py-2 rounded-lg transition-colors font-medium flex items-center gap-2 shadow"
+            style={{ 
+              backgroundColor: 'var(--color-accent-primary)',
+              color: 'var(--color-text-inverse)'
+            }}
+            title="Download portfolio as PDF"
+          >
+            <DownloadIcon className="h-5 w-5" />
+            Download PDF
+          </button>
         </div>
       </div>
 
@@ -280,7 +287,8 @@ const StudentPortfolio: React.FC = () => {
         >
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left Sidebar */}
-            <div className="lg:col-span-1 border-r p-6 overflow-y-auto" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-secondary-bg)' }}>
+            <div className="lg:col-span-1">
+              <ThemeContainer variant="surface" className="rounded-xl shadow-sm p-6 mb-6">
               {/* Profile Header */}
               <div className="text-center mb-6">
                 <div className="w-24 h-24 rounded-lg mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: 'var(--color-accent-primary)' }}>
@@ -402,25 +410,21 @@ const StudentPortfolio: React.FC = () => {
               {/* Certificate ID */}
               <div>
                 <h4 className="text-sm font-semibold mb-3" style={{ color: 'var(--color-text-secondary)' }}>CERTIFICATE ID</h4>
-                <div className="p-3 rounded-lg" style={{ backgroundColor: 'var(--color-surface)' }}>
+                <div className="p-3 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
                   <p className="text-sm font-mono" style={{ color: 'var(--color-text-secondary)' }}>
                     SYNCNER-2025-{student._id.slice(-8).toUpperCase()}-{Math.random().toString(36).substr(2, 6).toUpperCase()}
                   </p>
                 </div>
               </div>
+              </ThemeContainer>
             </div>
 
             {/* Main Content */}
-            <div className="lg:col-span-2 p-6 overflow-y-auto" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
-              {/* Introduction */}
-              <div className="mb-8">
-                <h3 className="text-xl font-bold mb-4 px-4 py-2 rounded-lg inline-block" style={{ 
-                  color: 'var(--color-text-primary)',
-                  backgroundColor: 'var(--color-secondary-bg)',
-                  borderColor: 'var(--color-border)',
-                  border: '1px solid'
-                }}>
-                  Introduction:
+            <div className="lg:col-span-2">
+              {/* Introduction Card */}
+              <ThemeContainer variant="surface" className="rounded-xl shadow-sm p-6 mb-6">
+                <h3 className="text-xl font-bold mb-4" style={{ color: 'var(--color-text-primary)' }}>
+                  Introduction
                 </h3>
                 <div className="p-4 rounded-lg" style={{ backgroundColor: 'var(--color-accent-tertiary)' }}>
                   <p style={{ color: 'var(--color-accent-primary)' }}>
@@ -428,79 +432,51 @@ const StudentPortfolio: React.FC = () => {
                     Skilled in various technologies and ready to contribute to impactful projects.
                   </p>
                 </div>
-              </div>
+              </ThemeContainer>
 
-              {/* Learning Journey Summary */}
-              <div className="mb-8">
-                <h3 className="text-xl font-bold mb-4 px-4 py-2 rounded-lg inline-block" style={{ 
-                  color: 'var(--color-text-primary)',
-                  backgroundColor: 'var(--color-secondary-bg)',
-                  borderColor: 'var(--color-border)',
-                  border: '1px solid'
-                }}>
-                  Learning Journey:
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="p-4 rounded-lg border" style={{ 
-                    backgroundColor: 'var(--color-success-bg)', 
-                    borderColor: 'var(--color-success)'
-                  }}>
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--color-success)' }}>
-                        <CheckCircledIcon className="w-5 h-5" style={{ color: 'var(--color-text-inverse)' }} />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold" style={{ color: 'var(--color-success)' }}>Completed</h4>
-                        <p className="text-2xl font-bold" style={{ color: 'var(--color-success)' }}>
-                          {student.learningTimeline.filter(l => l.status === 'completed').length}
-                        </p>
-                      </div>
-                    </div>
+              {/* Learning Journey Summary Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <ThemeContainer variant="surface" className="rounded-xl shadow-sm p-6 flex items-center gap-4">
+                  <div className="p-3 rounded-lg" style={{ backgroundColor: 'var(--color-success-bg)' }}>
+                    <CheckCircledIcon className="h-6 w-6" style={{ color: 'var(--color-success)' }} />
                   </div>
-                  <div className="p-4 rounded-lg border" style={{ 
-                    backgroundColor: 'var(--color-warning-bg)', 
-                    borderColor: 'var(--color-warning)'
-                  }}>
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--color-warning)' }}>
-                        <ClockIcon className="w-5 h-5" style={{ color: 'var(--color-text-inverse)' }} />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold" style={{ color: 'var(--color-warning)' }}>In Progress</h4>
-                        <p className="text-2xl font-bold" style={{ color: 'var(--color-warning)' }}>
-                          {student.learningTimeline.filter(l => l.status === 'in-progress').length}
-                        </p>
-                      </div>
-                    </div>
+                  <div>
+                    <p className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>Completed</p>
+                    <p className="text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>
+                      {student.learningTimeline.filter(l => l.status === 'completed').length}
+                    </p>
                   </div>
-                  <div className="p-4 rounded-lg border" style={{ 
-                    backgroundColor: 'var(--color-secondary-bg)', 
-                    borderColor: 'var(--color-border)'
-                  }}>
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--color-text-secondary)' }}>
-                        <RocketIcon className="w-5 h-5" style={{ color: 'var(--color-text-inverse)' }} />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>Total</h4>
-                        <p className="text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>
-                          {student.learningTimeline.length}
-                        </p>
-                      </div>
-                    </div>
+                </ThemeContainer>
+
+                <ThemeContainer variant="surface" className="rounded-xl shadow-sm p-6 flex items-center gap-4">
+                  <div className="p-3 rounded-lg" style={{ backgroundColor: 'var(--color-warning-bg)' }}>
+                    <ClockIcon className="h-6 w-6" style={{ color: 'var(--color-warning)' }} />
                   </div>
-                </div>
+                  <div>
+                    <p className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>In Progress</p>
+                    <p className="text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>
+                      {student.learningTimeline.filter(l => l.status === 'in-progress').length}
+                    </p>
+                  </div>
+                </ThemeContainer>
+
+                <ThemeContainer variant="surface" className="rounded-xl shadow-sm p-6 flex items-center gap-4">
+                  <div className="p-3 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
+                    <RocketIcon className="h-6 w-6" style={{ color: 'var(--color-text-secondary)' }} />
+                  </div>
+                  <div>
+                    <p className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>Total</p>
+                    <p className="text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>
+                      {student.learningTimeline.length}
+                    </p>
+                  </div>
+                </ThemeContainer>
               </div>
 
               {/* Portfolio Section */}
-              <div>
-                <h3 className="text-xl font-bold mb-4 px-4 py-2 rounded-lg inline-block" style={{ 
-                  color: 'var(--color-text-primary)',
-                  backgroundColor: 'var(--color-secondary-bg)',
-                  borderColor: 'var(--color-border)',
-                  border: '1px solid'
-                }}>
-                  Portfolio:
+              <ThemeContainer variant="surface" className="rounded-xl shadow-sm p-6">
+                <h3 className="text-xl font-bold mb-6" style={{ color: 'var(--color-text-primary)' }}>
+                  Portfolio
                 </h3>
                 
                 {/* Tabs */}
@@ -530,12 +506,7 @@ const StudentPortfolio: React.FC = () => {
                 {activeTab === 'topics' && (
                   <div className="space-y-6">
                     {/* Progress Overview */}
-                    <div className="p-6 rounded-lg" style={{ 
-                      backgroundColor: 'var(--color-secondary-bg)',
-                      borderColor: 'var(--color-border)',
-                      border: '1px solid',
-                      boxShadow: 'var(--shadow-sm)'
-                    }}>
+                    <ThemeContainer variant="secondary" className="rounded-lg p-6">
                       <h4 className="text-lg font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>Learning Progress Overview</h4>
                       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div className="text-center">
@@ -563,7 +534,7 @@ const StudentPortfolio: React.FC = () => {
                           <div className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>Overall</div>
                         </div>
                       </div>
-                    </div>
+                    </ThemeContainer>
 
                     {/* Learning Levels */}
                     <div className="space-y-4">
