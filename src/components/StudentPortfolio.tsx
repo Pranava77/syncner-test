@@ -203,7 +203,7 @@ const StudentPortfolio: React.FC = () => {
   return (
     <ThemeContainer variant="primary" className="min-h-screen">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8 p-6 lg:p-8">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8 p-6 lg:p-8 w-full">
         <div className="flex items-center gap-4">
           <button
             onClick={handleBack}
@@ -211,7 +211,6 @@ const StudentPortfolio: React.FC = () => {
             style={{ color: 'var(--color-accent-primary)' }}
           >
             <ArrowLeftIcon className="w-4 h-4" />
-            Back to Student Details
           </button>
           <div>
             <h1 
