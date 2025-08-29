@@ -391,7 +391,7 @@ const StudentPortfolio: React.FC = () => {
                       <CheckCircledIcon className="w-5 h-5" style={{ color: 'var(--color-success)' }} />
                     </div>
                     <p className="text-base font-mono break-all mb-3" style={{ color: 'var(--color-text-secondary)' }}>
-                      SYNCNER-2025-{student._id.slice(-8).toUpperCase()}-{Math.random().toString(36).substr(2, 6).toUpperCase()}
+                      SYNCNER-2025-{student._id.slice(-8).toUpperCase()}-{student.enrolledDate ? new Date(student.enrolledDate).getFullYear().toString().slice(-2) : '25'}
                     </p>
                     <div className="pt-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
                       <p className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
@@ -630,13 +630,13 @@ const StudentPortfolio: React.FC = () => {
                             <div className="flex items-center gap-4 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
                               {completionDate ? (
                                 <span>Completed {completionDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit' })}</span>
-                              ) : (
-                                <span>Started {new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', { month: 'short', day: '2-digit' })}</span>
-                              )}
+                              ) : student.enrolledDate ? (
+                                <span>Started {new Date(student.enrolledDate).toLocaleDateString('en-US', { month: 'short', day: '2-digit' })}</span>
+                              ) : null}
                               {assessmentScore > 0 && (
                                 <span>Assessed: {assessmentScore}/100</span>
                               )}
-                              {(timeSpent > 0 || minutesSpent > 0) && (
+                              {hasRealTimeData && (timeSpent > 0 || minutesSpent > 0) && (
                                 <span>Time: {timeSpent}h {minutesSpent}m</span>
                               )}
                             </div>
