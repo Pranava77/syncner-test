@@ -623,12 +623,7 @@ const StudentPortfolio: React.FC = () => {
                     </div>
 
                     {/* Strengths & Areas for Improvement */}
-                    <div className="p-6 rounded-lg" style={{ 
-                      backgroundColor: 'var(--color-secondary-bg)',
-                      borderColor: 'var(--color-border)',
-                      border: '1px solid',
-                      boxShadow: 'var(--shadow-sm)'
-                    }}>
+                    <ThemeContainer variant="secondary" className="rounded-lg p-6">
                       <h4 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--color-text-primary)' }}>
                         <TargetIcon className="w-5 h-5" style={{ color: 'var(--color-accent-primary)' }} />
                         Strengths & Areas for Improvement
@@ -657,15 +652,10 @@ const StudentPortfolio: React.FC = () => {
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </ThemeContainer>
 
                     {/* Learning Achievements */}
-                    <div className="p-6 rounded-lg" style={{ 
-                      backgroundColor: 'var(--color-secondary-bg)',
-                      borderColor: 'var(--color-border)',
-                      border: '1px solid',
-                      boxShadow: 'var(--shadow-sm)'
-                    }}>
+                    <ThemeContainer variant="secondary" className="rounded-lg p-6">
                       <h4 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--color-text-primary)' }}>
                         <StarIcon className="w-5 h-5" style={{ color: 'var(--color-success)' }} />
                         Learning Achievements
@@ -700,7 +690,7 @@ const StudentPortfolio: React.FC = () => {
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </ThemeContainer>
                   </div>
                 )}
 
@@ -716,12 +706,12 @@ const StudentPortfolio: React.FC = () => {
                     </p>
                   </div>
                 )}
-              </div>
+              </ThemeContainer>
             </div>
           </div>
         </motion.div>
       </div>
-    </div>
+    </ThemeContainer>
   );
 };
 
