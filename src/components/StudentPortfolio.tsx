@@ -352,14 +352,39 @@ const StudentPortfolio: React.FC = () => {
               <div className="mb-6">
                 <h4 className="text-sm font-semibold mb-3" style={{ color: 'var(--color-text-secondary)' }}>RECOMMENDED ROLES</h4>
                 <div className="space-y-2">
-                  {getRecommendedRoles().map((role) => (
+                  {getRecommendedRoles().map((role, index) => (
                     <div
                       key={role}
-                      className="flex items-center justify-between p-3 rounded-lg"
-                      style={{ backgroundColor: 'var(--color-surface)' }}
+                      className="group relative p-3 rounded-lg transition-all duration-200 cursor-pointer"
+                      style={{ 
+                        backgroundColor: 'var(--color-surface)',
+                        border: '1px solid',
+                        borderColor: 'var(--color-border)'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                        e.currentTarget.style.backgroundColor = 'var(--color-accent-tertiary)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--color-border)';
+                        e.currentTarget.style.backgroundColor = 'var(--color-surface)';
+                      }}
                     >
-                      <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{role}</span>
-                      <span style={{ color: 'var(--color-text-muted)' }}>⋯</span>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--color-accent-primary)' }}></div>
+                          <span className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>{role}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs px-2 py-1 rounded-full" style={{ 
+                            backgroundColor: 'var(--color-success-bg)', 
+                            color: 'var(--color-success)' 
+                          }}>
+                            Match
+                          </span>
+                          <RocketIcon className="w-4 h-4 transition-transform group-hover:scale-110" style={{ color: 'var(--color-accent-primary)' }} />
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -370,10 +395,38 @@ const StudentPortfolio: React.FC = () => {
               {/* Certificate ID */}
               <div>
                 <h4 className="text-sm font-semibold mb-3" style={{ color: 'var(--color-text-secondary)' }}>CERTIFICATE ID</h4>
-                <div className="p-3 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
-                  <p className="text-sm font-mono" style={{ color: 'var(--color-text-secondary)' }}>
-                    SYNCNER-2025-{student._id.slice(-8).toUpperCase()}-{Math.random().toString(36).substr(2, 6).toUpperCase()}
-                  </p>
+                <div className="relative group">
+                  <div className="p-4 rounded-lg border-2 transition-all duration-200 cursor-pointer" 
+                       style={{ 
+                         backgroundColor: 'var(--color-surface)',
+                         borderColor: 'var(--color-border)',
+                         borderStyle: 'dashed'
+                       }}
+                       onMouseEnter={(e) => {
+                         e.currentTarget.style.borderColor = 'var(--color-accent-primary)';
+                         e.currentTarget.style.backgroundColor = 'var(--color-accent-tertiary)';
+                       }}
+                       onMouseLeave={(e) => {
+                         e.currentTarget.style.borderColor = 'var(--color-border)';
+                         e.currentTarget.style.backgroundColor = 'var(--color-surface)';
+                       }}
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: 'var(--color-success)' }}></div>
+                        <span className="text-xs font-medium" style={{ color: 'var(--color-success)' }}>VERIFIED</span>
+                      </div>
+                      <CheckCircledIcon className="w-4 h-4" style={{ color: 'var(--color-success)' }} />
+                    </div>
+                    <p className="text-sm font-mono break-all" style={{ color: 'var(--color-text-secondary)' }}>
+                      SYNCNER-2025-{student._id.slice(-8).toUpperCase()}-{Math.random().toString(36).substr(2, 6).toUpperCase()}
+                    </p>
+                    <div className="mt-2 pt-2 border-t" style={{ borderColor: 'var(--color-border)' }}>
+                      <p className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                        Generated on {new Date().toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
               </ThemeContainer>
@@ -394,44 +447,7 @@ const StudentPortfolio: React.FC = () => {
                 </div>
               </ThemeContainer>
 
-              {/* Learning Journey Summary Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                <ThemeContainer variant="surface" className="rounded-xl shadow-sm p-6 flex items-center gap-4">
-                  <div className="p-3 rounded-lg" style={{ backgroundColor: 'var(--color-success-bg)' }}>
-                    <CheckCircledIcon className="h-6 w-6" style={{ color: 'var(--color-success)' }} />
-                  </div>
-                  <div>
-                    <p className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>Completed</p>
-                    <p className="text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>
-                      {student.learningTimeline.filter(l => l.status === 'completed').length}
-                    </p>
-                  </div>
-                </ThemeContainer>
 
-                <ThemeContainer variant="surface" className="rounded-xl shadow-sm p-6 flex items-center gap-4">
-                  <div className="p-3 rounded-lg" style={{ backgroundColor: 'var(--color-warning-bg)' }}>
-                    <ClockIcon className="h-6 w-6" style={{ color: 'var(--color-warning)' }} />
-                  </div>
-                  <div>
-                    <p className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>In Progress</p>
-                    <p className="text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>
-                      {student.learningTimeline.filter(l => l.status === 'in-progress').length}
-                    </p>
-                  </div>
-                </ThemeContainer>
-
-                <ThemeContainer variant="surface" className="rounded-xl shadow-sm p-6 flex items-center gap-4">
-                  <div className="p-3 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
-                    <RocketIcon className="h-6 w-6" style={{ color: 'var(--color-text-secondary)' }} />
-                  </div>
-                  <div>
-                    <p className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>Total</p>
-                    <p className="text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>
-                      {student.learningTimeline.length}
-                    </p>
-                  </div>
-                </ThemeContainer>
-              </div>
 
               {/* Portfolio Section */}
               <ThemeContainer variant="surface" className="rounded-xl shadow-sm p-6">
