@@ -309,7 +309,8 @@ const MyPortfolio: React.FC = () => {
     // If we have complete backend data, use it directly
     if (timeline && timeline.length > 0 && timeline.length >= totalLevels) {
       // Backend data is complete, just ensure proper ordering
-      return timeline.sort((a, b) => a.level - b.level);
+      // Create a copy to avoid modifying the original array
+      return [...timeline].sort((a, b) => a.level - b.level);
     }
     
     // Group existing timeline data by level
