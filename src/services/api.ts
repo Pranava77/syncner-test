@@ -462,15 +462,9 @@ class ApiService {
     return this.handleResponse(response);
   }
 
-
-
-
-
-
-
-  async getStudentPortfolio(studentId: string): Promise<StudentDetailsApiResponse> {
-    const url = `${this.baseURL}/student/portfolio/${studentId}`;
-    console.log('🔗 Making API call to:', url);
+  async getStudentPortfolio(studentId: string): Promise<any> {
+    const url = `${this.baseURL}/staff/students/${studentId}`;
+    console.log('🔗 Making API call to staff route:', url);
     try {
       const response = await fetch(url, {
         method: 'GET',
@@ -478,15 +472,33 @@ class ApiService {
         credentials: 'include',
       });
       const data = await this.handleResponse(response);
-      console.log('✅ Portfolio API Response:', data);
+      console.log('✅ Staff Student Details API Response:', data);
       return data;
     } catch (error) {
-      console.error('❌ Portfolio API Error:', error);
+      console.error('❌ Staff Student Details API Error:', error);
       throw this.handleError(error);
     }
   }
 
-  // Get own portfolio data (for students)
+  // Method specifically for staff to get student details
+  async getStudentDetails(studentId: string): Promise<any> {
+    const url = `${this.baseURL}/staff/students/${studentId}`;
+    console.log('🔗 Making API call to staff route:', url);
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: this.getHeaders(),
+        credentials: 'include',
+      });
+      const data = await this.handleResponse(response);
+      console.log('✅ Staff Student Details API Response:', data);
+      return data;
+    } catch (error) {
+      console.error('❌ Staff Student Details API Error:', error);
+      throw this.handleError(error);
+    }
+  }
+
   async getOwnPortfolio(): Promise<StudentDetailsApiResponse> {
     const url = `${this.baseURL}/student/portfolio/me`;
     console.log('🔗 Making API call to:', url);

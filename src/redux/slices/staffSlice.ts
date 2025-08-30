@@ -25,7 +25,8 @@ export const fetchStudentDetails = createAsyncThunk(
   'staff/fetchStudentDetails',
   async (studentId: string, { rejectWithValue }) => {
     try {
-      const response = await apiService.getStudentPortfolio(studentId);
+      const response = await apiService.getStudentDetails(studentId);
+      // The staff route returns { success: true, data: { student: {...} } }
       return response.data.student;
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to fetch student details');

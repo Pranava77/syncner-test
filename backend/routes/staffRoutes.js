@@ -535,7 +535,16 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
       skills: getSkillsForTrack(),
       recommendedRoles: getRecommendedRoles(),
       trackInfo: trackInfo || null,
-      enrolledDate: student.createdAt ? new Date(student.createdAt).toLocaleDateString('en-GB') : 'N/A'
+      enrolledDate: student.createdAt ? new Date(student.createdAt).toLocaleDateString('en-GB') : 'N/A',
+      // Add missing fields that the frontend expects
+      attendancePercentage: attendancePercentage,
+      progress: progress ? Math.round((progress.completedLevels.length / totalLevels) * 100) : 0,
+      leaderboardScore: leaderboardScore,
+      // Ensure these fields exist for the frontend
+      level: progress?.currentLevel || 1,
+      status: student.isActive ? 'active' : 'inactive',
+      batch: student.batch || 'N/A',
+      department: student.department || student.courseDept || 'N/A'
     };
     
     res.status(200).json({
