@@ -473,44 +473,31 @@ class ApiService {
   }
 
   async getStudentPortfolio(studentId: string): Promise<StudentDetailsApiResponse> {
-    const url = `${this.baseURL}/student/portfolio/${studentId}`;
+    const url = studentId ? 
+      `${this.baseURL}/student/portfolio/${studentId}` :
+      `${this.baseURL}/student/portfolio/me`;
+    
     console.log('🔗 Making API call to:', url);
+    
     try {
       const response = await fetch(url, {
         method: 'GET',
         headers: this.getHeaders(),
         credentials: 'include',
       });
-      const data = await this.handleResponse(response);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('❌ Portfolio API Error:', errorData);
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
       console.log('✅ Portfolio API Response:', data);
       return data;
     } catch (error) {
       console.error('❌ Portfolio API Error:', error);
       throw this.handleError(error);
-    }
-  }
-
-  // Get own portfolio data (for students)
-  async getOwnPortfolio(): Promise<StudentDetailsApiResponse> {
-    const url = `${this.baseURL}/student/portfolio/me`;
-    console.log('🔗 Making API call to:', url);
-    try {
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: this.getHeaders(),
-        credentials: 'include',
-      });
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('❌ Own Portfolio API Error:', errorData);
-        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      console.log('✅ Own Portfolio API Response:', data);
-      return data;
-    } catch (error) {
-      console.error('❌ Own Portfolio API Error:', error);
-      throw error;
     }
   }
 

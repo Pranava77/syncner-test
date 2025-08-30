@@ -8,9 +8,7 @@ export const fetchStudentPortfolio = createAsyncThunk(
   async (studentId: string, { rejectWithValue }) => {
     try {
       console.log('🎯 Fetching portfolio data for student:', studentId);
-      const response = studentId.length > 0 ? 
-        await apiService.getStudentPortfolio(studentId) :
-        await apiService.getOwnPortfolio();
+      const response = await apiService.getStudentPortfolio(studentId);
       console.log('✅ Portfolio API response:', response);
       return response.data.student;
     } catch (error: any) {

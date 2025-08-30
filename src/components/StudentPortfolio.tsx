@@ -25,7 +25,7 @@ import DailyActivityChart from './DailyActivityChart';
 const StudentPortfolio: React.FC = () => {
   const navigate = useNavigate();
   const { studentId } = useParams<{ studentId: string }>();
-  const { selectedStudent, studentDetailsLoading, error, getStudentDetails } = useStaff();
+  const { selectedStudent, studentDetailsLoading, error, getStudentDetails, clearSelectedStudent } = useStaff();
 
   const [expandedLevels, setExpandedLevels] = useState<Set<number>>(new Set());
 
@@ -34,8 +34,18 @@ const StudentPortfolio: React.FC = () => {
     if (studentId) {
       console.log('🔄 Fetching portfolio data for student:', studentId);
       getStudentDetails(studentId);
+    } else {
+      console.warn('⚠️ No studentId provided');
     }
   }, [studentId, getStudentDetails]);
+
+  // Clear selected student when component unmounts
+  React.useEffect(() => {
+    return () => {
+      console.log('🧹 Cleaning up student data');
+      clearSelectedStudent();
+    };
+  }, [clearSelectedStudent]);
 
   // Handle back navigation
   const handleBack = () => {

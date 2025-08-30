@@ -37,10 +37,13 @@ const MyPortfolio: React.FC = () => {
   if (portfolioLoading || !portfolioData) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
-        <div className="text-center">
+        <div className="text-center max-w-lg mx-auto">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: 'var(--color-accent-primary)' }}></div>
-          <p className="text-lg" style={{ color: 'var(--color-text-primary)' }}>
-            Loading your portfolio...
+          <h2 className="text-2xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>
+            Loading Your Portfolio
+          </h2>
+          <p className="text-lg" style={{ color: 'var(--color-text-secondary)' }}>
+            Please wait while we fetch your learning journey data...
           </p>
         </div>
       </div>
@@ -51,49 +54,37 @@ const MyPortfolio: React.FC = () => {
   if (portfolioError) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
-        <div className="text-center">
-          <p className="text-lg mb-4" style={{ color: 'var(--color-text-primary)' }}>
+        <div className="text-center max-w-lg mx-auto">
+          <div className="mb-6 text-6xl">😕</div>
+          <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--color-text-primary)' }}>
+            Something went wrong
+          </h2>
+          <p className="text-lg mb-6" style={{ color: 'var(--color-text-secondary)' }}>
             {portfolioError}
           </p>
-          <button
-            onClick={handleBack}
-            className="px-4 py-2 rounded-lg transition-colors hover:bg-[var(--color-accent-tertiary)]"
-            style={{ color: 'var(--color-accent-primary)' }}
-          >
-            Back to Dashboard
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  if (portfolioLoading || !portfolioData) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: 'var(--color-accent-primary)' }}></div>
-          <p className="text-lg" style={{ color: 'var(--color-text-primary)' }}>
-            Loading your portfolio...
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  if (portfolioError) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
-        <div className="text-center">
-          <p className="text-lg mb-4" style={{ color: 'var(--color-text-primary)' }}>
-            {portfolioError}
-          </p>
-          <button
-            onClick={handleBack}
-            className="px-4 py-2 rounded-lg transition-colors hover:bg-[var(--color-accent-tertiary)]"
-            style={{ color: 'var(--color-accent-primary)' }}
-          >
-            Back to Dashboard
-          </button>
+          <div className="flex items-center justify-center gap-4">
+            <button
+              onClick={handleBack}
+              className="px-6 py-3 rounded-xl transition-all duration-200 hover:scale-105"
+              style={{ 
+                backgroundColor: 'var(--color-surface)',
+                color: 'var(--color-text-primary)',
+                border: '1px solid var(--color-border)'
+              }}
+            >
+              Back to Dashboard
+            </button>
+            <button
+              onClick={() => getPortfolioData('')}
+              className="px-6 py-3 rounded-xl transition-all duration-200 hover:scale-105"
+              style={{ 
+                backgroundColor: 'var(--color-accent-primary)',
+                color: 'var(--color-text-inverse)'
+              }}
+            >
+              Try Again
+            </button>
+          </div>
         </div>
       </div>
     );
