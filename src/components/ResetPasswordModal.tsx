@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { EyeOpenIcon, EyeClosedIcon } from '@radix-ui/react-icons';
+import { motion } from 'framer-motion';
+import { generatePassword } from '../utils/formUtils';
 
 interface ResetPasswordModalProps {
   open: boolean;
@@ -7,16 +8,6 @@ interface ResetPasswordModalProps {
   user: { name: string; email: string } | null;
   onReset: (password: string) => Promise<void>;
 }
-
-const generatePassword = () => {
-  // Simple strong password generator
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%^&*';
-  let pwd = '';
-  for (let i = 0; i < 10; i++) {
-    pwd += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return pwd;
-};
 
 const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({ open, onClose, user, onReset }) => {
   const [password, setPassword] = useState('');

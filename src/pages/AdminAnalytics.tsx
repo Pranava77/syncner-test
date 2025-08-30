@@ -14,7 +14,7 @@ import { fetchAnalytics } from '../redux/slices/analyticsSlice';
 import { useAppDispatch } from '../redux/store';
 import LoadingScreen from '../components/LoadingScreen';
 import { useSelector } from 'react-redux';
-
+import { CHART_COLORS } from '../utils/chartConstants';
 
 const AdminAnalytics: React.FC = () => {
   const [dateRange, setDateRange] = useState('30');
@@ -24,6 +24,9 @@ const AdminAnalytics: React.FC = () => {
   const analytics = analyticsState.data;
   const loading = analyticsState.loading;
   const error = analyticsState.error;
+
+  // Use shared chart colors
+  const COLORS = CHART_COLORS.analytics;
 
   useEffect(() => {
     // Only fetch if not present or if dateRange changes
@@ -119,8 +122,6 @@ const AdminAnalytics: React.FC = () => {
     completionRate: analytics.completionRate || 0,
     studentRetention: analytics.studentRetention || 0
   };
-
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#A259F7', '#F95F62'];
 
   return (
     <div 

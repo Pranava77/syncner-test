@@ -13,6 +13,7 @@ import {
   CheckCircledIcon
 } from '@radix-ui/react-icons';
 import logo from '../assets/syncner-logo.png';
+import { CHART_COLORS } from '../utils/chartConstants';
 
 const RegisterPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -142,7 +143,7 @@ const RegisterPage: React.FC = () => {
     if (/[0-9]/.test(password)) strength++;
     if (/[^A-Za-z0-9]/.test(password)) strength++;
 
-    const colors = ['red', 'orange', 'yellow', 'lightgreen', 'green', 'darkgreen'];
+    const colors = CHART_COLORS.passwordStrength;
     const texts = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong', 'Very Strong'];
     
     return {
