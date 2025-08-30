@@ -29,32 +29,20 @@ const MyPortfolio: React.FC = () => {
 
   // Fetch student's own portfolio data when component mounts
   React.useEffect(() => {
-    console.log('🔄 Fetching own portfolio data');
+    console.log('🔄 MyPortfolio: Fetching own portfolio data');
+    console.log('🔍 Component state:', { portfolioLoading, hasData: !!portfolioData, error: portfolioError });
     getPortfolioData(''); // Pass empty string for own portfolio
-  }, [getPortfolioData]);
+  }, [getPortfolioData, portfolioLoading, portfolioData, portfolioError]);
 
   // Show loading state
-  if (portfolioLoading || !portfolioData) {
+  if (portfolioLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
-        <div className="text-center max-w-lg mx-auto">
+        <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: 'var(--color-accent-primary)' }}></div>
-          <h2 className="text-2xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>
-            Loading Your Portfolio
-          </h2>
-          <p className="text-lg" style={{ color: 'var(--color-text-secondary)' }}>
-            Please wait while we fetch your learning journey data...
+          <p className="text-lg" style={{ color: 'var(--color-text-primary)' }}>
+            Loading your portfolio...
           </p>
-          <div className="mt-6 space-y-4">
-            <div className="h-2 w-full rounded-full animate-pulse" style={{ backgroundColor: 'var(--color-border)' }}></div>
-            <div className="h-2 w-3/4 rounded-full animate-pulse" style={{ backgroundColor: 'var(--color-border)' }}></div>
-            <div className="h-2 w-1/2 rounded-full animate-pulse" style={{ backgroundColor: 'var(--color-border)' }}></div>
-          </div>
-          <div className="mt-8 grid grid-cols-3 gap-4">
-            <div className="h-20 rounded-lg animate-pulse" style={{ backgroundColor: 'var(--color-border)' }}></div>
-            <div className="h-20 rounded-lg animate-pulse" style={{ backgroundColor: 'var(--color-border)' }}></div>
-            <div className="h-20 rounded-lg animate-pulse" style={{ backgroundColor: 'var(--color-border)' }}></div>
-          </div>
         </div>
       </div>
     );
@@ -64,69 +52,68 @@ const MyPortfolio: React.FC = () => {
   if (portfolioError) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
-        <div className="text-center max-w-lg mx-auto">
-          <div className="mb-6 text-6xl">😕</div>
+        <div className="text-center">
+          <p className="text-lg mb-4" style={{ color: 'var(--color-text-primary)' }}>
+            {portfolioError}
+          </p>
+          <button
+            onClick={handleBack}
+            className="px-4 py-2 rounded-lg transition-colors hover:bg-[var(--color-accent-tertiary)]"
+            style={{ color: 'var(--color-text-primary)' }}
+          >
+            Back to Dashboard
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Show empty state if no portfolio data
+  if (!portfolioData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
+        <div className="text-center">
+          <div className="mb-6 text-6xl">🤔</div>
           <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--color-text-primary)' }}>
-            {portfolioError.includes('403') ? 'Session Expired' : 
-             portfolioError.includes('404') ? 'Portfolio Not Found' : 
-             'Something went wrong'}
+            No Portfolio Data
           </h2>
           <p className="text-lg mb-6" style={{ color: 'var(--color-text-secondary)' }}>
-            {portfolioError.includes('403') ? 'Your session has expired. Please log in again to view your portfolio.' :
-             portfolioError.includes('404') ? 'We couldn\'t find your portfolio data. Please make sure you\'re enrolled in a course.' :
-             portfolioError}
+            We couldn't find your portfolio data. This might be because you haven't started any courses yet.
           </p>
-          <div className="flex items-center justify-center gap-4">
-            <button
-              onClick={handleBack}
-              className="px-6 py-3 rounded-xl transition-all duration-200 hover:scale-105"
-              style={{ 
-                backgroundColor: 'var(--color-surface)',
-                color: 'var(--color-text-primary)',
-                border: '1px solid var(--color-border)'
-              }}
-            >
-              Back to Dashboard
-            </button>
-            {!portfolioError.includes('403') && (
-              <button
-                onClick={() => getPortfolioData('')}
-                className="px-6 py-3 rounded-xl transition-all duration-200 hover:scale-105"
-                style={{ 
-                  backgroundColor: 'var(--color-accent-primary)',
-                  color: 'var(--color-text-inverse)'
-                }}
-              >
-                Try Again
-              </button>
-            )}
-          </div>
-          {portfolioError.includes('403') && (
-            <div className="mt-6 p-4 rounded-lg" style={{ backgroundColor: 'var(--color-warning-bg)' }}>
-              <p className="text-sm" style={{ color: 'var(--color-warning)' }}>
-                You will be redirected to the login page in a few seconds...
-              </p>
-            </div>
-          )}
+          <button
+            onClick={handleBack}
+            className="px-6 py-3 rounded-xl transition-all duration-200 hover:scale-105"
+            style={{ 
+              backgroundColor: 'var(--color-accent-primary)',
+              color: 'var(--color-text-inverse)'
+            }}
+          >
+            Back to Dashboard
+          </button>
         </div>
       </div>
     );
   }
 
   const student = portfolioData;
+  
+  // Debug logging
+  console.log('🎯 MyPortfolio: Rendering with portfolio data:', {
+    hasStudent: !!student,
+    studentName: student?.name,
+    studentId: student?._id,
+    careerTrack: student?.careerTrack,
+    hasTimeline: !!student?.learningTimeline,
+    timelineLength: student?.learningTimeline?.length || 0,
+    hasDailyActivity: !!student?.dailyActivity,
+    dailyActivityLength: student?.dailyActivity?.length || 0
+  });
 
 
 
   // Calculate completion percentage
   const calculateCompletionPercentage = () => {
     if (!student?.learningTimeline || !Array.isArray(student.learningTimeline) || student.learningTimeline.length === 0) return 0;
-    
-    // Use summaryStats if available
-    if (student.summaryStats?.completionRate !== undefined) {
-      return Math.round(student.summaryStats.completionRate);
-    }
-    
-    // Fallback to calculating from timeline
     const completed = student.learningTimeline.filter((l: any) => l.status === 'completed').length;
     return Math.round((completed / student.learningTimeline.length) * 100);
   };

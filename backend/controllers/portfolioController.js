@@ -34,6 +34,9 @@ export const getStudentPortfolio = async (req, res) => {
     const { studentId } = req.params;
     console.log('🎯 Portfolio request for student:', studentId);
     console.log('👤 Requesting user:', req.user._id, 'Role:', req.user.role);
+    console.log('🔐 Request headers:', req.headers);
+    console.log('📝 Request params:', req.params);
+    console.log('🔍 Request query:', req.query);
     
     // Authorization check
     if (req.user.role === 'student') {
@@ -55,16 +58,26 @@ export const getStudentPortfolio = async (req, res) => {
     }
 
     // Get student data
+    console.log('🔍 Looking for student with ID:', studentId);
     const student = await User.findById(studentId)
       .select('-password')
       .lean();
 
     if (!student) {
+      console.log('❌ Student not found with ID:', studentId);
       return res.status(404).json({
         success: false,
         message: 'Student not found'
       });
     }
+    
+    console.log('✅ Student found:', {
+      id: student._id,
+      name: student.name,
+      email: student.email,
+      role: student.role,
+      careerTrack: student.careerTrack
+    });
 
     if (student.role !== 'student') {
       return res.status(400).json({
@@ -76,10 +89,20 @@ export const getStudentPortfolio = async (req, res) => {
     console.log('👤 Student found:', student.name, 'Career Track:', student.careerTrack);
 
     // Get student progress
+    console.log('🔍 Looking for progress data for user:', studentId);
     const progress = await UserProgress.findOne({ user: studentId })
       .lean();
     
     console.log('📊 Progress data found:', progress ? 'Yes' : 'No');
+    if (progress) {
+      console.log('📈 Progress details:', {
+        currentLevel: progress.currentLevel,
+        totalPoints: progress.totalPoints,
+        completedLevelsCount: progress.completedLevels?.length || 0,
+        hasDailyActivity: !!progress.dailyActivity,
+        hasAttendanceStats: !!progress.attendanceStats
+      });
+    }
 
     // Normalize career track
     const normalizedCareerTrack = normalizeCareerTrack(student.careerTrack);
@@ -90,6 +113,7 @@ export const getStudentPortfolio = async (req, res) => {
       .lean();
 
     // Get curriculum items for learning timeline
+    console.log('🔍 Looking for curriculum items for track:', normalizedCareerTrack);
     const curriculumItems = await Curriculum.find({
       careerTrack: normalizedCareerTrack,
       isActive: true
@@ -97,8 +121,12 @@ export const getStudentPortfolio = async (req, res) => {
     .sort({ order: 1 })
     .lean();
 
+    console.log('📚 Curriculum items found:', curriculumItems.length);
+    console.log('📋 Curriculum item types:', [...new Set(curriculumItems.map(item => item.type))]);
+    
     // Get unique level orders
     const levelOrders = [...new Set(curriculumItems.map(item => item.order))];
+    console.log('🎯 Level orders found:', levelOrders);
 
     // Build learning timeline
     const learningTimeline = levelOrders.map(order => {
@@ -254,12 +282,24 @@ export const getStudentPortfolio = async (req, res) => {
       enrolledDate: progress?.createdAt || student.createdAt
     };
 
-    return res.json({
+    const response = {
       success: true,
       data: {
         student: portfolioData
       }
+    };
+    
+    console.log('✅ Portfolio response prepared successfully');
+    console.log('📊 Response summary:', {
+      studentName: portfolioData.name,
+      careerTrack: portfolioData.careerTrack,
+      timelineLevels: portfolioData.learningTimeline?.length || 0,
+      dailyActivityDays: portfolioData.dailyActivity?.length || 0,
+      hasSkills: !!portfolioData.skills?.length,
+      hasRoles: !!portfolioData.recommendedRoles?.length
     });
+    
+    return res.json(response);
 
   } catch (error) {
     console.error('❌ Error in getStudentPortfolio:', error);

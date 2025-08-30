@@ -73,55 +73,20 @@ export interface AttendanceStats {
   lastPresentDate?: string;
 }
 
-export interface ContentItem {
-  id: string;
-  title: string;
-  content: string;
-  externalLink?: string;
-  description?: string;
-  resources?: string[];
-}
-
 export interface LearningLevel {
   level: number;
   courseName: string;
-  description: string;
   status: 'completed' | 'in-progress' | 'not-started';
-  learn: {
-    completed: boolean;
-    startTime: string | null;
-    endTime: string | null;
-    title: string;
-    description: string;
-    content: ContentItem[];
-    timeSpent: number;
-  };
-  test: {
-    completed: boolean;
-    score: number;
-    attempts: number;
-    startTime: string | null;
-    endTime: string | null;
-    title: string;
-    description: string;
-    content: {
-      id: string;
-      title: string;
-      question: string;
-      options: string[];
-      answer: string;
-    }[];
-    timeSpent: number;
-  };
-  exercise: {
-    completed: boolean;
-    startTime: string | null;
-    endTime: string | null;
-    title: string;
-    description: string;
-    content: ContentItem[];
-    timeSpent: number;
-  };
+  // Dynamic content names and descriptions
+  learnContentName?: string;
+  learnDescription?: string;
+  testContentName?: string;
+  testDescription?: string;
+  exerciseContentName?: string;
+  exerciseDescription?: string;
+  learn: LearningSection;
+  test: TestSection;
+  exercise: ExerciseSection;
 }
 
 export interface LearningSection {
@@ -130,7 +95,7 @@ export interface LearningSection {
   endTime?: string;
   title?: string;
   description?: string;
-  content?: string;
+  content?: any[]; // Backend returns array of content items
   timeSpent?: number;
 }
 
@@ -142,7 +107,7 @@ export interface TestSection {
   endTime?: string;
   title?: string;
   description?: string;
-  content?: string;
+  content?: any[]; // Backend returns array of content items
   timeSpent?: number;
 }
 
@@ -152,7 +117,7 @@ export interface ExerciseSection {
   endTime?: string;
   title?: string;
   description?: string;
-  content?: string;
+  content?: any[]; // Backend returns array of content items
   timeSpent?: number;
 }
 
