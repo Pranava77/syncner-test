@@ -420,7 +420,7 @@ const StudentDetails: React.FC = () => {
                                 <div className="flex-1">
                                   <div className="flex items-center gap-2 mb-1">
                                     <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-                                      Learn
+                                      {level.learnContentName || 'Learn'}
                                     </span>
                                     {level.learn.completed && (
                                       <span className="px-2 py-0.5 rounded-full text-xs font-medium"
@@ -432,6 +432,9 @@ const StudentDetails: React.FC = () => {
                                         ✓ Completed
                                       </span>
                                     )}
+                                  </div>
+                                  <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                                    {level.learnDescription || 'Complete learning materials and theory'}
                                   </div>
                                   <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
                                     {formatDateTime(level.learn.startTime)} → {formatDateTime(level.learn.endTime)}
@@ -464,7 +467,7 @@ const StudentDetails: React.FC = () => {
                                 <div className="flex-1">
                                   <div className="flex items-center gap-2 mb-1">
                                     <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-                                      Test
+                                      {level.testContentName || 'Test'}
                                     </span>
                                     {level.test.completed && (
                                       <span className="px-2 py-0.5 rounded-full text-xs font-medium"
@@ -476,6 +479,9 @@ const StudentDetails: React.FC = () => {
                                         ({level.test.score}% - {level.test.attempts} attempts)
                                       </span>
                                     )}
+                                  </div>
+                                  <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                                    {level.testDescription || 'Complete assessment and evaluation'}
                                   </div>
                                   <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
                                     {formatDateTime(level.test.startTime)} → {formatDateTime(level.test.endTime)}
@@ -508,7 +514,7 @@ const StudentDetails: React.FC = () => {
                                 <div className="flex-1">
                                   <div className="flex items-center gap-2 mb-1">
                                     <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-                                      Exercise
+                                      {level.exerciseContentName || 'Exercise'}
                                     </span>
                                     {level.exercise.completed ? (
                                       <span className="px-2 py-0.5 rounded-full text-xs font-medium"
@@ -520,15 +526,13 @@ const StudentDetails: React.FC = () => {
                                         ✓ Completed
                                       </span>
                                     ) : (
-                                      <span className="px-2 py-0.5 rounded-full text-xs font-medium animate-pulse"
-                                        style={{ 
-                                          backgroundColor: 'var(--color-accent-primary)',
-                                          color: 'white'
-                                        }}
-                                      >
-                                        In Progress
+                                      <span className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
+                                        {level.exerciseDescription || 'Complete hands-on exercises'}
                                       </span>
                                     )}
+                                  </div>
+                                  <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                                    {level.exerciseDescription || 'Complete hands-on exercises'}
                                   </div>
                                   <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
                                     {formatDateTime(level.exercise.startTime)} → {formatDateTime(level.exercise.endTime)}

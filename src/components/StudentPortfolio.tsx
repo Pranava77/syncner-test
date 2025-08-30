@@ -815,7 +815,9 @@ Generated on: ${new Date().toLocaleDateString()}
                             <div className="text-2xl font-bold mb-2" style={{ color: 'var(--color-accent-primary)' }}>
                               {level.learn?.completed ? '✓' : '○'}
                             </div>
-                            <div className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>Learning</div>
+                            <div className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>
+                              {level.learnContentName || 'Learning'}
+                            </div>
                             <div className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
                               {level.learn?.completed ? 'Completed' : 'In Progress'}
                             </div>
@@ -824,7 +826,9 @@ Generated on: ${new Date().toLocaleDateString()}
                             <div className="text-2xl font-bold mb-2" style={{ color: 'var(--color-accent-primary)' }}>
                               {level.test?.completed ? '✓' : '○'}
                             </div>
-                            <div className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>Test</div>
+                            <div className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>
+                              {level.testContentName || 'Test'}
+                            </div>
                             <div className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
                               {level.test?.completed ? 'Completed' : 'In Progress'}
                             </div>
@@ -833,8 +837,10 @@ Generated on: ${new Date().toLocaleDateString()}
                             <div className="text-2xl font-bold mb-2" style={{ color: 'var(--color-accent-primary)' }}>
                               {level.exercise?.completed ? '✓' : '○'}
                             </div>
-                            <div className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>Exercise</div>
-                            <div className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
+                            <div className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>
+                              {level.exerciseContentName || 'Exercise'}
+                            </div>
+                            <div className="text-xs mt-1" style={{ color: 'var(--color-text-secondary)' }}>
                               {level.exercise?.completed ? 'Completed' : 'In Progress'}
                             </div>
                           </div>
