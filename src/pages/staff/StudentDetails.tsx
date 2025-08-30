@@ -167,14 +167,19 @@ const StudentDetails: React.FC = () => {
 
   // Use selectedStudent data or fallback to mock data
   const studentData = selectedStudent || mockStudent;
+  
+  // Debug logging
+  console.log('StudentDetails - selectedStudent:', selectedStudent);
+  console.log('StudentDetails - studentData:', studentData);
+  console.log('StudentDetails - learningTimeline:', studentData.learningTimeline);
 
   // Radar chart data for performance metrics
   const radarData = [
-    { metric: 'Performance', value: studentData.performance.performance },
-    { metric: 'Potential', value: studentData.performance.potential },
-    { metric: 'Contribution', value: studentData.performance.contribution },
-    { metric: 'Creativity', value: studentData.performance.creativity },
-    { metric: 'Skill', value: studentData.performance.skill }
+    { metric: 'Performance', value: studentData.performance?.performance || 0 },
+    { metric: 'Potential', value: studentData.performance?.potential || 0 },
+    { metric: 'Contribution', value: studentData.performance?.contribution || 0 },
+    { metric: 'Creativity', value: studentData.performance?.creativity || 0 },
+    { metric: 'Skill', value: studentData.performance?.skill || 0 }
   ];
 
   const getStatusIcon = (status: string) => {
@@ -584,7 +589,8 @@ const StudentDetails: React.FC = () => {
 
           {/* Learning Levels */}
           <div className="space-y-6">
-            {studentData.learningTimeline.map((level, index) => (
+            {studentData.learningTimeline && studentData.learningTimeline.length > 0 ? (
+              studentData.learningTimeline.map((level, index) => (
               <div 
                 key={index} 
                 className="rounded-lg p-4"
@@ -672,7 +678,12 @@ const StudentDetails: React.FC = () => {
                   </div>
                 </div>
               </div>
-            ))}
+              ))
+            ) : (
+              <div className="text-center py-8" style={{ color: 'var(--color-text-muted)' }}>
+                No learning timeline data available
+              </div>
+            )}
           </div>
         </div>
       </div>

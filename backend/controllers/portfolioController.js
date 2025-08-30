@@ -106,87 +106,107 @@ export const getStudentPortfolio = async (req, res) => {
       });
     }
 
-    // Create portfolio data structure
+    // Create portfolio data structure matching StudentDetails interface
     const portfolioData = {
       student: {
         _id: student._id,
-        rollNumber: student.rollNumber || student._id.toString().slice(-12),
-        courseDept: student.courseDept || 'B.E IT',
         name: student.name,
-        batch: student.batch || '2023-2027',
+        email: student.email,
         careerTrack: student.careerTrack || 'Full Stack Development',
-        enrolledDate: student.createdAt ? new Date(student.createdAt).toLocaleDateString('en-IN') : '21-03-2025',
-        attendance: Math.round((attendanceStats.presentDays / Math.max(attendanceStats.totalDays, 1)) * 100),
+        level: student.level || 'Beginner',
         progress: Math.round(performance.performance),
-        leaderboard: summaryStats.leaderboard || 80,
+        status: 'active',
+        lastActive: student.lastActive || new Date().toISOString(),
+        totalPoints: progress?.totalPoints || 0,
+        streakDays: attendanceStats.currentStreak,
+        college: student.college || 'Tech University',
+        department: student.courseDept || 'B.E IT',
+        batch: student.batch || '2023-2027',
+        isActive: true,
+        createdAt: student.createdAt || new Date().toISOString(),
+        updatedAt: student.updatedAt || new Date().toISOString(),
+        currentStreak: attendanceStats.currentStreak,
+        longestStreak: attendanceStats.longestStreak,
+        attendancePercentage: Math.round((attendanceStats.presentDays / Math.max(attendanceStats.totalDays, 1)) * 100),
+        totalDays: attendanceStats.totalDays,
+        presentDays: attendanceStats.presentDays,
+        leaderboardScore: summaryStats.leaderboard || 80,
+        enrolledDate: student.createdAt ? new Date(student.createdAt).toLocaleDateString('en-IN') : '21-03-2025',
         performance,
-        attendanceStats,
         summaryStats,
+        learningTimeline: learningTimeline,
+        dailyActivity: progress?.dailyActivity || [],
+        attendanceStats,
+        skills: ['React', 'Node.js', 'Python', 'AWS', 'MongoDB'],
+        recommendedRoles: ['Frontend Developer', 'Full Stack Engineer', 'DevOps Engineer'],
         learningLevels: [
           {
             level: 3,
-            title: 'Introduction to HTML',
+            courseName: 'Introduction to HTML',
+            description: 'HTML Fundamentals',
             status: 'in-progress',
             learn: {
               completed: true,
-              startDate: '10-08-2025 10:00 AM',
-              endDate: '12-08-2025 11:00 AM'
+              startTime: '10-08-2025 10:00 AM',
+              endTime: '12-08-2025 11:00 AM'
             },
             test: {
               completed: true,
               score: 80,
               attempts: 2,
-              startDate: '13-08-2025 02:00 PM',
-              endDate: '13-08-2025 03:00 PM'
+              startTime: '13-08-2025 02:00 PM',
+              endTime: '13-08-2025 03:00 PM'
             },
             exercise: {
               completed: false,
-              startDate: '14-08-2025 09:03 PM',
-              endDate: 'In-Progress'
+              startTime: '14-08-2025 09:03 PM',
+              endTime: 'In-Progress'
             }
           },
           {
             level: 2,
-            title: 'Introduction to HTML',
+            courseName: 'Introduction to HTML',
+            description: 'HTML Fundamentals',
             status: 'completed',
             learn: {
               completed: true,
-              startDate: '05-08-2025 09:00 AM',
-              endDate: '07-08-2025 10:00 AM'
+              startTime: '05-08-2025 09:00 AM',
+              endTime: '07-08-2025 10:00 AM'
             },
             test: {
               completed: true,
               score: 85,
               attempts: 2,
-              startDate: '08-08-2025 01:00 PM',
-              endDate: '08-08-2025 02:00 PM'
+              startTime: '08-08-2025 01:00 PM',
+              endTime: '08-08-2025 02:00 PM'
             },
             exercise: {
               completed: true,
-              startDate: '09-08-2025 09:00 AM',
-              endDate: '09-08-2025 10:00 AM'
+              startTime: '09-08-2025 09:00 AM',
+              endTime: '09-08-2025 10:00 AM'
             }
           },
           {
             level: 1,
-            title: 'Introduction to HTML',
+            courseName: 'Introduction to HTML',
+            description: 'HTML Fundamentals',
             status: 'completed',
             learn: {
               completed: true,
-              startDate: '01-08-2025 09:00 AM',
-              endDate: '03-08-2025 10:00 AM'
+              startTime: '01-08-2025 09:00 AM',
+              endTime: '03-08-2025 10:00 AM'
             },
             test: {
               completed: true,
               score: 90,
               attempts: 2,
-              startDate: '04-08-2025 01:00 PM',
-              endDate: '04-08-2025 02:00 PM'
+              startTime: '04-08-2025 01:00 PM',
+              endTime: '04-08-2025 02:00 PM'
             },
             exercise: {
               completed: true,
-              startDate: '05-08-2025 09:00 AM',
-              endDate: '05-08-2025 10:00 AM'
+              startTime: '05-08-2025 09:00 AM',
+              endTime: '05-08-2025 10:00 AM'
             }
           }
         ]
