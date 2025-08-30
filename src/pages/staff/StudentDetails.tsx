@@ -9,7 +9,8 @@ import {
   CheckCircledIcon,
   StarIcon,
   FileTextIcon,
-  RocketIcon
+  RocketIcon,
+  ArrowUpIcon
 } from '@radix-ui/react-icons';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, Tooltip } from 'recharts';
 import { useStaff } from '../../hooks/useStaff';
@@ -176,6 +177,33 @@ const StudentDetails: React.FC = () => {
                   Student Details
                 </h1>
               </div>
+            </div>
+            
+            <div className="flex items-center space-x-3">
+              <button
+                onClick={() => studentId && getStudentDetails(studentId)}
+                disabled={studentDetailsLoading}
+                className="flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50"
+                style={{ 
+                  backgroundColor: 'var(--color-primary)', 
+                  color: 'var(--color-primary-text)' 
+                }}
+              >
+                <div className={`w-4 h-4 ${studentDetailsLoading ? 'animate-spin' : ''}`}>
+                  {studentDetailsLoading ? (
+                    <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full"></div>
+                  ) : (
+                    <ArrowUpIcon className="w-4 h-4" />
+                  )}
+                </div>
+                <span>{studentDetailsLoading ? 'Refreshing...' : 'Refresh'}</span>
+              </button>
+              
+              {studentData && (
+                <div className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
+                  Last updated: {new Date().toLocaleTimeString()}
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import User from '../models/User.js';
 import UserProgress from '../models/UserProgress.js';
+import Attendance from '../models/Attendance.js';
 
 export const getStudentPortfolio = async (req, res) => {
   try {
@@ -26,34 +27,68 @@ export const getStudentPortfolio = async (req, res) => {
     // Fetch user progress data
     const progress = await UserProgress.findOne({ userId: studentId });
     
-    // Calculate attendance stats from daily activity
+    // Get real attendance data from Attendance model
     let attendanceStats = { totalDays: 0, presentDays: 0, currentStreak: 0, longestStreak: 0 };
-    if (progress?.dailyActivity && progress.dailyActivity.length > 0) {
-      const totalDays = Math.ceil((Date.now() - new Date(student.createdAt)) / (1000 * 60 * 60 * 24));
-      const presentDays = progress.dailyActivity.filter(entry => 
-        entry.isPresent || entry.totalMinutes > 0
-      ).length;
+    
+    try {
+      // Get attendance records for this student
+      const attendanceRecords = await Attendance.find({ user: studentId }).sort({ date: 1 });
       
-      // Calculate current streak
-      let currentStreak = 0;
-      let longestStreak = 0;
-      let tempStreak = 0;
-      
-      for (let i = progress.dailyActivity.length - 1; i >= 0; i--) {
-        const entry = progress.dailyActivity[i];
-        if (entry.isPresent || entry.totalMinutes > 0) {
-          tempStreak++;
-          if (i === progress.dailyActivity.length - 1) {
-            currentStreak = tempStreak;
+      if (attendanceRecords && attendanceRecords.length > 0) {
+        // Calculate total days since enrollment
+        const totalDays = Math.ceil((Date.now() - new Date(student.createdAt)) / (1000 * 60 * 60 * 24));
+        
+        // Count present days from actual attendance records
+        const presentDays = attendanceRecords.filter(record => record.status === 'present').length;
+        
+        // Calculate current streak from attendance records
+        let currentStreak = 0;
+        let longestStreak = 0;
+        let tempStreak = 0;
+        
+        // Sort records by date (newest first) to calculate current streak
+        const sortedRecords = [...attendanceRecords].sort((a, b) => new Date(b.date) - new Date(a.date));
+        
+        for (let i = 0; i < sortedRecords.length; i++) {
+          const record = sortedRecords[i];
+          if (record.status === 'present') {
+            tempStreak++;
+            if (i === 0) { // First record (most recent)
+              currentStreak = tempStreak;
+            }
+          } else {
+            longestStreak = Math.max(longestStreak, tempStreak);
+            tempStreak = 0;
           }
-        } else {
-          longestStreak = Math.max(longestStreak, tempStreak);
-          tempStreak = 0;
         }
+        longestStreak = Math.max(longestStreak, tempStreak);
+        
+        attendanceStats = { totalDays, presentDays, currentStreak, longestStreak };
+        
+        console.log('Portfolio Controller - Real attendance stats from Attendance model:', attendanceStats);
+        console.log('Portfolio Controller - Attendance records found:', attendanceRecords.length);
+      } else {
+        // No attendance records found, calculate based on enrollment time
+        const totalDays = Math.ceil((Date.now() - new Date(student.createdAt)) / (1000 * 60 * 60 * 24));
+        attendanceStats = { 
+          totalDays, 
+          presentDays: 0, 
+          currentStreak: 0, 
+          longestStreak: 0 
+        };
+        
+        console.log('Portfolio Controller - No attendance records found, using enrollment-based calculation');
       }
-      longestStreak = Math.max(longestStreak, tempStreak);
-      
-      attendanceStats = { totalDays, presentDays, currentStreak, longestStreak };
+    } catch (error) {
+      console.error('Portfolio Controller - Error fetching attendance data:', error);
+      // Fallback to enrollment-based calculation
+      const totalDays = Math.ceil((Date.now() - new Date(student.createdAt)) / (1000 * 60 * 60 * 24));
+      attendanceStats = { 
+        totalDays, 
+        presentDays: 0, 
+        currentStreak: 0, 
+        longestStreak: 0 
+      };
     }
 
     // Calculate performance metrics based on test scores and progress
@@ -69,7 +104,7 @@ export const getStudentPortfolio = async (req, res) => {
     const summaryStats = {
       totalPoints: progress?.totalPoints || 0,
       consistency: Math.round((attendanceStats.presentDays / Math.max(attendanceStats.totalDays, 1)) * 100),
-      leaderboard: progress?.leaderboardRank || 0,
+      leaderboard: progress?.leaderboardRank || 80, // Default to 80 if no rank
       levelProgress: progress?.currentLevelProgress || 0
     };
 
