@@ -492,7 +492,6 @@ const AdminUsers: React.FC = () => {
             <div className="space-y-3">
               <input 
                 type="text" 
-                name="name"
                 placeholder="Name" 
                 value={userForm.name} 
                 onChange={e => setUserForm(f => ({ ...f, name: e.target.value }))} 
@@ -513,7 +512,6 @@ const AdminUsers: React.FC = () => {
               />
               <input 
                 type="email" 
-                name="email"
                 placeholder="Email" 
                 value={userForm.email} 
                 onChange={e => setUserForm(f => ({ ...f, email: e.target.value }))} 
@@ -534,7 +532,6 @@ const AdminUsers: React.FC = () => {
               />
               <input 
                 type="text" 
-                name="college"
                 placeholder="College" 
                 value={userForm.college} 
                 onChange={e => setUserForm(f => ({ ...f, college: e.target.value }))} 
@@ -554,7 +551,6 @@ const AdminUsers: React.FC = () => {
                 }}
               />
               <select 
-                name="role"
                 value={userForm.role} 
                 onChange={e => setUserForm(f => ({ ...f, role: e.target.value }))} 
                 className="w-full px-3 py-2 border rounded-lg transition-colors"
@@ -576,7 +572,6 @@ const AdminUsers: React.FC = () => {
               </select>
               {(userForm.role === 'student' || userForm.role === 'staff') && (
                 <select 
-                  name="careerTrack"
                   value={userForm.careerTrack} 
                   onChange={e => setUserForm(f => ({ ...f, careerTrack: e.target.value }))} 
                   className="w-full px-3 py-2 border rounded-lg transition-colors"
@@ -594,17 +589,16 @@ const AdminUsers: React.FC = () => {
                     e.currentTarget.style.boxShadow = 'none';
                   }}
                 >
-                  <option value="full-stack">Full Stack</option>
-                  <option value="data-science">Data Science</option>
-                  <option value="cybersecurity">Cybersecurity</option>
+                  <option value="full-stack">Full Stack Development</option>
                   <option value="ai-ml">AI/ML</option>
+                  <option value="ui-ux">UI/UX Design</option>
+                  <option value="data-science">Data Science</option>
                 </select>
               )}
               {/* Password field only for new users */}
               {!editingUser && (
                 <input
                   type="text"
-                  name="password"
                   placeholder="Password"
                   value={userForm.password}
                   onChange={e => setUserForm(f => ({ ...f, password: e.target.value }))}
@@ -625,17 +619,10 @@ const AdminUsers: React.FC = () => {
                 />
               )}
               <div className="flex items-center gap-2">
-                <input 
-                  type="checkbox" 
-                  name="isActive"
-                  checked={userForm.isActive} 
-                  onChange={e => setUserForm(f => ({ ...f, isActive: e.target.checked }))} 
-                  id="isActive" 
-                />
+                <input type="checkbox" checked={userForm.isActive} onChange={e => setUserForm(f => ({ ...f, isActive: e.target.checked }))} id="isActive" />
                 <label 
                   htmlFor="isActive" 
-                  className="text-sm"
-                  style={{ color: 'var(--color-text-secondary)' }}
+                  style={{ color: 'var(--color-text-primary)' }}
                 >
                   Active
                 </label>

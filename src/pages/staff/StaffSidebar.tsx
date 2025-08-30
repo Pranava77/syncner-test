@@ -440,19 +440,472 @@ const StaffSidebar: React.FC = () => {
   );
 };
 
-// Remove duplicate StaffMainDashboard component - use AdminDashboard instead
+// Main Dashboard Component - Exact AdminDashboard Replication
 const StaffMainDashboard: React.FC = () => {
-  // Redirect to admin dashboard or use shared component
-  return (
-    <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
-      <div className="text-center">
-        <p className="text-lg" style={{ color: 'var(--color-text-primary)' }}>
-          Staff analytics are now available in the main admin dashboard.
-        </p>
-        <p className="text-sm mt-2" style={{ color: 'var(--color-text-tertiary)' }}>
-          Please use the admin analytics section for comprehensive insights.
-        </p>
+  const { analytics, analyticsLoading, error, getAnalytics } = useStaff();
+
+  // Fetch analytics data on component mount
+  useEffect(() => {
+    getAnalytics();
+  }, [getAnalytics]);
+
+  const exportData = () => {
+    alert('CSV export functionality would be implemented here');
+  };
+
+  if (analyticsLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
+        <div className="text-center">
+          <motion.img
+            src={syncnerLogo}
+            alt="Syncner Logo"
+            className="w-16 h-16 mx-auto mb-4"
+            animate={{
+              scale: [1, 1.1, 1],
+              rotate: [0, 5, -5, 0],
+            }}
+            transition={{
+              scale: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
+              rotate: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+            }}
+          />
+          <p className="text-lg" style={{ color: 'var(--color-text-primary)' }}>
+            Loading analytics...
+          </p>
+        </div>
       </div>
+    );
+  }
+
+  // Show error state if analytics failed to load
+  if (error) {
+    return (
+      <div 
+        className="min-h-screen flex items-center justify-center"
+        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+      >
+        <div className="text-center">
+          <p 
+            className="text-lg text-red-500 mb-4"
+          >
+            Error loading analytics: {error}
+          </p>
+          <button
+            onClick={() => getAnalytics()}
+            className="px-4 py-2 rounded-lg transition-colors font-medium"
+            style={{ 
+              backgroundColor: 'var(--color-accent-primary)',
+              color: 'var(--color-text-inverse)' 
+            }}
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Fallbacks for missing analytics
+  const userCount = analytics?.totalStudents ?? 0;
+  const activeStudents = analytics?.activeStudents ?? 0;
+  const completionRate = analytics?.completionRate ?? 0;
+  const trackDistribution = analytics?.trackDistribution ?? [];
+  const avgProgress = analytics?.avgProgress ?? 0;
+
+  if (!analytics) {
+    return (
+      <div 
+        className="min-h-screen flex items-center justify-center"
+        style={{ backgroundColor: 'var(--color-primary-bg)' }}
+      >
+        <div className="text-center">
+          <p 
+            className="text-lg"
+            style={{ color: 'var(--color-text-primary)' }}
+          >
+            No analytics data available.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div 
+      className="min-h-screen p-4 lg:p-8"
+      style={{ backgroundColor: 'var(--color-primary-bg)' }}
+    >
+      {/* Header - Exact AdminDashboard Design */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+        <div>
+          <h1 
+            className="text-3xl font-heading"
+            style={{ color: 'var(--color-text-primary)' }}
+          >
+            Staff Analytics
+          </h1>
+          <p 
+            className="mt-1 font-label"
+            style={{ color: 'var(--color-text-tertiary)' }}
+          >
+            Comprehensive insights into student performance and progress
+          </p>
+        </div>
+        <div className="flex gap-3">
+          <button
+            onClick={() => getAnalytics()}
+            disabled={analyticsLoading}
+            className="px-4 py-2 rounded-lg transition-colors font-medium flex items-center gap-2 shadow disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{ 
+              backgroundColor: 'var(--color-accent-secondary)',
+              color: 'var(--color-text-primary)' 
+            }}
+          >
+            {analyticsLoading ? (
+              <>
+                <motion.div
+                  className="w-4 h-4 border-2 border-current border-t-transparent rounded-full"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                />
+                Loading...
+              </>
+            ) : (
+              <>
+                <RocketIcon className="h-4 w-4" />
+                Refresh
+              </>
+            )}
+          </button>
+        <button
+          onClick={exportData}
+          className="px-5 py-2 rounded-lg transition-colors font-medium flex items-center gap-2 shadow"
+          style={{ 
+            backgroundColor: 'var(--color-accent-primary)',
+            color: 'var(--color-text-inverse)' 
+          }}
+        >
+          <DownloadIcon className="h-5 w-5" />
+          Export CSV
+        </button>
+        </div>
+      </div>
+
+      {/* Analytics Cards - Exact AdminDashboard Design */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 mb-10">
+        <div 
+          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
+          <div 
+            className="p-3 rounded-lg"
+            style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+          >
+            <Users 
+              className="h-6 w-6" 
+              style={{ color: 'var(--color-accent-primary)' }}
+            />
+          </div>
+          <div>
+            <p 
+              className="text-sm"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >Total Students</p>
+            <p 
+              className="text-2xl font-bold"
+              style={{ color: 'var(--color-text-primary)' }}
+            >{userCount}</p>
+          </div>
+        </div>
+
+        <div 
+          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
+          <div 
+            className="p-3 rounded-lg"
+            style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+          >
+            <Users 
+              className="h-6 w-6" 
+              style={{ color: 'var(--color-accent-primary)' }}
+            />
+          </div>
+          <div>
+            <p 
+              className="text-sm"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >Active Students</p>
+            <p 
+              className="text-2xl font-bold"
+              style={{ color: 'var(--color-text-primary)' }}
+            >{activeStudents}</p>
+          </div>
+        </div>
+
+        <div 
+          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
+          <div 
+            className="p-3 rounded-lg"
+            style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+          >
+            <Target 
+              className="h-6 w-6" 
+              style={{ color: 'var(--color-accent-primary)' }}
+            />
+          </div>
+          <div>
+            <p 
+              className="text-sm"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >Course Completion</p>
+            <p 
+              className="text-2xl font-bold"
+              style={{ color: 'var(--color-text-primary)' }}
+            >{completionRate}%</p>
+            <p 
+              className="text-xs flex items-center mt-1"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
+              Students who completed at least one level
+            </p>
+          </div>
+        </div>
+
+
+
+        <div 
+          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
+          <div 
+            className="p-3 rounded-lg"
+            style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+          >
+            <Target 
+              className="h-6 w-6" 
+              style={{ color: 'var(--color-accent-primary)' }}
+            />
+          </div>
+          <div>
+            <p 
+              className="text-sm"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >Avg Progress</p>
+            <p 
+              className="text-2xl font-bold"
+              style={{ color: 'var(--color-text-primary)' }}
+            >{avgProgress}%</p>
+          </div>
+        </div>
+
+
+
+
+
+        <div 
+          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
+          <div 
+            className="p-3 rounded-lg"
+            style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+          >
+            <FileTextIcon 
+              className="h-6 w-6" 
+              style={{ color: 'var(--color-accent-primary)' }}
+            />
+          </div>
+          <div>
+            <p 
+              className="text-sm"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >Active Tracks</p>
+            <p 
+              className="text-2xl font-bold"
+              style={{ color: 'var(--color-text-primary)' }}
+            >{analytics?.trackStructure?.length || 0}</p>
+          </div>
+        </div>
+
+
+
+
+
+
+      </div>
+
+      {/* Students by Track Charts - Combined Row - Exact AdminDashboard Design */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        {/* Pie Chart */}
+        <div 
+          className="rounded-xl shadow-sm p-6 flex flex-col items-center"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
+          <h2 
+            className="text-lg font-semibold mb-6"
+            style={{ color: 'var(--color-text-primary)' }}
+          >Students by Track</h2>
+          <div className="w-full flex flex-col items-center justify-center">
+            <div className="w-full max-w-xs sm:max-w-sm md:max-w-md mx-auto">
+              <ResponsiveContainer width="100%" height={280}>
+                <PieChart>
+                  <Pie
+                    data={trackDistribution}
+                    dataKey="count"
+                    nameKey="track"
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={100}
+                    paddingAngle={2}
+                    labelLine={false}
+                    label={false}
+                    isAnimationActive={true}
+                    animationDuration={900}
+                    animationEasing="ease-out"
+                    stroke="#181F2A"
+                    strokeWidth={1}
+                  >
+                    {trackDistribution.map((entry: any, index: number) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length] + '99'}
+                      />
+                    ))}
+                  </Pie>
+                  {/* Minimal Center Label */}
+                  <text
+                    x="50%"
+                    y="50%"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fontSize="32"
+                    fontWeight="bold"
+                    fill="#00B8D9"
+                    style={{ pointerEvents: 'none', opacity: 0.95 }}
+                  >
+                    {userCount}
+                  </text>
+                  <text
+                    x="50%"
+                    y="62%"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fontSize="14"
+                    fill="#A0AEC0"
+                    style={{ pointerEvents: 'none', fontWeight: 400, opacity: 0.7 }}
+                  >
+                    students
+                  </text>
+                  <RechartsTooltip
+                    contentStyle={{ background: '#181F2A', border: 'none', borderRadius: 8, color: '#fff', boxShadow: '0 2px 8px #00B8D955' }}
+                    itemStyle={{ color: '#00B8D9' }}
+                    cursor={{ fill: '#00B8D922' }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            {/* Custom Legend */}
+            <div className="flex flex-wrap justify-center items-center gap-3 mt-6 w-full">
+              {trackDistribution.map((entry: any, idx: number) => (
+                <div
+                  key={entry.track}
+                  className="flex items-center gap-2 group transition-all"
+                >
+                  <span
+                    className="inline-block w-3 h-3 rounded-full transition-all group-hover:shadow-lg"
+                    style={{ background: COLORS[idx % COLORS.length] + 'cc' }}
+                  ></span>
+                  <span 
+                    className="text-xs font-medium opacity-80"
+                    style={{ color: 'var(--color-text-primary)' }}
+                  >{entry.track}</span>
+                  <span 
+                    className="text-xs ml-1 opacity-60"
+                    style={{ color: 'var(--color-text-tertiary)' }}
+                  >({entry.count})</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Bar Chart */}
+        <div 
+          className="rounded-xl shadow-sm p-6 flex flex-col items-center"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
+          <h2 
+            className="text-lg font-semibold mb-6"
+            style={{ color: 'var(--color-text-primary)' }}
+          >Students per Track</h2>
+          <div className="w-full max-w-xs sm:max-w-sm md:max-w-md mx-auto">
+            <ResponsiveContainer width="100%" height={280}>
+              <BarChart data={trackDistribution} barCategoryGap={20}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#22283122" />
+                <XAxis dataKey="track" tick={{ fill: '#A0AEC0', fontSize: 12, fontWeight: 500 }} axisLine={false} tickLine={false} />
+                <YAxis allowDecimals={false} tick={{ fill: '#A0AEC0', fontSize: 12, fontWeight: 500 }} axisLine={false} tickLine={false} />
+                <RechartsTooltip
+                  contentStyle={{ background: '#181F2A', border: 'none', borderRadius: 8, color: '#fff', boxShadow: '0 2px 8px #00B8D955' }}
+                  itemStyle={{ color: '#00B8D9' }}
+                  cursor={{ fill: '#00B8D922' }}
+                />
+                <Bar
+                  dataKey="count"
+                  radius={[6, 6, 6, 6]}
+                  minPointSize={2}
+                  isAnimationActive={true}
+                >
+                  {trackDistribution.map((entry: any, idx: number) => (
+                    <Cell
+                      key={`bar-cell-${idx}`}
+                      fill={`url(#barGradient${idx})`}
+                      stroke={COLORS[idx % COLORS.length]}
+                      strokeWidth={0.5}
+                    />
+                  ))}
+                </Bar>
+                {/* Gradients for bars */}
+                <defs>
+                  {trackDistribution.map((entry: any, idx: number) => (
+                    <linearGradient id={`barGradient${idx}`} key={idx} x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor={COLORS[idx % COLORS.length]} stopOpacity={0.85} />
+                      <stop offset="100%" stopColor={COLORS[idx % COLORS.length]} stopOpacity={0.45} />
+                    </linearGradient>
+                  ))}
+                </defs>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+
+
     </div>
   );
 };

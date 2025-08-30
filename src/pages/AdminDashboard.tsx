@@ -6,7 +6,8 @@ import LoadingScreen from '../components/LoadingScreen';
 
 import { fetchAnalytics } from '../redux/slices/analyticsSlice';
 import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
-import { COLORS, CHART_CONFIG, TOOLTIP_STYLES } from '../utils/chartConstants';
+
+const COLORS = ['#00B8D9', '#FFBB28', '#FF8042', '#A259F7', '#F95F62', '#00C49F'];
 
 const AdminDashboard: React.FC = () => {
   const analyticsState = useSelector((state: any) => state.analytics);
