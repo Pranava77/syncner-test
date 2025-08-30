@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { StudentDetails } from '../../types/staff';
-import { ApiService } from '../../services/api';
+import apiService from '../../services/api';
 
 // Async thunk for fetching student portfolio data
 export const fetchStudentPortfolio = createAsyncThunk(
@@ -8,7 +8,7 @@ export const fetchStudentPortfolio = createAsyncThunk(
   async (studentId: string, { rejectWithValue }) => {
     try {
       console.log('🎯 Calling NEW student portfolio API for student:', studentId);
-      const response = await ApiService.getStudentPortfolio(studentId);
+      const response = await apiService.getStudentPortfolio(studentId);
       console.log('✅ Student portfolio API response:', response);
       return response.data.student;  // Extract the student data from the nested response
     } catch (error: any) {
