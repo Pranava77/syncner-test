@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAppSelector } from '../redux/store';
 import {
   CheckCircledIcon,
   ClockIcon,
   ChevronDownIcon,
   ChevronRightIcon,
-  EyeOpenIcon,
   CalendarIcon,
   RocketIcon,
   PersonIcon,
@@ -17,7 +16,7 @@ import {
   DownloadIcon
 } from '@radix-ui/react-icons';
 import { StudentDetails } from '../types/staff';
-import { useStudent } from '../hooks/useStudent';
+import { useStaff } from '../hooks/useStaff';
 import ThemeContainer from './ThemeContainer';
 
 // Note: Backend generates fake timestamps instead of real data
@@ -26,56 +25,56 @@ import ThemeContainer from './ThemeContainer';
 
 const StudentPortfolio: React.FC = () => {
   const navigate = useNavigate();
-  const { user } = useAppSelector((state) => state.auth);
-  const { portfolioData, portfolioLoading, portfolioError, getPortfolioData } = useStudent();
+  const { studentId } = useParams<{ studentId: string }>();
+  const { selectedStudent, studentDetailsLoading, error, getStudentDetails } = useStaff();
 
   const [expandedLevels, setExpandedLevels] = useState<Set<number>>(new Set());
 
-  // Fetch student portfolio data when component mounts
+  // Fetch student details when component mounts
   React.useEffect(() => {
-    if (user?._id) {
-      getPortfolioData(user._id);
+    if (studentId) {
+      getStudentDetails(studentId);
     }
-  }, [user?._id, getPortfolioData]);
+  }, [studentId, getStudentDetails]);
 
   // Handle back navigation
   const handleBack = () => {
-    navigate('/student/dashboard');
+    navigate('/staff/students');
   };
 
-  if (portfolioLoading || !portfolioData) {
+  if (studentDetailsLoading || !selectedStudent) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: 'var(--color-accent-primary)' }}></div>
           <p className="text-lg" style={{ color: 'var(--color-text-primary)' }}>
-            Loading portfolio...
+            Loading student portfolio...
           </p>
         </div>
       </div>
     );
   }
 
-  if (portfolioError) {
+  if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
         <div className="text-center">
           <p className="text-lg mb-4" style={{ color: 'var(--color-text-primary)' }}>
-            {portfolioError}
+            {error}
           </p>
           <button
             onClick={handleBack}
             className="px-4 py-2 rounded-lg transition-colors hover:bg-[var(--color-accent-tertiary)]"
             style={{ color: 'var(--color-accent-primary)' }}
           >
-            Back to Dashboard
+            Back to Students
           </button>
         </div>
       </div>
     );
   }
 
-  const student = portfolioData;
+  const student = selectedStudent;
 
   // Calculate completion percentage
   const calculateCompletionPercentage = () => {
@@ -120,8 +119,8 @@ const StudentPortfolio: React.FC = () => {
   // Handle share functionality
   const handleShare = async () => {
     const shareData = {
-      title: `My Portfolio - Syncner`,
-      text: `Check out my learning portfolio and achievements at Syncner!`,
+      title: `${student.name}'s Portfolio - Syncner`,
+      text: `Check out ${student.name}'s learning portfolio and achievements at Syncner!`,
       url: window.location.href
     };
 
@@ -215,7 +214,7 @@ Generated on: ${new Date().toLocaleDateString()}
               className="text-3xl font-heading"
               style={{ color: 'var(--color-text-primary)' }}
             >
-              My Portfolio
+              Student Portfolio
             </h1>
             <p 
               className="mt-1 font-label"
@@ -498,13 +497,7 @@ Generated on: ${new Date().toLocaleDateString()}
                           })}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2 px-3 py-1 rounded-full" 
-                           style={{ backgroundColor: 'var(--color-success-bg)' }}>
-                        <EyeOpenIcon className="w-4 h-4" style={{ color: 'var(--color-success)' }} />
-                        <span className="text-xs font-semibold" style={{ color: 'var(--color-success)' }}>
-                          Blockchain Verified
-                        </span>
-                      </div>
+
                     </div>
                   </div>
                 </div>
