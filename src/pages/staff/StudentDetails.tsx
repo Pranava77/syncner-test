@@ -206,6 +206,12 @@ const StudentDetails: React.FC = () => {
     return selectedStudent.summaryStats.progress + selectedStudent.summaryStats.leaderboard;
   };
 
+  const handleRefresh = () => {
+    if (studentId) {
+      getStudentDetails(studentId);
+    }
+  };
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
       {/* Top Header/Navigation */}
@@ -220,9 +226,34 @@ const StudentDetails: React.FC = () => {
               <ArrowLeftIcon className="w-4 h-4" />
               Back to Students
             </button>
+            
+            <button
+              onClick={handleRefresh}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors hover:bg-[var(--color-accent-tertiary)]"
+              style={{ color: 'var(--color-accent-primary)' }}
+              disabled={studentDetailsLoading}
+            >
+              <div className={`w-4 h-4 ${studentDetailsLoading ? 'animate-spin' : ''}`}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M1 4v6h6M23 20v-6h-6"/>
+                  <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+                </svg>
+              </div>
+              Refresh
+            </button>
           </div>
           
-
+          <div className="flex items-center gap-4">
+            {studentDetailsLoading && (
+              <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2" style={{ borderColor: 'var(--color-accent-primary)' }}></div>
+                Updating...
+              </div>
+            )}
+            <div className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
+              Last updated: {selectedStudent?.updatedAt ? new Date(selectedStudent.updatedAt).toLocaleTimeString() : 'Unknown'}
+            </div>
+          </div>
         </div>
       </div>
 
