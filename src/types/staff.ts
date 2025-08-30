@@ -73,20 +73,55 @@ export interface AttendanceStats {
   lastPresentDate?: string;
 }
 
+export interface ContentItem {
+  id: string;
+  title: string;
+  content: string;
+  externalLink?: string;
+  description?: string;
+  resources?: string[];
+}
+
 export interface LearningLevel {
   level: number;
   courseName: string;
+  description: string;
   status: 'completed' | 'in-progress' | 'not-started';
-  // Dynamic content names and descriptions
-  learnContentName?: string;
-  learnDescription?: string;
-  testContentName?: string;
-  testDescription?: string;
-  exerciseContentName?: string;
-  exerciseDescription?: string;
-  learn: LearningSection;
-  test: TestSection;
-  exercise: ExerciseSection;
+  learn: {
+    completed: boolean;
+    startTime: string | null;
+    endTime: string | null;
+    title: string;
+    description: string;
+    content: ContentItem[];
+    timeSpent: number;
+  };
+  test: {
+    completed: boolean;
+    score: number;
+    attempts: number;
+    startTime: string | null;
+    endTime: string | null;
+    title: string;
+    description: string;
+    content: {
+      id: string;
+      title: string;
+      question: string;
+      options: string[];
+      answer: string;
+    }[];
+    timeSpent: number;
+  };
+  exercise: {
+    completed: boolean;
+    startTime: string | null;
+    endTime: string | null;
+    title: string;
+    description: string;
+    content: ContentItem[];
+    timeSpent: number;
+  };
 }
 
 export interface LearningSection {

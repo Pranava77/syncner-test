@@ -407,198 +407,169 @@ const StudentDetails: React.FC = () => {
                               </h3>
                             </div>
 
+                            {/* Level Description */}
+                            <div className="mb-4 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                              {level.description}
+                            </div>
+
                             {/* Modern Timeline Items */}
                             <div className="space-y-4">
                               {/* Learn */}
-                              <div className="group/item relative overflow-hidden rounded-xl p-4 transition-all duration-300 hover:scale-[1.02]"
-                                style={{ 
-                                  backgroundColor: 'var(--color-secondary-bg)',
-                                  border: `1px solid ${level.learn.completed ? 'var(--color-success)' : 'var(--color-border)'}`
-                                }}
-                              >
-                                <div className="flex items-center gap-4">
-                                  <div className="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 group-hover/item:scale-110"
-                                    style={{ 
-                                      backgroundColor: level.learn.completed ? 'var(--color-success)' : 'var(--color-tertiary-bg)',
-                                      color: level.learn.completed ? 'white' : 'var(--color-text-secondary)'
-                                    }}
-                                  >
-                                    <FileTextIcon className="w-5 h-5" />
-                                  </div>
-                                  <div className="flex-1">
-                                    <div className="flex items-center gap-2 mb-1">
-                                      <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-                                        {level.learn.title}
-                                      </span>
-                                      {level.learn.completed && (
-                                        <span className="px-2 py-0.5 rounded-full text-xs font-medium"
-                                          style={{ 
-                                            backgroundColor: 'var(--color-success)',
-                                            color: 'white'
-                                          }}
-                                        >
-                                          ✓ Completed
+                              {level.learn && (
+                                <div className="group/item relative overflow-hidden rounded-xl p-4 transition-all duration-300 hover:scale-[1.02]"
+                                  style={{ 
+                                    backgroundColor: 'var(--color-secondary-bg)',
+                                    border: `1px solid ${level.learn.completed ? 'var(--color-success)' : 'var(--color-border)'}`
+                                  }}
+                                >
+                                  <div className="flex items-center gap-4">
+                                    <div className="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 group-hover/item:scale-110"
+                                      style={{ 
+                                        backgroundColor: level.learn.completed ? 'var(--color-success)' : 'var(--color-tertiary-bg)',
+                                        color: level.learn.completed ? 'white' : 'var(--color-text-secondary)'
+                                      }}
+                                    >
+                                      <FileTextIcon className="w-5 h-5" />
+                                    </div>
+                                    <div className="flex-1">
+                                      <div className="flex items-center gap-2 mb-1">
+                                        <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                                          {level.learn.title}
                                         </span>
+                                        {level.learn.completed && (
+                                          <span className="px-2 py-0.5 rounded-full text-xs font-medium"
+                                            style={{ 
+                                              backgroundColor: 'var(--color-success)',
+                                              color: 'white'
+                                            }}
+                                          >
+                                            ✓ Completed
+                                          </span>
+                                        )}
+                                      </div>
+                                      <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                                        {level.learn.description}
+                                      </div>
+                                      {level.learn.content && level.learn.content.length > 0 && (
+                                        <div className="mt-2 space-y-2">
+                                          {level.learn.content.map((item, idx) => (
+                                            <div key={idx} className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
+                                              • {item.title}
+                                              {item.externalLink && (
+                                                <a 
+                                                  href={item.externalLink} 
+                                                  target="_blank" 
+                                                  rel="noopener noreferrer"
+                                                  className="ml-2 text-xs underline"
+                                                  style={{ color: 'var(--color-accent-primary)' }}
+                                                >
+                                                  View Resource
+                                                </a>
+                                              )}
+                                            </div>
+                                          ))}
+                                        </div>
                                       )}
                                     </div>
-                                    <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                                      {level.learn.description}
-                                    </div>
-                                    {level.learn.content && Array.isArray(level.learn.content) && level.learn.content.length > 0 && (
-                                      <div className="mt-2 space-y-2">
-                                        {level.learn.content.map((item: { id: string; title: string; externalLink?: string }) => (
-                                          <div key={item.id} className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                                            • {item.title}
-                                            {item.externalLink && (
-                                              <a 
-                                                href={item.externalLink} 
-                                                target="_blank" 
-                                                rel="noopener noreferrer"
-                                                className="ml-2 text-xs underline"
-                                                style={{ color: 'var(--color-accent-primary)' }}
-                                              >
-                                                View Resource
-                                              </a>
-                                            )}
-                                          </div>
-                                        ))}
-                                      </div>
-                                    )}
-                                    <div className="text-sm mt-2" style={{ color: 'var(--color-text-secondary)' }}>
-                                      {formatDateTime(level.learn.startTime)} → {formatDateTime(level.learn.endTime)}
-                                    </div>
-                                    {level.learn.endTime && getRelativeTime(level.learn.endTime) && (
-                                      <div className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
-                                        {getRelativeTime(level.learn.endTime)}
-                                      </div>
-                                    )}
                                   </div>
                                 </div>
-                              </div>
+                              )}
 
                               {/* Test */}
-                              <div className="group/item relative overflow-hidden rounded-xl p-4 transition-all duration-300 hover:scale-[1.02]"
-                                style={{ 
-                                  backgroundColor: 'var(--color-secondary-bg)',
-                                  border: `1px solid ${level.test.completed ? 'var(--color-success)' : 'var(--color-border)'}`
-                                }}
-                              >
-                                <div className="flex items-center gap-4">
-                                  <div className="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 group-hover/item:scale-110"
-                                    style={{ 
-                                      backgroundColor: level.test.completed ? 'var(--color-success)' : 'var(--color-tertiary-bg)',
-                                      color: level.test.completed ? 'white' : 'var(--color-text-secondary)'
-                                    }}
-                                  >
-                                    <TargetIcon className="w-5 h-5" />
-                                  </div>
-                                  <div className="flex-1">
-                                    <div className="flex items-center gap-2 mb-1">
-                                      <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-                                        {level.test.title}
-                                      </span>
-                                      {level.test.completed && (
-                                        <span className="px-2 py-0.5 rounded-full text-xs font-medium"
-                                          style={{ 
-                                            backgroundColor: 'var(--color-success)',
-                                            color: 'white'
-                                          }}
-                                        >
-                                          ({level.test.score}% - {level.test.attempts} attempts)
+                              {level.test && (
+                                <div className="group/item relative overflow-hidden rounded-xl p-4 transition-all duration-300 hover:scale-[1.02]"
+                                  style={{ 
+                                    backgroundColor: 'var(--color-secondary-bg)',
+                                    border: `1px solid ${level.test.completed ? 'var(--color-success)' : 'var(--color-border)'}`
+                                  }}
+                                >
+                                  <div className="flex items-center gap-4">
+                                    <div className="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 group-hover/item:scale-110"
+                                      style={{ 
+                                        backgroundColor: level.test.completed ? 'var(--color-success)' : 'var(--color-tertiary-bg)',
+                                        color: level.test.completed ? 'white' : 'var(--color-text-secondary)'
+                                      }}
+                                    >
+                                      <TargetIcon className="w-5 h-5" />
+                                    </div>
+                                    <div className="flex-1">
+                                      <div className="flex items-center gap-2 mb-1">
+                                        <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                                          {level.test.title}
                                         </span>
+                                        {level.test.completed && (
+                                          <span className="px-2 py-0.5 rounded-full text-xs font-medium"
+                                            style={{ 
+                                              backgroundColor: 'var(--color-success)',
+                                              color: 'white'
+                                            }}
+                                          >
+                                            {level.test.score}% - {level.test.attempts} attempts
+                                          </span>
+                                        )}
+                                      </div>
+                                      <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                                        {level.test.description}
+                                      </div>
+                                      {level.test.content && level.test.content.length > 0 && (
+                                        <div className="mt-2 text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
+                                          {level.test.content.length} questions available
+                                        </div>
                                       )}
                                     </div>
-                                    <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                                      {level.test.description}
-                                    </div>
-                                    {level.test.content && Array.isArray(level.test.content) && level.test.content.length > 0 && (
-                                      <div className="mt-2 space-y-2">
-                                        <div className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                                          Sample Questions:
-                                        </div>
-                                        {level.test.content.slice(0, 2).map((item: { id: string; question: string }) => (
-                                          <div key={item.id} className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                                            • {item.question}
-                                          </div>
-                                        ))}
-                                      </div>
-                                    )}
-                                    <div className="text-sm mt-2" style={{ color: 'var(--color-text-secondary)' }}>
-                                      {formatDateTime(level.test.startTime)} → {formatDateTime(level.test.endTime)}
-                                    </div>
-                                    {level.test.endTime && getRelativeTime(level.test.endTime) && (
-                                      <div className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
-                                        {getRelativeTime(level.test.endTime)}
-                                      </div>
-                                    )}
                                   </div>
                                 </div>
-                              </div>
+                              )}
 
                               {/* Exercise */}
-                              <div className="group/item relative overflow-hidden rounded-xl p-4 transition-all duration-300 hover:scale-[1.02]"
-                                style={{ 
-                                  backgroundColor: 'var(--color-secondary-bg)',
-                                  border: `1px solid ${level.exercise.completed ? 'var(--color-success)' : 'var(--color-accent-primary)'}`
-                                }}
-                              >
-                                <div className="flex items-center gap-4">
-                                  <div className="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 group-hover/item:scale-110"
-                                    style={{ 
-                                      backgroundColor: level.exercise.completed ? 'var(--color-success)' : 'var(--color-accent-primary)',
-                                      color: 'white'
-                                    }}
-                                  >
-                                    <FileTextIcon className="w-5 h-5" />
-                                  </div>
-                                  <div className="flex-1">
-                                    <div className="flex items-center gap-2 mb-1">
-                                      <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-                                        {level.exercise.title}
-                                      </span>
-                                      {level.exercise.completed ? (
-                                        <span className="px-2 py-0.5 rounded-full text-xs font-medium"
-                                          style={{ 
-                                            backgroundColor: 'var(--color-success)',
-                                            color: 'white'
-                                          }}
-                                        >
-                                          ✓ Completed
+                              {level.exercise && (
+                                <div className="group/item relative overflow-hidden rounded-xl p-4 transition-all duration-300 hover:scale-[1.02]"
+                                  style={{ 
+                                    backgroundColor: 'var(--color-secondary-bg)',
+                                    border: `1px solid ${level.exercise.completed ? 'var(--color-success)' : 'var(--color-accent-primary)'}`
+                                  }}
+                                >
+                                  <div className="flex items-center gap-4">
+                                    <div className="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 group-hover/item:scale-110"
+                                      style={{ 
+                                        backgroundColor: level.exercise.completed ? 'var(--color-success)' : 'var(--color-accent-primary)',
+                                        color: 'white'
+                                      }}
+                                    >
+                                      <FileTextIcon className="w-5 h-5" />
+                                    </div>
+                                    <div className="flex-1">
+                                      <div className="flex items-center gap-2 mb-1">
+                                        <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                                          {level.exercise.title}
                                         </span>
-                                      ) : (
-                                        <span className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
-                                          {level.exercise.description}
-                                        </span>
+                                        {level.exercise.completed && (
+                                          <span className="px-2 py-0.5 rounded-full text-xs font-medium"
+                                            style={{ 
+                                              backgroundColor: 'var(--color-success)',
+                                              color: 'white'
+                                            }}
+                                          >
+                                            ✓ Completed
+                                          </span>
+                                        )}
+                                      </div>
+                                      <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                                        {level.exercise.description}
+                                      </div>
+                                      {level.exercise.content && level.exercise.content.length > 0 && (
+                                        <div className="mt-2 space-y-2">
+                                          {level.exercise.content.map((item, idx) => (
+                                            <div key={idx} className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
+                                              • {item.title}
+                                            </div>
+                                          ))}
+                                        </div>
                                       )}
                                     </div>
-                                    <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                                      {level.exercise.description}
-                                    </div>
-                                    {level.exercise.content && Array.isArray(level.exercise.content) && level.exercise.content.length > 0 && (
-                                      <div className="mt-2 space-y-2">
-                                        {level.exercise.content.map((item: { id: string; title: string; description?: string }) => (
-                                          <div key={item.id} className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                                            • {item.title}
-                                            {item.description && (
-                                              <div className="ml-4 text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
-                                                {item.description}
-                                              </div>
-                                            )}
-                                          </div>
-                                        ))}
-                                      </div>
-                                    )}
-                                    <div className="text-sm mt-2" style={{ color: 'var(--color-text-secondary)' }}>
-                                      {formatDateTime(level.exercise.startTime)} → {formatDateTime(level.exercise.endTime)}
-                                    </div>
-                                    {level.exercise.endTime && getRelativeTime(level.exercise.endTime) && (
-                                      <div className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
-                                        {getRelativeTime(level.exercise.endTime)}
-                                      </div>
-                                    )}
                                   </div>
                                 </div>
-                              </div>
+                              )}
                             </div>
                           </div>
                         </div>
