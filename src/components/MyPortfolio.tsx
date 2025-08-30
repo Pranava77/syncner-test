@@ -72,17 +72,7 @@ const MyPortfolio: React.FC = () => {
 
   const student = portfolioData;
 
-  // Debug logging to see what data we're receiving
-  React.useEffect(() => {
-    if (student && student._id) {
-      console.log('📊 Student data received:', {
-        summaryStats: student.summaryStats,
-        learningTimeline: student.learningTimeline,
-        careerTrack: student.careerTrack,
-        name: student.name
-      });
-    }
-  }, [student?._id]); // Only depend on student ID to prevent infinite loops
+
 
   // Calculate completion percentage
   const calculateCompletionPercentage = () => {
