@@ -322,6 +322,33 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
       teamwork: 80 // This could be calculated based on collaborative activities
     };
     
+    // Get skills for career track
+    const getSkillsForTrack = () => {
+      const skills = {
+        'full-stack': ['HTML/CSS', 'JavaScript', 'React', 'Node.js', 'Database Design', 'Full Stack Architecture', 'API Development', 'DevOps Basics'],
+        'web-development': ['HTML/CSS', 'JavaScript', 'React', 'Node.js', 'Database Design', 'Frontend Frameworks', 'Backend Development'],
+        'ai-ml': ['Python', 'Machine Learning', 'Data Science', 'Neural Networks', 'Deep Learning', 'Statistics', 'Data Visualization'],
+        'ui-ux': ['User Research', 'Wireframing', 'Prototyping', 'Visual Design', 'User Testing', 'Design Systems', 'Accessibility'],
+        'data-science': ['Python', 'Statistics', 'Machine Learning', 'Data Visualization', 'SQL', 'Data Analysis', 'Big Data']
+      };
+      return skills[normalizedCareerTrack] || ['Programming', 'Problem Solving', 'Critical Thinking', 'Technical Skills'];
+    };
+    
+    // Get recommended roles for career track
+    const getRecommendedRoles = () => {
+      const roles = {
+        'full-stack': ['Full Stack Developer', 'Full Stack Engineer', 'Web Developer', 'Software Engineer', 'Full Stack Architect'],
+        'web-development': ['Frontend Developer', 'Backend Developer', 'Web Developer', 'JavaScript Developer', 'React Developer'],
+        'ai-ml': ['AI Engineer', 'Machine Learning Engineer', 'Data Scientist', 'ML Developer', 'AI Researcher'],
+        'ui-ux': ['UI/UX Designer', 'Product Designer', 'User Experience Designer', 'Interaction Designer', 'Visual Designer'],
+        'data-science': ['Data Scientist', 'Data Analyst', 'ML Engineer', 'Business Intelligence Analyst', 'Data Engineer']
+      };
+      return roles[normalizedCareerTrack] || ['Software Developer', 'Technical Specialist', 'IT Professional'];
+    };
+    
+    // Get track information for additional details
+    const trackInfo = await Track.findOne({ name: normalizedCareerTrack }).lean();
+    
     // Calculate attendance statistics for consistency
     let presentDays = 0;
     let totalDays = 1;
@@ -490,6 +517,9 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
       performance,
       summaryStats,
       learningTimeline,
+      skills: getSkillsForTrack(),
+      recommendedRoles: getRecommendedRoles(),
+      trackInfo: trackInfo || null,
       enrolledDate: student.createdAt ? new Date(student.createdAt).toLocaleDateString('en-GB') : 'N/A'
     };
     

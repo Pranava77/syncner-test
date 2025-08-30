@@ -31,6 +31,10 @@ export interface StudentDetails extends Student {
   performance: PerformanceMetrics;
   summaryStats: SummaryStats;
   learningTimeline: LearningLevel[];
+  attendanceStats: AttendanceStats;
+  skills: string[];
+  recommendedRoles: string[];
+  trackInfo?: any;
   enrolledDate: string;
 }
 
@@ -48,6 +52,17 @@ export interface SummaryStats {
   completedLevels: number;
   currentLevel: number;
   completionRate: number;
+  consistency: number;
+  progress: number;
+  leaderboard: number;
+}
+
+export interface AttendanceStats {
+  totalDays: number;
+  presentDays: number;
+  currentStreak: number;
+  longestStreak: number;
+  lastPresentDate?: string;
 }
 
 export interface LearningLevel {

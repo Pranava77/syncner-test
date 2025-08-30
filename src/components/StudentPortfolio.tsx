@@ -83,8 +83,12 @@ const StudentPortfolio: React.FC = () => {
     return Math.round((completed / student.learningTimeline.length) * 100);
   };
 
-  // Get skills for career track
+  // Get skills for career track - use backend data if available, fallback to hardcoded
   const getSkillsForTrack = () => {
+    if (student.skills && student.skills.length > 0) {
+      return student.skills;
+    }
+    
     const skills: { [key: string]: string[] } = {
       'web-development': ['HTML/CSS', 'JavaScript', 'React', 'Node.js', 'Database Design'],
       'data-science': ['Python', 'Statistics', 'Machine Learning', 'Data Visualization', 'SQL'],
@@ -94,8 +98,12 @@ const StudentPortfolio: React.FC = () => {
     return skills[student.careerTrack as keyof typeof skills] || ['Programming', 'Problem Solving', 'Critical Thinking'];
   };
 
-  // Get recommended roles
+  // Get recommended roles - use backend data if available, fallback to hardcoded
   const getRecommendedRoles = () => {
+    if (student.recommendedRoles && student.recommendedRoles.length > 0) {
+      return student.recommendedRoles;
+    }
+    
     const roles: { [key: string]: string[] } = {
       'web-development': ['Frontend Developer', 'Backend Developer', 'Full Stack Developer', 'Web Developer'],
       'data-science': ['Data Analyst', 'Data Scientist', 'ML Engineer', 'Business Intelligence Analyst'],
