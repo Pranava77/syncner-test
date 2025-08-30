@@ -6,92 +6,97 @@ import {
   CalendarIcon, 
   ClockIcon, 
   TargetIcon, 
-  RocketIcon, 
-  FileTextIcon, 
-  HomeIcon,
-  BarChartIcon,
   CheckCircledIcon,
-  FrameIcon,
   StarIcon,
-  CopyIcon,
-  ArrowUpIcon,
-  ActivityLogIcon,
-  BookmarkIcon,
-  CodeIcon,
-  LightningBoltIcon,
-  HeartIcon
+  FileTextIcon,
+  RocketIcon
 } from '@radix-ui/react-icons';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, Tooltip } from 'recharts';
 
-// Mock student data for demonstration
+// Mock student data matching wireframe structure
 const mockStudent = {
-  _id: '507f1f77bcf86cd799439011',
-  name: 'Alex Johnson',
-  email: 'alex.johnson@college.edu',
-  college: 'Tech University',
+  rollNumber: '713315104704',
+  courseDept: 'B.E IT',
+  name: 'Ramesh',
+  batch: '2023-2027',
   careerTrack: 'Full Stack Development',
-  level: 'Intermediate',
-  activeTodayMinutes: 241,
-  profileComplete: 85,
-  lastActive: '2024-01-15T10:30:00Z',
-  interests: ['Web Development', 'AI/ML', 'Mobile Apps', 'Cloud Computing'],
-  skills: ['React', 'Node.js', 'Python', 'AWS', 'MongoDB'],
-  recommendedRoles: ['Frontend Developer', 'Full Stack Engineer', 'DevOps Engineer'],
+  enrolledDate: '21-03-2025',
+  attendance: 80,
+  progress: 80,
+  leaderboard: 80,
   performance: {
-    technical: 85,
-    problemSolving: 78,
-    creativity: 92,
-    communication: 88,
-    teamwork: 82,
-    adaptability: 90
+    performance: 75,
+    potential: 85,
+    contribution: 70,
+    creativity: 90,
+    skill: 80
   },
-  attendanceStats: {
-    totalDays: 45,
-    presentDays: 38,
-    currentStreak: 7,
-    longestStreak: 12
-  },
-  summaryStats: {
-    totalPoints: 2847,
-    consistency: 84,
-    leaderboard: 12,
-    levelProgress: 65
-  },
-  learningTimeline: [
+  learningLevels: [
     {
-      date: '2024-01-15',
-      activity: 'Completed React Fundamentals Module',
-      type: 'learning',
-      duration: 120,
-      score: 92
+      level: 3,
+      title: 'Introduction to HTML',
+      status: 'in-progress',
+      learn: {
+        completed: true,
+        startDate: '10-08-2025 10:00 AM',
+        endDate: '12-08-2025 11:00 AM'
+      },
+      test: {
+        completed: true,
+        score: 80,
+        attempts: 2,
+        startDate: '13-08-2025 02:00 PM',
+        endDate: '13-08-2025 03:00 PM'
+      },
+      exercise: {
+        completed: false,
+        startDate: '14-08-2025 09:03 PM',
+        endDate: 'In-Progress'
+      }
     },
     {
-      date: '2024-01-14',
-      activity: 'Finished Node.js Backend Project',
-      type: 'project',
-      duration: 180,
-      score: 88
+      level: 2,
+      title: 'Introduction to HTML',
+      status: 'completed',
+      learn: {
+        completed: true,
+        startDate: '05-08-2025 09:00 AM',
+        endDate: '07-08-2025 10:00 AM'
+      },
+      test: {
+        completed: true,
+        score: 85,
+        attempts: 2,
+        startDate: '08-08-2025 01:00 PM',
+        endDate: '08-08-2025 02:00 PM'
+      },
+      exercise: {
+        completed: true,
+        startDate: '09-08-2025 09:00 AM',
+        endDate: '09-08-2025 10:00 AM'
+      }
     },
     {
-      date: '2024-01-13',
-      activity: 'Took Advanced JavaScript Test',
-      type: 'test',
-      duration: 45,
-      score: 95
-    },
-    {
-      date: '2024-01-12',
-      activity: 'Completed CSS Grid Exercise',
-      type: 'exercise',
-      duration: 60,
-      score: 90
-    },
-    {
-      date: '2024-01-11',
-      activity: 'Attended Web Development Workshop',
-      type: 'workshop',
-      duration: 90,
-      score: null
+      level: 1,
+      title: 'Introduction to HTML',
+      status: 'completed',
+      learn: {
+        completed: true,
+        startDate: '01-08-2025 09:00 AM',
+        endDate: '03-08-2025 10:00 AM'
+      },
+      test: {
+        completed: true,
+        score: 90,
+        attempts: 2,
+        startDate: '04-08-2025 01:00 PM',
+        endDate: '04-08-2025 02:00 PM'
+      },
+      exercise: {
+        completed: true,
+        startDate: '05-08-2025 09:00 AM',
+        endDate: '05-08-2025 10:00 AM'
+      }
     }
   ]
 };
@@ -99,88 +104,52 @@ const mockStudent = {
 const StudentDetails: React.FC = () => {
   const { studentId } = useParams<{ studentId: string }>();
   const navigate = useNavigate();
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [lastUpdated] = useState(new Date());
-
-  // Calculate attendance percentage
-  const calculateAttendancePercentage = () => {
-    if (mockStudent.attendanceStats.totalDays === 0) return 0;
-    return Math.round((mockStudent.attendanceStats.presentDays / mockStudent.attendanceStats.totalDays) * 100);
-  };
-
-  // Calculate leaderboard score
-  const calculateLeaderboardScore = () => {
-    return mockStudent.summaryStats.totalPoints + (mockStudent.attendanceStats.currentStreak * 10);
-  };
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
 
   // Radar chart data for performance metrics
   const radarData = [
-    { metric: 'Technical', value: mockStudent.performance.technical },
-    { metric: 'Problem Solving', value: mockStudent.performance.problemSolving },
+    { metric: 'Performance', value: mockStudent.performance.performance },
+    { metric: 'Potential', value: mockStudent.performance.potential },
+    { metric: 'Contribution', value: mockStudent.performance.contribution },
     { metric: 'Creativity', value: mockStudent.performance.creativity },
-    { metric: 'Communication', value: mockStudent.performance.communication },
-    { metric: 'Teamwork', value: mockStudent.performance.teamwork },
-    { metric: 'Adaptability', value: mockStudent.performance.adaptability }
+    { metric: 'Skill', value: mockStudent.performance.skill }
   ];
 
-  // Radar chart data for summary overview
-  const summaryRadarData = [
-    { metric: 'Total Points', value: mockStudent.summaryStats.totalPoints / 30 },
-    { metric: 'Consistency', value: mockStudent.summaryStats.consistency },
-    { metric: 'Leaderboard', value: (100 - mockStudent.summaryStats.leaderboard) },
-    { metric: 'Level Progress', value: mockStudent.summaryStats.levelProgress },
-    { metric: 'Attendance', value: calculateAttendancePercentage() },
-    { metric: 'Active Time', value: Math.min(mockStudent.activeTodayMinutes / 4, 100) }
-  ];
-
-  const handleRefresh = async () => {
-    setIsRefreshing(true);
-    // Simulate refresh delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setIsRefreshing(false);
-  };
-
-  const formatDateTime = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
-  const getRelativeTime = (dateString: string) => {
-    const now = new Date();
-    const date = new Date(dateString);
-    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
-    
-    if (diffInHours < 1) return 'Just now';
-    if (diffInHours < 24) return `${diffInHours} hours ago`;
-    if (diffInHours < 48) return 'Yesterday';
-    return `${Math.floor(diffInHours / 24)} days ago`;
-  };
-
-  const getActivityIcon = (type: string) => {
-    switch (type) {
-      case 'learning': return <BookmarkIcon className="w-4 h-4" />;
-      case 'project': return <CodeIcon className="w-4 h-4" />;
-      case 'test': return <FileTextIcon className="w-4 h-4" />;
-      case 'exercise': return <TargetIcon className="w-4 h-4" />;
-      case 'workshop': return <LightningBoltIcon className="w-4 h-4" />;
-      default: return <ActivityLogIcon className="w-4 h-4" />;
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'completed':
+        return <CheckCircledIcon className="w-5 h-5 text-green-500" />;
+      case 'in-progress':
+        return <ClockIcon className="w-5 h-5 text-yellow-500" />;
+      default:
+        return <ClockIcon className="w-5 h-5 text-gray-400" />;
     }
   };
 
-  const getActivityColor = (type: string) => {
-    switch (type) {
-      case 'learning': return 'bg-blue-100 text-blue-800';
-      case 'project': return 'bg-green-100 text-green-800';
-      case 'test': return 'bg-purple-100 text-purple-800';
-      case 'exercise': return 'bg-orange-100 text-orange-800';
-      case 'workshop': return 'bg-pink-100 text-pink-800';
-      default: return 'bg-gray-100 text-gray-800';
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'completed':
+        return 'text-green-600';
+      case 'in-progress':
+        return 'text-yellow-600';
+      default:
+        return 'text-gray-400';
     }
+  };
+
+  const getAttendanceLabel = (percentage: number) => {
+    if (percentage >= 90) return 'Great';
+    if (percentage >= 80) return 'Good';
+    if (percentage >= 70) return 'Average';
+    return 'Poor';
+  };
+
+  const getProgressLabel = (score: number) => {
+    if (score >= 90) return 'Great';
+    if (score >= 80) return 'Good';
+    if (score >= 70) return 'Average';
+    return 'Poor';
   };
 
   return (
@@ -200,26 +169,6 @@ const StudentDetails: React.FC = () => {
                 <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
                   Student Details
                 </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {mockStudent.name} • {mockStudent.careerTrack}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-3">
-              <button
-                onClick={handleRefresh}
-                disabled={isRefreshing}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors flex items-center space-x-2"
-              >
-                {isRefreshing ? (
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  <BarChartIcon className="w-4 h-4" />
-                )}
-                <span>{isRefreshing ? 'Refreshing...' : 'Refresh'}</span>
-              </button>
-              <div className="text-xs text-gray-500 dark:text-gray-400">
-                Last updated: {lastUpdated.toLocaleTimeString()}
               </div>
             </div>
           </div>
@@ -227,371 +176,196 @@ const StudentDetails: React.FC = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column - Student Info & Performance */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Student Basic Info */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                    {mockStudent.name}
-                  </h2>
-                  <p className="text-gray-600 dark:text-gray-400 mb-1">
-                    Student ID: {mockStudent._id}
-                  </p>
-                  <p className="text-gray-600 dark:text-gray-400 mb-1">
-                    Email: {mockStudent.email}
-                  </p>
-                  <p className="text-gray-600 dark:text-gray-400 mb-1">
-                    College: {mockStudent.college}
-                  </p>
-                  <p className="text-gray-600 dark:text-gray-400 mb-1">
-                    Career Track: {mockStudent.careerTrack}
-                  </p>
-                  <p className="text-gray-600 dark:text-gray-400 mb-1">
-                    Current Level: {mockStudent.level}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <div className={`w-3 h-3 rounded-full ${mockStudent.activeTodayMinutes > 0 ? 'bg-green-500' : 'bg-gray-400'}`} />
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                      {mockStudent.activeTodayMinutes > 0 ? 'Active Today' : 'Inactive'}
-                    </span>
-                  </div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                    Profile: {mockStudent.profileComplete}% Complete
-                  </div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                    Last Active: {getRelativeTime(mockStudent.lastActive)}
-                  </div>
-                </div>
+        {/* Top Section: Student Details + Performance Overview */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          {/* Left: Student Details */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              Student Details
+            </h2>
+            <div className="space-y-3">
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Roll Number:</span>
+                <span className="font-medium text-gray-900 dark:text-white">{mockStudent.rollNumber}</span>
               </div>
-
-              {/* Interests */}
-              <div className="mt-6">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
-                  <HeartIcon className="w-5 h-5 mr-2 text-red-500" />
-                  Interests
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {mockStudent.interests.map((interest: string, index: number) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 rounded-full text-sm"
-                    >
-                      {interest}
-                    </span>
-                  ))}
-                </div>
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Course & Dept:</span>
+                <span className="font-medium text-gray-900 dark:text-white">{mockStudent.courseDept}</span>
               </div>
-
-              {/* Skills */}
-              <div className="mt-6">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
-                  <CodeIcon className="w-5 h-5 mr-2 text-blue-500" />
-                  Skills
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {mockStudent.skills.map((skill: string, index: number) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full text-sm"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Student Name:</span>
+                <span className="font-medium text-gray-900 dark:text-white">{mockStudent.name}</span>
               </div>
-
-              {/* Recommended Roles */}
-              <div className="mt-6">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
-                  <FileTextIcon className="w-5 h-5 mr-2 text-green-500" />
-                  Recommended Roles
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {mockStudent.recommendedRoles.map((role: string, index: number) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 rounded-full text-sm"
-                    >
-                      {role}
-                    </span>
-                  ))}
-                </div>
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Batch:</span>
+                <span className="font-medium text-gray-900 dark:text-white">{mockStudent.batch}</span>
               </div>
-            </motion.div>
-
-            {/* Performance Overview Cards */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
-            >
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Points</p>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                      {mockStudent.summaryStats.totalPoints.toLocaleString()}
-                    </p>
-                  </div>
-                  <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
-                    <StarIcon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-                  </div>
-                </div>
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Enrolled Career Track:</span>
+                <span className="px-3 py-1 bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 rounded-full text-sm font-medium">
+                  {mockStudent.careerTrack}
+                </span>
               </div>
-
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Consistency</p>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                      {mockStudent.summaryStats.consistency}%
-                    </p>
-                  </div>
-                  <div className="p-2 bg-green-100 dark:bg-green-900 rounded-lg">
-                    <ArrowUpIcon className="w-6 h-6 text-green-600 dark:text-green-400" />
-                  </div>
-                </div>
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Enrolled Date:</span>
+                <span className="font-medium text-gray-900 dark:text-white">{mockStudent.enrolledDate}</span>
               </div>
-
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Leaderboard</p>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                      #{mockStudent.summaryStats.leaderboard}
-                    </p>
-                  </div>
-                  <div className="p-2 bg-yellow-100 dark:bg-yellow-900 rounded-lg">
-                    <CopyIcon className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Level Progress</p>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                      {mockStudent.summaryStats.levelProgress}%
-                    </p>
-                  </div>
-                  <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
-                    <RocketIcon className="w-6 h-6 text-purple-600 dark:text-purple-400" />
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Attendance Statistics */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
-            >
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-                <CalendarIcon className="w-5 h-5 mr-2 text-indigo-500" />
-                Attendance Statistics
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {mockStudent.attendanceStats.totalDays}
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Total Days</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {mockStudent.attendanceStats.presentDays}
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Present Days</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {mockStudent.attendanceStats.currentStreak}
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Current Streak</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {mockStudent.attendanceStats.longestStreak}
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Longest Streak</p>
-                </div>
-              </div>
-              <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Attendance Rate
-                  </span>
-                  <span className="text-sm font-medium text-gray-900 dark:text-white">
-                    {calculateAttendancePercentage()}%
-                  </span>
-                </div>
-                <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                  <div
-                    className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${calculateAttendancePercentage()}%` }}
-                  />
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Learning Timeline */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
-            >
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-                <ClockIcon className="w-5 h-5 mr-2 text-green-500" />
-                Learning Timeline
-              </h3>
-              <div className="space-y-4">
-                {mockStudent.learningTimeline.map((activity, index) => (
-                  <div key={index} className="flex items-start space-x-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                    <div className={`p-2 rounded-lg ${getActivityColor(activity.type)}`}>
-                      {getActivityIcon(activity.type)}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-1">
-                        <h4 className="font-medium text-gray-900 dark:text-white">
-                          {activity.activity}
-                        </h4>
-                        <span className="text-sm text-gray-500 dark:text-gray-400">
-                          {formatDateTime(activity.date)}
-                        </span>
-                      </div>
-                      <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400">
-                        <span className="flex items-center">
-                          <ClockIcon className="w-4 h-4 mr-1" />
-                          {activity.duration} min
-                        </span>
-                        {activity.score && (
-                          <span className="flex items-center">
-                            <TargetIcon className="w-4 h-4 mr-1" />
-                            Score: {activity.score}%
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
+            </div>
           </div>
 
-          {/* Right Column - Charts & Additional Info */}
+          {/* Right: Performance Overview */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              Performance Overview
+            </h2>
+            
+            {/* Radar Chart */}
+            <div className="h-48 mb-4">
+              <ResponsiveContainer width="100%" height="100%">
+                <RadarChart data={radarData}>
+                  <PolarGrid />
+                  <PolarAngleAxis dataKey="metric" />
+                  <PolarRadiusAxis angle={90} domain={[0, 100]} />
+                  <Radar
+                    name="Performance"
+                    dataKey="value"
+                    stroke="#3B82F6"
+                    fill="#3B82F6"
+                    fillOpacity={0.3}
+                  />
+                  <Tooltip />
+                </RadarChart>
+              </ResponsiveContainer>
+            </div>
+            
+            <div className="text-center text-sm text-gray-500 dark:text-gray-400 mb-4">
+              (Optional)
+            </div>
+            
+            <button className="w-full px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+              View Portfolio
+            </button>
+          </div>
+        </div>
+
+        {/* Middle Section: Summary Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                {mockStudent.attendance}%
+              </div>
+              <div className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Attendance
+              </div>
+              <div className="text-sm text-gray-500 dark:text-gray-400">
+                {getAttendanceLabel(mockStudent.attendance)}
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                {mockStudent.progress}
+              </div>
+              <div className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Progress
+              </div>
+              <div className="text-sm text-gray-500 dark:text-gray-400">
+                {getProgressLabel(mockStudent.progress)}
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                {mockStudent.leaderboard}%
+              </div>
+              <div className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Leaderboard
+              </div>
+              <div className="text-sm text-gray-500 dark:text-gray-400">
+                (Career Track Specific)
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Section: Learning Timeline */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            Learning Timeline:
+          </h2>
+          
+          {/* Date Range Pickers */}
+          <div className="flex items-center space-x-4 mb-6">
+            <div className="flex items-center space-x-2">
+              <span className="text-sm text-gray-600 dark:text-gray-400">From:</span>
+              <input
+                type="date"
+                value={fromDate}
+                onChange={(e) => setFromDate(e.target.value)}
+                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+              />
+            </div>
+            <div className="flex items-center space-x-2">
+              <span className="text-sm text-gray-600 dark:text-gray-400">To:</span>
+              <input
+                type="date"
+                value={toDate}
+                onChange={(e) => setToDate(e.target.value)}
+                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+              />
+            </div>
+          </div>
+
+          {/* Learning Levels */}
           <div className="space-y-6">
-            {/* Performance Metrics Radar Chart */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.1 }}
-              className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
-            >
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-                <BarChartIcon className="w-5 h-5 mr-2 text-blue-500" />
-                Performance Metrics
-              </h3>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <RadarChart data={radarData}>
-                    <PolarGrid />
-                    <PolarAngleAxis dataKey="metric" />
-                    <PolarRadiusAxis angle={90} domain={[0, 100]} />
-                    <Radar
-                      name="Performance"
-                      dataKey="value"
-                      stroke="#3B82F6"
-                      fill="#3B82F6"
-                      fillOpacity={0.3}
-                    />
-                    <Tooltip />
-                  </RadarChart>
-                </ResponsiveContainer>
-              </div>
-            </motion.div>
-
-            {/* Summary Overview Radar Chart */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-              className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
-            >
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-                <TargetIcon className="w-5 h-5 mr-2 text-green-500" />
-                Summary Overview
-              </h3>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <RadarChart data={summaryRadarData}>
-                    <PolarGrid />
-                    <PolarAngleAxis dataKey="metric" />
-                    <PolarRadiusAxis angle={90} domain={[0, 100]} />
-                    <Radar
-                      name="Summary"
-                      dataKey="value"
-                      stroke="#10B981"
-                      fill="#10B981"
-                      fillOpacity={0.3}
-                    />
-                    <Tooltip />
-                  </RadarChart>
-                </ResponsiveContainer>
-              </div>
-            </motion.div>
-
-            {/* Quick Stats */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 }}
-              className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
-            >
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-                                 <ActivityLogIcon className="w-5 h-5 mr-2 text-purple-500" />
-                Quick Stats
-              </h3>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Today's Activity</span>
-                  <span className="font-medium text-gray-900 dark:text-white">
-                    {mockStudent.activeTodayMinutes} min
-                  </span>
+            {mockStudent.learningLevels.map((level, index) => (
+              <div key={index} className="border border-gray-200 dark:border-gray-600 rounded-lg p-4">
+                <div className="flex items-center space-x-3 mb-4">
+                  {getStatusIcon(level.status)}
+                  <h3 className={`text-lg font-semibold ${getStatusColor(level.status)}`}>
+                    Level {level.level}: {level.title}
+                  </h3>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Leaderboard Score</span>
-                  <span className="font-medium text-gray-900 dark:text-white">
-                    {calculateLeaderboardScore()}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Attendance Rate</span>
-                  <span className="font-medium text-gray-900 dark:text-white">
-                    {calculateAttendancePercentage()}%
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Profile Completion</span>
-                  <span className="font-medium text-gray-900 dark:text-white">
-                    {mockStudent.profileComplete}%
-                  </span>
+                
+                <div className="space-y-3">
+                  {/* Learn */}
+                  <div className="flex items-center space-x-3">
+                    <CheckCircledIcon className="w-5 h-5 text-green-500" />
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Learn:</span>
+                    <span className="text-sm text-gray-900 dark:text-white">
+                      {level.learn.startDate} -- {level.learn.endDate}
+                    </span>
+                  </div>
+                  
+                  {/* Test */}
+                  <div className="flex items-center space-x-3">
+                    <CheckCircledIcon className="w-5 h-5 text-green-500" />
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Test:</span>
+                    <span className="text-sm text-gray-900 dark:text-white">
+                      ({level.test.score}% - {level.test.attempts} attempts) {level.test.startDate} -- {level.test.endDate}
+                    </span>
+                  </div>
+                  
+                  {/* Exercise */}
+                  <div className="flex items-center space-x-3">
+                    {level.exercise.completed ? (
+                      <CheckCircledIcon className="w-5 h-5 text-green-500" />
+                    ) : (
+                      <ClockIcon className="w-5 h-5 text-yellow-500" />
+                    )}
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Exercise:</span>
+                    <span className="text-sm text-gray-900 dark:text-white">
+                      {level.exercise.startDate} -- {level.exercise.endDate}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </motion.div>
+            ))}
           </div>
         </div>
       </div>
