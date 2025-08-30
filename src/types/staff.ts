@@ -70,13 +70,10 @@ export interface PerformanceMetrics {
 }
 
 export interface SummaryStats {
-  totalLevels: number;
-  completedLevels: number;
-  currentLevel: number;
-  completionRate: number;
+  totalPoints: number;
   consistency: number;
-  progress: number;
   leaderboard: number;
+  levelProgress: number;
 }
 
 export interface AttendanceStats {
@@ -85,6 +82,14 @@ export interface AttendanceStats {
   currentStreak: number;
   longestStreak: number;
   lastPresentDate?: string;
+}
+
+export interface StudentDetailsApiResponse {
+  success: boolean;
+  message: string;
+  data: {
+    student: StudentDetails;
+  };
 }
 
 export interface LearningLevel {
