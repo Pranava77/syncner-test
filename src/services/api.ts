@@ -462,7 +462,9 @@ class ApiService {
   }
 
   async getStudentPortfolio(studentId: string): Promise<StudentDetailsApiResponse> {
-    const response = await fetch(`${this.baseURL}/student/portfolio/${studentId}`, {
+    const url = `${this.baseURL}/student/portfolio/${studentId}`;
+    console.log('🔗 Making API call to:', url);
+    const response = await fetch(url, {
       method: 'GET',
       headers: this.getHeaders(),
       credentials: 'include',

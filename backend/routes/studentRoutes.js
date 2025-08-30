@@ -11,6 +11,8 @@ const router = express.Router();
 router.get('/portfolio/:studentId', protect, authorize('student'), async (req, res) => {
   try {
     const { studentId } = req.params;
+    console.log('🎯 Student portfolio route called for student:', studentId);
+    console.log('👤 Requesting user:', req.user._id, 'Role:', req.user.role);
     
     // Ensure student can only access their own data
     if (req.user._id.toString() !== studentId) {
