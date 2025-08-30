@@ -533,19 +533,7 @@ Generated on: ${new Date().toLocaleDateString()}
                 </div>
               </div>
 
-              {/* Daily Activity */}
-              <div className="mb-10">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-1 h-8 rounded-full" style={{ backgroundColor: 'var(--color-accent-primary)' }}></div>
-                  <h3 className="text-2xl font-bold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>Learning Activity</h3>
-                </div>
-                <div className="p-6 rounded-xl" style={{ 
-                  backgroundColor: 'var(--color-surface)',
-                  border: '1px solid var(--color-border)'
-                }}>
-                  <DailyActivityChart dailyActivity={student.dailyActivity} />
-                </div>
-              </div>
+
 
               {/* Certificate ID */}
               <div className="mb-8">
