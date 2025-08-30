@@ -9,8 +9,8 @@ export const getStudentPortfolio = async (req, res) => {
 
     // Check if user has permission to view this portfolio
     if (!isOwnPortfolio && req.user.role !== 'admin' && req.user.role !== 'staff') {
-      return res.status(403).json({
-        success: false,
+        return res.status(403).json({
+          success: false,
         message: 'Access denied. Only students can view their own portfolio, and staff/admin can view any portfolio.'
       });
     }
@@ -23,7 +23,7 @@ export const getStudentPortfolio = async (req, res) => {
         message: 'Student not found'
       });
     }
-
+    
     // Fetch user progress data
     const progress = await UserProgress.findOne({ userId: studentId });
     
@@ -85,25 +85,14 @@ export const getStudentPortfolio = async (req, res) => {
       } else {
         // No attendance records found, calculate based on enrollment time
         const totalDays = Math.ceil((Date.now() - new Date(student.createdAt)) / (1000 * 60 * 60 * 24));
-        
-        // Check if we have learning timeline data to estimate attendance
-        let estimatedPresentDays = 0;
-        if (portfolioData.student.learningTimeline && portfolioData.student.learningTimeline.length > 0) {
-          estimatedPresentDays = Math.min(portfolioData.student.learningTimeline.length, totalDays);
-        }
-        
         attendanceStats = { 
           totalDays, 
-          presentDays: estimatedPresentDays, 
-          currentStreak: estimatedPresentDays > 0 ? 1 : 0, 
-          longestStreak: estimatedPresentDays > 0 ? 1 : 0 
+          presentDays: 0, 
+          currentStreak: 0, 
+          longestStreak: 0 
         };
         
-        console.log('Portfolio Controller - No attendance records found, using learning timeline estimate:', {
-          totalDays,
-          estimatedPresentDays,
-          learningTimelineLength: portfolioData.student.learningTimeline?.length || 0
-        });
+        console.log('Portfolio Controller - No attendance records found, using enrollment-based calculation');
       }
     } catch (error) {
       console.error('Portfolio Controller - Error fetching attendance data:', error);
@@ -131,18 +120,7 @@ export const getStudentPortfolio = async (req, res) => {
       learningHistory: progress?.learningHistory?.length
     });
     
-    // Check if we have learning levels data (from the mock data structure)
-    if (portfolioData.student.learningLevels && Array.isArray(portfolioData.student.learningLevels)) {
-      const completedLevels = portfolioData.student.learningLevels.filter(level => level.status === 'completed');
-      totalLevels = portfolioData.student.learningLevels.length;
-      realProgress = Math.round((completedLevels.length / totalLevels) * 100);
-      console.log('Portfolio Controller - Progress from learningLevels:', { 
-        totalLevels, 
-        completedLevels: completedLevels.length, 
-        realProgress,
-        levels: portfolioData.student.learningLevels.map(l => ({ level: l.level, status: l.status }))
-      });
-    } else if (progress?.completedLevels && Array.isArray(progress.completedLevels) && progress.completedLevels.length > 0) {
+    if (progress?.completedLevels && Array.isArray(progress.completedLevels) && progress.completedLevels.length > 0) {
       // Get total levels from curriculum or use default
       totalLevels = Math.max(progress.completedLevels.length + (progress.currentLevel || 0), 10);
       realProgress = Math.round((progress.completedLevels.length / totalLevels) * 100);
@@ -167,22 +145,12 @@ export const getStudentPortfolio = async (req, res) => {
     // Calculate real leaderboard score using the same formula as staff routes
     let realLeaderboardScore = 0;
     
-    // Check if we have learning activity data
-    const hasLearningActivity = portfolioData.student.learningTimeline && portfolioData.student.learningTimeline.length > 0;
-    
-    if (progress || attendanceStats.presentDays > 0 || hasLearningActivity) {
+    if (progress || attendanceStats.presentDays > 0) {
       // Base score from progress (40% weight)
       const progressScore = realProgress;
       
-      // Attendance score (30% weight) - use learning timeline if no attendance
-      let attendanceScore = 0;
-      if (attendanceStats.presentDays > 0) {
-        attendanceScore = Math.round((attendanceStats.presentDays / Math.max(attendanceStats.totalDays, 1)) * 100);
-      } else if (hasLearningActivity) {
-        // Estimate attendance based on learning activity
-        const activeDays = portfolioData.student.learningTimeline.length;
-        attendanceScore = Math.min(100, Math.round((activeDays / Math.max(attendanceStats.totalDays, 1)) * 100));
-      }
+      // Attendance score (30% weight)
+      const attendanceScore = Math.round((attendanceStats.presentDays / Math.max(attendanceStats.totalDays, 1)) * 100);
       
       // Consistency/streak bonus (30% weight)
       let consistencyScore = 0;
@@ -192,9 +160,6 @@ export const getStudentPortfolio = async (req, res) => {
       } else if (attendanceStats.longestStreak >= 2) {
         // Use longest streak if current streak not available
         consistencyScore = Math.min(100, attendanceStats.longestStreak * 20); // Cap at 100%
-      } else if (hasLearningActivity) {
-        // Bonus for learning activity consistency
-        consistencyScore = Math.min(100, Math.round((portfolioData.student.learningTimeline.length / 3) * 100));
       }
       
       // Calculate weighted leaderboard score
@@ -208,7 +173,6 @@ export const getStudentPortfolio = async (req, res) => {
         progressScore,
         attendanceScore,
         consistencyScore,
-        hasLearningActivity,
         finalScore: realLeaderboardScore
       });
     } else {
@@ -310,8 +274,8 @@ export const getStudentPortfolio = async (req, res) => {
         presentDays: attendanceStats.presentDays,
         leaderboardScore: realLeaderboardScore,
         enrolledDate: student.createdAt ? new Date(student.createdAt).toLocaleDateString('en-IN') : '21-03-2025',
-        performance,
-        summaryStats,
+      performance,
+      summaryStats,
         learningTimeline: learningTimeline,
         dailyActivity: progress?.dailyActivity || [],
         attendanceStats,
