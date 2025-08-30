@@ -192,6 +192,20 @@ const StudentDetails: React.FC = () => {
     );
   }
 
+  const calculateAttendancePercentage = () => {
+    if (!selectedStudent.attendanceStats || selectedStudent.attendanceStats.totalDays === 0) {
+      return 0;
+    }
+    return (selectedStudent.attendanceStats.presentDays / selectedStudent.attendanceStats.totalDays) * 100;
+  };
+
+  const calculateLeaderboardScore = () => {
+    if (!selectedStudent.summaryStats) {
+      return 0;
+    }
+    return selectedStudent.summaryStats.progress + selectedStudent.summaryStats.leaderboard;
+  };
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
       {/* Top Header/Navigation */}
@@ -277,27 +291,29 @@ const StudentDetails: React.FC = () => {
                 {[
                   { 
                     label: 'Attendance', 
-                    value: selectedStudent.summaryStats.consistency, 
+                    value: calculateAttendancePercentage(), 
                     subtitle: 'Attendance Rate', 
                     icon: BarChartIcon,
                     isStreak: true,
-                    unit: '%'
+                    unit: '%',
+                    additionalInfo: selectedStudent.attendanceStats?.currentStreak ? 
+                      `Current Streak: ${selectedStudent.attendanceStats.currentStreak} days` : 'No current streak'
                   },
                   { 
                     label: 'Progress', 
-                    value: selectedStudent.summaryStats.progress, 
+                    value: selectedStudent.summaryStats?.progress || 0, 
                     subtitle: 'Course Completion', 
                     icon: RocketIcon,
                     isStreak: false,
                     unit: '%'
                   },
                   { 
-                    label: 'Leaderboard', 
-                    value: selectedStudent.summaryStats.leaderboard, 
-                    subtitle: 'Overall Score', 
+                    label: 'Total Points', 
+                    value: calculateLeaderboardScore(), 
+                    subtitle: 'Earned Points', 
                     icon: StarIcon,
                     isStreak: false,
-                    unit: '%'
+                    unit: ' pts'
                   }
                 ].map((stat, index) => (
                   <motion.div
@@ -317,14 +333,57 @@ const StudentDetails: React.FC = () => {
                     </div>
                     <div className="text-sm font-medium mb-1" style={{ color: 'var(--color-text-primary)' }}>{stat.label}</div>
                     <div className="text-xs opacity-70" style={{ color: 'var(--color-text-tertiary)' }}>{stat.subtitle}</div>
-                    {stat.isStreak && (
+                    {stat.isStreak && stat.additionalInfo && (
                       <div className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
-                        {selectedStudent.summaryStats.consistency > 0 ? `${selectedStudent.summaryStats.consistency}% attendance rate` : 'No attendance data'}
+                        {stat.additionalInfo}
                       </div>
                     )}
                   </motion.div>
                 ))}
               </div>
+
+              {/* Detailed Attendance Statistics */}
+              {selectedStudent.attendanceStats && (
+                <div 
+                  className="p-6 rounded-xl shadow-sm mb-6"
+                  style={{
+                    backgroundColor: 'var(--color-surface)',
+                    boxShadow: 'var(--shadow-sm)',
+                    borderColor: 'var(--color-border)'
+                  }}
+                >
+                  <h3 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--color-text-primary)' }}>
+                    <CalendarIcon className="w-5 h-5" style={{ color: 'var(--color-accent-primary)' }} />
+                    Attendance Statistics
+                  </h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold" style={{ color: 'var(--color-accent-primary)' }}>
+                        {selectedStudent.attendanceStats.presentDays || 0}
+                      </div>
+                      <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Present Days</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold" style={{ color: 'var(--color-accent-primary)' }}>
+                        {selectedStudent.attendanceStats.totalDays || 0}
+                      </div>
+                      <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Total Days</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold" style={{ color: 'var(--color-accent-primary)' }}>
+                        {selectedStudent.attendanceStats.currentStreak || 0}
+                      </div>
+                      <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Current Streak</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold" style={{ color: 'var(--color-accent-primary)' }}>
+                        {selectedStudent.attendanceStats.longestStreak || 0}
+                      </div>
+                      <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Longest Streak</div>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Interests and Skills */}
               {(selectedStudent.interests && selectedStudent.interests.length > 0 || selectedStudent.skills && selectedStudent.skills.length > 0) && (
