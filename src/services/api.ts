@@ -35,6 +35,14 @@ class ApiService {
     return response.json();
   }
 
+  private handleError(error: any) {
+    console.error('API Error:', error);
+    if (error instanceof Error) {
+      return error;
+    }
+    return new Error('An unknown error occurred');
+  }
+
   // Auth endpoints
   async login(credentials: { email: string; password: string }) {
     const response = await fetch(`${this.baseURL}/auth/login`, {
@@ -489,12 +497,17 @@ class ApiService {
         headers: this.getHeaders(),
         credentials: 'include',
       });
-      const data = await this.handleResponse(response);
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('❌ Own Portfolio API Error:', errorData);
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
       console.log('✅ Own Portfolio API Response:', data);
       return data;
     } catch (error) {
       console.error('❌ Own Portfolio API Error:', error);
-      throw this.handleError(error);
+      throw error;
     }
   }
 
