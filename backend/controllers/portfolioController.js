@@ -110,16 +110,42 @@ export const getStudentPortfolio = async (req, res) => {
     let realProgress = 0;
     let totalLevels = 10; // Default total levels
     
-    if (progress?.completedLevels && progress.completedLevels.length > 0) {
+    // Debug: Log the progress object structure
+    console.log('Portfolio Controller - Progress object:', {
+      hasProgress: !!progress,
+      completedLevels: progress?.completedLevels,
+      completedLevelsLength: progress?.completedLevels?.length,
+      currentLevel: progress?.currentLevel,
+      totalPoints: progress?.totalPoints,
+      learningHistory: progress?.learningHistory?.length
+    });
+    
+    if (progress?.completedLevels && Array.isArray(progress.completedLevels) && progress.completedLevels.length > 0) {
       // Get total levels from curriculum or use default
-      totalLevels = Math.max(progress.completedLevels.length + progress.currentLevel || 0, 10);
+      totalLevels = Math.max(progress.completedLevels.length + (progress.currentLevel || 0), 10);
       realProgress = Math.round((progress.completedLevels.length / totalLevels) * 100);
+      console.log('Portfolio Controller - Progress calculation successful:', { completedLevels: progress.completedLevels.length, totalLevels, realProgress });
+    } else {
+      // If no completed levels, check if there's any progress data
+      if (progress?.currentLevel && progress.currentLevel > 1) {
+        // Student has started but not completed any levels
+        realProgress = Math.round(((progress.currentLevel - 1) / 10) * 100);
+        console.log('Portfolio Controller - Progress based on current level:', { currentLevel: progress.currentLevel, realProgress });
+      } else if (progress?.totalPoints && progress.totalPoints > 0) {
+        // Student has earned points but no level progress
+        realProgress = Math.min(100, Math.round((progress.totalPoints / 1000) * 100)); // Assume 1000 points = 100%
+        console.log('Portfolio Controller - Progress based on total points:', { totalPoints: progress.totalPoints, realProgress });
+      } else {
+        // No progress at all
+        realProgress = 0;
+        console.log('Portfolio Controller - No progress data found, setting to 0');
+      }
     }
     
     // Calculate real leaderboard score using the same formula as staff routes
     let realLeaderboardScore = 0;
     
-    if (progress) {
+    if (progress || attendanceStats.presentDays > 0) {
       // Base score from progress (40% weight)
       const progressScore = realProgress;
       
@@ -142,6 +168,15 @@ export const getStudentPortfolio = async (req, res) => {
         (attendanceScore * 0.3) + 
         (consistencyScore * 0.3)
       );
+      
+      console.log('Portfolio Controller - Leaderboard calculation:', {
+        progressScore,
+        attendanceScore,
+        consistencyScore,
+        finalScore: realLeaderboardScore
+      });
+    } else {
+      console.log('Portfolio Controller - No progress or attendance data for leaderboard calculation');
     }
     
     // Calculate performance metrics based on test scores and progress
@@ -163,19 +198,38 @@ export const getStudentPortfolio = async (req, res) => {
 
     // Generate learning timeline from progress data
     const learningTimeline = [];
-    if (progress?.learningHistory) {
-      progress.learningHistory.forEach(entry => {
-        learningTimeline.push({
-          date: entry.date,
-          activity: entry.activity,
-          type: entry.type,
-          duration: entry.duration,
-          score: entry.score
-        });
+    
+    // Check if we have completed levels to create timeline
+    if (progress?.completedLevels && Array.isArray(progress.completedLevels) && progress.completedLevels.length > 0) {
+      progress.completedLevels.forEach(level => {
+        if (level.completedAt) {
+          learningTimeline.push({
+            date: level.completedAt.toISOString().split('T')[0],
+            activity: `Completed Level ${level.levelOrder}`,
+            type: 'learning',
+            duration: level.learnProgress?.timeSpent || 0,
+            score: level.testProgress?.attempts?.[0]?.score || 0
+          });
+        }
+      });
+    }
+    
+    // If no completed levels, check daily activity for timeline
+    if (learningTimeline.length === 0 && progress?.dailyActivity && progress.dailyActivity.length > 0) {
+      progress.dailyActivity.forEach(entry => {
+        if (entry.isPresent && entry.totalMinutes > 0) {
+          learningTimeline.push({
+            date: entry.date.toISOString().split('T')[0],
+            activity: 'Daily Learning Session',
+            type: 'learning',
+            duration: entry.totalMinutes * 60, // Convert to seconds
+            score: null
+          });
+        }
       });
     }
 
-    // If no learning history, create sample data based on current progress
+    // If still no timeline, create sample data based on current progress
     if (learningTimeline.length === 0) {
       const currentDate = new Date();
       const sampleActivities = [
@@ -300,6 +354,17 @@ export const getStudentPortfolio = async (req, res) => {
         ]
       }
     };
+
+    // Final debug log to see what's being returned
+    console.log('Portfolio Controller - Final portfolio data:', {
+      studentId: portfolioData.student._id,
+      progress: portfolioData.student.progress,
+      leaderboardScore: portfolioData.student.leaderboardScore,
+      attendancePercentage: portfolioData.student.attendancePercentage,
+      realProgress,
+      realLeaderboardScore,
+      summaryStats: portfolioData.student.summaryStats
+    });
 
     res.json({
       success: true,
