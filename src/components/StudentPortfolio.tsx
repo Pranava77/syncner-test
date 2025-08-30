@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from '../redux/store';
 import {
   CheckCircledIcon,
   ClockIcon,
@@ -25,21 +26,21 @@ import ThemeContainer from './ThemeContainer';
 
 const StudentPortfolio: React.FC = () => {
   const navigate = useNavigate();
-  const { studentId } = useParams();
+  const { user } = useAppSelector((state) => state.auth);
   const { selectedStudent, studentDetailsLoading, error, getStudentDetails } = useStaff();
 
   const [expandedLevels, setExpandedLevels] = useState<Set<number>>(new Set());
 
   // Fetch student details when component mounts
   React.useEffect(() => {
-    if (studentId) {
-      getStudentDetails(studentId);
+    if (user?._id) {
+      getStudentDetails(user._id);
     }
-  }, [studentId, getStudentDetails]);
+  }, [user?._id, getStudentDetails]);
 
   // Handle back navigation
   const handleBack = () => {
-    navigate(`/staff/students/${studentId}`);
+    navigate('/student/dashboard');
   };
 
   if (studentDetailsLoading || !selectedStudent) {
@@ -119,8 +120,8 @@ const StudentPortfolio: React.FC = () => {
   // Handle share functionality
   const handleShare = async () => {
     const shareData = {
-      title: `${student.name}'s Portfolio - Syncner`,
-      text: `Check out ${student.name}'s learning portfolio and achievements at Syncner!`,
+      title: `My Portfolio - Syncner`,
+      text: `Check out my learning portfolio and achievements at Syncner!`,
       url: window.location.href
     };
 
@@ -150,8 +151,8 @@ const StudentPortfolio: React.FC = () => {
     try {
       // Generate portfolio text content
       const portfolioText = `
-STUDENT PORTFOLIO - SYNCNER
-============================
+MY PORTFOLIO - SYNCNER
+======================
 
 Student Information:
 - Name: ${student.name}
@@ -161,7 +162,7 @@ Student Information:
 - Completion: ${calculateCompletionPercentage()}%
 
 Introduction:
-${student.name} is a dedicated student pursuing ${student.careerTrack} with a strong focus on practical learning and skill development. Currently enrolled in batch ${student.batch || 'N/A'} at ${student.department || 'N/A'} department, ${student.name} has demonstrated consistent progress and commitment to mastering the curriculum.
+You are a dedicated student pursuing ${student.careerTrack} with a strong focus on practical learning and skill development. Currently enrolled in batch ${student.batch || 'N/A'} at ${student.department || 'N/A'} department, you have demonstrated consistent progress and commitment to mastering the curriculum.
 
 Recommended Roles:
 ${getRecommendedRoles().map(role => `- ${role}`).join('\n')}
@@ -186,7 +187,7 @@ Generated on: ${new Date().toLocaleDateString()}
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${student.name.replace(/\s+/g, '_')}_Portfolio_Syncner.txt`;
+              a.download = `My_Portfolio_Syncner.txt`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -214,13 +215,13 @@ Generated on: ${new Date().toLocaleDateString()}
               className="text-3xl font-heading"
               style={{ color: 'var(--color-text-primary)' }}
             >
-              Student Portfolio
+              My Portfolio
             </h1>
             <p 
               className="mt-1 font-label"
               style={{ color: 'var(--color-text-tertiary)' }}
             >
-              Comprehensive overview of {student.name}'s learning journey and achievements
+              Comprehensive overview of your learning journey and achievements
             </p>
           </div>
         </div>
@@ -371,7 +372,7 @@ Generated on: ${new Date().toLocaleDateString()}
                   border: '1px solid var(--color-border)'
                 }}>
                   <p className="text-lg leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-                    <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{student.name}</span> is a dedicated student pursuing{' '}
+                    <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>You</span> are a dedicated student pursuing{' '}
                     <span className="px-2 py-1 rounded-md font-medium" style={{ 
                       backgroundColor: 'var(--color-accent-tertiary)', 
                       color: 'var(--color-accent-primary)' 
@@ -380,7 +381,7 @@ Generated on: ${new Date().toLocaleDateString()}
                     </span>{' '}
                     with a strong focus on practical learning and skill development. Currently enrolled in batch{' '}
                     <span className="font-medium" style={{ color: 'var(--color-text-primary)' }}>{student.batch || 'N/A'}</span>{' '}
-                    at {student.department || 'N/A'} department, {student.name} has demonstrated consistent progress and commitment to mastering the curriculum.
+                    at {student.department || 'N/A'} department, you have demonstrated consistent progress and commitment to mastering the curriculum.
                   </p>
                 </div>
               </div>
