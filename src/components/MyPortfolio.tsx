@@ -281,6 +281,71 @@ const MyPortfolio: React.FC = () => {
     return tasks;
   };
 
+  // Process learning timeline to remove duplicates and merge data properly
+  const processLearningTimeline = (timeline: any[]) => {
+    if (!timeline || timeline.length === 0) {
+      return [];
+    }
+    
+    // Group by level and merge data
+    const levelMap = new Map();
+    
+    timeline.forEach((entry: any) => {
+      const levelKey = entry.level;
+      
+      if (!levelMap.has(levelKey)) {
+        // First occurrence - set initial data
+        levelMap.set(levelKey, {
+          level: entry.level,
+          courseName: entry.courseName,
+          status: 'in-progress', // Will be updated based on completion
+          learn: entry.learn || { completed: false, startTime: null, endTime: null },
+          test: entry.test || { completed: false, score: 0, attempts: 0, startTime: null, endTime: null },
+          exercise: entry.exercise || { completed: false, startTime: null, endTime: null }
+        });
+      } else {
+        // Merge data from duplicate entry
+        const existing = levelMap.get(levelKey);
+        
+        // Merge learn data (take the completed one if available)
+        if (entry.learn && (entry.learn.completed || !existing.learn.completed)) {
+          existing.learn = { ...existing.learn, ...entry.learn };
+        }
+        
+        // Merge test data (take the one with better score or more recent)
+        if (entry.test && (entry.test.completed || entry.test.score > existing.test.score)) {
+          existing.test = { ...existing.test, ...entry.test };
+        }
+        
+        // Merge exercise data (take the completed one if available)
+        if (entry.exercise && (entry.exercise.completed || !existing.exercise.completed)) {
+          existing.exercise = { ...existing.exercise, ...entry.exercise };
+        }
+      }
+    });
+    
+    // Convert to array and determine final status for each level
+    const processedLevels = Array.from(levelMap.values()).map((level: any) => {
+      const learnCompleted = level.learn?.completed || false;
+      const testCompleted = level.test?.completed || false;
+      const exerciseCompleted = level.exercise?.completed || false;
+      
+      // Determine overall status
+      if (learnCompleted && testCompleted && exerciseCompleted) {
+        level.status = 'completed';
+      } else if (learnCompleted || testCompleted || exerciseCompleted) {
+        level.status = 'in-progress';
+      } else {
+        level.status = 'not-started';
+      }
+      
+      return level;
+    });
+    
+    // Sort by level number
+    return processedLevels.sort((a: any, b: any) => a.level - b.level);
+  };
+
   // Share portfolio
   const handleShare = () => {
     if (navigator.share) {
@@ -615,8 +680,19 @@ Generated on: ${new Date().toLocaleDateString()}
 
             {/* Learning Timeline */}
             <div className="space-y-4">
-              {student.learningTimeline && student.learningTimeline.length > 0 ? (
-                student.learningTimeline.map((level: any, index: number) => {
+              {(() => {
+                const processedTimeline = processLearningTimeline(student.learningTimeline);
+                if (!processedTimeline || processedTimeline.length === 0) {
+                  return (
+                    <div className="text-center py-12" style={{ color: 'var(--color-text-secondary)' }}>
+                      <ClockIcon className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                      <p className="text-lg">No learning data available yet.</p>
+                      <p className="text-sm mt-2">Start your learning journey to see your progress here!</p>
+                    </div>
+                  );
+                }
+                
+                return processedTimeline.map((level: any, index: number) => {
                   const tasks = getTasksForLevel(level);
                   const completedTasks = calculateCompletedTasks(level);
                   const isExpanded = expandedLevels.has(index);
@@ -819,13 +895,7 @@ Generated on: ${new Date().toLocaleDateString()}
                     </motion.div>
                   );
                 })
-              ) : (
-                <div className="text-center py-12" style={{ color: 'var(--color-text-secondary)' }}>
-                  <ClockIcon className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                  <p className="text-lg">No learning data available yet.</p>
-                  <p className="text-sm mt-2">Start your learning journey to see your progress here!</p>
-                </div>
-              )}
+              })()}
             </div>
           </div>
         </div>
