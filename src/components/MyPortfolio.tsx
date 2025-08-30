@@ -45,6 +45,16 @@ const MyPortfolio: React.FC = () => {
           <p className="text-lg" style={{ color: 'var(--color-text-secondary)' }}>
             Please wait while we fetch your learning journey data...
           </p>
+          <div className="mt-6 space-y-4">
+            <div className="h-2 w-full rounded-full animate-pulse" style={{ backgroundColor: 'var(--color-border)' }}></div>
+            <div className="h-2 w-3/4 rounded-full animate-pulse" style={{ backgroundColor: 'var(--color-border)' }}></div>
+            <div className="h-2 w-1/2 rounded-full animate-pulse" style={{ backgroundColor: 'var(--color-border)' }}></div>
+          </div>
+          <div className="mt-8 grid grid-cols-3 gap-4">
+            <div className="h-20 rounded-lg animate-pulse" style={{ backgroundColor: 'var(--color-border)' }}></div>
+            <div className="h-20 rounded-lg animate-pulse" style={{ backgroundColor: 'var(--color-border)' }}></div>
+            <div className="h-20 rounded-lg animate-pulse" style={{ backgroundColor: 'var(--color-border)' }}></div>
+          </div>
         </div>
       </div>
     );
@@ -57,10 +67,14 @@ const MyPortfolio: React.FC = () => {
         <div className="text-center max-w-lg mx-auto">
           <div className="mb-6 text-6xl">😕</div>
           <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--color-text-primary)' }}>
-            Something went wrong
+            {portfolioError.includes('403') ? 'Session Expired' : 
+             portfolioError.includes('404') ? 'Portfolio Not Found' : 
+             'Something went wrong'}
           </h2>
           <p className="text-lg mb-6" style={{ color: 'var(--color-text-secondary)' }}>
-            {portfolioError}
+            {portfolioError.includes('403') ? 'Your session has expired. Please log in again to view your portfolio.' :
+             portfolioError.includes('404') ? 'We couldn\'t find your portfolio data. Please make sure you\'re enrolled in a course.' :
+             portfolioError}
           </p>
           <div className="flex items-center justify-center gap-4">
             <button
@@ -74,17 +88,26 @@ const MyPortfolio: React.FC = () => {
             >
               Back to Dashboard
             </button>
-            <button
-              onClick={() => getPortfolioData('')}
-              className="px-6 py-3 rounded-xl transition-all duration-200 hover:scale-105"
-              style={{ 
-                backgroundColor: 'var(--color-accent-primary)',
-                color: 'var(--color-text-inverse)'
-              }}
-            >
-              Try Again
-            </button>
+            {!portfolioError.includes('403') && (
+              <button
+                onClick={() => getPortfolioData('')}
+                className="px-6 py-3 rounded-xl transition-all duration-200 hover:scale-105"
+                style={{ 
+                  backgroundColor: 'var(--color-accent-primary)',
+                  color: 'var(--color-text-inverse)'
+                }}
+              >
+                Try Again
+              </button>
+            )}
           </div>
+          {portfolioError.includes('403') && (
+            <div className="mt-6 p-4 rounded-lg" style={{ backgroundColor: 'var(--color-warning-bg)' }}>
+              <p className="text-sm" style={{ color: 'var(--color-warning)' }}>
+                You will be redirected to the login page in a few seconds...
+              </p>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -97,6 +120,13 @@ const MyPortfolio: React.FC = () => {
   // Calculate completion percentage
   const calculateCompletionPercentage = () => {
     if (!student?.learningTimeline || !Array.isArray(student.learningTimeline) || student.learningTimeline.length === 0) return 0;
+    
+    // Use summaryStats if available
+    if (student.summaryStats?.completionRate !== undefined) {
+      return Math.round(student.summaryStats.completionRate);
+    }
+    
+    // Fallback to calculating from timeline
     const completed = student.learningTimeline.filter((l: any) => l.status === 'completed').length;
     return Math.round((completed / student.learningTimeline.length) * 100);
   };

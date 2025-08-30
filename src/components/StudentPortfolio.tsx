@@ -63,11 +63,19 @@ const StudentPortfolio: React.FC = () => {
   if (studentDetailsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
-        <div className="text-center">
+        <div className="text-center max-w-lg mx-auto">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: 'var(--color-accent-primary)' }}></div>
-          <p className="text-lg" style={{ color: 'var(--color-text-primary)' }}>
-            Loading student portfolio...
+          <h2 className="text-2xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>
+            Loading Student Portfolio
+          </h2>
+          <p className="text-lg" style={{ color: 'var(--color-text-secondary)' }}>
+            Please wait while we fetch the student's learning journey data...
           </p>
+          <div className="mt-6 space-y-4">
+            <div className="h-2 w-full rounded-full animate-pulse" style={{ backgroundColor: 'var(--color-border)' }}></div>
+            <div className="h-2 w-3/4 rounded-full animate-pulse" style={{ backgroundColor: 'var(--color-border)' }}></div>
+            <div className="h-2 w-1/2 rounded-full animate-pulse" style={{ backgroundColor: 'var(--color-border)' }}></div>
+          </div>
         </div>
       </div>
     );
@@ -80,10 +88,14 @@ const StudentPortfolio: React.FC = () => {
         <div className="text-center max-w-lg mx-auto">
           <div className="mb-6 text-6xl">😕</div>
           <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--color-text-primary)' }}>
-            Something went wrong
+            {error.includes('403') ? 'Access Denied' : 
+             error.includes('404') ? 'Student Not Found' : 
+             'Something went wrong'}
           </h2>
           <p className="text-lg mb-6" style={{ color: 'var(--color-text-secondary)' }}>
-            {error}
+            {error.includes('403') ? 'You do not have permission to view this student\'s portfolio. Please check your access rights.' :
+             error.includes('404') ? 'The requested student portfolio could not be found. The student might not exist or has been removed.' :
+             error}
           </p>
           <div className="flex items-center justify-center gap-4">
             <button
@@ -97,16 +109,18 @@ const StudentPortfolio: React.FC = () => {
             >
               Back to Students
             </button>
-            <button
-              onClick={handleRetry}
-              className="px-6 py-3 rounded-xl transition-all duration-200 hover:scale-105"
-              style={{ 
-                backgroundColor: 'var(--color-accent-primary)',
-                color: 'var(--color-text-inverse)'
-              }}
-            >
-              Try Again
-            </button>
+            {!error.includes('403') && (
+              <button
+                onClick={handleRetry}
+                className="px-6 py-3 rounded-xl transition-all duration-200 hover:scale-105"
+                style={{ 
+                  backgroundColor: 'var(--color-accent-primary)',
+                  color: 'var(--color-text-inverse)'
+                }}
+              >
+                Try Again
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -145,6 +159,13 @@ const StudentPortfolio: React.FC = () => {
   // Calculate completion percentage
   const calculateCompletionPercentage = () => {
     if (!student?.learningTimeline || !Array.isArray(student.learningTimeline) || student.learningTimeline.length === 0) return 0;
+    
+    // Use summaryStats if available
+    if (student.summaryStats?.completionRate !== undefined) {
+      return Math.round(student.summaryStats.completionRate);
+    }
+    
+    // Fallback to calculating from timeline
     const completed = student.learningTimeline.filter(l => l?.status === 'completed').length;
     return Math.round((completed / student.learningTimeline.length) * 100);
   };

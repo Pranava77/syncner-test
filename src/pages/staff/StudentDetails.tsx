@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  PersonIcon,
   BarChartIcon,
   CheckCircledIcon,
   ClockIcon,
@@ -14,7 +13,6 @@ import {
 } from '@radix-ui/react-icons';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer } from 'recharts';
 import { useStaff } from '../../hooks/useStaff';
-import syncnerLogo from '../../assets/syncner-logo.png';
 
 
 // Utility function to format dates and times
@@ -329,21 +327,31 @@ const StudentDetails: React.FC = () => {
                 style={{
                   backgroundColor: 'var(--color-surface)',
                   boxShadow: 'var(--shadow-sm)',
-                  borderColor: 'var(--color-border)'
+                  borderColor: 'var(--color-border)',
+                  opacity: studentDetailsLoading ? 0.7 : 1,
+                  pointerEvents: studentDetailsLoading ? 'none' : 'auto'
                 }}
               >
-                <div className="mb-6">
+                <div className="mb-6 flex items-center justify-between">
                   <h2 
                     className="text-xl font-bold"
                     style={{ color: 'var(--color-text-primary)' }}
                   >
                     Learning Timeline
                   </h2>
+                  {studentDetailsLoading && (
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2" style={{ borderColor: 'var(--color-accent-primary)' }}></div>
+                  )}
                 </div>
 
-                <div className="space-y-8">
-                  {selectedStudent.learningTimeline.map((level, index) => (
-                    <motion.div
+                {selectedStudent.learningTimeline?.length === 0 ? (
+                  <div className="text-center py-8" style={{ color: 'var(--color-text-secondary)' }}>
+                    <p>No learning timeline data available.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-8">
+                    {selectedStudent.learningTimeline?.filter(level => level && typeof level === 'object').map((level, index) => (
+                      <motion.div
                       key={level.level}
                       className="relative group"
                       initial={{ opacity: 0, x: -20 }}
@@ -420,9 +428,9 @@ const StudentDetails: React.FC = () => {
                                 <div className="flex-1">
                                   <div className="flex items-center gap-2 mb-1">
                                     <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-                                      {level.learnContentName || 'Learn'}
+                                      {level.learn?.title || 'Learn'}
                                     </span>
-                                    {level.learn.completed && (
+                                    {level.learn?.completed && (
                                       <span className="px-2 py-0.5 rounded-full text-xs font-medium"
                                         style={{ 
                                           backgroundColor: 'var(--color-success)',
@@ -434,12 +442,12 @@ const StudentDetails: React.FC = () => {
                                     )}
                                   </div>
                                   <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                                    {level.learnDescription || 'Complete learning materials and theory'}
+                                    {level.learn?.description || 'Complete learning materials and theory'}
                                   </div>
                                   <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                                    {formatDateTime(level.learn.startTime)} → {formatDateTime(level.learn.endTime)}
+                                    {formatDateTime(level.learn?.startTime)} → {formatDateTime(level.learn?.endTime)}
                                   </div>
-                                  {getRelativeTime(level.learn.endTime) && (
+                                  {level.learn?.endTime && getRelativeTime(level.learn.endTime) && (
                                     <div className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
                                       {getRelativeTime(level.learn.endTime)}
                                     </div>
@@ -467,26 +475,26 @@ const StudentDetails: React.FC = () => {
                                 <div className="flex-1">
                                   <div className="flex items-center gap-2 mb-1">
                                     <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-                                      {level.testContentName || 'Test'}
+                                      {level.test?.title || 'Test'}
                                     </span>
-                                    {level.test.completed && (
+                                    {level.test?.completed && (
                                       <span className="px-2 py-0.5 rounded-full text-xs font-medium"
                                         style={{ 
                                           backgroundColor: 'var(--color-success)',
                                           color: 'white'
                                         }}
                                       >
-                                        ({level.test.score}% - {level.test.attempts} attempts)
+                                        ({level.test?.score || 0}% - {level.test?.attempts || 0} attempts)
                                       </span>
                                     )}
                                   </div>
                                   <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                                    {level.testDescription || 'Complete assessment and evaluation'}
+                                    {level.test?.description || 'Complete assessment and evaluation'}
                                   </div>
                                   <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                                    {formatDateTime(level.test.startTime)} → {formatDateTime(level.test.endTime)}
+                                    {formatDateTime(level.test?.startTime)} → {formatDateTime(level.test?.endTime)}
                                   </div>
-                                  {getRelativeTime(level.test.endTime) && (
+                                  {level.test?.endTime && getRelativeTime(level.test.endTime) && (
                                     <div className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
                                       {getRelativeTime(level.test.endTime)}
                                     </div>
@@ -514,9 +522,9 @@ const StudentDetails: React.FC = () => {
                                 <div className="flex-1">
                                   <div className="flex items-center gap-2 mb-1">
                                     <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-                                      {level.exerciseContentName || 'Exercise'}
+                                      {level.exercise?.title || 'Exercise'}
                                     </span>
-                                    {level.exercise.completed ? (
+                                    {level.exercise?.completed ? (
                                       <span className="px-2 py-0.5 rounded-full text-xs font-medium"
                                         style={{ 
                                           backgroundColor: 'var(--color-success)',
@@ -527,17 +535,17 @@ const StudentDetails: React.FC = () => {
                                       </span>
                                     ) : (
                                       <span className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
-                                        {level.exerciseDescription || 'Complete hands-on exercises'}
+                                        {level.exercise?.description || 'Complete hands-on exercises'}
                                       </span>
                                     )}
                                   </div>
                                   <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                                    {level.exerciseDescription || 'Complete hands-on exercises'}
+                                    {level.exercise?.description || 'Complete hands-on exercises'}
                                   </div>
                                   <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                                    {formatDateTime(level.exercise.startTime)} → {formatDateTime(level.exercise.endTime)}
+                                    {formatDateTime(level.exercise?.startTime)} → {formatDateTime(level.exercise?.endTime)}
                                   </div>
-                                  {getRelativeTime(level.exercise.endTime) && (
+                                  {level.exercise?.endTime && getRelativeTime(level.exercise.endTime) && (
                                     <div className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
                                       {getRelativeTime(level.exercise.endTime)}
                                     </div>
@@ -550,7 +558,8 @@ const StudentDetails: React.FC = () => {
                       </div>
                     </motion.div>
                   ))}
-                </div>
+                  </div>
+                )}
               </div>
             </div>
 
