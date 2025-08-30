@@ -186,5 +186,5 @@ export interface ApiResponse<T> {
 }
 
 export type StudentsApiResponse = ApiResponse<StudentListResponse>;
-export type StudentDetailsApiResponse = ApiResponse<StudentDetailsResponse>;
+
 export type StaffAnalyticsApiResponse = ApiResponse<StaffAnalyticsResponse>;

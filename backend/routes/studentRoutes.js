@@ -1,22 +1,8 @@
 import express from 'express';
 import { protect } from '../middleware/auth.js';
-import { getStudentPortfolio } from '../controllers/portfolioController.js';
 
 const router = express.Router();
 
-// Get own portfolio data - must be defined BEFORE the :studentId route
-router.get('/portfolio/me', protect, (req, res, next) => {
-  try {
-    // Set the studentId param to the logged-in user's ID
-    req.params.studentId = req.user._id;
-    req.isOwnPortfolio = true; // Add flag to indicate this is own portfolio request
-    next();
-  } catch (error) {
-    next(error);
-  }
-}, getStudentPortfolio);
-
-// Get student portfolio data - accessible by student (own data) and staff/admin
-router.get('/portfolio/:studentId', protect, getStudentPortfolio);
+// Portfolio routes have been removed
 
 export default router;
