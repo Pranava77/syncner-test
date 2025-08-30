@@ -105,7 +105,7 @@ const MyPortfolio: React.FC = () => {
 
   // Calculate completion percentage
   const calculateCompletionPercentage = () => {
-    if (!student.learningTimeline || student.learningTimeline.length === 0) return 0;
+    if (!student?.learningTimeline || !Array.isArray(student.learningTimeline) || student.learningTimeline.length === 0) return 0;
     const completed = student.learningTimeline.filter((l: any) => l.status === 'completed').length;
     return Math.round((completed / student.learningTimeline.length) * 100);
   };
@@ -287,38 +287,44 @@ const MyPortfolio: React.FC = () => {
     const tasks: Task[] = [];
     
     // Learn section - use actual content
-    if (level.learn?.content) {
+    if (level?.learn?.content && Array.isArray(level.learn.content)) {
       level.learn.content.forEach((item: any) => {
-        tasks.push({
-          title: item.title,
-          brief: item.description || item.content.substring(0, 100) + '...',
-          status: level.learn.completed ? 'completed' : level.learn.startTime ? 'in-progress' : 'pending',
-          type: 'learn'
-        });
+        if (item && typeof item === 'object') {
+          tasks.push({
+            title: item.title || 'Learning Module',
+            brief: item.description || (typeof item.content === 'string' ? item.content.substring(0, 100) + '...' : 'Complete learning materials'),
+            status: level.learn.completed ? 'completed' : level.learn.startTime ? 'in-progress' : 'pending',
+            type: 'learn'
+          });
+        }
       });
     }
     
     // Test section - use actual content
-    if (level.test?.content) {
+    if (level?.test?.content && Array.isArray(level.test.content)) {
       level.test.content.forEach((item: any) => {
-        tasks.push({
-          title: item.title,
-          brief: item.question,
-          status: level.test.completed ? 'completed' : level.test.attempts > 0 ? 'in-progress' : 'pending',
-          type: 'test'
-        });
+        if (item && typeof item === 'object') {
+          tasks.push({
+            title: item.title || 'Assessment',
+            brief: item.question || 'Complete the assessment',
+            status: level.test.completed ? 'completed' : level.test.attempts > 0 ? 'in-progress' : 'pending',
+            type: 'test'
+          });
+        }
       });
     }
     
     // Exercise section - use actual content
-    if (level.exercise?.content) {
+    if (level?.exercise?.content && Array.isArray(level.exercise.content)) {
       level.exercise.content.forEach((item: any) => {
-        tasks.push({
-          title: item.title,
-          brief: item.description,
-          status: level.exercise.completed ? 'completed' : level.exercise.startTime ? 'in-progress' : 'pending',
-          type: 'exercise'
-        });
+        if (item && typeof item === 'object') {
+          tasks.push({
+            title: item.title || 'Exercise',
+            brief: item.description || 'Complete the practical exercise',
+            status: level.exercise.completed ? 'completed' : level.exercise.startTime ? 'in-progress' : 'pending',
+            type: 'exercise'
+          });
+        }
       });
     }
     
@@ -352,12 +358,16 @@ const MyPortfolio: React.FC = () => {
   };
 
   // Process learning timeline to show all levels with proper status
-  const processLearningTimeline = (timeline: any[]) => {
-    const totalLevels = student.summaryStats?.totalLevels || 10;
-    const currentLevel = student.summaryStats?.currentLevel || 1;
+  const processLearningTimeline = (timeline: any[] | undefined) => {
+    if (!timeline || !Array.isArray(timeline)) {
+      timeline = [];
+    }
+
+    const totalLevels = student?.summaryStats?.totalLevels || 10;
+    const currentLevel = student?.summaryStats?.currentLevel || 1;
     
     // If we have complete backend data, use it directly
-    if (timeline && timeline.length > 0 && timeline.length >= totalLevels) {
+    if (timeline.length > 0 && timeline.length >= totalLevels) {
       // Backend data is complete, just ensure proper ordering
       // Create a copy to avoid modifying the original array
       return [...timeline].sort((a, b) => a.level - b.level);
