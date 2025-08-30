@@ -4,6 +4,8 @@ import { authorize } from '../middleware/auth.js';
 import User from '../models/User.js';
 import UserProgress from '../models/UserProgress.js';
 import Track from '../models/Track.js';
+import Curriculum from '../models/Curriculum.js';
+import { normalizeCareerTrack } from '../utils/careerTrackUtils.js';
 
 const router = express.Router();
 
@@ -36,33 +38,46 @@ router.get('/portfolio/:studentId', protect, authorize('student'), async (req, r
     const progress = await UserProgress.findOne({ user: studentId }).lean();
     console.log('📊 Student progress data:', progress ? 'Found' : 'Not found', progress?.completedLevels?.length || 0, 'completed levels');
     
+    // Normalize career track to handle legacy "fullstack" vs "full-stack"
+    const normalizedCareerTrack = normalizeCareerTrack(student.careerTrack);
+    console.log('🔄 Normalized career track:', student.careerTrack, '->', normalizedCareerTrack);
+    
     // Get track information - try multiple possible names
-    let track = await Track.findOne({ name: student.careerTrack }).lean();
-    if (!track && student.careerTrack) {
+    let track = await Track.findOne({ name: normalizedCareerTrack }).lean();
+    if (!track && normalizedCareerTrack) {
       // Try with different formatting
       const altFormats = [
-        student.careerTrack.toLowerCase().replace(/\s+/g, '-'),
-        student.careerTrack.toLowerCase().replace(/[\s-]/g, ''),
-        student.careerTrack
+        normalizedCareerTrack.toLowerCase().replace(/\s+/g, '-'),
+        normalizedCareerTrack.toLowerCase().replace(/[\s-]/g, ''),
+        normalizedCareerTrack
       ];
       for (const format of altFormats) {
         track = await Track.findOne({ name: format }).lean();
         if (track) break;
       }
     }
-    console.log('🎯 Track data for', student.careerTrack, ':', track ? `Found with ${track.levels?.length || 0} levels` : 'Not found');
+    console.log('🎯 Track data for', normalizedCareerTrack, ':', track ? `Found with ${track.levels?.length || 0} levels` : 'Not found');
     
-    // Calculate summary statistics with better defaults
-    const totalLevels = track && track.levels ? track.levels.length : 10;
+    // Get ALL curriculum items for this career track to determine total levels
+    const curriculumItems = await Curriculum.find({ 
+      careerTrack: normalizedCareerTrack, 
+      isActive: true 
+    }).sort({ order: 1 }).lean();
+    
+    // Get unique level orders from curriculum
+    const levelOrders = [...new Set(curriculumItems.map(item => item.order))].sort((a, b) => a - b);
+    const totalLevels = levelOrders.length;
+    
+    console.log('📚 Curriculum items found:', curriculumItems.length, 'for track:', normalizedCareerTrack);
+    console.log('🎯 Level orders found:', levelOrders, 'Total levels:', totalLevels);
+    
+    // Calculate summary statistics with real data
     const completedLevels = progress?.completedLevels?.length || 0;
     const currentLevel = progress?.currentLevel || 1;
     
     console.log('📈 Summary stats calculated:', { totalLevels, completedLevels, currentLevel });
     
-    // If no real data available, provide some sample structure
-    if (!progress && totalLevels === 10) {
-      console.log('⚠️ No progress data found, providing default structure');
-    }
+
     
     const summaryStats = {
       totalLevels,
@@ -71,60 +86,56 @@ router.get('/portfolio/:studentId', protect, authorize('student'), async (req, r
       completionRate: totalLevels > 0 ? Math.round((completedLevels / totalLevels) * 100) : 0
     };
 
-    // Build learning timeline
-    const learningTimeline = (progress?.completedLevels || []).map((level, index) => ({
-      level: level.levelOrder,
-      courseName: `Level ${level.levelOrder}`,
-      status: 'completed',
-      learn: { 
-        completed: level.completedSections?.learn || false, 
-        startTime: level.learnProgress?.timeSpent ? level.completedAt : null, 
-        endTime: level.learnProgress?.isCompleted ? level.completedAt : null 
-      },
-      test: { 
-        completed: level.completedSections?.test || false, 
-        score: level.testProgress?.attempts?.[0]?.score || 0, 
-        attempts: level.testProgress?.attempts?.length || 0, 
-        startTime: level.testProgress?.lastAttemptAt || level.completedAt, 
-        endTime: level.testProgress?.isCompleted ? level.completedAt : null 
-      },
-      exercise: { 
-        completed: level.completedSections?.exercise || false, 
-        startTime: level.exerciseSubmissions?.[0]?.submittedAt || level.completedAt, 
-        endTime: level.completedSections?.exercise ? level.completedAt : null 
-      }
-    })) || [];
-    
-    // Add current level if not completed
-    if (progress?.currentLevel && progress.currentLevel !== 1) {
-      // Find the current level progress data
-      const currentLevelProgress = progress.completedLevels.find(
-        level => level.levelOrder === progress.currentLevel
+    // Build complete learning timeline with ALL levels from curriculum
+    const learningTimeline = levelOrders.map(levelOrder => {
+      // Find progress data for this level
+      const levelProgress = progress?.completedLevels?.find(
+        level => level.levelOrder === levelOrder
       );
       
-      learningTimeline.unshift({
-        level: progress.currentLevel,
-        courseName: `Level ${progress.currentLevel}`,
-        status: 'in-progress',
+      // Determine level status
+      let status = 'not-started';
+      if (levelProgress) {
+        const allSectionsCompleted = levelProgress.completedSections?.learn && 
+                                   levelProgress.completedSections?.test && 
+                                   levelProgress.completedSections?.exercise;
+        status = allSectionsCompleted ? 'completed' : 'in-progress';
+      } else if (levelOrder === 1) {
+        status = 'in-progress'; // First level is always accessible
+      }
+      
+      // Get level title from curriculum
+      const levelCurriculumItem = curriculumItems.find(item => 
+        item.order === levelOrder && item.type === 'syllabus'
+      ) || curriculumItems.find(item => item.order === levelOrder);
+      
+      const levelTitle = levelCurriculumItem?.title || `Level ${levelOrder}`;
+      
+      return {
+        level: levelOrder,
+        courseName: levelTitle,
+        status: status,
         learn: { 
-          completed: currentLevelProgress?.completedSections?.learn || false, 
-          startTime: currentLevelProgress?.learnProgress?.timeSpent ? currentLevelProgress.completedAt : null, 
-          endTime: currentLevelProgress?.learnProgress?.isCompleted ? currentLevelProgress.completedAt : null 
+          completed: levelProgress?.completedSections?.learn || false, 
+          startTime: levelProgress?.learnProgress?.timeSpent ? levelProgress?.completedAt : null, 
+          endTime: levelProgress?.learnProgress?.isCompleted ? levelProgress?.completedAt : null 
         },
         test: { 
-          completed: currentLevelProgress?.completedSections?.test || false, 
-          score: currentLevelProgress?.testProgress?.attempts?.[0]?.score || 0, 
-          attempts: currentLevelProgress?.testProgress?.attempts?.length || 0, 
-          startTime: currentLevelProgress?.testProgress?.lastAttemptAt || null, 
-          endTime: currentLevelProgress?.testProgress?.isCompleted ? currentLevelProgress.completedAt : null 
+          completed: levelProgress?.completedSections?.test || false, 
+          score: levelProgress?.testProgress?.attempts?.[0]?.score || 0, 
+          attempts: levelProgress?.testProgress?.attempts?.length || 0, 
+          startTime: levelProgress?.testProgress?.lastAttemptAt || null, 
+          endTime: levelProgress?.testProgress?.isCompleted ? levelProgress?.completedAt : null 
         },
         exercise: { 
-          completed: currentLevelProgress?.completedSections?.exercise || false, 
-          startTime: currentLevelProgress?.exerciseSubmissions?.[0]?.submittedAt || null, 
-          endTime: currentLevelProgress?.completedSections?.exercise ? currentLevelProgress.completedAt : null 
+          completed: levelProgress?.completedSections?.exercise || false, 
+          startTime: levelProgress?.exerciseSubmissions?.[0]?.submittedAt || null, 
+          endTime: levelProgress?.completedSections?.exercise ? levelProgress?.completedAt : null 
         }
-      });
-    }
+      };
+    });
+    
+    console.log('📚 Built learning timeline with', learningTimeline.length, 'levels:', learningTimeline.map(l => ({ level: l.level, status: l.status, title: l.courseName })));
     
     const studentDetails = {
       ...student,
