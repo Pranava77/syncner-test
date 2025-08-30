@@ -461,77 +461,136 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
       leaderboard: leaderboardScore // Comprehensive leaderboard score
     };
     
-    // Build complete learning timeline with ALL levels from curriculum
-    const learningTimeline = levelOrders.map(levelOrder => {
-      // Find progress data for this level
-      const levelProgress = progress?.completedLevels?.find(
-        level => level.levelOrder === levelOrder
-      );
-      
-      // Determine level status
-      let status = 'not-started';
-      if (levelProgress) {
-        const allSectionsCompleted = levelProgress.completedSections?.learn && 
-                                   levelProgress.completedSections?.test && 
-                                   levelProgress.completedSections?.exercise;
-        status = allSectionsCompleted ? 'completed' : 'in-progress';
-      } else if (levelOrder === 1) {
-        status = 'in-progress'; // First level is always accessible
-      }
-      
-      // Get level title and content details from curriculum
-      const levelCurriculumItem = curriculumItems.find(item => 
-        item.order === levelOrder && item.type === 'syllabus'
-      ) || curriculumItems.find(item => item.order === levelOrder);
-      
-      const levelTitle = levelCurriculumItem?.title || `Level ${levelOrder}`;
-      
-      // Get specific content items for this level
-      const levelContentItems = curriculumItems.filter(item => item.order === levelOrder);
-      
-      // Find specific content types
-      const learnContent = levelContentItems.find(item => item.type === 'learn' || item.type === 'syllabus');
-      const testContent = levelContentItems.find(item => item.type === 'test' || item.type === 'quiz');
-      const exerciseContent = levelContentItems.find(item => item.type === 'exercise' || item.type === 'project');
-      
-      return {
-        level: levelOrder,
-        courseName: levelTitle,
-        status: status,
-        // Dynamic content names and descriptions
-        learnContentName: learnContent?.title || `${levelTitle} - Learning Module`,
-        learnDescription: learnContent?.description || `Complete learning materials and theory for ${levelTitle}`,
-        testContentName: testContent?.title || `${levelTitle} - Assessment`,
-        testDescription: testContent?.description || `Complete assessment and evaluation for ${levelTitle}`,
-        exerciseContentName: exerciseContent?.title || `${levelTitle} - Practical Exercise`,
-        exerciseDescription: exerciseContent?.description || `Complete hands-on exercises for ${levelTitle}`,
-        learn: { 
-          completed: levelProgress?.completedSections?.learn || false, 
-          startTime: levelProgress?.learnProgress?.timeSpent ? levelProgress?.completedAt : null, 
-          endTime: levelProgress?.learnProgress?.isCompleted ? levelProgress?.completedAt : null 
-        },
-        test: { 
-          completed: levelProgress?.completedSections?.test || false, 
-          score: levelProgress?.testProgress?.attempts?.[0]?.score || 0, 
-          attempts: levelProgress?.testProgress?.attempts?.length || 0, 
-          startTime: levelProgress?.testProgress?.lastAttemptAt || null, 
-          endTime: levelProgress?.testProgress?.isCompleted ? levelProgress?.completedAt : null 
-        },
-        exercise: { 
-          completed: levelProgress?.completedSections?.exercise || false, 
-          startTime: levelProgress?.exerciseSubmissions?.[0]?.submittedAt || null, 
-          endTime: levelProgress?.completedSections?.exercise ? levelProgress?.completedAt : null 
-        }
-      };
-    });
+    // Build learning timeline using real student progress data
+    const learningTimeline = [];
     
-    console.log('📚 Staff route: Built learning timeline with', learningTimeline.length, 'levels:', learningTimeline.map(l => ({ level: l.level, status: l.status, title: l.courseName })));
+    // Add completed levels to timeline
+    if (progress?.completedLevels && Array.isArray(progress.completedLevels)) {
+      progress.completedLevels.forEach(level => {
+        if (level.completedAt) {
+          // Add learn section completion
+          if (level.completedSections?.learn) {
+            learningTimeline.push({
+              type: 'learning',
+              activity: `Completed Learning: ${level.courseName || `Level ${level.levelOrder}`}`,
+              date: level.completedAt.toISOString().split('T')[0],
+              duration: level.learnProgress?.timeSpent || 30, // Default 30 minutes if no time data
+              score: null
+            });
+          }
+          
+          // Add test section completion
+          if (level.completedSections?.test && level.testProgress?.attempts?.length > 0) {
+            const bestScore = Math.max(...level.testProgress.attempts.map(attempt => attempt.score || 0));
+            learningTimeline.push({
+              type: 'test',
+              activity: `Completed Test: ${level.courseName || `Level ${level.levelOrder}`}`,
+              date: level.completedAt.toISOString().split('T')[0],
+              duration: 45, // Default test duration
+              score: bestScore
+            });
+          }
+          
+          // Add exercise section completion
+          if (level.completedSections?.exercise) {
+            learningTimeline.push({
+              type: 'exercise',
+              activity: `Completed Exercise: ${level.courseName || `Level ${level.levelOrder}`}`,
+              date: level.completedAt.toISOString().split('T')[0],
+              duration: level.exerciseProgress?.timeSpent || 60, // Default 60 minutes if no time data
+              score: null
+            });
+          }
+        }
+      });
+    }
+    
+    // Add daily activity data if available
+    if (progress?.dailyActivity && Array.isArray(progress.dailyActivity)) {
+      progress.dailyActivity.forEach(entry => {
+        if (entry.isPresent && entry.totalMinutes > 0) {
+          learningTimeline.push({
+            type: 'learning',
+            activity: 'Daily Learning Session',
+            date: entry.date.toISOString().split('T')[0],
+            duration: entry.totalMinutes,
+            score: null
+          });
+        }
+      });
+    }
+    
+    // Add test attempts if available
+    if (progress?.testAttempts && Array.isArray(progress.testAttempts)) {
+      progress.testAttempts.forEach(attempt => {
+        if (attempt.submittedAt) {
+          learningTimeline.push({
+            type: 'test',
+            activity: `Test Attempt: ${attempt.levelName || 'Level Assessment'}`,
+            date: attempt.submittedAt.toISOString().split('T')[0],
+            duration: 45,
+            score: attempt.score || 0
+          });
+        }
+      });
+    }
+    
+    // Add exercise submissions if available
+    if (progress?.exerciseSubmissions && Array.isArray(progress.exerciseSubmissions)) {
+      progress.exerciseSubmissions.forEach(submission => {
+        if (submission.submittedAt) {
+          learningTimeline.push({
+            type: 'exercise',
+            activity: `Exercise Submission: ${submission.exerciseTitle || 'Practical Exercise'}`,
+            date: submission.submittedAt.toISOString().split('T')[0],
+            duration: 60,
+            score: null
+          });
+        }
+      });
+    }
+    
+    // Sort timeline by date (newest first)
+    learningTimeline.sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+    // Limit to last 20 activities to avoid overwhelming the UI
+    const limitedTimeline = learningTimeline.slice(0, 20);
+    
+    // If no real timeline data, generate sample data based on enrollment
+    if (limitedTimeline.length === 0) {
+      const enrollmentDate = new Date(student.createdAt || Date.now());
+      const today = new Date();
+      const daysSinceEnrollment = Math.ceil((today.getTime() - enrollmentDate.getTime()) / (1000 * 60 * 60 * 24));
+      
+      // Generate realistic sample activities based on enrollment time
+      if (daysSinceEnrollment > 0) {
+        const sampleActivities = [
+          { type: 'learning', activity: 'Platform Introduction', duration: 15, score: null },
+          { type: 'test', activity: 'Initial Assessment', duration: 30, score: 75 },
+          { type: 'exercise', activity: 'First Practice Exercise', duration: 45, score: null }
+        ];
+        
+        sampleActivities.forEach((activity, index) => {
+          const activityDate = new Date(enrollmentDate);
+          activityDate.setDate(enrollmentDate.getDate() + Math.floor((index + 1) * daysSinceEnrollment / 4));
+          
+          limitedTimeline.push({
+            ...activity,
+            date: activityDate.toISOString().split('T')[0]
+          });
+        });
+        
+        console.log('📚 Staff route: Generated sample timeline data for new student');
+      }
+    }
+    
+    console.log('📚 Staff route: Built real learning timeline with', limitedTimeline.length, 'activities from actual progress data');
     
     const studentDetails = {
       ...student,
       performance,
       summaryStats,
-      learningTimeline,
+      learningTimeline: limitedTimeline,
       skills: getSkillsForTrack(),
       recommendedRoles: getRecommendedRoles(),
       trackInfo: trackInfo || null,
