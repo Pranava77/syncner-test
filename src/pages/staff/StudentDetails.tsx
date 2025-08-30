@@ -119,22 +119,22 @@ const StudentDetails: React.FC = () => {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'completed':
-        return <CheckCircledIcon className="w-5 h-5 text-green-500" />;
+        return <CheckCircledIcon className="w-5 h-5" style={{ color: 'var(--color-success)' }} />;
       case 'in-progress':
-        return <ClockIcon className="w-5 h-5 text-yellow-500" />;
+        return <ClockIcon className="w-5 h-5" style={{ color: 'var(--color-warning)' }} />;
       default:
-        return <ClockIcon className="w-5 h-5 text-gray-400" />;
+        return <ClockIcon className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />;
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed':
-        return 'text-green-600';
+        return { color: 'var(--color-success)' };
       case 'in-progress':
-        return 'text-yellow-600';
+        return { color: 'var(--color-warning)' };
       default:
-        return 'text-gray-400';
+        return { color: 'var(--color-text-muted)' };
     }
   };
 
@@ -153,20 +153,33 @@ const StudentDetails: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div 
+      className="min-h-screen"
+      style={{ backgroundColor: 'var(--color-primary-bg)' }}
+    >
       {/* Header */}
-      <div className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+      <div 
+        className="border-b"
+        style={{ 
+          borderColor: 'var(--color-border)',
+          backgroundColor: 'var(--color-surface)'
+        }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => navigate('/staff/students')}
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                className="p-2 rounded-lg transition-colors hover:bg-[var(--color-accent-tertiary)]"
+                style={{ color: 'var(--color-accent-primary)' }}
               >
-                <ArrowLeftIcon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                <ArrowLeftIcon className="w-5 h-5" />
               </button>
               <div>
-                <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
+                <h1 
+                  className="text-xl font-heading"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
                   Student Details
                 </h1>
               </div>
@@ -179,43 +192,124 @@ const StudentDetails: React.FC = () => {
         {/* Top Section: Student Details + Performance Overview */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           {/* Left: Student Details */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          <div 
+            className="rounded-xl shadow-sm p-6"
+            style={{
+              backgroundColor: 'var(--color-surface)',
+              boxShadow: 'var(--shadow-sm)',
+              borderColor: 'var(--color-border)'
+            }}
+          >
+            <h2 
+              className="text-lg font-heading mb-4"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
               Student Details
             </h2>
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600 dark:text-gray-400">Roll Number:</span>
-                <span className="font-medium text-gray-900 dark:text-white">{mockStudent.rollNumber}</span>
+                <span 
+                  className="text-sm font-label"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                >
+                  Roll Number:
+                </span>
+                <span 
+                  className="font-medium"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  {mockStudent.rollNumber}
+                </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600 dark:text-gray-400">Course & Dept:</span>
-                <span className="font-medium text-gray-900 dark:text-white">{mockStudent.courseDept}</span>
+                <span 
+                  className="text-sm font-label"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                >
+                  Course & Dept:
+                </span>
+                <span 
+                  className="font-medium"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  {mockStudent.courseDept}
+                </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600 dark:text-gray-400">Student Name:</span>
-                <span className="font-medium text-gray-900 dark:text-white">{mockStudent.name}</span>
+                <span 
+                  className="text-sm font-label"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                >
+                  Student Name:
+                </span>
+                <span 
+                  className="font-medium"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  {mockStudent.name}
+                </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600 dark:text-gray-400">Batch:</span>
-                <span className="font-medium text-gray-900 dark:text-white">{mockStudent.batch}</span>
+                <span 
+                  className="text-sm font-label"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                >
+                  Batch:
+                </span>
+                <span 
+                  className="font-medium"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  {mockStudent.batch}
+                </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600 dark:text-gray-400">Enrolled Career Track:</span>
-                <span className="px-3 py-1 bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 rounded-full text-sm font-medium">
+                <span 
+                  className="text-sm font-label"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                >
+                  Enrolled Career Track:
+                </span>
+                <span 
+                  className="px-3 py-1 rounded-full text-sm font-medium"
+                  style={{
+                    backgroundColor: 'var(--color-accent-tertiary)',
+                    color: 'var(--color-accent-primary)'
+                  }}
+                >
                   {mockStudent.careerTrack}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600 dark:text-gray-400">Enrolled Date:</span>
-                <span className="font-medium text-gray-900 dark:text-white">{mockStudent.enrolledDate}</span>
+                <span 
+                  className="text-sm font-label"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                >
+                  Enrolled Date:
+                </span>
+                <span 
+                  className="font-medium"
+                  style={{ color: 'var(--color-text-primary)' }}
+                >
+                  {mockStudent.enrolledDate}
+                </span>
               </div>
             </div>
           </div>
 
           {/* Right: Performance Overview */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          <div 
+            className="rounded-xl shadow-sm p-6"
+            style={{
+              backgroundColor: 'var(--color-surface)',
+              boxShadow: 'var(--shadow-sm)',
+              borderColor: 'var(--color-border)'
+            }}
+          >
+            <h2 
+              className="text-lg font-heading mb-4"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
               Performance Overview
             </h2>
             
@@ -229,8 +323,8 @@ const StudentDetails: React.FC = () => {
                   <Radar
                     name="Performance"
                     dataKey="value"
-                    stroke="#3B82F6"
-                    fill="#3B82F6"
+                    stroke="var(--color-accent-primary)"
+                    fill="var(--color-accent-primary)"
                     fillOpacity={0.3}
                   />
                   <Tooltip />
@@ -238,55 +332,112 @@ const StudentDetails: React.FC = () => {
               </ResponsiveContainer>
             </div>
             
-            <div className="text-center text-sm text-gray-500 dark:text-gray-400 mb-4">
+            <div 
+              className="text-center text-sm mb-4"
+              style={{ color: 'var(--color-text-muted)' }}
+            >
               (Optional)
             </div>
             
-            <button className="w-full px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+            <button 
+              className="w-full px-4 py-2 rounded-lg transition-colors font-medium"
+              style={{
+                backgroundColor: 'var(--color-accent-tertiary)',
+                color: 'var(--color-accent-primary)'
+              }}
+            >
               View Portfolio
             </button>
           </div>
         </div>
 
         {/* Middle Section: Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div 
+            className="rounded-xl shadow-sm p-6"
+            style={{
+              backgroundColor: 'var(--color-surface)',
+              boxShadow: 'var(--shadow-sm)',
+              borderColor: 'var(--color-border)'
+            }}
+          >
             <div className="text-center">
-              <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+              <div 
+                className="text-3xl font-heading mb-2"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
                 {mockStudent.attendance}%
               </div>
-              <div className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <div 
+                className="text-lg font-label mb-1"
+                style={{ color: 'var(--color-text-secondary)' }}
+              >
                 Attendance
               </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">
+              <div 
+                className="text-sm"
+                style={{ color: 'var(--color-text-muted)' }}
+              >
                 {getAttendanceLabel(mockStudent.attendance)}
               </div>
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+          <div 
+            className="rounded-xl shadow-sm p-6"
+            style={{
+              backgroundColor: 'var(--color-surface)',
+              boxShadow: 'var(--shadow-sm)',
+              borderColor: 'var(--color-border)'
+            }}
+          >
             <div className="text-center">
-              <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+              <div 
+                className="text-3xl font-heading mb-2"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
                 {mockStudent.progress}
               </div>
-              <div className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <div 
+                className="text-lg font-label mb-1"
+                style={{ color: 'var(--color-text-secondary)' }}
+              >
                 Progress
               </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">
+              <div 
+                className="text-sm"
+                style={{ color: 'var(--color-text-muted)' }}
+              >
                 {getProgressLabel(mockStudent.progress)}
               </div>
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+          <div 
+            className="rounded-xl shadow-sm p-6"
+            style={{
+              backgroundColor: 'var(--color-surface)',
+              boxShadow: 'var(--shadow-sm)',
+              borderColor: 'var(--color-border)'
+            }}
+          >
             <div className="text-center">
-              <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+              <div 
+                className="text-3xl font-heading mb-2"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
                 {mockStudent.leaderboard}%
               </div>
-              <div className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <div 
+                className="text-lg font-label mb-1"
+                style={{ color: 'var(--color-text-secondary)' }}
+              >
                 Leaderboard
               </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">
+              <div 
+                className="text-sm"
+                style={{ color: 'var(--color-text-muted)' }}
+              >
                 (Career Track Specific)
               </div>
             </div>
@@ -294,29 +445,59 @@ const StudentDetails: React.FC = () => {
         </div>
 
         {/* Bottom Section: Learning Timeline */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+        <div 
+          className="rounded-xl shadow-sm p-6"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            boxShadow: 'var(--shadow-sm)',
+            borderColor: 'var(--color-border)'
+          }}
+        >
+          <h2 
+            className="text-lg font-heading mb-4"
+            style={{ color: 'var(--color-text-primary)' }}
+          >
             Learning Timeline:
           </h2>
           
           {/* Date Range Pickers */}
           <div className="flex items-center space-x-4 mb-6">
             <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-600 dark:text-gray-400">From:</span>
+              <span 
+                className="text-sm font-label"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >
+                From:
+              </span>
               <input
                 type="date"
                 value={fromDate}
                 onChange={(e) => setFromDate(e.target.value)}
-                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                className="px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+                style={{
+                  backgroundColor: 'var(--color-surface)',
+                  border: '1px solid var(--color-border)',
+                  color: 'var(--color-text-primary)'
+                }}
               />
             </div>
             <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-600 dark:text-gray-400">To:</span>
+              <span 
+                className="text-sm font-label"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >
+                To:
+              </span>
               <input
                 type="date"
                 value={toDate}
                 onChange={(e) => setToDate(e.target.value)}
-                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                className="px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+                style={{
+                  backgroundColor: 'var(--color-surface)',
+                  border: '1px solid var(--color-border)',
+                  color: 'var(--color-text-primary)'
+                }}
               />
             </div>
           </div>
@@ -324,10 +505,20 @@ const StudentDetails: React.FC = () => {
           {/* Learning Levels */}
           <div className="space-y-6">
             {mockStudent.learningLevels.map((level, index) => (
-              <div key={index} className="border border-gray-200 dark:border-gray-600 rounded-lg p-4">
+              <div 
+                key={index} 
+                className="rounded-lg p-4"
+                style={{
+                  border: '1px solid var(--color-border)',
+                  backgroundColor: 'var(--color-surface-elevated)'
+                }}
+              >
                 <div className="flex items-center space-x-3 mb-4">
                   {getStatusIcon(level.status)}
-                  <h3 className={`text-lg font-semibold ${getStatusColor(level.status)}`}>
+                  <h3 
+                    className="text-lg font-heading"
+                    style={getStatusColor(level.status)}
+                  >
                     Level {level.level}: {level.title}
                   </h3>
                 </div>
@@ -335,18 +526,40 @@ const StudentDetails: React.FC = () => {
                 <div className="space-y-3">
                   {/* Learn */}
                   <div className="flex items-center space-x-3">
-                    <CheckCircledIcon className="w-5 h-5 text-green-500" />
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Learn:</span>
-                    <span className="text-sm text-gray-900 dark:text-white">
+                    <CheckCircledIcon 
+                      className="w-5 h-5" 
+                      style={{ color: 'var(--color-success)' }} 
+                    />
+                    <span 
+                      className="text-sm font-label"
+                      style={{ color: 'var(--color-text-tertiary)' }}
+                    >
+                      Learn:
+                    </span>
+                    <span 
+                      className="text-sm"
+                      style={{ color: 'var(--color-text-primary)' }}
+                    >
                       {level.learn.startDate} -- {level.learn.endDate}
                     </span>
                   </div>
                   
                   {/* Test */}
                   <div className="flex items-center space-x-3">
-                    <CheckCircledIcon className="w-5 h-5 text-green-500" />
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Test:</span>
-                    <span className="text-sm text-gray-900 dark:text-white">
+                    <CheckCircledIcon 
+                      className="w-5 h-5" 
+                      style={{ color: 'var(--color-success)' }} 
+                    />
+                    <span 
+                      className="text-sm font-label"
+                      style={{ color: 'var(--color-text-tertiary)' }}
+                    >
+                      Test:
+                    </span>
+                    <span 
+                      className="text-sm"
+                      style={{ color: 'var(--color-text-primary)' }}
+                    >
                       ({level.test.score}% - {level.test.attempts} attempts) {level.test.startDate} -- {level.test.endDate}
                     </span>
                   </div>
@@ -354,12 +567,26 @@ const StudentDetails: React.FC = () => {
                   {/* Exercise */}
                   <div className="flex items-center space-x-3">
                     {level.exercise.completed ? (
-                      <CheckCircledIcon className="w-5 h-5 text-green-500" />
+                      <CheckCircledIcon 
+                        className="w-5 h-5" 
+                        style={{ color: 'var(--color-success)' }} 
+                      />
                     ) : (
-                      <ClockIcon className="w-5 h-5 text-yellow-500" />
+                      <ClockIcon 
+                        className="w-5 h-5" 
+                        style={{ color: 'var(--color-warning)' }} 
+                      />
                     )}
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Exercise:</span>
-                    <span className="text-sm text-gray-900 dark:text-white">
+                    <span 
+                      className="text-sm font-label"
+                      style={{ color: 'var(--color-text-tertiary)' }}
+                    >
+                      Exercise:
+                    </span>
+                    <span 
+                      className="text-sm"
+                      style={{ color: 'var(--color-text-primary)' }}
+                    >
                       {level.exercise.startDate} -- {level.exercise.endDate}
                     </span>
                   </div>
