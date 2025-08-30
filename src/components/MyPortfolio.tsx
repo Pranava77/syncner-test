@@ -281,72 +281,80 @@ const MyPortfolio: React.FC = () => {
     return tasks;
   };
 
-  // Process learning timeline to remove duplicates and merge data properly
+  // Process learning timeline to show all levels with proper status
   const processLearningTimeline = (timeline: any[]) => {
-    if (!timeline || timeline.length === 0) {
-      return [];
+    const totalLevels = student.summaryStats?.totalLevels || 10;
+    const currentLevel = student.summaryStats?.currentLevel || 1;
+    
+    // Group existing timeline data by level
+    const levelDataMap = new Map();
+    
+    if (timeline && timeline.length > 0) {
+      timeline.forEach((entry: any) => {
+        const levelKey = entry.level;
+        
+        if (!levelDataMap.has(levelKey)) {
+          levelDataMap.set(levelKey, {
+            learn: entry.learn || { completed: false, startTime: null, endTime: null },
+            test: entry.test || { completed: false, score: 0, attempts: 0, startTime: null, endTime: null },
+            exercise: entry.exercise || { completed: false, startTime: null, endTime: null }
+          });
+        } else {
+          // Merge data from duplicate entry
+          const existing = levelDataMap.get(levelKey);
+          
+          // Merge learn data (take the completed one if available)
+          if (entry.learn && (entry.learn.completed || !existing.learn.completed)) {
+            existing.learn = { ...existing.learn, ...entry.learn };
+          }
+          
+          // Merge test data (take the one with better score or more recent)
+          if (entry.test && (entry.test.completed || entry.test.score > existing.test.score)) {
+            existing.test = { ...existing.test, ...entry.test };
+          }
+          
+          // Merge exercise data (take the completed one if available)
+          if (entry.exercise && (entry.exercise.completed || !existing.exercise.completed)) {
+            existing.exercise = { ...existing.exercise, ...entry.exercise };
+          }
+        }
+      });
     }
     
-    // Group by level and merge data
-    const levelMap = new Map();
-    
-    timeline.forEach((entry: any) => {
-      const levelKey = entry.level;
+    // Create all levels from 1 to totalLevels
+    const allLevels = [];
+    for (let i = 1; i <= totalLevels; i++) {
+      const backendLevel = i - 1; // Backend uses 0-based indexing
+      const levelData = levelDataMap.get(backendLevel) || {
+        learn: { completed: false, startTime: null, endTime: null },
+        test: { completed: false, score: 0, attempts: 0, startTime: null, endTime: null },
+        exercise: { completed: false, startTime: null, endTime: null }
+      };
       
-      if (!levelMap.has(levelKey)) {
-        // First occurrence - set initial data
-        // Convert Level 0 to Level 1 for display
-        const displayLevel = entry.level === 0 ? 1 : entry.level + 1;
-        levelMap.set(levelKey, {
-          level: displayLevel,
-          originalLevel: entry.level, // Keep original for data consistency
-          courseName: `Level ${displayLevel}`, // Update course name to match display level
-          status: 'in-progress', // Will be updated based on completion
-          learn: entry.learn || { completed: false, startTime: null, endTime: null },
-          test: entry.test || { completed: false, score: 0, attempts: 0, startTime: null, endTime: null },
-          exercise: entry.exercise || { completed: false, startTime: null, endTime: null }
-        });
-      } else {
-        // Merge data from duplicate entry
-        const existing = levelMap.get(levelKey);
-        
-        // Merge learn data (take the completed one if available)
-        if (entry.learn && (entry.learn.completed || !existing.learn.completed)) {
-          existing.learn = { ...existing.learn, ...entry.learn };
-        }
-        
-        // Merge test data (take the one with better score or more recent)
-        if (entry.test && (entry.test.completed || entry.test.score > existing.test.score)) {
-          existing.test = { ...existing.test, ...entry.test };
-        }
-        
-        // Merge exercise data (take the completed one if available)
-        if (entry.exercise && (entry.exercise.completed || !existing.exercise.completed)) {
-          existing.exercise = { ...existing.exercise, ...entry.exercise };
-        }
-      }
-    });
-    
-    // Convert to array and determine final status for each level
-    const processedLevels = Array.from(levelMap.values()).map((level: any) => {
-      const learnCompleted = level.learn?.completed || false;
-      const testCompleted = level.test?.completed || false;
-      const exerciseCompleted = level.exercise?.completed || false;
+      const learnCompleted = levelData.learn?.completed || false;
+      const testCompleted = levelData.test?.completed || false;
+      const exerciseCompleted = levelData.exercise?.completed || false;
       
-      // Determine overall status
-      if (learnCompleted && testCompleted && exerciseCompleted) {
-        level.status = 'completed';
-      } else if (learnCompleted || testCompleted || exerciseCompleted) {
-        level.status = 'in-progress';
-      } else {
-        level.status = 'not-started';
+      // Determine status based on current level and completion
+      let status = 'not-started';
+      if (i < currentLevel || (learnCompleted && testCompleted && exerciseCompleted)) {
+        status = 'completed';
+      } else if (i === currentLevel || learnCompleted || testCompleted || exerciseCompleted) {
+        status = 'in-progress';
       }
       
-      return level;
-    });
+      allLevels.push({
+        level: i, // Display level (1, 2, 3, etc.)
+        originalLevel: backendLevel, // Backend level (0, 1, 2, etc.)
+        courseName: `Level ${i}`,
+        status: status,
+        learn: levelData.learn,
+        test: levelData.test,
+        exercise: levelData.exercise
+      });
+    }
     
-    // Sort by original level number but display adjusted levels
-    return processedLevels.sort((a: any, b: any) => a.originalLevel - b.originalLevel);
+    return allLevels;
   };
 
   // Share portfolio
