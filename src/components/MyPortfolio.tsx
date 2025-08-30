@@ -295,9 +295,12 @@ const MyPortfolio: React.FC = () => {
       
       if (!levelMap.has(levelKey)) {
         // First occurrence - set initial data
+        // Convert Level 0 to Level 1 for display
+        const displayLevel = entry.level === 0 ? 1 : entry.level + 1;
         levelMap.set(levelKey, {
-          level: entry.level,
-          courseName: entry.courseName,
+          level: displayLevel,
+          originalLevel: entry.level, // Keep original for data consistency
+          courseName: `Level ${displayLevel}`, // Update course name to match display level
           status: 'in-progress', // Will be updated based on completion
           learn: entry.learn || { completed: false, startTime: null, endTime: null },
           test: entry.test || { completed: false, score: 0, attempts: 0, startTime: null, endTime: null },
@@ -342,8 +345,8 @@ const MyPortfolio: React.FC = () => {
       return level;
     });
     
-    // Sort by level number
-    return processedLevels.sort((a: any, b: any) => a.level - b.level);
+    // Sort by original level number but display adjusted levels
+    return processedLevels.sort((a: any, b: any) => a.originalLevel - b.originalLevel);
   };
 
   // Share portfolio
