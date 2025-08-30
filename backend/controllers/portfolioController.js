@@ -131,7 +131,7 @@ export const getStudentPortfolio = async (req, res) => {
             description: item.description || '',
             resources: item.resources || []
           })),
-          timeSpent: completedLevel?.learnProgress?.timeSpent || 0
+          timeSpent: Math.floor((completedLevel?.learnProgress?.timeSpent || 0) / 60) // Convert seconds to minutes
         },
         test: {
           completed: completedLevel?.completedSections?.test || false,
@@ -154,9 +154,12 @@ export const getStudentPortfolio = async (req, res) => {
               ?.split(':')[1]?.trim() || 'A'
           })),
           timeSpent: completedLevel?.testProgress?.attempts?.reduce((total, attempt) => {
-            const start = new Date(attempt.completedAt);
-            const end = new Date(completedLevel.testProgress.lastAttemptAt);
-            return total + Math.floor((end - start) / (1000 * 60)); // Convert to minutes
+            if (attempt.completedAt && completedLevel.testProgress.lastAttemptAt) {
+              const start = new Date(attempt.completedAt);
+              const end = new Date(completedLevel.testProgress.lastAttemptAt);
+              return total + Math.floor((end - start) / (1000 * 60)); // Convert to minutes
+            }
+            return total + 15; // Assume 15 minutes per attempt if no timestamps
           }, 0) || 0
         },
         exercise: {
@@ -172,7 +175,18 @@ export const getStudentPortfolio = async (req, res) => {
             description: item.description || '',
             resources: item.resources || []
           })),
-          timeSpent: completedLevel?.exerciseSubmissions?.length * 30 || 0 // Estimate 30 minutes per submission
+          timeSpent: completedLevel?.exerciseSubmissions?.reduce((total, submission) => {
+            if (submission.submittedAt) {
+              const submissionTime = new Date(submission.submittedAt);
+              const prevSubmission = completedLevel?.exerciseSubmissions?.find(s => 
+                s.submittedAt && new Date(s.submittedAt) < submissionTime
+              );
+              const startTime = prevSubmission ? new Date(prevSubmission.submittedAt) : new Date(submissionTime);
+              startTime.setMinutes(startTime.getMinutes() - 30); // Assume at least 30 minutes per submission
+              return total + Math.floor((submissionTime - startTime) / (1000 * 60)); // Convert to minutes
+            }
+            return total + 30; // Default to 30 minutes if no timestamp
+          }, 0) || 0
         }
       };
     });

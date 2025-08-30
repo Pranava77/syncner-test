@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  PersonIcon,
   BarChartIcon,
   CheckCircledIcon,
   ClockIcon,
@@ -14,7 +13,6 @@ import {
 } from '@radix-ui/react-icons';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer } from 'recharts';
 import { useStaff } from '../../hooks/useStaff';
-import syncnerLogo from '../../assets/syncner-logo.png';
 
 
 // Utility function to format dates and times
@@ -439,11 +437,19 @@ const StudentDetails: React.FC = () => {
                                   <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
                                     {formatDateTime(level.learn.startTime)} → {formatDateTime(level.learn.endTime)}
                                   </div>
-                                  {getRelativeTime(level.learn.endTime) && (
-                                    <div className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
-                                      {getRelativeTime(level.learn.endTime)}
-                                    </div>
-                                  )}
+                                  <div className="flex items-center gap-4 mt-1">
+                                    {(level.learn.timeSpent || 0) > 0 && (
+                                      <div className="flex items-center gap-1 text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                                        <ClockIcon className="w-3 h-3" />
+                                        {level.learn.timeSpent} minutes
+                                      </div>
+                                    )}
+                                    {getRelativeTime(level.learn.endTime) && (
+                                      <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                                        {getRelativeTime(level.learn.endTime)}
+                                      </div>
+                                    )}
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -486,11 +492,19 @@ const StudentDetails: React.FC = () => {
                                   <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
                                     {formatDateTime(level.test.startTime)} → {formatDateTime(level.test.endTime)}
                                   </div>
-                                  {getRelativeTime(level.test.endTime) && (
-                                    <div className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
-                                      {getRelativeTime(level.test.endTime)}
-                                    </div>
-                                  )}
+                                  <div className="flex items-center gap-4 mt-1">
+                                    {(level.test.timeSpent || 0) > 0 && (
+                                      <div className="flex items-center gap-1 text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                                        <ClockIcon className="w-3 h-3" />
+                                        {level.test.timeSpent} minutes
+                                      </div>
+                                    )}
+                                    {getRelativeTime(level.test.endTime) && (
+                                      <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                                        {getRelativeTime(level.test.endTime)}
+                                      </div>
+                                    )}
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -537,11 +551,19 @@ const StudentDetails: React.FC = () => {
                                   <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
                                     {formatDateTime(level.exercise.startTime)} → {formatDateTime(level.exercise.endTime)}
                                   </div>
-                                  {getRelativeTime(level.exercise.endTime) && (
-                                    <div className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
-                                      {getRelativeTime(level.exercise.endTime)}
-                                    </div>
-                                  )}
+                                  <div className="flex items-center gap-4 mt-1">
+                                    {(level.exercise.timeSpent || 0) > 0 && (
+                                      <div className="flex items-center gap-1 text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                                        <ClockIcon className="w-3 h-3" />
+                                        {level.exercise.timeSpent} minutes
+                                      </div>
+                                    )}
+                                    {getRelativeTime(level.exercise.endTime) && (
+                                      <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                                        {getRelativeTime(level.exercise.endTime)}
+                                      </div>
+                                    )}
+                                  </div>
                                 </div>
                               </div>
                             </div>
