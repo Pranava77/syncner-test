@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '../redux/store';
 import {
   CheckCircledIcon,
   ClockIcon,
@@ -30,7 +29,7 @@ const MyPortfolio: React.FC = () => {
   // Fetch student's own portfolio data when component mounts
   React.useEffect(() => {
     console.log('🔄 Fetching own portfolio data');
-    getPortfolioData(undefined); // Pass undefined for own portfolio
+    getPortfolioData(''); // Pass empty string for own portfolio
   }, [getPortfolioData]);
 
   // Show loading state
@@ -66,11 +65,6 @@ const MyPortfolio: React.FC = () => {
       </div>
     );
   }
-
-  // Handle back navigation
-  const handleBack = () => {
-    navigate('/student/dashboard');
-  };
 
   if (portfolioLoading || !portfolioData) {
     return (

@@ -5,10 +5,10 @@ import apiService from '../../services/api';
 // Async thunk for fetching student portfolio data
 export const fetchStudentPortfolio = createAsyncThunk(
   'student/fetchPortfolio',
-  async (studentId: string | undefined, { rejectWithValue }) => {
+  async (studentId: string, { rejectWithValue }) => {
     try {
       console.log('🎯 Fetching portfolio data for student:', studentId);
-      const response = studentId ? 
+      const response = studentId.length > 0 ? 
         await apiService.getStudentPortfolio(studentId) :
         await apiService.getOwnPortfolio();
       console.log('✅ Portfolio API response:', response);
