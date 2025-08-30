@@ -10,11 +10,14 @@ import {
   StarIcon,
   FileTextIcon,
   RocketIcon,
-  ArrowUpIcon
+  ArrowUpIcon,
+  PersonIcon,
+  IdCardIcon,
+  HomeIcon,
+  CalendarIcon as CalendarDaysIcon
 } from '@radix-ui/react-icons';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, Tooltip } from 'recharts';
 import { useStaff } from '../../hooks/useStaff';
-
 
 const StudentDetails: React.FC = () => {
   const { studentId } = useParams<{ studentId: string }>();
@@ -52,7 +55,7 @@ const StudentDetails: React.FC = () => {
   // Show loading state while data is being fetched
   if (studentDetailsLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg)' }}>
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: 'var(--color-primary)' }}></div>
           <p className="text-lg" style={{ color: 'var(--color-text-primary)' }}>Loading student details...</p>
@@ -64,7 +67,7 @@ const StudentDetails: React.FC = () => {
   // Show error state if there's an error
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg)' }}>
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
         <div className="text-center">
           <div className="text-red-500 text-6xl mb-4">⚠️</div>
           <h2 className="text-2xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>Error Loading Student</h2>
@@ -84,7 +87,7 @@ const StudentDetails: React.FC = () => {
   // Show message if no student data is available
   if (!studentData) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg)' }}>
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
         <div className="text-center">
           <div className="text-gray-500 text-6xl mb-4">👤</div>
           <h2 className="text-2xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>No Student Data</h2>
@@ -108,257 +111,321 @@ const StudentDetails: React.FC = () => {
     { metric: 'Progress', value: studentData.progress || 0 }
   ];
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return <CheckCircledIcon className="w-5 h-5" style={{ color: 'var(--color-success)' }} />;
-      case 'in-progress':
-        return <ClockIcon className="w-5 h-5" style={{ color: 'var(--color-warning)' }} />;
-      default:
-        return <ClockIcon className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />;
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return { color: 'var(--color-success)' };
-      case 'in-progress':
-        return { color: 'var(--color-warning)' };
-      default:
-        return { color: 'var(--color-text-muted)' };
-    }
-  };
-
   const getAttendanceLabel = (percentage: number) => {
-    if (percentage >= 90) return 'Great';
+    if (percentage >= 90) return 'Excellent';
     if (percentage >= 80) return 'Good';
     if (percentage >= 70) return 'Average';
-    return 'Poor';
+    return 'Needs Improvement';
   };
 
   const getProgressLabel = (score: number) => {
-    if (score >= 90) return 'Great';
+    if (score >= 90) return 'Excellent';
     if (score >= 80) return 'Good';
     if (score >= 70) return 'Average';
-    return 'Poor';
+    return 'Needs Improvement';
+  };
+
+  const getLeaderboardLabel = (score: number) => {
+    if (score >= 90) return 'Top Performer';
+    if (score >= 80) return 'High Achiever';
+    if (score >= 70) return 'Good Standing';
+    return 'Room for Growth';
   };
 
   return (
     <div 
-      className="min-h-screen"
+      className="min-h-screen p-4 lg:p-8"
       style={{ backgroundColor: 'var(--color-primary-bg)' }}
     >
       {/* Header */}
-      <div 
-        className="border-b"
-        style={{ 
-          borderColor: 'var(--color-border)',
-          backgroundColor: 'var(--color-surface)'
-        }}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={() => navigate('/staff/students')}
-                className="p-2 rounded-lg transition-colors hover:bg-[var(--color-accent-tertiary)]"
-                style={{ color: 'var(--color-accent-primary)' }}
-              >
-                <ArrowLeftIcon className="w-5 h-5" />
-              </button>
-              <div>
-                <h1 
-                  className="text-xl font-heading"
-                  style={{ color: 'var(--color-text-primary)' }}
-                >
-                  Student Details
-                </h1>
-              </div>
-            </div>
-            
-            <div className="flex items-center space-x-3">
-              <button
-                onClick={() => studentId && getStudentDetails(studentId)}
-                disabled={studentDetailsLoading}
-                className="flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50"
-                style={{ 
-                  backgroundColor: 'var(--color-primary)', 
-                  color: 'var(--color-primary-text)' 
-                }}
-              >
-                <div className={`w-4 h-4 ${studentDetailsLoading ? 'animate-spin' : ''}`}>
-                  {studentDetailsLoading ? (
-                    <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full"></div>
-                  ) : (
-                    <ArrowUpIcon className="w-4 h-4" />
-                  )}
-                </div>
-                <span>{studentDetailsLoading ? 'Refreshing...' : 'Refresh'}</span>
-              </button>
-              
-              {studentData && (
-                <div className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
-                  Last updated: {new Date().toLocaleTimeString()}
-                </div>
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => navigate('/staff/students')}
+            className="p-2 rounded-lg transition-colors hover:bg-[var(--color-accent-tertiary)]"
+            style={{ color: 'var(--color-accent-primary)' }}
+          >
+            <ArrowLeftIcon className="w-5 h-5" />
+          </button>
+          <div>
+            <h1 
+              className="text-3xl font-heading"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              Student Details
+            </h1>
+            <p 
+              className="mt-1 font-label"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
+              Comprehensive view of student performance and progress
+            </p>
+          </div>
+        </div>
+        
+        <div className="flex items-center space-x-3">
+          <button
+            onClick={() => studentId && getStudentDetails(studentId)}
+            disabled={studentDetailsLoading}
+            className="px-5 py-2 rounded-lg transition-colors font-medium flex items-center gap-2 shadow disabled:opacity-50"
+            style={{ 
+              backgroundColor: 'var(--color-accent-primary)',
+              color: 'var(--color-text-inverse)' 
+            }}
+          >
+            <div className={`w-4 h-4 ${studentDetailsLoading ? 'animate-spin' : ''}`}>
+              {studentDetailsLoading ? (
+                <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full"></div>
+              ) : (
+                <ArrowUpIcon className="w-4 h-4" />
               )}
             </div>
+            <span>{studentDetailsLoading ? 'Refreshing...' : 'Refresh'}</span>
+          </button>
+          
+          {studentData && (
+            <div className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
+              Last updated: {new Date().toLocaleTimeString()}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Top Section: Student Info Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {/* Student ID Card */}
+        <div 
+          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
+          <div 
+            className="p-3 rounded-lg"
+            style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+          >
+            <IdCardIcon 
+              className="h-6 w-6" 
+              style={{ color: 'var(--color-accent-primary)' }}
+            />
+          </div>
+          <div>
+            <p 
+              className="text-sm"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >Student ID</p>
+            <p 
+              className="text-lg font-bold"
+              style={{ color: 'var(--color-text-primary)' }}
+            >{studentData._id}</p>
+          </div>
+        </div>
+
+        {/* Department Card */}
+        <div 
+          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
+          <div 
+            className="p-3 rounded-lg"
+            style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+          >
+            <HomeIcon 
+              className="h-6 w-6" 
+              style={{ color: 'var(--color-accent-primary)' }}
+            />
+          </div>
+          <div>
+            <p 
+              className="text-sm"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >Department</p>
+            <p 
+              className="text-lg font-bold"
+              style={{ color: 'var(--color-text-primary)' }}
+            >{studentData.department}</p>
+          </div>
+        </div>
+
+        {/* Batch Card */}
+        <div 
+          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
+          <div 
+            className="p-3 rounded-lg"
+            style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+          >
+            <CalendarDaysIcon 
+              className="h-6 w-6" 
+              style={{ color: 'var(--color-accent-primary)' }}
+            />
+          </div>
+          <div>
+            <p 
+              className="text-sm"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >Batch</p>
+            <p 
+              className="text-lg font-bold"
+              style={{ color: 'var(--color-text-primary)' }}
+            >{studentData.batch}</p>
+          </div>
+        </div>
+
+        {/* Career Track Card */}
+        <div 
+          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
+          <div 
+            className="p-3 rounded-lg"
+            style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+          >
+            <RocketIcon 
+              className="h-6 w-6" 
+              style={{ color: 'var(--color-accent-primary)' }}
+            />
+          </div>
+          <div>
+            <p 
+              className="text-sm"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >Career Track</p>
+            <p 
+              className="text-lg font-bold"
+              style={{ color: 'var(--color-text-primary)' }}
+            >{studentData.careerTrack}</p>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Loading State */}
-        {studentDetailsLoading && (
-          <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-accent-primary)]"></div>
-            <p className="mt-2" style={{ color: 'var(--color-text-secondary)' }}>
-              Loading student details...
-            </p>
-          </div>
-        )}
-
-        {/* Error State */}
-        {error && (
-          <div className="mb-6 p-4 rounded-lg" style={{ backgroundColor: 'var(--color-error-bg)' }}>
-            <p style={{ color: 'var(--color-error)' }}>
-              Error: {error}
-            </p>
-          </div>
-        )}
-
-        {/* Top Section: Student Details + Performance Overview */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          {/* Left: Student Details */}
-          <div 
-            className="rounded-xl shadow-sm p-6"
-            style={{
-              backgroundColor: 'var(--color-surface)',
-              boxShadow: 'var(--shadow-sm)',
-              borderColor: 'var(--color-border)'
-            }}
+      {/* Middle Section: Performance Overview */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        {/* Left: Student Details */}
+        <div 
+          className="rounded-xl shadow-sm p-6"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
+          <h2 
+            className="text-xl font-heading mb-6"
+            style={{ color: 'var(--color-text-primary)' }}
           >
-            <h2 
-              className="text-lg font-heading mb-4"
-              style={{ color: 'var(--color-text-primary)' }}
-            >
-              Student Details
-            </h2>
-            <div className="space-y-3">
-              <div className="flex justify-between">
-                <span 
-                  className="text-sm font-label"
-                  style={{ color: 'var(--color-text-tertiary)' }}
-                >
-                  Roll Number:
-                </span>
-                <span 
-                  className="font-medium"
-                  style={{ color: 'var(--color-text-primary)' }}
-                >
-                  {studentData._id}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span 
-                  className="text-sm font-label"
-                  style={{ color: 'var(--color-text-tertiary)' }}
-                >
-                  Course & Dept:
-                </span>
-                <span 
-                  className="font-medium"
-                  style={{ color: 'var(--color-text-primary)' }}
-                >
-                  {studentData.department}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span 
-                  className="text-sm font-label"
-                  style={{ color: 'var(--color-text-tertiary)' }}
-                >
-                  Student Name:
-                </span>
-                <span 
-                  className="font-medium"
-                  style={{ color: 'var(--color-text-primary)' }}
-                >
-                  {studentData.name}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span 
-                  className="text-sm font-label"
-                  style={{ color: 'var(--color-text-tertiary)' }}
-                >
-                  Batch:
-                </span>
-                <span 
-                  className="font-medium"
-                  style={{ color: 'var(--color-text-primary)' }}
-                >
-                  {studentData.batch}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span 
-                  className="text-sm font-label"
-                  style={{ color: 'var(--color-text-tertiary)' }}
-                >
-                  Enrolled Career Track:
-                </span>
-                <span 
-                  className="px-3 py-1 rounded-full text-sm font-medium"
-                  style={{
-                    backgroundColor: 'var(--color-accent-tertiary)',
-                    color: 'var(--color-accent-primary)'
-                  }}
-                >
-                  {studentData.careerTrack}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span 
-                  className="text-sm font-label"
-                  style={{ color: 'var(--color-text-tertiary)' }}
-                >
-                  Enrolled Date:
-                </span>
-                <span 
-                  className="font-medium"
-                  style={{ color: 'var(--color-text-primary)' }}
-                >
-                  {studentData.enrolledDate}
-                </span>
-              </div>
+            Student Information
+          </h2>
+          <div className="space-y-4">
+            <div className="flex justify-between items-center py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
+              <span 
+                className="text-sm font-label"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >
+                Full Name
+              </span>
+              <span 
+                className="font-medium"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                {studentData.name}
+              </span>
+            </div>
+            <div className="flex justify-between items-center py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
+              <span 
+                className="text-sm font-label"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >
+                Email
+              </span>
+              <span 
+                className="font-medium"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                {studentData.email}
+              </span>
+            </div>
+            <div className="flex justify-between items-center py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
+              <span 
+                className="text-sm font-label"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >
+                Enrollment Date
+              </span>
+              <span 
+                className="font-medium"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                {studentData.enrolledDate}
+              </span>
+            </div>
+            <div className="flex justify-between items-center py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
+              <span 
+                className="text-sm font-label"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >
+                Current Level
+              </span>
+              <span 
+                className="font-medium"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                {studentData.level}
+              </span>
+            </div>
+            <div className="flex justify-between items-center py-2">
+              <span 
+                className="text-sm font-label"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >
+                Status
+              </span>
+              <span 
+                className="px-3 py-1 rounded-full text-sm font-medium"
+                style={{
+                  backgroundColor: studentData.status === 'active' ? 'var(--color-success-bg)' : 'var(--color-error-bg)',
+                  color: studentData.status === 'active' ? 'var(--color-success)' : 'var(--color-error)'
+                }}
+              >
+                {studentData.status}
+              </span>
             </div>
           </div>
+        </div>
 
-          {/* Right: Performance Overview */}
-          <div 
-            className="rounded-xl shadow-sm p-6"
-            style={{
-              backgroundColor: 'var(--color-surface)',
-              boxShadow: 'var(--shadow-sm)',
-              borderColor: 'var(--color-border)'
-            }}
+        {/* Right: Performance Overview */}
+        <div 
+          className="rounded-xl shadow-sm p-6"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
+          <h2 
+            className="text-xl font-heading mb-6"
+            style={{ color: 'var(--color-text-primary)' }}
           >
-            <h2 
-              className="text-lg font-heading mb-4"
-              style={{ color: 'var(--color-text-primary)' }}
-            >
-              Student Overview
-            </h2>
-            
-            {/* Radar Chart */}
-            <div className="h-48 mb-4">
-              <ResponsiveContainer width="100%" height="100%">
-                <RadarChart data={radarData}>
-                  <PolarGrid />
-                  <PolarAngleAxis dataKey="metric" />
-                  <PolarRadiusAxis angle={90} domain={[0, 100]} />
-                                  <Radar
+            Performance Overview
+          </h2>
+          
+          {/* Radar Chart */}
+          <div className="h-64 mb-6">
+            <ResponsiveContainer width="100%" height="100%">
+              <RadarChart data={radarData}>
+                <PolarGrid />
+                <PolarAngleAxis dataKey="metric" />
+                <PolarRadiusAxis angle={90} domain={[0, 100]} />
+                <Radar
                   name="Student Metrics"
                   dataKey="value"
                   stroke="var(--color-accent-primary)"
@@ -374,141 +441,143 @@ const StudentDetails: React.FC = () => {
                     borderRadius: '8px'
                   }}
                 />
-                </RadarChart>
-              </ResponsiveContainer>
-            </div>
-            
-            <div 
-              className="text-center text-sm mb-4"
-              style={{ color: 'var(--color-text-muted)' }}
-            >
-              Attendance, Leaderboard Score, and Progress Overview
-            </div>
-            
-            <button 
-              className="w-full px-4 py-2 rounded-lg transition-colors font-medium"
-              style={{
-                backgroundColor: 'var(--color-accent-tertiary)',
-                color: 'var(--color-accent-primary)'
-              }}
-            >
-              View Portfolio
-            </button>
+              </RadarChart>
+            </ResponsiveContainer>
+          </div>
+          
+          <div 
+            className="text-center text-sm"
+            style={{ color: 'var(--color-text-muted)' }}
+          >
+            Attendance, Leaderboard Score, and Progress Overview
           </div>
         </div>
+      </div>
 
-        {/* Middle Section: Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div 
-            className="rounded-xl shadow-sm p-6"
-            style={{
-              backgroundColor: 'var(--color-surface)',
-              boxShadow: 'var(--shadow-sm)',
-              borderColor: 'var(--color-border)'
-            }}
-          >
-            <div className="text-center">
-              <div 
-                className="text-3xl font-heading mb-2"
-                style={{ color: 'var(--color-text-primary)' }}
-              >
-                                  {studentData.attendancePercentage}%
-              </div>
-              <div 
-                className="text-lg font-label mb-1"
-                style={{ color: 'var(--color-text-secondary)' }}
-              >
-                Attendance
-              </div>
-              <div 
-                className="text-sm"
-                style={{ color: 'var(--color-text-muted)' }}
-              >
-                                  {getAttendanceLabel(studentData.attendancePercentage)}
-              </div>
-            </div>
-          </div>
-
-          <div 
-            className="rounded-xl shadow-sm p-6"
-            style={{
-              backgroundColor: 'var(--color-surface)',
-              boxShadow: 'var(--shadow-sm)',
-              borderColor: 'var(--color-border)'
-            }}
-          >
-            <div className="text-center">
-              <div 
-                className="text-3xl font-heading mb-2"
-                style={{ color: 'var(--color-text-primary)' }}
-              >
-                                  {studentData.progress}
-              </div>
-              <div 
-                className="text-lg font-label mb-1"
-                style={{ color: 'var(--color-text-secondary)' }}
-              >
-                Progress
-              </div>
-              <div 
-                className="text-sm"
-                style={{ color: 'var(--color-text-muted)' }}
-              >
-                {getProgressLabel(studentData.progress)}
-              </div>
-            </div>
-          </div>
-
-          <div 
-            className="rounded-xl shadow-sm p-6"
-            style={{
-              backgroundColor: 'var(--color-surface)',
-              boxShadow: 'var(--shadow-sm)',
-              borderColor: 'var(--color-border)'
-            }}
-          >
-            <div className="text-center">
-              <div 
-                className="text-3xl font-heading mb-2"
-                style={{ color: 'var(--color-text-primary)' }}
-              >
-                                  {studentData.leaderboardScore}%
-              </div>
-              <div 
-                className="text-lg font-label mb-1"
-                style={{ color: 'var(--color-text-secondary)' }}
-              >
-                Leaderboard
-              </div>
-              <div 
-                className="text-sm"
-                style={{ color: 'var(--color-text-muted)' }}
-              >
-                (Career Track Specific)
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Section: Learning Timeline */}
+      {/* Summary Cards Section */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div 
-          className="rounded-xl shadow-sm p-6"
+          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
           style={{
             backgroundColor: 'var(--color-surface)',
-            boxShadow: 'var(--shadow-sm)',
-            borderColor: 'var(--color-border)'
+            boxShadow: 'var(--shadow-sm)'
           }}
         >
+          <div 
+            className="p-3 rounded-lg"
+            style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+          >
+            <CalendarIcon 
+              className="h-6 w-6" 
+              style={{ color: 'var(--color-accent-primary)' }}
+            />
+          </div>
+          <div>
+            <p 
+              className="text-sm"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >Attendance</p>
+            <p 
+              className="text-2xl font-bold"
+              style={{ color: 'var(--color-text-primary)' }}
+            >{studentData.attendancePercentage}%</p>
+            <p 
+              className="text-xs flex items-center mt-1"
+              style={{ color: 'var(--color-accent-primary)' }}
+            >
+              {getAttendanceLabel(studentData.attendancePercentage)}
+            </p>
+          </div>
+        </div>
+
+        <div 
+          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
+          <div 
+            className="p-3 rounded-lg"
+            style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+          >
+            <TargetIcon 
+              className="h-6 w-6" 
+              style={{ color: 'var(--color-accent-primary)' }}
+            />
+          </div>
+          <div>
+            <p 
+              className="text-sm"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >Progress</p>
+            <p 
+              className="text-2xl font-bold"
+              style={{ color: 'var(--color-text-primary)' }}
+            >{studentData.progress}%</p>
+            <p 
+              className="text-xs flex items-center mt-1"
+              style={{ color: 'var(--color-accent-primary)' }}
+            >
+              {getProgressLabel(studentData.progress)}
+            </p>
+          </div>
+        </div>
+
+        <div 
+          className="rounded-xl shadow-sm p-6 flex items-center gap-4"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
+          <div 
+            className="p-3 rounded-lg"
+            style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+          >
+            <StarIcon 
+              className="h-6 w-6" 
+              style={{ color: 'var(--color-accent-primary)' }}
+            />
+          </div>
+          <div>
+            <p 
+              className="text-sm"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >Leaderboard</p>
+            <p 
+              className="text-2xl font-bold"
+              style={{ color: 'var(--color-text-primary)' }}
+            >{studentData.leaderboardScore}%</p>
+            <p 
+              className="text-xs flex items-center mt-1"
+              style={{ color: 'var(--color-accent-primary)' }}
+            >
+              {getLeaderboardLabel(studentData.leaderboardScore)}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Learning Timeline Section */}
+      <div 
+        className="rounded-xl shadow-sm p-6"
+        style={{
+          backgroundColor: 'var(--color-surface)',
+          boxShadow: 'var(--shadow-sm)'
+        }}
+      >
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
           <h2 
-            className="text-lg font-heading mb-4"
+            className="text-xl font-heading"
             style={{ color: 'var(--color-text-primary)' }}
           >
-            Learning Timeline:
+            Learning Timeline
           </h2>
           
-          {/* Date Range Pickers */}
-          <div className="flex items-center space-x-4 mb-6">
-            <div className="flex items-center space-x-2">
+          {/* Date Filters */}
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
               <span 
                 className="text-sm font-label"
                 style={{ color: 'var(--color-text-tertiary)' }}
@@ -519,15 +588,15 @@ const StudentDetails: React.FC = () => {
                 type="date"
                 value={fromDate}
                 onChange={(e) => setFromDate(e.target.value)}
-                className="px-3 py-2 rounded-lg text-sm font-medium transition-colors"
-                style={{
-                  backgroundColor: 'var(--color-surface)',
-                  border: '1px solid var(--color-border)',
+                className="px-3 py-1 rounded-lg border text-sm"
+                style={{ 
+                  borderColor: 'var(--color-border)',
+                  backgroundColor: 'var(--color-surface-elevated)',
                   color: 'var(--color-text-primary)'
                 }}
               />
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-2">
               <span 
                 className="text-sm font-label"
                 style={{ color: 'var(--color-text-tertiary)' }}
@@ -538,117 +607,117 @@ const StudentDetails: React.FC = () => {
                 type="date"
                 value={toDate}
                 onChange={(e) => setToDate(e.target.value)}
-                className="px-3 py-2 rounded-lg text-sm font-medium transition-colors"
-                style={{
-                  backgroundColor: 'var(--color-surface)',
-                  border: '1px solid var(--color-border)',
+                className="px-3 py-1 rounded-lg border text-sm"
+                style={{ 
+                  borderColor: 'var(--color-border)',
+                  backgroundColor: 'var(--color-surface-elevated)',
                   color: 'var(--color-text-primary)'
                 }}
               />
             </div>
           </div>
-
-          {/* Learning Levels */}
-          <div className="space-y-6">
-                        {studentData.learningTimeline && studentData.learningTimeline.length > 0 ? (
-              studentData.learningTimeline.map((activity, index) => (
-                <div 
-                  key={index} 
-                  className="rounded-lg p-4"
-                  style={{
-                    border: '1px solid var(--color-border)',
-                    backgroundColor: 'var(--color-surface-elevated)'
-                  }}
-                >
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
-                      <span className="text-blue-600 text-sm font-semibold" style={{ color: 'var(--color-primary)' }}>
-                        {activity.type === 'learning' ? '📚' : activity.type === 'test' ? '📝' : '💻'}
-                      </span>
-                    </div>
-                    <h3 
-                      className="text-lg font-heading"
+        </div>
+        
+        {/* Learning Timeline Content */}
+        <div className="space-y-4">
+          {studentData.learningTimeline && studentData.learningTimeline.length > 0 ? (
+            studentData.learningTimeline.map((activity, index) => (
+              <div 
+                key={index} 
+                className="rounded-lg p-4 border"
+                style={{
+                  borderColor: 'var(--color-border)',
+                  backgroundColor: 'var(--color-surface-elevated)'
+                }}
+              >
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
+                    <span className="text-sm font-semibold" style={{ color: 'var(--color-primary)' }}>
+                      {activity.type === 'learning' ? '📚' : activity.type === 'test' ? '📝' : '💻'}
+                    </span>
+                  </div>
+                  <h3 
+                    className="text-lg font-heading"
+                    style={{ color: 'var(--color-text-primary)' }}
+                  >
+                    {activity.activity}
+                  </h3>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Date */}
+                  <div className="flex items-center space-x-2">
+                    <CalendarIcon 
+                      className="w-4 h-4" 
+                      style={{ color: 'var(--color-text-tertiary)' }} 
+                    />
+                    <span 
+                      className="text-sm font-label"
+                      style={{ color: 'var(--color-text-tertiary)' }}
+                    >
+                      Date:
+                    </span>
+                    <span 
+                      className="text-sm"
                       style={{ color: 'var(--color-text-primary)' }}
                     >
-                      {activity.activity}
-                    </h3>
+                      {new Date(activity.date).toLocaleDateString('en-US', { 
+                        weekday: 'short', 
+                        month: 'short', 
+                        day: 'numeric' 
+                      })}
+                    </span>
                   </div>
                   
-                  <div className="space-y-3">
-                    {/* Date */}
-                    <div className="flex items-center space-x-3">
-                      <CalendarIcon 
-                        className="w-5 h-5" 
-                        style={{ color: 'var(--color-text-tertiary)' }} 
-                      />
-                      <span 
-                        className="text-sm font-label"
-                        style={{ color: 'var(--color-text-tertiary)' }}
-                      >
-                        Date:
-                      </span>
-                      <span 
-                        className="text-sm"
-                        style={{ color: 'var(--color-text-primary)' }}
-                      >
-                        {new Date(activity.date).toLocaleDateString('en-US', { 
-                          weekday: 'short', 
-                          month: 'short', 
-                          day: 'numeric' 
-                        })}
-                      </span>
-                    </div>
-                    
-                    {/* Duration */}
-                    <div className="flex items-center space-x-3">
-                      <ClockIcon 
-                        className="w-5 h-5" 
-                        style={{ color: 'var(--color-text-tertiary)' }} 
-                      />
-                      <span 
-                        className="text-sm font-label"
-                        style={{ color: 'var(--color-text-tertiary)' }}
-                      >
-                        Duration:
-                      </span>
-                      <span 
-                        className="text-sm"
-                        style={{ color: 'var(--color-text-primary)' }}
-                      >
-                        {activity.duration} minutes
-                      </span>
-                    </div>
-                    
-                    {/* Score */}
-                    {activity.score && (
-                      <div className="flex items-center space-x-3">
-                        <TargetIcon 
-                          className="w-5 h-5" 
-                          style={{ color: 'var(--color-text-tertiary)' }} 
-                        />
-                        <span 
-                          className="text-sm font-label"
-                          style={{ color: 'var(--color-text-tertiary)' }}
-                        >
-                          Score:
-                        </span>
-                        <span 
-                          className="text-sm"
-                          style={{ color: 'var(--color-text-primary)' }}
-                        >
-                          {activity.score}%
-                        </span>
-                      </div>
-                    )}
+                  {/* Duration */}
+                  <div className="flex items-center space-x-2">
+                    <ClockIcon 
+                      className="w-4 h-4" 
+                      style={{ color: 'var(--color-text-tertiary)' }} 
+                    />
+                    <span 
+                      className="text-sm font-label"
+                      style={{ color: 'var(--color-text-tertiary)' }}
+                    >
+                      Duration:
+                    </span>
+                    <span 
+                      className="text-sm"
+                      style={{ color: 'var(--color-text-primary)' }}
+                    >
+                      {activity.duration} minutes
+                    </span>
                   </div>
+                  
+                  {/* Score */}
+                  {activity.score && (
+                    <div className="flex items-center space-x-2">
+                      <TargetIcon 
+                        className="w-4 h-4" 
+                        style={{ color: 'var(--color-text-tertiary)' }} 
+                      />
+                      <span 
+                        className="text-sm font-label"
+                        style={{ color: 'var(--color-text-tertiary)' }}
+                      >
+                        Score:
+                      </span>
+                      <span 
+                        className="text-sm"
+                        style={{ color: 'var(--color-text-primary)' }}
+                      >
+                        {activity.score}%
+                      </span>
+                    </div>
+                  )}
                 </div>
-              ))
-            ) : (
-              <div className="text-center py-8" style={{ color: 'var(--color-text-muted)' }}>
-                No learning timeline data available
               </div>
-            )}
-          </div>
+            ))
+          ) : (
+            <div className="text-center py-8" style={{ color: 'var(--color-text-muted)' }}>
+              No learning timeline data available
+            </div>
+          )}
         </div>
       </div>
     </div>
