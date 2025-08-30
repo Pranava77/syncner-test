@@ -450,26 +450,19 @@ const StudentDetails: React.FC = () => {
                                       <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
                                         {level.learn.description}
                                       </div>
-                                      {level.learn.content && level.learn.content.length > 0 && (
-                                        <div className="mt-2 space-y-2">
-                                          {level.learn.content.map((item, idx) => (
-                                            <div key={idx} className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
-                                              • {item.title}
-                                              {item.externalLink && (
-                                                <a 
-                                                  href={item.externalLink} 
-                                                  target="_blank" 
-                                                  rel="noopener noreferrer"
-                                                  className="ml-2 text-xs underline"
-                                                  style={{ color: 'var(--color-accent-primary)' }}
-                                                >
-                                                  View Resource
-                                                </a>
-                                              )}
-                                            </div>
-                                          ))}
+                                      <div className="mt-2">
+                                        <div className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
+                                          Start: {formatDateTime(level.learn.startTime)}
                                         </div>
-                                      )}
+                                        <div className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
+                                          End: {formatDateTime(level.learn.endTime)}
+                                        </div>
+                                        {level.learn.timeSpent > 0 && (
+                                          <div className="text-sm mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
+                                            Time spent: {level.learn.timeSpent} minutes
+                                          </div>
+                                        )}
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -511,11 +504,19 @@ const StudentDetails: React.FC = () => {
                                       <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
                                         {level.test.description}
                                       </div>
-                                      {level.test.content && level.test.content.length > 0 && (
-                                        <div className="mt-2 text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
-                                          {level.test.content.length} questions available
+                                      <div className="mt-2">
+                                        <div className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
+                                          Start: {formatDateTime(level.test.startTime)}
                                         </div>
-                                      )}
+                                        <div className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
+                                          End: {formatDateTime(level.test.endTime)}
+                                        </div>
+                                        {level.test.timeSpent > 0 && (
+                                          <div className="text-sm mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
+                                            Time spent: {level.test.timeSpent} minutes
+                                          </div>
+                                        )}
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -557,15 +558,19 @@ const StudentDetails: React.FC = () => {
                                       <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
                                         {level.exercise.description}
                                       </div>
-                                      {level.exercise.content && level.exercise.content.length > 0 && (
-                                        <div className="mt-2 space-y-2">
-                                          {level.exercise.content.map((item, idx) => (
-                                            <div key={idx} className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
-                                              • {item.title}
-                                            </div>
-                                          ))}
+                                      <div className="mt-2">
+                                        <div className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
+                                          Start: {formatDateTime(level.exercise.startTime)}
                                         </div>
-                                      )}
+                                        <div className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
+                                          End: {formatDateTime(level.exercise.endTime)}
+                                        </div>
+                                        {level.exercise.timeSpent > 0 && (
+                                          <div className="text-sm mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
+                                            Time spent: {level.exercise.timeSpent} minutes
+                                          </div>
+                                        )}
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
