@@ -263,6 +263,9 @@ export const getStudentPortfolio = async (req, res) => {
       leaderboard: progress?.totalPoints || 0
     };
 
+    // Count present days (days with activity)
+    const presentDays = progress.dailyActivity.filter(entry => entry.isPresent || entry.totalMinutes > 0).length;
+
     // Build response object
     const portfolioData = {
       ...student,
