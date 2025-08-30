@@ -21,6 +21,18 @@ export const fetchStudents = createAsyncThunk(
   }
 );
 
+export const fetchStudentDetails = createAsyncThunk(
+  'staff/fetchStudentDetails',
+  async (studentId: string, { rejectWithValue }) => {
+    try {
+      const response = await apiService.getStudentPortfolio(studentId);
+      return response.data.student;
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'Failed to fetch student details');
+    }
+  }
+);
+
 
 
 export const fetchStaffAnalytics = createAsyncThunk(
@@ -38,18 +50,21 @@ export const fetchStaffAnalytics = createAsyncThunk(
 // State interface
 interface StaffState {
   students: Student[];
+  selectedStudent: StudentDetails | null;
   analytics: StaffAnalytics | null;
   loading: boolean;
   error: string | null;
   filters: StudentFilters;
   pagination: PaginationState;
   studentsLoading: boolean;
+  studentDetailsLoading: boolean;
   analyticsLoading: boolean;
 }
 
 // Initial state
 const initialState: StaffState = {
   students: [],
+  selectedStudent: null,
   analytics: null,
   loading: false,
   error: null,
@@ -68,6 +83,7 @@ const initialState: StaffState = {
     hasPrevPage: false
   },
   studentsLoading: false,
+  studentDetailsLoading: false,
   analyticsLoading: false
 };
 
@@ -86,7 +102,9 @@ const staffSlice = createSlice({
     clearError: (state) => {
       state.error = null;
     },
-
+    clearSelectedStudent: (state) => {
+      state.selectedStudent = null;
+    },
     resetFilters: (state) => {
       state.filters = initialState.filters;
       state.pagination.currentPage = 1;
@@ -107,6 +125,22 @@ const staffSlice = createSlice({
       })
       .addCase(fetchStudents.rejected, (state, action) => {
         state.studentsLoading = false;
+        state.error = action.payload as string;
+      });
+
+    // Fetch student details
+    builder
+      .addCase(fetchStudentDetails.pending, (state) => {
+        state.studentDetailsLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchStudentDetails.fulfilled, (state, action) => {
+        state.studentDetailsLoading = false;
+        state.selectedStudent = action.payload;
+        state.error = null;
+      })
+      .addCase(fetchStudentDetails.rejected, (state, action) => {
+        state.studentDetailsLoading = false;
         state.error = action.payload as string;
       });
 
@@ -135,14 +169,17 @@ export const {
   setFilters, 
   setPagination, 
   clearError, 
+  clearSelectedStudent,
   resetFilters 
 } = staffSlice.actions;
 
 // Export selectors
 export const selectStaffState = (state: { staff: StaffState }) => state.staff;
 export const selectStudents = (state: { staff: StaffState }) => state.staff.students;
+export const selectSelectedStudent = (state: { staff: StaffState }) => state.staff.selectedStudent;
 export const selectAnalytics = (state: { staff: StaffState }) => state.staff.analytics;
 export const selectStudentsLoading = (state: { staff: StaffState }) => state.staff.studentsLoading;
+export const selectStudentDetailsLoading = (state: { staff: StaffState }) => state.staff.studentDetailsLoading;
 export const selectAnalyticsLoading = (state: { staff: StaffState }) => state.staff.analyticsLoading;
 export const selectFilters = (state: { staff: StaffState }) => state.staff.filters;
 export const selectPagination = (state: { staff: StaffState }) => state.staff.pagination;

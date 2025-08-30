@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
@@ -12,90 +12,128 @@ import {
   RocketIcon
 } from '@radix-ui/react-icons';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, Tooltip } from 'recharts';
+import { useStaff } from '../../hooks/useStaff';
 
 // Mock student data matching wireframe structure
 const mockStudent = {
-  rollNumber: '713315104704',
-  courseDept: 'B.E IT',
+  _id: '713315104704',
   name: 'Ramesh',
-  batch: '2023-2027',
+  email: 'ramesh@example.com',
   careerTrack: 'Full Stack Development',
-  enrolledDate: '21-03-2025',
-  attendance: 80,
+  level: 'Intermediate',
   progress: 80,
-  leaderboard: 80,
+  status: 'active' as const,
+  lastActive: '2024-01-15T10:30:00Z',
+  totalPoints: 2847,
+  streakDays: 7,
+  college: 'Tech University',
+  department: 'B.E IT',
+  batch: '2023-2027',
+  isActive: true,
+  createdAt: '2024-01-01T00:00:00Z',
+  updatedAt: '2024-01-15T10:30:00Z',
+  currentStreak: 7,
+  longestStreak: 12,
+  attendancePercentage: 80,
+  totalDays: 45,
+  presentDays: 38,
+  leaderboardScore: 80,
+  enrolledDate: '21-03-2025',
   performance: {
     performance: 75,
     potential: 85,
     contribution: 70,
     creativity: 90,
-    skill: 80
+    skill: 80,
+    teamwork: 82
   },
-  learningLevels: [
+  summaryStats: {
+    totalLevels: 10,
+    completedLevels: 7,
+    currentLevel: 8,
+    completionRate: 70,
+    consistency: 84,
+    progress: 80,
+    leaderboard: 80
+  },
+  learningTimeline: [],
+  dailyActivity: [],
+  attendanceStats: {
+    totalDays: 45,
+    presentDays: 38,
+    currentStreak: 7,
+    longestStreak: 12
+  },
+  skills: ['React', 'Node.js', 'Python', 'AWS', 'MongoDB'],
+  recommendedRoles: ['Frontend Developer', 'Full Stack Engineer', 'DevOps Engineer'],
+  learningTimeline: [
     {
       level: 3,
-      title: 'Introduction to HTML',
-      status: 'in-progress',
+      courseName: 'Introduction to HTML',
+      description: 'HTML Fundamentals',
+      status: 'in-progress' as const,
       learn: {
         completed: true,
-        startDate: '10-08-2025 10:00 AM',
-        endDate: '12-08-2025 11:00 AM'
+        startTime: '10-08-2025 10:00 AM',
+        endTime: '12-08-2025 11:00 AM'
       },
       test: {
         completed: true,
         score: 80,
         attempts: 2,
-        startDate: '13-08-2025 02:00 PM',
-        endDate: '13-08-2025 03:00 PM'
+        startTime: '13-08-2025 02:00 PM',
+        endTime: '13-08-2025 03:00 PM'
       },
       exercise: {
         completed: false,
-        startDate: '14-08-2025 09:03 PM',
-        endDate: 'In-Progress'
+        startTime: '14-08-2025 09:03 PM',
+        endTime: 'In-Progress'
       }
     },
     {
       level: 2,
-      title: 'Introduction to HTML',
-      status: 'completed',
+      courseName: 'Introduction to HTML',
+      description: 'HTML Fundamentals',
+      status: 'completed' as const,
       learn: {
         completed: true,
-        startDate: '05-08-2025 09:00 AM',
-        endDate: '07-08-2025 10:00 AM'
+        startTime: '05-08-2025 09:00 AM',
+        endTime: '07-08-2025 10:00 AM'
       },
       test: {
         completed: true,
         score: 85,
         attempts: 2,
-        startDate: '08-08-2025 01:00 PM',
-        endDate: '08-08-2025 02:00 PM'
+        startTime: '08-08-2025 01:00 PM',
+        endTime: '08-08-2025 02:00 PM'
       },
       exercise: {
         completed: true,
-        startDate: '09-08-2025 09:00 AM',
-        endDate: '09-08-2025 10:00 AM'
+        startTime: '09-08-2025 09:00 AM',
+        endTime: '09-08-2025 10:00 AM'
       }
     },
     {
       level: 1,
-      title: 'Introduction to HTML',
-      status: 'completed',
+      courseName: 'Introduction to HTML',
+      description: 'HTML Fundamentals',
+      status: 'completed' as const,
       learn: {
         completed: true,
-        startDate: '01-08-2025 09:00 AM',
-        endDate: '03-08-2025 10:00 AM'
+        startTime: '01-08-2025 09:00 AM',
+        endTime: '03-08-2025 10:00 AM'
       },
       test: {
         completed: true,
         score: 90,
         attempts: 2,
-        startDate: '04-08-2025 01:00 PM',
-        endDate: '04-08-2025 02:00 PM'
+        startTime: '04-08-2025 01:00 PM',
+        endTime: '04-08-2025 02:00 PM'
       },
       exercise: {
         completed: true,
-        startDate: '05-08-2025 09:00 AM',
-        endDate: '05-08-2025 10:00 AM'
+        startTime: '05-08-2025 09:00 AM',
+        endTime: '05-08-2025 10:00 AM'
       }
     }
   ]
@@ -106,14 +144,37 @@ const StudentDetails: React.FC = () => {
   const navigate = useNavigate();
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
+  
+  const { 
+    selectedStudent, 
+    studentDetailsLoading, 
+    error, 
+    getStudentDetails, 
+    clearSelectedStudent 
+  } = useStaff();
+
+  // Fetch student details when component mounts
+  useEffect(() => {
+    if (studentId) {
+      getStudentDetails(studentId);
+    }
+    
+    // Cleanup when component unmounts
+    return () => {
+      clearSelectedStudent();
+    };
+  }, [studentId, getStudentDetails, clearSelectedStudent]);
+
+  // Use selectedStudent data or fallback to mock data
+  const studentData = selectedStudent || mockStudent;
 
   // Radar chart data for performance metrics
   const radarData = [
-    { metric: 'Performance', value: mockStudent.performance.performance },
-    { metric: 'Potential', value: mockStudent.performance.potential },
-    { metric: 'Contribution', value: mockStudent.performance.contribution },
-    { metric: 'Creativity', value: mockStudent.performance.creativity },
-    { metric: 'Skill', value: mockStudent.performance.skill }
+    { metric: 'Performance', value: studentData.performance.performance },
+    { metric: 'Potential', value: studentData.performance.potential },
+    { metric: 'Contribution', value: studentData.performance.contribution },
+    { metric: 'Creativity', value: studentData.performance.creativity },
+    { metric: 'Skill', value: studentData.performance.skill }
   ];
 
   const getStatusIcon = (status: string) => {
@@ -189,6 +250,25 @@ const StudentDetails: React.FC = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Loading State */}
+        {studentDetailsLoading && (
+          <div className="text-center py-12">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-accent-primary)]"></div>
+            <p className="mt-2" style={{ color: 'var(--color-text-secondary)' }}>
+              Loading student details...
+            </p>
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && (
+          <div className="mb-6 p-4 rounded-lg" style={{ backgroundColor: 'var(--color-error-bg)' }}>
+            <p style={{ color: 'var(--color-error)' }}>
+              Error: {error}
+            </p>
+          </div>
+        )}
+
         {/* Top Section: Student Details + Performance Overview */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           {/* Left: Student Details */}
@@ -218,7 +298,7 @@ const StudentDetails: React.FC = () => {
                   className="font-medium"
                   style={{ color: 'var(--color-text-primary)' }}
                 >
-                  {mockStudent.rollNumber}
+                  {studentData._id}
                 </span>
               </div>
               <div className="flex justify-between">
@@ -232,7 +312,7 @@ const StudentDetails: React.FC = () => {
                   className="font-medium"
                   style={{ color: 'var(--color-text-primary)' }}
                 >
-                  {mockStudent.courseDept}
+                  {studentData.department}
                 </span>
               </div>
               <div className="flex justify-between">
@@ -246,7 +326,7 @@ const StudentDetails: React.FC = () => {
                   className="font-medium"
                   style={{ color: 'var(--color-text-primary)' }}
                 >
-                  {mockStudent.name}
+                  {studentData.name}
                 </span>
               </div>
               <div className="flex justify-between">
@@ -260,7 +340,7 @@ const StudentDetails: React.FC = () => {
                   className="font-medium"
                   style={{ color: 'var(--color-text-primary)' }}
                 >
-                  {mockStudent.batch}
+                  {studentData.batch}
                 </span>
               </div>
               <div className="flex justify-between">
@@ -277,7 +357,7 @@ const StudentDetails: React.FC = () => {
                     color: 'var(--color-accent-primary)'
                   }}
                 >
-                  {mockStudent.careerTrack}
+                  {studentData.careerTrack}
                 </span>
               </div>
               <div className="flex justify-between">
@@ -291,7 +371,7 @@ const StudentDetails: React.FC = () => {
                   className="font-medium"
                   style={{ color: 'var(--color-text-primary)' }}
                 >
-                  {mockStudent.enrolledDate}
+                  {studentData.enrolledDate}
                 </span>
               </div>
             </div>
@@ -366,7 +446,7 @@ const StudentDetails: React.FC = () => {
                 className="text-3xl font-heading mb-2"
                 style={{ color: 'var(--color-text-primary)' }}
               >
-                {mockStudent.attendance}%
+                                  {studentData.attendancePercentage}%
               </div>
               <div 
                 className="text-lg font-label mb-1"
@@ -378,7 +458,7 @@ const StudentDetails: React.FC = () => {
                 className="text-sm"
                 style={{ color: 'var(--color-text-muted)' }}
               >
-                {getAttendanceLabel(mockStudent.attendance)}
+                                  {getAttendanceLabel(studentData.attendancePercentage)}
               </div>
             </div>
           </div>
@@ -396,7 +476,7 @@ const StudentDetails: React.FC = () => {
                 className="text-3xl font-heading mb-2"
                 style={{ color: 'var(--color-text-primary)' }}
               >
-                {mockStudent.progress}
+                                  {studentData.progress}
               </div>
               <div 
                 className="text-lg font-label mb-1"
@@ -426,7 +506,7 @@ const StudentDetails: React.FC = () => {
                 className="text-3xl font-heading mb-2"
                 style={{ color: 'var(--color-text-primary)' }}
               >
-                {mockStudent.leaderboard}%
+                                  {studentData.leaderboardScore}%
               </div>
               <div 
                 className="text-lg font-label mb-1"
@@ -504,7 +584,7 @@ const StudentDetails: React.FC = () => {
 
           {/* Learning Levels */}
           <div className="space-y-6">
-            {mockStudent.learningLevels.map((level, index) => (
+            {studentData.learningTimeline.map((level, index) => (
               <div 
                 key={index} 
                 className="rounded-lg p-4"
@@ -519,7 +599,7 @@ const StudentDetails: React.FC = () => {
                     className="text-lg font-heading"
                     style={getStatusColor(level.status)}
                   >
-                    Level {level.level}: {level.title}
+                    Level {level.level}: {level.courseName}
                   </h3>
                 </div>
                 
@@ -540,7 +620,7 @@ const StudentDetails: React.FC = () => {
                       className="text-sm"
                       style={{ color: 'var(--color-text-primary)' }}
                     >
-                      {level.learn.startDate} -- {level.learn.endDate}
+                      {level.learn.startTime} -- {level.learn.endTime}
                     </span>
                   </div>
                   
@@ -560,7 +640,7 @@ const StudentDetails: React.FC = () => {
                       className="text-sm"
                       style={{ color: 'var(--color-text-primary)' }}
                     >
-                      ({level.test.score}% - {level.test.attempts} attempts) {level.test.startDate} -- {level.test.endDate}
+                      ({level.test.score}% - {level.test.attempts} attempts) {level.test.startTime} -- {level.test.endTime}
                     </span>
                   </div>
                   
@@ -587,7 +667,7 @@ const StudentDetails: React.FC = () => {
                       className="text-sm"
                       style={{ color: 'var(--color-text-primary)' }}
                     >
-                      {level.exercise.startDate} -- {level.exercise.endDate}
+                      {level.exercise.startTime} -- {level.exercise.endTime}
                     </span>
                   </div>
                 </div>

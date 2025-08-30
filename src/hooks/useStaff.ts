@@ -2,10 +2,12 @@ import { useCallback, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { 
   fetchStudents, 
+  fetchStudentDetails,
   fetchStaffAnalytics,
   setFilters,
   setPagination,
   clearError,
+  clearSelectedStudent,
   resetFilters
 } from '../redux/slices/staffSlice';
 import { StudentFilters, PaginationState } from '../types/staff';
@@ -14,8 +16,10 @@ export const useStaff = () => {
   const dispatch = useAppDispatch();
   const {
     students,
+    selectedStudent,
     analytics,
     studentsLoading,
+    studentDetailsLoading,
     analyticsLoading,
     filters,
     pagination,
@@ -25,6 +29,11 @@ export const useStaff = () => {
   // Fetch students with filters and pagination
   const getStudents = useCallback((filters?: StudentFilters, page?: number, limit?: number) => {
     dispatch(fetchStudents({ filters, page, limit }));
+  }, [dispatch]);
+
+  // Fetch single student details
+  const getStudentDetails = useCallback((studentId: string) => {
+    dispatch(fetchStudentDetails(studentId));
   }, [dispatch]);
 
 
@@ -49,6 +58,11 @@ export const useStaff = () => {
     dispatch(clearError());
   }, [dispatch]);
 
+  // Clear selected student
+  const clearSelectedStudentState = useCallback(() => {
+    dispatch(clearSelectedStudent());
+  }, [dispatch]);
+
 
 
   // Reset all filters
@@ -69,10 +83,12 @@ export const useStaff = () => {
   return {
     // Data
     students,
+    selectedStudent,
     analytics,
     
     // Loading states
     studentsLoading,
+    studentDetailsLoading,
     analyticsLoading,
     
     // State
@@ -82,10 +98,12 @@ export const useStaff = () => {
     
     // Actions
     getStudents,
+    getStudentDetails,
     getAnalytics,
     updateFilters,
     updatePagination,
     clearError: clearErrorState,
+    clearSelectedStudent: clearSelectedStudentState,
     resetFilters: resetAllFilters
   };
 };
