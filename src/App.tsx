@@ -30,7 +30,7 @@ import LevelLearnPage from './pages/LevelLearnPage';
 import LevelTestPage from './pages/LevelTestPage';
 import LevelExercisePage from './pages/LevelExercisePage';
 import ProjectsPage from './pages/ProjectsPage';
-import MyPortfolio from './components/MyPortfolio';
+
 
 function AdminWrapper() {
   return (
@@ -124,7 +124,7 @@ function App() {
             <Route path="training/:levelId/learn" element={<LevelLearnPage />} />
             <Route path="training/:levelId/test" element={<LevelTestPage />} />
             <Route path="training/:levelId/exercise" element={<LevelExercisePage />} />
-                          <Route path="portfolio" element={<MyPortfolio />} />
+
             <Route path="projects" element={<ProjectsPage />} />
             <Route path="profile" element={
               <motion.div
