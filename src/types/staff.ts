@@ -42,10 +42,29 @@ export interface LearningTimelineItem {
   score?: number;
 }
 
+export interface TimelineSection {
+  status: 'not-started' | 'in-progress' | 'completed';
+  details: any;
+  title: string;
+}
+
+export interface TimelineLevel {
+  levelOrder: number;
+  levelTitle: string;
+  levelDescription: string;
+  overallStatus: 'not-started' | 'in-progress' | 'completed' | 'accessible';
+  sections: {
+    learn: TimelineSection;
+    test: TimelineSection;
+    exercise: TimelineSection;
+  };
+}
+
 export interface StudentDetails extends Student {
   performance: PerformanceMetrics;
   summaryStats: SummaryStats;
-  learningTimeline: LearningTimelineItem[];
+  learningTimeline: TimelineLevel[]; // Updated to use new detailed structure
+  simpleTimeline?: LearningTimelineItem[]; // Keep old structure for backward compatibility
   learningLevels: LearningLevel[];
   dailyActivity: DailyActivity[];
   attendanceStats: AttendanceStats;

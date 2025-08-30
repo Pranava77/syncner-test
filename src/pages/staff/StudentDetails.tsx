@@ -18,12 +18,12 @@ import {
 } from '@radix-ui/react-icons';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, Tooltip } from 'recharts';
 import { useStaff } from '../../hooks/useStaff';
+import DetailedLearningTimeline from '../../components/DetailedLearningTimeline';
 
 const StudentDetails: React.FC = () => {
   const { studentId } = useParams<{ studentId: string }>();
   const navigate = useNavigate();
-  const [fromDate, setFromDate] = useState('');
-  const [toDate, setToDate] = useState('');
+
   
   const { 
     selectedStudent, 
@@ -559,167 +559,9 @@ const StudentDetails: React.FC = () => {
         </div>
       </div>
 
-      {/* Learning Timeline Section */}
-      <div 
-        className="rounded-xl shadow-sm p-6"
-        style={{
-          backgroundColor: 'var(--color-surface)',
-          boxShadow: 'var(--shadow-sm)'
-        }}
-      >
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-          <h2 
-            className="text-xl font-heading"
-            style={{ color: 'var(--color-text-primary)' }}
-          >
-            Learning Timeline
-          </h2>
-          
-          {/* Date Filters */}
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <span 
-                className="text-sm font-label"
-                style={{ color: 'var(--color-text-tertiary)' }}
-              >
-                From:
-              </span>
-              <input
-                type="date"
-                value={fromDate}
-                onChange={(e) => setFromDate(e.target.value)}
-                className="px-3 py-1 rounded-lg border text-sm"
-                style={{ 
-                  borderColor: 'var(--color-border)',
-                  backgroundColor: 'var(--color-surface-elevated)',
-                  color: 'var(--color-text-primary)'
-                }}
-              />
-            </div>
-            <div className="flex items-center gap-2">
-              <span 
-                className="text-sm font-label"
-                style={{ color: 'var(--color-text-tertiary)' }}
-              >
-                To:
-              </span>
-              <input
-                type="date"
-                value={toDate}
-                onChange={(e) => setToDate(e.target.value)}
-                className="px-3 py-1 rounded-lg border text-sm"
-                style={{ 
-                  borderColor: 'var(--color-border)',
-                  backgroundColor: 'var(--color-surface-elevated)',
-                  color: 'var(--color-text-primary)'
-                }}
-              />
-            </div>
-          </div>
-        </div>
-        
-        {/* Learning Timeline Content */}
-        <div className="space-y-4">
-          {studentData.learningTimeline && studentData.learningTimeline.length > 0 ? (
-            studentData.learningTimeline.map((activity, index) => (
-              <div 
-                key={index} 
-                className="rounded-lg p-4 border"
-                style={{
-                  borderColor: 'var(--color-border)',
-                  backgroundColor: 'var(--color-surface-elevated)'
-                }}
-              >
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
-                    <span className="text-sm font-semibold" style={{ color: 'var(--color-primary)' }}>
-                      {activity.type === 'learning' ? '📚' : activity.type === 'test' ? '📝' : '💻'}
-                    </span>
-                  </div>
-                  <h3 
-                    className="text-lg font-heading"
-                    style={{ color: 'var(--color-text-primary)' }}
-                  >
-                    {activity.activity}
-                  </h3>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {/* Date */}
-                  <div className="flex items-center space-x-2">
-                    <CalendarIcon 
-                      className="w-4 h-4" 
-                      style={{ color: 'var(--color-text-tertiary)' }} 
-                    />
-                    <span 
-                      className="text-sm font-label"
-                      style={{ color: 'var(--color-text-tertiary)' }}
-                    >
-                      Date:
-                    </span>
-                    <span 
-                      className="text-sm"
-                      style={{ color: 'var(--color-text-primary)' }}
-                    >
-                      {new Date(activity.date).toLocaleDateString('en-US', { 
-                        weekday: 'short', 
-                        month: 'short', 
-                        day: 'numeric' 
-                      })}
-                    </span>
-                  </div>
-                  
-                  {/* Duration */}
-                  <div className="flex items-center space-x-2">
-                    <ClockIcon 
-                      className="w-4 h-4" 
-                      style={{ color: 'var(--color-text-tertiary)' }} 
-                    />
-                    <span 
-                      className="text-sm font-label"
-                      style={{ color: 'var(--color-text-tertiary)' }}
-                    >
-                      Duration:
-                    </span>
-                    <span 
-                      className="text-sm"
-                      style={{ color: 'var(--color-text-primary)' }}
-                    >
-                      {activity.duration} minutes
-                    </span>
-                  </div>
-                  
-                  {/* Score */}
-                  {activity.score && (
-                    <div className="flex items-center space-x-2">
-                      <TargetIcon 
-                        className="w-4 h-4" 
-                        style={{ color: 'var(--color-text-tertiary)' }} 
-                      />
-                      <span 
-                        className="text-sm font-label"
-                        style={{ color: 'var(--color-text-tertiary)' }}
-                      >
-                        Score:
-                      </span>
-                      <span 
-                        className="text-sm"
-                        style={{ color: 'var(--color-text-primary)' }}
-                      >
-                        {activity.score}%
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="text-center py-8" style={{ color: 'var(--color-text-muted)' }}>
-              No learning timeline data available
-            </div>
-          )}
-        </div>
-      </div>
+      {/* Detailed Learning Timeline Section */}
+      <DetailedLearningTimeline timeline={studentData.learningTimeline || []} />
+
     </div>
   );
 };
