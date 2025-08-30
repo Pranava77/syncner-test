@@ -101,13 +101,11 @@ const StudentDetails: React.FC = () => {
     );
   }
 
-  // Radar chart data for performance metrics
+  // Radar chart data for performance overview using real endpoint data
   const radarData = [
-    { metric: 'Performance', value: studentData.performance?.performance || 0 },
-    { metric: 'Potential', value: studentData.performance?.potential || 0 },
-    { metric: 'Contribution', value: studentData.performance?.contribution || 0 },
-    { metric: 'Creativity', value: studentData.performance?.creativity || 0 },
-    { metric: 'Skill', value: studentData.performance?.skill || 0 }
+    { metric: 'Attendance', value: studentData.attendancePercentage || 0 },
+    { metric: 'Leaderboard', value: studentData.leaderboardScore || 0 },
+    { metric: 'Progress', value: studentData.progress || 0 }
   ];
 
   const getStatusIcon = (status: string) => {
@@ -350,7 +348,7 @@ const StudentDetails: React.FC = () => {
               className="text-lg font-heading mb-4"
               style={{ color: 'var(--color-text-primary)' }}
             >
-              Performance Overview
+              Student Overview
             </h2>
             
             {/* Radar Chart */}
@@ -360,14 +358,22 @@ const StudentDetails: React.FC = () => {
                   <PolarGrid />
                   <PolarAngleAxis dataKey="metric" />
                   <PolarRadiusAxis angle={90} domain={[0, 100]} />
-                  <Radar
-                    name="Performance"
-                    dataKey="value"
-                    stroke="var(--color-accent-primary)"
-                    fill="var(--color-accent-primary)"
-                    fillOpacity={0.3}
-                  />
-                  <Tooltip />
+                                  <Radar
+                  name="Student Metrics"
+                  dataKey="value"
+                  stroke="var(--color-accent-primary)"
+                  fill="var(--color-accent-primary)"
+                  fillOpacity={0.3}
+                />
+                <Tooltip 
+                  formatter={(value, name) => [`${value}%`, name]}
+                  labelStyle={{ color: 'var(--color-text-primary)' }}
+                  contentStyle={{ 
+                    backgroundColor: 'var(--color-surface)',
+                    border: '1px solid var(--color-border)',
+                    borderRadius: '8px'
+                  }}
+                />
                 </RadarChart>
               </ResponsiveContainer>
             </div>
@@ -376,7 +382,7 @@ const StudentDetails: React.FC = () => {
               className="text-center text-sm mb-4"
               style={{ color: 'var(--color-text-muted)' }}
             >
-              (Optional)
+              Attendance, Leaderboard Score, and Progress Overview
             </div>
             
             <button 
