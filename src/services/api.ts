@@ -464,12 +464,19 @@ class ApiService {
   async getStudentPortfolio(studentId: string): Promise<StudentDetailsApiResponse> {
     const url = `${this.baseURL}/student/portfolio/${studentId}`;
     console.log('🔗 Making API call to:', url);
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: this.getHeaders(),
-      credentials: 'include',
-    });
-    return this.handleResponse(response);
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: this.getHeaders(),
+        credentials: 'include',
+      });
+      const data = await this.handleResponse(response);
+      console.log('✅ Portfolio API Response:', data);
+      return data;
+    } catch (error) {
+      console.error('❌ Portfolio API Error:', error);
+      throw error;
+    }
   }
 
   async getStaffAnalytics(): Promise<StaffAnalyticsApiResponse> {

@@ -134,7 +134,7 @@ app.use('/api/attendance', attendanceRoutes);
 app.use('/api/curriculum', curriculumRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/staff', staffRoutes);
-app.use('/api/student', studentRoutes);
+app.use('/api/student', studentRoutes); // Student routes including portfolio
 
 // Health check endpoint
 const serverStartTime = Date.now();

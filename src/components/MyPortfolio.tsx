@@ -5,7 +5,6 @@ import { useAppSelector } from '../redux/store';
 import {
   CheckCircledIcon,
   ClockIcon,
-  ChevronDownIcon,
   ChevronRightIcon,
   CalendarIcon,
   RocketIcon,
@@ -28,9 +27,44 @@ const MyPortfolio: React.FC = () => {
   // Fetch student's own portfolio data when component mounts
   React.useEffect(() => {
     if (user?._id) {
+      console.log('🔄 Fetching portfolio data for user:', user._id);
       getPortfolioData(user._id);
     }
   }, [user?._id, getPortfolioData]);
+
+  // Show loading state
+  if (portfolioLoading || !portfolioData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: 'var(--color-accent-primary)' }}></div>
+          <p className="text-lg" style={{ color: 'var(--color-text-primary)' }}>
+            Loading your portfolio...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (portfolioError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
+        <div className="text-center">
+          <p className="text-lg mb-4" style={{ color: 'var(--color-text-primary)' }}>
+            {portfolioError}
+          </p>
+          <button
+            onClick={handleBack}
+            className="px-4 py-2 rounded-lg transition-colors hover:bg-[var(--color-accent-tertiary)]"
+            style={{ color: 'var(--color-accent-primary)' }}
+          >
+            Back to Dashboard
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   // Handle back navigation
   const handleBack = () => {

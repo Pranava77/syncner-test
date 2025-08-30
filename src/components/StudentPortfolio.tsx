@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAppSelector } from '../redux/store';
 import {
   CheckCircledIcon,
   ClockIcon,
@@ -15,7 +14,6 @@ import {
   Share1Icon,
   DownloadIcon
 } from '@radix-ui/react-icons';
-import { StudentDetails } from '../types/staff';
 import { useStaff } from '../hooks/useStaff';
 import ThemeContainer from './ThemeContainer';
 
@@ -33,9 +31,24 @@ const StudentPortfolio: React.FC = () => {
   // Fetch student details when component mounts
   React.useEffect(() => {
     if (studentId) {
+      console.log('🔄 Fetching student details for ID:', studentId);
       getStudentDetails(studentId);
     }
   }, [studentId, getStudentDetails]);
+
+  // Show loading state
+  if (studentDetailsLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: 'var(--color-accent-primary)' }}></div>
+          <p className="text-lg" style={{ color: 'var(--color-text-primary)' }}>
+            Loading student portfolio...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   // Handle back navigation
   const handleBack = () => {
