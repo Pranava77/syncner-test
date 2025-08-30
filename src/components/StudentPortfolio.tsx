@@ -37,6 +37,18 @@ const StudentPortfolio: React.FC = () => {
     }
   }, [studentId, getStudentDetails]);
 
+  // Handle back navigation
+  const handleBack = () => {
+    navigate('/staff/students');
+  };
+
+  // Handle retry
+  const handleRetry = () => {
+    if (studentId) {
+      getStudentDetails(studentId);
+    }
+  };
+
   // Show loading state
   if (studentDetailsLoading) {
     return (
@@ -51,35 +63,65 @@ const StudentPortfolio: React.FC = () => {
     );
   }
 
-  // Handle back navigation
-  const handleBack = () => {
-    navigate('/staff/students');
-  };
-
-  if (studentDetailsLoading || !selectedStudent) {
+  // Show error state
+  if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: 'var(--color-accent-primary)' }}></div>
-          <p className="text-lg" style={{ color: 'var(--color-text-primary)' }}>
-            Loading student portfolio...
+        <div className="text-center max-w-lg mx-auto">
+          <div className="mb-6 text-6xl">😕</div>
+          <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--color-text-primary)' }}>
+            Something went wrong
+          </h2>
+          <p className="text-lg mb-6" style={{ color: 'var(--color-text-secondary)' }}>
+            {error}
           </p>
+          <div className="flex items-center justify-center gap-4">
+            <button
+              onClick={handleBack}
+              className="px-6 py-3 rounded-xl transition-all duration-200 hover:scale-105"
+              style={{ 
+                backgroundColor: 'var(--color-surface)',
+                color: 'var(--color-text-primary)',
+                border: '1px solid var(--color-border)'
+              }}
+            >
+              Back to Students
+            </button>
+            <button
+              onClick={handleRetry}
+              className="px-6 py-3 rounded-xl transition-all duration-200 hover:scale-105"
+              style={{ 
+                backgroundColor: 'var(--color-accent-primary)',
+                color: 'var(--color-text-inverse)'
+              }}
+            >
+              Try Again
+            </button>
+          </div>
         </div>
       </div>
     );
   }
 
-  if (error) {
+  // Show empty state if no student data
+  if (!selectedStudent) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
-        <div className="text-center">
-          <p className="text-lg mb-4" style={{ color: 'var(--color-text-primary)' }}>
-            {error}
+        <div className="text-center max-w-lg mx-auto">
+          <div className="mb-6 text-6xl">🤔</div>
+          <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--color-text-primary)' }}>
+            No Student Data
+          </h2>
+          <p className="text-lg mb-6" style={{ color: 'var(--color-text-secondary)' }}>
+            We couldn't find any data for this student. This might be because the student doesn't exist or you don't have permission to view their portfolio.
           </p>
           <button
             onClick={handleBack}
-            className="px-4 py-2 rounded-lg transition-colors hover:bg-[var(--color-accent-tertiary)]"
-            style={{ color: 'var(--color-accent-primary)' }}
+            className="px-6 py-3 rounded-xl transition-all duration-200 hover:scale-105"
+            style={{ 
+              backgroundColor: 'var(--color-accent-primary)',
+              color: 'var(--color-text-inverse)'
+            }}
           >
             Back to Students
           </button>
@@ -92,14 +134,14 @@ const StudentPortfolio: React.FC = () => {
 
   // Calculate completion percentage
   const calculateCompletionPercentage = () => {
-    if (!student.learningTimeline || student.learningTimeline.length === 0) return 0;
-    const completed = student.learningTimeline.filter(l => l.status === 'completed').length;
+    if (!student?.learningTimeline || !Array.isArray(student.learningTimeline) || student.learningTimeline.length === 0) return 0;
+    const completed = student.learningTimeline.filter(l => l?.status === 'completed').length;
     return Math.round((completed / student.learningTimeline.length) * 100);
   };
 
   // Get skills for career track - use backend data if available, fallback to hardcoded
   const getSkillsForTrack = () => {
-    if (student.skills && student.skills.length > 0) {
+    if (student?.skills && Array.isArray(student.skills) && student.skills.length > 0) {
       return student.skills;
     }
     
@@ -109,12 +151,12 @@ const StudentPortfolio: React.FC = () => {
       'mobile-development': ['React Native', 'Flutter', 'Mobile UI/UX', 'App Development', 'Cross-platform'],
       'cybersecurity': ['Network Security', 'Ethical Hacking', 'Cryptography', 'Security Analysis', 'Incident Response']
     };
-    return skills[student.careerTrack as keyof typeof skills] || ['Programming', 'Problem Solving', 'Critical Thinking'];
+    return skills[student?.careerTrack as keyof typeof skills] || ['Programming', 'Problem Solving', 'Critical Thinking'];
   };
 
   // Get recommended roles - use backend data if available, fallback to hardcoded
   const getRecommendedRoles = () => {
-    if (student.recommendedRoles && student.recommendedRoles.length > 0) {
+    if (student?.recommendedRoles && Array.isArray(student.recommendedRoles) && student.recommendedRoles.length > 0) {
       return student.recommendedRoles;
     }
     
@@ -124,7 +166,7 @@ const StudentPortfolio: React.FC = () => {
       'mobile-development': ['Mobile App Developer', 'React Native Developer', 'Flutter Developer', 'iOS/Android Developer'],
       'cybersecurity': ['Security Analyst', 'Penetration Tester', 'Security Engineer', 'Cyber Security Specialist']
     };
-    return roles[student.careerTrack as keyof typeof roles] || ['Software Developer', 'Technical Specialist', 'IT Professional'];
+    return roles[student?.careerTrack as keyof typeof roles] || ['Software Developer', 'Technical Specialist', 'IT Professional'];
   };
 
   // Toggle level expansion
