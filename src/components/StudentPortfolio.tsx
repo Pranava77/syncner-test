@@ -646,27 +646,36 @@ Generated on: ${new Date().toLocaleDateString()}
                   
                   // Add core learning tasks based on actual completion status from backend
                   if (level.learn) {
+                    const learnTitle = level.learnContentName || `Learning: ${level.courseName || 'Module Content'}`;
+                    const learnBrief = level.learnDescription || (level.learn.completed ? 'Content mastered successfully' : 'Continue learning core concepts');
+                    
                     baseTasks.push({
-                      title: `Learning: ${level.courseName || 'Module Content'}`,
-                      brief: level.learn.completed ? 'Content mastered successfully' : 'Continue learning core concepts',
+                      title: learnTitle,
+                      brief: learnBrief,
                       status: level.learn.completed ? 'completed' : 'in-progress',
                       type: 'learning'
                     });
                   }
                   
                   if (level.test) {
+                    const testTitle = level.testContentName || `Assessment: ${level.courseName || 'Module Test'}`;
+                    const testBrief = level.testDescription || (level.test.completed ? `Test completed with ${level.test.score || 0}% score` : 'Take assessment to test knowledge');
+                    
                     baseTasks.push({
-                      title: `Assessment: ${level.courseName || 'Module Test'}`,
-                      brief: level.test.completed ? `Test completed with ${level.test.score || 0}% score` : 'Take assessment to test knowledge',
+                      title: testTitle,
+                      brief: testBrief,
                       status: level.test.completed ? 'completed' : 'in-progress',
                       type: 'assessment'
                     });
                   }
                   
                   if (level.exercise) {
+                    const exerciseTitle = level.exerciseContentName || `Exercise: ${level.courseName || 'Module Practice'}`;
+                    const exerciseBrief = level.exerciseDescription || (level.exercise.completed ? 'Practical exercises completed' : 'Apply what you learned');
+                    
                     baseTasks.push({
-                      title: `Exercise: ${level.courseName || 'Module Practice'}`,
-                      brief: level.exercise.completed ? 'Practical exercises completed' : 'Apply what you learned',
+                      title: exerciseTitle,
+                      brief: exerciseBrief,
                       status: level.exercise.completed ? 'completed' : 'in-progress',
                       type: 'practice'
                     });

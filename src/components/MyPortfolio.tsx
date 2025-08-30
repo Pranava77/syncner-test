@@ -245,7 +245,7 @@ const MyPortfolio: React.FC = () => {
     return completed;
   };
 
-  // Get tasks for a level
+  // Get tasks for a level with dynamic names
   const getTasksForLevel = (level: any) => {
     interface Task {
       title: string;
@@ -256,32 +256,44 @@ const MyPortfolio: React.FC = () => {
 
     const tasks: Task[] = [];
     
-    // Learn section
+    // Get dynamic level name from backend data
+    const levelName = level.courseName || `Level ${level.level}`;
+    
+    // Learn section - use dynamic content names
     if (level.learn) {
+      const learnTitle = level.learnContentName || `${levelName} - Learning Module`;
+      const learnBrief = level.learnDescription || 'Complete learning materials, theory, and concepts for this level';
+      
       tasks.push({
-        title: `Level ${level.level}`,
-        brief: 'Complete learning materials and theory',
-        status: level.learn.completed ? 'completed' : 'pending',
+        title: learnTitle,
+        brief: learnBrief,
+        status: level.learn.completed ? 'completed' : level.learn.startTime ? 'in-progress' : 'pending',
         type: 'learn'
       });
     }
     
-    // Test section
+    // Test section - use dynamic content names
     if (level.test) {
+      const testTitle = level.testContentName || `${levelName} - Assessment`;
+      const testBrief = level.testDescription || 'Complete assessment, quiz, and evaluation for this level';
+      
       tasks.push({
-        title: `Level ${level.level}`,
-        brief: 'Complete assessment and quiz',
-        status: level.test.completed ? 'completed' : 'pending',
+        title: testTitle,
+        brief: testBrief,
+        status: level.test.completed ? 'completed' : level.test.attempts > 0 ? 'in-progress' : 'pending',
         type: 'test'
       });
     }
     
-    // Exercise section
+    // Exercise section - use dynamic content names
     if (level.exercise) {
+      const exerciseTitle = level.exerciseContentName || `${levelName} - Practical Exercise`;
+      const exerciseBrief = level.exerciseDescription || 'Complete hands-on exercises and practical applications';
+      
       tasks.push({
-        title: `Level ${level.level}`,
-        brief: 'Complete practical exercises',
-        status: level.exercise.completed ? 'completed' : 'pending',
+        title: exerciseTitle,
+        brief: exerciseBrief,
+        status: level.exercise.completed ? 'completed' : level.exercise.startTime ? 'in-progress' : 'pending',
         type: 'exercise'
       });
     }
@@ -294,6 +306,12 @@ const MyPortfolio: React.FC = () => {
     const totalLevels = student.summaryStats?.totalLevels || 10;
     const currentLevel = student.summaryStats?.currentLevel || 1;
     
+    // If we have complete backend data, use it directly
+    if (timeline && timeline.length > 0 && timeline.length >= totalLevels) {
+      // Backend data is complete, just ensure proper ordering
+      return timeline.sort((a, b) => a.level - b.level);
+    }
+    
     // Group existing timeline data by level
     const levelDataMap = new Map();
     
@@ -303,6 +321,13 @@ const MyPortfolio: React.FC = () => {
         
         if (!levelDataMap.has(levelKey)) {
           levelDataMap.set(levelKey, {
+            courseName: entry.courseName,
+            learnContentName: entry.learnContentName,
+            learnDescription: entry.learnDescription,
+            testContentName: entry.testContentName,
+            testDescription: entry.testDescription,
+            exerciseContentName: entry.exerciseContentName,
+            exerciseDescription: entry.exerciseDescription,
             learn: entry.learn || { completed: false, startTime: null, endTime: null },
             test: entry.test || { completed: false, score: 0, attempts: 0, startTime: null, endTime: null },
             exercise: entry.exercise || { completed: false, startTime: null, endTime: null }
@@ -310,6 +335,15 @@ const MyPortfolio: React.FC = () => {
         } else {
           // Merge data from duplicate entry
           const existing = levelDataMap.get(levelKey);
+          
+          // Preserve content names and descriptions
+          if (entry.courseName && !existing.courseName) existing.courseName = entry.courseName;
+          if (entry.learnContentName && !existing.learnContentName) existing.learnContentName = entry.learnContentName;
+          if (entry.learnDescription && !existing.learnDescription) existing.learnDescription = entry.learnDescription;
+          if (entry.testContentName && !existing.testContentName) existing.testContentName = entry.testContentName;
+          if (entry.testDescription && !existing.testDescription) existing.testDescription = entry.testDescription;
+          if (entry.exerciseContentName && !existing.exerciseContentName) existing.exerciseContentName = entry.exerciseContentName;
+          if (entry.exerciseDescription && !existing.exerciseDescription) existing.exerciseDescription = entry.exerciseDescription;
           
           // Merge learn data (take the completed one if available)
           if (entry.learn && (entry.learn.completed || !existing.learn.completed)) {
@@ -334,6 +368,13 @@ const MyPortfolio: React.FC = () => {
     for (let i = 1; i <= totalLevels; i++) {
       const backendLevel = i - 1; // Backend uses 0-based indexing
       const levelData = levelDataMap.get(backendLevel) || {
+        courseName: `Level ${i}`,
+        learnContentName: `Level ${i} - Learning Module`,
+        learnDescription: `Complete learning materials and theory for Level ${i}`,
+        testContentName: `Level ${i} - Assessment`,
+        testDescription: `Complete assessment and evaluation for Level ${i}`,
+        exerciseContentName: `Level ${i} - Practical Exercise`,
+        exerciseDescription: `Complete hands-on exercises for Level ${i}`,
         learn: { completed: false, startTime: null, endTime: null },
         test: { completed: false, score: 0, attempts: 0, startTime: null, endTime: null },
         exercise: { completed: false, startTime: null, endTime: null }
@@ -354,7 +395,13 @@ const MyPortfolio: React.FC = () => {
       allLevels.push({
         level: i, // Display level (1, 2, 3, etc.)
         originalLevel: backendLevel, // Backend level (0, 1, 2, etc.)
-        courseName: `Level ${i}`,
+        courseName: levelData.courseName,
+        learnContentName: levelData.learnContentName,
+        learnDescription: levelData.learnDescription,
+        testContentName: levelData.testContentName,
+        testDescription: levelData.testDescription,
+        exerciseContentName: levelData.exerciseContentName,
+        exerciseDescription: levelData.exerciseDescription,
         status: status,
         learn: levelData.learn,
         test: levelData.test,

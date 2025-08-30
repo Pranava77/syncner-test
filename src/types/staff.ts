@@ -69,6 +69,13 @@ export interface LearningLevel {
   level: number;
   courseName: string;
   status: 'completed' | 'in-progress' | 'not-started';
+  // Dynamic content names and descriptions
+  learnContentName?: string;
+  learnDescription?: string;
+  testContentName?: string;
+  testDescription?: string;
+  exerciseContentName?: string;
+  exerciseDescription?: string;
   learn: LearningSection;
   test: TestSection;
   exercise: ExerciseSection;

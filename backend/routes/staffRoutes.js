@@ -479,17 +479,32 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
         status = 'in-progress'; // First level is always accessible
       }
       
-      // Get level title from curriculum
+      // Get level title and content details from curriculum
       const levelCurriculumItem = curriculumItems.find(item => 
         item.order === levelOrder && item.type === 'syllabus'
       ) || curriculumItems.find(item => item.order === levelOrder);
       
       const levelTitle = levelCurriculumItem?.title || `Level ${levelOrder}`;
       
+      // Get specific content items for this level
+      const levelContentItems = curriculumItems.filter(item => item.order === levelOrder);
+      
+      // Find specific content types
+      const learnContent = levelContentItems.find(item => item.type === 'learn' || item.type === 'syllabus');
+      const testContent = levelContentItems.find(item => item.type === 'test' || item.type === 'quiz');
+      const exerciseContent = levelContentItems.find(item => item.type === 'exercise' || item.type === 'project');
+      
       return {
         level: levelOrder,
         courseName: levelTitle,
         status: status,
+        // Dynamic content names and descriptions
+        learnContentName: learnContent?.title || `${levelTitle} - Learning Module`,
+        learnDescription: learnContent?.description || `Complete learning materials and theory for ${levelTitle}`,
+        testContentName: testContent?.title || `${levelTitle} - Assessment`,
+        testDescription: testContent?.description || `Complete assessment and evaluation for ${levelTitle}`,
+        exerciseContentName: exerciseContent?.title || `${levelTitle} - Practical Exercise`,
+        exerciseDescription: exerciseContent?.description || `Complete hands-on exercises for ${levelTitle}`,
         learn: { 
           completed: levelProgress?.completedSections?.learn || false, 
           startTime: levelProgress?.learnProgress?.timeSpent ? levelProgress?.completedAt : null, 
