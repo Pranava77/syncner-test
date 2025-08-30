@@ -311,6 +311,12 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
     
     console.log('📚 Staff route: Curriculum items found:', curriculumItems.length, 'for track:', normalizedCareerTrack);
     console.log('🎯 Staff route: Level orders found:', levelOrders, 'Total levels:', totalLevels);
+    console.log('📋 Sample curriculum items:', curriculumItems.slice(0, 3).map(item => ({
+      order: item.order,
+      title: item.title,
+      type: item.type,
+      _id: item._id
+    })));
     
     // Calculate performance metrics
     const performance = {
@@ -464,15 +470,52 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
     // Build learning timeline using real student progress data
     const learningTimeline = [];
     
+    // Create a mapping of level order to curriculum data for proper naming
+    const levelToCurriculumMap = {};
+    curriculumItems.forEach(item => {
+      levelToCurriculumMap[item.order] = {
+        title: item.title,
+        description: item.description,
+        courseName: item.courseName || item.title
+      };
+    });
+    
+    console.log('🗺️ Level to curriculum mapping:', levelToCurriculumMap);
+    console.log('📊 Progress data structure:', JSON.stringify(progress?.completedLevels, null, 2));
+    
     // Add completed levels to timeline
     if (progress?.completedLevels && Array.isArray(progress.completedLevels)) {
       progress.completedLevels.forEach(level => {
+        console.log(`🔍 Processing level data:`, level);
+        
         if (level.completedAt) {
+          // Get proper level name from curriculum - handle both levelOrder and levelId
+          let levelName = 'Unknown Level';
+          let levelOrder = level.levelOrder;
+          
+          // If levelOrder is missing or 0, try to extract from levelId or find by curriculum
+          if (!levelOrder || levelOrder === 0) {
+            // Try to find curriculum item by levelId if available
+            if (level.levelId) {
+              const curriculumItem = curriculumItems.find(item => item._id.toString() === level.levelId);
+              if (curriculumItem) {
+                levelOrder = curriculumItem.order;
+                levelName = curriculumItem.title || curriculumItem.courseName || `Level ${curriculumItem.order}`;
+              }
+            }
+          } else {
+            // Use the mapping we created
+            const levelInfo = levelToCurriculumMap[levelOrder] || {};
+            levelName = levelInfo.title || levelInfo.courseName || `Level ${levelOrder}`;
+          }
+          
+          console.log(`📚 Processing level ${levelOrder}:`, levelName, level);
+          
           // Add learn section completion
           if (level.completedSections?.learn) {
             learningTimeline.push({
               type: 'learning',
-              activity: `Completed Learning: ${level.courseName || `Level ${level.levelOrder}`}`,
+              activity: `Completed Learning: ${levelName}`,
               date: level.completedAt.toISOString().split('T')[0],
               duration: level.learnProgress?.timeSpent || 30, // Default 30 minutes if no time data
               score: null
@@ -484,7 +527,7 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
             const bestScore = Math.max(...level.testProgress.attempts.map(attempt => attempt.score || 0));
             learningTimeline.push({
               type: 'test',
-              activity: `Completed Test: ${level.courseName || `Level ${level.levelOrder}`}`,
+              activity: `Completed Test: ${levelName}`,
               date: level.completedAt.toISOString().split('T')[0],
               duration: 45, // Default test duration
               score: bestScore
@@ -495,7 +538,7 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
           if (level.completedSections?.exercise) {
             learningTimeline.push({
               type: 'exercise',
-              activity: `Completed Exercise: ${level.courseName || `Level ${level.levelOrder}`}`,
+              activity: `Completed Exercise: ${levelName}`,
               date: level.completedAt.toISOString().split('T')[0],
               duration: level.exerciseProgress?.timeSpent || 60, // Default 60 minutes if no time data
               score: null
@@ -522,17 +565,29 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
     
     // Add test attempts if available
     if (progress?.testAttempts && Array.isArray(progress.testAttempts)) {
-      progress.testAttempts.forEach(attempt => {
-        if (attempt.submittedAt) {
-          learningTimeline.push({
-            type: 'test',
-            activity: `Test Attempt: ${attempt.levelName || 'Level Assessment'}`,
-            date: attempt.submittedAt.toISOString().split('T')[0],
-            duration: 45,
-            score: attempt.score || 0
-          });
-        }
-      });
+              progress.testAttempts.forEach(attempt => {
+          if (attempt.submittedAt) {
+            // Try to get level name from curriculum mapping
+            let levelName = 'Level Assessment';
+            if (attempt.levelOrder && attempt.levelOrder > 0) {
+              const levelInfo = levelToCurriculumMap[attempt.levelOrder] || {};
+              levelName = levelInfo.title || levelInfo.courseName || `Level ${attempt.levelOrder}`;
+            } else if (attempt.levelId) {
+              const curriculumItem = curriculumItems.find(item => item._id.toString() === attempt.levelId);
+              if (curriculumItem) {
+                levelName = curriculumItem.title || curriculumItem.courseName || `Level ${curriculumItem.order}`;
+              }
+            }
+            
+            learningTimeline.push({
+              type: 'test',
+              activity: `Test Attempt: ${levelName}`,
+              date: attempt.submittedAt.toISOString().split('T')[0],
+              duration: 45,
+              score: attempt.score || 0
+            });
+          }
+        });
     }
     
     // Add exercise submissions if available
