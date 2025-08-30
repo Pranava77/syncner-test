@@ -725,10 +725,25 @@ Generated on: ${new Date().toLocaleDateString()}
                         </div>
                         
                         <div className="flex-1 space-y-2">
-                          <h4 className="text-2xl font-bold tracking-tight group-hover:text-opacity-80 transition-all duration-200" 
-                              style={{ color: 'var(--color-text-primary)' }}>
-                            {level.courseName || `Level ${level.level}`}
-                          </h4>
+                          <div className="flex items-center gap-3">
+                            <h4 className="text-2xl font-bold tracking-tight group-hover:text-opacity-80 transition-all duration-200" 
+                                style={{ color: 'var(--color-text-primary)' }}>
+                              {level.courseName || `Level ${level.level}`}
+                            </h4>
+                            {/* Status Badge */}
+                            <div className="px-2 py-1 rounded-full text-xs font-bold" style={{ 
+                              backgroundColor: level.status === 'completed' ? 'var(--color-success-bg)' : 
+                                             level.status === 'in-progress' ? 'var(--color-warning-bg)' : 'var(--color-tertiary-bg)',
+                              color: level.status === 'completed' ? 'var(--color-success)' : 
+                                     level.status === 'in-progress' ? 'var(--color-warning)' : 'var(--color-text-secondary)',
+                              border: '1px solid',
+                              borderColor: level.status === 'completed' ? 'var(--color-success)' : 
+                                          level.status === 'in-progress' ? 'var(--color-warning)' : 'var(--color-border)'
+                            }}>
+                              {level.status === 'completed' ? '✓' : 
+                               level.status === 'in-progress' ? '⟳' : '○'}
+                            </div>
+                          </div>
                           <div className="flex items-center gap-6 text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>
                             {completionDate ? (
                               <div className="flex items-center gap-2">
@@ -809,6 +824,32 @@ Generated on: ${new Date().toLocaleDateString()}
                     
                     {expandedLevels.has(index) && (
                       <ThemeContainer variant="surface" className="p-6 border-t rounded-t-none">
+                        {/* Level Status Summary */}
+                        <div className="mb-6 p-4 rounded-lg" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <div className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                                Level Status:
+                              </div>
+                              <div className="px-3 py-1 rounded-full text-sm font-bold" style={{ 
+                                backgroundColor: level.status === 'completed' ? 'var(--color-success-bg)' : 
+                                               level.status === 'in-progress' ? 'var(--color-warning-bg)' : 'var(--color-tertiary-bg)',
+                                color: level.status === 'completed' ? 'var(--color-success)' : 
+                                       level.status === 'in-progress' ? 'var(--color-warning)' : 'var(--color-text-secondary)',
+                                border: '2px solid',
+                                borderColor: level.status === 'completed' ? 'var(--color-success)' : 
+                                            level.status === 'in-progress' ? 'var(--color-warning)' : 'var(--color-border)'
+                              }}>
+                                {level.status === 'completed' ? '✓ COMPLETED' : 
+                                 level.status === 'in-progress' ? '⟳ IN PROGRESS' : '○ NOT STARTED'}
+                              </div>
+                            </div>
+                            <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                              {completedTasks} of {totalTasks} tasks completed
+                            </div>
+                          </div>
+                        </div>
+                        
                         {/* Learning Progress Overview */}
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                           <div className="text-center p-4 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
@@ -821,6 +862,18 @@ Generated on: ${new Date().toLocaleDateString()}
                             <div className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
                               {level.learn?.completed ? 'Completed' : 'In Progress'}
                             </div>
+                            {/* Progress indicator */}
+                            <div className="mt-2">
+                              <div className="w-full h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--color-border)' }}>
+                                <div 
+                                  className="h-full rounded-full transition-all duration-500"
+                                  style={{ 
+                                    width: level.learn?.completed ? '100%' : '0%',
+                                    backgroundColor: level.learn?.completed ? 'var(--color-success)' : 'var(--color-accent-primary)'
+                                  }}
+                                />
+                              </div>
+                            </div>
                           </div>
                           <div className="text-center p-4 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
                             <div className="text-2xl font-bold mb-2" style={{ color: 'var(--color-accent-primary)' }}>
@@ -832,6 +885,18 @@ Generated on: ${new Date().toLocaleDateString()}
                             <div className="text-xs mt-1" style={{ color: 'var(--color-text-tertiary)' }}>
                               {level.test?.completed ? 'Completed' : 'In Progress'}
                             </div>
+                            {/* Progress indicator */}
+                            <div className="mt-2">
+                              <div className="w-full h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--color-border)' }}>
+                                <div 
+                                  className="h-full rounded-full transition-all duration-500"
+                                  style={{ 
+                                    width: level.test?.completed ? '100%' : '0%',
+                                    backgroundColor: level.test?.completed ? 'var(--color-success)' : 'var(--color-accent-primary)'
+                                  }}
+                                />
+                              </div>
+                            </div>
                           </div>
                           <div className="text-center p-4 rounded-lg" style={{ backgroundColor: 'var(--color-secondary-bg)' }}>
                             <div className="text-2xl font-bold mb-2" style={{ color: 'var(--color-accent-primary)' }}>
@@ -842,6 +907,18 @@ Generated on: ${new Date().toLocaleDateString()}
                             </div>
                             <div className="text-xs mt-1" style={{ color: 'var(--color-text-secondary)' }}>
                               {level.exercise?.completed ? 'Completed' : 'In Progress'}
+                            </div>
+                            {/* Progress indicator */}
+                            <div className="mt-2">
+                              <div className="w-full h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--color-border)' }}>
+                                <div 
+                                  className="h-full rounded-full transition-all duration-500"
+                                  style={{ 
+                                    width: level.exercise?.completed ? '100%' : '0%',
+                                    backgroundColor: level.exercise?.completed ? 'var(--color-success)' : 'var(--color-accent-primary)'
+                                  }}
+                                />
+                              </div>
                             </div>
                           </div>
                         </div>
