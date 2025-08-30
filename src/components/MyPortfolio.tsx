@@ -72,6 +72,18 @@ const MyPortfolio: React.FC = () => {
 
   const student = portfolioData;
 
+  // Debug logging to see what data we're receiving
+  React.useEffect(() => {
+    if (student) {
+      console.log('📊 Student data received:', {
+        summaryStats: student.summaryStats,
+        learningTimeline: student.learningTimeline,
+        careerTrack: student.careerTrack,
+        name: student.name
+      });
+    }
+  }, [student]);
+
   // Calculate completion percentage
   const calculateCompletionPercentage = () => {
     if (!student.learningTimeline || student.learningTimeline.length === 0) return 0;
@@ -570,9 +582,13 @@ Generated on: ${new Date().toLocaleDateString()}
                 border: '1px solid var(--color-border)'
               }}>
                 <div className="text-3xl font-bold mb-2" style={{ color: 'var(--color-success)' }}>
-                  {student.summaryStats?.completedLevels || 0}
+                  {student.summaryStats?.completedLevels ?? 
+                   (student.learningTimeline ? student.learningTimeline.filter((l: any) => l.status === 'completed').length : 0)}
                 </div>
                 <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Levels Completed</div>
+                {!student.summaryStats && (
+                  <div className="text-xs mt-1" style={{ color: 'var(--color-warning)' }}>No progress data</div>
+                )}
               </div>
               <div className="p-6 rounded-xl text-center" style={{ 
                 backgroundColor: 'var(--color-secondary-bg)',
@@ -591,6 +607,9 @@ Generated on: ${new Date().toLocaleDateString()}
                   {student.summaryStats?.totalLevels || 10}
                 </div>
                 <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Total Levels</div>
+                {(student.summaryStats?.totalLevels || 10) === 10 && (
+                  <div className="text-xs mt-1" style={{ color: 'var(--color-warning)' }}>Default value</div>
+                )}
               </div>
               <div className="p-6 rounded-xl text-center" style={{ 
                 backgroundColor: 'var(--color-secondary-bg)',

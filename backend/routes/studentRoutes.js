@@ -29,17 +29,40 @@ router.get('/portfolio/:studentId', protect, authorize('student'), async (req, r
         message: 'Student not found'
       });
     }
+    
+    console.log('👤 Student found:', student.name, 'Career Track:', student.careerTrack);
 
     // Get student progress
     const progress = await UserProgress.findOne({ user: studentId }).lean();
+    console.log('📊 Student progress data:', progress ? 'Found' : 'Not found', progress?.completedLevels?.length || 0, 'completed levels');
     
-    // Get track information
-    const track = await Track.findOne({ name: student.careerTrack }).lean();
+    // Get track information - try multiple possible names
+    let track = await Track.findOne({ name: student.careerTrack }).lean();
+    if (!track && student.careerTrack) {
+      // Try with different formatting
+      const altFormats = [
+        student.careerTrack.toLowerCase().replace(/\s+/g, '-'),
+        student.careerTrack.toLowerCase().replace(/[\s-]/g, ''),
+        student.careerTrack
+      ];
+      for (const format of altFormats) {
+        track = await Track.findOne({ name: format }).lean();
+        if (track) break;
+      }
+    }
+    console.log('🎯 Track data for', student.careerTrack, ':', track ? `Found with ${track.levels?.length || 0} levels` : 'Not found');
     
-    // Calculate summary statistics
-    const totalLevels = track ? track.levels.length : 10;
+    // Calculate summary statistics with better defaults
+    const totalLevels = track && track.levels ? track.levels.length : 10;
     const completedLevels = progress?.completedLevels?.length || 0;
     const currentLevel = progress?.currentLevel || 1;
+    
+    console.log('📈 Summary stats calculated:', { totalLevels, completedLevels, currentLevel });
+    
+    // If no real data available, provide some sample structure
+    if (!progress && totalLevels === 10) {
+      console.log('⚠️ No progress data found, providing default structure');
+    }
     
     const summaryStats = {
       totalLevels,
