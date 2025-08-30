@@ -34,10 +34,19 @@ export interface DailyActivity {
   isPresent: boolean;
 }
 
+export interface LearningTimelineItem {
+  date: string;
+  activity: string;
+  type: 'learning' | 'test' | 'exercise';
+  duration: number;
+  score?: number;
+}
+
 export interface StudentDetails extends Student {
   performance: PerformanceMetrics;
   summaryStats: SummaryStats;
-  learningTimeline: LearningLevel[];
+  learningTimeline: LearningTimelineItem[];
+  learningLevels: LearningLevel[];
   dailyActivity: DailyActivity[];
   attendanceStats: AttendanceStats;
   skills: string[];

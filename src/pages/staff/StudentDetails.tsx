@@ -14,130 +14,6 @@ import {
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, Tooltip } from 'recharts';
 import { useStaff } from '../../hooks/useStaff';
 
-// Mock student data matching wireframe structure
-const mockStudent = {
-  _id: '713315104704',
-  name: 'Ramesh',
-  email: 'ramesh@example.com',
-  careerTrack: 'Full Stack Development',
-  level: 'Intermediate',
-  progress: 80,
-  status: 'active' as const,
-  lastActive: '2024-01-15T10:30:00Z',
-  totalPoints: 2847,
-  streakDays: 7,
-  college: 'Tech University',
-  department: 'B.E IT',
-  batch: '2023-2027',
-  isActive: true,
-  createdAt: '2024-01-01T00:00:00Z',
-  updatedAt: '2024-01-15T10:30:00Z',
-  currentStreak: 7,
-  longestStreak: 12,
-  attendancePercentage: 80,
-  totalDays: 45,
-  presentDays: 38,
-  leaderboardScore: 80,
-  enrolledDate: '21-03-2025',
-  performance: {
-    performance: 75,
-    potential: 85,
-    contribution: 70,
-    creativity: 90,
-    skill: 80,
-    teamwork: 82
-  },
-  summaryStats: {
-    totalLevels: 10,
-    completedLevels: 7,
-    currentLevel: 8,
-    completionRate: 70,
-    consistency: 84,
-    progress: 80,
-    leaderboard: 80
-  },
-  learningTimeline: [],
-  dailyActivity: [],
-  attendanceStats: {
-    totalDays: 45,
-    presentDays: 38,
-    currentStreak: 7,
-    longestStreak: 12
-  },
-  skills: ['React', 'Node.js', 'Python', 'AWS', 'MongoDB'],
-  recommendedRoles: ['Frontend Developer', 'Full Stack Engineer', 'DevOps Engineer'],
-  learningTimeline: [
-    {
-      level: 3,
-      courseName: 'Introduction to HTML',
-      description: 'HTML Fundamentals',
-      status: 'in-progress' as const,
-      learn: {
-        completed: true,
-        startTime: '10-08-2025 10:00 AM',
-        endTime: '12-08-2025 11:00 AM'
-      },
-      test: {
-        completed: true,
-        score: 80,
-        attempts: 2,
-        startTime: '13-08-2025 02:00 PM',
-        endTime: '13-08-2025 03:00 PM'
-      },
-      exercise: {
-        completed: false,
-        startTime: '14-08-2025 09:03 PM',
-        endTime: 'In-Progress'
-      }
-    },
-    {
-      level: 2,
-      courseName: 'Introduction to HTML',
-      description: 'HTML Fundamentals',
-      status: 'completed' as const,
-      learn: {
-        completed: true,
-        startTime: '05-08-2025 09:00 AM',
-        endTime: '07-08-2025 10:00 AM'
-      },
-      test: {
-        completed: true,
-        score: 85,
-        attempts: 2,
-        startTime: '08-08-2025 01:00 PM',
-        endTime: '08-08-2025 02:00 PM'
-      },
-      exercise: {
-        completed: true,
-        startTime: '09-08-2025 09:00 AM',
-        endTime: '09-08-2025 10:00 AM'
-      }
-    },
-    {
-      level: 1,
-      courseName: 'Introduction to HTML',
-      description: 'HTML Fundamentals',
-      status: 'completed' as const,
-      learn: {
-        completed: true,
-        startTime: '01-08-2025 09:00 AM',
-        endTime: '03-08-2025 10:00 AM'
-      },
-      test: {
-        completed: true,
-        score: 90,
-        attempts: 2,
-        startTime: '04-08-2025 01:00 PM',
-        endTime: '04-08-2025 02:00 PM'
-      },
-      exercise: {
-        completed: true,
-        startTime: '05-08-2025 09:00 AM',
-        endTime: '05-08-2025 10:00 AM'
-      }
-    }
-  ]
-};
 
 const StudentDetails: React.FC = () => {
   const { studentId } = useParams<{ studentId: string }>();
@@ -165,13 +41,64 @@ const StudentDetails: React.FC = () => {
     };
   }, [studentId, getStudentDetails, clearSelectedStudent]);
 
-  // Use selectedStudent data or fallback to mock data
-  const studentData = selectedStudent || mockStudent;
+  // Use selectedStudent data from backend
+  const studentData = selectedStudent;
   
   // Debug logging
   console.log('StudentDetails - selectedStudent:', selectedStudent);
   console.log('StudentDetails - studentData:', studentData);
-  console.log('StudentDetails - learningTimeline:', studentData.learningTimeline);
+  
+  // Show loading state while data is being fetched
+  if (studentDetailsLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg)' }}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: 'var(--color-primary)' }}></div>
+          <p className="text-lg" style={{ color: 'var(--color-text-primary)' }}>Loading student details...</p>
+        </div>
+      </div>
+    );
+  }
+  
+  // Show error state if there's an error
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg)' }}>
+        <div className="text-center">
+          <div className="text-red-500 text-6xl mb-4">⚠️</div>
+          <h2 className="text-2xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>Error Loading Student</h2>
+          <p className="text-lg mb-4" style={{ color: 'var(--color-text-muted)' }}>{error}</p>
+          <button 
+            onClick={() => getStudentDetails(studentId!)}
+            className="px-4 py-2 rounded-lg font-medium"
+            style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-primary-text)' }}
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+  
+  // Show message if no student data is available
+  if (!studentData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg)' }}>
+        <div className="text-center">
+          <div className="text-gray-500 text-6xl mb-4">👤</div>
+          <h2 className="text-2xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>No Student Data</h2>
+          <p className="text-lg mb-4" style={{ color: 'var(--color-text-muted)' }}>Student information not found.</p>
+          <button 
+            onClick={() => navigate('/staff/students')}
+            className="px-4 py-2 rounded-lg font-medium"
+            style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-primary-text)' }}
+          >
+            Back to Students
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   // Radar chart data for performance metrics
   const radarData = [
@@ -493,7 +420,7 @@ const StudentDetails: React.FC = () => {
                 className="text-sm"
                 style={{ color: 'var(--color-text-muted)' }}
               >
-                {getProgressLabel(mockStudent.progress)}
+                {getProgressLabel(studentData.progress)}
               </div>
             </div>
           </div>
@@ -589,95 +516,98 @@ const StudentDetails: React.FC = () => {
 
           {/* Learning Levels */}
           <div className="space-y-6">
-            {studentData.learningTimeline && studentData.learningTimeline.length > 0 ? (
-              studentData.learningTimeline.map((level, index) => (
-              <div 
-                key={index} 
-                className="rounded-lg p-4"
-                style={{
-                  border: '1px solid var(--color-border)',
-                  backgroundColor: 'var(--color-surface-elevated)'
-                }}
-              >
-                <div className="flex items-center space-x-3 mb-4">
-                  {getStatusIcon(level.status)}
-                  <h3 
-                    className="text-lg font-heading"
-                    style={getStatusColor(level.status)}
-                  >
-                    Level {level.level}: {level.courseName}
-                  </h3>
-                </div>
-                
-                <div className="space-y-3">
-                  {/* Learn */}
-                  <div className="flex items-center space-x-3">
-                    <CheckCircledIcon 
-                      className="w-5 h-5" 
-                      style={{ color: 'var(--color-success)' }} 
-                    />
-                    <span 
-                      className="text-sm font-label"
-                      style={{ color: 'var(--color-text-tertiary)' }}
-                    >
-                      Learn:
-                    </span>
-                    <span 
-                      className="text-sm"
+                        {studentData.learningTimeline && studentData.learningTimeline.length > 0 ? (
+              studentData.learningTimeline.map((activity, index) => (
+                <div 
+                  key={index} 
+                  className="rounded-lg p-4"
+                  style={{
+                    border: '1px solid var(--color-border)',
+                    backgroundColor: 'var(--color-surface-elevated)'
+                  }}
+                >
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
+                      <span className="text-blue-600 text-sm font-semibold" style={{ color: 'var(--color-primary)' }}>
+                        {activity.type === 'learning' ? '📚' : activity.type === 'test' ? '📝' : '💻'}
+                      </span>
+                    </div>
+                    <h3 
+                      className="text-lg font-heading"
                       style={{ color: 'var(--color-text-primary)' }}
                     >
-                      {level.learn.startTime} -- {level.learn.endTime}
-                    </span>
+                      {activity.activity}
+                    </h3>
                   </div>
                   
-                  {/* Test */}
-                  <div className="flex items-center space-x-3">
-                    <CheckCircledIcon 
-                      className="w-5 h-5" 
-                      style={{ color: 'var(--color-success)' }} 
-                    />
-                    <span 
-                      className="text-sm font-label"
-                      style={{ color: 'var(--color-text-tertiary)' }}
-                    >
-                      Test:
-                    </span>
-                    <span 
-                      className="text-sm"
-                      style={{ color: 'var(--color-text-primary)' }}
-                    >
-                      ({level.test.score}% - {level.test.attempts} attempts) {level.test.startTime} -- {level.test.endTime}
-                    </span>
-                  </div>
-                  
-                  {/* Exercise */}
-                  <div className="flex items-center space-x-3">
-                    {level.exercise.completed ? (
-                      <CheckCircledIcon 
+                  <div className="space-y-3">
+                    {/* Date */}
+                    <div className="flex items-center space-x-3">
+                      <CalendarIcon 
                         className="w-5 h-5" 
-                        style={{ color: 'var(--color-success)' }} 
+                        style={{ color: 'var(--color-text-tertiary)' }} 
                       />
-                    ) : (
+                      <span 
+                        className="text-sm font-label"
+                        style={{ color: 'var(--color-text-tertiary)' }}
+                      >
+                        Date:
+                      </span>
+                      <span 
+                        className="text-sm"
+                        style={{ color: 'var(--color-text-primary)' }}
+                      >
+                        {new Date(activity.date).toLocaleDateString('en-US', { 
+                          weekday: 'short', 
+                          month: 'short', 
+                          day: 'numeric' 
+                        })}
+                      </span>
+                    </div>
+                    
+                    {/* Duration */}
+                    <div className="flex items-center space-x-3">
                       <ClockIcon 
                         className="w-5 h-5" 
-                        style={{ color: 'var(--color-warning)' }} 
+                        style={{ color: 'var(--color-text-tertiary)' }} 
                       />
+                      <span 
+                        className="text-sm font-label"
+                        style={{ color: 'var(--color-text-tertiary)' }}
+                      >
+                        Duration:
+                      </span>
+                      <span 
+                        className="text-sm"
+                        style={{ color: 'var(--color-text-primary)' }}
+                      >
+                        {activity.duration} minutes
+                      </span>
+                    </div>
+                    
+                    {/* Score */}
+                    {activity.score && (
+                      <div className="flex items-center space-x-3">
+                        <TargetIcon 
+                          className="w-5 h-5" 
+                          style={{ color: 'var(--color-text-tertiary)' }} 
+                        />
+                        <span 
+                          className="text-sm font-label"
+                          style={{ color: 'var(--color-text-tertiary)' }}
+                        >
+                          Score:
+                        </span>
+                        <span 
+                          className="text-sm"
+                          style={{ color: 'var(--color-text-primary)' }}
+                        >
+                          {activity.score}%
+                        </span>
+                      </div>
                     )}
-                    <span 
-                      className="text-sm font-label"
-                      style={{ color: 'var(--color-text-tertiary)' }}
-                    >
-                      Exercise:
-                    </span>
-                    <span 
-                      className="text-sm"
-                      style={{ color: 'var(--color-text-primary)' }}
-                    >
-                      {level.exercise.startTime} -- {level.exercise.endTime}
-                    </span>
                   </div>
                 </div>
-              </div>
               ))
             ) : (
               <div className="text-center py-8" style={{ color: 'var(--color-text-muted)' }}>
