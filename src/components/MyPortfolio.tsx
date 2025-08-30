@@ -15,7 +15,6 @@ import {
   Share1Icon,
   DownloadIcon
 } from '@radix-ui/react-icons';
-import { StudentDetails } from '../types/staff';
 import { useStudent } from '../hooks/useStudent';
 import ThemeContainer from './ThemeContainer';
 
