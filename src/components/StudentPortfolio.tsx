@@ -16,6 +16,7 @@ import {
 } from '@radix-ui/react-icons';
 import { useStaff } from '../hooks/useStaff';
 import ThemeContainer from './ThemeContainer';
+import DailyActivityChart from './DailyActivityChart';
 
 // Note: Backend generates fake timestamps instead of real data
 // This causes dates and times to change on every refresh
@@ -458,6 +459,20 @@ Generated on: ${new Date().toLocaleDateString()}
                 </div>
               </div>
 
+              {/* Daily Activity */}
+              <div className="mb-10">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-1 h-8 rounded-full" style={{ backgroundColor: 'var(--color-accent-primary)' }}></div>
+                  <h3 className="text-2xl font-bold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>Learning Activity</h3>
+                </div>
+                <div className="p-6 rounded-xl" style={{ 
+                  backgroundColor: 'var(--color-surface)',
+                  border: '1px solid var(--color-border)'
+                }}>
+                  <DailyActivityChart dailyActivity={student.dailyActivity} />
+                </div>
+              </div>
+
               {/* Certificate ID */}
               <div className="mb-8">
                 <div className="flex items-center gap-3 mb-6">
@@ -653,48 +668,56 @@ Generated on: ${new Date().toLocaleDateString()}
                     brief: string;
                     status: 'completed' | 'in-progress' | 'not-started';
                     type: string;
+                    content?: string;
+                    timeSpent?: number;
+                    score?: number;
                   }
                   
                   const baseTasks: Task[] = [];
                   
                   // Add core learning tasks based on actual completion status from backend
                   if (level.learn) {
-                    const learnTitle = level.learnContentName || `Learning: ${level.courseName || 'Module Content'}`;
-                    const learnBrief = level.learnDescription || (level.learn.completed ? 'Content mastered successfully' : 'Continue learning core concepts');
+                    const learnTitle = level.learn.title || `Learning: ${level.courseName || 'Module Content'}`;
+                    const learnBrief = level.learn.description || (level.learn.completed ? 'Content mastered successfully' : 'Continue learning core concepts');
                     
                     baseTasks.push({
                       title: learnTitle,
                       brief: learnBrief,
-                      status: level.learn.completed ? 'completed' : 'in-progress',
-                      type: 'learning'
+                      status: level.learn.completed ? 'completed' : level.learn.startTime ? 'in-progress' : 'not-started',
+                      type: 'learning',
+                      content: level.learn.content,
+                      timeSpent: level.learn.timeSpent
                     });
                   }
                   
                   if (level.test) {
-                    const testTitle = level.testContentName || `Assessment: ${level.courseName || 'Module Test'}`;
-                    const testBrief = level.testDescription || (level.test.completed ? `Test completed with ${level.test.score || 0}% score` : 'Take assessment to test knowledge');
+                    const testTitle = level.test.title || `Assessment: ${level.courseName || 'Module Test'}`;
+                    const testBrief = level.test.description || (level.test.completed ? `Test completed with ${level.test.score || 0}% score` : 'Take assessment to test knowledge');
                     
                     baseTasks.push({
                       title: testTitle,
                       brief: testBrief,
-                      status: level.test.completed ? 'completed' : 'in-progress',
-                      type: 'assessment'
+                      status: level.test.completed ? 'completed' : level.test.attempts > 0 ? 'in-progress' : 'not-started',
+                      type: 'assessment',
+                      content: level.test.content,
+                      score: level.test.score,
+                      timeSpent: level.test.timeSpent
                     });
                   }
                   
                   if (level.exercise) {
-                    const exerciseTitle = level.exerciseContentName || `Exercise: ${level.courseName || 'Module Practice'}`;
-                    const exerciseBrief = level.exerciseDescription || (level.exercise.completed ? 'Practical exercises completed' : 'Apply what you learned');
+                    const exerciseTitle = level.exercise.title || `Exercise: ${level.courseName || 'Module Practice'}`;
+                    const exerciseBrief = level.exercise.description || (level.exercise.completed ? 'Practical exercises completed' : 'Apply what you learned');
                     
                     baseTasks.push({
                       title: exerciseTitle,
                       brief: exerciseBrief,
-                      status: level.exercise.completed ? 'completed' : 'in-progress',
-                      type: 'practice'
+                      status: level.exercise.completed ? 'completed' : level.exercise.startTime ? 'in-progress' : 'not-started',
+                      type: 'practice',
+                      content: level.exercise.content,
+                      timeSpent: level.exercise.timeSpent
                     });
                   }
-                  
-                  // Only show real tasks from backend data - no fake generated tasks
                   
                   return baseTasks;
                 };
@@ -1004,14 +1027,47 @@ Generated on: ${new Date().toLocaleDateString()}
                                         {task.brief}
                                       </p>
                                       
-                                      {/* Task type badge */}
-                                      <div className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium"
-                                           style={{ 
-                                             backgroundColor: 'var(--color-accent-tertiary)',
-                                             color: 'var(--color-accent-primary)'
-                                           }}>
-                                        {task.type}
+                                      {/* Task details */}
+                                      <div className="flex flex-wrap gap-2 mb-3">
+                                        {task.timeSpent !== undefined && (
+                                          <div className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium"
+                                               style={{ 
+                                                 backgroundColor: 'var(--color-secondary-bg)',
+                                                 color: 'var(--color-text-secondary)'
+                                               }}>
+                                            <ClockIcon className="w-3 h-3" />
+                                            {Math.floor(task.timeSpent / 60)}h {task.timeSpent % 60}m
+                                          </div>
+                                        )}
+                                        {task.score !== undefined && (
+                                          <div className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium"
+                                               style={{ 
+                                                 backgroundColor: 'var(--color-success-bg)',
+                                                 color: 'var(--color-success)'
+                                               }}>
+                                            <CheckCircledIcon className="w-3 h-3" />
+                                            {task.score}%
+                                          </div>
+                                        )}
+                                        {/* Task type badge */}
+                                        <div className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium"
+                                             style={{ 
+                                               backgroundColor: 'var(--color-accent-tertiary)',
+                                               color: 'var(--color-accent-primary)'
+                                             }}>
+                                          {task.type}
+                                        </div>
                                       </div>
+                                      
+                                      {/* Task content preview */}
+                                      {task.content && (
+                                        <div className="mt-2 p-2 rounded text-xs" style={{ 
+                                          backgroundColor: 'var(--color-secondary-bg)',
+                                          color: 'var(--color-text-tertiary)'
+                                        }}>
+                                          {task.content.length > 100 ? `${task.content.slice(0, 100)}...` : task.content}
+                                        </div>
+                                      )}
                                     </div>
                                   </div>
                                 </div>

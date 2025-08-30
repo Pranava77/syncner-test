@@ -15,6 +15,7 @@ import {
 } from '@radix-ui/react-icons';
 import { useStudent } from '../hooks/useStudent';
 import ThemeContainer from './ThemeContainer';
+import DailyActivityChart from './DailyActivityChart';
 
 const MyPortfolio: React.FC = () => {
   const navigate = useNavigate();
@@ -274,7 +275,7 @@ const MyPortfolio: React.FC = () => {
     return completed;
   };
 
-  // Get tasks for a level with dynamic names
+  // Get tasks for a level with dynamic content
   const getTasksForLevel = (level: any) => {
     interface Task {
       title: string;
@@ -285,44 +286,64 @@ const MyPortfolio: React.FC = () => {
 
     const tasks: Task[] = [];
     
-    // Get dynamic level name from backend data
-    const levelName = level.courseName || `Level ${level.level}`;
+    // Learn section - use actual content
+    if (level.learn?.content) {
+      level.learn.content.forEach((item: any) => {
+        tasks.push({
+          title: item.title,
+          brief: item.description || item.content.substring(0, 100) + '...',
+          status: level.learn.completed ? 'completed' : level.learn.startTime ? 'in-progress' : 'pending',
+          type: 'learn'
+        });
+      });
+    }
     
-    // Learn section - use dynamic content names
-    if (level.learn) {
-      const learnTitle = level.learnContentName || `${levelName} - Learning Module`;
-      const learnBrief = level.learnDescription || 'Complete learning materials, theory, and concepts for this level';
+    // Test section - use actual content
+    if (level.test?.content) {
+      level.test.content.forEach((item: any) => {
+        tasks.push({
+          title: item.title,
+          brief: item.question,
+          status: level.test.completed ? 'completed' : level.test.attempts > 0 ? 'in-progress' : 'pending',
+          type: 'test'
+        });
+      });
+    }
+    
+    // Exercise section - use actual content
+    if (level.exercise?.content) {
+      level.exercise.content.forEach((item: any) => {
+        tasks.push({
+          title: item.title,
+          brief: item.description,
+          status: level.exercise.completed ? 'completed' : level.exercise.startTime ? 'in-progress' : 'pending',
+          type: 'exercise'
+        });
+      });
+    }
+    
+    // If no content is available, add default tasks
+    if (tasks.length === 0) {
+      const levelName = level.courseName || `Level ${level.level}`;
       
       tasks.push({
-        title: learnTitle,
-        brief: learnBrief,
-        status: level.learn.completed ? 'completed' : level.learn.startTime ? 'in-progress' : 'pending',
+        title: `${levelName} - Learning Module`,
+        brief: 'Complete learning materials, theory, and concepts for this level',
+        status: level.learn?.completed ? 'completed' : level.learn?.startTime ? 'in-progress' : 'pending',
         type: 'learn'
       });
-    }
-    
-    // Test section - use dynamic content names
-    if (level.test) {
-      const testTitle = level.testContentName || `${levelName} - Assessment`;
-      const testBrief = level.testDescription || 'Complete assessment, quiz, and evaluation for this level';
       
       tasks.push({
-        title: testTitle,
-        brief: testBrief,
-        status: level.test.completed ? 'completed' : level.test.attempts > 0 ? 'in-progress' : 'pending',
+        title: `${levelName} - Assessment`,
+        brief: 'Complete assessment and evaluation for this level',
+        status: level.test?.completed ? 'completed' : level.test?.attempts > 0 ? 'in-progress' : 'pending',
         type: 'test'
       });
-    }
-    
-    // Exercise section - use dynamic content names
-    if (level.exercise) {
-      const exerciseTitle = level.exerciseContentName || `${levelName} - Practical Exercise`;
-      const exerciseBrief = level.exerciseDescription || 'Complete hands-on exercises and practical applications';
       
       tasks.push({
-        title: exerciseTitle,
-        brief: exerciseBrief,
-        status: level.exercise.completed ? 'completed' : level.exercise.startTime ? 'in-progress' : 'pending',
+        title: `${levelName} - Practical Exercise`,
+        brief: 'Complete hands-on exercises and practical applications',
+        status: level.exercise?.completed ? 'completed' : level.exercise?.startTime ? 'in-progress' : 'pending',
         type: 'exercise'
       });
     }
@@ -502,6 +523,21 @@ Generated on: ${new Date().toLocaleDateString()}
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
       {/* Header */}
+      {/* Daily Activity */}
+      <div className="mb-10">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-1 h-8 rounded-full" style={{ backgroundColor: 'var(--color-accent-primary)' }}></div>
+          <h3 className="text-2xl font-bold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>Learning Activity</h3>
+        </div>
+        <div className="p-6 rounded-xl" style={{ 
+          backgroundColor: 'var(--color-surface)',
+          border: '1px solid var(--color-border)'
+        }}>
+          <DailyActivityChart dailyActivity={portfolioData.dailyActivity} />
+        </div>
+      </div>
+
+      {/* Certificate ID */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">

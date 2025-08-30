@@ -27,10 +27,18 @@ export interface Student {
   leaderboardScore: number;
 }
 
+export interface DailyActivity {
+  date: string;
+  totalMinutes: number;
+  activities: string[];
+  isPresent: boolean;
+}
+
 export interface StudentDetails extends Student {
   performance: PerformanceMetrics;
   summaryStats: SummaryStats;
   learningTimeline: LearningLevel[];
+  dailyActivity: DailyActivity[];
   attendanceStats: AttendanceStats;
   skills: string[];
   recommendedRoles: string[];
@@ -85,6 +93,10 @@ export interface LearningSection {
   completed: boolean;
   startTime?: string;
   endTime?: string;
+  title?: string;
+  description?: string;
+  content?: string;
+  timeSpent?: number;
 }
 
 export interface TestSection {
@@ -93,12 +105,20 @@ export interface TestSection {
   attempts: number;
   startTime?: string;
   endTime?: string;
+  title?: string;
+  description?: string;
+  content?: string;
+  timeSpent?: number;
 }
 
 export interface ExerciseSection {
   completed: boolean;
   startTime?: string;
   endTime?: string;
+  title?: string;
+  description?: string;
+  content?: string;
+  timeSpent?: number;
 }
 
 export interface StudentFilters {

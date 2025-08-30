@@ -15,15 +15,15 @@ const getSkillsForTrack = (track) => {
   return skills[track] || ['Programming', 'Problem Solving', 'Critical Thinking'];
 };
 
-// Helper function to get recommended roles for a career track
+// Helper function to get recommended roles
 const getRecommendedRoles = (track) => {
   const roles = {
-    'full-stack': ['Full Stack Developer', 'Software Engineer', 'Web Developer', 'Application Developer'],
+    'full-stack': ['Frontend Developer', 'Backend Developer', 'Full Stack Developer', 'Web Developer'],
     'ai-ml': ['ML Engineer', 'AI Developer', 'Data Scientist', 'Research Engineer'],
     'ui-ux': ['UI Designer', 'UX Designer', 'Product Designer', 'Interaction Designer'],
-    'data-science': ['Data Scientist', 'Data Analyst', 'Business Intelligence Analyst', 'Data Engineer']
+    'data-science': ['Data Analyst', 'Data Scientist', 'Business Intelligence Analyst', 'Data Engineer']
   };
-  return roles[track] || ['Software Developer', 'Technical Analyst', 'Technology Consultant'];
+  return roles[track] || ['Software Developer', 'Technical Specialist', 'Technology Consultant'];
 };
 
 // @desc    Get student portfolio data
@@ -87,10 +87,7 @@ export const getStudentPortfolio = async (req, res) => {
     .lean();
 
     // Get unique level orders
-    const levelOrders = [...new Set(curriculumItems.map(item => item.order))].sort((a, b) => a - b);
-    const totalLevels = levelOrders.length;
-
-    console.log('📚 Found', curriculumItems.length, 'curriculum items across', totalLevels, 'levels');
+    const levelOrders = [...new Set(curriculumItems.map(item => item.order))];
 
     // Build learning timeline
     const learningTimeline = levelOrders.map(order => {
@@ -106,72 +103,134 @@ export const getStudentPortfolio = async (req, res) => {
       return {
         level: order,
         courseName: syllabusItem?.title || `Level ${order}`,
+        description: syllabusItem?.description || `Level ${order} content`,
         status: completedLevel?.completedSections?.exercise ? 'completed' :
                 completedLevel ? 'in-progress' : 'not-started',
         learn: {
           completed: completedLevel?.completedSections?.learn || false,
           startTime: completedLevel?.learnProgress?.timeSpent ? new Date(completedLevel.completedAt).toISOString() : null,
-          endTime: completedLevel?.completedSections?.learn ? new Date(completedLevel.completedAt).toISOString() : null
+          endTime: completedLevel?.completedSections?.learn ? new Date(completedLevel.completedAt).toISOString() : null,
+          title: learnItems[0]?.title || `Level ${order} Learning`,
+          description: learnItems[0]?.description || 'Complete the learning materials for this level',
+          content: learnItems.map(item => ({
+            id: item._id.toString(),
+            title: item.title,
+            content: item.content,
+            externalLink: item.externalLink || '',
+            description: item.description || '',
+            resources: item.resources || []
+          })),
+          timeSpent: completedLevel?.learnProgress?.timeSpent || 0
         },
         test: {
           completed: completedLevel?.completedSections?.test || false,
           score: completedLevel?.testProgress?.attempts?.slice(-1)[0]?.score || 0,
           attempts: completedLevel?.testProgress?.attempts?.length || 0,
           startTime: completedLevel?.testProgress?.attempts?.[0]?.completedAt?.toISOString() || null,
-          endTime: completedLevel?.testProgress?.isCompleted ? completedLevel?.testProgress?.lastAttemptAt?.toISOString() : null
+          endTime: completedLevel?.testProgress?.isCompleted ? completedLevel?.testProgress?.lastAttemptAt?.toISOString() : null,
+          title: testItems[0]?.title || `Level ${order} Assessment`,
+          description: testItems[0]?.description || 'Complete the assessment for this level',
+          content: testItems.map(item => ({
+            id: item._id.toString(),
+            title: item.title,
+            question: item.content.split('\n')[0],
+            options: item.content.split('\n')
+              .slice(1)
+              .filter(line => line.match(/^[A-D]\)/))
+              .map(line => line.substring(2).trim()),
+            answer: item.content.split('\n')
+              .find(line => line.startsWith('Answer:'))
+              ?.split(':')[1]?.trim() || 'A'
+          })),
+          timeSpent: completedLevel?.testProgress?.attempts?.reduce((total, attempt) => {
+            const start = new Date(attempt.completedAt);
+            const end = new Date(completedLevel.testProgress.lastAttemptAt);
+            return total + Math.floor((end - start) / (1000 * 60)); // Convert to minutes
+          }, 0) || 0
         },
         exercise: {
           completed: completedLevel?.completedSections?.exercise || false,
           startTime: completedLevel?.exerciseSubmissions?.[0]?.submittedAt?.toISOString() || null,
-          endTime: completedLevel?.completedSections?.exercise ? completedLevel?.completedAt?.toISOString() : null
+          endTime: completedLevel?.completedSections?.exercise ? completedLevel?.exerciseSubmissions?.slice(-1)[0]?.submittedAt?.toISOString() : null,
+          title: exerciseItems[0]?.title || `Level ${order} Exercise`,
+          description: exerciseItems[0]?.description || 'Complete the practical exercises for this level',
+          content: exerciseItems.map(item => ({
+            id: item._id.toString(),
+            title: item.title,
+            content: item.content,
+            description: item.description || '',
+            resources: item.resources || []
+          })),
+          timeSpent: completedLevel?.exerciseSubmissions?.length * 30 || 0 // Estimate 30 minutes per submission
         }
       };
     });
 
-    // Calculate summary stats
-    const completedLevels = learningTimeline.filter(l => l.status === 'completed').length;
-    const inProgressLevels = learningTimeline.filter(l => l.status === 'in-progress').length;
-    const currentLevel = progress?.currentLevel || 1;
-    const completionRate = totalLevels > 0 ? Math.round((completedLevels / totalLevels) * 100) : 0;
+    // Get daily activity data
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const thirtyDaysAgo = new Date(today);
+    thirtyDaysAgo.setDate(today.getDate() - 30);
+
+    const dailyActivity = progress?.dailyActivity || [];
+    const recentActivity = dailyActivity
+      .filter(day => new Date(day.date) >= thirtyDaysAgo)
+      .map(day => ({
+        date: day.date.toISOString(),
+        totalMinutes: day.totalMinutes,
+        activities: day.activities,
+        isPresent: day.isPresent
+      }))
+      .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    // Fill in missing dates with zero activity
+    const allDates = [];
+    for (let d = new Date(thirtyDaysAgo); d <= today; d.setDate(d.getDate() + 1)) {
+      const dateStr = d.toISOString().split('T')[0];
+      const existingActivity = recentActivity.find(a => a.date.startsWith(dateStr));
+      if (existingActivity) {
+        allDates.push(existingActivity);
+      } else {
+        allDates.push({
+          date: new Date(d).toISOString(),
+          totalMinutes: 0,
+          activities: [],
+          isPresent: false
+        });
+      }
+    }
 
     // Calculate performance metrics
     const performance = {
-      performance: completionRate,
-      potential: Math.min(100, Math.round((completedLevels + inProgressLevels) / totalLevels * 100)),
-      contribution: Math.round((progress?.totalPoints || 0) / 100),
-      creativity: Math.round(((progress?.completedLevels || [])
-        .reduce((sum, level) => sum + (level.exerciseSubmissions || []).length, 0) / totalLevels) * 100),
-      skill: Math.round(((progress?.completedLevels || [])
-        .reduce((sum, level) => sum + (level.testProgress?.attempts?.slice(-1)[0]?.score || 0), 0) / (completedLevels || 1)) || 0),
-      teamwork: Math.round((progress?.attendanceStats?.presentDays || 0) / (progress?.attendanceStats?.totalDays || 1) * 100) || 0
+      performance: Math.min(100, (progress?.totalPoints || 0) / 10),
+      potential: Math.min(100, ((progress?.completedLevels?.length || 0) / levelOrders.length) * 100),
+      contribution: Math.min(100, (progress?.dailyActivity?.filter(d => d.isPresent)?.length || 0) / 30 * 100),
+      creativity: Math.min(100, (progress?.completedLevels?.reduce((total, level) => 
+        total + (level.exerciseSubmissions?.length || 0), 0) || 0) * 10),
+      skill: Math.min(100, progress?.completedLevels?.reduce((total, level) => 
+        total + (level.testProgress?.attempts?.slice(-1)[0]?.score || 0), 0) / 
+        (progress?.completedLevels?.length || 1)),
+      teamwork: Math.min(100, (progress?.attendanceStats?.currentStreak || 0) * 5)
     };
 
-    // Build track info
-    const trackInfo = track ? {
-      name: track.name,
-      displayName: track.displayName,
-      description: track.description,
-      duration: track.duration,
-      difficulty: track.difficulty,
-      averageSalary: track.averageSalary,
-      careerPaths: track.careerPaths,
-      prerequisites: track.prerequisites
-    } : null;
+    // Calculate summary stats
+    const summaryStats = {
+      totalLevels: levelOrders.length,
+      completedLevels: progress?.completedLevels?.filter(l => l.completedSections?.exercise)?.length || 0,
+      currentLevel: progress?.currentLevel || 1,
+      completionRate: ((progress?.completedLevels?.filter(l => l.completedSections?.exercise)?.length || 0) / levelOrders.length) * 100,
+      consistency: (progress?.attendanceStats?.presentDays || 0) / (progress?.attendanceStats?.totalDays || 1) * 100,
+      progress: ((progress?.currentLevel || 1) / levelOrders.length) * 100,
+      leaderboard: progress?.totalPoints || 0
+    };
 
-    // Build final portfolio data
-    const studentDetails = {
+    // Build response object
+    const portfolioData = {
       ...student,
       performance,
-      summaryStats: {
-        totalLevels,
-        completedLevels,
-        currentLevel,
-        completionRate,
-        consistency: performance.teamwork,
-        progress: completionRate,
-        leaderboard: student.totalPoints || 0
-      },
+      summaryStats,
       learningTimeline,
+      dailyActivity: allDates,
       attendanceStats: progress?.attendanceStats || {
         totalDays: 0,
         presentDays: 0,
@@ -180,24 +239,23 @@ export const getStudentPortfolio = async (req, res) => {
       },
       skills: getSkillsForTrack(normalizedCareerTrack),
       recommendedRoles: getRecommendedRoles(normalizedCareerTrack),
-      trackInfo,
-      enrolledDate: student.createdAt ? new Date(student.createdAt).toLocaleDateString('en-GB') : 'N/A'
+      trackInfo: track,
+      enrolledDate: progress?.createdAt || student.createdAt
     };
 
-    console.log('✅ Portfolio data built successfully');
-    
-    res.status(200).json({
+    return res.json({
       success: true,
       data: {
-        student: studentDetails
+        student: portfolioData
       }
     });
+
   } catch (error) {
-    console.error('❌ Error fetching student portfolio:', error);
-    res.status(500).json({
+    console.error('❌ Error in getStudentPortfolio:', error);
+    return res.status(500).json({
       success: false,
-      message: 'Failed to fetch portfolio data',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+      message: 'Error fetching portfolio data',
+      error: error.message
     });
   }
 };
