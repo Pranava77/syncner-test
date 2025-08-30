@@ -67,6 +67,21 @@ export const getStudentPortfolio = async (req, res) => {
         
         console.log('Portfolio Controller - Real attendance stats from Attendance model:', attendanceStats);
         console.log('Portfolio Controller - Attendance records found:', attendanceRecords.length);
+        
+        // Log progress and leaderboard calculations
+        console.log('Portfolio Controller - Progress calculation:', {
+          completedLevels: progress?.completedLevels?.length || 0,
+          totalLevels,
+          realProgress
+        });
+        
+        console.log('Portfolio Controller - Leaderboard calculation:', {
+          progressScore: realProgress,
+          attendanceScore: Math.round((attendanceStats.presentDays / Math.max(attendanceStats.totalDays, 1)) * 100),
+          consistencyScore: attendanceStats.currentStreak >= 2 ? Math.min(100, attendanceStats.currentStreak * 25) : 
+                           attendanceStats.longestStreak >= 2 ? Math.min(100, attendanceStats.longestStreak * 20) : 0,
+          finalScore: realLeaderboardScore
+        });
       } else {
         // No attendance records found, calculate based on enrollment time
         const totalDays = Math.ceil((Date.now() - new Date(student.createdAt)) / (1000 * 60 * 60 * 24));
@@ -91,21 +106,59 @@ export const getStudentPortfolio = async (req, res) => {
       };
     }
 
+    // Calculate real progress based on completed levels
+    let realProgress = 0;
+    let totalLevels = 10; // Default total levels
+    
+    if (progress?.completedLevels && progress.completedLevels.length > 0) {
+      // Get total levels from curriculum or use default
+      totalLevels = Math.max(progress.completedLevels.length + progress.currentLevel || 0, 10);
+      realProgress = Math.round((progress.completedLevels.length / totalLevels) * 100);
+    }
+    
+    // Calculate real leaderboard score using the same formula as staff routes
+    let realLeaderboardScore = 0;
+    
+    if (progress) {
+      // Base score from progress (40% weight)
+      const progressScore = realProgress;
+      
+      // Attendance score (30% weight)
+      const attendanceScore = Math.round((attendanceStats.presentDays / Math.max(attendanceStats.totalDays, 1)) * 100);
+      
+      // Consistency/streak bonus (30% weight)
+      let consistencyScore = 0;
+      if (attendanceStats.currentStreak >= 2) {
+        // Bonus for continuous attendance: 2+ days = 100%, 1 day = 50%
+        consistencyScore = Math.min(100, attendanceStats.currentStreak * 25); // Cap at 100%
+      } else if (attendanceStats.longestStreak >= 2) {
+        // Use longest streak if current streak not available
+        consistencyScore = Math.min(100, attendanceStats.longestStreak * 20); // Cap at 100%
+      }
+      
+      // Calculate weighted leaderboard score
+      realLeaderboardScore = Math.round(
+        (progressScore * 0.4) + 
+        (attendanceScore * 0.3) + 
+        (consistencyScore * 0.3)
+      );
+    }
+    
     // Calculate performance metrics based on test scores and progress
     const performance = {
-      performance: progress?.testScores?.average || 75,
-      potential: Math.min(100, (progress?.testScores?.average || 75) + 15),
-      contribution: progress?.participationScore || 70,
-      creativity: progress?.creativeScore || 90,
-      skill: progress?.skillLevel || 80
+      performance: progress?.testScores?.average || realProgress,
+      potential: Math.min(100, (progress?.testScores?.average || realProgress) + 15),
+      contribution: progress?.participationScore || attendanceStats.presentDays,
+      creativity: progress?.creativeScore || realProgress,
+      skill: progress?.skillLevel || realProgress
     };
 
-    // Calculate summary stats
+    // Calculate summary stats with real data
     const summaryStats = {
       totalPoints: progress?.totalPoints || 0,
       consistency: Math.round((attendanceStats.presentDays / Math.max(attendanceStats.totalDays, 1)) * 100),
-      leaderboard: progress?.leaderboardRank || 80, // Default to 80 if no rank
-      levelProgress: progress?.currentLevelProgress || 0
+      leaderboard: realLeaderboardScore,
+      levelProgress: realProgress
     };
 
     // Generate learning timeline from progress data
@@ -149,7 +202,7 @@ export const getStudentPortfolio = async (req, res) => {
         email: student.email,
         careerTrack: student.careerTrack || 'Full Stack Development',
         level: student.level || 'Beginner',
-        progress: Math.round(performance.performance),
+        progress: realProgress,
         status: 'active',
         lastActive: student.lastActive || new Date().toISOString(),
         totalPoints: progress?.totalPoints || 0,
@@ -165,7 +218,7 @@ export const getStudentPortfolio = async (req, res) => {
         attendancePercentage: Math.round((attendanceStats.presentDays / Math.max(attendanceStats.totalDays, 1)) * 100),
         totalDays: attendanceStats.totalDays,
         presentDays: attendanceStats.presentDays,
-        leaderboardScore: summaryStats.leaderboard || 80,
+        leaderboardScore: realLeaderboardScore,
         enrolledDate: student.createdAt ? new Date(student.createdAt).toLocaleDateString('en-IN') : '21-03-2025',
         performance,
         summaryStats,
