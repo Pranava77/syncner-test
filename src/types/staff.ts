@@ -44,9 +44,10 @@ export interface PerformanceMetrics {
 }
 
 export interface SummaryStats {
-  consistency: number;
-  progress: number;
-  leaderboard: number;
+  totalLevels: number;
+  completedLevels: number;
+  currentLevel: number;
+  completionRate: number;
 }
 
 export interface LearningLevel {

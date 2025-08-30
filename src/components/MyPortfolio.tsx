@@ -74,7 +74,7 @@ const MyPortfolio: React.FC = () => {
 
   // Debug logging to see what data we're receiving
   React.useEffect(() => {
-    if (student) {
+    if (student && student._id) {
       console.log('📊 Student data received:', {
         summaryStats: student.summaryStats,
         learningTimeline: student.learningTimeline,
@@ -82,7 +82,7 @@ const MyPortfolio: React.FC = () => {
         name: student.name
       });
     }
-  }, [student]);
+  }, [student?._id]); // Only depend on student ID to prevent infinite loops
 
   // Calculate completion percentage
   const calculateCompletionPercentage = () => {
@@ -95,6 +95,7 @@ const MyPortfolio: React.FC = () => {
   const getSkillsForTrack = () => {
     const skills: { [key: string]: string[] } = {
       'web-development': ['HTML/CSS', 'JavaScript', 'React', 'Node.js', 'Database Design'],
+      'full-stack': ['HTML/CSS', 'JavaScript', 'React', 'Node.js', 'Database Design', 'Full Stack Architecture'],
       'data-science': ['Python', 'Statistics', 'Machine Learning', 'Data Visualization', 'SQL'],
       'mobile-development': ['React Native', 'Flutter', 'Mobile UI/UX', 'App Development', 'Cross-platform'],
       'cybersecurity': ['Network Security', 'Ethical Hacking', 'Cryptography', 'Security Analysis', 'Incident Response']
@@ -106,6 +107,7 @@ const MyPortfolio: React.FC = () => {
   const getRecommendedRoles = () => {
     const roles: { [key: string]: string[] } = {
       'web-development': ['Frontend Developer', 'Backend Developer', 'Full Stack Developer', 'Web Developer'],
+      'full-stack': ['Full Stack Developer', 'Full Stack Engineer', 'Web Developer', 'Software Engineer'],
       'data-science': ['Data Analyst', 'Data Scientist', 'ML Engineer', 'Business Intelligence Analyst'],
       'mobile-development': ['Mobile App Developer', 'React Native Developer', 'Flutter Developer', 'iOS/Android Developer'],
       'cybersecurity': ['Security Analyst', 'Penetration Tester', 'Security Engineer', 'Cyber Security Specialist']
