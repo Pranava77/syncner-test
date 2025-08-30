@@ -104,6 +104,78 @@ export const getStudentPortfolio = async (req, res) => {
       });
     }
 
+    // Calculate attendance stats from daily activity data
+    let attendanceStats = {
+      totalDays: 0,
+      presentDays: 0,
+      currentStreak: 0,
+      longestStreak: 0,
+      lastPresentDate: null
+    };
+
+    if (progress?.dailyActivity && progress.dailyActivity.length > 0) {
+      const today = new Date();
+      const enrollmentDate = progress.createdAt || student.createdAt;
+      
+      // Calculate total days from enrollment
+      const totalDays = Math.ceil((today.getTime() - enrollmentDate.getTime()) / (1000 * 60 * 60 * 24));
+      
+      // Count present days (days with activity) - treat any day with totalMinutes > 0 as present
+      const presentDays = progress.dailyActivity.filter(entry => entry.isPresent || entry.totalMinutes > 0).length;
+      
+      // Calculate current streak
+      let currentStreak = 0;
+      let longestStreak = 0;
+      let lastPresentDate = null;
+      
+      // Sort daily activity by date (newest first)
+      const sortedActivity = [...progress.dailyActivity].sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      for (let i = 0; i < sortedActivity.length; i++) {
+        const entry = sortedActivity[i];
+        if (entry.isPresent || entry.totalMinutes > 0) {
+          if (currentStreak === 0) {
+            // Start of a streak
+            currentStreak = 1;
+            lastPresentDate = new Date(entry.date);
+            
+            // Check if this is part of a longer streak
+            let streakLength = 1;
+            for (let j = i + 1; j < sortedActivity.length; j++) {
+              const nextEntry = sortedActivity[j];
+              const dayDiff = Math.ceil((new Date(entry.date).getTime() - new Date(nextEntry.date).getTime()) / (1000 * 60 * 60 * 24));
+              
+              if (dayDiff === 1 && (nextEntry.isPresent || nextEntry.totalMinutes > 0)) {
+                streakLength++;
+              } else {
+                break;
+              }
+            }
+            
+            if (streakLength > longestStreak) {
+              longestStreak = streakLength;
+            }
+          } else {
+            // Continue current streak
+            currentStreak++;
+          }
+        } else {
+          // Break in streak
+          break;
+        }
+      }
+      
+      attendanceStats = {
+        totalDays: Math.max(1, totalDays),
+        presentDays: presentDays,
+        currentStreak: currentStreak,
+        longestStreak: longestStreak,
+        lastPresentDate: lastPresentDate
+      };
+      
+      console.log('📅 Calculated attendance stats:', attendanceStats);
+    }
+
     // Normalize career track
     const normalizedCareerTrack = normalizeCareerTrack(student.careerTrack);
     console.log('🔄 Normalized track:', student.careerTrack, '->', normalizedCareerTrack);
@@ -258,13 +330,12 @@ export const getStudentPortfolio = async (req, res) => {
       completedLevels: progress?.completedLevels?.filter(l => l.completedSections?.exercise)?.length || 0,
       currentLevel: progress?.currentLevel || 1,
       completionRate: ((progress?.completedLevels?.filter(l => l.completedSections?.exercise)?.length || 0) / levelOrders.length) * 100,
-      consistency: (progress?.attendanceStats?.presentDays || 0) / (progress?.attendanceStats?.totalDays || 1) * 100,
+      consistency: (attendanceStats.presentDays || 0) / (attendanceStats.totalDays || 1) * 100,
       progress: ((progress?.currentLevel || 1) / levelOrders.length) * 100,
       leaderboard: progress?.totalPoints || 0
     };
 
-    // Count present days (days with activity)
-    const presentDays = progress.dailyActivity.filter(entry => entry.isPresent || entry.totalMinutes > 0).length;
+
 
     // Build response object
     const portfolioData = {
@@ -273,12 +344,7 @@ export const getStudentPortfolio = async (req, res) => {
       summaryStats,
       learningTimeline,
       dailyActivity: allDates,
-      attendanceStats: progress?.attendanceStats || {
-        totalDays: 0,
-        presentDays: 0,
-        currentStreak: 0,
-        longestStreak: 0
-      },
+      attendanceStats: attendanceStats,
       skills: getSkillsForTrack(normalizedCareerTrack),
       recommendedRoles: getRecommendedRoles(normalizedCareerTrack),
       trackInfo: track,
