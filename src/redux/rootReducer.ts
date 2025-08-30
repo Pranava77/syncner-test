@@ -7,6 +7,7 @@ import settingsReducer from './slices/settingsSlice';
 import curriculumReducer from './slices/curriculumSlice';
 import usersReducer from './slices/userSlice';
 import staffReducer from './slices/staffSlice';
+import studentReducer from './slices/studentSlice';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   curriculum: curriculumReducer,
   users: usersReducer,
   staff: staffReducer,
+  student: studentReducer,
 });
 
 export default rootReducer;

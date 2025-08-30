@@ -461,6 +461,15 @@ class ApiService {
     return this.handleResponse(response);
   }
 
+  async getStudentPortfolio(studentId: string): Promise<StudentDetailsApiResponse> {
+    const response = await fetch(`${this.baseURL}/student/portfolio/${studentId}`, {
+      method: 'GET',
+      headers: this.getHeaders(),
+      credentials: 'include',
+    });
+    return this.handleResponse(response);
+  }
+
   async getStaffAnalytics(): Promise<StaffAnalyticsApiResponse> {
     const response = await fetch(`${this.baseURL}/staff/analytics`, {
       method: 'GET',

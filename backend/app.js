@@ -34,6 +34,7 @@ import attendanceRoutes from './routes/attendanceRoutes.js';
 import curriculumRoutes from './routes/curriculumRoutes.js';
 import progressRoutes from './routes/progressRoutes.js';
 import staffRoutes from './routes/staffRoutes.js';
+import studentRoutes from './routes/studentRoutes.js';
 
 // Import middleware
 import { errorHandler } from './middleware/errorHandler.js';
@@ -133,6 +134,7 @@ app.use('/api/attendance', attendanceRoutes);
 app.use('/api/curriculum', curriculumRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/staff', staffRoutes);
+app.use('/api/student', studentRoutes);
 
 // Health check endpoint
 const serverStartTime = Date.now();

@@ -17,7 +17,7 @@ import {
   DownloadIcon
 } from '@radix-ui/react-icons';
 import { StudentDetails } from '../types/staff';
-import { useStaff } from '../hooks/useStaff';
+import { useStudent } from '../hooks/useStudent';
 import ThemeContainer from './ThemeContainer';
 
 // Note: Backend generates fake timestamps instead of real data
@@ -27,23 +27,23 @@ import ThemeContainer from './ThemeContainer';
 const StudentPortfolio: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.auth);
-  const { selectedStudent, studentDetailsLoading, error, getStudentDetails } = useStaff();
+  const { portfolioData, portfolioLoading, portfolioError, getPortfolioData } = useStudent();
 
   const [expandedLevels, setExpandedLevels] = useState<Set<number>>(new Set());
 
-  // Fetch student details when component mounts
+  // Fetch student portfolio data when component mounts
   React.useEffect(() => {
     if (user?._id) {
-      getStudentDetails(user._id);
+      getPortfolioData(user._id);
     }
-  }, [user?._id, getStudentDetails]);
+  }, [user?._id, getPortfolioData]);
 
   // Handle back navigation
   const handleBack = () => {
     navigate('/student/dashboard');
   };
 
-  if (studentDetailsLoading || !selectedStudent) {
+  if (portfolioLoading || !portfolioData) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
         <div className="text-center">
@@ -56,26 +56,26 @@ const StudentPortfolio: React.FC = () => {
     );
   }
 
-  if (error) {
+  if (portfolioError) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
         <div className="text-center">
           <p className="text-lg mb-4" style={{ color: 'var(--color-text-primary)' }}>
-            {error}
+            {portfolioError}
           </p>
           <button
             onClick={handleBack}
             className="px-4 py-2 rounded-lg transition-colors hover:bg-[var(--color-accent-tertiary)]"
             style={{ color: 'var(--color-accent-primary)' }}
           >
-            Back to Student Details
+            Back to Dashboard
           </button>
         </div>
       </div>
     );
   }
 
-  const student = selectedStudent;
+  const student = portfolioData;
 
   // Calculate completion percentage
   const calculateCompletionPercentage = () => {
