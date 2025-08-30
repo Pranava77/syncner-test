@@ -11,8 +11,8 @@ export const useStudent = () => {
   } = useAppSelector(state => state.student);
 
   // Fetch student's own portfolio data
-  const getPortfolioData = useCallback((studentId: string) => {
-    dispatch(fetchStudentPortfolio(studentId));
+  const getPortfolioData = useCallback((studentId?: string) => {
+    dispatch(fetchStudentPortfolio(studentId || ''));
   }, [dispatch]);
 
   return {

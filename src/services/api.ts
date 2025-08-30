@@ -22,6 +22,9 @@ class ApiService {
     
     if (authToken) {
       headers['Authorization'] = `Bearer ${authToken}`;
+      console.log('🔑 Using token:', authToken);
+    } else {
+      console.warn('⚠️ No auth token found');
     }
     
     return headers;

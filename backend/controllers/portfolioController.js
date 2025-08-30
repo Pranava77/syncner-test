@@ -36,11 +36,22 @@ export const getStudentPortfolio = async (req, res) => {
     console.log('👤 Requesting user:', req.user._id, 'Role:', req.user.role);
     
     // Authorization check
-    if (req.user.role === 'student' && req.user._id.toString() !== studentId) {
-      return res.status(403).json({
-        success: false,
-        message: 'Access denied. You can only view your own portfolio.'
-      });
+    if (req.user.role === 'student') {
+      // If it's a /me request or the user is requesting their own portfolio
+      if (req.isOwnPortfolio || req.user._id.toString() === studentId.toString()) {
+        // Allow access to own portfolio
+        console.log('✅ Authorized: User accessing own portfolio');
+      } else {
+        // Deny access to other student portfolios
+        console.log('❌ Unauthorized: Student trying to access another student\'s portfolio');
+        return res.status(403).json({
+          success: false,
+          message: 'Access denied. You can only view your own portfolio.'
+        });
+      }
+    } else {
+      // Staff/admin can access any portfolio
+      console.log('✅ Authorized: Staff/admin accessing student portfolio');
     }
 
     // Get student data
