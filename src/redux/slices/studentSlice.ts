@@ -5,15 +5,17 @@ import apiService from '../../services/api';
 // Async thunk for fetching student portfolio data
 export const fetchStudentPortfolio = createAsyncThunk(
   'student/fetchPortfolio',
-  async (studentId: string, { rejectWithValue }) => {
+  async (studentId: string | undefined, { rejectWithValue }) => {
     try {
-      console.log('🎯 Calling NEW student portfolio API for student:', studentId);
-      const response = await apiService.getStudentPortfolio(studentId);
-      console.log('✅ Student portfolio API response:', response);
-      return response.data.student;  // Extract the student data from the nested response
+      console.log('🎯 Fetching portfolio data for student:', studentId);
+      const response = studentId ? 
+        await apiService.getStudentPortfolio(studentId) :
+        await apiService.getOwnPortfolio();
+      console.log('✅ Portfolio API response:', response);
+      return response.data.student;
     } catch (error: any) {
-      console.error('❌ Student portfolio API error:', error);
-      return rejectWithValue(error.response?.data?.message || 'Failed to fetch portfolio data');
+      console.error('❌ Portfolio API error:', error);
+      return rejectWithValue(error.message || 'Failed to fetch portfolio data');
     }
   }
 );

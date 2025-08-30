@@ -19,18 +19,19 @@ import ThemeContainer from './ThemeContainer';
 
 const MyPortfolio: React.FC = () => {
   const navigate = useNavigate();
-  const { user } = useAppSelector((state) => state.auth);
   const { portfolioData, portfolioLoading, portfolioError, getPortfolioData } = useStudent();
-
   const [expandedLevels, setExpandedLevels] = useState<Set<number>>(new Set());
+
+  // Handle back navigation
+  const handleBack = () => {
+    navigate('/student/dashboard');
+  };
 
   // Fetch student's own portfolio data when component mounts
   React.useEffect(() => {
-    if (user?._id) {
-      console.log('🔄 Fetching portfolio data for user:', user._id);
-      getPortfolioData(user._id);
-    }
-  }, [user?._id, getPortfolioData]);
+    console.log('🔄 Fetching own portfolio data');
+    getPortfolioData(undefined); // Pass undefined for own portfolio
+  }, [getPortfolioData]);
 
   // Show loading state
   if (portfolioLoading || !portfolioData) {

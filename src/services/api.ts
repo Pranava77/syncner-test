@@ -475,7 +475,26 @@ class ApiService {
       return data;
     } catch (error) {
       console.error('❌ Portfolio API Error:', error);
-      throw error;
+      throw this.handleError(error);
+    }
+  }
+
+  // Get own portfolio data (for students)
+  async getOwnPortfolio(): Promise<StudentDetailsApiResponse> {
+    const url = `${this.baseURL}/student/portfolio/me`;
+    console.log('🔗 Making API call to:', url);
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: this.getHeaders(),
+        credentials: 'include',
+      });
+      const data = await this.handleResponse(response);
+      console.log('✅ Own Portfolio API Response:', data);
+      return data;
+    } catch (error) {
+      console.error('❌ Own Portfolio API Error:', error);
+      throw this.handleError(error);
     }
   }
 

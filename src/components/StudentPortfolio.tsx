@@ -28,10 +28,10 @@ const StudentPortfolio: React.FC = () => {
 
   const [expandedLevels, setExpandedLevels] = useState<Set<number>>(new Set());
 
-  // Fetch student details when component mounts
+  // Fetch student portfolio data when component mounts
   React.useEffect(() => {
     if (studentId) {
-      console.log('🔄 Fetching student details for ID:', studentId);
+      console.log('🔄 Fetching portfolio data for student:', studentId);
       getStudentDetails(studentId);
     }
   }, [studentId, getStudentDetails]);
