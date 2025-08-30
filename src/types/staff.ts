@@ -44,6 +44,11 @@ export interface StudentDetails extends Student {
   recommendedRoles: string[];
   trackInfo?: any;
   enrolledDate: string;
+  // Additional properties from API response
+  college?: string;
+  interests?: string[];
+  profileComplete?: boolean;
+  activeTodayMinutes?: number;
 }
 
 export interface PerformanceMetrics {
@@ -76,6 +81,7 @@ export interface AttendanceStats {
 export interface LearningLevel {
   level: number;
   courseName: string;
+  description: string;
   status: 'completed' | 'in-progress' | 'not-started';
   // Dynamic content names and descriptions
   learnContentName?: string;

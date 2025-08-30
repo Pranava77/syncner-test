@@ -10,7 +10,10 @@ import {
   ArrowLeftIcon,
   TargetIcon,
   RocketIcon,
-  FileTextIcon
+  FileTextIcon,
+  CalendarIcon,
+  HomeIcon,
+  HeartIcon
 } from '@radix-ui/react-icons';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer } from 'recharts';
 import { useStaff } from '../../hooks/useStaff';
@@ -322,6 +325,72 @@ const StudentDetails: React.FC = () => {
                   </motion.div>
                 ))}
               </div>
+
+              {/* Interests and Skills */}
+              {(selectedStudent.interests && selectedStudent.interests.length > 0 || selectedStudent.skills && selectedStudent.skills.length > 0) && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  {selectedStudent.interests && selectedStudent.interests.length > 0 && (
+                    <div 
+                      className="p-6 rounded-xl shadow-sm"
+                      style={{
+                        backgroundColor: 'var(--color-surface)',
+                        boxShadow: 'var(--shadow-sm)',
+                        borderColor: 'var(--color-border)'
+                      }}
+                    >
+                      <h3 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--color-text-primary)' }}>
+                        <HeartIcon className="w-5 h-5" style={{ color: 'var(--color-accent-primary)' }} />
+                        Interests
+                      </h3>
+                      <div className="flex flex-wrap gap-2">
+                        {selectedStudent.interests.map((interest: string, index: number) => (
+                          <span
+                            key={index}
+                            className="px-3 py-1 rounded-full text-sm"
+                            style={{
+                              backgroundColor: 'var(--color-accent-primary)',
+                              color: 'var(--color-text-inverse)'
+                            }}
+                          >
+                            {interest}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedStudent.skills && selectedStudent.skills.length > 0 && (
+                    <div 
+                      className="p-6 rounded-xl shadow-sm"
+                      style={{
+                        backgroundColor: 'var(--color-surface)',
+                        boxShadow: 'var(--shadow-sm)',
+                        borderColor: 'var(--color-border)'
+                      }}
+                    >
+                      <h3 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--color-text-primary)' }}>
+                        <StarIcon className="w-5 h-5" style={{ color: 'var(--color-accent-primary)' }} />
+                        Skills
+                      </h3>
+                      <div className="flex flex-wrap gap-2">
+                        {selectedStudent.skills.map((skill: string, index: number) => (
+                          <span
+                            key={index}
+                            className="px-3 py-1 rounded-full text-sm border"
+                            style={{
+                              backgroundColor: 'var(--color-secondary-bg)',
+                              color: 'var(--color-text-primary)',
+                              borderColor: 'var(--color-border)'
+                            }}
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Learning Timeline */}
               <div 
