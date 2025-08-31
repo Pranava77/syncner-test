@@ -178,6 +178,72 @@ const StudentDetails: React.FC = () => {
     }
   };
 
+  // Function to generate timeline from curriculum data (fallback when backend doesn't provide progress)
+  const generateTimelineFromCurriculum = async () => {
+    if (!studentData?.careerTrack) return;
+    
+    try {
+      // Get curriculum data for this career track
+      const curriculumResponse = await fetch(`/api/training/levels?track=${studentData.careerTrack}`);
+      const curriculumData = await curriculumResponse.json();
+      
+      if (curriculumData.success && curriculumData.data) {
+        const timelineData = curriculumData.data.map((level: any) => ({
+          levelOrder: level.order || 1,
+          levelTitle: level.title || `Level ${level.order || 1}`,
+          levelDescription: level.description || 'Learning level',
+          overallStatus: 'not-started', // Default status since we don't have progress data
+          sections: {
+            learn: {
+              status: 'not-started',
+              details: {
+                startDate: null,
+                endDate: null,
+                timeSpent: 0,
+                isCompleted: false
+              },
+              title: 'Learning Materials',
+              content: level.learn || []
+            },
+            test: {
+              status: 'not-started',
+              details: {
+                startDate: null,
+                endDate: null,
+                score: 0,
+                attempts: 0,
+                isCompleted: false
+              },
+              title: 'Assessment',
+              content: level.test || []
+            },
+            exercise: {
+              status: 'not-started',
+              details: {
+                startDate: null,
+                endDate: null,
+                timeSpent: 0,
+                isCompleted: false
+              },
+              title: 'Practice Exercise',
+              content: level.exercise || []
+            }
+          }
+        }));
+        
+        if (timelineData.length > 0) {
+          setDynamicTimeline(timelineData);
+          setLastRefreshTime(new Date());
+          setTimelineError(null);
+          console.log('📚 Generated timeline from curriculum data:', timelineData);
+        }
+      }
+    } catch (error) {
+      console.error('Error generating timeline from curriculum:', error);
+      setTimelineError('Failed to generate timeline from curriculum data');
+    }
+  };
+
 
   
   // Show loading state while data is being fetched
