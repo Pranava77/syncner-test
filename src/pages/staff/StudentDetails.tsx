@@ -91,63 +91,53 @@ const StudentDetails: React.FC = () => {
     if (!studentData) return;
     
     try {
-      // Use the comprehensive timeline data from backend
+      // Transform backend learningLevels data to match DetailedLearningTimeline component structure
       let timelineData: any[] = [];
       
-      // Priority 1: Use comprehensive activity timeline if available
-      if (studentData.comprehensiveActivityTimeline && studentData.comprehensiveActivityTimeline.length > 0) {
-        timelineData = studentData.comprehensiveActivityTimeline.map((activity: any) => ({
-          id: activity.date || Date.now(),
-          date: activity.date,
-          type: activity.type,
-          title: activity.activity,
-          description: activity.details?.levelName || activity.activity,
-          duration: activity.duration || 0,
-          score: activity.details?.bestScore || null,
-          level: activity.details?.levelOrder || 1,
-          status: 'completed',
-          metadata: activity.details
-        }));
-      }
-      // Priority 2: Use learning timeline if available
-      else if (studentData.learningTimeline && studentData.learningTimeline.length > 0) {
-        timelineData = studentData.learningTimeline.map((item: any) => ({
-          id: item.date || Date.now(),
-          date: item.date,
-          type: item.type || 'learning',
-          title: item.activity || 'Learning Activity',
-          description: item.activity || 'Learning Activity',
-          duration: item.duration || 0,
-          score: item.score || null,
-          level: 1,
-          status: 'completed',
-          metadata: item
-        }));
-      }
-      // Priority 3: Use simple timeline if available
-      else if (studentData.simpleTimeline && studentData.simpleTimeline.length > 0) {
-        timelineData = studentData.simpleTimeline.map((item: any) => ({
-          id: item.date || Date.now(),
-          date: item.date,
-          type: item.type || 'learning',
-          title: item.activity || 'Learning Activity',
-          description: item.activity || 'Learning Activity',
-          duration: item.duration || 0,
-          score: item.score || null,
-          level: 1,
-          status: 'completed',
-          metadata: item
+      // Check if we have learning levels data from backend
+      if (studentData.learningLevels && Array.isArray(studentData.learningLevels)) {
+        timelineData = studentData.learningLevels.map((level: any) => ({
+          levelOrder: level.level || level.order || 1,
+          levelTitle: level.courseName || level.title || `Level ${level.level || level.order || 1}`,
+          levelDescription: level.description || 'Learning level',
+          overallStatus: level.status || 'not-started',
+          sections: {
+            learn: {
+              status: level.learn?.completed ? 'completed' : level.learn?.startTime ? 'in-progress' : 'not-started',
+              details: {
+                startDate: level.learn?.startTime || null,
+                endDate: level.learn?.endTime || null,
+                timeSpent: level.learn?.timeSpent || 0,
+                isCompleted: level.learn?.completed || false
+              },
+              title: 'Learning Materials'
+            },
+            test: {
+              status: level.test?.completed ? 'completed' : level.test?.startTime ? 'in-progress' : 'not-started',
+              details: {
+                startDate: level.test?.startTime || null,
+                endDate: level.test?.startTime || null, // Use startTime as endTime for tests
+                score: level.test?.score || 0,
+                attempts: level.test?.attempts || 0,
+                isCompleted: level.test?.completed || false
+              },
+              title: 'Assessment'
+            },
+            exercise: {
+              status: level.exercise?.completed ? 'completed' : level.exercise?.startTime ? 'in-progress' : 'not-started',
+              details: {
+                startDate: level.exercise?.startTime || null,
+                endDate: level.exercise?.startTime || null, // Use startTime as endTime for exercises
+                timeSpent: level.exercise?.timeSpent || 0,
+                isCompleted: level.exercise?.completed || false
+              },
+              title: 'Practice Exercise'
+            }
+          }
         }));
       }
       
-      // Sort by date (newest first)
-      timelineData.sort((a, b) => {
-        const dateA = new Date(a.date || 0);
-        const dateB = new Date(b.date || 0);
-        return dateB.getTime() - dateA.getTime();
-      });
-      
-      // If we have backend timeline data, use it instead of external service
+      // If we have backend timeline data, use it
       if (timelineData.length > 0) {
         setDynamicTimeline(timelineData);
         setLastRefreshTime(new Date());
