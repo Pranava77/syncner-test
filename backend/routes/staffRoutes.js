@@ -1298,7 +1298,7 @@ function generateSkillsFromTrack(careerTrack, completionPercentage) {
 
 function generateRecommendedRoles(careerTrack, completionPercentage) {
   const baseRoles = {
-    'full-stack': ['Full Stack Developer', 'Front-end Developer', 'Back-end Developer', 'Software Developer'],
+    'full-stack': ['Full Stack Developer', 'Frontend Developer', 'Backend Developer', 'Software Developer'],
     'ai-ml': ['AI Engineer', 'Machine Learning Engineer', 'Data Scientist', 'Research Analyst'],
     'ui-ux': ['UI/UX Designer', 'Product Designer', 'Visual Designer', 'Interaction Designer'],
     'data-science': ['Data Scientist', 'Data Analyst', 'Business Analyst', 'Research Scientist']

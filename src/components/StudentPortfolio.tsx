@@ -57,7 +57,7 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
   studentData: initialStudentData
 }) => {
   console.log('StudentPortfolio component rendered with:', { studentId, initialStudentData });
-  const [activeTab, setActiveTab] = useState<'topics' | 'projects'>('topics');
+  const [activeTab, setActiveTab] = useState<'topics'>('topics');
   const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set());
   const [studentData, setStudentData] = useState<StudentPortfolioData | null>(initialStudentData || null);
   const [loading, setLoading] = useState(!initialStudentData);
@@ -407,53 +407,36 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                 Portfolio:
               </h2>
               
-              {/* Tabs */}
-              <div className="flex gap-2 mb-6">
-                <button
-                  onClick={() => setActiveTab('topics')}
-                  className={`px-6 py-3 rounded-lg font-semibold transition-all duration-200 ${
-                    activeTab === 'topics'
-                      ? 'text-white'
-                      : 'text-gray-400 hover:text-white'
-                  }`}
-                  style={{
-                    backgroundColor: activeTab === 'topics' 
-                      ? 'var(--color-accent-primary)' 
-                      : 'var(--color-tertiary-bg)'
-                  }}
-                >
+              {/* Topics Section */}
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
                   Topics Covered
-                </button>
-                
-                <button
-                  onClick={() => setActiveTab('projects')}
-                  className={`px-6 py-3 rounded-lg font-semibold transition-all duration-200 ${
-                    activeTab === 'projects'
-                      ? 'text-white'
-                      : 'text-gray-400 hover:text-white'
-                  }`}
-                  style={{
-                    backgroundColor: activeTab === 'projects' 
-                      ? 'var(--color-accent-primary)' 
-                      : 'var(--color-tertiary-bg)'
-                  }}
-                >
-                  Projects
-                </button>
+                </h3>
               </div>
               
-              {/* Tab Content */}
-              {activeTab === 'topics' && (
-                <div className="space-y-4">
-                  {studentData.modules.map((module) => (
-                    <div
-                      key={module.id}
-                      className="border rounded-xl overflow-hidden"
-                      style={{
-                        borderColor: 'var(--color-border)',
-                        backgroundColor: 'var(--color-tertiary-bg)'
-                      }}
-                    >
+                            {/* Topics Content */}
+              <div className="space-y-4">
+                {/* Debug: Show module count and data */}
+                <div className="text-sm text-gray-500 mb-4 p-4 bg-gray-100 rounded">
+                  <strong>Debug Info:</strong><br/>
+                  Modules count: {studentData.modules?.length || 0}<br/>
+                  Modules data: {JSON.stringify(studentData.modules?.slice(0, 2), null, 2)}<br/>
+                  Student name: {studentData.name}<br/>
+                  Track: {studentData.track}
+                </div>
+                {(() => { console.log('Rendering modules:', studentData.modules); return null; })()}
+                {studentData.modules && studentData.modules.length > 0 ? (
+                  studentData.modules.map((module, index) => (
+                  <div
+                    key={module.id}
+                    className="border rounded-xl overflow-hidden"
+                    style={{
+                      borderColor: 'var(--color-border)',
+                      backgroundColor: 'var(--color-tertiary-bg)'
+                    }}
+                  >
+                    {/* Debug: Show module data */}
+                    {(() => { console.log(`Module ${index}:`, module); return null; })()}
                       {/* Module Header */}
                       <div 
                         className="p-4 cursor-pointer hover:bg-opacity-80 transition-all duration-200"
@@ -584,24 +567,20 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                         </motion.div>
                       )}
                     </div>
-                  ))}
-                </div>
-              )}
-              
-              {activeTab === 'projects' && (
-                <div className="text-center py-12">
-                  <div className="text-6xl mb-4">🚧</div>
-                  <h3 
-                    className="text-xl font-semibold mb-2"
-                    style={{ color: 'var(--color-text-primary)' }}
-                  >
-                    Projects Coming Soon
-                  </h3>
-                  <p style={{ color: 'var(--color-text-muted)' }}>
-                    Project showcase will be available in the next update.
-                  </p>
-                </div>
-              )}
+                  ))
+                ) : (
+                  <div className="text-center py-8">
+                    <div className="text-4xl mb-4">📚</div>
+                    <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--color-text-primary)' }}>
+                      No Modules Found
+                    </h3>
+                    <p style={{ color: 'var(--color-text-secondary)' }}>
+                      No curriculum modules available for this student.
+                    </p>
+                  </div>
+                )}
+              </div>
+
             </div>
           </div>
         </div>
