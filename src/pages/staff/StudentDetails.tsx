@@ -30,8 +30,6 @@ const StudentDetails: React.FC = () => {
   
   // State for enhanced timeline
   const [enhancedTimeline, setEnhancedTimeline] = useState<any[]>([]);
-  const [fromDate, setFromDate] = useState<string>('');
-  const [toDate, setToDate] = useState<string>('');
   
   // Use selectedStudent data from backend
   const studentData = selectedStudent;
@@ -645,12 +643,6 @@ const StudentDetails: React.FC = () => {
            {enhancedTimeline.length > 0 ? (
             <EnhancedLearningTimeline 
               timeline={enhancedTimeline}
-              fromDate={fromDate}
-              toDate={toDate}
-              onDateChange={(from, to) => {
-                setFromDate(from);
-                setToDate(to);
-              }}
             />
                    ) : (
              <motion.div 
