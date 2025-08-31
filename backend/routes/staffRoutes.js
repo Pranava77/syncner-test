@@ -337,7 +337,10 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
       order: item.order,
       title: item.title,
       type: item.type,
-      _id: item._id
+      _id: item._id,
+      hasExercise: !!item.exercise,
+      exerciseCount: item.exercise?.length || 0,
+      exerciseData: item.exercise ? item.exercise.slice(0, 2) : 'No exercise data'
     })));
     
     // If no curriculum items found, create a fallback structure
@@ -1208,6 +1211,13 @@ router.get('/student/:studentId/portfolio', protect, authorize('staff', 'admin')
       const bestItem = items[0]; // Take the best item for this level
       const levelProgress = progress?.learningLevels?.find(l => l.level === parseInt(order));
       
+      console.log(`🔍 Module ${order}:`, {
+        title: bestItem.title,
+        hasExercise: !!bestItem.exercise,
+        exerciseCount: bestItem.exercise?.length || 0,
+        totalTasks: bestItem.exercise?.length || 1
+      });
+      
       return {
         id: `module-${String(order).padStart(2, '0')}`,
         moduleNumber: String(order).padStart(2, '0'),
@@ -1217,8 +1227,8 @@ router.get('/student/:studentId/portfolio', protect, authorize('staff', 'admin')
         assessmentScore: levelProgress?.test?.score || 0,
         timeSpent: formatTimeSpent(levelProgress?.learn?.timeSpent || 0),
         mcqScore: levelProgress?.test?.score || 0,
-        tasksCompleted: levelProgress?.exercise?.completed ? 5 : 0,
-        totalTasks: 5,
+        tasksCompleted: levelProgress?.exercise?.completed ? (bestItem.exercise?.length || 1) : 0,
+        totalTasks: bestItem.exercise?.length || 1,
         tasks: generateTasksForModule(bestItem, levelProgress)
       };
     });
@@ -1355,26 +1365,49 @@ function generateTasksForModule(curriculumItem, levelProgress) {
   }
   
   // Fallback to curriculum title-based tasks only if no real data exists
-  let taskTitle = 'Complete Module';
-  let taskDescription = 'Finish all module requirements';
+  let tasks = [];
   
   if (curriculumItem.title.toLowerCase().includes('html') || curriculumItem.title.toLowerCase().includes('css')) {
-    taskTitle = 'Build HTML/CSS Website';
-    taskDescription = 'Create a complete website using HTML and CSS';
+    tasks = [
+      { title: 'HTML Structure', description: 'Create proper HTML document structure' },
+      { title: 'CSS Styling', description: 'Apply CSS styles and layout' },
+      { title: 'Responsive Design', description: 'Make the design mobile-friendly' },
+      { title: 'Accessibility', description: 'Ensure proper semantic HTML and ARIA labels' },
+      { title: 'Final Review', description: 'Test and optimize the website' }
+    ];
   } else if (curriculumItem.title.toLowerCase().includes('javascript')) {
-    taskTitle = 'JavaScript Practice';
-    taskDescription = 'Complete JavaScript exercises and projects';
+    tasks = [
+      { title: 'JavaScript Basics', description: 'Master fundamental JavaScript concepts' },
+      { title: 'DOM Manipulation', description: 'Learn to interact with webpage elements' },
+      { title: 'Event Handling', description: 'Implement user interactions and events' },
+      { title: 'Data Structures', description: 'Work with arrays, objects, and functions' },
+      { title: 'Project Implementation', description: 'Build a complete JavaScript application' }
+    ];
   } else if (curriculumItem.title.toLowerCase().includes('react')) {
-    taskTitle = 'React Development';
-    taskDescription = 'Build React components and applications';
+    tasks = [
+      { title: 'Component Creation', description: 'Build reusable React components' },
+      { title: 'State Management', description: 'Implement component state and props' },
+      { title: 'Event Handling', description: 'Add user interactions to components' },
+      { title: 'Routing', description: 'Implement navigation between components' },
+      { title: 'Final Project', description: 'Create a complete React application' }
+    ];
+  } else {
+    // Generic tasks for other modules
+    tasks = [
+      { title: 'Theory Learning', description: 'Study the core concepts and theory' },
+      { title: 'Practical Exercise', description: 'Complete hands-on practice exercises' },
+      { title: 'Project Work', description: 'Work on assigned projects or assignments' },
+      { title: 'Assessment', description: 'Take quizzes or tests to validate learning' },
+      { title: 'Documentation', description: 'Create notes and document your learning' }
+    ];
   }
   
-  return [{
-    id: `task-${curriculumItem.order}-1`,
-    title: taskTitle,
-    description: taskDescription,
+  return tasks.map((task, index) => ({
+    id: `task-${curriculumItem.order}-${index + 1}`,
+    title: task.title,
+    description: task.description,
     completed: levelProgress?.exercise?.completed || false
-  }];
+  }));
 }
 
 function getTitleQuality(title) {
