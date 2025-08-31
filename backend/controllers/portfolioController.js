@@ -342,6 +342,114 @@ export const getStudentPortfolio = async (req, res) => {
       });
     }
 
+    // Generate learning levels data from curriculum
+    let learningLevelsData = [];
+    if (progress?.careerTrack) {
+      try {
+        // Get curriculum items for this career track
+        const curriculumItems = await Curriculum.find({ 
+          careerTrack: progress.careerTrack,
+          isActive: true 
+        }).sort({ order: 1 });
+        
+        if (curriculumItems && curriculumItems.length > 0) {
+          console.log('Portfolio Controller - Generating learning levels from curriculum:', curriculumItems.length, 'items');
+          
+          learningLevelsData = curriculumItems.map(item => {
+            // Find progress data for this level
+            const levelProgress = progress?.completedLevels?.find(
+              level => level.levelOrder === item.order || level.levelId === item._id.toString()
+            );
+            
+            // Determine level status
+            let levelStatus = 'not-started';
+            if (levelProgress) {
+              const completedSections = [
+                levelProgress.completedSections?.learn,
+                levelProgress.completedSections?.test,
+                levelProgress.completedSections?.exercise
+              ].filter(Boolean).length;
+              
+              if (completedSections === 3) {
+                levelStatus = 'completed';
+              } else if (completedSections > 0) {
+                levelStatus = 'in-progress';
+              }
+            } else if (item.order === 1) {
+              levelStatus = 'accessible';
+            }
+            
+            // Get completion details for each section
+            const learnDetails = levelProgress?.learnProgress ? {
+              completed: levelProgress.completedSections?.learn || false,
+              startTime: levelProgress.learnProgress.startDate || levelProgress.completedAt,
+              endTime: levelProgress.completedSections?.learn ? levelProgress.completedAt : null
+            } : {
+              completed: false,
+              startTime: null,
+              endTime: null
+            };
+            
+            const testDetails = levelProgress?.testProgress ? {
+              completed: levelProgress.completedSections?.test || false,
+              score: levelProgress.testProgress.attempts?.length > 0 
+                ? Math.max(...levelProgress.testProgress.attempts.map(a => a.score || 0))
+                : 0,
+              attempts: levelProgress.testProgress.attempts?.length || 0,
+              startTime: levelProgress.testProgress.startDate || levelProgress.completedAt,
+              endTime: levelProgress.completedSections?.test ? levelProgress.completedAt : null
+            } : {
+              completed: false,
+              score: 0,
+              attempts: 0,
+              startTime: null,
+              endTime: null
+            };
+            
+            const exerciseDetails = levelProgress?.exerciseProgress ? {
+              completed: levelProgress.completedSections?.exercise || false,
+              startTime: levelProgress.exerciseProgress.startDate || levelProgress.completedAt,
+              endTime: levelProgress.completedSections?.exercise ? levelProgress.completedAt : null
+            } : {
+              completed: false,
+              startTime: null,
+              endTime: null
+            };
+            
+            return {
+              level: item.order,
+              courseName: item.title,
+              description: item.description,
+              status: levelStatus,
+              learn: learnDetails,
+              test: testDetails,
+              exercise: exerciseDetails
+            };
+          });
+          
+          console.log('Portfolio Controller - Generated learning levels:', learningLevelsData.length, 'levels');
+        }
+      } catch (error) {
+        console.log('Portfolio Controller - Error generating learning levels:', error.message);
+      }
+    }
+    
+    // Fallback to sample data if no curriculum found
+    if (learningLevelsData.length === 0) {
+      console.log('Portfolio Controller - Using fallback learning levels');
+      learningLevelsData = [
+        {
+          level: 1,
+          courseName: 'Introduction to Web Development',
+          description: 'Learn the basics of web development',
+          status: 'accessible',
+          learn: { completed: false, startTime: null, endTime: null },
+          test: { completed: false, score: 0, attempts: 0, startTime: null, endTime: null },
+          exercise: { completed: false, startTime: null, endTime: null }
+        }
+      ];
+    }
+
     // Create portfolio data structure matching StudentDetails interface
     const portfolioData = {
       student: {
@@ -376,77 +484,7 @@ export const getStudentPortfolio = async (req, res) => {
         attendanceStats,
         skills: ['React', 'Node.js', 'Python', 'AWS', 'MongoDB'],
         recommendedRoles: ['Frontend Developer', 'Full Stack Engineer', 'DevOps Engineer'],
-        learningLevels: [
-          {
-            level: 3,
-            courseName: 'Introduction to HTML',
-            description: 'HTML Fundamentals',
-            status: 'in-progress',
-            learn: {
-              completed: true,
-              startTime: '10-08-2025 10:00 AM',
-              endTime: '12-08-2025 11:00 AM'
-            },
-            test: {
-              completed: true,
-              score: 80,
-              attempts: 2,
-              startTime: '13-08-2025 02:00 PM',
-              endTime: '13-08-2025 03:00 PM'
-            },
-            exercise: {
-              completed: false,
-              startTime: '14-08-2025 09:03 PM',
-              endTime: 'In-Progress'
-            }
-          },
-          {
-            level: 2,
-            courseName: 'Introduction to HTML',
-            description: 'HTML Fundamentals',
-            status: 'completed',
-            learn: {
-              completed: true,
-              startTime: '05-08-2025 09:00 AM',
-              endTime: '07-08-2025 10:00 AM'
-            },
-            test: {
-              completed: true,
-              score: 85,
-              attempts: 2,
-              startTime: '08-08-2025 01:00 PM',
-              endTime: '08-08-2025 02:00 PM'
-            },
-            exercise: {
-              completed: true,
-              startTime: '09-08-2025 09:00 AM',
-              endTime: '09-08-2025 10:00 AM'
-            }
-          },
-          {
-            level: 1,
-            courseName: 'Introduction to HTML',
-            description: 'HTML Fundamentals',
-            status: 'completed',
-            learn: {
-              completed: true,
-              startTime: '01-08-2025 09:00 AM',
-              endTime: '03-08-2025 10:00 AM'
-            },
-            test: {
-              completed: true,
-              score: 90,
-              attempts: 2,
-              startTime: '04-08-2025 01:00 PM',
-              endTime: '04-08-2025 02:00 PM'
-            },
-            exercise: {
-              completed: true,
-              startTime: '05-08-2025 09:00 AM',
-              endTime: '05-08-2025 10:00 AM'
-            }
-          }
-        ]
+        learningLevels: learningLevelsData
       }
     };
 
