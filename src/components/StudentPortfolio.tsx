@@ -42,6 +42,13 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
   studentId,
   studentData: initialStudentData
 }) => {
+  // Helper function to format time spent
+  const formatTimeSpent = (seconds: number): string => {
+    if (!seconds || seconds === 0) return '0h 0m';
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    return `${hours}h ${minutes}m`;
+  };
   console.log('StudentPortfolio component rendered with:', { studentId, initialStudentData });
   const [activeTab, setActiveTab] = useState<'topics'>('topics');
   const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set());
@@ -232,7 +239,7 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                     color: 'white'
                   }}
                 >
-                  Track: {studentData.track}
+                  Track: {studentData.student?.careerTrack || 'Unknown'}
                 </div>
                 
                 <div 
@@ -242,7 +249,7 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                     color: 'white'
                   }}
                 >
-                  Duration: {studentData.duration}
+                  Enrolled: {studentData.student?.createdAt ? formatDate(studentData.student.createdAt) : 'Unknown'}
                 </div>
                 
                 <div 
@@ -252,109 +259,62 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                     color: 'white'
                   }}
                 >
-                  Last verified: {formatDate(studentData.lastVerified)}
+                  College: {studentData.student?.college || 'Not specified'}
                 </div>
               </div>
               
-              {/* Skills */}
+              {/* Progress Summary */}
               <div className="mb-6">
                 <h3 
                   className="text-sm font-semibold mb-3 uppercase tracking-wider"
                   style={{ color: 'var(--color-text-primary)' }}
                 >
-                  Skills
+                  Progress Summary
                 </h3>
-                <div className="flex flex-wrap gap-2">
-                  {studentData.skills.map((skill, index) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 rounded-lg text-xs font-medium"
-                      style={{
-                        backgroundColor: 'var(--color-tertiary-bg)',
-                        color: 'var(--color-text-secondary)'
-                      }}
-                    >
-                      {skill}
-                    </span>
-                  ))}
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span style={{ color: 'var(--color-text-secondary)' }}>Current Level:</span>
+                    <span style={{ color: 'var(--color-text-primary)' }}>{studentData.progress?.currentLevel || 1}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span style={{ color: 'var(--color-text-secondary)' }}>Completed:</span>
+                    <span style={{ color: 'var(--color-text-primary)' }}>{studentData.progress?.completedLevels || 0} / {studentData.progress?.totalLevels || 0}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span style={{ color: 'var(--color-text-primary)' }}>Total Points:</span>
+                    <span style={{ color: 'var(--color-text-primary)' }}>{studentData.progress?.totalPoints || 0}</span>
+                  </div>
                 </div>
               </div>
               
-              {/* Certificate ID */}
+              {/* Attendance */}
               <div>
                 <h3 
                   className="text-sm font-semibold mb-2 uppercase tracking-wider"
                   style={{ color: 'var(--color-text-primary)' }}
                 >
-                  Certificate ID
+                  Attendance
                 </h3>
-                <p 
-                  className="text-sm font-mono p-3 rounded-lg"
-                  style={{
-                    backgroundColor: 'var(--color-tertiary-bg)',
-                    color: 'var(--color-text-secondary)'
-                  }}
-                >
-                  {studentData.certificateId}
-                </p>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span style={{ color: 'var(--color-text-secondary)' }}>Present:</span>
+                    <span style={{ color: 'var(--color-text-primary)' }}>{studentData.attendance?.presentDays || 0} / {studentData.attendance?.totalDays || 0}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span style={{ color: 'var(--color-text-primary)' }}>Percentage:</span>
+                    <span style={{ color: 'var(--color-text-primary)' }}>{studentData.attendance?.percentage || 0}%</span>
+                  </div>
+                </div>
               </div>
             </div>
             
-            {/* Recommended Roles */}
-            <div 
-              className="p-6 rounded-2xl border"
-              style={{
-                backgroundColor: 'var(--color-surface)',
-                borderColor: 'var(--color-border)',
-                boxShadow: 'var(--shadow-md)'
-              }}
-            >
-              <h3 
-                className="text-lg font-bold mb-4 uppercase tracking-wider"
-                style={{ color: 'var(--color-text-primary)' }}
-              >
-                Recommended Roles
-              </h3>
-              
-              <div className="space-y-3">
-                {studentData.recommendedRoles.map((role, index) => (
-                  <div
-                    key={index}
-                    className="px-4 py-3 rounded-lg flex items-center justify-between"
-                    style={{
-                      backgroundColor: 'var(--color-tertiary-bg)',
-                      borderColor: 'var(--color-border)'
-                    }}
-                  >
-                    <span 
-                      className="font-medium"
-                      style={{ color: 'var(--color-text-primary)' }}
-                    >
-                      {role}
-                    </span>
-                    
-                    {/* Highlight current focus role */}
-                    {index === 1 && (
-                      <div 
-                        className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
-                        style={{
-                          backgroundColor: 'var(--color-warning)',
-                          color: 'white'
-                        }}
-                      >
-                        M
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
+
           </div>
           
           {/* Right Side - Main Content */}
           <div className="lg:col-span-2 space-y-6">
             
-            {/* Introduction */}
+            {/* Student Info */}
             <div 
               className="p-6 rounded-2xl border"
               style={{
@@ -367,14 +327,18 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                 className="text-xl font-bold mb-4"
                 style={{ color: 'var(--color-text-primary)' }}
               >
-                Introduction:
+                Student Information:
               </h2>
-              <p 
-                className="text-base leading-relaxed"
-                style={{ color: 'var(--color-text-secondary)' }}
-              >
-                {studentData.introduction}
-              </p>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span style={{ color: 'var(--color-text-secondary)' }}>Email:</span>
+                  <span style={{ color: 'var(--color-text-primary)' }}>{studentData.student?.email || 'Not provided'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span style={{ color: 'var(--color-text-secondary)' }}>Department:</span>
+                  <span style={{ color: 'var(--color-text-primary)' }}>{studentData.student?.department || 'Not specified'}</span>
+                </div>
+              </div>
             </div>
             
             {/* Portfolio Section */}
@@ -390,13 +354,13 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                 className="text-xl font-bold mb-6"
                 style={{ color: 'var(--color-text-primary)' }}
               >
-                Portfolio:
+                Learning Progress:
               </h2>
               
-              {/* Topics Section */}
+              {/* Learning Levels Section */}
               <div className="mb-6">
                 <h3 className="text-lg font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
-                  Topics Covered
+                  Learning Levels
                 </h3>
               </div>
               
@@ -405,14 +369,14 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                 {/* Data Check */}
                 <div className="mb-4 p-3 bg-blue-50 rounded-lg">
                   <p className="text-sm text-blue-800">
-                    <strong>Data Check:</strong> {studentData.modules?.length || 0} modules loaded
+                    <strong>Data Check:</strong> {studentData.learningLevels?.length || 0} learning levels loaded | Student: {studentData.student?.name || 'Unknown'} | Track: {studentData.student?.careerTrack || 'Unknown'}
                   </p>
                 </div>
                 
-                {studentData.modules && studentData.modules.length > 0 ? (
-                  studentData.modules.map((module, index) => (
+                {studentData.learningLevels && studentData.learningLevels.length > 0 ? (
+                  studentData.learningLevels.map((level: any, index: number) => (
                     <div
-                      key={module.id}
+                      key={level.id || `level-${index}`}
                       className="border rounded-xl overflow-hidden"
                       style={{
                         borderColor: 'var(--color-border)',
@@ -422,7 +386,7 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                       {/* Module Header */}
                       <div 
                         className="p-4 cursor-pointer hover:bg-opacity-80 transition-all duration-200"
-                        onClick={() => toggleModule(module.id)}
+                        onClick={() => toggleModule(level.id || `level-${index}`)}
                         style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
                       >
                         <div className="flex items-center justify-between">
@@ -435,7 +399,7 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                                 color: 'white'
                               }}
                             >
-                              {module.moduleNumber}
+                              {level.levelOrder || index + 1}
                             </div>
                             
                             {/* Module Info */}
@@ -444,18 +408,18 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                                 className="text-lg font-bold mb-2"
                                 style={{ color: 'var(--color-text-primary)' }}
                               >
-                                {module.title}
+                                {level.levelTitle || `Level ${level.levelOrder || index + 1}`}
                               </h3>
                               
                               <div className="flex items-center gap-4 text-sm">
                                 <span style={{ color: 'var(--color-text-tertiary)' }}>
-                                  Completed {formatDate(module.completedDate)}
+                                  Completed {formatDate(level.completedAt)}
                                 </span>
                                 <span style={{ color: 'var(--color-text-tertiary)' }}>
-                                  Assessed: {module.assessmentScore}/100
+                                  Assessed: {level.test?.score || 0}/100
                                 </span>
                                 <span style={{ color: 'var(--color-text-tertiary)' }}>
-                                  Time: {module.timeSpent}
+                                  Time: {level.learn?.timeSpent ? formatTimeSpent(level.learn.timeSpent) : '0h 0m'}
                                 </span>
                               </div>
                             </div>
@@ -470,7 +434,7 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                                 color: 'var(--color-success)'
                               }}
                             >
-                              MCQ ✅ {module.mcqScore}%
+                              MCQ ✅ {level.test?.score || 0}%
                             </span>
                             <span 
                               className="px-3 py-1 rounded-lg text-sm font-medium"
@@ -479,11 +443,11 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                                 color: 'var(--color-info)'
                               }}
                             >
-                              Tasks {module.tasksCompleted}/{module.totalTasks}
+                              Tasks {level.exercise?.completed ? 1 : 0}/{level.exercise?.length || 0}
                             </span>
                             
                             {/* Expand/Collapse Icon */}
-                            {expandedModules.has(module.id) ? (
+                            {expandedModules.has(level.id || `level-${index}`) ? (
                               <ChevronDownIcon className="w-5 h-5" style={{ color: 'var(--color-text-tertiary)' }} />
                             ) : (
                               <ChevronRightIcon className="w-5 h-5" style={{ color: 'var(--color-text-tertiary)' }} />
@@ -493,58 +457,45 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                       </div>
                       
                       {/* Expanded Tasks */}
-                      {expandedModules.has(module.id) && (
+                      {expandedModules.has(level.id || `level-${index}`) && (
                         <motion.div
                           initial={{ opacity: 0, height: 0 }}
                           animate={{ opacity: 1, height: 'auto' }}
                           exit={{ opacity: 0, height: 0 }}
                           transition={{ duration: 0.3 }}
-                          className="border-t"
-                          style={{ borderColor: 'var(--color-border)' }}
+                          style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
                         >
-                          <div className="p-4 space-y-3">
-                            {module.tasks.map((task) => (
-                              <div
-                                key={task.id}
-                                className="flex items-center justify-between p-3 rounded-lg"
-                                style={{
-                                  backgroundColor: 'var(--color-surface)',
-                                  borderColor: 'var(--color-border)'
-                                }}
-                              >
-                                <div>
-                                  <h4 
-                                    className="font-semibold mb-1"
-                                    style={{ color: 'var(--color-text-primary)' }}
-                                  >
-                                    Task: {task.title}
-                                  </h4>
-                                  <p 
-                                    className="text-sm"
-                                    style={{ color: 'var(--color-text-secondary)' }}
-                                  >
-                                    {task.description}
-                                  </p>
-                                </div>
-                                
-                                <button
-                                  className="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105"
-                                  style={{
-                                    backgroundColor: 'var(--color-accent-primary)',
-                                    color: 'white'
-                                  }}
+                          <div className="p-4 border-t" style={{ borderColor: 'var(--color-border)' }}>
+                            <h4 className="font-semibold mb-3" style={{ color: 'var(--color-text-primary)' }}>
+                              Tasks & Exercises
+                            </h4>
+                            <div className="space-y-3">
+                              {level.exercise && Array.isArray(level.exercise) ? level.exercise.map((task: any, taskIndex: number) => (
+                                <div
+                                  key={task.id || `task-${index}-${taskIndex}`}
+                                  className="flex items-center justify-between p-3 rounded-lg"
+                                  style={{ backgroundColor: 'var(--color-surface)' }}
                                 >
-                                  View
-                                </button>
-                              </div>
-                            ))}
-                            
-                            <p 
-                              className="text-xs italic text-center pt-2"
-                              style={{ color: 'var(--color-text-muted)' }}
-                            >
-                              Will also be showing optional tasks
-                            </p>
+                                  <div>
+                                    <h5 className="font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                                      {task.title || `Exercise ${taskIndex + 1}`}
+                                    </h5>
+                                    <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                                      {task.description || task.content || 'Complete the assigned exercise'}
+                                    </p>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    {task.completed ? (
+                                      <span className="text-green-500">✅</span>
+                                    ) : (
+                                      <span className="text-gray-400">⏳</span>
+                                    )}
+                                  </div>
+                                </div>
+                              )) : (
+                                <p className="text-sm text-gray-500">No exercises available for this level</p>
+                              )}
+                            </div>
                           </div>
                         </motion.div>
                       )}
@@ -554,10 +505,10 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                   <div className="text-center py-8">
                     <div className="text-4xl mb-4">📚</div>
                     <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--color-text-primary)' }}>
-                      No Modules Found
+                      No Learning Levels Found
                     </h3>
                     <p style={{ color: 'var(--color-text-secondary)' }}>
-                      No curriculum modules available for this student.
+                      No learning levels available for this student.
                     </p>
                   </div>
                 )}
