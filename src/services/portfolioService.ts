@@ -1,4 +1,4 @@
-import { api } from './api';
+import apiService from './api';
 
 export interface PortfolioTask {
   id: string;
@@ -37,11 +37,7 @@ export interface StudentPortfolioData {
   modules: PortfolioModule[];
 }
 
-export interface PortfolioResponse {
-  success: boolean;
-  data: StudentPortfolioData;
-  message: string;
-}
+
 
 export class PortfolioService {
   /**
@@ -49,12 +45,12 @@ export class PortfolioService {
    */
   static async getStudentPortfolio(studentId: string): Promise<StudentPortfolioData> {
     try {
-      const response = await api.get<PortfolioResponse>(`/staff/student/${studentId}/portfolio`);
+      const response = await apiService.get(`/staff/student/${studentId}/portfolio`);
       
-      if (response.data.success) {
-        return response.data.data;
+      if (response.success) {
+        return response.data;
       } else {
-        throw new Error(response.data.message || 'Failed to fetch portfolio data');
+        throw new Error(response.message || 'Failed to fetch portfolio data');
       }
     } catch (error) {
       console.error('Error fetching student portfolio:', error);
@@ -67,12 +63,12 @@ export class PortfolioService {
    */
   static async getMyPortfolio(): Promise<StudentPortfolioData> {
     try {
-      const response = await api.get<PortfolioResponse>('/student/portfolio/me');
+      const response = await apiService.get('/student/portfolio/me');
       
-      if (response.data.success) {
-        return response.data.data;
+      if (response.success) {
+        return response.data;
       } else {
-        throw new Error(response.data.message || 'Failed to fetch portfolio data');
+        throw new Error(response.message || 'Failed to fetch portfolio data');
       }
     } catch (error) {
       console.error('Error fetching my portfolio:', error);
@@ -85,12 +81,12 @@ export class PortfolioService {
    */
   static async getPortfolioByStudentId(studentId: string): Promise<StudentPortfolioData> {
     try {
-      const response = await api.get<PortfolioResponse>(`/student/portfolio/${studentId}`);
+      const response = await apiService.get(`/student/portfolio/${studentId}`);
       
-      if (response.data.success) {
-        return response.data.data;
+      if (response.success) {
+        return response.data;
       } else {
-        throw new Error(response.data.message || 'Failed to fetch portfolio data');
+        throw new Error(response.message || 'Failed to fetch portfolio data');
       }
     } catch (error) {
       console.error('Error fetching portfolio by student ID:', error);
