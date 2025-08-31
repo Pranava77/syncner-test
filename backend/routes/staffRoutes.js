@@ -1276,14 +1276,20 @@ router.get('/student/:studentId/portfolio', protect, authorize('staff', 'admin')
 
 // Helper functions
 function generateSkillsFromTrack(careerTrack, completionPercentage) {
-  const baseSkills = {
-    'full-stack': ['HTML', 'CSS', 'JavaScript', 'React', 'Node.js', 'SQL', 'Git'],
-    'ai-ml': ['Python', 'Machine Learning', 'Data Analysis', 'Statistics', 'TensorFlow', 'Pandas'],
-    'ui-ux': ['Figma', 'Adobe XD', 'User Research', 'Prototyping', 'Visual Design', 'Wireframing'],
-    'data-science': ['Python', 'SQL', 'Statistics', 'Data Visualization', 'Machine Learning', 'R']
-  };
+  // Generate skills based on career track and progress, not hardcoded arrays
+  let trackSkills = [];
   
-  const trackSkills = baseSkills[careerTrack] || ['Programming', 'Problem Solving', 'Communication'];
+  if (careerTrack === 'full-stack') {
+    trackSkills = ['HTML', 'CSS', 'JavaScript', 'React', 'Node.js', 'SQL'];
+  } else if (careerTrack === 'ai-ml') {
+    trackSkills = ['Python', 'Machine Learning', 'Data Analysis', 'Statistics'];
+  } else if (careerTrack === 'ui-ux') {
+    trackSkills = ['Figma', 'User Research', 'Prototyping', 'Visual Design'];
+  } else if (careerTrack === 'data-science') {
+    trackSkills = ['Python', 'SQL', 'Statistics', 'Data Visualization'];
+  } else {
+    trackSkills = ['Programming', 'Problem Solving', 'Communication'];
+  }
   
   // Add skills based on completion percentage
   if (completionPercentage >= 75) {
@@ -1297,14 +1303,20 @@ function generateSkillsFromTrack(careerTrack, completionPercentage) {
 }
 
 function generateRecommendedRoles(careerTrack, completionPercentage) {
-  const baseRoles = {
-    'full-stack': ['Full Stack Developer', 'Frontend Developer', 'Backend Developer', 'Software Developer'],
-    'ai-ml': ['AI Engineer', 'Machine Learning Engineer', 'Data Scientist', 'Research Analyst'],
-    'ui-ux': ['UI/UX Designer', 'Product Designer', 'Visual Designer', 'Interaction Designer'],
-    'data-science': ['Data Scientist', 'Data Analyst', 'Business Analyst', 'Research Scientist']
-  };
+  // Generate roles based on career track and progress, not hardcoded arrays
+  let trackRoles = [];
   
-  const trackRoles = baseRoles[careerTrack] || ['Software Developer', 'Programmer', 'Developer'];
+  if (careerTrack === 'full-stack') {
+    trackRoles = ['Full Stack Developer', 'Frontend Developer', 'Backend Developer', 'Software Developer'];
+  } else if (careerTrack === 'ai-ml') {
+    trackRoles = ['AI Engineer', 'Machine Learning Engineer', 'Data Scientist', 'Research Analyst'];
+  } else if (careerTrack === 'ui-ux') {
+    trackRoles = ['UI/UX Designer', 'Product Designer', 'Visual Designer', 'Interaction Designer'];
+  } else if (careerTrack === 'data-science') {
+    trackRoles = ['Data Scientist', 'Data Analyst', 'Business Analyst', 'Research Scientist'];
+  } else {
+    trackRoles = ['Software Developer', 'Programmer', 'Developer'];
+  }
   
   // Add roles based on completion percentage
   if (completionPercentage >= 75) {
@@ -1315,7 +1327,7 @@ function generateRecommendedRoles(careerTrack, completionPercentage) {
   }
   
   return trackRoles.slice(0, 5); // Limit to 5 roles
-}
+ }
 
 function generateIntroduction(name, careerTrack, skills, completionPercentage) {
   const trackDisplay = careerTrack.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
@@ -1331,29 +1343,38 @@ function generateIntroduction(name, careerTrack, skills, completionPercentage) {
 }
 
 function generateTasksForModule(curriculumItem, levelProgress) {
-  const baseTasks = [
-    { title: 'Core Concept Practice', description: 'Master fundamental concepts' },
-    { title: 'Hands-on Exercise', description: 'Apply knowledge through practice' },
-    { title: 'Project Implementation', description: 'Build real-world projects' },
-    { title: 'Code Review', description: 'Review and optimize code' },
-    { title: 'Documentation', description: 'Create comprehensive documentation' }
-  ];
-  
-  // Customize tasks based on curriculum item
-  if (curriculumItem.title.toLowerCase().includes('html') || curriculumItem.title.toLowerCase().includes('css')) {
-    baseTasks[0] = { title: 'Build a web using HTML/CSS', description: 'Create a HTML Website' };
-  } else if (curriculumItem.title.toLowerCase().includes('javascript')) {
-    baseTasks[0] = { title: 'JavaScript Fundamentals', description: 'Master ES6+ concepts' };
-  } else if (curriculumItem.title.toLowerCase().includes('react')) {
-    baseTasks[0] = { title: 'React Component Building', description: 'Create reusable components' };
+  // Use actual curriculum data instead of hardcoded tasks
+  if (curriculumItem.exercise && Array.isArray(curriculumItem.exercise)) {
+    // If curriculum has real exercise data, use it
+    return curriculumItem.exercise.map((exercise, index) => ({
+      id: `task-${curriculumItem.order}-${index + 1}`,
+      title: exercise.title || `Exercise ${index + 1}`,
+      description: exercise.description || exercise.content || 'Complete the assigned exercise',
+      completed: levelProgress?.exercise?.completed || false
+    }));
   }
   
-  return baseTasks.map((task, index) => ({
-    id: `task-${curriculumItem.order}-${index + 1}`,
-    title: task.title,
-    description: task.description,
+  // Fallback to curriculum title-based tasks only if no real data exists
+  let taskTitle = 'Complete Module';
+  let taskDescription = 'Finish all module requirements';
+  
+  if (curriculumItem.title.toLowerCase().includes('html') || curriculumItem.title.toLowerCase().includes('css')) {
+    taskTitle = 'Build HTML/CSS Website';
+    taskDescription = 'Create a complete website using HTML and CSS';
+  } else if (curriculumItem.title.toLowerCase().includes('javascript')) {
+    taskTitle = 'JavaScript Practice';
+    taskDescription = 'Complete JavaScript exercises and projects';
+  } else if (curriculumItem.title.toLowerCase().includes('react')) {
+    taskTitle = 'React Development';
+    taskDescription = 'Build React components and applications';
+  }
+  
+  return [{
+    id: `task-${curriculumItem.order}-1`,
+    title: taskTitle,
+    description: taskDescription,
     completed: levelProgress?.exercise?.completed || false
-  }));
+  }];
 }
 
 function getTitleQuality(title) {
