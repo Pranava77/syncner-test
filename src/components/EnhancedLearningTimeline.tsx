@@ -173,7 +173,7 @@ const EnhancedLearningTimeline: React.FC<EnhancedLearningTimelineProps> = ({
                     {level.level}
                   </div>
                 </div>
-
+                
                 {/* Right Side - Content */}
                 <div className="flex-1">
                   {/* Level Header */}
@@ -204,15 +204,15 @@ const EnhancedLearningTimeline: React.FC<EnhancedLearningTimelineProps> = ({
                       style={{ color: 'var(--color-text-primary)' }}
                     >
                       {level.courseName}
-                    </h3>
+                  </h3>
                     
                     <p 
                       className="text-sm leading-relaxed"
                       style={{ color: 'var(--color-text-secondary)' }}
                     >
-                      {level.description}
-                    </p>
-                  </div>
+                    {level.description}
+                  </p>
+                </div>
 
                   {/* Progress Sections */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -276,8 +276,8 @@ const EnhancedLearningTimeline: React.FC<EnhancedLearningTimelineProps> = ({
                           >
                             {level.learn.completed ? 'Completed' : 'In Progress'}
                           </span>
-                        </div>
-                        
+              </div>
+
                         {level.learn.completed && (
                           <>
                             <div className="flex items-center justify-between">
@@ -306,14 +306,14 @@ const EnhancedLearningTimeline: React.FC<EnhancedLearningTimelineProps> = ({
                                 style={{ color: 'var(--color-text-secondary)' }}
                               >
                                 {formatDateTime(level.learn.endTime)}
-                              </span>
-                            </div>
+                    </span>
+                  </div>
                           </>
                         )}
-                      </div>
-                    </div>
+                  </div>
+                </div>
 
-                    {/* Test Section */}
+                {/* Test Section */}
                     <div 
                       className="p-4 rounded-xl border relative"
                       style={{
@@ -403,14 +403,14 @@ const EnhancedLearningTimeline: React.FC<EnhancedLearningTimelineProps> = ({
                                 style={{ color: 'var(--color-text-secondary)' }}
                               >
                                 {level.test.attempts}
-                              </span>
-                            </div>
+                    </span>
+                  </div>
                           </>
                         )}
-                      </div>
-                    </div>
+                  </div>
+                </div>
 
-                    {/* Exercise Section */}
+                {/* Exercise Section */}
                     <div 
                       className="p-4 rounded-xl border relative"
                       style={{
@@ -500,8 +500,8 @@ const EnhancedLearningTimeline: React.FC<EnhancedLearningTimelineProps> = ({
                                 style={{ color: 'var(--color-text-secondary)' }}
                               >
                                 {formatDateTime(level.exercise.endTime)}
-                              </span>
-                            </div>
+                    </span>
+                  </div>
                           </>
                         )}
                       </div>

@@ -63,18 +63,22 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
   const [loading, setLoading] = useState(!initialStudentData);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch portfolio data from backend if not provided
+  // Use the data passed from parent component (same as Learning Journey)
   useEffect(() => {
-    console.log('useEffect triggered:', { initialStudentData, studentId, shouldFetch: !initialStudentData && !!studentId });
+    console.log('Portfolio component: Using data from parent:', { initialStudentData, studentId });
     
-    if (!initialStudentData && studentId) {
+    if (initialStudentData) {
+      console.log('Portfolio: Using provided data, no API call needed');
+      setStudentData(initialStudentData);
+      setLoading(false);
+    } else if (studentId) {
+      console.log('Portfolio: No data provided, fetching from API...');
       const fetchPortfolio = async () => {
         try {
-          console.log('Starting to fetch portfolio data...');
           setLoading(true);
           setError(null);
           const data = await PortfolioService.getStudentPortfolio(studentId);
-          console.log('Portfolio data received:', data);
+          console.log('Portfolio data received from API:', data);
           setStudentData(data);
         } catch (err) {
           console.error('Error fetching portfolio:', err);
@@ -83,10 +87,7 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
           setLoading(false);
         }
       };
-
       fetchPortfolio();
-    } else {
-      console.log('Not fetching - initialStudentData exists or no studentId');
     }
   }, [studentId, initialStudentData]);
 
