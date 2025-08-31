@@ -1183,16 +1183,35 @@ router.get('/student/:studentId/portfolio', protect, authorize('staff', 'admin')
     const recommendedRoles = generateRecommendedRoles(student.careerTrack, completionPercentage);
     console.log('Roles generated:', recommendedRoles);
     
-    // Build modules data
+    // Build modules data - deduplicate and organize by level
     console.log('Building modules data for', curriculumItems.length, 'curriculum items');
-    const modules = curriculumItems.map((item, index) => {
-      const levelProgress = progress?.learningLevels?.find(l => l.level === item.order);
-      console.log(`Module ${item.order}:`, { title: item.title, levelProgress: !!levelProgress });
+    
+    // Group curriculum items by order and select the best one for each level
+    const levelGroups = {};
+    curriculumItems.forEach(item => {
+      if (!levelGroups[item.order]) {
+        levelGroups[item.order] = [];
+      }
+      levelGroups[item.order].push(item);
+    });
+    
+    // For each level, select the best curriculum item (prioritize meaningful titles)
+    const organizedModules = Object.keys(levelGroups).map(order => {
+      const items = levelGroups[order];
+      // Sort by title quality (prefer meaningful titles over generic ones)
+      items.sort((a, b) => {
+        const aQuality = getTitleQuality(a.title);
+        const bQuality = getTitleQuality(b.title);
+        return bQuality - aQuality; // Higher quality first
+      });
+      
+      const bestItem = items[0]; // Take the best item for this level
+      const levelProgress = progress?.learningLevels?.find(l => l.level === parseInt(order));
       
       return {
-        id: `module-${String(item.order).padStart(2, '0')}`,
-        moduleNumber: String(item.order).padStart(2, '0'),
-        title: item.title,
+        id: `module-${String(order).padStart(2, '0')}`,
+        moduleNumber: String(order).padStart(2, '0'),
+        title: bestItem.title,
         completed: levelProgress?.overallStatus === 'completed',
         completedDate: levelProgress?.completedAt || null,
         assessmentScore: levelProgress?.test?.score || 0,
@@ -1200,10 +1219,13 @@ router.get('/student/:studentId/portfolio', protect, authorize('staff', 'admin')
         mcqScore: levelProgress?.test?.score || 0,
         tasksCompleted: levelProgress?.exercise?.completed ? 5 : 0,
         totalTasks: 5,
-        tasks: generateTasksForModule(item, levelProgress)
+        tasks: generateTasksForModule(bestItem, levelProgress)
       };
     });
-    console.log('Modules built:', modules.length);
+    
+    // Sort by level order
+    const modules = organizedModules.sort((a, b) => parseInt(a.moduleNumber) - parseInt(b.moduleNumber));
+    console.log('Modules built:', modules.length, 'after deduplication');
     
     // Build portfolio data
     console.log('Building final portfolio data');
@@ -1217,10 +1239,16 @@ router.get('/student/:studentId/portfolio', protect, authorize('staff', 'admin')
       duration,
       lastVerified: lastVerified,
       skills,
-      certificateId: `SYNCNER-${new Date().getFullYear()}-STU${student._id.toString().slice(-4)}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
+      certificateId: `SYNCNER-${new Date().getYear()}-STU${student._id.toString().slice(-4)}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
       recommendedRoles,
       introduction: generateIntroduction(student.name, student.careerTrack, skills, completionPercentage),
-      modules
+      modules,
+      // Add deduplication info
+      curriculumInfo: {
+        totalItems: curriculumItems.length,
+        uniqueLevels: modules.length,
+        deduplicated: curriculumItems.length - modules.length
+      }
     };
     console.log('Portfolio data built successfully, sending response');
     
@@ -1326,6 +1354,35 @@ function generateTasksForModule(curriculumItem, levelProgress) {
     description: task.description,
     completed: levelProgress?.exercise?.completed || false
   }));
+}
+
+function getTitleQuality(title) {
+  if (!title) return 0;
+  
+  const lowerTitle = title.toLowerCase();
+  
+  // High quality: Specific, meaningful titles
+  if (lowerTitle.includes('html') || lowerTitle.includes('css') || 
+      lowerTitle.includes('javascript') || lowerTitle.includes('react') ||
+      lowerTitle.includes('course') || lowerTitle.includes('crash course') ||
+      lowerTitle.includes('introduction') || lowerTitle.includes('basics')) {
+    return 10;
+  }
+  
+  // Medium quality: Project or material related
+  if (lowerTitle.includes('project') || lowerTitle.includes('material') ||
+      lowerTitle.includes('setup') || lowerTitle.includes('mini project')) {
+    return 7;
+  }
+  
+  // Low quality: Generic or unclear titles
+  if (lowerTitle.includes('random') || lowerTitle.includes('level') ||
+      lowerTitle.includes('test') || lowerTitle.length < 5) {
+    return 3;
+  }
+  
+  // Default quality for other titles
+  return 5;
 }
 
 function formatTimeSpent(seconds) {
