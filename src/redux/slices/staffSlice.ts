@@ -7,6 +7,7 @@ import {
   PaginationState 
 } from '../../types/staff';
 import apiService from '../../services/api';
+import { StudentTimelineService } from '../../services/studentTimelineService';
 
 // Async thunks
 export const fetchStudents = createAsyncThunk(
@@ -25,38 +26,28 @@ export const fetchStudentDetails = createAsyncThunk(
   'staff/fetchStudentDetails',
   async (studentId: string, { rejectWithValue }) => {
     try {
-      // Use the staff endpoint which already has the complete timeline built
-      const response = await apiService.getStudentDetails(studentId);
-      const studentData = response.data.student;
-
-      console.log('🔄 Student Details - Staff data received:', {
+      console.log('🚀 Starting Two-API Student Details Fetch...');
+      
+      // Use the new StudentTimelineService for clean two-API approach
+      const combinedTimeline = await StudentTimelineService.generateStudentTimeline(studentId);
+      
+      // Get additional student data from portfolio for other fields
+      const portfolioResponse = await apiService.getStudentPortfolio(studentId);
+      const studentData = portfolioResponse.data.student;
+      
+      // Add the combined timeline to the student data
+      studentData.learningTimeline = combinedTimeline;
+      
+      console.log('✅ Two-API Student Details Fetch Complete:', {
+        studentId,
         careerTrack: studentData.careerTrack,
-        progress: studentData.progress,
-        detailedLearningTimeline: studentData.detailedLearningTimeline,
-        comprehensiveActivityTimeline: studentData.comprehensiveActivityTimeline
+        timelineLevels: combinedTimeline.length,
+        studentName: studentData.name
       });
-
-      // The staff endpoint already provides the complete timeline with time data
-      // Just map it to the expected frontend structure
-      if (studentData.detailedLearningTimeline && Array.isArray(studentData.detailedLearningTimeline)) {
-        console.log('📚 Student Details - Using pre-built detailed learning timeline:', {
-          levelsCount: studentData.detailedLearningTimeline.length,
-          levels: studentData.detailedLearningTimeline.map((l: any) => ({ 
-            order: l.levelOrder, 
-            title: l.levelTitle, 
-            status: l.overallStatus 
-          }))
-        });
-
-        // Map the detailedLearningTimeline to learningTimeline for frontend compatibility
-        studentData.learningTimeline = studentData.detailedLearningTimeline;
-      } else {
-        console.log('⚠️ Student Details - No detailed learning timeline found, using fallback');
-        studentData.learningTimeline = [];
-      }
-
+      
       return studentData;
     } catch (error: any) {
+      console.error('❌ Two-API Student Details Fetch Failed:', error);
       return rejectWithValue(error.message || 'Failed to fetch student details');
     }
   }

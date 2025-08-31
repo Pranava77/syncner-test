@@ -19,6 +19,7 @@ import {
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, Tooltip } from 'recharts';
 import { useStaff } from '../../hooks/useStaff';
 import DetailedLearningTimeline from '../../components/DetailedLearningTimeline';
+import { StudentTimelineService, CombinedTimelineLevel } from '../../services/studentTimelineService';
 
 const StudentDetails: React.FC = () => {
   const { studentId } = useParams<{ studentId: string }>();
@@ -32,6 +33,15 @@ const StudentDetails: React.FC = () => {
     getStudentDetails, 
     clearSelectedStudent 
   } = useStaff();
+  
+  // State for dynamic timeline generation
+  const [isGeneratingTimeline, setIsGeneratingTimeline] = useState(false);
+  const [dynamicTimeline, setDynamicTimeline] = useState<CombinedTimelineLevel[]>([]);
+  const [timelineError, setTimelineError] = useState<string | null>(null);
+  const [lastRefreshTime, setLastRefreshTime] = useState<Date | null>(null);
+  
+  // Use selectedStudent data from backend
+  const studentData = selectedStudent;
 
   // Fetch student details when component mounts
   useEffect(() => {
@@ -45,9 +55,39 @@ const StudentDetails: React.FC = () => {
     };
   }, [studentId, getStudentDetails, clearSelectedStudent]);
 
-  // Use selectedStudent data from backend
-  const studentData = selectedStudent;
-  
+  // Dynamic timeline generation when student data changes
+  useEffect(() => {
+    if (studentData && studentData.careerTrack) {
+      generateDynamicTimeline();
+    }
+  }, [studentData?.careerTrack]);
+
+  // Function to generate dynamic timeline using StudentTimelineService
+  const generateDynamicTimeline = async () => {
+    if (!studentId || !studentData?.careerTrack) return;
+    
+    setIsGeneratingTimeline(true);
+    setTimelineError(null);
+    
+    try {
+      console.log('🔄 Generating dynamic timeline for student:', studentData.name);
+      const timeline = await StudentTimelineService.generateStudentTimeline(studentId);
+      setDynamicTimeline(timeline);
+      setLastRefreshTime(new Date());
+      console.log('✅ Dynamic timeline generated successfully:', timeline.length, 'levels');
+    } catch (error) {
+      console.error('❌ Failed to generate dynamic timeline:', error);
+      setTimelineError(error instanceof Error ? error.message : 'Failed to generate timeline');
+    } finally {
+      setIsGeneratingTimeline(false);
+    }
+  };
+
+  // Function to manually refresh timeline
+  const refreshTimeline = () => {
+    generateDynamicTimeline();
+  };
+
   // Debug logging
   useEffect(() => {
     if (import.meta.env.DEV && studentData) {
@@ -583,20 +623,132 @@ const StudentDetails: React.FC = () => {
         </div>
       </div>
 
-      {/* Detailed Learning Timeline Section */}
-      <DetailedLearningTimeline timeline={studentData.learningTimeline || []} />
+      {/* Dynamic Learning Timeline Section */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h2 
+              className="text-2xl font-heading mb-2"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              Learning Timeline
+            </h2>
+            <p 
+              className="font-label"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
+              Real-time progress tracking with curriculum data
+            </p>
+          </div>
+          
+          <div className="flex items-center gap-3">
+            {lastRefreshTime && (
+              <div className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
+                Last updated: {lastRefreshTime.toLocaleTimeString()}
+              </div>
+            )}
+            
+            <button
+              onClick={refreshTimeline}
+              disabled={isGeneratingTimeline}
+              className="px-4 py-2 rounded-lg transition-colors font-medium flex items-center gap-2 shadow disabled:opacity-50"
+              style={{ 
+                backgroundColor: 'var(--color-accent-primary)',
+                color: 'var(--color-text-inverse)' 
+              }}
+            >
+              <div className={`w-4 h-4 ${isGeneratingTimeline ? 'animate-spin' : ''}`}>
+                {isGeneratingTimeline ? (
+                  <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full"></div>
+                ) : (
+                  <ArrowUpIcon className="w-4 h-4" />
+                )}
+              </div>
+              <span>{isGeneratingTimeline ? 'Generating...' : 'Refresh Timeline'}</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Timeline Error Display */}
+        {timelineError && (
+          <div className="mb-4 p-4 rounded-lg border" style={{ 
+            backgroundColor: 'var(--color-error-bg)', 
+            borderColor: 'var(--color-error)',
+            color: 'var(--color-error)' 
+          }}>
+            <div className="flex items-center gap-2">
+              <span>⚠️</span>
+              <span>Timeline Error: {timelineError}</span>
+            </div>
+            <button
+              onClick={refreshTimeline}
+              className="mt-2 text-sm underline hover:no-underline"
+            >
+              Try Again
+            </button>
+          </div>
+        )}
+
+        {/* Dynamic Timeline Display */}
+        {dynamicTimeline.length > 0 ? (
+          <div>
+            {/* Success Message */}
+            <div className="mb-4 p-3 rounded-lg border" style={{ 
+              backgroundColor: 'var(--color-success-bg)', 
+              borderColor: 'var(--color-success)',
+              color: 'var(--color-success)' 
+            }}>
+              <div className="flex items-center gap-2">
+                <span>✅</span>
+                <span>Timeline generated successfully with {dynamicTimeline.length} levels</span>
+              </div>
+            </div>
+            
+            <DetailedLearningTimeline timeline={dynamicTimeline} />
+          </div>
+        ) : (
+          <div className="text-center py-8" style={{ color: 'var(--color-text-muted)' }}>
+            {isGeneratingTimeline ? (
+              <div className="flex items-center justify-center gap-2">
+                <div className="w-6 h-6 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+                <span>Generating timeline...</span>
+              </div>
+            ) : (
+              <div>
+                <div className="text-4xl mb-2">📚</div>
+                <p>No timeline data available</p>
+                <p className="text-sm mt-1">Click the button below to generate a dynamic timeline</p>
+                <button
+                  onClick={refreshTimeline}
+                  className="mt-3 px-4 py-2 rounded-lg font-medium"
+                  style={{ 
+                    backgroundColor: 'var(--color-accent-primary)',
+                    color: 'var(--color-text-inverse)' 
+                  }}
+                >
+                  Generate Timeline
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
       
       {/* Debug: Show timeline data structure */}
       {import.meta.env.DEV && (
         <div className="mt-4 p-4 bg-gray-100 rounded-lg">
-          <h4 className="font-semibold mb-2">Debug: Learning Timeline Data</h4>
+          <h4 className="font-semibold mb-2">Debug: Dynamic Timeline Data</h4>
           <pre className="text-xs overflow-auto">
-            {JSON.stringify(studentData.learningTimeline, null, 2)}
+            {JSON.stringify(dynamicTimeline, null, 2)}
           </pre>
           
-          <h4 className="font-semibold mb-2 mt-4">Debug: Comprehensive Activity Timeline</h4>
+          <h4 className="font-semibold mb-2 mt-4">Debug: Student Data</h4>
           <pre className="text-xs overflow-auto">
-            {JSON.stringify(studentData.comprehensiveActivityTimeline, null, 2)}
+            {JSON.stringify({
+              careerTrack: studentData.careerTrack,
+              progress: studentData.progress,
+              learningLevels: studentData.learningLevels
+            }, null, 2)}
           </pre>
         </div>
       )}
