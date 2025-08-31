@@ -61,6 +61,13 @@ const StudentDetails: React.FC = () => {
       generateDynamicTimeline();
       generateTimelineFromBackendData();
       
+      // If no backend timeline data, try curriculum data as fallback
+      setTimeout(() => {
+        if (dynamicTimeline.length === 0) {
+          generateTimelineFromCurriculum();
+        }
+      }, 1000);
+      
       // Debug: Log enrollment date data
       console.log('📅 Enrollment Date Debug:', {
         createdAt: studentData.createdAt,
@@ -103,6 +110,8 @@ const StudentDetails: React.FC = () => {
     }
     // Also try to generate dynamic timeline as fallback
     generateDynamicTimeline();
+    // Try curriculum data as another fallback
+    generateTimelineFromCurriculum();
   };
 
   // Function to generate timeline from backend data

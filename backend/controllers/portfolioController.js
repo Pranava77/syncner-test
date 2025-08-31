@@ -29,6 +29,22 @@ export const getStudentPortfolio = async (req, res) => {
     // Fetch user progress data
     const progress = await UserProgress.findOne({ user: studentId });
     
+    // Debug: Log what we found in UserProgress
+    console.log('Portfolio Controller - UserProgress query result:', {
+      studentId,
+      foundProgress: !!progress,
+      progressId: progress?._id,
+      progressStructure: progress ? {
+        user: progress.user,
+        careerTrack: progress.careerTrack,
+        currentLevel: progress.currentLevel,
+        totalPoints: progress.totalPoints,
+        completedLevelsCount: progress.completedLevels?.length || 0,
+        hasCompletedLevels: progress.completedLevels && progress.completedLevels.length > 0,
+        completedLevelsSample: progress.completedLevels?.[0] || null
+      } : null
+    });
+    
     // Get real attendance data from Attendance model
     let attendanceStats = { totalDays: 0, presentDays: 0, currentStreak: 0, longestStreak: 0 };
     
@@ -217,12 +233,28 @@ export const getStudentPortfolio = async (req, res) => {
         
         if (curriculumItems && curriculumItems.length > 0) {
           learningLevelsData = curriculumItems.map(item => {
-            const levelProgress = progress.completedLevels.find(l => l.levelId === item._id.toString());
+            // Find progress for this specific level by matching curriculum ID or order
+            const levelProgress = progress.completedLevels.find(l => 
+              l.levelId === item._id.toString() || l.levelOrder === item.order
+            );
+            
+            // Determine overall status for this level
+            let overallStatus = 'not-started';
+            if (levelProgress) {
+              // Check if all sections are completed
+              const allSectionsCompleted = levelProgress.completedSections?.learn && 
+                                         levelProgress.completedSections?.test && 
+                                         levelProgress.completedSections?.exercise;
+              overallStatus = allSectionsCompleted ? 'completed' : 'in-progress';
+            } else if (progress?.currentLevel === item.order) {
+              overallStatus = 'in-progress';
+            }
+            
             return {
               level: item.order,
               courseName: item.title,
               description: item.description,
-              status: levelProgress ? 'completed' : progress?.currentLevel === item.order ? 'in-progress' : 'not-started',
+              status: overallStatus,
               learn: {
                 completed: levelProgress?.completedSections?.learn || false,
                 startTime: levelProgress?.learnProgress?.startTime || null,
@@ -245,9 +277,66 @@ export const getStudentPortfolio = async (req, res) => {
               }
             };
           });
+          
+          console.log('Portfolio Controller - Generated learning levels data:', {
+            totalLevels: learningLevelsData.length,
+            sampleLevel: learningLevelsData[0],
+            progressData: {
+              hasProgress: !!progress,
+              completedLevelsCount: progress?.completedLevels?.length || 0,
+              currentLevel: progress?.currentLevel
+            }
+          });
         }
       } catch (error) {
         console.log('Portfolio Controller - Could not get curriculum items:', error.message);
+      }
+    }
+    
+    // If no learning levels data was generated, create a basic structure from curriculum
+    if (learningLevelsData.length === 0 && progress?.careerTrack) {
+      try {
+        console.log('Portfolio Controller - No learning levels data generated, creating basic structure from curriculum');
+        const curriculumItems = await Curriculum.find({ 
+          careerTrack: progress.careerTrack,
+          type: 'syllabus'
+        }).sort({ order: 1 });
+        
+        if (curriculumItems && curriculumItems.length > 0) {
+          learningLevelsData = curriculumItems.map(item => ({
+            level: item.order,
+            courseName: item.title,
+            description: item.description,
+            status: 'not-started',
+            learn: {
+              completed: false,
+              startTime: null,
+              endTime: null,
+              timeSpent: 0,
+              content: item.learn || []
+            },
+            test: {
+              completed: false,
+              score: 0,
+              attempts: 0,
+              startTime: null,
+              content: item.test || []
+            },
+            exercise: {
+              completed: false,
+              startTime: null,
+              timeSpent: 0,
+              content: item.exercise || []
+            }
+          }));
+          
+          console.log('Portfolio Controller - Created basic learning levels structure:', {
+            totalLevels: learningLevelsData.length,
+            sampleLevel: learningLevelsData[0]
+          });
+        }
+      } catch (error) {
+        console.log('Portfolio Controller - Could not create basic curriculum structure:', error.message);
       }
     }
 
