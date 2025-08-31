@@ -51,9 +51,6 @@ export const fetchStudentDetails = createAsyncThunk(
         completedLevels: portfolioData.progress?.completedLevels || 0,
         totalLevels: portfolioData.progress?.totalLevels || 0,
         
-        performance: portfolioData.performance || {},
-        summaryStats: portfolioData.summaryStats || {},
-        
         // Add the combined timeline
         learningTimeline: combinedTimeline
       };

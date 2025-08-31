@@ -355,15 +355,7 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
       console.log('🔄 Created fallback curriculum with', totalLevels, 'levels');
     }
     
-    // Calculate performance metrics
-    const performance = {
-      performance: progress ? Math.round((progress.completedLevels.length / totalLevels) * 100) : 0,
-      potential: 90, // This could be calculated based on various factors
-      contribution: 78, // This could be calculated based on community participation
-      creativity: 82, // This could be calculated based on exercise submissions
-      skill: progress ? Math.round((progress.totalPoints / 1000) * 100) : 0, // Assuming 1000 points = 100% skill
-      teamwork: 80 // This could be calculated based on collaborative activities
-    };
+
     
     // Get skills for career track
     const getSkillsForTrack = () => {
@@ -497,12 +489,7 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
       );
     }
     
-    // Calculate summary stats
-    const summaryStats = {
-      consistency: attendancePercentage, // Attendance rate (0-100 scale)
-      progress: progress ? Math.round((progress.completedLevels.length / totalLevels) * 100) : 0,
-      leaderboard: leaderboardScore // Comprehensive leaderboard score
-    };
+
     
     // Build detailed learning timeline with level-by-level breakdown
     const detailedLearningTimeline = [];
@@ -907,8 +894,6 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
     
     const studentDetails = {
       ...student,
-      performance,
-      summaryStats,
       learningTimeline: detailedLearningTimeline, // Use the new detailed timeline
       comprehensiveActivityTimeline: comprehensiveActivityTimeline, // Add comprehensive activity timeline
       simpleTimeline: limitedSimpleTimeline, // Keep simple timeline for backward compatibility
@@ -921,7 +906,7 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
       progress: progress ? Math.round((progress.completedLevels.length / totalLevels) * 100) : 0,
       leaderboardScore: leaderboardScore,
       // Ensure these fields exist for the frontend
-      level: progress?.currentLevel || 1,
+      currentLevel: progress?.currentLevel || 1,
       status: student.isActive ? 'active' : 'inactive',
       batch: student.batch || 'N/A',
       department: student.department || student.courseDept || 'N/A'
@@ -936,8 +921,6 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
     console.log('📈 Learning Timeline Length:', detailedLearningTimeline.length);
     console.log('📋 Learning Timeline Structure:', JSON.stringify(detailedLearningTimeline, null, 2));
     console.log('🔍 Sample Timeline Entry:', detailedLearningTimeline[0]);
-    console.log('📊 Summary Stats:', summaryStats);
-    console.log('⭐ Performance:', performance);
     
     res.status(200).json({
       success: true,

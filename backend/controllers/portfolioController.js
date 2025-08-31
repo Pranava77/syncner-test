@@ -202,23 +202,6 @@ export const getStudentPortfolio = async (req, res) => {
         };
       }
     }
-    
-    // Calculate performance metrics based on test scores and progress
-    const performance = {
-      performance: progress?.testScores?.average || realProgress,
-      potential: Math.min(100, (progress?.testScores?.average || realProgress) + 15),
-      contribution: progress?.participationScore || attendanceStats.presentDays,
-      creativity: progress?.creativeScore || realProgress,
-      skill: progress?.skillLevel || realProgress
-    };
-
-    // Calculate summary stats with real data
-    const summaryStats = {
-      totalPoints: progress?.totalPoints || 0,
-      consistency: Math.round((attendanceStats.presentDays / Math.max(attendanceStats.totalDays, 1)) * 100),
-      leaderboard: leaderboardData?.totalScore || 0,
-      levelProgress: realProgress
-    };
 
     // Generate learning timeline from progress data
     const learningTimeline = [];
@@ -353,8 +336,6 @@ export const getStudentPortfolio = async (req, res) => {
           timeScore: 0
         }
       },
-      performance,
-      summaryStats,
       learningTimeline,
       learningLevels: learningLevelsData
     };

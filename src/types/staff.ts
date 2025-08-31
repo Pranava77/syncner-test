@@ -69,8 +69,6 @@ export interface ActivityTimelineItem {
 }
 
 export interface StudentDetails extends Student {
-  performance: PerformanceMetrics;
-  summaryStats: SummaryStats;
   learningTimeline: TimelineLevel[]; // Updated to use new detailed structure
   comprehensiveActivityTimeline?: ActivityTimelineItem[]; // New comprehensive activity timeline
   simpleTimeline?: LearningTimelineItem[]; // Keep old structure for backward compatibility
@@ -99,25 +97,6 @@ export interface StudentDetails extends Student {
   currentLevel: number;
   completedLevels: number;
   totalLevels: number;
-}
-
-export interface PerformanceMetrics {
-  performance: number;
-  potential: number;
-  contribution: number;
-  creativity: number;
-  skill: number;
-  teamwork: number;
-}
-
-export interface SummaryStats {
-  totalLevels: number;
-  completedLevels: number;
-  currentLevel: number;
-  completionRate: number;
-  consistency: number;
-  progress: number;
-  leaderboard: number;
 }
 
 export interface AttendanceStats {
