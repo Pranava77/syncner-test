@@ -4,24 +4,17 @@ import { motion } from 'framer-motion';
 import { 
   ArrowLeftIcon, 
   CalendarIcon, 
-  ClockIcon, 
   TargetIcon, 
-  CheckCircledIcon,
   StarIcon,
-  FileTextIcon,
   RocketIcon,
   ArrowUpIcon,
-  PersonIcon,
   IdCardIcon,
   HomeIcon,
   CalendarIcon as CalendarDaysIcon
 } from '@radix-ui/react-icons';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, Tooltip } from 'recharts';
 import { useStaff } from '../../hooks/useStaff';
-import DetailedLearningTimeline from '../../components/DetailedLearningTimeline';
 import EnhancedLearningTimeline from '../../components/EnhancedLearningTimeline';
-import { StudentTimelineService, CombinedTimelineLevel } from '../../services/studentTimelineService';
-import apiService from '../../services/api';
 
 const StudentDetails: React.FC = () => {
   const { studentId } = useParams<{ studentId: string }>();
@@ -36,11 +29,8 @@ const StudentDetails: React.FC = () => {
     clearSelectedStudent 
   } = useStaff();
   
-  // State for dynamic timeline generation
-  const [isGeneratingTimeline, setIsGeneratingTimeline] = useState(false);
-  const [dynamicTimeline, setDynamicTimeline] = useState<CombinedTimelineLevel[]>([]);
+  // State for enhanced timeline
   const [enhancedTimeline, setEnhancedTimeline] = useState<any[]>([]);
-  const [timelineError, setTimelineError] = useState<string | null>(null);
   const [lastRefreshTime, setLastRefreshTime] = useState<Date | null>(null);
   const [fromDate, setFromDate] = useState<string>('');
   const [toDate, setToDate] = useState<string>('');
@@ -60,59 +50,47 @@ const StudentDetails: React.FC = () => {
     };
   }, [studentId, getStudentDetails, clearSelectedStudent]);
 
-  // Dynamic timeline generation when student data changes
+  // Transform portfolio data for enhanced timeline
   useEffect(() => {
-    if (studentData && studentData.careerTrack) {
-      generateDynamicTimeline();
-      generateTimelineFromBackendData();
-      
-      // Transform portfolio data for enhanced timeline
-      if (studentData.learningLevels && Array.isArray(studentData.learningLevels)) {
-        const enhancedData = studentData.learningLevels.map((level: any) => ({
-          level: level.level || level.order || 1,
-          courseName: level.courseName || level.title || `Level ${level.level || level.order || 1}`,
-          description: level.description || 'Learning level',
-          status: level.status || 'not-started',
-          learn: {
-            completed: level.learn?.completed || false,
-            startTime: level.learn?.startTime || null,
-            endTime: level.learn?.endTime || null,
-            timeSpent: level.learn?.timeSpent || 0,
-            title: level.learn?.title || 'Learning Materials',
-            status: level.learn?.status || 'not-started',
-            materials: level.learn?.materials || level.learn?.content || []
-          },
-          test: {
-            completed: level.test?.completed || false,
-            score: level.test?.score || 0,
-            attempts: level.test?.attempts || 0,
-            startTime: level.test?.startTime || null,
-            endTime: level.test?.endTime || null,
-            title: level.test?.title || 'Assessment',
-            status: level.test?.status || 'not-started',
-            questions: level.test?.questions || level.test?.content || []
-          },
-          exercise: {
-            completed: level.exercise?.completed || false,
-            startTime: level.exercise?.startTime || null,
-            endTime: level.exercise?.endTime || null,
-            timeSpent: level.exercise?.timeSpent || 0,
-            title: level.exercise?.title || 'Practice Exercise',
-            status: level.exercise?.status || 'not-started',
-            tasks: level.exercise?.tasks || level.exercise?.content || []
-          }
-        }));
-        
-        setEnhancedTimeline(enhancedData);
-        console.log('📚 Enhanced timeline data from portfolio:', enhancedData);
-      }
-      
-      // If no backend timeline data, try curriculum data as fallback
-      setTimeout(() => {
-        if (dynamicTimeline.length === 0) {
-          generateTimelineFromCurriculum();
+    if (studentData && studentData.careerTrack && studentData.learningLevels) {
+      const enhancedData = studentData.learningLevels.map((level: any) => ({
+        level: level.level || level.order || 1,
+        courseName: level.courseName || level.title || `Level ${level.level || level.order || 1}`,
+        description: level.description || 'Learning level',
+        status: level.status || 'not-started',
+        learn: {
+          completed: level.learn?.completed || false,
+          startTime: level.learn?.startTime || null,
+          endTime: level.learn?.endTime || null,
+          timeSpent: level.learn?.timeSpent || 0,
+          title: level.learn?.title || 'Learning Materials',
+          status: level.learn?.status || 'not-started',
+          materials: level.learn?.materials || level.learn?.content || []
+        },
+        test: {
+          completed: level.test?.completed || false,
+          score: level.test?.score || 0,
+          attempts: level.test?.attempts || 0,
+          startTime: level.test?.startTime || null,
+          endTime: level.test?.endTime || null,
+          title: level.test?.title || 'Assessment',
+          status: level.test?.status || 'not-started',
+          questions: level.test?.questions || level.test?.content || []
+        },
+        exercise: {
+          completed: level.exercise?.completed || false,
+          startTime: level.exercise?.startTime || null,
+          endTime: level.exercise?.endTime || null,
+          timeSpent: level.exercise?.timeSpent || 0,
+          title: level.exercise?.title || 'Practice Exercise',
+          status: level.exercise?.status || 'not-started',
+          tasks: level.exercise?.tasks || level.exercise?.content || []
         }
-      }, 1000);
+      }));
+      
+      setEnhancedTimeline(enhancedData);
+      setLastRefreshTime(new Date());
+      console.log('📚 Enhanced timeline data from portfolio:', enhancedData);
       
       // Debug: Log enrollment date data
       console.log('📅 Enrollment Date Debug:', {
@@ -128,25 +106,9 @@ const StudentDetails: React.FC = () => {
         learningLevels: studentData.learningLevels
       });
     }
-  }, [studentData?.careerTrack]);
+  }, [studentData?.careerTrack, studentData?.learningLevels]);
 
-  // Function to generate dynamic timeline using StudentTimelineService
-  const generateDynamicTimeline = async () => {
-    if (!studentId || !studentData?.careerTrack) return;
-    
-    setIsGeneratingTimeline(true);
-    setTimelineError(null);
-    
-    try {
-      const timeline = await StudentTimelineService.generateStudentTimeline(studentId);
-      setDynamicTimeline(timeline);
-      setLastRefreshTime(new Date());
-    } catch (error) {
-      setTimelineError(error instanceof Error ? error.message : 'Failed to generate timeline');
-    } finally {
-      setIsGeneratingTimeline(false);
-    }
-  };
+
 
   // Function to manually refresh timeline
   const refreshTimeline = () => {
@@ -154,141 +116,11 @@ const StudentDetails: React.FC = () => {
       // Refresh student data from backend to get latest learningLevels
       getStudentDetails(studentId);
     }
-    // Also try to generate dynamic timeline as fallback
-    generateDynamicTimeline();
-    // Try curriculum data as another fallback
-    generateTimelineFromCurriculum();
   };
 
-  // Function to generate timeline from backend data
-  const generateTimelineFromBackendData = () => {
-    if (!studentData) return;
-    
-    try {
-      // Transform backend learningLevels data to match DetailedLearningTimeline component structure
-      let timelineData: any[] = [];
-      
-      // Check if we have learning levels data from backend
-      if (studentData.learningLevels && Array.isArray(studentData.learningLevels)) {
-        timelineData = studentData.learningLevels.map((level: any) => ({
-          levelOrder: level.level || level.order || 1,
-          levelTitle: level.courseName || level.title || `Level ${level.level || level.order || 1}`,
-          levelDescription: level.description || 'Learning level',
-          overallStatus: level.status || 'not-started',
-          sections: {
-            learn: {
-              status: level.learn?.completed ? 'completed' : level.learn?.startTime ? 'in-progress' : 'not-started',
-              details: {
-                startDate: level.learn?.startTime || null,
-                endDate: level.learn?.endTime || null,
-                timeSpent: level.learn?.timeSpent || 0,
-                isCompleted: level.learn?.completed || false
-              },
-              title: 'Learning Materials'
-            },
-            test: {
-              status: level.test?.completed ? 'completed' : level.test?.startTime ? 'in-progress' : 'not-started',
-              details: {
-                startDate: level.test?.startTime || null,
-                endDate: level.test?.startTime || null, // Use startTime as endTime for tests
-                score: level.test?.score || 0,
-                attempts: level.test?.attempts || 0,
-                isCompleted: level.test?.completed || false
-              },
-              title: 'Assessment'
-            },
-            exercise: {
-              status: level.exercise?.completed ? 'completed' : level.exercise?.startTime ? 'in-progress' : 'not-started',
-              details: {
-                startDate: level.exercise?.startTime || null,
-                endDate: level.exercise?.startTime || null, // Use startTime as endTime for exercises
-                timeSpent: level.exercise?.timeSpent || 0,
-                isCompleted: level.exercise?.completed || false
-              },
-              title: 'Practice Exercise'
-            }
-          }
-        }));
-      }
-      
-      // If we have backend timeline data, use it
-      if (timelineData.length > 0) {
-        setDynamicTimeline(timelineData);
-        setLastRefreshTime(new Date());
-        setTimelineError(null);
-        console.log('📚 Generated timeline from backend data:', timelineData);
-      }
-    } catch (error) {
-      console.error('Error generating timeline from backend data:', error);
-      setTimelineError('Failed to generate timeline from backend data');
-    }
-  };
 
-  // Function to generate timeline from curriculum data (fallback when backend doesn't provide progress)
-  const generateTimelineFromCurriculum = async () => {
-    if (!studentData?.careerTrack) return;
-    
-    try {
-      // Get curriculum data for this career track
-      const curriculumResponse = await fetch(`/api/training/levels?track=${studentData.careerTrack}`);
-      const curriculumData = await curriculumResponse.json();
-      
-      if (curriculumData.success && curriculumData.data) {
-        const timelineData = curriculumData.data.map((level: any) => ({
-          levelOrder: level.order || 1,
-          levelTitle: level.title || `Level ${level.order || 1}`,
-          levelDescription: level.description || 'Learning level',
-          overallStatus: 'not-started', // Default status since we don't have progress data
-          sections: {
-            learn: {
-              status: 'not-started',
-              details: {
-                startDate: null,
-                endDate: null,
-                timeSpent: 0,
-                isCompleted: false
-              },
-              title: 'Learning Materials',
-              content: level.learn || []
-            },
-            test: {
-              status: 'not-started',
-              details: {
-                startDate: null,
-                endDate: null,
-                score: 0,
-                attempts: 0,
-                isCompleted: false
-              },
-              title: 'Assessment',
-              content: level.test || []
-            },
-            exercise: {
-              status: 'not-started',
-              details: {
-                startDate: null,
-                endDate: null,
-                timeSpent: 0,
-                isCompleted: false
-              },
-              title: 'Practice Exercise',
-              content: level.exercise || []
-            }
-          }
-        }));
-        
-        if (timelineData.length > 0) {
-          setDynamicTimeline(timelineData);
-          setLastRefreshTime(new Date());
-          setTimelineError(null);
-          console.log('📚 Generated timeline from curriculum data:', timelineData);
-        }
-      }
-    } catch (error) {
-      console.error('Error generating timeline from curriculum:', error);
-      setTimelineError('Failed to generate timeline from curriculum data');
-    }
-  };
+
+
 
 
   
@@ -847,56 +679,29 @@ const StudentDetails: React.FC = () => {
             
                            <button
                  onClick={refreshTimeline}
-                 disabled={isGeneratingTimeline}
+                 disabled={false}
                  className="px-6 py-3 rounded-xl transition-all duration-300 font-semibold flex items-center gap-3 shadow-lg hover:shadow-xl disabled:opacity-50 transform hover:scale-105 active:scale-95"
                  style={{
                    backgroundColor: 'var(--color-accent-primary)',
                    color: 'var(--color-text-inverse)'
                  }}
                >
-                 <div className={`w-5 h-5 ${isGeneratingTimeline ? 'animate-spin' : ''}`}>
-                   {isGeneratingTimeline ? (
+                 <div className={`w-5 h-5`}>
+                   {false ? (
                      <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full"></div>
                    ) : (
                      <ArrowUpIcon className="w-5 h-5" />
                    )}
                  </div>
-                 <span className="text-base">{isGeneratingTimeline ? 'Generating...' : '🔄 Refresh Data'}</span>
+                 <span className="text-base">🔄 Refresh Data</span>
                </button>
           </div>
         </div>
 
-                   {/* Timeline Error Display */}
-           {timelineError && (
-             <motion.div 
-               className="mb-6 p-6 rounded-2xl border-2 shadow-lg"
-               style={{
-                 backgroundColor: 'var(--color-error-bg)',
-                 borderColor: 'var(--color-error)',
-                 color: 'var(--color-error)'
-               }}
-               initial={{ opacity: 0, scale: 0.9 }}
-               animate={{ opacity: 1, scale: 1 }}
-               transition={{ duration: 0.3 }}
-             >
-               <div className="flex items-center gap-3 mb-3">
-                 <span className="text-2xl">⚠️</span>
-                 <div>
-                   <h4 className="font-semibold text-lg">Timeline Generation Failed</h4>
-                   <p className="text-sm opacity-90">{timelineError}</p>
-                 </div>
-               </div>
-               <button
-                 onClick={refreshTimeline}
-                 className="px-4 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition-all duration-200 font-medium"
-               >
-                 🔄 Try Again
-               </button>
-             </motion.div>
-           )}
 
-           {/* Dynamic Timeline Display */}
-           {dynamicTimeline.length > 0 ? (
+
+           {/* Enhanced Timeline Display */}
+           {enhancedTimeline.length > 0 ? (
              <div>
                {/* Success Message */}
                <motion.div 
@@ -914,7 +719,7 @@ const StudentDetails: React.FC = () => {
                    <span className="text-2xl">🎉</span>
                    <div>
                      <h4 className="font-semibold text-lg">Learning Journey Loaded!</h4>
-                     <p className="text-sm opacity-90">Displaying {dynamicTimeline.length} levels from backend progress data</p>
+                     <p className="text-sm opacity-90">Displaying {enhancedTimeline.length} levels from portfolio data</p>
                    </div>
                  </div>
                </motion.div>
@@ -937,14 +742,14 @@ const StudentDetails: React.FC = () => {
                animate={{ opacity: 1, scale: 1 }}
                transition={{ duration: 0.5 }}
              >
-               {isGeneratingTimeline ? (
+               {false ? (
                  <div className="flex flex-col items-center justify-center gap-4">
                    <div className="w-16 h-16 border-4 border-current border-t-transparent rounded-full animate-spin" style={{ color: 'var(--color-accent-primary)' }}></div>
                    <div className="text-center">
                      <h3 className="text-xl font-semibold mb-2" style={{ color: 'var(--color-text-primary)' }}>
-                       Generating Your Timeline
+                       Loading Learning Journey
                      </h3>
-                     <p className="text-lg">Fetching curriculum data and progress information...</p>
+                     <p className="text-lg">Fetching portfolio data and progress information...</p>
                    </div>
                  </div>
                ) : (
@@ -973,9 +778,9 @@ const StudentDetails: React.FC = () => {
       {/* Debug: Show timeline data structure */}
       {import.meta.env.DEV && (
         <div className="mt-4 p-4 bg-gray-100 rounded-lg">
-          <h4 className="font-semibold mb-2">Debug: Dynamic Timeline Data</h4>
+          <h4 className="font-semibold mb-2">Debug: Enhanced Timeline Data</h4>
           <pre className="text-xs overflow-auto">
-            {JSON.stringify(dynamicTimeline, null, 2)}
+            {JSON.stringify(enhancedTimeline, null, 2)}
           </pre>
           
           <h4 className="font-semibold mb-2 mt-4">Debug: Student Data</h4>
