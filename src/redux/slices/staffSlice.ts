@@ -26,8 +26,6 @@ export const fetchStudentDetails = createAsyncThunk(
   'staff/fetchStudentDetails',
   async (studentId: string, { rejectWithValue }) => {
     try {
-      console.log('🚀 Starting Two-API Student Details Fetch...');
-      
       // Use the new StudentTimelineService for clean two-API approach
       const combinedTimeline = await StudentTimelineService.generateStudentTimeline(studentId);
       
@@ -38,16 +36,8 @@ export const fetchStudentDetails = createAsyncThunk(
       // Add the combined timeline to the student data
       studentData.learningTimeline = combinedTimeline;
       
-      console.log('✅ Two-API Student Details Fetch Complete:', {
-        studentId,
-        careerTrack: studentData.careerTrack,
-        timelineLevels: combinedTimeline.length,
-        studentName: studentData.name
-      });
-      
       return studentData;
     } catch (error: any) {
-      console.error('❌ Two-API Student Details Fetch Failed:', error);
       return rejectWithValue(error.message || 'Failed to fetch student details');
     }
   }
@@ -157,9 +147,6 @@ const staffSlice = createSlice({
       .addCase(fetchStudentDetails.fulfilled, (state, action) => {
         state.studentDetailsLoading = false;
         state.selectedStudent = action.payload;
-        console.log('🔄 Redux State Updated: selectedStudent set to:', action.payload);
-        console.log('📚 Redux State: Learning timeline length:', action.payload?.learningTimeline?.length || 0);
-        console.log('📋 Redux State: Timeline structure:', JSON.stringify(action.payload?.learningTimeline, null, 2));
         state.error = null;
       })
       .addCase(fetchStudentDetails.rejected, (state, action) => {

@@ -117,7 +117,7 @@ export const useCurriculumManagement = () => {
         setTrackCounts(counts);
       }
     } catch (e) {
-      console.warn('Failed to fetch track counts', e);
+      // Silent error handling
     }
   }, [normalizeTrack]);
 
@@ -165,7 +165,6 @@ export const useCurriculumManagement = () => {
         setLevels([]);
       }
     } catch (error) {
-      console.error('Error fetching levels:', error);
       setError(`Failed to load levels: ${error instanceof Error ? error.message : 'Unknown error'}`);
       setLevels([]);
     } finally {

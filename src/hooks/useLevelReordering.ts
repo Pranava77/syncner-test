@@ -18,7 +18,7 @@ export const useLevelReordering = () => {
       setIsReordering(true);
       setReorderError(null);
 
-      console.log('Moving level up:', { track, currentOrder, targetOrder });
+
 
       const response = await apiService.reorderLevelsByTrack(track, currentOrder, targetOrder);
       
@@ -37,7 +37,7 @@ export const useLevelReordering = () => {
         return { success: false, message: errorMessage };
       }
     } catch (error) {
-      console.error('Error moving level up:', error);
+      // Silent error handling
       const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
       setReorderError(errorMessage);
       return { success: false, message: errorMessage };
@@ -52,7 +52,7 @@ export const useLevelReordering = () => {
       setIsReordering(true);
       setReorderError(null);
 
-      console.log('Moving level down:', { track, currentOrder, targetOrder });
+
 
       const response = await apiService.reorderLevelsByTrack(track, currentOrder, targetOrder);
       
@@ -71,7 +71,7 @@ export const useLevelReordering = () => {
         return { success: false, message: errorMessage };
       }
     } catch (error) {
-      console.error('Error moving level down:', error);
+      // Silent error handling
       const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
       setReorderError(errorMessage);
       return { success: false, message: errorMessage };

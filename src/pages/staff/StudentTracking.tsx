@@ -92,16 +92,7 @@ const StudentTracking: React.FC = () => {
     return date.toLocaleDateString();
   };
 
-  // Debug logging
-  React.useEffect(() => {
-    console.log('StudentTracking Debug Info:');
-    console.log('Students array:', students);
-    console.log('Students length:', students.length);
-    console.log('Students loading:', studentsLoading);
-    console.log('Error:', error);
-    console.log('Filters:', filters);
-    console.log('Pagination:', pagination);
-  }, [students, studentsLoading, error, filters, pagination]);
+
 
   if (studentsLoading && students.length === 0) {
     return (
@@ -116,7 +107,7 @@ const StudentTracking: React.FC = () => {
     );
   }
 
-  // Show debug info if no students are found
+  // Show message if no students are found
   if (!studentsLoading && students.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
@@ -124,14 +115,9 @@ const StudentTracking: React.FC = () => {
           <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--color-text-primary)' }}>
             No Students Found
           </h2>
-          <div className="text-left space-y-2 mb-6" style={{ color: 'var(--color-text-secondary)' }}>
-            <p><strong>Debug Info:</strong></p>
-            <p>Students array length: {students.length}</p>
-            <p>Loading state: {studentsLoading ? 'true' : 'false'}</p>
-            <p>Error: {error || 'none'}</p>
-            <p>Total students: {pagination.totalStudents}</p>
-            <p>Current page: {pagination.currentPage}</p>
-          </div>
+          <p className="mb-6" style={{ color: 'var(--color-text-secondary)' }}>
+            No students match the current filters or there are no students in the system.
+          </p>
           <button
             onClick={() => window.location.reload()}
             className="px-4 py-2 rounded-lg"

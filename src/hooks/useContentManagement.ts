@@ -211,17 +211,7 @@ export const useContentManagement = () => {
           }
         }
 
-        // Debug: Log what we're sending to the backend
-        console.log('Content Update Payload:', {
-          contentType,
-          updateData,
-          formData: {
-            title: formData.title,
-            content: formData.content,
-            description: formData.description,
-            resources: formData.resources
-          }
-        });
+
 
         const response = await apiService.updateCurriculumItem(contentId, updateData);
         
@@ -293,7 +283,6 @@ export const useContentManagement = () => {
         }
       }
     } catch (error) {
-      console.error('Error submitting content:', error);
       const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
       setContentFormError(errorMessage);
       return { success: false, message: errorMessage };
@@ -317,7 +306,6 @@ export const useContentManagement = () => {
         return { success: false, message: response.message || 'Failed to delete content' };
       }
     } catch (error) {
-      console.error('Error deleting content:', error);
       const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
       return { success: false, message: errorMessage };
     } finally {

@@ -55,17 +55,13 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
   // Listen for curriculum changes from admin
   useEffect(() => {
     const handleCurriculumChange = (event: CustomEvent) => {
-      console.log('LevelsSidebar: Curriculum change detected:', event.detail);
       if (event.detail.track === user?.careerTrack) {
-        console.log('LevelsSidebar: Refreshing levels due to curriculum change in admin');
         refetch();
       }
     };
     
     const handleLevelsRefreshRequired = (event: CustomEvent) => {
-      console.log('LevelsSidebar: Immediate refresh required:', event.detail);
       if (event.detail.track === user?.careerTrack) {
-        console.log('LevelsSidebar: Force refreshing levels due to immediate refresh requirement');
         // Force immediate refresh using the enhanced function
         setTimeout(() => forceRefresh(), 100);
       }
@@ -167,25 +163,23 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
     }
   }, [currentLevel]);
 
-  // Check if current level still exists (in case it was deleted by admin)
-  useEffect(() => {
-    if (levels.length > 0 && currentLevel) {
-      const levelExists = levels.find(level => level.id === currentLevel);
-      if (!levelExists) {
-        console.log('LevelsSidebar: Current level no longer exists, clearing current selection');
-        // Clear the current level selection since it no longer exists
-        if (setSidebarOpen) {
-          setSidebarOpen(true); // Open sidebar to show available levels
+      // Check if current level still exists (in case it was deleted by admin)
+    useEffect(() => {
+      if (levels.length > 0 && currentLevel) {
+        const levelExists = levels.find(level => level.id === currentLevel);
+        if (!levelExists) {
+          // Clear the current level selection since it no longer exists
+          if (setSidebarOpen) {
+            setSidebarOpen(true); // Open sidebar to show available levels
+          }
         }
       }
-    }
-  }, [levels, currentLevel, setSidebarOpen]);
+    }, [levels, currentLevel, setSidebarOpen]);
 
   const toggleLevelExpansion = (levelId: string) => {
     // Find the level to check if it belongs to the current user's track
     const level = levelsWithUnlockLogic.find(l => l.id === levelId);
     if (!level) {
-      console.error('Level not found or not from current track:', levelId);
       return;
     }
 
@@ -204,17 +198,14 @@ const LevelsSidebar: React.FC<LevelsSidebarProps> = ({
 
   const handleLevelClick = (level: Level, section: string) => {
     if (!level.isUnlocked) {
-      console.log('Level is locked:', level.order);
       return;
     }
 
     // Since we're only processing levels from the current track, this check is redundant but kept for safety
     if (level.careerTrack !== user?.careerTrack) {
-      console.error('Level track mismatch:', { levelTrack: level.careerTrack, userTrack: user?.careerTrack });
       return;
     }
     
-    console.log('Navigating to:', `/student/training/${level.id}/${section}`, { levelTrack: level.careerTrack, userTrack: user?.careerTrack });
     navigate(`/student/training/${level.id}/${section}`);
     if (setSidebarOpen) setSidebarOpen(false);
   };

@@ -11,6 +11,7 @@ import {
 import { motion } from 'framer-motion';
 import apiService from '../services/api';
 import syncnerLogo from '../assets/syncner-logo.png';
+import { useTimeTracking } from '../hooks/useTimeTracking';
 
 interface TaskSubmissionModalProps {
   isOpen: boolean;
@@ -45,6 +46,14 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Time tracking hook
+  const { 
+    isTracking, 
+    startTracking, 
+    stopTracking, 
+    getCurrentSessionDuration 
+  } = useTimeTracking();
+
   // Populate form with existing submission data when editing
   React.useEffect(() => {
     if (existingSubmission && existingSubmission.links.length > 0) {
@@ -60,6 +69,33 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
       }));
     }
   }, [existingSubmission]);
+
+  // Start time tracking when modal opens
+  React.useEffect(() => {
+    if (isOpen && exercise.id) {
+      startTracking(exercise.id, 'exercise');
+    }
+    
+    // Cleanup: Stop time tracking when modal closes
+    return () => {
+      if (isTracking) {
+        stopTracking();
+      }
+    };
+  }, [isOpen, exercise.id, startTracking, stopTracking, isTracking]);
+
+  // Real-time session timer update
+  React.useEffect(() => {
+    if (!isTracking) return;
+    
+    const interval = setInterval(() => {
+      // Force re-render to update the timer display
+      // We'll use a simple state update to trigger re-render
+      setFormData(prev => ({ ...prev }));
+    }, 1000); // Update every second
+    
+    return () => clearInterval(interval);
+  }, [isTracking]);
 
   const handleInputChange = (field: string, value: string | string[]) => {
     setFormData(prev => ({
@@ -84,7 +120,7 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
       await navigator.clipboard.writeText(text);
       // You could add a toast notification here
     } catch (err) {
-      console.error('Failed to copy text: ', err);
+      // Silent error handling
     }
   };
 
@@ -133,6 +169,11 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
     setError(null);
     
     try {
+      // Stop time tracking when exercise is submitted
+      if (isTracking) {
+        await stopTracking();
+      }
+      
       // Extract links from form data
       const links = [
         formData.submissionLink,
@@ -142,10 +183,8 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
       // Submit or update exercise with links
       if (isEditMode) {
         await apiService.updateExercise(exercise.id || '', exercise.title, links);
-        console.log('Exercise updated successfully:', formData);
       } else {
         await apiService.submitExercise(exercise.id || '', exercise.title, links);
-        console.log('Exercise submitted successfully:', formData);
       }
       
       // Trigger refresh callback if provided
@@ -155,7 +194,6 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
       
       onClose();
     } catch (error) {
-      console.error('Error submitting exercise:', error);
       setError(`Failed to ${isEditMode ? 'update' : 'submit'} exercise. Please try again.`);
     } finally {
       setIsSubmitting(false);
@@ -234,6 +272,23 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
             </div>
           </div>
         </div>
+
+        {/* Live Session Timer */}
+        {isTracking && (
+          <div className="mx-6 mt-4 p-3 rounded-lg border-2 border-dashed" style={{ borderColor: 'var(--color-accent-primary)' }}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: 'var(--color-accent-primary)' }}></div>
+                <span className="text-sm font-medium" style={{ color: 'var(--color-accent-primary)' }}>
+                  Exercise Session
+                </span>
+              </div>
+              <div className="text-lg font-bold" style={{ color: 'var(--color-accent-primary)' }}>
+                {Math.floor(getCurrentSessionDuration() / 60)}:{(getCurrentSessionDuration() % 60).toString().padStart(2, '0')}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Error Message */}
         {error && (

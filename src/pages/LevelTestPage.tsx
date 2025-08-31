@@ -6,6 +6,7 @@ import { CheckCircledIcon, ClockIcon, ReaderIcon, LockClosedIcon, ExclamationTri
 import { motion } from 'framer-motion';
 import apiService from '../services/api';
 import syncnerLogo from '../assets/syncner-logo.png';
+import { useTimeTracking } from '../hooks/useTimeTracking';
 
 interface Level {
   id: string;
@@ -63,6 +64,14 @@ const LevelTestPage: React.FC = () => {
   const [testPassed, setTestPassed] = useState<boolean | null>(null);
   const [showRetakePopup, setShowRetakePopup] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Time tracking hook
+  const { 
+    isTracking, 
+    startTracking, 
+    stopTracking, 
+    getCurrentSessionDuration 
+  } = useTimeTracking();
 
   const fetchLevel = useCallback(async () => {
     try {
@@ -154,8 +163,18 @@ const LevelTestPage: React.FC = () => {
     if (levelId) {
       fetchLevel();
       fetchTestProgress();
+      
+      // Start time tracking when entering test page
+      startTracking(levelId, 'test');
     }
-  }, [levelId, fetchLevel, fetchTestProgress]);
+    
+    // Cleanup: Stop time tracking when leaving the page
+    return () => {
+      if (levelId && isTracking) {
+        stopTracking();
+      }
+    };
+  }, [levelId, fetchLevel, fetchTestProgress, startTracking, stopTracking, isTracking]);
 
   // Listen for curriculum changes from admin
   useEffect(() => {
@@ -215,6 +234,18 @@ const LevelTestPage: React.FC = () => {
     }
   }, [canRetake, currentAttempt, fetchTestProgress]);
 
+  // Real-time session timer update
+  useEffect(() => {
+    if (!isTracking) return;
+    
+    const interval = setInterval(() => {
+      // Force re-render to update the timer display
+      setRefreshTrigger(prev => prev + 1);
+    }, 1000); // Update every second
+    
+    return () => clearInterval(interval);
+  }, [isTracking]);
+
   useEffect(() => {
     if (submitted) return;
     if (timeLeft === 0) {
@@ -267,6 +298,11 @@ const LevelTestPage: React.FC = () => {
     
     const score = calculateScore();
     const passed = score >= 60;
+    
+    // Stop time tracking when test is submitted
+    if (isTracking) {
+      await stopTracking();
+    }
     
     // Prepare answers for submission
     const answersForSubmission = randomizedQuestions.map((question, qIdx) => ({
@@ -930,6 +966,23 @@ const LevelTestPage: React.FC = () => {
           >
             <span>Questions answered: {Object.keys(answers).filter(key => answers[parseInt(key)].some(a => a)).length} of {validQuestions.length}</span>
           </div>
+          
+          {/* Live Session Timer */}
+          {isTracking && (
+            <div className="mt-3 p-3 rounded-lg border-2 border-dashed" style={{ borderColor: 'var(--color-accent-primary)' }}>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: 'var(--color-accent-primary)' }}></div>
+                  <span className="text-sm font-medium" style={{ color: 'var(--color-accent-primary)' }}>
+                    Test Session
+                  </span>
+                </div>
+                <div className="text-lg font-bold" style={{ color: 'var(--color-accent-primary)' }}>
+                  {Math.floor(getCurrentSessionDuration() / 60)}:{(getCurrentSessionDuration() % 60).toString().padStart(2, '0')}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Test Details Section */}

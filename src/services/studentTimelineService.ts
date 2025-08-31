@@ -56,20 +56,11 @@ export class StudentTimelineService {
    * Step 1: Fetch student portfolio data (contains progress and career track)
    */
   static async fetchStudentPortfolio(studentId: string) {
-    console.log('🔄 Step 1: Fetching student portfolio data...');
     try {
       const response = await apiService.getStudentPortfolio(studentId);
       const studentData = response.data.student;
-      
-      console.log('✅ Step 1 Complete - Portfolio data received:', {
-        careerTrack: studentData.careerTrack,
-        progressExists: !!studentData.progress,
-        learningLevelsCount: studentData.learningLevels?.length || 0
-      });
-      
       return studentData;
     } catch (error) {
-      console.error('❌ Step 1 Failed - Portfolio fetch error:', error);
       throw new Error('Failed to fetch student portfolio data');
     }
   }
@@ -106,19 +97,13 @@ export class StudentTimelineService {
     studentData: any, 
     curriculumLevels: CurriculumLevel[]
   ): CombinedTimelineLevel[] {
-    console.log('🔄 Step 3: Combining student progress with curriculum data...');
-    
     const combinedTimeline: CombinedTimelineLevel[] = [];
     
     curriculumLevels.forEach((level) => {
-      console.log(`🔍 Processing curriculum level ${level.order}: ${level.title}`);
-      
       // Find student's progress for this level
       const levelProgress = studentData.learningLevels?.find(
         (l: any) => l.level === level.order
       );
-      
-      console.log(`📊 Level ${level.order} progress found:`, !!levelProgress);
       
       // Determine section statuses and details
       const learnDetails = this.extractLearnDetails(levelProgress);
@@ -158,15 +143,6 @@ export class StudentTimelineService {
       };
       
       combinedTimeline.push(timelineLevel);
-    });
-    
-    console.log('✅ Step 3 Complete - Combined timeline created:', {
-      levelsCount: combinedTimeline.length,
-      levels: combinedTimeline.map(l => ({ 
-        order: l.levelOrder, 
-        title: l.levelTitle, 
-        status: l.overallStatus 
-      }))
     });
     
     return combinedTimeline;
@@ -264,14 +240,11 @@ export class StudentTimelineService {
    * Main method: Orchestrate the entire two-API process
    */
   static async generateStudentTimeline(studentId: string): Promise<CombinedTimelineLevel[]> {
-    console.log('🚀 Starting Two-API Timeline Generation Process...');
-    
     try {
       // Step 1: Get student data
       const studentData = await this.fetchStudentPortfolio(studentId);
       
       if (!studentData.careerTrack) {
-        console.warn('⚠️ Student has no career track, using fallback');
         return this.generateFallbackTimeline();
       }
       
@@ -279,18 +252,15 @@ export class StudentTimelineService {
       const curriculumLevels = await this.fetchCurriculumLevels(studentData.careerTrack);
       
       if (!curriculumLevels || curriculumLevels.length === 0) {
-        console.warn('⚠️ No curriculum levels found, using fallback');
         return this.generateFallbackTimeline();
       }
       
       // Step 3: Combine the data
       const combinedTimeline = this.combineData(studentData, curriculumLevels);
       
-      console.log('🎉 Two-API Timeline Generation Complete!');
       return combinedTimeline;
       
     } catch (error) {
-      console.error('❌ Timeline generation failed, using fallback:', error);
       return this.generateFallbackTimeline();
     }
   }
@@ -299,8 +269,6 @@ export class StudentTimelineService {
    * Fallback timeline generation when APIs fail
    */
   private static generateFallbackTimeline(): CombinedTimelineLevel[] {
-    console.log('🔄 Generating fallback timeline...');
-    
     const fallbackLevels = [
       {
         levelOrder: 1,
@@ -350,7 +318,6 @@ export class StudentTimelineService {
       }
     ];
     
-    console.log('✅ Fallback timeline generated with', fallbackLevels.length, 'levels');
     return fallbackLevels;
   }
 }

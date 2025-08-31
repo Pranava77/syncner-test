@@ -53,7 +53,6 @@ const AdminStaff: React.FC = () => {
         await dispatch(fetchAllUsers({ role: 'staff' })).unwrap();
       } catch (err: any) {
         setError(err.message || 'Failed to load staff members');
-        console.error('Staff load error:', err);
       }
     };
     loadStaff();
@@ -100,7 +99,6 @@ const AdminStaff: React.FC = () => {
         setTimeout(() => setSuccessMessage(null), 3000);
       } catch (err: any) {
         setError(err.message || 'An error occurred while deleting staff member');
-        console.error('Staff delete error:', err);
       }
     }
   };
@@ -139,7 +137,6 @@ const AdminStaff: React.FC = () => {
       }
     } catch (err: any) {
       setError(err.message || 'An error occurred while saving staff member');
-      console.error('Staff save error:', err);
     } finally {
       setIsSubmitting(false);
     }
@@ -683,7 +680,6 @@ const AdminStaff: React.FC = () => {
             setTimeout(() => setSuccessMessage(null), 3000);
           } catch (err: any) {
             setError(err.message || 'Failed to reset password');
-            console.error('Password reset error:', err);
             throw err; // Re-throw so the modal can handle it
           }
         }}

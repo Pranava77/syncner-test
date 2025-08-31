@@ -21,9 +21,6 @@ class ApiService {
     
     if (authToken) {
       headers['Authorization'] = `Bearer ${authToken}`;
-      console.log('🔑 Using token:', authToken);
-    } else {
-      console.warn('⚠️ No auth token found');
     }
     
     return headers;
@@ -38,7 +35,6 @@ class ApiService {
   }
 
   private handleError(error: any) {
-    console.error('API Error:', error);
     if (error instanceof Error) {
       return error;
     }
@@ -460,49 +456,25 @@ class ApiService {
     if (filters.sortBy) queryParams.append('sortBy', filters.sortBy);
     if (filters.sortOrder) queryParams.append('sortOrder', filters.sortOrder);
 
-    console.log('🔗 API Call: GET /staff/students with params:', queryParams.toString());
-
     const response = await fetch(`${this.baseURL}/staff/students?${queryParams}`, {
       method: 'GET',
       headers: this.getHeaders(),
       credentials: 'include',
     });
     
-    const result = await this.handleResponse(response);
-    console.log('✅ API Response for getStudents:', result);
-    console.log('📊 Students count:', result?.data?.students?.length || 0);
-    console.log('📋 Pagination:', result?.data?.pagination);
-    
-    return result;
+    return this.handleResponse(response);
   }
 
   async getStudentPortfolio(studentId: string): Promise<any> {
     const url = `${this.baseURL}/student/portfolio/${studentId}`;
-    console.log('🔗 Making API call to portfolio route:', url);
     try {
       const response = await fetch(url, {
         method: 'GET',
         headers: this.getHeaders(),
         credentials: 'include',
       });
-      const data = await this.handleResponse(response);
-      console.log('✅ Portfolio API Response:', data);
-
-      // Debug: Log the specific learning timeline data
-      if (data && data.data && data.data.student) {
-        console.log('📚 Portfolio Learning Timeline Data Received:');
-        console.log('📊 Timeline Length:', data.data.student.learningTimeline?.length || 0);
-        console.log('📋 Timeline Structure:', JSON.stringify(data.data.student.learningTimeline, null, 2));
-        console.log('🎯 Student Career Track:', data.data.student.careerTrack);
-        console.log('📈 Progress:', data.data.student.progress);
-        console.log('⭐ Performance:', data.data.student.performance);
-      } else {
-        console.log('⚠️ No student data found in portfolio response');
-      }
-
-      return data;
+      return this.handleResponse(response);
     } catch (error) {
-      console.error('❌ Portfolio API Error:', error);
       throw this.handleError(error);
     }
   }
@@ -510,18 +482,14 @@ class ApiService {
   // Get curriculum levels for a specific career track
   async getCurriculumLevels(careerTrack: string): Promise<any> {
     const url = `${this.baseURL}/training/levels?track=${encodeURIComponent(careerTrack)}`;
-    console.log('🔗 Making API call to training levels route:', url);
     try {
       const response = await fetch(url, {
         method: 'GET',
         headers: this.getHeaders(),
         credentials: 'include',
       });
-      const data = await this.handleResponse(response);
-      console.log('✅ Training Levels API Response:', data);
-      return data;
+      return this.handleResponse(response);
     } catch (error) {
-      console.error('❌ Training Levels API Error:', error);
       throw this.handleError(error);
     }
   }
@@ -529,38 +497,20 @@ class ApiService {
   // Method specifically for staff to get student details
   async getStudentDetails(studentId: string): Promise<any> {
     const url = `${this.baseURL}/staff/students/${studentId}`;
-    console.log('🔗 Making API call to staff route:', url);
     try {
       const response = await fetch(url, {
         method: 'GET',
         headers: this.getHeaders(),
         credentials: 'include',
       });
-      const data = await this.handleResponse(response);
-      console.log('✅ Staff API Response:', data);
-
-      // Debug: Log the specific learning timeline data
-      if (data && data.data && data.data.student) {
-        console.log('📚 Staff Learning Timeline Data Received:');
-        console.log('📊 Timeline Length:', data.data.student.detailedLearningTimeline?.length || 0);
-        console.log('📋 Timeline Structure:', JSON.stringify(data.data.student.detailedLearningTimeline, null, 2));
-        console.log('🎯 Student Career Track:', data.data.student.careerTrack);
-        console.log('📈 Progress:', data.data.student.progress);
-        console.log('⭐ Performance:', data.data.student.performance);
-      } else {
-        console.log('⚠️ No student data found in staff response');
-      }
-
-      return data;
+      return this.handleResponse(response);
     } catch (error) {
-      console.error('❌ Staff API Error:', error);
       throw this.handleError(error);
     }
   }
 
-  async getOwnPortfolio(): Promise<StudentDetailsApiResponse> {
+  async getOwnPortfolio(): Promise<any> {
     const url = `${this.baseURL}/student/portfolio/me`;
-    console.log('🔗 Making API call to:', url);
     try {
       const response = await fetch(url, {
         method: 'GET',
@@ -569,14 +519,10 @@ class ApiService {
       });
       if (!response.ok) {
         const errorData = await response.json();
-        console.error('❌ Own Portfolio API Error:', errorData);
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
-      const data = await response.json();
-      console.log('✅ Own Portfolio API Response:', data);
-      return data;
+      return response.json();
     } catch (error) {
-      console.error('❌ Own Portfolio API Error:', error);
       throw error;
     }
   }
@@ -727,6 +673,40 @@ class ApiService {
       headers: this.getHeaders(),
       credentials: 'include',
     });
+    return this.handleResponse(response);
+  }
+
+  // Time tracking methods
+  async startTimeTracking(levelId: string, section: 'learn' | 'test' | 'exercise'): Promise<any> {
+    const response = await fetch(`${this.baseURL}/time-tracking/start`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      credentials: 'include',
+      body: JSON.stringify({ levelId, section }),
+    });
+    
+    return this.handleResponse(response);
+  }
+
+  async stopTimeTracking(levelId: string, section: 'learn' | 'test' | 'exercise'): Promise<any> {
+    const response = await fetch(`${this.baseURL}/time-tracking/stop`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      credentials: 'include',
+      body: JSON.stringify({ levelId, section }),
+    });
+    
+    return this.handleResponse(response);
+  }
+
+  async pauseTimeTracking(levelId: string, section: 'learn' | 'test' | 'exercise'): Promise<any> {
+    const response = await fetch(`${this.baseURL}/time-tracking/pause`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      credentials: 'include',
+      body: JSON.stringify({ levelId, section }),
+    });
+    
     return this.handleResponse(response);
   }
 }

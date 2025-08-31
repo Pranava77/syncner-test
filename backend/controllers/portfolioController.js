@@ -301,12 +301,15 @@ export const getStudentPortfolio = async (req, res) => {
                 completed: levelProgress?.completedSections?.test || false,
                 score: levelProgress?.testProgress?.attempts?.[0]?.score || 0,
                 attempts: levelProgress?.testProgress?.attempts?.length || 0,
-                startTime: levelProgress?.testProgress?.lastAttemptAt || null,
+                startTime: levelProgress?.testProgress?.startTime || null,
+                endTime: levelProgress?.testProgress?.endTime || null,
+                timeSpent: levelProgress?.testProgress?.timeSpent || 0,
                 content: item.test || []
               },
               exercise: {
                 completed: levelProgress?.completedSections?.exercise || false,
-                startTime: levelProgress?.exerciseSubmissions?.[0]?.submittedAt || null,
+                startTime: levelProgress?.exerciseSubmissions?.[0]?.startTime || null,
+                endTime: levelProgress?.exerciseSubmissions?.[0]?.endTime || null,
                 timeSpent: levelProgress?.exerciseSubmissions?.[0]?.timeSpent || 0,
                 content: item.exercise || []
               }

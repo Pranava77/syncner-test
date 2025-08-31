@@ -33,7 +33,6 @@ interface DetailedLearningTimelineProps {
 }
 
 const DetailedLearningTimeline: React.FC<DetailedLearningTimelineProps> = ({ timeline }) => {
-  console.log('DetailedLearningTimeline - Received timeline:', timeline);
 
   const getStatusColor = (status: string) => {
     switch (status) {

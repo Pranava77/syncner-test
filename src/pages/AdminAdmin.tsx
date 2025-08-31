@@ -51,7 +51,6 @@ const AdminAdmin: React.FC = () => {
         await dispatch(fetchAllUsers({ role: 'admin' })).unwrap();
       } catch (err: any) {
         setError(err.message || 'Failed to load admins');
-        console.error('Admin load error:', err);
       }
     };
     loadAdmins();
@@ -93,7 +92,6 @@ const AdminAdmin: React.FC = () => {
         setTimeout(() => setSuccessMessage(null), 3000);
       } catch (err: any) {
         setError(err.message || 'An error occurred while deleting admin');
-        console.error('Admin delete error:', err);
       }
     }
   };
@@ -132,7 +130,6 @@ const AdminAdmin: React.FC = () => {
       }
     } catch (err: any) {
       setError(err.message || 'An error occurred while saving admin');
-      console.error('Admin save error:', err);
     } finally {
       setIsSubmitting(false);
     }
@@ -623,7 +620,6 @@ const AdminAdmin: React.FC = () => {
             setTimeout(() => setSuccessMessage(null), 3000);
           } catch (err: any) {
             setError(err.message || 'Failed to reset password');
-            console.error('Password reset error:', err);
             throw err; // Re-throw so the modal can handle it
           }
         }}

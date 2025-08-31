@@ -95,10 +95,9 @@ export const useLevels = (trackId?: string) => {
     // Only fetch if cache is invalid or no data exists
     if (!isCacheValid) {
       try {
-        console.log('useLevels: Fetching levels due to cache invalidation or empty data');
         await dispatch(fetchLevelsWithStatus({ trackId })).unwrap();
       } catch (err) {
-        console.error('Failed to fetch levels:', err);
+        // Silent error handling
       }
     }
   }, [trackId, dispatch, isCacheValid]);
@@ -106,22 +105,20 @@ export const useLevels = (trackId?: string) => {
   const refetch = useCallback(async () => {
     if (!trackId) return;
     try {
-      console.log('useLevels: Force refetching levels');
       await dispatch(fetchLevelsWithStatus({ trackId })).unwrap();
     } catch (err) {
-      console.error('Failed to refetch levels:', err);
+      // Silent error handling
     }
   }, [trackId, dispatch]);
 
   const forceRefresh = useCallback(async () => {
     if (!trackId) return;
     try {
-      console.log('useLevels: Force refreshing levels (bypassing cache)');
       // Clear cache first, then fetch
       dispatch(clearCache());
       await dispatch(fetchLevelsWithStatus({ trackId })).unwrap();
     } catch (err) {
-      console.error('Failed to force refresh levels:', err);
+      // Silent error handling
     }
   }, [trackId, dispatch]);
 

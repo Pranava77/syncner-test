@@ -134,7 +134,7 @@ const Layout: React.FC = () => {
       await dispatch(logoutUser()).unwrap();
       navigate('/');
     } catch (error) {
-      console.error('Layout: Logout failed:', error);
+      // Silent error handling
     } finally {
       setIsLoggingOut(false);
     }
