@@ -4,7 +4,7 @@ import User from '../models/User.js';
 import UserProgress from '../models/UserProgress.js';
 import Track from '../models/Track.js';
 import Curriculum from '../models/Curriculum.js'; // Added import for Curriculum
-import LeaderboardService from '../services/LeaderboardService.js'; // Added import for LeaderboardService
+import LeaderboardService from '../services/leaderboardService.js'; // Added import for LeaderboardService
 
 const router = express.Router();
 
