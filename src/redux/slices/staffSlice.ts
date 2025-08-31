@@ -35,6 +35,16 @@ export const fetchStudentDetails = createAsyncThunk(
         learningLevels: studentData.learningLevels
       });
 
+      // Log the complete student progress structure
+      console.log('📊 Student Details - Complete progress structure:', {
+        progress: studentData.progress,
+        learningLevels: studentData.learningLevels,
+        completedLevels: studentData.progress?.completedLevels,
+        learnProgress: studentData.progress?.learnProgress,
+        testProgress: studentData.progress?.testProgress,
+        exerciseSubmissions: studentData.progress?.exerciseSubmissions
+      });
+
       // Then, get curriculum levels for this career track
       if (studentData.careerTrack) {
         try {
@@ -54,6 +64,13 @@ export const fetchStudentDetails = createAsyncThunk(
             const levelProgress = studentData.learningLevels?.find(
               (l: any) => l.level === level.order
             );
+
+            console.log(`🔍 Mapping Level ${level.order} (${level.title}):`, {
+              levelOrder: level.order,
+              levelTitle: level.title,
+              foundProgress: !!levelProgress,
+              progressData: levelProgress
+            });
 
             // Get progress details for each section
             const learnDetails = levelProgress?.learn ? {
