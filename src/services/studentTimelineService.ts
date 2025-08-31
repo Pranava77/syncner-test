@@ -119,6 +119,14 @@ export class StudentTimelineService {
       );
       
       console.log(`📊 Level ${level.order} progress found:`, !!levelProgress);
+      if (levelProgress) {
+        console.log(`📋 Level ${level.order} progress data:`, {
+          level: levelProgress.level,
+          learn: levelProgress.learn,
+          test: levelProgress.test,
+          exercise: levelProgress.exercise
+        });
+      }
       
       // Determine section statuses and details
       const learnDetails = this.extractLearnDetails(levelProgress);
@@ -185,6 +193,8 @@ export class StudentTimelineService {
       };
     }
     
+    console.log('🔍 Learn details from levelProgress:', levelProgress.learn);
+    
     return {
       startDate: levelProgress.learn.startTime || null,
       endDate: levelProgress.learn.endTime || null,
@@ -207,6 +217,8 @@ export class StudentTimelineService {
       };
     }
     
+    console.log('🔍 Test details from levelProgress:', levelProgress.test);
+    
     return {
       startDate: levelProgress.test.startTime || null,
       endDate: levelProgress.test.endTime || null,
@@ -228,6 +240,8 @@ export class StudentTimelineService {
         isCompleted: false
       };
     }
+    
+    console.log('🔍 Exercise details from levelProgress:', levelProgress.exercise);
     
     return {
       startDate: levelProgress.exercise.startTime || null,

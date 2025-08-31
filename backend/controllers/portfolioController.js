@@ -1,6 +1,7 @@
 import User from '../models/User.js';
 import UserProgress from '../models/UserProgress.js';
 import Attendance from '../models/Attendance.js';
+import Curriculum from '../models/Curriculum.js';
 
 export const getStudentPortfolio = async (req, res) => {
   try {
@@ -123,8 +124,7 @@ export const getStudentPortfolio = async (req, res) => {
     // Try to get total levels from curriculum if we have career track
     if (progress?.careerTrack) {
       try {
-        // Import curriculum model to get total levels
-        const { default: Curriculum } = await import('../models/Curriculum.js');
+
         const curriculumItems = await Curriculum.find({ 
           careerTrack: progress.careerTrack,
           type: 'syllabus' // Get only syllabus items (main levels)
@@ -200,8 +200,7 @@ export const getStudentPortfolio = async (req, res) => {
       // Try to get actual leaderboard ranking if we have career track
       if (progress?.careerTrack) {
         try {
-          // Get all students in the same career track to calculate ranking
-          const { default: UserProgress } = await import('../models/UserProgress.js');
+          
           const allStudentsInTrack = await UserProgress.find({ 
             careerTrack: progress.careerTrack 
           }).populate('user', 'name email');
@@ -361,6 +360,12 @@ export const getStudentPortfolio = async (req, res) => {
               level => level.levelOrder === item.order || level.levelId === item._id.toString()
             );
             
+            console.log(`🔍 Portfolio Controller - Processing level ${item.order}:`, {
+              itemTitle: item.title,
+              levelProgressFound: !!levelProgress,
+              levelProgressData: levelProgress
+            });
+            
             // Determine level status
             let levelStatus = 'not-started';
             if (levelProgress) {
@@ -382,12 +387,14 @@ export const getStudentPortfolio = async (req, res) => {
             // Get completion details for each section
             const learnDetails = levelProgress?.learnProgress ? {
               completed: levelProgress.completedSections?.learn || false,
-              startTime: levelProgress.learnProgress.startDate || levelProgress.completedAt,
-              endTime: levelProgress.completedSections?.learn ? levelProgress.completedAt : null
+              startTime: levelProgress.learnProgress.lastAttemptAt || levelProgress.completedAt,
+              endTime: levelProgress.completedSections?.learn ? levelProgress.completedAt : null,
+              timeSpent: levelProgress.learnProgress.timeSpent || 0
             } : {
               completed: false,
               startTime: null,
-              endTime: null
+              endTime: null,
+              timeSpent: 0
             };
             
             const testDetails = levelProgress?.testProgress ? {
@@ -396,7 +403,7 @@ export const getStudentPortfolio = async (req, res) => {
                 ? Math.max(...levelProgress.testProgress.attempts.map(a => a.score || 0))
                 : 0,
               attempts: levelProgress.testProgress.attempts?.length || 0,
-              startTime: levelProgress.testProgress.startDate || levelProgress.completedAt,
+              startTime: levelProgress.testProgress.lastAttemptAt || levelProgress.completedAt,
               endTime: levelProgress.completedSections?.test ? levelProgress.completedAt : null
             } : {
               completed: false,
@@ -406,14 +413,16 @@ export const getStudentPortfolio = async (req, res) => {
               endTime: null
             };
             
-            const exerciseDetails = levelProgress?.exerciseProgress ? {
+            const exerciseDetails = levelProgress?.exerciseSubmissions ? {
               completed: levelProgress.completedSections?.exercise || false,
-              startTime: levelProgress.exerciseProgress.startDate || levelProgress.completedAt,
-              endTime: levelProgress.completedSections?.exercise ? levelProgress.completedAt : null
+              startTime: levelProgress.exerciseSubmissions?.[0]?.submittedAt || levelProgress.completedAt,
+              endTime: levelProgress.completedSections?.exercise ? levelProgress.completedAt : null,
+              timeSpent: 0 // Exercise doesn't track time spent
             } : {
               completed: false,
               startTime: null,
-              endTime: null
+              endTime: null,
+              timeSpent: 0
             };
             
             return {
@@ -428,6 +437,7 @@ export const getStudentPortfolio = async (req, res) => {
           });
           
           console.log('Portfolio Controller - Generated learning levels:', learningLevelsData.length, 'levels');
+          console.log('Portfolio Controller - Learning levels data structure:', JSON.stringify(learningLevelsData, null, 2));
         }
       } catch (error) {
         console.log('Portfolio Controller - Error generating learning levels:', error.message);
@@ -477,9 +487,20 @@ export const getStudentPortfolio = async (req, res) => {
         leaderboardScore: realLeaderboardScore,
         leaderboardRank: leaderboardRank || null,
         enrolledDate: student.createdAt ? new Date(student.createdAt).toLocaleDateString('en-IN') : '21-03-2025',
-      performance,
-      summaryStats,
-        learningTimeline: learningTimeline,
+              performance: {
+          performance: realProgress,
+          potential: 90,
+          contribution: 78,
+          creativity: 82,
+          skill: Math.min(100, Math.round((progress?.totalPoints || 0) / 10)),
+          teamwork: 80
+        },
+        summaryStats: {
+          consistency: Math.min(100, attendanceStats.currentStreak * 25),
+          progress: realProgress,
+          leaderboard: realLeaderboardScore
+        },
+        learningTimeline: [],
         dailyActivity: progress?.dailyActivity || [],
         attendanceStats,
         skills: ['React', 'Node.js', 'Python', 'AWS', 'MongoDB'],

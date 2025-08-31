@@ -619,17 +619,17 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
         levelDescription: curriculumItem.description,
         overallStatus: overallStatus,
         sections: {
-          learn: {
+        learn: { 
             status: learnStatus,
             details: learnDetails,
             title: 'Learn'
-          },
-          test: {
+        },
+        test: { 
             status: testStatus,
             details: testDetails,
             title: 'Test'
-          },
-          exercise: {
+        },
+        exercise: { 
             status: exerciseStatus,
             details: exerciseDetails,
             title: 'Exercise'

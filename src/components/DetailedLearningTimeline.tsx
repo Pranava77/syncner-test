@@ -1,8 +1,18 @@
 import React from 'react';
+import { motion } from 'framer-motion';
+
+interface TimelineDetails {
+  startDate: string | null;
+  endDate: string | null;
+  timeSpent?: number;
+  score?: number;
+  attempts?: number;
+  isCompleted: boolean;
+}
 
 interface TimelineSection {
   status: 'not-started' | 'in-progress' | 'completed';
-  details: any;
+  details: TimelineDetails;
   title: string;
 }
 
@@ -10,7 +20,7 @@ interface TimelineLevel {
   levelOrder: number;
   levelTitle: string;
   levelDescription: string;
-  overallStatus: 'not-started' | 'in-progress' | 'completed' | 'accessible';
+  overallStatus: 'not-started' | 'accessible' | 'in-progress' | 'completed';
   sections: {
     learn: TimelineSection;
     test: TimelineSection;
@@ -23,301 +33,443 @@ interface DetailedLearningTimelineProps {
 }
 
 const DetailedLearningTimeline: React.FC<DetailedLearningTimelineProps> = ({ timeline }) => {
-  // Debug logging
-  console.log('🔍 DetailedLearningTimeline received timeline:', timeline);
-  console.log('📊 Timeline length:', timeline?.length);
-  console.log('📋 Timeline structure:', JSON.stringify(timeline, null, 2));
-  
+  console.log('DetailedLearningTimeline - Received timeline:', timeline);
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'completed':
+        return 'var(--color-success)';
+      case 'in-progress':
+        return 'var(--color-warning)';
+      case 'accessible':
+        return 'var(--color-info)';
+      default:
+        return 'var(--color-text-muted)';
+    }
+  };
+
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'completed':
-        return (
-          <div 
-            className="w-4 h-4 rounded-full flex items-center justify-center"
-            style={{ backgroundColor: 'var(--color-success)' }}
-          >
-            <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-            </svg>
-          </div>
-        );
+        return '✅';
       case 'in-progress':
-        return (
-          <div 
-            className="w-4 h-4 rounded-full flex items-center justify-center"
-            style={{ backgroundColor: 'var(--color-warning)' }}
-          >
-            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--color-white)' }}></div>
-          </div>
-        );
+        return '🔄';
       case 'accessible':
-        return (
-          <div 
-            className="w-4 h-4 rounded-full flex items-center justify-center"
-            style={{ backgroundColor: 'var(--color-primary)' }}
-          >
-            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--color-white)' }}></div>
-          </div>
-        );
+        return '🔓';
       default:
-        return (
-          <div 
-            className="w-4 h-4 rounded-full flex items-center justify-center"
-            style={{ backgroundColor: 'var(--color-border)' }}
-          >
-            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--color-white)' }}></div>
-          </div>
-        );
+        return '🔒';
     }
   };
 
-  const getOverallStatusIcon = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return (
-          <div 
-            className="w-5 h-5 rounded-full flex items-center justify-center"
-            style={{ backgroundColor: 'var(--color-success)' }}
-          >
-            <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-            </svg>
-          </div>
-        );
-      case 'in-progress':
-        return (
-          <div 
-            className="w-5 h-5 rounded-full flex items-center justify-center"
-            style={{ backgroundColor: 'var(--color-warning)' }}
-          >
-            <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: 'var(--color-white)' }}></div>
-          </div>
-        );
-      case 'accessible':
-        return (
-          <div 
-            className="w-5 h-5 rounded-full flex items-center justify-center"
-            style={{ backgroundColor: 'var(--color-primary)' }}
-          >
-            <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: 'var(--color-white)' }}></div>
-          </div>
-        );
+  const getSectionIcon = (sectionType: string) => {
+    switch (sectionType) {
+      case 'learn':
+        return '📚';
+      case 'test':
+        return '📝';
+      case 'exercise':
+        return '💻';
       default:
-        return (
-          <div 
-            className="w-5 h-5 rounded-full flex items-center justify-center"
-            style={{ backgroundColor: 'var(--color-border)' }}
-          >
-            <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: 'var(--color-white)' }}></div>
-          </div>
-        );
+        return '📋';
     }
   };
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: string | null) => {
     if (!dateString) return 'Not started';
     try {
-      const date = new Date(dateString);
-      return date.toLocaleDateString('en-GB', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true
+      return new Date(dateString).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
       });
     } catch {
       return 'Invalid date';
     }
   };
 
-  const getSectionDetails = (section: TimelineSection) => {
-    if (section.status === 'not-started') {
-      return 'Start date and time -- End Date and Time';
-    }
-
-    if (section.status === 'completed') {
-      if (section.details?.endDate) {
-        return `${formatDate(section.details.startDate)} -- ${formatDate(section.details.endDate)}`;
-      }
-      return 'Start date and time -- End Date and Time';
-    }
-
-    if (section.status === 'in-progress') {
-      if (section.details?.startDate) {
-        return `${formatDate(section.details.startDate)} -- In-Progress`;
-      }
-      return 'Start date and time -- In-Progress';
-    }
-
-    return 'Start date and time -- End Date and Time';
+  const formatTime = (seconds: number | undefined) => {
+    if (!seconds) return '0m';
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    if (minutes === 0) return `${remainingSeconds}s`;
+    if (remainingSeconds === 0) return `${minutes}m`;
+    return `${minutes}m ${remainingSeconds}s`;
   };
 
-  const getTestDetails = (section: TimelineSection) => {
-    if (section.status === 'not-started') {
-      return 'Test';
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
     }
+  };
 
-    if (section.details?.attempts?.length > 0) {
-      const bestScore = section.details.bestScore || 0;
-      const attempts = section.details.attempts.length;
-      return `Test (${bestScore}% - ${attempts} attempt${attempts > 1 ? 's' : ''})`;
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut" as const
+      }
     }
-
-    return 'Test';
   };
 
   if (!timeline || timeline.length === 0) {
     return (
-      <div 
-        className="rounded-xl shadow-sm p-6"
-        style={{
-          backgroundColor: 'var(--color-surface)',
-          boxShadow: 'var(--shadow-sm)'
-        }}
-      >
-        <h3 
-          className="text-xl font-heading mb-4"
-          style={{ color: 'var(--color-text-primary)' }}
-        >
-          Learning Timeline
+      <div className="text-center py-12">
+        <div className="text-6xl mb-4">📚</div>
+        <h3 className="text-xl font-semibold mb-2" style={{ color: 'var(--color-text-primary)' }}>
+          No Timeline Data Available
         </h3>
-        <p 
-          className="text-center py-8"
-          style={{ color: 'var(--color-text-muted)' }}
-        >
-          No learning timeline data available
+        <p style={{ color: 'var(--color-text-muted)' }}>
+          Timeline data will appear here once available.
         </p>
       </div>
     );
   }
 
   return (
-    <div 
-      className="rounded-xl shadow-sm p-6"
-      style={{
-        backgroundColor: 'var(--color-surface)',
-        boxShadow: 'var(--shadow-sm)'
-      }}
+    <motion.div
+      className="space-y-6"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
     >
-      <h3 
-        className="text-xl font-heading mb-6"
-        style={{ color: 'var(--color-text-primary)' }}
-      >
-        Learning Timeline
-      </h3>
-      
-      <div className="relative">
-        {/* Vertical timeline line */}
-        <div 
-          className="absolute left-6 top-0 bottom-0 w-0.5"
-          style={{ backgroundColor: 'var(--color-border)' }}
-        ></div>
-        
-        <div className="space-y-8">
-          {timeline.map((level, index) => (
-            <div key={level.levelOrder} className="relative">
-              {/* Level main indicator */}
-              <div className="absolute left-4 top-0 transform -translate-x-1/2">
-                {getOverallStatusIcon(level.overallStatus)}
-              </div>
-              
-              {/* Level content */}
-              <div className="ml-12">
-                <div className="mb-4">
-                  <h4 
-                    className="text-lg font-heading"
-                    style={{ color: 'var(--color-text-primary)' }}
-                  >
-                    Level {level.levelOrder}: {level.levelTitle}
-                  </h4>
-                  {level.levelDescription && (
-                    <p 
-                      className="text-sm mt-1"
-                      style={{ color: 'var(--color-text-secondary)' }}
+      {/* Timeline Header */}
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-bold mb-3" style={{ color: 'var(--color-text-primary)' }}>
+          Learning Journey
+        </h2>
+        <p className="text-lg" style={{ color: 'var(--color-text-muted)' }}>
+          Track your progress through {timeline.length} levels
+        </p>
+        <div className="flex justify-center items-center gap-4 mt-4">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: 'var(--color-success)' }}></div>
+            <span className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Completed</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: 'var(--color-warning)' }}></div>
+            <span className="text-sm" style={{ color: 'var(--color-text-muted)' }}>In Progress</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: 'var(--color-info)' }}></div>
+            <span className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Accessible</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: 'var(--color-text-muted)' }}></div>
+            <span className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Locked</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Timeline Levels */}
+      <div className="space-y-6">
+        {timeline.map((level, index) => (
+          <motion.div
+            key={level.levelOrder}
+            className="relative"
+            variants={itemVariants}
+          >
+            {/* Level Card */}
+            <div 
+              className="rounded-2xl shadow-lg overflow-hidden border-2 transition-all duration-300 hover:shadow-xl hover:scale-[1.02]"
+              style={{
+                backgroundColor: 'var(--color-surface)',
+                borderColor: getStatusColor(level.overallStatus),
+                boxShadow: `0 10px 25px rgba(0, 0, 0, 0.1)`
+              }}
+            >
+              {/* Level Header */}
+              <div 
+                className="p-6 border-b-2"
+                style={{ 
+                  borderColor: getStatusColor(level.overallStatus),
+                  backgroundColor: `${getStatusColor(level.overallStatus)}10`
+                }}
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-3">
+                    <div 
+                      className="w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold"
+                      style={{ 
+                        backgroundColor: getStatusColor(level.overallStatus),
+                        color: 'white'
+                      }}
                     >
-                      {level.levelDescription}
-                    </p>
-                  )}
+                      {level.levelOrder}
+                    </div>
+                    <div>
+                      <h3 
+                        className="text-xl font-bold mb-1"
+                        style={{ color: 'var(--color-text-primary)' }}
+                      >
+                        {level.levelTitle}
+                      </h3>
+                      <p 
+                        className="text-sm"
+                        style={{ color: 'var(--color-text-muted)' }}
+                      >
+                        {level.levelDescription}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">{getStatusIcon(level.overallStatus)}</span>
+                    <span 
+                      className="px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide"
+                      style={{
+                        backgroundColor: `${getStatusColor(level.overallStatus)}20`,
+                        color: getStatusColor(level.overallStatus)
+                      }}
+                    >
+                      {level.overallStatus.replace('-', ' ')}
+                    </span>
+                  </div>
                 </div>
-                
-                {/* Sections */}
-                <div className="space-y-4">
+
+                {/* Progress Bar */}
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div 
+                    className="h-2 rounded-full transition-all duration-500 ease-out"
+                    style={{
+                      backgroundColor: getStatusColor(level.overallStatus),
+                      width: level.overallStatus === 'completed' ? '100%' : 
+                             level.overallStatus === 'in-progress' ? '50%' : '0%'
+                    }}
+                  ></div>
+                </div>
+              </div>
+
+              {/* Sections Grid */}
+              <div className="p-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {/* Learn Section */}
-                  <div className="flex items-start space-x-3">
-                    <div className="mt-1">
-                      {getStatusIcon(level.sections.learn.status)}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2">
-                        <span 
-                          className="font-medium"
-                          style={{ color: 'var(--color-text-primary)' }}
-                        >
-                          {level.sections.learn.title}
-                        </span>
+                  <motion.div
+                    className="relative group"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <div 
+                      className={`p-4 rounded-xl border-2 transition-all duration-300 ${
+                        level.sections.learn.status === 'completed' 
+                          ? 'border-green-200 bg-green-50' 
+                          : level.sections.learn.status === 'in-progress'
+                          ? 'border-yellow-200 bg-yellow-50'
+                          : 'border-gray-200 bg-gray-50'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3 mb-3">
+                        <span className="text-2xl">{getSectionIcon('learn')}</span>
+                        <div>
+                          <h4 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                            Learn
+                          </h4>
+                          <span 
+                            className={`text-xs px-2 py-1 rounded-full font-medium ${
+                              level.sections.learn.status === 'completed' 
+                                ? 'bg-green-100 text-green-800' 
+                                : level.sections.learn.status === 'in-progress'
+                                ? 'bg-yellow-100 text-yellow-800'
+                                : 'bg-gray-100 text-gray-800'
+                            }`}
+                          >
+                            {level.sections.learn.status.replace('-', ' ')}
+                          </span>
+                        </div>
                       </div>
-                      <p 
-                        className="text-sm mt-1 underline"
-                        style={{ color: 'var(--color-text-secondary)' }}
-                      >
-                        {getSectionDetails(level.sections.learn)}
-                      </p>
+                      
+                      <div className="space-y-2 text-sm" style={{ color: 'var(--color-text-muted)' }}>
+                        <div className="flex justify-between">
+                          <span>Started:</span>
+                          <span>{formatDate(level.sections.learn.details.startDate)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Completed:</span>
+                          <span>{formatDate(level.sections.learn.details.endDate)}</span>
+                        </div>
+                        {level.sections.learn.details.timeSpent && (
+                          <div className="flex justify-between">
+                            <span>Time Spent:</span>
+                            <span>{formatTime(level.sections.learn.details.timeSpent)}</span>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  
+                  </motion.div>
+
                   {/* Test Section */}
-                  <div className="flex items-start space-x-3">
-                    <div className="mt-1">
-                      {getStatusIcon(level.sections.test.status)}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2">
-                        <span 
-                          className="font-medium"
-                          style={{ color: 'var(--color-text-primary)' }}
-                        >
-                          {getTestDetails(level.sections.test)}
-                        </span>
+                  <motion.div
+                    className="relative group"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <div 
+                      className={`p-4 rounded-xl border-2 transition-all duration-300 ${
+                        level.sections.test.status === 'completed' 
+                          ? 'border-green-200 bg-green-50' 
+                          : level.sections.test.status === 'in-progress'
+                          ? 'border-yellow-200 bg-yellow-50'
+                          : 'border-gray-200 bg-gray-50'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3 mb-3">
+                        <span className="text-2xl">{getSectionIcon('test')}</span>
+                        <div>
+                          <h4 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                            Test
+                          </h4>
+                          <span 
+                            className={`text-xs px-2 py-1 rounded-full font-medium ${
+                              level.sections.test.status === 'completed' 
+                                ? 'bg-green-100 text-green-800' 
+                                : level.sections.test.status === 'in-progress'
+                                ? 'bg-yellow-100 text-yellow-800'
+                                : 'bg-gray-100 text-gray-800'
+                            }`}
+                          >
+                            {level.sections.test.status.replace('-', ' ')}
+                          </span>
+                        </div>
                       </div>
-                      <p 
-                        className="text-sm mt-1 underline"
-                        style={{ color: 'var(--color-text-secondary)' }}
-                      >
-                        {getSectionDetails(level.sections.test)}
-                      </p>
+                      
+                      <div className="space-y-2 text-sm" style={{ color: 'var(--color-text-muted)' }}>
+                        <div className="flex justify-between">
+                          <span>Started:</span>
+                          <span>{formatDate(level.sections.test.details.startDate)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Completed:</span>
+                          <span>{formatDate(level.sections.test.details.endDate)}</span>
+                        </div>
+                        {level.sections.test.details.score !== undefined && (
+                          <div className="flex justify-between">
+                            <span>Best Score:</span>
+                            <span className="font-semibold" style={{ color: 'var(--color-success)' }}>
+                              {level.sections.test.details.score}%
+                            </span>
+                          </div>
+                        )}
+                        {level.sections.test.details.attempts !== undefined && (
+                          <div className="flex justify-between">
+                            <span>Attempts:</span>
+                            <span>{level.sections.test.details.attempts}</span>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  
+                  </motion.div>
+
                   {/* Exercise Section */}
-                  <div className="flex items-start space-x-3">
-                    <div className="mt-1">
-                      {getStatusIcon(level.sections.exercise.status)}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2">
-                        <span 
-                          className="font-medium"
-                          style={{ color: 'var(--color-text-primary)' }}
-                        >
-                          {level.sections.exercise.title}
-                        </span>
+                  <motion.div
+                    className="relative group"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <div 
+                      className={`p-4 rounded-xl border-2 transition-all duration-300 ${
+                        level.sections.exercise.status === 'completed' 
+                          ? 'border-green-200 bg-green-50' 
+                          : level.sections.exercise.status === 'in-progress'
+                          ? 'border-yellow-200 bg-yellow-50'
+                          : 'border-gray-200 bg-gray-50'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3 mb-3">
+                        <span className="text-2xl">{getSectionIcon('exercise')}</span>
+                        <div>
+                          <h4 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                            Exercise
+                          </h4>
+                          <span 
+                            className={`text-xs px-2 py-1 rounded-full font-medium ${
+                              level.sections.exercise.status === 'completed' 
+                                ? 'bg-green-100 text-green-800' 
+                                : level.sections.exercise.status === 'in-progress'
+                                ? 'bg-yellow-100 text-yellow-800'
+                                : 'bg-gray-100 text-gray-800'
+                            }`}
+                          >
+                            {level.sections.exercise.status.replace('-', ' ')}
+                          </span>
+                        </div>
                       </div>
-                      <p 
-                        className="text-sm mt-1 underline"
-                        style={{ color: 'var(--color-text-secondary)' }}
-                      >
-                        {getSectionDetails(level.sections.exercise)}
-                      </p>
+                      
+                      <div className="space-y-2 text-sm" style={{ color: 'var(--color-text-muted)' }}>
+                        <div className="flex justify-between">
+                          <span>Started:</span>
+                          <span>{formatDate(level.sections.exercise.details.startDate)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Completed:</span>
+                          <span>{formatDate(level.sections.exercise.details.endDate)}</span>
+                        </div>
+                        {level.sections.exercise.details.timeSpent && (
+                          <div className="flex justify-between">
+                            <span>Time Spent:</span>
+                            <span>{formatTime(level.sections.exercise.details.timeSpent)}</span>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
+                  </motion.div>
                 </div>
               </div>
             </div>
-          ))}
-        </div>
+
+            {/* Connection Line (except for last item) */}
+            {index < timeline.length - 1 && (
+              <div className="absolute left-6 top-full w-0.5 h-6" style={{ backgroundColor: 'var(--color-border)' }}></div>
+            )}
+          </motion.div>
+        ))}
       </div>
-    </div>
+
+      {/* Timeline Summary */}
+      <motion.div 
+        className="mt-8 p-6 rounded-2xl text-center"
+        style={{ 
+          backgroundColor: 'var(--color-surface)',
+          border: '2px solid var(--color-border)'
+        }}
+        variants={itemVariants}
+      >
+        <h3 className="text-xl font-semibold mb-3" style={{ color: 'var(--color-text-primary)' }}>
+          Journey Summary
+        </h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div>
+            <div className="text-2xl font-bold" style={{ color: 'var(--color-success)' }}>
+              {timeline.filter(l => l.overallStatus === 'completed').length}
+            </div>
+            <div className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Completed</div>
+          </div>
+          <div>
+            <div className="text-2xl font-bold" style={{ color: 'var(--color-warning)' }}>
+              {timeline.filter(l => l.overallStatus === 'in-progress').length}
+            </div>
+            <div className="text-sm" style={{ color: 'var(--color-text-muted)' }}>In Progress</div>
+          </div>
+          <div>
+            <div className="text-2xl font-bold" style={{ color: 'var(--color-info)' }}>
+              {timeline.filter(l => l.overallStatus === 'accessible').length}
+            </div>
+            <div className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Accessible</div>
+          </div>
+          <div>
+            <div className="text-2xl font-bold" style={{ color: 'var(--color-text-muted)' }}>
+              {timeline.filter(l => l.overallStatus === 'not-started').length}
+            </div>
+            <div className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Locked</div>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
   );
 };
 
