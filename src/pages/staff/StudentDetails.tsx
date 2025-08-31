@@ -67,6 +67,13 @@ const StudentDetails: React.FC = () => {
         enrolledDate: studentData.enrolledDate,
         formattedCreatedAt: studentData.createdAt ? new Date(studentData.createdAt).toLocaleDateString('en-GB') : null
       });
+      
+      // Debug: Log learning levels data
+      console.log('📚 Learning Levels Debug:', {
+        hasLearningLevels: !!studentData.learningLevels,
+        learningLevelsCount: studentData.learningLevels?.length || 0,
+        learningLevels: studentData.learningLevels
+      });
     }
   }, [studentData?.careerTrack]);
 
@@ -90,6 +97,11 @@ const StudentDetails: React.FC = () => {
 
   // Function to manually refresh timeline
   const refreshTimeline = () => {
+    if (studentId) {
+      // Refresh student data from backend to get latest learningLevels
+      getStudentDetails(studentId);
+    }
+    // Also try to generate dynamic timeline as fallback
     generateDynamicTimeline();
   };
 
@@ -701,7 +713,7 @@ const StudentDetails: React.FC = () => {
                  className="font-label text-lg"
                  style={{ color: 'var(--color-text-tertiary)' }}
                >
-                 Track your progress through the curriculum with real-time updates
+                 Real-time progress tracking with completion timestamps
                </p>
              </div>
           
@@ -728,7 +740,7 @@ const StudentDetails: React.FC = () => {
                      <ArrowUpIcon className="w-5 h-5" />
                    )}
                  </div>
-                 <span className="text-base">{isGeneratingTimeline ? 'Generating...' : '🔄 Refresh Timeline'}</span>
+                 <span className="text-base">{isGeneratingTimeline ? 'Generating...' : '🔄 Refresh Data'}</span>
                </button>
           </div>
         </div>
@@ -780,8 +792,8 @@ const StudentDetails: React.FC = () => {
                  <div className="flex items-center gap-3">
                    <span className="text-2xl">🎉</span>
                    <div>
-                     <h4 className="font-semibold text-lg">Timeline Generated Successfully!</h4>
-                     <p className="text-sm opacity-90">Found {dynamicTimeline.length} levels with detailed progress information</p>
+                     <h4 className="font-semibold text-lg">Learning Journey Loaded!</h4>
+                     <p className="text-sm opacity-90">Displaying {dynamicTimeline.length} levels from backend progress data</p>
                    </div>
                  </div>
                </motion.div>
@@ -810,9 +822,9 @@ const StudentDetails: React.FC = () => {
                  <div>
                    <div className="text-8xl mb-6">🚀</div>
                    <h3 className="text-2xl font-bold mb-3" style={{ color: 'var(--color-text-primary)' }}>
-                     Ready to Start Your Journey?
+                     Learning Journey Ready
                    </h3>
-                   <p className="text-lg mb-6">Generate a dynamic timeline to track your learning progress</p>
+                   <p className="text-lg mb-6">Click refresh to load the latest progress data from backend</p>
                    <button
                      onClick={refreshTimeline}
                      className="px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
@@ -821,7 +833,7 @@ const StudentDetails: React.FC = () => {
                        color: 'var(--color-text-inverse)'
                      }}
                    >
-                     🎯 Generate Timeline
+                     🔄 Refresh Data
                    </button>
                  </div>
                )}
@@ -849,6 +861,11 @@ const StudentDetails: React.FC = () => {
               leaderboardScore: studentData.leaderboardScore,
               learningLevels: studentData.learningLevels?.length || 0
             }, null, 2)}
+          </pre>
+          
+          <h4 className="font-semibold mb-2 mt-4">Debug: Raw Learning Levels</h4>
+          <pre className="text-xs overflow-auto">
+            {JSON.stringify(studentData.learningLevels, null, 2)}
           </pre>
         </div>
       )}
