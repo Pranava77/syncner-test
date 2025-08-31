@@ -504,6 +504,13 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
     // Build detailed learning timeline with level-by-level breakdown
     const detailedLearningTimeline = [];
     
+    console.log('🔨 Starting timeline generation with:', {
+      levelOrders: levelOrders,
+      curriculumItemsCount: curriculumItems.length,
+      progressExists: !!progress,
+      progressCompletedLevels: progress?.completedLevels?.length || 0
+    });
+    
     // Create a mapping of level order to curriculum data for proper naming
     const levelToCurriculumMap = {};
     curriculumItems.forEach(item => {
@@ -536,9 +543,20 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
     }
     
     // Build timeline for each level in the curriculum
+    console.log('🔨 Starting timeline generation loop with levelOrders:', levelOrders);
+    console.log('🗺️ Level to curriculum mapping available:', Object.keys(levelToCurriculumMap));
+    
     levelOrders.forEach(levelOrder => {
       const curriculumItem = levelToCurriculumMap[levelOrder];
-      if (!curriculumItem) return;
+      console.log(`🔍 Processing level ${levelOrder}:`, { 
+        foundCurriculumItem: !!curriculumItem, 
+        curriculumItem: curriculumItem 
+      });
+      
+      if (!curriculumItem) {
+        console.log(`⚠️ No curriculum item found for level ${levelOrder}, skipping`);
+        return;
+      }
       
       // Find progress data for this level
       const levelProgress = progress?.completedLevels?.find(
