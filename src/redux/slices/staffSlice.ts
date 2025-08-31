@@ -31,10 +31,32 @@ export const fetchStudentDetails = createAsyncThunk(
       
       // Get additional student data from portfolio for other fields
       const portfolioResponse = await apiService.getStudentPortfolio(studentId);
-      const studentData = portfolioResponse.data.student;
+      const portfolioData = portfolioResponse.data;
       
-      // Add the combined timeline to the student data
-      studentData.learningTimeline = combinedTimeline;
+      // Combine student data with portfolio data
+      const studentData = {
+        ...portfolioData.student,
+        // Flatten portfolio data for easy access in frontend
+        attendancePercentage: portfolioData.attendance?.percentage || 0,
+        totalDays: portfolioData.attendance?.totalDays || 0,
+        presentDays: portfolioData.attendance?.presentDays || 0,
+        currentStreak: portfolioData.attendance?.currentStreak || 0,
+        longestStreak: portfolioData.attendance?.longestStreak || 0,
+        
+        leaderboardScore: portfolioData.leaderboard?.score || 0,
+        leaderboardRank: portfolioData.leaderboard?.rank || null,
+        
+        progress: portfolioData.progress?.percentage || 0,
+        currentLevel: portfolioData.progress?.currentLevel || 1,
+        completedLevels: portfolioData.progress?.completedLevels || 0,
+        totalLevels: portfolioData.progress?.totalLevels || 0,
+        
+        performance: portfolioData.performance || {},
+        summaryStats: portfolioData.summaryStats || {},
+        
+        // Add the combined timeline
+        learningTimeline: combinedTimeline
+      };
       
       return studentData;
     } catch (error: any) {

@@ -86,6 +86,19 @@ export interface StudentDetails extends Student {
   interests?: string[];
   profileComplete?: boolean;
   activeTodayMinutes?: number;
+  
+  // Portfolio data fields (flattened for easy access)
+  attendancePercentage: number;
+  totalDays: number;
+  presentDays: number;
+  currentStreak: number;
+  longestStreak: number;
+  leaderboardScore: number;
+  leaderboardRank: number | null;
+  progress: number;
+  currentLevel: number;
+  completedLevels: number;
+  totalLevels: number;
 }
 
 export interface PerformanceMetrics {

@@ -522,6 +522,12 @@ const StudentDetails: React.FC = () => {
             >
               {getAttendanceLabel(studentData.attendancePercentage)}
             </p>
+            <p 
+              className="text-xs mt-1"
+              style={{ color: 'var(--color-text-muted)' }}
+            >
+              {studentData.presentDays}/{studentData.totalDays} days • Streak: {studentData.currentStreak}
+            </p>
           </div>
         </div>
 
@@ -556,6 +562,12 @@ const StudentDetails: React.FC = () => {
             >
               {getProgressLabel(studentData.progress)}
             </p>
+            <p 
+              className="text-xs mt-1"
+              style={{ color: 'var(--color-text-muted)' }}
+            >
+              Level {studentData.currentLevel} • {studentData.completedLevels}/{studentData.totalLevels} completed
+            </p>
           </div>
         </div>
 
@@ -583,16 +595,194 @@ const StudentDetails: React.FC = () => {
             <p 
               className="text-2xl font-bold"
               style={{ color: 'var(--color-text-primary)' }}
-            >{studentData.leaderboardScore}%</p>
+            >{studentData.leaderboardScore}</p>
             <p 
               className="text-xs flex items-center mt-1"
               style={{ color: 'var(--color-accent-primary)' }}
             >
               {getLeaderboardLabel(studentData.leaderboardScore)}
             </p>
+            <p 
+              className="text-xs mt-1"
+              style={{ color: 'var(--color-text-muted)' }}
+            >
+              {studentData.leaderboardRank ? `Rank: ${studentData.leaderboardRank}` : 'No rank yet'}
+            </p>
           </div>
         </div>
       </div>
+
+      {/* Additional Portfolio Data Section */}
+      {studentData.performance && (
+        <div className="mb-8">
+          <h2 
+            className="text-2xl font-heading mb-6"
+            style={{ color: 'var(--color-text-primary)' }}
+          >
+            Performance Metrics
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div 
+              className="rounded-lg p-4 text-center"
+              style={{
+                backgroundColor: 'var(--color-surface)',
+                boxShadow: 'var(--shadow-sm)'
+              }}
+            >
+              <p 
+                className="text-sm mb-1"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >Performance</p>
+              <p 
+                className="text-xl font-bold"
+                style={{ color: 'var(--color-text-primary)' }}
+              >{studentData.performance.performance}%</p>
+            </div>
+            <div 
+              className="rounded-lg p-4 text-center"
+              style={{
+                backgroundColor: 'var(--color-surface)',
+                boxShadow: 'var(--shadow-sm)'
+              }}
+            >
+              <p 
+                className="text-sm mb-1"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >Potential</p>
+              <p 
+                className="text-xl font-bold"
+                style={{ color: 'var(--color-text-primary)' }}
+              >{studentData.performance.potential}%</p>
+            </div>
+            <div 
+              className="rounded-lg p-4 text-center"
+              style={{
+                backgroundColor: 'var(--color-surface)',
+                boxShadow: 'var(--shadow-sm)'
+              }}
+            >
+              <p 
+                className="text-sm mb-1"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >Contribution</p>
+              <p 
+                className="text-xl font-bold"
+                style={{ color: 'var(--color-text-primary)' }}
+              >{studentData.performance.contribution}</p>
+            </div>
+            <div 
+              className="rounded-lg p-4 text-center"
+              style={{
+                backgroundColor: 'var(--color-surface)',
+                boxShadow: 'var(--shadow-sm)'
+              }}
+            >
+              <p 
+                className="text-sm mb-1"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >Creativity</p>
+              <p 
+                className="text-xl font-bold"
+                style={{ color: 'var(--color-text-primary)' }}
+              >{studentData.performance.creativity}%</p>
+            </div>
+            <div 
+              className="rounded-lg p-4 text-center"
+              style={{
+                backgroundColor: 'var(--color-surface)',
+                boxShadow: 'var(--shadow-sm)'
+              }}
+            >
+              <p 
+                className="text-sm mb-1"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >Skill</p>
+              <p 
+                className="text-xl font-bold"
+                style={{ color: 'var(--color-text-primary)' }}
+              >{studentData.performance.skill}%</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Summary Stats Section */}
+      {studentData.summaryStats && (
+        <div className="mb-8">
+          <h2 
+            className="text-2xl font-heading mb-6"
+            style={{ color: 'var(--color-text-primary)' }}
+          >
+            Summary Statistics
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div 
+              className="rounded-lg p-4 text-center"
+              style={{
+                backgroundColor: 'var(--color-surface)',
+                boxShadow: 'var(--shadow-sm)'
+              }}
+            >
+              <p 
+                className="text-sm mb-1"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >Total Points</p>
+              <p 
+                className="text-xl font-bold"
+                style={{ color: 'var(--color-text-primary)' }}
+              >{studentData.summaryStats.totalPoints}</p>
+            </div>
+            <div 
+              className="rounded-lg p-4 text-center"
+              style={{
+                backgroundColor: 'var(--color-surface)',
+                boxShadow: 'var(--shadow-sm)'
+              }}
+            >
+              <p 
+                className="text-sm mb-1"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >Consistency</p>
+              <p 
+                className="text-xl font-bold"
+                style={{ color: 'var(--color-text-primary)' }}
+              >{studentData.summaryStats.consistency}%</p>
+            </div>
+            <div 
+              className="rounded-lg p-4 text-center"
+              style={{
+                backgroundColor: 'var(--color-surface)',
+                boxShadow: 'var(--shadow-sm)'
+              }}
+            >
+              <p 
+                className="text-sm mb-1"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >Leaderboard</p>
+              <p 
+                className="text-xl font-bold"
+                style={{ color: 'var(--color-text-primary)' }}
+              >{studentData.summaryStats.leaderboard}</p>
+            </div>
+            <div 
+              className="rounded-lg p-4 text-center"
+              style={{
+                backgroundColor: 'var(--color-surface)',
+                boxShadow: 'var(--shadow-sm)'
+              }}
+            >
+              <p 
+                className="text-sm mb-1"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >Level Progress</p>
+              <p 
+                className="text-xl font-bold"
+                style={{ color: 'var(--color-text-primary)' }}
+              >{studentData.summaryStats.levelProgress}%</p>
+            </div>
+          </div>
+        </div>
+      )}
 
                {/* Dynamic Learning Timeline Section */}
          <div className="mb-8">
