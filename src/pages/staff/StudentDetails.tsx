@@ -7,7 +7,6 @@ import {
   TargetIcon, 
   StarIcon,
   RocketIcon,
-  ArrowUpIcon,
   IdCardIcon,
   HomeIcon,
   CalendarIcon as CalendarDaysIcon
@@ -31,7 +30,6 @@ const StudentDetails: React.FC = () => {
   
   // State for enhanced timeline
   const [enhancedTimeline, setEnhancedTimeline] = useState<any[]>([]);
-  const [lastRefreshTime, setLastRefreshTime] = useState<Date | null>(null);
   const [fromDate, setFromDate] = useState<string>('');
   const [toDate, setToDate] = useState<string>('');
   
@@ -89,7 +87,6 @@ const StudentDetails: React.FC = () => {
       }));
       
       setEnhancedTimeline(enhancedData);
-      setLastRefreshTime(new Date());
       console.log('📚 Enhanced timeline data from portfolio:', enhancedData);
       
       // Debug: Log enrollment date data
@@ -110,13 +107,7 @@ const StudentDetails: React.FC = () => {
 
 
 
-  // Function to manually refresh timeline
-  const refreshTimeline = () => {
-    if (studentId) {
-      // Refresh student data from backend to get latest learningLevels
-      getStudentDetails(studentId);
-    }
-  };
+
 
 
 
@@ -235,32 +226,7 @@ const StudentDetails: React.FC = () => {
           </div>
         </div>
         
-        <div className="flex items-center space-x-3">
-          <button
-            onClick={() => studentId && getStudentDetails(studentId)}
-            disabled={studentDetailsLoading}
-            className="px-5 py-2 rounded-lg transition-colors font-medium flex items-center gap-2 shadow disabled:opacity-50"
-            style={{ 
-              backgroundColor: 'var(--color-accent-primary)',
-              color: 'var(--color-text-inverse)' 
-            }}
-          >
-            <div className={`w-4 h-4 ${studentDetailsLoading ? 'animate-spin' : ''}`}>
-              {studentDetailsLoading ? (
-                <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full"></div>
-              ) : (
-                <ArrowUpIcon className="w-4 h-4" />
-              )}
-            </div>
-            <span>{studentDetailsLoading ? 'Refreshing...' : 'Refresh'}</span>
-          </button>
-          
-          {studentData && (
-            <div className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
-              Last updated: {new Date().toLocaleTimeString()}
-            </div>
-          )}
-        </div>
+
       </div>
 
       {/* Top Section: Student Info Cards */}
@@ -670,60 +636,13 @@ const StudentDetails: React.FC = () => {
                </p>
              </div>
           
-          <div className="flex items-center gap-3">
-            {lastRefreshTime && (
-              <div className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
-                Last updated: {lastRefreshTime.toLocaleTimeString()}
-              </div>
-            )}
-            
-                           <button
-                 onClick={refreshTimeline}
-                 disabled={false}
-                 className="px-6 py-3 rounded-xl transition-all duration-300 font-semibold flex items-center gap-3 shadow-lg hover:shadow-xl disabled:opacity-50 transform hover:scale-105 active:scale-95"
-                 style={{
-                   backgroundColor: 'var(--color-accent-primary)',
-                   color: 'var(--color-text-inverse)'
-                 }}
-               >
-                 <div className={`w-5 h-5`}>
-                   {false ? (
-                     <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full"></div>
-                   ) : (
-                     <ArrowUpIcon className="w-5 h-5" />
-                   )}
-                 </div>
-                 <span className="text-base">🔄 Refresh Data</span>
-               </button>
-          </div>
+          
         </div>
 
 
 
            {/* Enhanced Timeline Display */}
            {enhancedTimeline.length > 0 ? (
-             <div>
-               {/* Success Message */}
-               <motion.div 
-                 className="mb-6 p-4 rounded-2xl border-2 shadow-lg"
-                 style={{
-                   backgroundColor: 'var(--color-success-bg)',
-                   borderColor: 'var(--color-success)',
-                   color: 'var(--color-success)'
-                 }}
-                 initial={{ opacity: 0, y: -20 }}
-                 animate={{ opacity: 1, y: 0 }}
-                 transition={{ duration: 0.5 }}
-               >
-                 <div className="flex items-center gap-3">
-                   <span className="text-2xl">🎉</span>
-                   <div>
-                     <h4 className="font-semibold text-lg">Learning Journey Loaded!</h4>
-                     <p className="text-sm opacity-90">Displaying {enhancedTimeline.length} levels from portfolio data</p>
-                   </div>
-                 </div>
-               </motion.div>
-            
             <EnhancedLearningTimeline 
               timeline={enhancedTimeline}
               fromDate={fromDate}
@@ -733,7 +652,6 @@ const StudentDetails: React.FC = () => {
                 setToDate(to);
               }}
             />
-          </div>
                    ) : (
              <motion.div 
                className="text-center py-16"
@@ -758,17 +676,7 @@ const StudentDetails: React.FC = () => {
                    <h3 className="text-2xl font-bold mb-3" style={{ color: 'var(--color-text-primary)' }}>
                      Learning Journey Ready
                    </h3>
-                   <p className="text-lg mb-6">Click refresh to load the latest progress data from backend</p>
-                   <button
-                     onClick={refreshTimeline}
-                     className="px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
-                     style={{
-                       backgroundColor: 'var(--color-accent-primary)',
-                       color: 'var(--color-text-inverse)'
-                     }}
-                   >
-                     🔄 Refresh Data
-                   </button>
+                   <p className="text-lg mb-6">Learning journey data will be displayed when available</p>
                  </div>
                )}
              </motion.div>
