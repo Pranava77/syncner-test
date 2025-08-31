@@ -124,17 +124,7 @@ const EnhancedLearningTimeline: React.FC<EnhancedLearningTimelineProps> = ({
 
   return (
     <div className="w-full">
-      {/* Header */}
-      <div className="mb-8">
-        <div className="text-center">
-          <h2 
-            className="text-3xl font-bold mb-3"
-            style={{ color: 'var(--color-text-primary)' }}
-          >
-            🚀 Learning Timeline
-          </h2>
-        </div>
-      </div>
+
 
       {/* Timeline Container */}
       <div className="relative">
