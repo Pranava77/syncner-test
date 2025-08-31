@@ -357,12 +357,28 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                 Learning Progress & Details:
               </h2>
               
-              {/* Learning Levels Section */}
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
-                  Learning Levels
+                          {/* Learning Levels Section */}
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                  🎯 Learning Levels
                 </h3>
+                <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                  <span className="flex items-center gap-1">
+                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                    Completed
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    In Progress
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <div className="w-3 h-3 rounded-full bg-gray-400"></div>
+                    Not Started
+                  </span>
+                </div>
               </div>
+            </div>
               
                                           {/* Topics Content */}
               <div className="space-y-4">
@@ -377,15 +393,19 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                   studentData.learningLevels.map((level: any, index: number) => (
                     <div
                       key={level.id || `level-${index}`}
-                      className="border rounded-xl overflow-hidden"
+                      className={`border rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg ${
+                        level.status === 'completed' ? 'border-green-200' : 
+                        level.status === 'in-progress' ? 'border-yellow-200' : 'border-gray-200'
+                      }`}
                       style={{
-                        borderColor: 'var(--color-border)',
+                        borderColor: level.status === 'completed' ? 'var(--color-success)' : 
+                                   level.status === 'in-progress' ? 'var(--color-warning)' : 'var(--color-border)',
                         backgroundColor: 'var(--color-tertiary-bg)'
                       }}
                     >
                       {/* Module Header */}
                       <div 
-                        className="p-4 cursor-pointer hover:bg-opacity-80 transition-all duration-200"
+                        className="p-6 cursor-pointer hover:bg-opacity-90 transition-all duration-200 group"
                         onClick={() => toggleModule(level.id || `level-${index}`)}
                         style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
                       >
@@ -393,9 +413,11 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                           <div className="flex items-center gap-4">
                             {/* Module Number Badge */}
                             <div 
-                              className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold"
+                              className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold transition-all duration-200 group-hover:scale-110 ${
+                                level.status === 'completed' ? 'bg-green-500 shadow-lg' : 
+                                level.status === 'in-progress' ? 'bg-yellow-500 shadow-lg' : 'bg-gray-400'
+                              }`}
                               style={{
-                                backgroundColor: 'var(--color-info)',
                                 color: 'white'
                               }}
                             >
@@ -435,25 +457,72 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                           </div>
                           
                           {/* Progress Badges */}
-                          <div className="flex items-center gap-3">
-                            <span 
-                              className="px-3 py-1 rounded-lg text-sm font-medium"
-                              style={{
-                                backgroundColor: 'var(--color-success-bg)',
-                                color: 'var(--color-success)'
-                              }}
-                            >
-                              MCQ ✅ {level.test?.score || 0}%
-                            </span>
-                            <span 
-                              className="px-3 py-1 rounded-lg text-sm font-medium"
-                              style={{
-                                backgroundColor: 'var(--color-info-bg)',
-                                color: 'var(--color-info)'
-                              }}
-                            >
-                              Tasks {level.exercise?.completed ? 1 : 0}/{level.exercise?.length || 0}
-                            </span>
+                          <div className="flex items-center gap-4">
+                            {/* Learn Progress */}
+                            <div className="text-center">
+                              <div className="flex items-center gap-1 mb-1">
+                                <span className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>Learn</span>
+                                {level.learn?.completed ? (
+                                  <span className="text-green-500">✅</span>
+                                ) : (
+                                  <span className="text-yellow-500">⏳</span>
+                                )}
+                              </div>
+                              <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div 
+                                  className="h-full transition-all duration-300"
+                                  style={{
+                                    backgroundColor: level.learn?.completed ? 'var(--color-success)' : 'var(--color-warning)',
+                                    width: level.learn?.completed ? '100%' : '50%'
+                                  }}
+                                ></div>
+                              </div>
+                            </div>
+
+                            {/* Test Progress */}
+                            <div className="text-center">
+                              <div className="flex items-center gap-1 mb-1">
+                                <span className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>Test</span>
+                                {level.test?.completed ? (
+                                  <span className="text-green-500">✅</span>
+                                ) : (
+                                  <span className="text-yellow-500">⏳</span>
+                                )}
+                              </div>
+                              <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div 
+                                  className="h-full transition-all duration-300"
+                                  style={{
+                                    backgroundColor: level.test?.completed ? 'var(--color-success)' : 'var(--color-warning)',
+                                    width: level.test?.completed ? '100%' : '0%'
+                                  }}
+                                ></div>
+                              </div>
+                              <div className="text-xs font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                                {level.test?.score || 0}%
+                              </div>
+                            </div>
+
+                            {/* Exercise Progress */}
+                            <div className="text-center">
+                              <div className="flex items-center gap-1 mb-1">
+                                <span className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>Exercise</span>
+                                {level.exercise?.completed ? (
+                                  <span className="text-green-500">✅</span>
+                                ) : (
+                                  <span className="text-yellow-500">⏳</span>
+                                )}
+                              </div>
+                              <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div 
+                                  className="h-full transition-all duration-300"
+                                  style={{
+                                    backgroundColor: level.exercise?.completed ? 'var(--color-success)' : 'var(--color-warning)',
+                                    width: level.exercise?.completed ? '100%' : '0%'
+                                  }}
+                                ></div>
+                              </div>
+                            </div>
                             
                             {/* Status Badge */}
                             <span 
@@ -485,21 +554,27 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                           transition={{ duration: 0.3 }}
                           style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
                         >
-                          <div className="p-4 border-t" style={{ borderColor: 'var(--color-border)' }}>
+                          <div className="p-6 border-t" style={{ borderColor: 'var(--color-border)' }}>
                             
                             {/* Learning Section Details */}
-                            <div className="mb-6">
-                              <h4 className="font-semibold mb-3 flex items-center gap-2" style={{ color: 'var(--color-text-primary)' }}>
-                                📚 Learning Materials
-                                <span className={`px-2 py-1 rounded-full text-xs ${
+                            <div className="mb-8">
+                              <div className="flex items-center justify-between mb-4">
+                                <h4 className="font-semibold text-lg flex items-center gap-3" style={{ color: 'var(--color-text-primary)' }}>
+                                  <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                                    📚
+                                  </div>
+                                  Learning Materials
+                                </h4>
+                                <span className={`px-3 py-1 rounded-full text-sm font-medium ${
                                   level.learn?.completed 
-                                    ? 'bg-green-100 text-green-800' 
-                                    : 'bg-yellow-100 text-yellow-800'
+                                    ? 'bg-green-100 text-green-800 border border-green-200' 
+                                    : 'bg-yellow-100 text-yellow-800 border border-yellow-200'
                                 }`}>
-                                  {level.learn?.completed ? 'Completed' : 'In Progress'}
+                                  {level.learn?.completed ? '✅ Completed' : '⏳ In Progress'}
                                 </span>
-                              </h4>
-                              <div className="grid grid-cols-2 gap-4 text-sm">
+                              </div>
+                                                              <div className="bg-white rounded-lg p-4 shadow-sm">
+                                  <div className="grid grid-cols-2 gap-6 text-sm">
                                 <div>
                                   <span style={{ color: 'var(--color-text-secondary)' }}>Status:</span>
                                   <span className="ml-2" style={{ color: 'var(--color-text-primary)' }}>
