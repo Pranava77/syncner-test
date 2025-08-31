@@ -59,6 +59,7 @@ const StudentDetails: React.FC = () => {
   useEffect(() => {
     if (studentData && studentData.careerTrack) {
       generateDynamicTimeline();
+      generateTimelineFromBackendData();
     }
   }, [studentData?.careerTrack]);
 
@@ -401,7 +402,7 @@ const StudentDetails: React.FC = () => {
                 className="font-medium"
                 style={{ color: 'var(--color-text-primary)' }}
               >
-                {studentData.enrolledDate}
+                {studentData?.enrolledDate || 'Loading...'}
               </span>
             </div>
             <div className="flex justify-between items-center py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
@@ -415,7 +416,7 @@ const StudentDetails: React.FC = () => {
                 className="font-medium"
                 style={{ color: 'var(--color-text-primary)' }}
               >
-                {studentData.level}
+                {studentData?.currentLevel || 'Loading...'}
               </span>
             </div>
             <div className="flex justify-between items-center py-2">
