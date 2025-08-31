@@ -3,8 +3,7 @@ import { motion } from 'framer-motion';
 import { 
   CheckCircledIcon, 
   ClockIcon, 
-  PlayIcon,
-  CalendarIcon
+  PlayIcon
 } from '@radix-ui/react-icons';
 
 interface TimelineLevel {
@@ -44,16 +43,10 @@ interface TimelineLevel {
 
 interface EnhancedLearningTimelineProps {
   timeline: TimelineLevel[];
-  fromDate?: string;
-  toDate?: string;
-  onDateChange?: (from: string, to: string) => void;
 }
 
 const EnhancedLearningTimeline: React.FC<EnhancedLearningTimelineProps> = ({
-  timeline,
-  fromDate,
-  toDate,
-  onDateChange
+  timeline
 }) => {
   const formatDateTime = (dateString: string | null) => {
     if (!dateString) return '--';
@@ -106,47 +99,11 @@ const EnhancedLearningTimeline: React.FC<EnhancedLearningTimelineProps> = ({
 
   return (
     <div className="w-full">
-      {/* Header with Date Range */}
-      <div className="flex items-center justify-between mb-8">
+      {/* Header */}
+      <div className="mb-8">
         <h2 className="text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>
           Learning Timeline
         </h2>
-        
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <label className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>
-              From:
-            </label>
-            <input
-              type="date"
-              value={fromDate || ''}
-              onChange={(e) => onDateChange?.(e.target.value, toDate || '')}
-              className="px-3 py-2 rounded-lg border text-sm"
-              style={{
-                backgroundColor: 'var(--color-input-bg)',
-                borderColor: 'var(--color-border)',
-                color: 'var(--color-text-primary)'
-              }}
-            />
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <label className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>
-              To:
-            </label>
-            <input
-              type="date"
-              value={toDate || ''}
-              onChange={(e) => onDateChange?.(fromDate || '', e.target.value)}
-              className="px-3 py-2 rounded-lg border text-sm"
-              style={{
-                backgroundColor: 'var(--color-input-bg)',
-                borderColor: 'var(--color-border)',
-                color: 'var(--color-text-primary)'
-              }}
-            />
-          </div>
-        </div>
       </div>
 
       {/* Timeline */}
