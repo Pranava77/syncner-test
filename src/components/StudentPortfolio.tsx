@@ -169,8 +169,26 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
   };
 
   return (
-    <div className="min-h-screen p-6" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
+      {/* Modern Header with Gradient */}
+      <div className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 py-16 px-6">
+        <div className="absolute inset-0 bg-black/10"></div>
+        <div className="relative max-w-7xl mx-auto text-center">
+          <h1 className="text-5xl font-bold text-white mb-4 tracking-tight">
+            Student Portfolio
+          </h1>
+          <p className="text-xl text-blue-100 max-w-2xl mx-auto leading-relaxed">
+            Comprehensive learning progress and achievements dashboard
+          </p>
+          <div className="mt-8 flex justify-center">
+            <div className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-2 text-white text-sm">
+              📊 Real-time Progress Tracking
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 -mt-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           {/* Left Sidebar - User Profile & Skills */}
@@ -178,22 +196,17 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
             
             {/* User Profile Card */}
             <div 
-              className="p-6 rounded-2xl border"
+              className="p-8 rounded-3xl border-0 shadow-2xl backdrop-blur-sm"
               style={{
-                backgroundColor: 'var(--color-surface)',
+                backgroundColor: 'rgba(255, 255, 255, 0.95)',
                 borderColor: 'var(--color-border)',
-                boxShadow: 'var(--shadow-md)'
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
               }}
             >
               {/* Profile Picture & Basic Info */}
-              <div className="flex items-start gap-4 mb-6">
+              <div className="flex items-start gap-6 mb-8">
                 <div 
-                  className="w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold"
-                  style={{
-                    backgroundColor: 'var(--color-tertiary-bg)',
-                    color: 'var(--color-text-primary)',
-                    border: '3px solid var(--color-border)'
-                  }}
+                  className="w-24 h-24 rounded-2xl flex items-center justify-center text-3xl font-bold bg-gradient-to-br from-blue-500 to-purple-600 text-white shadow-lg"
                 >
                   {studentData.student?.name?.charAt(0).toUpperCase() || 'S'}
                 </div>
@@ -264,25 +277,38 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
               </div>
               
               {/* Progress Summary */}
-              <div className="mb-6">
+              <div className="mb-8">
                 <h3 
-                  className="text-sm font-semibold mb-3 uppercase tracking-wider"
+                  className="text-lg font-semibold mb-4 flex items-center gap-2"
                   style={{ color: 'var(--color-text-primary)' }}
                 >
-                  Progress Summary
+                  📈 Progress Summary
                 </h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span style={{ color: 'var(--color-text-secondary)' }}>Current Level:</span>
-                    <span style={{ color: 'var(--color-text-primary)' }}>{studentData.progress?.currentLevel || 1}</span>
+                
+                {/* Progress Bar */}
+                <div className="mb-4">
+                  <div className="flex justify-between text-sm mb-2">
+                    <span style={{ color: 'var(--color-text-secondary)' }}>Overall Progress</span>
+                    <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                      {studentData.progress?.percentage || 0}%
+                    </span>
                   </div>
-                  <div className="flex justify-between">
-                    <span style={{ color: 'var(--color-text-secondary)' }}>Completed:</span>
-                    <span style={{ color: 'var(--color-text-primary)' }}>{studentData.progress?.completedLevels || 0} / {studentData.progress?.totalLevels || 0}</span>
+                  <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                    <div 
+                      className="h-full bg-gradient-to-r from-blue-500 to-purple-600 rounded-full transition-all duration-1000 ease-out"
+                      style={{ width: `${studentData.progress?.percentage || 0}%` }}
+                    ></div>
                   </div>
-                  <div className="flex justify-between">
-                    <span style={{ color: 'var(--color-text-primary)' }}>Total Points:</span>
-                    <span style={{ color: 'var(--color-text-primary)' }}>{studentData.progress?.totalPoints || 0}</span>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl">
+                    <div className="text-2xl font-bold text-blue-600 mb-1">{studentData.progress?.currentLevel || 1}</div>
+                    <div className="text-sm text-blue-600">Current Level</div>
+                  </div>
+                  <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-xl">
+                    <div className="text-2xl font-bold text-green-600 mb-1">{studentData.progress?.completedLevels || 0}</div>
+                    <div className="text-sm text-green-600">Completed</div>
                   </div>
                 </div>
               </div>
@@ -290,19 +316,40 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
               {/* Attendance */}
               <div>
                 <h3 
-                  className="text-sm font-semibold mb-2 uppercase tracking-wider"
+                  className="text-lg font-semibold mb-4 flex items-center gap-2"
                   style={{ color: 'var(--color-text-primary)' }}
                 >
-                  Attendance
+                  📅 Attendance
                 </h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span style={{ color: 'var(--color-text-secondary)' }}>Present:</span>
-                    <span style={{ color: 'var(--color-text-primary)' }}>{studentData.attendance?.presentDays || 0} / {studentData.attendance?.totalDays || 0}</span>
+                
+                {/* Attendance Stats */}
+                <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-xl">
+                  <div className="text-center mb-4">
+                    <div className="text-3xl font-bold text-orange-600 mb-1">{studentData.attendance?.percentage || 0}%</div>
+                    <div className="text-sm text-orange-600">Attendance Rate</div>
                   </div>
-                  <div className="flex justify-between">
-                    <span style={{ color: 'var(--color-text-primary)' }}>Percentage:</span>
-                    <span style={{ color: 'var(--color-text-primary)' }}>{studentData.attendance?.percentage || 0}%</span>
+                  
+                  <div className="grid grid-cols-2 gap-4 text-center">
+                    <div>
+                      <div className="text-xl font-bold text-orange-700">{studentData.attendance?.presentDays || 0}</div>
+                      <div className="text-xs text-orange-600">Present Days</div>
+                    </div>
+                    <div>
+                      <div className="text-xl font-bold text-orange-700">{studentData.attendance?.totalDays || 0}</div>
+                      <div className="text-xs text-orange-600">Total Days</div>
+                    </div>
+                  </div>
+                  
+                  {/* Streak Info */}
+                  <div className="mt-4 pt-4 border-t border-orange-200">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-orange-600">Current Streak</span>
+                      <span className="font-semibold text-orange-700">{studentData.attendance?.currentStreak || 0} days</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-orange-600">Longest Streak</span>
+                      <span className="font-semibold text-orange-700">{studentData.attendance?.longestStreak || 0} days</span>
+                    </div>
                   </div>
                 </div>
               </div>
