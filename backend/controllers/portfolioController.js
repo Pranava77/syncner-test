@@ -203,57 +203,7 @@ export const getStudentPortfolio = async (req, res) => {
       }
     }
 
-    // Generate learning timeline from progress data
-    const learningTimeline = [];
-    
-    // Check if we have completed levels to create timeline
-    if (progress?.completedLevels && Array.isArray(progress.completedLevels) && progress.completedLevels.length > 0) {
-      progress.completedLevels.forEach(level => {
-        if (level.completedAt) {
-          learningTimeline.push({
-            date: level.completedAt.toISOString().split('T')[0],
-            activity: `Completed Level ${level.levelOrder}`,
-            type: 'learning',
-            duration: level.learnProgress?.timeSpent || 0,
-            score: level.testProgress?.attempts?.[0]?.score || 0
-          });
-        }
-      });
-    }
-    
-    // If no completed levels, check daily activity for timeline
-    if (learningTimeline.length === 0 && progress?.dailyActivity && progress.dailyActivity.length > 0) {
-      progress.dailyActivity.forEach(entry => {
-        if (entry.isPresent && entry.totalMinutes > 0) {
-          learningTimeline.push({
-            date: entry.date.toISOString().split('T')[0],
-            activity: 'Daily Learning Session',
-            type: 'learning',
-            duration: entry.totalMinutes * 60, // Convert to seconds
-            score: null
-          });
-        }
-      });
-    }
 
-    // If still no timeline, create sample data based on current progress
-    if (learningTimeline.length === 0) {
-      const currentDate = new Date();
-      const sampleActivities = [
-        { type: 'learning', activity: 'Completed Module Introduction', duration: 120, score: 85 },
-        { type: 'test', activity: 'Module Assessment', duration: 45, score: 80 },
-        { type: 'exercise', activity: 'Practice Exercise', duration: 60, score: 90 }
-      ];
-      
-      sampleActivities.forEach((activity, index) => {
-        const date = new Date(currentDate);
-        date.setDate(date.getDate() - (index + 1));
-        learningTimeline.push({
-          date: date.toISOString().split('T')[0],
-          ...activity
-        });
-      });
-    }
 
     // Generate learning levels data from curriculum
     let learningLevelsData = [];
@@ -336,7 +286,6 @@ export const getStudentPortfolio = async (req, res) => {
           timeScore: 0
         }
       },
-      learningTimeline,
       learningLevels: learningLevelsData
     };
 

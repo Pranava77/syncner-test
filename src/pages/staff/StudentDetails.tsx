@@ -847,7 +847,8 @@ const StudentDetails: React.FC = () => {
               currentLevel: studentData.currentLevel,
               enrolledDate: studentData.enrolledDate,
               attendancePercentage: studentData.attendancePercentage,
-              leaderboardScore: studentData.leaderboardScore
+              leaderboardScore: studentData.leaderboardScore,
+              learningLevels: studentData.learningLevels?.length || 0
             }, null, 2)}
           </pre>
         </div>
