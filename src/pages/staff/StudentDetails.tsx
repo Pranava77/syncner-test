@@ -561,6 +561,16 @@ const StudentDetails: React.FC = () => {
 
       {/* Detailed Learning Timeline Section */}
       <DetailedLearningTimeline timeline={studentData.learningTimeline || []} />
+      
+      {/* Debug: Show timeline data structure */}
+      {import.meta.env.DEV && (
+        <div className="mt-4 p-4 bg-gray-100 rounded-lg">
+          <h4 className="font-semibold mb-2">Debug: Learning Timeline Data</h4>
+          <pre className="text-xs overflow-auto">
+            {JSON.stringify(studentData.learningTimeline, null, 2)}
+          </pre>
+        </div>
+      )}
 
     </div>
   );

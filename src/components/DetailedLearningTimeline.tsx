@@ -23,6 +23,11 @@ interface DetailedLearningTimelineProps {
 }
 
 const DetailedLearningTimeline: React.FC<DetailedLearningTimelineProps> = ({ timeline }) => {
+  // Debug logging
+  console.log('🔍 DetailedLearningTimeline received timeline:', timeline);
+  console.log('📊 Timeline length:', timeline?.length);
+  console.log('📋 Timeline structure:', JSON.stringify(timeline, null, 2));
+  
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'completed':

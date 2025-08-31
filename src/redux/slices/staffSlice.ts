@@ -138,6 +138,9 @@ const staffSlice = createSlice({
       .addCase(fetchStudentDetails.fulfilled, (state, action) => {
         state.studentDetailsLoading = false;
         state.selectedStudent = action.payload;
+        console.log('🔄 Redux State Updated: selectedStudent set to:', action.payload);
+        console.log('📚 Redux State: Learning timeline length:', action.payload?.learningTimeline?.length || 0);
+        console.log('📋 Redux State: Timeline structure:', JSON.stringify(action.payload?.learningTimeline, null, 2));
         state.error = null;
       })
       .addCase(fetchStudentDetails.rejected, (state, action) => {

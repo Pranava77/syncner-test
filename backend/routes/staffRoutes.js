@@ -292,12 +292,30 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
       });
     }
     
+    // Normalize career track to handle legacy "fullstack" vs "full-stack" and other variations
+    const normalizedCareerTrack = (() => {
+      const track = student.careerTrack?.toLowerCase() || '';
+      console.log('🔍 Original career track:', student.careerTrack);
+      
+      if (track.includes('full') || track.includes('stack')) {
+        return 'full-stack';
+      } else if (track.includes('ai') || track.includes('ml') || track.includes('machine')) {
+        return 'ai-ml';
+      } else if (track.includes('ui') || track.includes('ux') || track.includes('design')) {
+        return 'ui-ux';
+      } else if (track.includes('data') || track.includes('science')) {
+        return 'data-science';
+      } else {
+        console.log('⚠️ Unknown career track, defaulting to full-stack:', track);
+        return 'full-stack'; // Default fallback
+      }
+    })();
+    
+    console.log('🔄 Normalized career track:', normalizedCareerTrack);
+    
     // Get detailed progress data
     const progress = await UserProgress.findOne({ user: id })
       .lean();
-    
-    // Normalize career track to handle legacy "fullstack" vs "full-stack"
-    const normalizedCareerTrack = student.careerTrack === 'fullstack' ? 'full-stack' : student.careerTrack;
     
     // Get ALL curriculum items for this career track to determine total levels
     const curriculumItems = await Curriculum.find({ 
@@ -317,6 +335,22 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
       type: item.type,
       _id: item._id
     })));
+    
+    // If no curriculum items found, create a fallback structure
+    if (curriculumItems.length === 0) {
+      console.log('⚠️ No curriculum items found, creating fallback structure');
+      const fallbackLevels = [
+        { order: 1, title: 'Introduction to Programming', description: 'Basic programming concepts and fundamentals' },
+        { order: 2, title: 'Core Concepts', description: 'Essential programming principles and practices' },
+        { order: 3, title: 'Advanced Topics', description: 'Complex programming concepts and advanced techniques' }
+      ];
+      
+      curriculumItems.push(...fallbackLevels);
+      levelOrders.push(...fallbackLevels.map(l => l.order));
+      totalLevels = levelOrders.length;
+      
+      console.log('🔄 Created fallback curriculum with', totalLevels, 'levels');
+    }
     
     // Calculate performance metrics
     const performance = {
@@ -697,6 +731,18 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
       batch: student.batch || 'N/A',
       department: student.department || student.courseDept || 'N/A'
     };
+    
+    // Debug: Log the final response structure
+    console.log('🚀 FINAL RESPONSE DEBUG:');
+    console.log('📊 Student ID:', student._id);
+    console.log('📚 Career Track:', student.careerTrack);
+    console.log('🔄 Normalized Track:', normalizedCareerTrack);
+    console.log('🎯 Total Levels Found:', totalLevels);
+    console.log('📈 Learning Timeline Length:', detailedLearningTimeline.length);
+    console.log('📋 Learning Timeline Structure:', JSON.stringify(detailedLearningTimeline, null, 2));
+    console.log('🔍 Sample Timeline Entry:', detailedLearningTimeline[0]);
+    console.log('📊 Summary Stats:', summaryStats);
+    console.log('⭐ Performance:', performance);
     
     res.status(200).json({
       success: true,
