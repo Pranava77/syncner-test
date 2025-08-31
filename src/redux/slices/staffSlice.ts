@@ -25,63 +25,178 @@ export const fetchStudentDetails = createAsyncThunk(
   'staff/fetchStudentDetails',
   async (studentId: string, { rejectWithValue }) => {
     try {
-      // Use portfolio endpoint instead of staff endpoint for cleaner timeline data
-      const response = await apiService.getStudentPortfolio(studentId);
-      const studentData = response.data.student;
-      
-      // Transform portfolio data to match the expected TimelineLevel structure
-      if (studentData.learningLevels && Array.isArray(studentData.learningLevels)) {
-        console.log('🔄 Portfolio data transformation - Original learningLevels:', studentData.learningLevels);
-        
-        const transformedTimeline = studentData.learningLevels.map((level: any) => ({
-          levelOrder: level.level,
-          levelTitle: level.courseName,
-          levelDescription: level.description,
-          overallStatus: level.status === 'completed' ? 'completed' : 
-                        level.status === 'in-progress' ? 'in-progress' : 'not-started',
-          sections: {
-            learn: {
-              status: level.learn?.completed ? 'completed' : 'in-progress',
-              details: {
-                startDate: level.learn?.startTime,
-                endDate: level.learn?.endTime,
-                isCompleted: level.learn?.completed
-              },
-              title: 'Learn'
-            },
-            test: {
-              status: level.test?.completed ? 'completed' : 'in-progress',
-              details: {
-                startDate: level.test?.startTime,
-                endDate: level.test?.endTime,
-                score: level.test?.score,
-                attempts: level.test?.attempts,
-                isCompleted: level.test?.completed
-              },
-              title: 'Test'
-            },
-            exercise: {
-              status: level.exercise?.completed ? 'completed' : 'in-progress',
-              details: {
-                startDate: level.exercise?.startTime,
-                endDate: level.exercise?.endTime,
-                isCompleted: level.exercise?.completed
-              },
-              title: 'Exercise'
+      // First, get student portfolio data for progress information
+      const portfolioResponse = await apiService.getStudentPortfolio(studentId);
+      const studentData = portfolioResponse.data.student;
+
+      console.log('🔄 Student Details - Portfolio data received:', {
+        careerTrack: studentData.careerTrack,
+        progress: studentData.progress,
+        learningLevels: studentData.learningLevels
+      });
+
+      // Then, get curriculum levels for this career track
+      if (studentData.careerTrack) {
+        try {
+          const curriculumResponse = await apiService.getCurriculumLevels(studentData.careerTrack);
+          const curriculumLevels = curriculumResponse.data;
+
+          console.log('📚 Student Details - Curriculum levels received:', {
+            track: studentData.careerTrack,
+            levelsCount: curriculumLevels.length,
+            levels: curriculumLevels.map((l: any) => ({ order: l.order, title: l.title }))
+          });
+
+          // Transform curriculum data to match the expected TimelineLevel structure
+          // and combine it with student progress data
+          const transformedTimeline = curriculumLevels.map((level: any) => {
+            // Find student's progress for this level
+            const levelProgress = studentData.learningLevels?.find(
+              (l: any) => l.level === level.order
+            );
+
+            // Get progress details for each section
+            const learnDetails = levelProgress?.learn ? {
+              startDate: levelProgress.learn.startTime,
+              endDate: levelProgress.learn.endTime,
+              isCompleted: levelProgress.learn.completed
+            } : {
+              startDate: null,
+              endDate: null,
+              isCompleted: false
+            };
+
+            const testDetails = levelProgress?.test ? {
+              startDate: levelProgress.test.startTime,
+              endDate: levelProgress.test.endTime,
+              score: levelProgress.test.score || 0,
+              attempts: levelProgress.test.attempts || 0,
+              isCompleted: levelProgress.test.completed
+            } : {
+              startDate: null,
+              endDate: null,
+              score: 0,
+              attempts: 0,
+              isCompleted: false
+            };
+
+            const exerciseDetails = levelProgress?.exercise ? {
+              startDate: levelProgress.exercise.startTime,
+              endDate: levelProgress.exercise.endTime,
+              isCompleted: levelProgress.exercise.completed
+            } : {
+              startDate: null,
+              endDate: null,
+              isCompleted: false
+            };
+
+            // Determine overall status based on section completion
+            let overallStatus = 'not-started';
+            if (levelProgress) {
+              const completedSections = [
+                learnDetails.isCompleted,
+                testDetails.isCompleted,
+                exerciseDetails.isCompleted
+              ].filter(Boolean).length;
+
+              if (completedSections === 3) {
+                overallStatus = 'completed';
+              } else if (completedSections > 0) {
+                overallStatus = 'in-progress';
+              } else if (level.order === 1) {
+                overallStatus = 'accessible';
+              }
+            } else if (level.order === 1) {
+              overallStatus = 'accessible';
             }
+
+            return {
+              levelOrder: level.order,
+              levelTitle: level.title,
+              levelDescription: level.description,
+              overallStatus,
+              sections: {
+                learn: {
+                  status: learnDetails.isCompleted ? 'completed' : 'in-progress',
+                  details: learnDetails,
+                  title: 'Learn'
+                },
+                test: {
+                  status: testDetails.isCompleted ? 'completed' : 'in-progress',
+                  details: testDetails,
+                  title: 'Test'
+                },
+                exercise: {
+                  status: exerciseDetails.isCompleted ? 'completed' : 'in-progress',
+                  details: exerciseDetails,
+                  title: 'Exercise'
+                }
+              }
+            };
+          });
+
+          console.log('✅ Student Details - Transformed timeline:', {
+            levelsCount: transformedTimeline.length,
+            levels: transformedTimeline.map((l: any) => ({ 
+              order: l.levelOrder, 
+              title: l.levelTitle, 
+              status: l.overallStatus 
+            }))
+          });
+
+          // Replace learningLevels with the transformed timeline
+          studentData.learningTimeline = transformedTimeline;
+        } catch (curriculumError) {
+          console.error('❌ Student Details - Error fetching curriculum levels:', curriculumError);
+          // Fallback to portfolio data if curriculum fetch fails
+          if (studentData.learningLevels && Array.isArray(studentData.learningLevels)) {
+            console.log('🔄 Student Details - Using portfolio fallback data');
+            const fallbackTimeline = studentData.learningLevels.map((level: any) => ({
+              levelOrder: level.level,
+              levelTitle: level.courseName,
+              levelDescription: level.description,
+              overallStatus: level.status === 'completed' ? 'completed' :
+                            level.status === 'in-progress' ? 'in-progress' : 'not-started',
+              sections: {
+                learn: {
+                  status: level.learn?.completed ? 'completed' : 'in-progress',
+                  details: {
+                    startDate: level.learn?.startTime,
+                    endDate: level.learn?.endTime,
+                    isCompleted: level.learn?.completed
+                  },
+                  title: 'Learn'
+                },
+                test: {
+                  status: level.test?.completed ? 'completed' : 'in-progress',
+                  details: {
+                    startDate: level.test?.startTime,
+                    endDate: level.test?.endTime,
+                    score: level.test?.score,
+                    attempts: level.test?.attempts,
+                    isCompleted: level.test?.completed
+                  },
+                  title: 'Test'
+                },
+                exercise: {
+                  status: level.exercise?.completed ? 'completed' : 'in-progress',
+                  details: {
+                    startDate: level.exercise?.startTime,
+                    endDate: level.exercise?.endTime,
+                    isCompleted: level.exercise?.completed
+                  },
+                  title: 'Exercise'
+                }
+              }
+            }));
+            studentData.learningTimeline = fallbackTimeline;
           }
-        }));
-        
-        console.log('✅ Portfolio data transformation - Transformed timeline:', transformedTimeline);
-        
-        // Replace learningLevels with the transformed timeline
-        studentData.learningTimeline = transformedTimeline;
+        }
       } else {
-        console.log('⚠️ Portfolio data transformation - No learningLevels found, using fallback');
-        // Create a fallback timeline if no learningLevels exist
+        console.log('⚠️ Student Details - No career track found, using fallback');
         studentData.learningTimeline = [];
       }
-      
+
       return studentData;
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to fetch student details');

@@ -473,7 +473,7 @@ class ApiService {
       });
       const data = await this.handleResponse(response);
       console.log('✅ Portfolio API Response:', data);
-      
+
       // Debug: Log the specific learning timeline data
       if (data && data.data && data.data.student) {
         console.log('📚 Portfolio Learning Timeline Data Received:');
@@ -485,10 +485,29 @@ class ApiService {
       } else {
         console.log('⚠️ No student data found in portfolio response');
       }
-      
+
       return data;
     } catch (error) {
       console.error('❌ Portfolio API Error:', error);
+      throw this.handleError(error);
+    }
+  }
+
+  // Get curriculum levels for a specific career track
+  async getCurriculumLevels(careerTrack: string): Promise<any> {
+    const url = `${this.baseURL}/training/levels?track=${encodeURIComponent(careerTrack)}`;
+    console.log('🔗 Making API call to training levels route:', url);
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: this.getHeaders(),
+        credentials: 'include',
+      });
+      const data = await this.handleResponse(response);
+      console.log('✅ Training Levels API Response:', data);
+      return data;
+    } catch (error) {
+      console.error('❌ Training Levels API Error:', error);
       throw this.handleError(error);
     }
   }

@@ -49,10 +49,32 @@ const StudentDetails: React.FC = () => {
   const studentData = selectedStudent;
   
   // Debug logging
-  console.log('StudentDetails - selectedStudent:', selectedStudent);
-  console.log('StudentDetails - studentData:', studentData);
-  console.log('StudentDetails - learningTimeline:', studentData?.learningTimeline);
-  console.log('StudentDetails - learningLevels:', studentData?.learningLevels);
+  useEffect(() => {
+    if (import.meta.env.DEV && studentData) {
+      console.log('StudentDetails - selectedStudent:', selectedStudent);
+      console.log('StudentDetails - studentData:', studentData);
+      console.log('StudentDetails - learningTimeline:', studentData?.learningTimeline);
+      console.log('StudentDetails - learningLevels:', studentData?.learningLevels);
+      console.log('StudentDetails - careerTrack:', studentData?.careerTrack);
+      console.log('StudentDetails - Timeline length:', studentData?.learningTimeline?.length || 0);
+      
+      // Log each level in detail
+      if (studentData?.learningTimeline) {
+        studentData.learningTimeline.forEach((level: any, index: number) => {
+          console.log(`StudentDetails - Level ${index + 1}:`, {
+            order: level.levelOrder,
+            title: level.levelTitle,
+            status: level.overallStatus,
+            sections: {
+              learn: { status: level.sections?.learn?.status, completed: level.sections?.learn?.details?.isCompleted },
+              test: { status: level.sections?.test?.status, completed: level.sections?.test?.details?.isCompleted },
+              exercise: { status: level.sections?.exercise?.status, completed: level.sections?.exercise?.details?.isCompleted }
+            }
+          });
+        });
+      }
+    }
+  }, [studentData, selectedStudent]);
   
   // Show loading state while data is being fetched
   if (studentDetailsLoading) {
