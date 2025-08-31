@@ -65,14 +65,19 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
 
   // Fetch portfolio data from backend if not provided
   useEffect(() => {
+    console.log('useEffect triggered:', { initialStudentData, studentId, shouldFetch: !initialStudentData && !!studentId });
+    
     if (!initialStudentData && studentId) {
       const fetchPortfolio = async () => {
         try {
+          console.log('Starting to fetch portfolio data...');
           setLoading(true);
           setError(null);
           const data = await PortfolioService.getStudentPortfolio(studentId);
+          console.log('Portfolio data received:', data);
           setStudentData(data);
         } catch (err) {
+          console.error('Error fetching portfolio:', err);
           setError(err instanceof Error ? err.message : 'Failed to fetch portfolio data');
         } finally {
           setLoading(false);
@@ -80,6 +85,8 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
       };
 
       fetchPortfolio();
+    } else {
+      console.log('Not fetching - initialStudentData exists or no studentId');
     }
   }, [studentId, initialStudentData]);
 
@@ -414,29 +421,25 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                 </h3>
               </div>
               
-                            {/* Topics Content */}
+                                          {/* Topics Content */}
               <div className="space-y-4">
-                {/* Debug: Show module count and data */}
-                <div className="text-sm text-gray-500 mb-4 p-4 bg-gray-100 rounded">
-                  <strong>Debug Info:</strong><br/>
-                  Modules count: {studentData.modules?.length || 0}<br/>
-                  Modules data: {JSON.stringify(studentData.modules?.slice(0, 2), null, 2)}<br/>
-                  Student name: {studentData.name}<br/>
-                  Track: {studentData.track}
+                {/* Data Check */}
+                <div className="mb-4 p-3 bg-blue-50 rounded-lg">
+                  <p className="text-sm text-blue-800">
+                    <strong>Data Check:</strong> {studentData.modules?.length || 0} modules loaded
+                  </p>
                 </div>
-                {(() => { console.log('Rendering modules:', studentData.modules); return null; })()}
+                
                 {studentData.modules && studentData.modules.length > 0 ? (
                   studentData.modules.map((module, index) => (
-                  <div
-                    key={module.id}
-                    className="border rounded-xl overflow-hidden"
-                    style={{
-                      borderColor: 'var(--color-border)',
-                      backgroundColor: 'var(--color-tertiary-bg)'
-                    }}
-                  >
-                    {/* Debug: Show module data */}
-                    {(() => { console.log(`Module ${index}:`, module); return null; })()}
+                    <div
+                      key={module.id}
+                      className="border rounded-xl overflow-hidden"
+                      style={{
+                        borderColor: 'var(--color-border)',
+                        backgroundColor: 'var(--color-tertiary-bg)'
+                      }}
+                    >
                       {/* Module Header */}
                       <div 
                         className="p-4 cursor-pointer hover:bg-opacity-80 transition-all duration-200"

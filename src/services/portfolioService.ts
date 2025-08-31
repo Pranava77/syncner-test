@@ -45,15 +45,19 @@ export class PortfolioService {
    */
   static async getStudentPortfolio(studentId: string): Promise<StudentPortfolioData> {
     try {
+      console.log('PortfolioService: Calling API for student:', studentId);
       const response = await apiService.get(`/staff/student/${studentId}/portfolio`);
+      console.log('PortfolioService: API response received:', response);
       
       if (response.success) {
+        console.log('PortfolioService: Returning data:', response.data);
         return response.data;
       } else {
+        console.error('PortfolioService: API returned error:', response.message);
         throw new Error(response.message || 'Failed to fetch portfolio data');
       }
     } catch (error) {
-      console.error('Error fetching student portfolio:', error);
+      console.error('PortfolioService: Error fetching student portfolio:', error);
       throw new Error('Failed to fetch student portfolio data');
     }
   }
