@@ -19,6 +19,7 @@ import {
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, Tooltip } from 'recharts';
 import { useStaff } from '../../hooks/useStaff';
 import DetailedLearningTimeline from '../../components/DetailedLearningTimeline';
+import EnhancedLearningTimeline from '../../components/EnhancedLearningTimeline';
 import { StudentTimelineService, CombinedTimelineLevel } from '../../services/studentTimelineService';
 
 const StudentDetails: React.FC = () => {

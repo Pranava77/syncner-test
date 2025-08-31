@@ -250,6 +250,14 @@ export const getStudentPortfolio = async (req, res) => {
               overallStatus = 'in-progress';
             }
             
+            // Get timestamps for each section if available
+            const learnStartTime = levelProgress?.learnProgress?.startTime || null;
+            const learnEndTime = levelProgress?.learnProgress?.endTime || null;
+            const testStartTime = levelProgress?.testProgress?.lastAttemptAt || null;
+            const testEndTime = levelProgress?.testProgress?.lastAttemptAt || null; // Assuming test end time is same as last attempt
+            const exerciseStartTime = levelProgress?.exerciseSubmissions?.[0]?.submittedAt || null;
+            const exerciseEndTime = levelProgress?.exerciseSubmissions?.[0]?.submittedAt || null; // Assuming exercise end time is same as submission
+
             return {
               level: item.order,
               courseName: item.title,
@@ -257,23 +265,56 @@ export const getStudentPortfolio = async (req, res) => {
               status: overallStatus,
               learn: {
                 completed: levelProgress?.completedSections?.learn || false,
-                startTime: levelProgress?.learnProgress?.startTime || null,
-                endTime: levelProgress?.learnProgress?.endTime || null,
+                startTime: learnStartTime,
+                endTime: learnEndTime,
                 timeSpent: levelProgress?.learnProgress?.timeSpent || 0,
-                content: item.learn || []
+                content: item.learn || [],
+                title: 'Learning Materials',
+                status: levelProgress?.completedSections?.learn ? 'completed' : learnStartTime ? 'in-progress' : 'not-started',
+                // Additional content details
+                materials: item.learn?.map(material => ({
+                  id: material.id,
+                  title: material.title,
+                  description: material.description,
+                  externalLink: material.externalLink,
+                  order: material.order
+                })) || []
               },
               test: {
                 completed: levelProgress?.completedSections?.test || false,
                 score: levelProgress?.testProgress?.attempts?.[0]?.score || 0,
                 attempts: levelProgress?.testProgress?.attempts?.length || 0,
-                startTime: levelProgress?.testProgress?.lastAttemptAt || null,
-                content: item.test || []
+                startTime: testStartTime,
+                endTime: testEndTime,
+                content: item.test || [],
+                title: 'Assessment',
+                status: levelProgress?.completedSections?.test ? 'completed' : testStartTime ? 'in-progress' : 'not-started',
+                // Additional test details
+                questions: item.test?.map(test => ({
+                  id: test.id,
+                  title: test.title,
+                  question: test.question,
+                  options: test.options,
+                  answer: test.answer,
+                  order: test.order
+                })) || []
               },
               exercise: {
                 completed: levelProgress?.completedSections?.exercise || false,
-                startTime: levelProgress?.exerciseSubmissions?.[0]?.submittedAt || null,
+                startTime: exerciseStartTime,
+                endTime: exerciseEndTime,
                 timeSpent: levelProgress?.exerciseSubmissions?.[0]?.timeSpent || 0,
-                content: item.exercise || []
+                content: item.exercise || [],
+                title: 'Practice Exercise',
+                status: levelProgress?.completedSections?.exercise ? 'completed' : exerciseStartTime ? 'in-progress' : 'not-started',
+                // Additional exercise details
+                tasks: item.exercise?.map(exercise => ({
+                  id: exercise.id,
+                  title: exercise.title,
+                  description: exercise.description,
+                  content: exercise.content,
+                  order: exercise.order
+                })) || []
               }
             };
           });
@@ -313,20 +354,50 @@ export const getStudentPortfolio = async (req, res) => {
               startTime: null,
               endTime: null,
               timeSpent: 0,
-              content: item.learn || []
+              content: item.learn || [],
+              title: 'Learning Materials',
+              status: 'not-started',
+              materials: item.learn?.map(material => ({
+                id: material.id,
+                title: material.title,
+                description: material.description,
+                externalLink: material.externalLink,
+                order: material.order
+              })) || []
             },
             test: {
               completed: false,
               score: 0,
               attempts: 0,
               startTime: null,
-              content: item.test || []
+              endTime: null,
+              content: item.test || [],
+              title: 'Assessment',
+              status: 'not-started',
+              questions: item.test?.map(test => ({
+                id: test.id,
+                title: test.title,
+                question: test.question,
+                options: test.options,
+                answer: test.answer,
+                order: test.order
+              })) || []
             },
             exercise: {
               completed: false,
               startTime: null,
+              endTime: null,
               timeSpent: 0,
-              content: item.exercise || []
+              content: item.exercise || [],
+              title: 'Practice Exercise',
+              status: 'not-started',
+              tasks: item.exercise?.map(exercise => ({
+                id: exercise.id,
+                title: exercise.title,
+                description: exercise.description,
+                content: exercise.content,
+                order: exercise.order
+              })) || []
             }
           }));
           
