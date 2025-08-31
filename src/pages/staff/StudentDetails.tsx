@@ -86,6 +86,80 @@ const StudentDetails: React.FC = () => {
     generateDynamicTimeline();
   };
 
+  // Function to generate timeline from backend data
+  const generateTimelineFromBackendData = () => {
+    if (!studentData) return;
+    
+    try {
+      // Use the comprehensive timeline data from backend
+      let timelineData: any[] = [];
+      
+      // Priority 1: Use comprehensive activity timeline if available
+      if (studentData.comprehensiveActivityTimeline && studentData.comprehensiveActivityTimeline.length > 0) {
+        timelineData = studentData.comprehensiveActivityTimeline.map((activity: any) => ({
+          id: activity.date || Date.now(),
+          date: activity.date,
+          type: activity.type,
+          title: activity.activity,
+          description: activity.details?.levelName || activity.activity,
+          duration: activity.duration || 0,
+          score: activity.details?.bestScore || null,
+          level: activity.details?.levelOrder || 1,
+          status: 'completed',
+          metadata: activity.details
+        }));
+      }
+      // Priority 2: Use learning timeline if available
+      else if (studentData.learningTimeline && studentData.learningTimeline.length > 0) {
+        timelineData = studentData.learningTimeline.map((item: any) => ({
+          id: item.date || Date.now(),
+          date: item.date,
+          type: item.type || 'learning',
+          title: item.activity || 'Learning Activity',
+          description: item.activity || 'Learning Activity',
+          duration: item.duration || 0,
+          score: item.score || null,
+          level: 1,
+          status: 'completed',
+          metadata: item
+        }));
+      }
+      // Priority 3: Use simple timeline if available
+      else if (studentData.simpleTimeline && studentData.simpleTimeline.length > 0) {
+        timelineData = studentData.simpleTimeline.map((item: any) => ({
+          id: item.date || Date.now(),
+          date: item.date,
+          type: item.type || 'learning',
+          title: item.activity || 'Learning Activity',
+          description: item.activity || 'Learning Activity',
+          duration: item.duration || 0,
+          score: item.score || null,
+          level: 1,
+          status: 'completed',
+          metadata: item
+        }));
+      }
+      
+      // Sort by date (newest first)
+      timelineData.sort((a, b) => {
+        const dateA = new Date(a.date || 0);
+        const dateB = new Date(b.date || 0);
+        return dateB.getTime() - dateA.getTime();
+      });
+      
+      // If we have backend timeline data, use it instead of external service
+      if (timelineData.length > 0) {
+        setDynamicTimeline(timelineData);
+        setLastRefreshTime(new Date());
+        setTimelineError(null);
+        console.log('📚 Generated timeline from backend data:', timelineData);
+      }
+    } catch (error) {
+      console.error('Error generating timeline from backend data:', error);
+      setTimelineError('Failed to generate timeline from backend data');
+    }
+  };
+
 
   
   // Show loading state while data is being fetched
