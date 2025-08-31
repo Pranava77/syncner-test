@@ -644,8 +644,8 @@ const StudentDetails: React.FC = () => {
                }}
                onClick={() => {
                  // Navigate to portfolio page
-                 console.log('Portfolio button clicked, navigating to:', `/staff/student/${studentId}/portfolio`);
-                 navigate(`/staff/student/${studentId}/portfolio`);
+                       console.log('Portfolio button clicked, navigating to:', `/student/${studentId}/portfolio`);
+      navigate(`/student/${studentId}/portfolio`);
                }}
              >
                📁 View Portfolio

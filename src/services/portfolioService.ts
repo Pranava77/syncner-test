@@ -1,40 +1,42 @@
 import apiService from './api';
 
-export interface PortfolioTask {
-  id: string;
-  title: string;
-  description: string;
-  completed: boolean;
-}
 
-export interface PortfolioModule {
-  id: string;
-  moduleNumber: string;
-  title: string;
-  completed: boolean;
-  completedDate: string | null;
-  assessmentScore: number;
-  timeSpent: string;
-  mcqScore: number;
-  tasksCompleted: number;
-  totalTasks: number;
-  tasks: PortfolioTask[];
-}
 
 export interface StudentPortfolioData {
-  name: string;
-  location: string;
-  profilePicture?: string;
-  completionPercentage: number;
-  status: string;
-  track: string;
-  duration: string;
-  lastVerified: string;
-  skills: string[];
-  certificateId: string;
-  recommendedRoles: string[];
-  introduction: string;
-  modules: PortfolioModule[];
+  student: {
+    _id: string;
+    name: string;
+    email: string;
+    careerTrack: string;
+    college?: string;
+    department?: string;
+    createdAt: string;
+  };
+  progress: {
+    currentLevel: number;
+    completedLevels: number;
+    totalLevels: number;
+    percentage: number;
+    totalPoints: number;
+  };
+  attendance: {
+    totalDays: number;
+    presentDays: number;
+    percentage: number;
+    currentStreak: number;
+    longestStreak: number;
+  };
+  leaderboard: {
+    score: number;
+    rank: number | null;
+    breakdown: {
+      progressScore: number;
+      attendanceScore: number;
+      consistencyScore: number;
+      timeScore: number;
+    };
+  };
+  learningLevels: any[];
 }
 
 
@@ -46,7 +48,8 @@ export class PortfolioService {
   static async getStudentPortfolio(studentId: string): Promise<StudentPortfolioData> {
     try {
       console.log('PortfolioService: Calling API for student:', studentId);
-      const response = await apiService.get(`/staff/student/${studentId}/portfolio`);
+      // Use the same endpoint as learning journey for consistent data
+      const response = await apiService.get(`/student/portfolio/${studentId}`);
       console.log('PortfolioService: API response received:', response);
       
       if (response.success) {
@@ -98,41 +101,5 @@ export class PortfolioService {
     }
   }
 
-  /**
-   * Transform backend data to frontend format
-   */
-  static transformPortfolioData(backendData: any): StudentPortfolioData {
-    return {
-      name: backendData.name || 'Unknown Student',
-      location: backendData.location || 'Location not specified',
-      profilePicture: backendData.profilePicture,
-      completionPercentage: backendData.completionPercentage || 0,
-      status: backendData.status || 'In Progress',
-      track: backendData.track || 'Unknown Track',
-      duration: backendData.duration || 'Unknown Duration',
-      lastVerified: backendData.lastVerified || new Date().toISOString(),
-      skills: backendData.skills || [],
-      certificateId: backendData.certificateId || 'CERT-0000-0000',
-      recommendedRoles: backendData.recommendedRoles || [],
-      introduction: backendData.introduction || 'No introduction available.',
-      modules: (backendData.modules || []).map((module: any) => ({
-        id: module.id || `module-${module.moduleNumber}`,
-        moduleNumber: module.moduleNumber || '00',
-        title: module.title || 'Unknown Module',
-        completed: module.completed || false,
-        completedDate: module.completedDate,
-        assessmentScore: module.assessmentScore || 0,
-        timeSpent: module.timeSpent || '0h 0m',
-        mcqScore: module.mcqScore || 0,
-        tasksCompleted: module.tasksCompleted || 0,
-        totalTasks: module.totalTasks || 5,
-        tasks: (module.tasks || []).map((task: any) => ({
-          id: task.id || `task-${Math.random()}`,
-          title: task.title || 'Unknown Task',
-          description: task.description || 'No description available',
-          completed: task.completed || false
-        }))
-      }))
-    };
-  }
+
 }

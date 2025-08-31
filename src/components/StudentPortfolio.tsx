@@ -35,21 +35,7 @@ interface PortfolioModule {
 
 interface StudentPortfolioProps {
   studentId: string;
-  studentData?: {
-    name: string;
-    location: string;
-    profilePicture?: string;
-    completionPercentage: number;
-    status: string;
-    track: string;
-    duration: string;
-    lastVerified: string;
-    skills: string[];
-    certificateId: string;
-    recommendedRoles: string[];
-    introduction: string;
-    modules: PortfolioModule[];
-  };
+  studentData?: StudentPortfolioData;
 }
 
 const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
@@ -202,15 +188,7 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                     border: '3px solid var(--color-border)'
                   }}
                 >
-                  {studentData.profilePicture ? (
-                    <img 
-                      src={studentData.profilePicture} 
-                      alt={studentData.name}
-                      className="w-full h-full rounded-full object-cover"
-                    />
-                  ) : (
-                    studentData.name.charAt(0).toUpperCase()
-                  )}
+                  {studentData.student?.name?.charAt(0).toUpperCase() || 'S'}
                 </div>
                 
                 <div className="flex-1">
@@ -218,7 +196,7 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                     className="text-2xl font-bold mb-2"
                     style={{ color: 'var(--color-text-primary)' }}
                   >
-                    {studentData.name}
+                    {studentData.student?.name || 'Student Name'}
                   </h1>
                   
                   <div className="flex items-center gap-2 mb-3">
@@ -227,7 +205,7 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                       className="text-sm"
                       style={{ color: 'var(--color-text-tertiary)' }}
                     >
-                      {studentData.location}
+                      {studentData.student?.college ? `${studentData.student.college}, ${studentData.student.department || 'Unknown'}` : 'Location not specified'}
                     </span>
                   </div>
                   
@@ -239,8 +217,8 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                       color: 'white'
                     }}
                   >
-                    {studentData.completionPercentage}% completed
-                    <div className="text-xs mt-1">{studentData.status}</div>
+                    {studentData.progress?.percentage || 0}% completed
+                    <div className="text-xs mt-1">Level {studentData.progress?.currentLevel || 1} of {studentData.progress?.totalLevels || 0}</div>
                   </div>
                 </div>
               </div>
