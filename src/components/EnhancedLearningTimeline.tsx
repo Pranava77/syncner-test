@@ -131,14 +131,8 @@ const EnhancedLearningTimeline: React.FC<EnhancedLearningTimelineProps> = ({
             className="text-3xl font-bold mb-3"
             style={{ color: 'var(--color-text-primary)' }}
           >
-            🚀 Learning Journey
+            🚀 Learning Timeline
           </h2>
-          <p 
-            className="text-lg"
-            style={{ color: 'var(--color-text-secondary)' }}
-          >
-            Track your progress through {timeline.length} levels
-          </p>
         </div>
       </div>
 
