@@ -1113,4 +1113,204 @@ router.get('/leaderboard', protect, authorize('staff', 'admin'), async (req, res
   }
 });
 
+// Get detailed student portfolio for staff view
+router.get('/student/:studentId/portfolio', protect, authorize('staff', 'admin'), async (req, res) => {
+  try {
+    const { studentId } = req.params;
+    
+    // Fetch student data
+    const student = await User.findById(studentId).select('-password');
+    if (!student) {
+      return res.status(404).json({
+        success: false,
+        message: 'Student not found'
+      });
+    }
+    
+    // Fetch user progress data
+    const progress = await UserProgress.findOne({ user: studentId });
+    
+    // Get curriculum items for this career track
+    const curriculumItems = await Curriculum.find({ 
+      careerTrack: student.careerTrack, 
+      isActive: true 
+    }).sort({ order: 1 }).lean();
+    
+    // Get attendance data
+    const attendanceRecords = await Attendance.find({ user: studentId }).sort({ date: 1 });
+    
+    // Calculate completion percentage and status
+    const totalLevels = curriculumItems.length;
+    const completedLevels = progress?.completedLevels?.length || 0;
+    const completionPercentage = totalLevels > 0 ? Math.round((completedLevels / totalLevels) * 100) : 0;
+    
+    // Determine status based on completion
+    let status = 'In Progress';
+    if (completionPercentage === 100) {
+      status = 'Ready to Hire';
+    } else if (completionPercentage >= 75) {
+      status = 'Nearly Complete';
+    } else if (completionPercentage >= 50) {
+      status = 'Halfway There';
+    } else if (completionPercentage >= 25) {
+      status = 'Getting Started';
+    } else {
+      status = 'Just Started';
+    }
+    
+    // Calculate duration since enrollment
+    const enrollmentDate = new Date(student.createdAt);
+    const now = new Date();
+    const monthsDiff = Math.floor((now.getTime() - enrollmentDate.getTime()) / (1000 * 60 * 60 * 24 * 30.44));
+    const duration = monthsDiff === 0 ? 'Less than 1 month' : `${monthsDiff} month${monthsDiff > 1 ? 's' : ''}`;
+    
+    // Get last verification date (use last activity or enrollment date)
+    const lastVerified = progress?.lastActivity || student.createdAt;
+    
+    // Generate skills based on career track and progress
+    const skills = generateSkillsFromTrack(student.careerTrack, completionPercentage);
+    
+    // Generate recommended roles based on career track and progress
+    const recommendedRoles = generateRecommendedRoles(student.careerTrack, completionPercentage);
+    
+    // Build modules data
+    const modules = curriculumItems.map((item, index) => {
+      const levelProgress = progress?.learningLevels?.find(l => l.level === item.order);
+      
+      return {
+        id: `module-${String(item.order).padStart(2, '0')}`,
+        moduleNumber: String(item.order).padStart(2, '0'),
+        title: item.title,
+        completed: levelProgress?.overallStatus === 'completed',
+        completedDate: levelProgress?.completedAt || null,
+        assessmentScore: levelProgress?.test?.score || 0,
+        timeSpent: formatTimeSpent(levelProgress?.learn?.timeSpent || 0),
+        mcqScore: levelProgress?.test?.score || 0,
+        tasksCompleted: levelProgress?.exercise?.completed ? 5 : 0,
+        totalTasks: 5,
+        tasks: generateTasksForModule(item, levelProgress)
+      };
+    });
+    
+    // Build portfolio data
+    const portfolioData = {
+      name: student.name,
+      location: student.college ? `${student.college}, ${student.department || 'Unknown'}` : 'Location not specified',
+      profilePicture: student.profilePicture,
+      completionPercentage,
+      status,
+      track: student.careerTrack.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()),
+      duration,
+      lastVerified: lastVerified,
+      skills,
+      certificateId: `SYNCNER-${new Date().getFullYear()}-STU${student._id.toString().slice(-4)}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
+      recommendedRoles,
+      introduction: generateIntroduction(student.name, student.careerTrack, skills, completionPercentage),
+      modules
+    };
+    
+    res.status(200).json({
+      success: true,
+      data: portfolioData,
+      message: 'Student portfolio retrieved successfully'
+    });
+    
+  } catch (error) {
+    console.error('Error fetching student portfolio:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error while retrieving portfolio'
+    });
+  }
+});
+
+// Helper functions
+function generateSkillsFromTrack(careerTrack, completionPercentage) {
+  const baseSkills = {
+    'full-stack': ['HTML', 'CSS', 'JavaScript', 'React', 'Node.js', 'SQL', 'Git'],
+    'ai-ml': ['Python', 'Machine Learning', 'Data Analysis', 'Statistics', 'TensorFlow', 'Pandas'],
+    'ui-ux': ['Figma', 'Adobe XD', 'User Research', 'Prototyping', 'Visual Design', 'Wireframing'],
+    'data-science': ['Python', 'SQL', 'Statistics', 'Data Visualization', 'Machine Learning', 'R']
+  };
+  
+  const trackSkills = baseSkills[careerTrack] || ['Programming', 'Problem Solving', 'Communication'];
+  
+  // Add skills based on completion percentage
+  if (completionPercentage >= 75) {
+    trackSkills.push('Advanced Problem Solving', 'Project Management');
+  }
+  if (completionPercentage >= 50) {
+    trackSkills.push('Team Collaboration', 'Time Management');
+  }
+  
+  return trackSkills.slice(0, 6); // Limit to 6 skills
+}
+
+function generateRecommendedRoles(careerTrack, completionPercentage) {
+  const baseRoles = {
+    'full-stack': ['Full Stack Developer', 'Front-end Developer', 'Back-end Developer', 'Software Developer'],
+    'ai-ml': ['AI Engineer', 'Machine Learning Engineer', 'Data Scientist', 'Research Analyst'],
+    'ui-ux': ['UI/UX Designer', 'Product Designer', 'Visual Designer', 'Interaction Designer'],
+    'data-science': ['Data Scientist', 'Data Analyst', 'Business Analyst', 'Research Scientist']
+  };
+  
+  const trackRoles = baseRoles[careerTrack] || ['Software Developer', 'Programmer', 'Developer'];
+  
+  // Add roles based on completion percentage
+  if (completionPercentage >= 75) {
+    trackRoles.push('Senior Developer', 'Team Lead');
+  }
+  if (completionPercentage >= 50) {
+    trackRoles.push('Mid-level Developer', 'Project Coordinator');
+  }
+  
+  return trackRoles.slice(0, 5); // Limit to 5 roles
+}
+
+function generateIntroduction(name, careerTrack, skills, completionPercentage) {
+  const trackDisplay = careerTrack.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
+  const skillList = skills.slice(0, 3).join(', ');
+  
+  if (completionPercentage === 100) {
+    return `${trackDisplay} professional, passionate about solving real business problems with code. Skilled in ${skillList}, and ready to contribute to impactful projects.`;
+  } else if (completionPercentage >= 75) {
+    return `${trackDisplay} developer in the making, passionate about solving real business problems with code. Skilled in ${skillList}, and nearly ready to contribute to impactful projects.`;
+  } else {
+    return `${trackDisplay} developer in the making, passionate about solving real business problems with code. Currently building skills in ${skillList}, and eager to learn and grow.`;
+  }
+}
+
+function generateTasksForModule(curriculumItem, levelProgress) {
+  const baseTasks = [
+    { title: 'Core Concept Practice', description: 'Master fundamental concepts' },
+    { title: 'Hands-on Exercise', description: 'Apply knowledge through practice' },
+    { title: 'Project Implementation', description: 'Build real-world projects' },
+    { title: 'Code Review', description: 'Review and optimize code' },
+    { title: 'Documentation', description: 'Create comprehensive documentation' }
+  ];
+  
+  // Customize tasks based on curriculum item
+  if (curriculumItem.title.toLowerCase().includes('html') || curriculumItem.title.toLowerCase().includes('css')) {
+    baseTasks[0] = { title: 'Build a web using HTML/CSS', description: 'Create a HTML Website' };
+  } else if (curriculumItem.title.toLowerCase().includes('javascript')) {
+    baseTasks[0] = { title: 'JavaScript Fundamentals', description: 'Master ES6+ concepts' };
+  } else if (curriculumItem.title.toLowerCase().includes('react')) {
+    baseTasks[0] = { title: 'React Component Building', description: 'Create reusable components' };
+  }
+  
+  return baseTasks.map((task, index) => ({
+    id: `task-${curriculumItem.order}-${index + 1}`,
+    title: task.title,
+    description: task.description,
+    completed: levelProgress?.exercise?.completed || false
+  }));
+}
+
+function formatTimeSpent(seconds) {
+  if (!seconds || seconds === 0) return '0h 0m';
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  return `${hours}h ${minutes}m`;
+}
+
 export default router;

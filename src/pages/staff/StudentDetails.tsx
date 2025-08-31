@@ -643,9 +643,9 @@ const StudentDetails: React.FC = () => {
                  boxShadow: 'var(--shadow-md)'
                }}
                onClick={() => {
-                 // Navigate to student portfolio or open portfolio modal
-                 console.log('View portfolio for student:', studentId);
-                 // You can add navigation logic here
+                 // Navigate to portfolio page
+                 const portfolioUrl = `/staff/student/${studentId}/portfolio`;
+                 window.location.href = portfolioUrl;
                }}
              >
                📁 View Portfolio
