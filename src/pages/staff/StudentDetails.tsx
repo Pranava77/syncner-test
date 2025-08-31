@@ -60,6 +60,13 @@ const StudentDetails: React.FC = () => {
     if (studentData && studentData.careerTrack) {
       generateDynamicTimeline();
       generateTimelineFromBackendData();
+      
+      // Debug: Log enrollment date data
+      console.log('📅 Enrollment Date Debug:', {
+        createdAt: studentData.createdAt,
+        enrolledDate: studentData.enrolledDate,
+        formattedCreatedAt: studentData.createdAt ? new Date(studentData.createdAt).toLocaleDateString('en-GB') : null
+      });
     }
   }, [studentData?.careerTrack]);
 
@@ -466,7 +473,8 @@ const StudentDetails: React.FC = () => {
                 className="font-medium"
                 style={{ color: 'var(--color-text-primary)' }}
               >
-                {studentData?.enrolledDate || 'Loading...'}
+                {studentData?.createdAt ? new Date(studentData.createdAt).toLocaleDateString('en-GB') : 
+                 studentData?.enrolledDate || 'Loading...'}
               </span>
             </div>
             <div className="flex justify-between items-center py-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
@@ -835,6 +843,7 @@ const StudentDetails: React.FC = () => {
               careerTrack: studentData.careerTrack,
               progress: studentData.progress,
               currentLevel: studentData.currentLevel,
+              createdAt: studentData.createdAt,
               enrolledDate: studentData.enrolledDate,
               attendancePercentage: studentData.attendancePercentage,
               leaderboardScore: studentData.leaderboardScore,

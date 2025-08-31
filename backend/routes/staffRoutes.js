@@ -901,6 +901,7 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
       recommendedRoles: getRecommendedRoles(),
       trackInfo: trackInfo || null,
       enrolledDate: student.createdAt ? new Date(student.createdAt).toLocaleDateString('en-GB') : 'N/A',
+      createdAt: student.createdAt, // Add raw createdAt for frontend use
       // Add missing fields that the frontend expects
       attendancePercentage: attendancePercentage,
       progress: progress ? Math.round((progress.completedLevels.length / totalLevels) * 100) : 0,
