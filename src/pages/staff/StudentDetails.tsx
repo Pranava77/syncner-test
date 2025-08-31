@@ -21,6 +21,7 @@ import { useStaff } from '../../hooks/useStaff';
 import DetailedLearningTimeline from '../../components/DetailedLearningTimeline';
 import EnhancedLearningTimeline from '../../components/EnhancedLearningTimeline';
 import { StudentTimelineService, CombinedTimelineLevel } from '../../services/studentTimelineService';
+import apiService from '../../services/api';
 
 const StudentDetails: React.FC = () => {
   const { studentId } = useParams<{ studentId: string }>();
@@ -38,8 +39,11 @@ const StudentDetails: React.FC = () => {
   // State for dynamic timeline generation
   const [isGeneratingTimeline, setIsGeneratingTimeline] = useState(false);
   const [dynamicTimeline, setDynamicTimeline] = useState<CombinedTimelineLevel[]>([]);
+  const [enhancedTimeline, setEnhancedTimeline] = useState<any[]>([]);
   const [timelineError, setTimelineError] = useState<string | null>(null);
   const [lastRefreshTime, setLastRefreshTime] = useState<Date | null>(null);
+  const [fromDate, setFromDate] = useState<string>('');
+  const [toDate, setToDate] = useState<string>('');
   
   // Use selectedStudent data from backend
   const studentData = selectedStudent;
@@ -61,6 +65,47 @@ const StudentDetails: React.FC = () => {
     if (studentData && studentData.careerTrack) {
       generateDynamicTimeline();
       generateTimelineFromBackendData();
+      
+      // Transform portfolio data for enhanced timeline
+      if (studentData.learningLevels && Array.isArray(studentData.learningLevels)) {
+        const enhancedData = studentData.learningLevels.map((level: any) => ({
+          level: level.level || level.order || 1,
+          courseName: level.courseName || level.title || `Level ${level.level || level.order || 1}`,
+          description: level.description || 'Learning level',
+          status: level.status || 'not-started',
+          learn: {
+            completed: level.learn?.completed || false,
+            startTime: level.learn?.startTime || null,
+            endTime: level.learn?.endTime || null,
+            timeSpent: level.learn?.timeSpent || 0,
+            title: level.learn?.title || 'Learning Materials',
+            status: level.learn?.status || 'not-started',
+            materials: level.learn?.materials || level.learn?.content || []
+          },
+          test: {
+            completed: level.test?.completed || false,
+            score: level.test?.score || 0,
+            attempts: level.test?.attempts || 0,
+            startTime: level.test?.startTime || null,
+            endTime: level.test?.endTime || null,
+            title: level.test?.title || 'Assessment',
+            status: level.test?.status || 'not-started',
+            questions: level.test?.questions || level.test?.content || []
+          },
+          exercise: {
+            completed: level.exercise?.completed || false,
+            startTime: level.exercise?.startTime || null,
+            endTime: level.exercise?.endTime || null,
+            timeSpent: level.exercise?.timeSpent || 0,
+            title: level.exercise?.title || 'Practice Exercise',
+            status: level.exercise?.status || 'not-started',
+            tasks: level.exercise?.tasks || level.exercise?.content || []
+          }
+        }));
+        
+        setEnhancedTimeline(enhancedData);
+        console.log('📚 Enhanced timeline data from portfolio:', enhancedData);
+      }
       
       // If no backend timeline data, try curriculum data as fallback
       setTimeout(() => {
@@ -874,7 +919,15 @@ const StudentDetails: React.FC = () => {
                  </div>
                </motion.div>
             
-            <DetailedLearningTimeline timeline={dynamicTimeline} />
+            <EnhancedLearningTimeline 
+              timeline={enhancedTimeline}
+              fromDate={fromDate}
+              toDate={toDate}
+              onDateChange={(from, to) => {
+                setFromDate(from);
+                setToDate(to);
+              }}
+            />
           </div>
                    ) : (
              <motion.div 
