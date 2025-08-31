@@ -49,6 +49,7 @@ export class PortfolioService {
     try {
       console.log('PortfolioService: Calling API for student:', studentId);
       // Use the same endpoint as learning journey for consistent data
+      console.log('PortfolioService: Calling API endpoint:', `/student/portfolio/${studentId}`);
       const response = await apiService.get(`/student/portfolio/${studentId}`);
       console.log('PortfolioService: API response received:', response);
       

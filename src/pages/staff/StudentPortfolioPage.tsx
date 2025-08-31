@@ -10,6 +10,7 @@ const StudentPortfolioPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   
   console.log('StudentPortfolioPage rendered with studentId:', studentId);
+  console.log('StudentPortfolioPage: Current URL pathname:', window.location.pathname);
 
   // Fetch portfolio data when component mounts
   useEffect(() => {

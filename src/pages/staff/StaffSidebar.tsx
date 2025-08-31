@@ -432,8 +432,9 @@ const StaffSidebar: React.FC = () => {
             <Route path="/" element={<StaffMainDashboard />} />
             <Route path="/students" element={<StudentTracking />} />
             <Route path="/students/:studentId" element={<StudentDetails />} />
-            <Route path="/student/:studentId/portfolio" element={<StudentPortfolioPage />} />
+            <Route path="/portfolio/:studentId" element={<StudentPortfolioPage />} />
             <Route path="/test-portfolio" element={<div>Test Portfolio Route Working!</div>} />
+
 
             <Route path="/profile" element={<StaffProfile />} />
           </Routes>
