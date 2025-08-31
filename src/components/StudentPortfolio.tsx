@@ -369,7 +369,7 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                 {/* Data Check */}
                 <div className="mb-4 p-3 bg-blue-50 rounded-lg">
                   <p className="text-sm text-blue-800">
-                    <strong>Data Check:</strong> {studentData.learningLevels?.length || 0} learning levels loaded | Student: {studentData.student?.name || 'Unknown'} | Track: {studentData.student?.careerTrack || 'Unknown'}
+                    <strong>Data Check:</strong> {studentData.learningLevels?.length || 0} learning levels loaded | Student: {studentData.student?.name || 'Unknown'} | Track: {studentData.student?.careerTrack || 'Unknown'} | Progress: {studentData.progress?.percentage || 0}% | Attendance: {studentData.attendance?.percentage || 0}%
                   </p>
                 </div>
                 
@@ -399,7 +399,7 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                                 color: 'white'
                               }}
                             >
-                              {level.levelOrder || index + 1}
+                              {level.level || index + 1}
                             </div>
                             
                             {/* Module Info */}
@@ -408,12 +408,18 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                                 className="text-lg font-bold mb-2"
                                 style={{ color: 'var(--color-text-primary)' }}
                               >
-                                {level.levelTitle || `Level ${level.levelOrder || index + 1}`}
+                                {level.courseName || `Level ${level.level || index + 1}`}
                               </h3>
+                              
+                              {level.description && (
+                                <p className="text-sm mb-2" style={{ color: 'var(--color-text-secondary)' }}>
+                                  {level.description}
+                                </p>
+                              )}
                               
                               <div className="flex items-center gap-4 text-sm">
                                 <span style={{ color: 'var(--color-text-tertiary)' }}>
-                                  Completed {formatDate(level.completedAt)}
+                                  Status: {level.status || 'unknown'}
                                 </span>
                                 <span style={{ color: 'var(--color-text-tertiary)' }}>
                                   Assessed: {level.test?.score || 0}/100
@@ -444,6 +450,17 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                               }}
                             >
                               Tasks {level.exercise?.completed ? 1 : 0}/{level.exercise?.length || 0}
+                            </span>
+                            
+                            {/* Status Badge */}
+                            <span 
+                              className="px-3 py-1 rounded-lg text-sm font-medium"
+                              style={{
+                                backgroundColor: level.status === 'completed' ? 'var(--color-success-bg)' : 'var(--color-warning-bg)',
+                                color: level.status === 'completed' ? 'var(--color-success)' : 'var(--color-warning)'
+                              }}
+                            >
+                              {level.status === 'completed' ? '✅ Completed' : '⏳ In Progress'}
                             </span>
                             
                             {/* Expand/Collapse Icon */}
