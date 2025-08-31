@@ -460,7 +460,12 @@ userProgressSchema.methods.updateAttendanceStats = function() {
   // Count present days (days with activity)
   const presentDays = this.dailyActivity.filter(entry => entry.isPresent).length;
   
-  // Calculate current streak
+  // Calculate total time spent on different activities
+  const totalLearningTime = this.dailyActivity.reduce((total, entry) => total + (entry.learningTime || 0), 0);
+  const totalTestTime = this.dailyActivity.reduce((total, entry) => total + (entry.testTime || 0), 0);
+  const totalExerciseTime = this.dailyActivity.reduce((total, entry) => total + (entry.exerciseTime || 0), 0);
+  
+  // Calculate current streak with improved logic
   let currentStreak = 0;
   let longestStreak = this.attendanceStats.longestStreak || 0;
   let lastPresentDate = null;
@@ -468,6 +473,7 @@ userProgressSchema.methods.updateAttendanceStats = function() {
   // Sort daily activity by date (newest first)
   const sortedActivity = [...this.dailyActivity].sort((a, b) => b.date - a.date);
   
+  // Calculate current streak (consecutive days from today backwards)
   for (let i = 0; i < sortedActivity.length; i++) {
     const entry = sortedActivity[i];
     if (entry.isPresent) {
@@ -502,13 +508,16 @@ userProgressSchema.methods.updateAttendanceStats = function() {
     }
   }
   
-  // Update attendance stats
+  // Update attendance stats with total time tracking
   this.attendanceStats = {
     totalDays: Math.max(1, totalDays),
     presentDays: presentDays,
     currentStreak: currentStreak,
     longestStreak: longestStreak,
-    lastPresentDate: lastPresentDate
+    lastPresentDate: lastPresentDate,
+    totalLearningTime: totalLearningTime,
+    totalTestTime: totalTestTime,
+    totalExerciseTime: totalExerciseTime
   };
   
   // Update last activity

@@ -531,7 +531,7 @@ const StudentDetails: React.FC = () => {
             className="p-3 rounded-lg"
             style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
           >
-            <CalendarDaysIcon 
+            <CalendarIcon 
               className="h-6 w-6" 
               style={{ color: 'var(--color-accent-primary)' }}
             />
@@ -765,33 +765,24 @@ const StudentDetails: React.FC = () => {
            )}
       </div>
       
-               {/* Debug: Show timeline data structure */}
-         {import.meta.env.DEV && (
-           <div className="mt-4 p-4 bg-gray-100 rounded-lg">
-             <h4 className="font-semibold mb-2">Debug: Dynamic Timeline Data</h4>
-             <pre className="text-xs overflow-auto">
-               {JSON.stringify(dynamicTimeline, null, 2)}
-             </pre>
-
-             <h4 className="font-semibold mb-2 mt-4">Debug: Student Data</h4>
-             <pre className="text-xs overflow-auto">
-               {JSON.stringify({
-                 careerTrack: studentData.careerTrack,
-                 progress: studentData.progress,
-                 learningLevels: studentData.learningLevels,
-                 attendancePercentage: studentData.attendancePercentage,
-                 leaderboardScore: studentData.leaderboardScore,
-                 performance: studentData.performance,
-                 summaryStats: studentData.summaryStats
-               }, null, 2)}
-             </pre>
-
-             <h4 className="font-semibold mb-2 mt-4">Debug: Raw Student Data</h4>
-             <pre className="text-xs overflow-auto">
-               {JSON.stringify(studentData, null, 2)}
-             </pre>
-           </div>
-         )}
+      {/* Debug: Show timeline data structure */}
+      {import.meta.env.DEV && (
+        <div className="mt-4 p-4 bg-gray-100 rounded-lg">
+          <h4 className="font-semibold mb-2">Debug: Dynamic Timeline Data</h4>
+          <pre className="text-xs overflow-auto">
+            {JSON.stringify(dynamicTimeline, null, 2)}
+          </pre>
+          
+          <h4 className="font-semibold mb-2 mt-4">Debug: Student Data</h4>
+          <pre className="text-xs overflow-auto">
+            {JSON.stringify({
+              careerTrack: studentData.careerTrack,
+              progress: studentData.progress,
+              learningLevels: studentData.learningLevels
+            }, null, 2)}
+          </pre>
+        </div>
+      )}
 
     </div>
   );

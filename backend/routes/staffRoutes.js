@@ -4,6 +4,7 @@ import User from '../models/User.js';
 import UserProgress from '../models/UserProgress.js';
 import Track from '../models/Track.js';
 import Curriculum from '../models/Curriculum.js'; // Added import for Curriculum
+import LeaderboardService from '../services/LeaderboardService.js'; // Added import for LeaderboardService
 
 const router = express.Router();
 
@@ -1052,6 +1053,77 @@ router.get('/analytics', protect, authorize('staff', 'admin'), async (req, res) 
       success: false,
       message: 'Internal server error'
     });
+  }
+});
+
+// Get leaderboard for a specific career track
+router.get('/leaderboard/:careerTrack', protect, authorize('staff', 'admin'), async (req, res) => {
+  try {
+    const { careerTrack } = req.params;
+    const { limit = 50 } = req.query;
+
+    const leaderboard = await LeaderboardService.getLeaderboard(careerTrack, parseInt(limit));
+
+    res.status(200).json({
+      success: true,
+      data: {
+        careerTrack,
+        leaderboard,
+        totalStudents: leaderboard.length
+      },
+      message: 'Leaderboard retrieved successfully'
+    });
+  } catch (error) {
+    console.error('Error fetching leaderboard:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// Get global leaderboard across all career tracks
+router.get('/leaderboard', protect, authorize('staff', 'admin'), async (req, res) => {
+  try {
+    const { limit = 100 } = req.query;
+
+    // Get all career tracks
+    const careerTracks = ['full-stack', 'ai-ml', 'ui-ux', 'data-science'];
+    
+    // Get leaderboards for all tracks
+    const allLeaderboards = await Promise.all(
+      careerTracks.map(async (track) => {
+        const leaderboard = await LeaderboardService.getLeaderboard(track, parseInt(limit));
+        return {
+          careerTrack: track,
+          leaderboard: leaderboard.slice(0, Math.ceil(limit / careerTracks.length)) // Distribute limit across tracks
+        };
+      })
+    );
+
+    // Combine and sort all students
+    const allStudents = allLeaderboards.flatMap(track => 
+      track.leaderboard.map(student => ({
+        ...student,
+        careerTrack: track.careerTrack
+      }))
+    );
+
+    // Sort by total score and add global ranks
+    allStudents.sort((a, b) => b.totalScore - a.totalScore);
+    allStudents.forEach((student, index) => {
+      student.globalRank = index + 1;
+    });
+
+    res.status(200).json({
+      success: true,
+      data: {
+        leaderboard: allStudents.slice(0, parseInt(limit)),
+        totalStudents: allStudents.length,
+        careerTracks: careerTracks
+      },
+      message: 'Global leaderboard retrieved successfully'
+    });
+  } catch (error) {
+    console.error('Error fetching global leaderboard:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 

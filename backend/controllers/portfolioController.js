@@ -2,6 +2,7 @@ import User from '../models/User.js';
 import UserProgress from '../models/UserProgress.js';
 import Attendance from '../models/Attendance.js';
 import Curriculum from '../models/Curriculum.js';
+import LeaderboardService from '../services/leaderboardService.js';
 
 export const getStudentPortfolio = async (req, res) => {
   try {
@@ -26,7 +27,7 @@ export const getStudentPortfolio = async (req, res) => {
     }
     
     // Fetch user progress data
-    const progress = await UserProgress.findOne({ userId: studentId });
+    const progress = await UserProgress.findOne({ user: studentId });
     
     // Get real attendance data from Attendance model
     let attendanceStats = { totalDays: 0, presentDays: 0, currentStreak: 0, longestStreak: 0 };
@@ -68,21 +69,6 @@ export const getStudentPortfolio = async (req, res) => {
         
         console.log('Portfolio Controller - Real attendance stats from Attendance model:', attendanceStats);
         console.log('Portfolio Controller - Attendance records found:', attendanceRecords.length);
-        
-        // Log progress and leaderboard calculations
-        console.log('Portfolio Controller - Progress calculation:', {
-          completedLevels: progress?.completedLevels?.length || 0,
-          totalLevels,
-          realProgress
-        });
-        
-        console.log('Portfolio Controller - Leaderboard calculation:', {
-          progressScore: realProgress,
-          attendanceScore: Math.round((attendanceStats.presentDays / Math.max(attendanceStats.totalDays, 1)) * 100),
-          consistencyScore: attendanceStats.currentStreak >= 2 ? Math.min(100, attendanceStats.currentStreak * 25) : 
-                           attendanceStats.longestStreak >= 2 ? Math.min(100, attendanceStats.longestStreak * 20) : 0,
-          finalScore: realLeaderboardScore
-        });
       } else {
         // No attendance records found, calculate based on enrollment time
         const totalDays = Math.ceil((Date.now() - new Date(student.createdAt)) / (1000 * 60 * 60 * 24));
@@ -124,29 +110,26 @@ export const getStudentPortfolio = async (req, res) => {
     // Try to get total levels from curriculum if we have career track
     if (progress?.careerTrack) {
       try {
-
-        const curriculumItems = await Curriculum.find({ 
+        const curriculumCount = await Curriculum.countDocuments({ 
           careerTrack: progress.careerTrack,
-          type: 'syllabus' // Get only syllabus items (main levels)
-        }).sort({ order: 1 });
-        
-        if (curriculumItems && curriculumItems.length > 0) {
-          totalLevels = curriculumItems.length;
-          console.log('Portfolio Controller - Found curriculum levels:', { careerTrack: progress.careerTrack, totalLevels });
+          type: 'syllabus'
+        });
+        if (curriculumCount > 0) {
+          totalLevels = curriculumCount;
+          console.log('Portfolio Controller - Total levels from curriculum:', totalLevels);
         }
       } catch (error) {
-        console.log('Portfolio Controller - Could not fetch curriculum, using default:', error.message);
+        console.log('Portfolio Controller - Could not get curriculum count:', error.message);
       }
     }
     
     if (progress?.completedLevels && Array.isArray(progress.completedLevels) && progress.completedLevels.length > 0) {
-      // Calculate progress based on completed levels vs total curriculum levels
+      // Student has completed levels
       realProgress = Math.round((progress.completedLevels.length / totalLevels) * 100);
-      console.log('Portfolio Controller - Progress calculation successful:', { 
+      console.log('Portfolio Controller - Progress based on completed levels:', { 
         completedLevels: progress.completedLevels.length, 
-        totalLevels, 
-        realProgress,
-        careerTrack: progress.careerTrack 
+        totalLevels,
+        realProgress 
       });
     } else {
       // If no completed levels, check if there's any progress data
@@ -169,107 +152,55 @@ export const getStudentPortfolio = async (req, res) => {
       }
     }
     
-    // Calculate real leaderboard score using the same formula as staff routes
-    let realLeaderboardScore = 0;
-    let leaderboardRank = 0;
+    // Use unified leaderboard service for consistent scoring
+    let leaderboardData = null;
+    if (progress?.careerTrack) {
+      try {
+        leaderboardData = await LeaderboardService.updateStudentScore(studentId, progress.careerTrack);
+        console.log('Portfolio Controller - Leaderboard data from service:', leaderboardData);
+      } catch (error) {
+        console.log('Portfolio Controller - Could not get leaderboard data:', error.message);
+      }
+    }
     
-    if (progress || attendanceStats.presentDays > 0) {
-      // Base score from progress (40% weight)
-      const progressScore = realProgress;
-      
-      // Attendance score (30% weight)
-      const attendanceScore = Math.round((attendanceStats.presentDays / Math.max(attendanceStats.totalDays, 1)) * 100);
-      
-      // Consistency/streak bonus (30% weight)
-      let consistencyScore = 0;
-      if (attendanceStats.currentStreak >= 2) {
-        // Bonus for continuous attendance: 2+ days = 100%, 1 day = 50%
-        consistencyScore = Math.min(100, attendanceStats.currentStreak * 25); // Cap at 100%
-      } else if (attendanceStats.longestStreak >= 2) {
-        // Use longest streak if current streak not available
-        consistencyScore = Math.min(100, attendanceStats.longestStreak * 20); // Cap at 100%
-      }
-      
-      // Calculate weighted leaderboard score
-      realLeaderboardScore = Math.round(
-        (progressScore * 0.4) + 
-        (attendanceScore * 0.3) + 
-        (consistencyScore * 0.3)
-      );
-      
-      // Try to get actual leaderboard ranking if we have career track
-      if (progress?.careerTrack) {
-        try {
-          
-          const allStudentsInTrack = await UserProgress.find({ 
-            careerTrack: progress.careerTrack 
-          }).populate('user', 'name email');
-          
-          if (allStudentsInTrack && allStudentsInTrack.length > 0) {
-            // Calculate scores for all students in the track
-            const studentScores = allStudentsInTrack.map(student => {
-              let studentProgress = 0;
-              let studentAttendance = 0;
-              let studentConsistency = 0;
-              
-              // Calculate student progress
-              if (student.completedLevels && student.completedLevels.length > 0) {
-                studentProgress = Math.round((student.completedLevels.length / totalLevels) * 100);
-              }
-              
-              // Calculate student attendance (simplified)
-              if (student.attendanceStats?.presentDays) {
-                studentAttendance = Math.round((student.attendanceStats.presentDays / Math.max(student.attendanceStats.totalDays, 1)) * 100);
-              }
-              
-              // Calculate student consistency
-              if (student.attendanceStats?.currentStreak >= 2) {
-                studentConsistency = Math.min(100, student.attendanceStats.currentStreak * 25);
-              } else if (student.attendanceStats?.longestStreak >= 2) {
-                studentConsistency = Math.min(100, student.attendanceStats.longestStreak * 20);
-              }
-              
-              const totalScore = Math.round(
-                (studentProgress * 0.4) + 
-                (studentAttendance * 0.3) + 
-                (studentConsistency * 0.3)
-              );
-              
-              return {
-                userId: student.user._id,
-                name: student.user.name,
-                score: totalScore
-              };
-            });
-            
-            // Sort by score and find rank
-            studentScores.sort((a, b) => b.score - a.score);
-            const currentStudentRank = studentScores.findIndex(student => student.userId.toString() === studentId) + 1;
-            
-            if (currentStudentRank > 0) {
-              leaderboardRank = currentStudentRank;
-              console.log('Portfolio Controller - Leaderboard ranking calculated:', { 
-                totalStudents: studentScores.length, 
-                rank: leaderboardRank,
-                topScore: studentScores[0]?.score,
-                currentScore: realLeaderboardScore
-              });
-            }
-          }
-        } catch (error) {
-          console.log('Portfolio Controller - Could not calculate leaderboard ranking:', error.message);
+    // Fallback to old calculation if leaderboard service fails
+    if (!leaderboardData) {
+      console.log('Portfolio Controller - Using fallback leaderboard calculation');
+      if (progress || attendanceStats.presentDays > 0) {
+        // Base score from progress (40% weight)
+        const progressScore = realProgress;
+        
+        // Attendance score (30% weight)
+        const attendanceScore = Math.round((attendanceStats.presentDays / Math.max(attendanceStats.totalDays, 1)) * 100);
+        
+        // Consistency/streak bonus (30% weight)
+        let consistencyScore = 0;
+        if (attendanceStats.currentStreak >= 2) {
+          // Bonus for continuous attendance: 2+ days = 100%, 1 day = 50%
+          consistencyScore = Math.min(100, attendanceStats.currentStreak * 25); // Cap at 100%
+        } else if (attendanceStats.longestStreak >= 2) {
+          // Use longest streak if current streak not available
+          consistencyScore = Math.min(100, attendanceStats.longestStreak * 20); // Cap at 100%
         }
+        
+        // Calculate weighted leaderboard score
+        const realLeaderboardScore = Math.round(
+          (progressScore * 0.4) + 
+          (attendanceScore * 0.3) + 
+          (consistencyScore * 0.3)
+        );
+        
+        leaderboardData = {
+          totalScore: realLeaderboardScore,
+          breakdown: {
+            progressScore,
+            attendanceScore,
+            consistencyScore,
+            timeScore: 0
+          },
+          rank: null
+        };
       }
-      
-      console.log('Portfolio Controller - Leaderboard calculation:', {
-        progressScore,
-        attendanceScore,
-        consistencyScore,
-        finalScore: realLeaderboardScore,
-        rank: leaderboardRank || 'N/A'
-      });
-    } else {
-      console.log('Portfolio Controller - No progress or attendance data for leaderboard calculation');
     }
     
     // Calculate performance metrics based on test scores and progress
@@ -285,7 +216,7 @@ export const getStudentPortfolio = async (req, res) => {
     const summaryStats = {
       totalPoints: progress?.totalPoints || 0,
       consistency: Math.round((attendanceStats.presentDays / Math.max(attendanceStats.totalDays, 1)) * 100),
-      leaderboard: realLeaderboardScore,
+      leaderboard: leaderboardData?.totalScore || 0,
       levelProgress: realProgress
     };
 
@@ -348,190 +279,98 @@ export const getStudentPortfolio = async (req, res) => {
         // Get curriculum items for this career track
         const curriculumItems = await Curriculum.find({ 
           careerTrack: progress.careerTrack,
-          isActive: true 
+          type: 'syllabus'
         }).sort({ order: 1 });
         
         if (curriculumItems && curriculumItems.length > 0) {
-          console.log('Portfolio Controller - Generating learning levels from curriculum:', curriculumItems.length, 'items');
-          
           learningLevelsData = curriculumItems.map(item => {
-            // Find progress data for this level
-            const levelProgress = progress?.completedLevels?.find(
-              level => level.levelOrder === item.order || level.levelId === item._id.toString()
-            );
-            
-            console.log(`🔍 Portfolio Controller - Processing level ${item.order}:`, {
-              itemTitle: item.title,
-              levelProgressFound: !!levelProgress,
-              levelProgressData: levelProgress
-            });
-            
-            // Determine level status
-            let levelStatus = 'not-started';
-            if (levelProgress) {
-              const completedSections = [
-                levelProgress.completedSections?.learn,
-                levelProgress.completedSections?.test,
-                levelProgress.completedSections?.exercise
-              ].filter(Boolean).length;
-              
-              if (completedSections === 3) {
-                levelStatus = 'completed';
-              } else if (completedSections > 0) {
-                levelStatus = 'in-progress';
-              }
-            } else if (item.order === 1) {
-              levelStatus = 'accessible';
-            }
-            
-            // Get completion details for each section
-            const learnDetails = levelProgress?.learnProgress ? {
-              completed: levelProgress.completedSections?.learn || false,
-              startTime: levelProgress.learnProgress.lastAttemptAt || levelProgress.completedAt,
-              endTime: levelProgress.completedSections?.learn ? levelProgress.completedAt : null,
-              timeSpent: levelProgress.learnProgress.timeSpent || 0
-            } : {
-              completed: false,
-              startTime: null,
-              endTime: null,
-              timeSpent: 0
-            };
-            
-            const testDetails = levelProgress?.testProgress ? {
-              completed: levelProgress.completedSections?.test || false,
-              score: levelProgress.testProgress.attempts?.length > 0 
-                ? Math.max(...levelProgress.testProgress.attempts.map(a => a.score || 0))
-                : 0,
-              attempts: levelProgress.testProgress.attempts?.length || 0,
-              startTime: levelProgress.testProgress.lastAttemptAt || levelProgress.completedAt,
-              endTime: levelProgress.completedSections?.test ? levelProgress.completedAt : null
-            } : {
-              completed: false,
-              score: 0,
-              attempts: 0,
-              startTime: null,
-              endTime: null
-            };
-            
-            const exerciseDetails = levelProgress?.exerciseSubmissions ? {
-              completed: levelProgress.completedSections?.exercise || false,
-              startTime: levelProgress.exerciseSubmissions?.[0]?.submittedAt || levelProgress.completedAt,
-              endTime: levelProgress.completedSections?.exercise ? levelProgress.completedAt : null,
-              timeSpent: 0 // Exercise doesn't track time spent
-            } : {
-              completed: false,
-              startTime: null,
-              endTime: null,
-              timeSpent: 0
-            };
-            
+            const levelProgress = progress.completedLevels.find(l => l.levelId === item._id.toString());
             return {
               level: item.order,
               courseName: item.title,
               description: item.description,
-              status: levelStatus,
-              learn: learnDetails,
-              test: testDetails,
-              exercise: exerciseDetails
+              status: levelProgress ? 'completed' : progress?.currentLevel === item.order ? 'in-progress' : 'not-started',
+              learn: {
+                completed: levelProgress?.completedSections?.learn || false,
+                startTime: levelProgress?.learnProgress?.startTime || null,
+                endTime: levelProgress?.learnProgress?.endTime || null,
+                timeSpent: levelProgress?.learnProgress?.timeSpent || 0,
+                content: item.learn || []
+              },
+              test: {
+                completed: levelProgress?.completedSections?.test || false,
+                score: levelProgress?.testProgress?.attempts?.[0]?.score || 0,
+                attempts: levelProgress?.testProgress?.attempts?.length || 0,
+                startTime: levelProgress?.testProgress?.lastAttemptAt || null,
+                content: item.test || []
+              },
+              exercise: {
+                completed: levelProgress?.completedSections?.exercise || false,
+                startTime: levelProgress?.exerciseSubmissions?.[0]?.submittedAt || null,
+                timeSpent: levelProgress?.exerciseSubmissions?.[0]?.timeSpent || 0,
+                content: item.exercise || []
+              }
             };
           });
-          
-          console.log('Portfolio Controller - Generated learning levels:', learningLevelsData.length, 'levels');
-          console.log('Portfolio Controller - Learning levels data structure:', JSON.stringify(learningLevelsData, null, 2));
         }
       } catch (error) {
-        console.log('Portfolio Controller - Error generating learning levels:', error.message);
+        console.log('Portfolio Controller - Could not get curriculum items:', error.message);
       }
     }
-    
-    // Fallback to sample data if no curriculum found
-    if (learningLevelsData.length === 0) {
-      console.log('Portfolio Controller - Using fallback learning levels');
-      learningLevelsData = [
-        {
-          level: 1,
-          courseName: 'Introduction to Web Development',
-          description: 'Learn the basics of web development',
-          status: 'accessible',
-          learn: { completed: false, startTime: null, endTime: null },
-          test: { completed: false, score: 0, attempts: 0, startTime: null, endTime: null },
-          exercise: { completed: false, startTime: null, endTime: null }
-        }
-      ];
-    }
 
-    // Create portfolio data structure matching StudentDetails interface
+    // Build comprehensive response
     const portfolioData = {
       student: {
         _id: student._id,
         name: student.name,
         email: student.email,
-        careerTrack: student.careerTrack || 'Full Stack Development',
-        level: student.level || 'Beginner',
-        progress: realProgress,
-        status: 'active',
-        lastActive: student.lastActive || new Date().toISOString(),
-        totalPoints: progress?.totalPoints || 0,
-        streakDays: attendanceStats.currentStreak,
-        college: student.college || 'Tech University',
-        department: student.courseDept || 'B.E IT',
-        batch: student.batch || '2023-2027',
-        isActive: true,
-        createdAt: student.createdAt || new Date().toISOString(),
-        updatedAt: student.updatedAt || new Date().toISOString(),
-        currentStreak: attendanceStats.currentStreak,
-        longestStreak: attendanceStats.longestStreak,
-        attendancePercentage: Math.round((attendanceStats.presentDays / Math.max(attendanceStats.totalDays, 1)) * 100),
+        careerTrack: student.careerTrack,
+        college: student.college,
+        department: student.department,
+        createdAt: student.createdAt
+      },
+      progress: {
+        currentLevel: progress?.currentLevel || 1,
+        completedLevels: progress?.completedLevels?.length || 0,
+        totalLevels: totalLevels,
+        percentage: realProgress,
+        totalPoints: progress?.totalPoints || 0
+      },
+      attendance: {
         totalDays: attendanceStats.totalDays,
         presentDays: attendanceStats.presentDays,
-        leaderboardScore: realLeaderboardScore,
-        leaderboardRank: leaderboardRank || null,
-        enrolledDate: student.createdAt ? new Date(student.createdAt).toLocaleDateString('en-IN') : '21-03-2025',
-              performance: {
-          performance: realProgress,
-          potential: 90,
-          contribution: 78,
-          creativity: 82,
-          skill: Math.min(100, Math.round((progress?.totalPoints || 0) / 10)),
-          teamwork: 80
-        },
-        summaryStats: {
-          consistency: Math.min(100, attendanceStats.currentStreak * 25),
-          progress: realProgress,
-          leaderboard: realLeaderboardScore
-        },
-        learningTimeline: [],
-        dailyActivity: progress?.dailyActivity || [],
-        attendanceStats,
-        skills: ['React', 'Node.js', 'Python', 'AWS', 'MongoDB'],
-        recommendedRoles: ['Frontend Developer', 'Full Stack Engineer', 'DevOps Engineer'],
-        learningLevels: learningLevelsData
-      }
+        percentage: Math.round((attendanceStats.presentDays / Math.max(attendanceStats.totalDays, 1)) * 100),
+        currentStreak: attendanceStats.currentStreak,
+        longestStreak: attendanceStats.longestStreak
+      },
+      leaderboard: {
+        score: leaderboardData?.totalScore || 0,
+        rank: leaderboardData?.rank || null,
+        breakdown: leaderboardData?.breakdown || {
+          progressScore: 0,
+          attendanceScore: 0,
+          consistencyScore: 0,
+          timeScore: 0
+        }
+      },
+      performance,
+      summaryStats,
+      learningTimeline,
+      learningLevels: learningLevelsData
     };
 
-    // Final debug log to see what's being returned
-    console.log('Portfolio Controller - Final portfolio data:', {
-      studentId: portfolioData.student._id,
-      progress: portfolioData.student.progress,
-      leaderboardScore: portfolioData.student.leaderboardScore,
-      attendancePercentage: portfolioData.student.attendancePercentage,
-      realProgress,
-      realLeaderboardScore,
-      summaryStats: portfolioData.student.summaryStats
-    });
-
-    res.json({
+    res.status(200).json({
       success: true,
-      message: 'Portfolio data retrieved successfully',
-      data: portfolioData
+      data: portfolioData,
+      message: 'Portfolio retrieved successfully'
     });
 
   } catch (error) {
-    console.error('Error fetching student portfolio:', error);
+    console.error('Portfolio Controller - Error:', error);
     res.status(500).json({
       success: false,
-      message: 'Internal server error',
-      error: error.message
+      message: 'Server error while retrieving portfolio',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
 };
