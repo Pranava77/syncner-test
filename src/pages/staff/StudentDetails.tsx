@@ -633,9 +633,24 @@ const StudentDetails: React.FC = () => {
                  Real-time progress tracking with completion timestamps
                </p>
              </div>
-          
-          
-        </div>
+             
+             {/* Portfolio Button */}
+             <button
+               className="px-6 py-3 rounded-xl font-semibold transition-all duration-200 hover:scale-105 hover:shadow-lg"
+               style={{
+                 backgroundColor: 'var(--color-accent-primary)',
+                 color: 'white',
+                 boxShadow: 'var(--shadow-md)'
+               }}
+               onClick={() => {
+                 // Navigate to student portfolio or open portfolio modal
+                 console.log('View portfolio for student:', studentId);
+                 // You can add navigation logic here
+               }}
+             >
+               📁 View Portfolio
+             </button>
+           </div>
 
 
 
