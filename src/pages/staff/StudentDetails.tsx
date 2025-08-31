@@ -569,6 +569,11 @@ const StudentDetails: React.FC = () => {
           <pre className="text-xs overflow-auto">
             {JSON.stringify(studentData.learningTimeline, null, 2)}
           </pre>
+          
+          <h4 className="font-semibold mb-2 mt-4">Debug: Comprehensive Activity Timeline</h4>
+          <pre className="text-xs overflow-auto">
+            {JSON.stringify(studentData.comprehensiveActivityTimeline, null, 2)}
+          </pre>
         </div>
       )}
 

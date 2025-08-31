@@ -519,6 +519,22 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
     console.log('🗺️ Level to curriculum mapping:', levelToCurriculumMap);
     console.log('📊 Progress data structure:', JSON.stringify(progress?.completedLevels, null, 2));
     
+    // If no curriculum items found, create a fallback structure
+    if (curriculumItems.length === 0) {
+      console.log('⚠️ No curriculum items found, creating fallback structure');
+      const fallbackLevels = [
+        { order: 1, title: 'Introduction to Programming', description: 'Basic programming concepts and fundamentals' },
+        { order: 2, title: 'Core Concepts', description: 'Essential programming principles and practices' },
+        { order: 3, title: 'Advanced Topics', description: 'Complex programming concepts and advanced techniques' }
+      ];
+      
+      curriculumItems.push(...fallbackLevels);
+      levelOrders.push(...fallbackLevels.map(l => l.order));
+      totalLevels = levelOrders.length;
+      
+      console.log('🔄 Created fallback curriculum with', totalLevels, 'levels');
+    }
+    
     // Build timeline for each level in the curriculum
     levelOrders.forEach(levelOrder => {
       const curriculumItem = levelToCurriculumMap[levelOrder];
@@ -610,6 +626,163 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
     detailedLearningTimeline.sort((a, b) => b.levelOrder - a.levelOrder);
     
     console.log('📚 Staff route: Built detailed learning timeline with', detailedLearningTimeline.length, 'levels');
+    console.log('📋 Final timeline structure:', JSON.stringify(detailedLearningTimeline, null, 2));
+    
+    // Now build a comprehensive activity timeline with real data from multiple sources
+    const comprehensiveActivityTimeline = [];
+    
+    // 1. Add daily activity data if available
+    if (progress?.dailyActivity && Array.isArray(progress.dailyActivity)) {
+      progress.dailyActivity.forEach(entry => {
+        if (entry.isPresent && entry.totalMinutes > 0) {
+          comprehensiveActivityTimeline.push({
+            type: 'daily-activity',
+            date: entry.date,
+            activity: 'Daily Learning Session',
+            duration: entry.totalMinutes,
+            details: {
+              totalMinutes: entry.totalMinutes,
+              activities: entry.activities || [],
+              isPresent: entry.isPresent
+            }
+          });
+        }
+      });
+    }
+    
+    // 2. Add test attempts with real data
+    if (progress?.testAttempts && Array.isArray(progress.testAttempts)) {
+      progress.testAttempts.forEach(attempt => {
+        if (attempt.submittedAt) {
+          // Find the level name for this test
+          let levelName = 'Level Assessment';
+          if (attempt.levelOrder && attempt.levelOrder > 0) {
+            const levelInfo = levelToCurriculumMap[attempt.levelOrder] || {};
+            levelName = levelInfo.title || `Level ${attempt.levelOrder}`;
+          } else if (attempt.levelId) {
+            const curriculumItem = curriculumItems.find(item => item._id.toString() === attempt.levelId);
+            if (curriculumItem) {
+              levelName = curriculumItem.title || `Level ${curriculumItem.order}`;
+            }
+          }
+          
+          comprehensiveActivityTimeline.push({
+            type: 'test-attempt',
+            date: attempt.submittedAt,
+            activity: `Test Attempt: ${levelName}`,
+            duration: 45, // Default test duration
+            details: {
+              score: attempt.score || 0,
+              passed: attempt.passed || false,
+              levelOrder: attempt.levelOrder,
+              levelId: attempt.levelId,
+              levelName: levelName
+            }
+          });
+        }
+      });
+    }
+    
+    // 3. Add exercise submissions with real data
+    if (progress?.exerciseSubmissions && Array.isArray(progress.exerciseSubmissions)) {
+      progress.exerciseSubmissions.forEach(submission => {
+        if (submission.submittedAt) {
+          comprehensiveActivityTimeline.push({
+            type: 'exercise-submission',
+            date: submission.submittedAt,
+            activity: `Exercise Submission: ${submission.exerciseTitle || 'Practical Exercise'}`,
+            duration: 60, // Default exercise duration
+            details: {
+              exerciseTitle: submission.exerciseTitle,
+              status: submission.status,
+              links: submission.links || [],
+              submittedAt: submission.submittedAt
+            }
+          });
+        }
+      });
+    }
+    
+    // 4. Add level completion activities
+    if (progress?.completedLevels && Array.isArray(progress.completedLevels)) {
+      progress.completedLevels.forEach(level => {
+        if (level.completedAt) {
+          // Get proper level name from curriculum
+          let levelName = 'Unknown Level';
+          let levelOrder = level.levelOrder;
+          
+          if (!levelOrder || levelOrder === 0) {
+            if (level.levelId) {
+              const curriculumItem = curriculumItems.find(item => item._id.toString() === level.levelId);
+              if (curriculumItem) {
+                levelOrder = curriculumItem.order;
+                levelName = curriculumItem.title || curriculumItem.courseName || `Level ${curriculumItem.order}`;
+              }
+            }
+          } else {
+            const levelInfo = levelToCurriculumMap[levelOrder] || {};
+            levelName = levelInfo.title || levelInfo.courseName || `Level ${levelOrder}`;
+          }
+          
+          // Add learn section completion
+          if (level.completedSections?.learn) {
+            comprehensiveActivityTimeline.push({
+              type: 'learn-completion',
+              date: level.completedAt,
+              activity: `Completed Learning: ${levelName}`,
+              duration: level.learnProgress?.timeSpent || 30,
+              details: {
+                levelOrder: levelOrder,
+                levelName: levelName,
+                timeSpent: level.learnProgress?.timeSpent || 0,
+                linksAccessed: level.learnProgress?.linksAccessed || [],
+                completedAt: level.completedAt
+              }
+            });
+          }
+          
+          // Add test section completion
+          if (level.completedSections?.test && level.testProgress?.attempts?.length > 0) {
+            const bestScore = Math.max(...level.testProgress.attempts.map(attempt => attempt.score || 0));
+            comprehensiveActivityTimeline.push({
+              type: 'test-completion',
+              date: level.completedAt,
+              activity: `Completed Test: ${levelName}`,
+              duration: 45,
+              details: {
+                levelOrder: levelOrder,
+                levelName: levelName,
+                bestScore: bestScore,
+                attempts: level.testProgress.attempts.length,
+                completedAt: level.completedAt
+              }
+            });
+          }
+          
+          // Add exercise section completion
+          if (level.completedSections?.exercise) {
+            comprehensiveActivityTimeline.push({
+              type: 'exercise-completion',
+              date: level.completedAt,
+              activity: `Completed Exercise: ${levelName}`,
+              duration: level.learnProgress?.timeSpent || 60,
+              details: {
+                levelOrder: levelOrder,
+                levelName: levelName,
+                timeSpent: level.learnProgress?.timeSpent || 0,
+                completedAt: level.completedAt
+              }
+            });
+          }
+        }
+      });
+    }
+    
+    // Sort comprehensive timeline by date (newest first)
+    comprehensiveActivityTimeline.sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+    console.log('📚 Staff route: Built comprehensive activity timeline with', comprehensiveActivityTimeline.length, 'activities');
+    console.log('📋 Activity timeline sample:', comprehensiveActivityTimeline.slice(0, 3));
     
     // Keep the old simple timeline for backward compatibility (but limit it)
     const simpleTimeline = [];
@@ -716,6 +889,7 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
       performance,
       summaryStats,
       learningTimeline: detailedLearningTimeline, // Use the new detailed timeline
+      comprehensiveActivityTimeline: comprehensiveActivityTimeline, // Add comprehensive activity timeline
       simpleTimeline: limitedSimpleTimeline, // Keep simple timeline for backward compatibility
       skills: getSkillsForTrack(),
       recommendedRoles: getRecommendedRoles(),

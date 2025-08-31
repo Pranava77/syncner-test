@@ -60,10 +60,19 @@ export interface TimelineLevel {
   };
 }
 
+export interface ActivityTimelineItem {
+  type: 'daily-activity' | 'test-attempt' | 'exercise-submission' | 'learn-completion' | 'test-completion' | 'exercise-completion';
+  date: string | Date;
+  activity: string;
+  duration: number;
+  details: any;
+}
+
 export interface StudentDetails extends Student {
   performance: PerformanceMetrics;
   summaryStats: SummaryStats;
   learningTimeline: TimelineLevel[]; // Updated to use new detailed structure
+  comprehensiveActivityTimeline?: ActivityTimelineItem[]; // New comprehensive activity timeline
   simpleTimeline?: LearningTimelineItem[]; // Keep old structure for backward compatibility
   learningLevels: LearningLevel[];
   dailyActivity: DailyActivity[];
