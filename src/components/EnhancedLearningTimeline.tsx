@@ -124,7 +124,7 @@ const EnhancedLearningTimeline: React.FC<EnhancedLearningTimelineProps> = ({
 
   return (
     <div className="w-full">
-      {/* Modern Header */}
+      {/* Header */}
       <div className="mb-8">
         <div className="text-center">
           <h2 
@@ -136,445 +136,392 @@ const EnhancedLearningTimeline: React.FC<EnhancedLearningTimelineProps> = ({
         </div>
       </div>
 
-      {/* Journey Summary Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="p-4 rounded-xl border text-center"
-          style={{
-            backgroundColor: 'var(--color-surface)',
-            borderColor: 'var(--color-border)',
-            boxShadow: 'var(--shadow-sm)'
-          }}
-        >
-          <div 
-            className="text-2xl font-bold mb-1"
-            style={{ color: 'var(--color-success)' }}
-          >
-            {timeline.filter(l => l.status === 'completed').length}
-          </div>
-          <div 
-            className="text-sm font-medium"
-            style={{ color: 'var(--color-text-secondary)' }}
-          >
-            Completed
-          </div>
-        </motion.div>
+      {/* Timeline Container */}
+      <div className="relative">
+        {/* Vertical Timeline Line */}
+        <div 
+          className="absolute left-8 top-0 bottom-0 w-1"
+          style={{ backgroundColor: 'var(--color-border)' }}
+        ></div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="p-4 rounded-xl border text-center"
-          style={{
-            backgroundColor: 'var(--color-surface)',
-            borderColor: 'var(--color-border)',
-            boxShadow: 'var(--shadow-sm)'
-          }}
-        >
-          <div 
-            className="text-2xl font-bold mb-1"
-            style={{ color: 'var(--color-warning)' }}
-          >
-            {timeline.filter(l => l.status === 'in-progress').length}
-          </div>
-          <div 
-            className="text-sm font-medium"
-            style={{ color: 'var(--color-text-secondary)' }}
-          >
-            In Progress
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="p-4 rounded-xl border text-center"
-          style={{
-            backgroundColor: 'var(--color-surface)',
-            borderColor: 'var(--color-border)',
-            boxShadow: 'var(--shadow-sm)'
-          }}
-        >
-          <div 
-            className="text-2xl font-bold mb-1"
-            style={{ color: 'var(--color-info)' }}
-          >
-            {timeline.filter(l => l.status === 'not-started').length}
-          </div>
-          <div 
-            className="text-sm font-medium"
-            style={{ color: 'var(--color-text-secondary)' }}
-          >
-            Upcoming
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="p-4 rounded-xl border text-center"
-          style={{
-            backgroundColor: 'var(--color-surface)',
-            borderColor: 'var(--color-border)',
-            boxShadow: 'var(--shadow-sm)'
-          }}
-        >
-          <div 
-            className="text-2xl font-bold mb-1"
-            style={{ color: 'var(--color-accent-primary)' }}
-          >
-            {timeline.length}
-          </div>
-          <div 
-            className="text-sm font-medium"
-            style={{ color: 'var(--color-text-secondary)' }}
-          >
-            Total Levels
-          </div>
-        </motion.div>
-      </div>
-
-      {/* Modern Timeline */}
-      <div className="space-y-6">
-        {timeline.map((level, index) => (
-          <motion.div
-            key={level.level}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className="relative"
-          >
-            {/* Level Card */}
-            <div 
-              className="rounded-2xl border p-6"
-              style={{
-                backgroundColor: 'var(--color-surface)',
-                borderColor: 'var(--color-border)',
-                boxShadow: 'var(--shadow-md)'
-              }}
+        {/* Timeline Items */}
+        <div className="space-y-8">
+          {timeline.map((level, index) => (
+            <motion.div
+              key={level.level}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="relative"
             >
-              {/* Level Header */}
-              <div className="flex items-start gap-4 mb-6">
-                {/* Status Badge */}
-                <div className="flex-shrink-0">
+              {/* Timeline Node */}
+              <div className="flex items-start gap-6">
+                {/* Left Side - Timeline Node */}
+                <div className="flex-shrink-0 relative">
+                  {/* Timeline Node */}
                   <div 
-                    className={`w-12 h-12 rounded-full flex items-center justify-center border-2 ${
+                    className={`w-16 h-16 rounded-full border-4 flex items-center justify-center shadow-lg ${
                       level.status === 'completed' 
                         ? 'bg-green-100 border-green-500' 
                         : level.status === 'in-progress'
                         ? 'bg-yellow-100 border-yellow-500'
                         : 'bg-gray-100 border-gray-300'
                     }`}
+                    style={{
+                      backgroundColor: 'var(--color-surface)',
+                      boxShadow: 'var(--shadow-md)'
+                    }}
                   >
                     {getLevelStatusIcon(level.status)}
                   </div>
+                  
+                  {/* Level Number Badge */}
+                  <div 
+                    className="absolute -top-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white"
+                    style={{ backgroundColor: 'var(--color-accent-primary)' }}
+                  >
+                    {level.level}
+                  </div>
                 </div>
-                
-                {/* Level Info */}
+
+                {/* Right Side - Content */}
                 <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <span 
-                      className="px-3 py-1 rounded-full text-xs font-semibold"
+                  {/* Level Header */}
+                  <div className="mb-4">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span 
+                        className="px-3 py-1 rounded-full text-xs font-semibold"
+                        style={{
+                          backgroundColor: level.status === 'completed' 
+                            ? 'var(--color-success-bg)' 
+                            : level.status === 'in-progress'
+                            ? 'var(--color-warning-bg)'
+                            : 'var(--color-info-bg)',
+                          color: level.status === 'completed' 
+                            ? 'var(--color-success)' 
+                            : level.status === 'in-progress'
+                            ? 'var(--color-warning)'
+                            : 'var(--color-info)'
+                        }}
+                      >
+                        {level.status === 'completed' ? 'Completed' : 
+                         level.status === 'in-progress' ? 'In Progress' : 'Upcoming'}
+                      </span>
+                    </div>
+                    
+                    <h3 
+                      className="text-xl font-bold mb-2"
+                      style={{ color: 'var(--color-text-primary)' }}
+                    >
+                      {level.courseName}
+                    </h3>
+                    
+                    <p 
+                      className="text-sm leading-relaxed"
+                      style={{ color: 'var(--color-text-secondary)' }}
+                    >
+                      {level.description}
+                    </p>
+                  </div>
+
+                  {/* Progress Sections */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Learn Section */}
+                    <div 
+                      className="p-4 rounded-xl border relative"
                       style={{
-                        backgroundColor: level.status === 'completed' 
-                          ? 'var(--color-success-bg)' 
-                          : level.status === 'in-progress'
-                          ? 'var(--color-warning-bg)'
-                          : 'var(--color-info-bg)',
-                        color: level.status === 'completed' 
-                          ? 'var(--color-success)' 
-                          : level.status === 'in-progress'
-                          ? 'var(--color-warning)'
-                          : 'var(--color-info)'
+                        backgroundColor: 'var(--color-tertiary-bg)',
+                        borderColor: 'var(--color-border-subtle)'
                       }}
                     >
-                      {level.status === 'completed' ? 'Completed' : 
-                       level.status === 'in-progress' ? 'In Progress' : 'Upcoming'}
-                    </span>
-                    <span 
-                      className="text-sm font-medium"
-                      style={{ color: 'var(--color-text-tertiary)' }}
+                      {/* Section Header */}
+                      <div className="flex items-center gap-3 mb-3">
+                        <div 
+                          className="p-2 rounded-lg"
+                          style={{
+                            backgroundColor: 'var(--color-info-bg)',
+                            color: 'var(--color-info)'
+                          }}
+                        >
+                          {getSectionIcon('learn')}
+                        </div>
+                        <span 
+                          className="font-semibold text-sm"
+                          style={{ color: 'var(--color-text-primary)' }}
+                        >
+                          Learn
+                        </span>
+                      </div>
+                      
+                      {/* Progress Bar */}
+                      <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
+                        <div 
+                          className="h-2 rounded-full transition-all duration-500"
+                          style={{
+                            backgroundColor: level.learn.completed ? 'var(--color-success)' : 'var(--color-warning)',
+                            width: level.learn.completed ? '100%' : '50%'
+                          }}
+                        />
+                      </div>
+                      
+                      {/* Status and Details */}
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span 
+                            className="text-xs"
+                            style={{ color: 'var(--color-text-tertiary)' }}
+                          >
+                            Status
+                          </span>
+                          <span 
+                            className="text-xs font-medium px-2 py-1 rounded-full"
+                            style={{
+                              backgroundColor: level.learn.completed 
+                                ? 'var(--color-success-bg)' 
+                                : 'var(--color-warning-bg)',
+                              color: level.learn.completed 
+                                ? 'var(--color-success)' 
+                                : 'var(--color-warning)'
+                            }}
+                          >
+                            {level.learn.completed ? 'Completed' : 'In Progress'}
+                          </span>
+                        </div>
+                        
+                        {level.learn.completed && (
+                          <>
+                            <div className="flex items-center justify-between">
+                              <span 
+                                className="text-xs"
+                                style={{ color: 'var(--color-text-tertiary)' }}
+                              >
+                                Time Spent
+                              </span>
+                              <span 
+                                className="text-xs font-medium"
+                                style={{ color: 'var(--color-text-secondary)' }}
+                              >
+                                {formatTimeSpent(level.learn.timeSpent)}
+                              </span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span 
+                                className="text-xs"
+                                style={{ color: 'var(--color-text-tertiary)' }}
+                              >
+                                Completed
+                              </span>
+                              <span 
+                                className="text-xs font-medium"
+                                style={{ color: 'var(--color-text-secondary)' }}
+                              >
+                                {formatDateTime(level.learn.endTime)}
+                              </span>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Test Section */}
+                    <div 
+                      className="p-4 rounded-xl border relative"
+                      style={{
+                        backgroundColor: 'var(--color-tertiary-bg)',
+                        borderColor: 'var(--color-border-subtle)'
+                      }}
                     >
-                      Level {level.level}
-                    </span>
+                      {/* Section Header */}
+                      <div className="flex items-center gap-3 mb-3">
+                        <div 
+                          className="p-2 rounded-lg"
+                          style={{
+                            backgroundColor: 'var(--color-warning-bg)',
+                            color: 'var(--color-warning)'
+                          }}
+                        >
+                          {getSectionIcon('test')}
+                        </div>
+                        <span 
+                          className="font-semibold text-sm"
+                          style={{ color: 'var(--color-text-primary)' }}
+                        >
+                          Test
+                        </span>
+                      </div>
+                      
+                      {/* Progress Bar */}
+                      <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
+                        <div 
+                          className="h-2 rounded-full transition-all duration-500"
+                          style={{
+                            backgroundColor: level.test.completed ? 'var(--color-success)' : 'var(--color-warning)',
+                            width: level.test.completed ? '100%' : '50%'
+                          }}
+                        />
+                      </div>
+                      
+                      {/* Status and Details */}
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span 
+                            className="text-xs"
+                            style={{ color: 'var(--color-text-tertiary)' }}
+                          >
+                            Status
+                          </span>
+                          <span 
+                            className="text-xs font-medium px-2 py-1 rounded-full"
+                            style={{
+                              backgroundColor: level.test.completed 
+                                ? 'var(--color-success-bg)' 
+                                : 'var(--color-warning-bg)',
+                              color: level.test.completed 
+                                ? 'var(--color-success)' 
+                                : 'var(--color-warning)'
+                            }}
+                          >
+                            {level.test.completed ? 'Completed' : 'In Progress'}
+                          </span>
+                        </div>
+                        
+                        {level.test.completed && (
+                          <>
+                            <div className="flex items-center justify-between">
+                              <span 
+                                className="text-xs"
+                                style={{ color: 'var(--color-text-tertiary)' }}
+                              >
+                                Score
+                              </span>
+                              <span 
+                                className="text-xs font-medium"
+                                style={{ color: 'var(--color-text-secondary)' }}
+                              >
+                                {level.test.score}%
+                              </span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span 
+                                className="text-xs"
+                                style={{ color: 'var(--color-text-tertiary)' }}
+                              >
+                                Attempts
+                              </span>
+                              <span 
+                                className="text-xs font-medium"
+                                style={{ color: 'var(--color-text-secondary)' }}
+                              >
+                                {level.test.attempts}
+                              </span>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Exercise Section */}
+                    <div 
+                      className="p-4 rounded-xl border relative"
+                      style={{
+                        backgroundColor: 'var(--color-tertiary-bg)',
+                        borderColor: 'var(--color-border-subtle)'
+                      }}
+                    >
+                      {/* Section Header */}
+                      <div className="flex items-center gap-3 mb-3">
+                        <div 
+                          className="p-2 rounded-lg"
+                          style={{
+                            backgroundColor: 'var(--color-success-bg)',
+                            color: 'var(--color-success)'
+                          }}
+                        >
+                          {getSectionIcon('exercise')}
+                        </div>
+                        <span 
+                          className="font-semibold text-sm"
+                          style={{ color: 'var(--color-text-primary)' }}
+                        >
+                          Exercise
+                        </span>
+                      </div>
+                      
+                      {/* Progress Bar */}
+                      <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
+                        <div 
+                          className="h-2 rounded-full transition-all duration-500"
+                          style={{
+                            backgroundColor: level.exercise.completed ? 'var(--color-success)' : 'var(--color-warning)',
+                            width: level.exercise.completed ? '100%' : '50%'
+                          }}
+                        />
+                      </div>
+                      
+                      {/* Status and Details */}
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span 
+                            className="text-xs"
+                            style={{ color: 'var(--color-text-tertiary)' }}
+                          >
+                            Status
+                          </span>
+                          <span 
+                            className="text-xs font-medium px-2 py-1 rounded-full"
+                            style={{
+                              backgroundColor: level.exercise.completed 
+                                ? 'var(--color-success-bg)' 
+                                : 'var(--color-warning-bg)',
+                              color: level.exercise.completed 
+                                ? 'var(--color-success)' 
+                                : 'var(--color-warning)'
+                            }}
+                          >
+                            {level.exercise.completed ? 'Completed' : 'In Progress'}
+                          </span>
+                        </div>
+                        
+                        {level.exercise.completed && (
+                          <>
+                            <div className="flex items-center justify-between">
+                              <span 
+                                className="text-xs"
+                                style={{ color: 'var(--color-text-tertiary)' }}
+                              >
+                                Time Spent
+                              </span>
+                              <span 
+                                className="text-xs font-medium"
+                                style={{ color: 'var(--color-text-secondary)' }}
+                              >
+                                {formatTimeSpent(level.exercise.timeSpent)}
+                              </span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span 
+                                className="text-xs"
+                                style={{ color: 'var(--color-text-tertiary)' }}
+                              >
+                                Completed
+                              </span>
+                              <span 
+                                className="text-xs font-medium"
+                                style={{ color: 'var(--color-text-secondary)' }}
+                              >
+                                {formatDateTime(level.exercise.endTime)}
+                              </span>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                  <h3 
-                    className="text-xl font-bold mb-2"
-                    style={{ color: 'var(--color-text-primary)' }}
-                  >
-                    {level.courseName}
-                  </h3>
-                  <p 
-                    className="text-sm leading-relaxed"
-                    style={{ color: 'var(--color-text-secondary)' }}
-                  >
-                    {level.description}
-                  </p>
                 </div>
               </div>
-
-              {/* Sections Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {/* Learn Section */}
-                <div 
-                  className="p-4 rounded-xl border"
-                  style={{
-                    backgroundColor: 'var(--color-tertiary-bg)',
-                    borderColor: 'var(--color-border-subtle)'
-                  }}
-                >
-                  <div className="flex items-center gap-3 mb-3">
-                    <div 
-                      className="p-2 rounded-lg"
-                      style={{
-                        backgroundColor: 'var(--color-info-bg)',
-                        color: 'var(--color-info)'
-                      }}
-                    >
-                      {getSectionIcon('learn')}
-                    </div>
-                    <span 
-                      className="font-semibold text-sm"
-                      style={{ color: 'var(--color-text-primary)' }}
-                    >
-                      Learn
-                    </span>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span 
-                        className="text-xs"
-                        style={{ color: 'var(--color-text-tertiary)' }}
-                      >
-                        Status
-                      </span>
-                      <span 
-                        className="text-xs font-medium px-2 py-1 rounded-full"
-                        style={{
-                          backgroundColor: level.learn.completed 
-                            ? 'var(--color-success-bg)' 
-                            : 'var(--color-warning-bg)',
-                          color: level.learn.completed 
-                            ? 'var(--color-success)' 
-                            : 'var(--color-warning)'
-                        }}
-                      >
-                        {level.learn.completed ? 'Completed' : 'In Progress'}
-                      </span>
-                    </div>
-                    
-                    {level.learn.completed && (
-                      <>
-                        <div className="flex items-center justify-between">
-                          <span 
-                            className="text-xs"
-                            style={{ color: 'var(--color-text-tertiary)' }}
-                          >
-                            Time Spent
-                          </span>
-                          <span 
-                            className="text-xs font-medium"
-                            style={{ color: 'var(--color-text-secondary)' }}
-                          >
-                            {formatTimeSpent(level.learn.timeSpent)}
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span 
-                            className="text-xs"
-                            style={{ color: 'var(--color-text-tertiary)' }}
-                          >
-                            Completed
-                          </span>
-                          <span 
-                            className="text-xs font-medium"
-                            style={{ color: 'var(--color-text-secondary)' }}
-                          >
-                            {formatDateTime(level.learn.endTime)}
-                          </span>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                </div>
-
-                {/* Test Section */}
-                <div 
-                  className="p-4 rounded-xl border"
-                  style={{
-                    backgroundColor: 'var(--color-tertiary-bg)',
-                    borderColor: 'var(--color-border-subtle)'
-                  }}
-                >
-                  <div className="flex items-center gap-3 mb-3">
-                    <div 
-                      className="p-2 rounded-lg"
-                      style={{
-                        backgroundColor: 'var(--color-warning-bg)',
-                        color: 'var(--color-warning)'
-                      }}
-                    >
-                      {getSectionIcon('test')}
-                    </div>
-                    <span 
-                      className="font-semibold text-sm"
-                      style={{ color: 'var(--color-text-primary)' }}
-                    >
-                      Test
-                    </span>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span 
-                        className="text-xs"
-                        style={{ color: 'var(--color-text-tertiary)' }}
-                      >
-                        Status
-                      </span>
-                      <span 
-                        className="text-xs font-medium px-2 py-1 rounded-full"
-                        style={{
-                          backgroundColor: level.test.completed 
-                            ? 'var(--color-success-bg)' 
-                            : 'var(--color-warning-bg)',
-                          color: level.test.completed 
-                            ? 'var(--color-success)' 
-                            : 'var(--color-warning)'
-                        }}
-                      >
-                        {level.test.completed ? 'Completed' : 'In Progress'}
-                      </span>
-                    </div>
-                    
-                    {level.test.completed && (
-                      <>
-                        <div className="flex items-center justify-between">
-                          <span 
-                            className="text-xs"
-                            style={{ color: 'var(--color-text-tertiary)' }}
-                          >
-                            Score
-                          </span>
-                          <span 
-                            className="text-xs font-medium"
-                            style={{ color: 'var(--color-text-secondary)' }}
-                          >
-                            {level.test.score}%
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span 
-                            className="text-xs"
-                            style={{ color: 'var(--color-text-tertiary)' }}
-                          >
-                            Attempts
-                          </span>
-                          <span 
-                            className="text-xs font-medium"
-                            style={{ color: 'var(--color-text-secondary)' }}
-                          >
-                            {level.test.attempts}
-                          </span>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                </div>
-
-                {/* Exercise Section */}
-                <div 
-                  className="p-4 rounded-xl border"
-                  style={{
-                    backgroundColor: 'var(--color-tertiary-bg)',
-                    borderColor: 'var(--color-border-subtle)'
-                  }}
-                >
-                  <div className="flex items-center gap-3 mb-3">
-                    <div 
-                      className="p-2 rounded-lg"
-                      style={{
-                        backgroundColor: 'var(--color-success-bg)',
-                        color: 'var(--color-success)'
-                      }}
-                    >
-                      {getSectionIcon('exercise')}
-                    </div>
-                    <span 
-                      className="font-semibold text-sm"
-                      style={{ color: 'var(--color-text-primary)' }}
-                    >
-                      Exercise
-                    </span>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span 
-                        className="text-xs"
-                        style={{ color: 'var(--color-text-tertiary)' }}
-                      >
-                        Status
-                      </span>
-                      <span 
-                        className="text-xs font-medium px-2 py-1 rounded-full"
-                        style={{
-                          backgroundColor: level.exercise.completed 
-                            ? 'var(--color-success-bg)' 
-                            : 'var(--color-warning-bg)',
-                          color: level.exercise.completed 
-                            ? 'var(--color-success)' 
-                            : 'var(--color-warning)'
-                        }}
-                      >
-                        {level.exercise.completed ? 'Completed' : 'In Progress'}
-                      </span>
-                    </div>
-                    
-                    {level.exercise.completed && (
-                      <>
-                        <div className="flex items-center justify-between">
-                          <span 
-                            className="text-xs"
-                            style={{ color: 'var(--color-text-tertiary)' }}
-                          >
-                            Time Spent
-                          </span>
-                          <span 
-                            className="text-xs font-medium"
-                            style={{ color: 'var(--color-text-secondary)' }}
-                          >
-                            {formatTimeSpent(level.exercise.timeSpent)}
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span 
-                            className="text-xs"
-                            style={{ color: 'var(--color-text-tertiary)' }}
-                          >
-                            Completed
-                          </span>
-                          <span 
-                            className="text-xs font-medium"
-                            style={{ color: 'var(--color-text-secondary)' }}
-                          >
-                            {formatDateTime(level.exercise.endTime)}
-                          </span>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        ))}
+            </motion.div>
+          ))}
+        </div>
       </div>
     </div>
   );
