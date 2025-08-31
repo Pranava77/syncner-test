@@ -523,23 +523,23 @@ class ApiService {
         credentials: 'include',
       });
       const data = await this.handleResponse(response);
-      console.log('✅ Staff Student Details API Response:', data);
-      
+      console.log('✅ Staff API Response:', data);
+
       // Debug: Log the specific learning timeline data
       if (data && data.data && data.data.student) {
-        console.log('📚 Learning Timeline Data Received:');
-        console.log('📊 Timeline Length:', data.data.student.learningTimeline?.length || 0);
-        console.log('📋 Timeline Structure:', JSON.stringify(data.data.student.learningTimeline, null, 2));
+        console.log('📚 Staff Learning Timeline Data Received:');
+        console.log('📊 Timeline Length:', data.data.student.detailedLearningTimeline?.length || 0);
+        console.log('📋 Timeline Structure:', JSON.stringify(data.data.student.detailedLearningTimeline, null, 2));
         console.log('🎯 Student Career Track:', data.data.student.careerTrack);
         console.log('📈 Progress:', data.data.student.progress);
         console.log('⭐ Performance:', data.data.student.performance);
       } else {
-        console.log('⚠️ No student data found in response');
+        console.log('⚠️ No student data found in staff response');
       }
-      
+
       return data;
     } catch (error) {
-      console.error('❌ Staff Student Details API Error:', error);
+      console.error('❌ Staff API Error:', error);
       throw this.handleError(error);
     }
   }
