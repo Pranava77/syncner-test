@@ -25,9 +25,64 @@ export const fetchStudentDetails = createAsyncThunk(
   'staff/fetchStudentDetails',
   async (studentId: string, { rejectWithValue }) => {
     try {
-      const response = await apiService.getStudentDetails(studentId);
-      // The staff route returns { success: true, data: { student: {...} } }
-      return response.data.student;
+      // Use portfolio endpoint instead of staff endpoint for cleaner timeline data
+      const response = await apiService.getStudentPortfolio(studentId);
+      const studentData = response.data.student;
+      
+      // Transform portfolio data to match the expected TimelineLevel structure
+      if (studentData.learningLevels && Array.isArray(studentData.learningLevels)) {
+        console.log('🔄 Portfolio data transformation - Original learningLevels:', studentData.learningLevels);
+        
+        const transformedTimeline = studentData.learningLevels.map((level: any) => ({
+          levelOrder: level.level,
+          levelTitle: level.courseName,
+          levelDescription: level.description,
+          overallStatus: level.status === 'completed' ? 'completed' : 
+                        level.status === 'in-progress' ? 'in-progress' : 'not-started',
+          sections: {
+            learn: {
+              status: level.learn?.completed ? 'completed' : 'in-progress',
+              details: {
+                startDate: level.learn?.startTime,
+                endDate: level.learn?.endTime,
+                isCompleted: level.learn?.completed
+              },
+              title: 'Learn'
+            },
+            test: {
+              status: level.test?.completed ? 'completed' : 'in-progress',
+              details: {
+                startDate: level.test?.startTime,
+                endDate: level.test?.endTime,
+                score: level.test?.score,
+                attempts: level.test?.attempts,
+                isCompleted: level.test?.completed
+              },
+              title: 'Test'
+            },
+            exercise: {
+              status: level.exercise?.completed ? 'completed' : 'in-progress',
+              details: {
+                startDate: level.exercise?.startTime,
+                endDate: level.exercise?.endTime,
+                isCompleted: level.exercise?.completed
+              },
+              title: 'Exercise'
+            }
+          }
+        }));
+        
+        console.log('✅ Portfolio data transformation - Transformed timeline:', transformedTimeline);
+        
+        // Replace learningLevels with the transformed timeline
+        studentData.learningTimeline = transformedTimeline;
+      } else {
+        console.log('⚠️ Portfolio data transformation - No learningLevels found, using fallback');
+        // Create a fallback timeline if no learningLevels exist
+        studentData.learningTimeline = [];
+      }
+      
+      return studentData;
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to fetch student details');
     }

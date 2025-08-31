@@ -51,6 +51,8 @@ const StudentDetails: React.FC = () => {
   // Debug logging
   console.log('StudentDetails - selectedStudent:', selectedStudent);
   console.log('StudentDetails - studentData:', studentData);
+  console.log('StudentDetails - learningTimeline:', studentData?.learningTimeline);
+  console.log('StudentDetails - learningLevels:', studentData?.learningLevels);
   
   // Show loading state while data is being fetched
   if (studentDetailsLoading) {
