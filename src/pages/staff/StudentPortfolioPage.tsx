@@ -4,6 +4,8 @@ import StudentPortfolio from '../../components/StudentPortfolio';
 
 const StudentPortfolioPage: React.FC = () => {
   const { studentId } = useParams<{ studentId: string }>();
+  
+  console.log('StudentPortfolioPage rendered with studentId:', studentId);
 
   if (!studentId) {
     return (

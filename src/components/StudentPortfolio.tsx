@@ -35,7 +35,7 @@ interface PortfolioModule {
 
 interface StudentPortfolioProps {
   studentId: string;
-  studentData: {
+  studentData?: {
     name: string;
     location: string;
     profilePicture?: string;
@@ -56,6 +56,7 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
   studentId,
   studentData: initialStudentData
 }) => {
+  console.log('StudentPortfolio component rendered with:', { studentId, initialStudentData });
   const [activeTab, setActiveTab] = useState<'topics' | 'projects'>('topics');
   const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set());
   const [studentData, setStudentData] = useState<StudentPortfolioData | null>(initialStudentData || null);
