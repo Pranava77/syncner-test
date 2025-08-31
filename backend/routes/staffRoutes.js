@@ -1227,9 +1227,14 @@ router.get('/student/:studentId/portfolio', protect, authorize('staff', 'admin')
         assessmentScore: levelProgress?.test?.score || 0,
         timeSpent: formatTimeSpent(levelProgress?.learn?.timeSpent || 0),
         mcqScore: levelProgress?.test?.score || 0,
-        tasksCompleted: levelProgress?.exercise?.completed ? (bestItem.exercise?.length || 1) : 0,
-        totalTasks: bestItem.exercise?.length || 1,
-        tasks: generateTasksForModule(bestItem, levelProgress)
+        tasksCompleted: levelProgress?.exercise?.completed ? (bestItem.exercise?.length || 0) : 0,
+        totalTasks: bestItem.exercise?.length || 0,
+        tasks: bestItem.exercise && Array.isArray(bestItem.exercise) ? bestItem.exercise.map((exercise, index) => ({
+          id: `task-${bestItem.order}-${index + 1}`,
+          title: exercise.title || `Exercise ${index + 1}`,
+          description: exercise.description || exercise.content || 'Complete the assigned exercise',
+          completed: levelProgress?.exercise?.completed || false
+        })) : []
       };
     });
     
@@ -1352,63 +1357,9 @@ function generateIntroduction(name, careerTrack, skills, completionPercentage) {
   }
 }
 
-function generateTasksForModule(curriculumItem, levelProgress) {
-  // Use actual curriculum data instead of hardcoded tasks
-  if (curriculumItem.exercise && Array.isArray(curriculumItem.exercise)) {
-    // If curriculum has real exercise data, use it
-    return curriculumItem.exercise.map((exercise, index) => ({
-      id: `task-${curriculumItem.order}-${index + 1}`,
-      title: exercise.title || `Exercise ${index + 1}`,
-      description: exercise.description || exercise.content || 'Complete the assigned exercise',
-      completed: levelProgress?.exercise?.completed || false
-    }));
-  }
+
   
-  // Fallback to curriculum title-based tasks only if no real data exists
-  let tasks = [];
-  
-  if (curriculumItem.title.toLowerCase().includes('html') || curriculumItem.title.toLowerCase().includes('css')) {
-    tasks = [
-      { title: 'HTML Structure', description: 'Create proper HTML document structure' },
-      { title: 'CSS Styling', description: 'Apply CSS styles and layout' },
-      { title: 'Responsive Design', description: 'Make the design mobile-friendly' },
-      { title: 'Accessibility', description: 'Ensure proper semantic HTML and ARIA labels' },
-      { title: 'Final Review', description: 'Test and optimize the website' }
-    ];
-  } else if (curriculumItem.title.toLowerCase().includes('javascript')) {
-    tasks = [
-      { title: 'JavaScript Basics', description: 'Master fundamental JavaScript concepts' },
-      { title: 'DOM Manipulation', description: 'Learn to interact with webpage elements' },
-      { title: 'Event Handling', description: 'Implement user interactions and events' },
-      { title: 'Data Structures', description: 'Work with arrays, objects, and functions' },
-      { title: 'Project Implementation', description: 'Build a complete JavaScript application' }
-    ];
-  } else if (curriculumItem.title.toLowerCase().includes('react')) {
-    tasks = [
-      { title: 'Component Creation', description: 'Build reusable React components' },
-      { title: 'State Management', description: 'Implement component state and props' },
-      { title: 'Event Handling', description: 'Add user interactions to components' },
-      { title: 'Routing', description: 'Implement navigation between components' },
-      { title: 'Final Project', description: 'Create a complete React application' }
-    ];
-  } else {
-    // Generic tasks for other modules
-    tasks = [
-      { title: 'Theory Learning', description: 'Study the core concepts and theory' },
-      { title: 'Practical Exercise', description: 'Complete hands-on practice exercises' },
-      { title: 'Project Work', description: 'Work on assigned projects or assignments' },
-      { title: 'Assessment', description: 'Take quizzes or tests to validate learning' },
-      { title: 'Documentation', description: 'Create notes and document your learning' }
-    ];
-  }
-  
-  return tasks.map((task, index) => ({
-    id: `task-${curriculumItem.order}-${index + 1}`,
-    title: task.title,
-    description: task.description,
-    completed: levelProgress?.exercise?.completed || false
-  }));
-}
+
 
 function getTitleQuality(title) {
   if (!title) return 0;
