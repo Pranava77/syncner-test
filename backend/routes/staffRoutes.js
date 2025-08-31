@@ -211,10 +211,11 @@ router.get('/students', protect, authorize('staff', 'admin'), async (req, res) =
           ...student,
           careerTrack: normalizedCareerTrack, // Use normalized value
           progress: studentProgress && studentProgress.completedLevels ? Math.round((studentProgress.completedLevels.length / totalLevels) * 100) : 0,
-          currentLevel: studentProgress ? `Level ${studentProgress.currentLevel}` : 'Level 1',
+          level: studentProgress ? `Level ${studentProgress.currentLevel}` : 'Level 1', // Fix: use 'level' instead of 'currentLevel'
           totalPoints: studentProgress?.totalPoints || 0,
           streakDays: studentProgress?.streakDays || 0,
           status: student.isActive ? 'active' : 'inactive',
+          lastActive: studentProgress?.lastActivity || student.updatedAt || student.createdAt, // Add lastActive field
           // Attendance information
           currentStreak: studentProgress?.attendanceStats?.currentStreak || 0,
           longestStreak: studentProgress?.attendanceStats?.longestStreak || 0,
@@ -231,10 +232,11 @@ router.get('/students', protect, authorize('staff', 'admin'), async (req, res) =
             ...student,
             careerTrack: student.careerTrack,
             progress: 0,
-            currentLevel: 'Level 1',
+            level: 'Level 1', // Fix: use 'level' instead of 'currentLevel'
             totalPoints: 0,
             streakDays: 0,
             status: student.isActive ? 'active' : 'inactive',
+            lastActive: student.updatedAt || student.createdAt, // Add lastActive field
             currentStreak: 0,
             longestStreak: 0,
             attendancePercentage: 0,

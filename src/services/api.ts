@@ -451,15 +451,29 @@ class ApiService {
     const queryParams = new URLSearchParams({
       page: page.toString(),
       limit: limit.toString(),
-      ...filters
     });
+
+    // Add filters only if they have values
+    if (filters.search) queryParams.append('search', filters.search);
+    if (filters.status && filters.status !== 'all') queryParams.append('status', filters.status);
+    if (filters.careerTrack && filters.careerTrack !== 'all') queryParams.append('careerTrack', filters.careerTrack);
+    if (filters.sortBy) queryParams.append('sortBy', filters.sortBy);
+    if (filters.sortOrder) queryParams.append('sortOrder', filters.sortOrder);
+
+    console.log('🔗 API Call: GET /staff/students with params:', queryParams.toString());
 
     const response = await fetch(`${this.baseURL}/staff/students?${queryParams}`, {
       method: 'GET',
       headers: this.getHeaders(),
       credentials: 'include',
     });
-    return this.handleResponse(response);
+    
+    const result = await this.handleResponse(response);
+    console.log('✅ API Response for getStudents:', result);
+    console.log('📊 Students count:', result?.data?.students?.length || 0);
+    console.log('📋 Pagination:', result?.data?.pagination);
+    
+    return result;
   }
 
   async getStudentPortfolio(studentId: string): Promise<any> {
