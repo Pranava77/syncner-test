@@ -4,6 +4,7 @@ import User from '../models/User.js';
 import UserProgress from '../models/UserProgress.js';
 import Track from '../models/Track.js';
 import Curriculum from '../models/Curriculum.js'; // Added import for Curriculum
+import Attendance from '../models/Attendance.js'; // Added import for Attendance
 import LeaderboardService from '../services/leaderboardService.js'; // Added import for LeaderboardService
 
 const router = express.Router();
@@ -1117,24 +1118,29 @@ router.get('/leaderboard', protect, authorize('staff', 'admin'), async (req, res
 router.get('/student/:studentId/portfolio', protect, authorize('staff', 'admin'), async (req, res) => {
   try {
     const { studentId } = req.params;
+    console.log('Portfolio route called for studentId:', studentId);
     
     // Fetch student data
     const student = await User.findById(studentId).select('-password');
     if (!student) {
+      console.log('Student not found for ID:', studentId);
       return res.status(404).json({
         success: false,
         message: 'Student not found'
       });
     }
+    console.log('Student found:', { name: student.name, careerTrack: student.careerTrack });
     
     // Fetch user progress data
     const progress = await UserProgress.findOne({ user: studentId });
+    console.log('Progress data found:', !!progress, 'Progress ID:', progress?._id);
     
     // Get curriculum items for this career track
     const curriculumItems = await Curriculum.find({ 
       careerTrack: student.careerTrack, 
       isActive: true 
     }).sort({ order: 1 }).lean();
+    console.log('Curriculum items found:', curriculumItems.length, 'for track:', student.careerTrack);
     
     // Get attendance data
     const attendanceRecords = await Attendance.find({ user: studentId }).sort({ date: 1 });
@@ -1168,14 +1174,20 @@ router.get('/student/:studentId/portfolio', protect, authorize('staff', 'admin')
     const lastVerified = progress?.lastActivity || student.createdAt;
     
     // Generate skills based on career track and progress
+    console.log('Generating skills for track:', student.careerTrack, 'completion:', completionPercentage);
     const skills = generateSkillsFromTrack(student.careerTrack, completionPercentage);
+    console.log('Skills generated:', skills);
     
     // Generate recommended roles based on career track and progress
+    console.log('Generating roles for track:', student.careerTrack, 'completion:', completionPercentage);
     const recommendedRoles = generateRecommendedRoles(student.careerTrack, completionPercentage);
+    console.log('Roles generated:', recommendedRoles);
     
     // Build modules data
+    console.log('Building modules data for', curriculumItems.length, 'curriculum items');
     const modules = curriculumItems.map((item, index) => {
       const levelProgress = progress?.learningLevels?.find(l => l.level === item.order);
+      console.log(`Module ${item.order}:`, { title: item.title, levelProgress: !!levelProgress });
       
       return {
         id: `module-${String(item.order).padStart(2, '0')}`,
@@ -1191,8 +1203,10 @@ router.get('/student/:studentId/portfolio', protect, authorize('staff', 'admin')
         tasks: generateTasksForModule(item, levelProgress)
       };
     });
+    console.log('Modules built:', modules.length);
     
     // Build portfolio data
+    console.log('Building final portfolio data');
     const portfolioData = {
       name: student.name,
       location: student.college ? `${student.college}, ${student.department || 'Unknown'}` : 'Location not specified',
@@ -1208,6 +1222,7 @@ router.get('/student/:studentId/portfolio', protect, authorize('staff', 'admin')
       introduction: generateIntroduction(student.name, student.careerTrack, skills, completionPercentage),
       modules
     };
+    console.log('Portfolio data built successfully, sending response');
     
     res.status(200).json({
       success: true,
@@ -1217,9 +1232,16 @@ router.get('/student/:studentId/portfolio', protect, authorize('staff', 'admin')
     
   } catch (error) {
     console.error('Error fetching student portfolio:', error);
+    console.error('Error stack:', error.stack);
+    console.error('Error details:', {
+      message: error.message,
+      name: error.name,
+      code: error.code
+    });
     res.status(500).json({
       success: false,
-      message: 'Server error while retrieving portfolio'
+      message: 'Server error while retrieving portfolio',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
 });
