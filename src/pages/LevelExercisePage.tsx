@@ -7,7 +7,6 @@ import { LockClosedIcon, CheckCircledIcon } from '@radix-ui/react-icons';
 import { motion } from 'framer-motion';
 import apiService from '../services/api';
 import syncnerLogo from '../assets/syncner-logo.png';
-import { useTimeTracking } from '../hooks/useTimeTracking';
 
 interface Level {
   id: string;
@@ -51,14 +50,6 @@ const LevelExercisePage: React.FC = () => {
   const [isExerciseUnlocked, setIsExerciseUnlocked] = useState(false);
   const [hasExerciseLinks, setHasExerciseLinks] = useState(false);
   const [exerciseSubmissions, setExerciseSubmissions] = useState<any[]>([]);
-
-  // Time tracking hook
-  const { 
-    isTracking, 
-    startTracking, 
-    stopTracking, 
-    getCurrentSessionDuration 
-  } = useTimeTracking();
 
   const fetchLevel = useCallback(async () => {
     try {
@@ -137,18 +128,8 @@ const LevelExercisePage: React.FC = () => {
     if (levelId) {
       fetchLevel();
       fetchExerciseStatus();
-      
-      // Start time tracking when entering exercise page
-      startTracking(levelId, 'exercise');
     }
-    
-    // Cleanup: Stop time tracking when leaving the page
-    return () => {
-      if (levelId && isTracking) {
-        stopTracking();
-      }
-    };
-  }, [levelId, fetchLevel, fetchExerciseStatus, startTracking, stopTracking, isTracking]);
+  }, [levelId, fetchLevel, fetchExerciseStatus]);
 
   // Refresh exercise status when refreshTrigger changes (e.g., after test completion)
   useEffect(() => {
@@ -156,18 +137,6 @@ const LevelExercisePage: React.FC = () => {
       fetchExerciseStatus();
     }
   }, [refreshTrigger, fetchExerciseStatus]);
-
-  // Real-time session timer update
-  useEffect(() => {
-    if (!isTracking) return;
-    
-    const interval = setInterval(() => {
-      // Force re-render to update the timer display
-      setRefreshTrigger(prev => prev + 1);
-    }, 1000); // Update every second
-    
-    return () => clearInterval(interval);
-  }, [isTracking]);
 
   const fetchAllLevels = useCallback(async () => {
     try {
@@ -885,23 +854,6 @@ const LevelExercisePage: React.FC = () => {
                   <span className="text-xs" style={{ color: 'var(--color-text-inverse)' }}>!</span>
                 </div>
                 <span className="font-semibold">Submit exercise links to unlock the next level.</span>
-              </div>
-            </div>
-          )}
-          
-          {/* Live Session Timer */}
-          {isTracking && (
-            <div className="mt-3 p-3 rounded-lg border-2 border-dashed" style={{ borderColor: 'var(--color-accent-primary)' }}>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: 'var(--color-accent-primary)' }}></div>
-                  <span className="text-sm font-medium" style={{ color: 'var(--color-accent-primary)' }}>
-                    Exercise Session
-                  </span>
-                </div>
-                <div className="text-lg font-bold" style={{ color: 'var(--color-accent-primary)' }}>
-                  {Math.floor(getCurrentSessionDuration() / 60)}:{(getCurrentSessionDuration() % 60).toString().padStart(2, '0')}
-                </div>
               </div>
             </div>
           )}

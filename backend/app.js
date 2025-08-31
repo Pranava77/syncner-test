@@ -35,7 +35,6 @@ import curriculumRoutes from './routes/curriculumRoutes.js';
 import progressRoutes from './routes/progressRoutes.js';
 import staffRoutes from './routes/staffRoutes.js';
 import studentRoutes from './routes/studentRoutes.js';
-import timeTrackingRoutes from './routes/timeTrackingRoutes.js';
 
 // Import middleware
 import { errorHandler } from './middleware/errorHandler.js';
@@ -136,7 +135,6 @@ app.use('/api/curriculum', curriculumRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/staff', staffRoutes);
 app.use('/api/student', studentRoutes); // Student routes including portfolio
-app.use('/api/time-tracking', timeTrackingRoutes);
 
 // Health check endpoint
 const serverStartTime = Date.now();

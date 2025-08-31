@@ -6,7 +6,6 @@ import { PlayIcon, ReaderIcon, FileTextIcon, ChevronUpIcon, ChevronDownIcon, Ext
 import { motion, AnimatePresence } from 'framer-motion';
 import apiService from '../services/api';
 import syncnerLogo from '../assets/syncner-logo.png';
-import { useTimeTracking } from '../hooks/useTimeTracking';
 
 interface ReadFirst {
   brief?: string;
@@ -65,14 +64,6 @@ const LevelLearnPage: React.FC = () => {
   const [isTestUnlocked, setIsTestUnlocked] = useState(false);
   const [isLearnUnlocked, setIsLearnUnlocked] = useState(true);
   const [accessedLinks, setAccessedLinks] = useState<string[]>([]);
-
-  // Time tracking hook
-  const { 
-    isTracking, 
-    startTracking, 
-    stopTracking, 
-    getCurrentSessionDuration 
-  } = useTimeTracking();
 
   const fetchLevel = useCallback(async () => {
     try {
@@ -152,30 +143,8 @@ const LevelLearnPage: React.FC = () => {
     if (levelId) {
       fetchLevel();
       fetchLearnProgress();
-      
-      // Start time tracking when entering learning page
-      startTracking(levelId, 'learn');
     }
-    
-    // Cleanup: Stop time tracking when leaving the page
-    return () => {
-      if (levelId && isTracking) {
-        stopTracking();
-      }
-    };
-  }, [levelId, fetchLevel, fetchLearnProgress, startTracking, stopTracking, isTracking]);
-
-  // Real-time session timer update
-  useEffect(() => {
-    if (!isTracking) return;
-    
-    const interval = setInterval(() => {
-      // Force re-render to update the timer display
-      setRefreshTrigger(prev => prev + 1);
-    }, 1000); // Update every second
-    
-    return () => clearInterval(interval);
-  }, [isTracking]);
+  }, [levelId, fetchLevel, fetchLearnProgress]);
 
   // Listen for curriculum changes from admin
   useEffect(() => {
@@ -600,23 +569,6 @@ const LevelLearnPage: React.FC = () => {
                 <span>Time spent: {Math.floor(learnProgress.timeSpent / 60)}m {learnProgress.timeSpent % 60}s</span>
                 <span>{learnProgress.linksAccessed.length} of {level?.learn?.length || 1} resources accessed</span>
               </div>
-              
-              {/* Live Session Timer */}
-              {isTracking && (
-                <div className="mt-3 p-3 rounded-lg border-2 border-dashed" style={{ borderColor: 'var(--color-accent-primary)' }}>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: 'var(--color-accent-primary)' }}></div>
-                      <span className="text-sm font-medium" style={{ color: 'var(--color-accent-primary)' }}>
-                        Live Session
-                      </span>
-                    </div>
-                    <div className="text-lg font-bold" style={{ color: 'var(--color-accent-primary)' }}>
-                      {Math.floor(getCurrentSessionDuration() / 60)}:{(getCurrentSessionDuration() % 60).toString().padStart(2, '0')}
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* Learning Content */}

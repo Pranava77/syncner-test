@@ -675,40 +675,6 @@ class ApiService {
     });
     return this.handleResponse(response);
   }
-
-  // Time tracking methods
-  async startTimeTracking(levelId: string, section: 'learn' | 'test' | 'exercise'): Promise<any> {
-    const response = await fetch(`${this.baseURL}/time-tracking/start`, {
-      method: 'POST',
-      headers: this.getHeaders(),
-      credentials: 'include',
-      body: JSON.stringify({ levelId, section }),
-    });
-    
-    return this.handleResponse(response);
-  }
-
-  async stopTimeTracking(levelId: string, section: 'learn' | 'test' | 'exercise'): Promise<any> {
-    const response = await fetch(`${this.baseURL}/time-tracking/stop`, {
-      method: 'POST',
-      headers: this.getHeaders(),
-      credentials: 'include',
-      body: JSON.stringify({ levelId, section }),
-    });
-    
-    return this.handleResponse(response);
-  }
-
-  async pauseTimeTracking(levelId: string, section: 'learn' | 'test' | 'exercise'): Promise<any> {
-    const response = await fetch(`${this.baseURL}/time-tracking/pause`, {
-      method: 'POST',
-      headers: this.getHeaders(),
-      credentials: 'include',
-      body: JSON.stringify({ levelId, section }),
-    });
-    
-    return this.handleResponse(response);
-  }
 }
 
 export default new ApiService();

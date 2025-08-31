@@ -40,14 +40,6 @@ const userProgressSchema = new mongoose.Schema({
     },
     // New fields for learn section tracking
     learnProgress: {
-      startTime: {
-        type: Date,
-        default: null
-      },
-      endTime: {
-        type: Date,
-        default: null
-      },
       timeSpent: {
         type: Number,
         default: 0 // in seconds
@@ -63,18 +55,6 @@ const userProgressSchema = new mongoose.Schema({
     },
     // New fields for test section tracking
     testProgress: {
-      startTime: {
-        type: Date,
-        default: null
-      },
-      endTime: {
-        type: Date,
-        default: null
-      },
-      timeSpent: {
-        type: Number,
-        default: 0 // in seconds
-      },
       attempts: [{
         attemptNumber: {
           type: Number,
@@ -105,18 +85,6 @@ const userProgressSchema = new mongoose.Schema({
     },
     exerciseSubmissions: [{
       exerciseTitle: String,
-      startTime: {
-        type: Date,
-        default: null
-      },
-      endTime: {
-        type: Date,
-        default: null
-      },
-      timeSpent: {
-        type: Number,
-        default: 0 // in seconds
-      },
       submittedAt: {
         type: Date,
         default: Date.now
@@ -307,7 +275,7 @@ userProgressSchema.methods.markLevelCompleted = function(levelId, levelOrder, se
 };
 
 // Method to update learn progress
-userProgressSchema.methods.updateLearnProgress = function(levelId, timeSpent, linksAccessed, startTime = null, endTime = null) {
+userProgressSchema.methods.updateLearnProgress = function(levelId, timeSpent, linksAccessed) {
   let level = this.completedLevels.find(l => l.levelId === levelId);
   
   if (!level) {
@@ -316,20 +284,17 @@ userProgressSchema.methods.updateLearnProgress = function(levelId, timeSpent, li
       levelId,
       levelOrder: 0, // Will be set when marking as completed
       completedSections: { learn: false, exercise: false, test: false },
-      learnProgress: { startTime: null, endTime: null, timeSpent: 0, linksAccessed: [], isCompleted: false },
-      testProgress: { startTime: null, endTime: null, timeSpent: 0, attempts: [], isCompleted: false },
+      learnProgress: { timeSpent: 0, linksAccessed: [], isCompleted: false },
+      testProgress: { attempts: [], isCompleted: false },
       exerciseSubmissions: []
     };
     this.completedLevels.push(level);
   }
   
   if (!level.learnProgress) {
-    level.learnProgress = { startTime: null, endTime: null, timeSpent: 0, linksAccessed: [], isCompleted: false };
+    level.learnProgress = { timeSpent: 0, linksAccessed: [], isCompleted: false };
   }
   
-  // Update time tracking
-  if (startTime) level.learnProgress.startTime = startTime;
-  if (endTime) level.learnProgress.endTime = endTime;
   level.learnProgress.timeSpent = timeSpent;
   
   // Set links accessed (frontend sends complete array)
@@ -349,7 +314,7 @@ userProgressSchema.methods.updateLearnProgress = function(levelId, timeSpent, li
 };
 
 // Method to submit test attempt
-userProgressSchema.methods.submitTestAttempt = function(levelId, score, answers, startTime = null, endTime = null, timeSpent = 0) {
+userProgressSchema.methods.submitTestAttempt = function(levelId, score, answers) {
   let level = this.completedLevels.find(l => l.levelId === levelId);
   
   if (!level) {
@@ -357,15 +322,15 @@ userProgressSchema.methods.submitTestAttempt = function(levelId, score, answers,
       levelId,
       levelOrder: 0,
       completedSections: { learn: false, exercise: false, test: false },
-      learnProgress: { startTime: null, endTime: null, timeSpent: 0, linksAccessed: [], isCompleted: false },
-      testProgress: { startTime: null, endTime: null, timeSpent: 0, attempts: [], isCompleted: false },
+      learnProgress: { timeSpent: 0, linksAccessed: [], isCompleted: false },
+      testProgress: { attempts: [], isCompleted: false },
       exerciseSubmissions: []
     };
     this.completedLevels.push(level);
   }
   
   if (!level.testProgress) {
-    level.testProgress = { startTime: null, endTime: null, timeSpent: 0, attempts: [], isCompleted: false };
+    level.testProgress = { attempts: [], isCompleted: false };
   }
   
   const attemptNumber = level.testProgress.attempts.length + 1;
@@ -379,11 +344,6 @@ userProgressSchema.methods.submitTestAttempt = function(levelId, score, answers,
     completedAt: new Date()
   });
   
-  // Update time tracking
-  if (startTime) level.testProgress.startTime = startTime;
-  if (endTime) level.testProgress.endTime = endTime;
-  level.testProgress.timeSpent = timeSpent;
-  
   level.testProgress.lastAttemptAt = new Date();
   
   // Mark test as completed if passed
@@ -396,14 +356,11 @@ userProgressSchema.methods.submitTestAttempt = function(levelId, score, answers,
 };
 
 // Method to submit exercise
-userProgressSchema.methods.submitExercise = function(levelId, exerciseTitle, links, startTime = null, endTime = null, timeSpent = 0) {
+userProgressSchema.methods.submitExercise = function(levelId, exerciseTitle, links) {
   const level = this.completedLevels.find(l => l.levelId === levelId);
   if (level) {
     level.exerciseSubmissions.push({
       exerciseTitle,
-      startTime: startTime,
-      endTime: endTime,
-      timeSpent: timeSpent,
       submittedAt: new Date(),
       status: 'submitted',
       links: links || []
