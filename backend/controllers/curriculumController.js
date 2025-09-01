@@ -1,6 +1,7 @@
 import Curriculum from '../models/Curriculum.js';
 import { validationResult } from 'express-validator';
 import { normalizeCareerTrack } from '../utils/careerTrackUtils.js';
+import { groupCurriculumIntoLevels } from '../utils/levelUtils.js';
 
 // Helper function to group curriculum items into levels (same as trainingController)
 const groupCurriculumIntoLevels = (items) => {

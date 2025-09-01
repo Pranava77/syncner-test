@@ -16,7 +16,7 @@ interface TaskModalProps {
   isOpen: boolean;
   onClose: () => void;
   task: {
-    title: string;
+  title: string;
     description: string;
     content: string;
     submissionLink?: string;
@@ -225,23 +225,23 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
     console.log('Portfolio component: Initializing with:', { initialStudentData, studentId });
     
     const fetchPortfolioData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
+        try {
+          setLoading(true);
+          setError(null);
         
         const data = await fetchWithRetry();
         console.log('Portfolio data:', data);
         
-        setStudentData(data);
+          setStudentData(data);
         setRetryCount(0); // Reset retry count on success
-      } catch (err) {
+        } catch (err) {
         console.error('Error loading portfolio:', err);
         setError(err instanceof Error ? err.message : 'Failed to load portfolio data');
         setRetryCount(prev => prev + 1);
-      } finally {
-        setLoading(false);
-      }
-    };
+        } finally {
+          setLoading(false);
+        }
+      };
     
     fetchPortfolioData();
   }, [studentId, initialStudentData, retryCount]);
@@ -319,7 +319,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
             {/* Profile Image */}
             <div 
               className="w-24 h-24 rounded-2xl overflow-hidden border-4"
-              style={{ 
+              style={{
                 backgroundColor: 'var(--color-surface)',
                 borderColor: 'var(--color-accent-primary)'
               }}
@@ -344,7 +344,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                   }}
                 >
                   Ready to Hire
-                </span>
+                    </span>
               </div>
               <p className="text-lg mb-3" style={{ color: 'var(--color-text-secondary)' }}>
                 {studentData?.student?.college || 'Location'}, {studentData?.student?.department || 'India'}
@@ -376,10 +376,10 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                   </span>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-
+                  </div>
+                </div>
+              </div>
+              
         {/* Skills Section */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
@@ -417,7 +417,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
               <h2 className="text-lg font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
                 RECOMMENDED ROLES
               </h2>
-              <div className="space-y-2">
+                <div className="space-y-2">
                 {getRecommendedRoles(studentData?.student?.careerTrack || '').map((role) => (
                   <div
                     key={role}
@@ -433,7 +433,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                 ))}
               </div>
             </div>
-
+            
             <div 
               className="p-6 rounded-2xl border"
               style={{
@@ -478,7 +478,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                 SQL, Python, and data visualization, and ready to contribute to impactful projects.
               </p>
             </div>
-
+            
             {/* Portfolio Section */}
             <div 
               className="p-6 rounded-2xl border"
@@ -491,7 +491,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
               <h2 className="text-xl font-semibold mb-6" style={{ color: 'var(--color-text-primary)' }}>
                 Portfolio:
               </h2>
-
+              
               {/* Learning Journey */}
               <div className="space-y-6">
                 {studentData?.learningLevels?.map((level, index) => (
@@ -515,7 +515,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                         <div>
                           <h3 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>
                             {level.courseName}
-                          </h3>
+                </h3>
                           <div className="flex items-center gap-4 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
                             <span>Time: {formatTimeSpent(level.learn?.timeSpent || 0)}</span>
                             <span>MCQ {level.test?.score || 0}% ({level.test?.attempts || 0} attempts)</span>
@@ -534,7 +534,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                             }}
                           >
                             {level.test?.score || 0}%
-                          </span>
+                  </span>
                         </div>
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>Tasks</span>
@@ -546,19 +546,19 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                             }}
                           >
                             5/5
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
+                  </span>
+                </div>
+              </div>
+            </div>
+              
                     {/* Tasks */}
                     <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                       {level.exercise.tasks.map((task: Task) => (
                         <div
                           key={task.id}
                           className="p-4 rounded-xl"
-                          style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
-                        >
+                        style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
+                      >
                           <div className="flex items-start justify-between mb-2">
                             <div>
                               <h4 className="font-medium mb-1" style={{ color: 'var(--color-text-primary)' }}>
@@ -598,8 +598,8 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                               Completed
                             </div>
                           )}
-                        </div>
-                      ))}
+                                    </div>
+                                  ))}
                     </div>
                   </div>
                 ))}

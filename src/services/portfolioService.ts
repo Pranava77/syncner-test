@@ -99,35 +99,14 @@ export interface StudentPortfolioData {
 
 export class PortfolioService {
   /**
-   * Fetch student portfolio data for staff view
+   * Fetch student portfolio data
+   * @param studentId - The ID of the student to fetch portfolio for, or 'me' for own portfolio
    */
-  static async getStudentPortfolio(studentId: string): Promise<StudentPortfolioData> {
+  static async getStudentPortfolio(studentId: string = 'me'): Promise<StudentPortfolioData> {
     try {
-      console.log('PortfolioService: Calling API for student:', studentId);
-      // Use the same endpoint as learning journey for consistent data
-      console.log('PortfolioService: Calling API endpoint:', `/student/portfolio/${studentId}`);
-      const response = await apiService.get(`/student/portfolio/${studentId}`);
-      console.log('PortfolioService: API response received:', response);
-      
-      if (response.success) {
-        console.log('PortfolioService: Returning data:', response.data);
-        return response.data;
-      } else {
-        console.error('PortfolioService: API returned error:', response.message);
-        throw new Error(response.message || 'Failed to fetch portfolio data');
-      }
-    } catch (error) {
-      console.error('PortfolioService: Error fetching student portfolio:', error);
-      throw new Error('Failed to fetch student portfolio data');
-    }
-  }
-
-  /**
-   * Fetch student's own portfolio data
-   */
-  static async getMyPortfolio(): Promise<StudentPortfolioData> {
-    try {
-      const response = await apiService.get('/student/portfolio/me');
+      console.log('PortfolioService: Fetching portfolio for student:', studentId);
+      const endpoint = studentId === 'me' ? '/student/portfolio/me' : `/student/portfolio/${studentId}`;
+      const response = await apiService.get(endpoint);
       
       if (response.success) {
         return response.data;
@@ -135,25 +114,7 @@ export class PortfolioService {
         throw new Error(response.message || 'Failed to fetch portfolio data');
       }
     } catch (error) {
-      console.error('Error fetching my portfolio:', error);
-      throw new Error('Failed to fetch portfolio data');
-    }
-  }
-
-  /**
-   * Fetch any student's portfolio data (for staff/admin)
-   */
-  static async getPortfolioByStudentId(studentId: string): Promise<StudentPortfolioData> {
-    try {
-      const response = await apiService.get(`/student/portfolio/${studentId}`);
-      
-      if (response.success) {
-        return response.data;
-      } else {
-        throw new Error(response.message || 'Failed to fetch portfolio data');
-      }
-    } catch (error) {
-      console.error('Error fetching portfolio by student ID:', error);
+      console.error('PortfolioService: Error fetching portfolio:', error);
       throw new Error('Failed to fetch portfolio data');
     }
   }
