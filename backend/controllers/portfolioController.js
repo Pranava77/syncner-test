@@ -528,10 +528,10 @@ export const getStudentPortfolio = async (req, res) => {
     }
 
     // Calculate progress percentage safely
-    const totalLevels = learningLevels.length || 1; // Avoid division by zero
+    const levelCount = learningLevels.length || 1; // Avoid division by zero
     const completedLevelsCount = progress?.completedLevels?.length || 0;
     const progressPercentage = Math.min(
-      Math.round((completedLevelsCount / totalLevels) * 100),
+      Math.round((completedLevelsCount / levelCount) * 100),
       100 // Cap at 100%
     );
 
@@ -555,7 +555,7 @@ export const getStudentPortfolio = async (req, res) => {
       progress: {
         currentLevel: Math.max(progress?.currentLevel || 1, 1), // Ensure minimum level 1
         completedLevels: completedLevelsCount,
-        totalLevels,
+        totalLevels: levelCount,
         percentage: progressPercentage,
         totalPoints: Math.max(progress?.totalPoints || 0, 0) // Ensure non-negative
       },
