@@ -109,7 +109,10 @@ export class PortfolioService {
     try {
       console.log('PortfolioService: Fetching portfolio for student:', studentId);
       const endpoint = studentId === 'me' ? '/student/portfolio/me' : `/student/portfolio/${studentId}`;
+      console.log('PortfolioService: Calling endpoint:', endpoint);
+      
       const response = await apiService.get(endpoint);
+      console.log('PortfolioService: Response received:', response);
       
       if (response.success) {
         return response.data;

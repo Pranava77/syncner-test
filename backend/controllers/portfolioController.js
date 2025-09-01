@@ -9,8 +9,16 @@ export const getStudentPortfolio = async (req, res) => {
     const { studentId } = req.params;
     const isOwnPortfolio = req.isOwnPortfolio || false;
 
+    console.log('Portfolio Controller - Request details:', {
+      studentId,
+      isOwnPortfolio,
+      userId: req.user?._id,
+      userRole: req.user?.role,
+      params: req.params
+    });
+
     // Validate studentId
-    if (!studentId || typeof studentId !== 'string') {
+    if (!studentId) {
       return res.status(400).json({
         success: false,
         message: 'Invalid student ID provided'
@@ -25,12 +33,16 @@ export const getStudentPortfolio = async (req, res) => {
       });
     }
 
-    // Validate user role and access rights
-    if (isOwnPortfolio && (!req.user || req.user._id.toString() !== studentId)) {
-      return res.status(403).json({
-        success: false,
-        message: 'Access denied. You can only view your own portfolio.'
-      });
+    // For own portfolio requests, the middleware has already validated the user
+    if (isOwnPortfolio) {
+      if (!req.user) {
+        return res.status(401).json({
+          success: false,
+          message: 'User not authenticated'
+        });
+      }
+      
+      console.log('Portfolio Controller - Own portfolio request validated for user:', req.user._id);
     }
 
     // Fetch student data

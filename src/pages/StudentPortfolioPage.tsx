@@ -8,7 +8,18 @@ const StudentPortfolioPage: React.FC = () => {
   const { user } = useAppSelector((state) => state.auth);
 
   if (!user) {
-    return <div>User not found</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
+        <div className="text-center">
+          <h2 className="text-xl font-semibold mb-2" style={{ color: 'var(--color-error)' }}>
+            User not found
+          </h2>
+          <p style={{ color: 'var(--color-text-secondary)' }}>
+            Please log in to view your portfolio.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -40,6 +51,23 @@ const StudentPortfolioPage: React.FC = () => {
 
           {/* Portfolio Component */}
           <StudentPortfolio studentId={user._id || user.id || 'me'} />
+          
+          {/* Debug Info */}
+          <div className="mt-4 p-4 rounded-lg border" style={{ 
+            backgroundColor: 'var(--color-tertiary-bg)', 
+            borderColor: 'var(--color-border)' 
+          }}>
+            <h3 className="font-semibold mb-2" style={{ color: 'var(--color-text-primary)' }}>
+              Debug Information
+            </h3>
+            <div className="text-sm space-y-1" style={{ color: 'var(--color-text-secondary)' }}>
+              <div>User ID: {user._id || 'Not set'}</div>
+              <div>User ID (alt): {user.id || 'Not set'}</div>
+              <div>User Role: {user.role}</div>
+              <div>User Email: {user.email}</div>
+              <div>Token exists: {localStorage.getItem('token') ? 'Yes' : 'No'}</div>
+            </div>
+          </div>
         </div>
       </motion.div>
     </ErrorBoundary>
