@@ -2,6 +2,52 @@ import React, { useState, useEffect } from 'react';
 import ErrorBoundary from './ErrorBoundary';
 import { PortfolioService, StudentPortfolioData } from '../services/portfolioService';
 
+const getRecommendedRoles = (careerTrack: string): string[] => {
+  switch (careerTrack.toLowerCase()) {
+    case 'full-stack':
+    case 'fullstack':
+      return [
+        'Full Stack Developer',
+        'Software Engineer',
+        'Web Developer',
+        'Application Developer',
+        'DevOps Engineer'
+      ];
+    case 'ai-ml':
+      return [
+        'Machine Learning Engineer',
+        'AI Developer',
+        'Data Scientist',
+        'Research Engineer',
+        'MLOps Engineer'
+      ];
+    case 'ui-ux':
+      return [
+        'UI/UX Designer',
+        'Product Designer',
+        'Interaction Designer',
+        'Frontend Developer',
+        'Web Designer'
+      ];
+    case 'data-science':
+      return [
+        'Data Scientist',
+        'Data Analyst',
+        'Business Intelligence Analyst',
+        'Data Engineer',
+        'Research Analyst'
+      ];
+    default:
+      return [
+        'Software Developer',
+        'Application Developer',
+        'Technical Analyst',
+        'Technology Consultant',
+        'Project Manager'
+      ];
+  }
+};
+
 // Commented out as it's currently unused
 // interface PortfolioTask {
 //   id: string;
@@ -232,18 +278,22 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
         {/* Skills Section */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
-            {['SQL', 'Python', 'EDA', 'Data Viz', 'Communication'].map((skill) => (
-              <span
-                key={skill}
-                className="px-4 py-2 rounded-full text-sm font-medium"
-                style={{
-                  backgroundColor: 'var(--color-tertiary-bg)',
-                  color: 'var(--color-text-primary)'
-                }}
-              >
-                {skill}
-              </span>
-            ))}
+                                  {studentData?.learningLevels?.reduce((skills: string[], level) => {
+                        // Extract skills from level description or content
+                        const levelSkills = level.description?.match(/\b(?:SQL|Python|JavaScript|React|Node\.js|Express|MongoDB|HTML|CSS|Git|API|REST|GraphQL|TypeScript|AWS|Docker|Testing|CI\/CD|Agile|Scrum)\b/g) || [];
+                        return [...new Set([...skills, ...levelSkills])];
+                      }, []).map((skill) => (
+                        <span
+                          key={skill}
+                          className="px-4 py-2 rounded-full text-sm font-medium"
+                          style={{
+                            backgroundColor: 'var(--color-tertiary-bg)',
+                            color: 'var(--color-text-primary)'
+                          }}
+                        >
+                          {skill}
+                        </span>
+                      ))}
           </div>
         </div>
 
@@ -263,7 +313,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                 RECOMMENDED ROLES
               </h2>
               <div className="space-y-2">
-                {['Full Stack Developer', 'Front-end Developer', 'Back-end Developer', 'Software Developer', 'AI Full stack Developer'].map((role) => (
+                {getRecommendedRoles(studentData?.student?.careerTrack || '').map((role) => (
                   <div
                     key={role}
                     className="p-3 rounded-xl flex items-center justify-between"
@@ -297,7 +347,9 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                   color: 'var(--color-text-primary)'
                 }}
               >
-                <span className="text-sm font-mono">SYNCNER-2025-STU1234-9X5T7K</span>
+                <span className="text-sm font-mono">
+                  {`SYNCNER-${new Date().getFullYear()}-${studentData?.student?._id?.toString()?.slice(-8).toUpperCase()}-${Math.random().toString(36).slice(-6).toUpperCase()}`}
+                </span>
               </div>
             </div>
           </div>
@@ -396,19 +448,19 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
 
                     {/* Tasks */}
                     <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {[1, 2, 3, 4, 5].map((taskNum) => (
+                      {level.exercise.tasks.map((task) => (
                         <div
-                          key={taskNum}
+                          key={task.id}
                           className="p-4 rounded-xl"
                           style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
                         >
                           <div className="flex items-start justify-between mb-2">
                             <div>
                               <h4 className="font-medium mb-1" style={{ color: 'var(--color-text-primary)' }}>
-                                Task: Build a web using HTML/CSS
+                                {task.title}
                               </h4>
                               <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                                Brief: Create a HTML Website
+                                {task.description}
                               </p>
                             </div>
                             <button
