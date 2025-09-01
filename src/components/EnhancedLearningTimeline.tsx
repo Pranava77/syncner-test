@@ -2,8 +2,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { 
   CheckCircledIcon, 
-  ClockIcon, 
-  PlayIcon,
   ReaderIcon,
   FileTextIcon,
   CodeIcon
@@ -21,7 +19,15 @@ interface TimelineLevel {
     timeSpent: number;
     title: string;
     status: string;
-    materials: any[];
+    materials: {
+      id: string;
+      title: string;
+      description: string;
+      content: string;
+      completed: boolean;
+      accessedAt: string | null;
+    }[];
+    progress: number;
   };
   test: {
     completed: boolean;
@@ -31,7 +37,16 @@ interface TimelineLevel {
     endTime: string | null;
     title: string;
     status: string;
-    questions: any[];
+    questions: {
+      id: string;
+      title: string;
+      question: string;
+      options: string[];
+      answer: string;
+      answered: boolean;
+      correct: boolean;
+    }[];
+    progress: number;
   };
   exercise: {
     completed: boolean;
@@ -40,7 +55,15 @@ interface TimelineLevel {
     timeSpent: number;
     title: string;
     status: string;
-    tasks: any[];
+    tasks: {
+      id: string;
+      title: string;
+      description: string;
+      content: string;
+      completed: boolean;
+      submissionLink?: string;
+    }[];
+    progress: number;
   };
 }
 
@@ -67,17 +90,6 @@ const EnhancedLearningTimeline: React.FC<EnhancedLearningTimelineProps> = ({
     }
   };
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return <CheckCircledIcon className="w-5 h-5 text-green-500" />;
-      case 'in-progress':
-        return <PlayIcon className="w-5 h-5 text-yellow-500" />;
-      default:
-        return <ClockIcon className="w-4 h-4 text-gray-400" />;
-    }
-  };
-
   const getLevelStatusIcon = (status: string) => {
     switch (status) {
       case 'completed':
@@ -86,17 +98,6 @@ const EnhancedLearningTimeline: React.FC<EnhancedLearningTimelineProps> = ({
         return <div className="w-6 h-6 rounded-full border-2 border-yellow-500 bg-yellow-100"></div>;
       default:
         return <div className="w-6 h-6 rounded-full border-2 border-gray-300 bg-gray-100"></div>;
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return 'var(--color-success)';
-      case 'in-progress':
-        return 'var(--color-warning)';
-      default:
-        return 'var(--color-text-muted)';
     }
   };
 
@@ -249,7 +250,7 @@ const EnhancedLearningTimeline: React.FC<EnhancedLearningTimelineProps> = ({
                           className="h-2 rounded-full transition-all duration-500"
                           style={{
                             backgroundColor: level.learn.completed ? 'var(--color-success)' : 'var(--color-warning)',
-                            width: level.learn.completed ? '100%' : '50%'
+                            width: `${level.learn.progress || 0}%`
                           }}
                         />
                       </div>
@@ -346,7 +347,7 @@ const EnhancedLearningTimeline: React.FC<EnhancedLearningTimelineProps> = ({
                           className="h-2 rounded-full transition-all duration-500"
                           style={{
                             backgroundColor: level.test.completed ? 'var(--color-success)' : 'var(--color-warning)',
-                            width: level.test.completed ? '100%' : '50%'
+                            width: `${level.test.progress || 0}%`
                           }}
                         />
                       </div>
@@ -443,7 +444,7 @@ const EnhancedLearningTimeline: React.FC<EnhancedLearningTimelineProps> = ({
                           className="h-2 rounded-full transition-all duration-500"
                           style={{
                             backgroundColor: level.exercise.completed ? 'var(--color-success)' : 'var(--color-warning)',
-                            width: level.exercise.completed ? '100%' : '50%'
+                            width: `${level.exercise.progress || 0}%`
                           }}
                         />
                       </div>

@@ -49,40 +49,81 @@ const StudentDetails: React.FC = () => {
   // Transform portfolio data for enhanced timeline
   useEffect(() => {
     if (studentData && studentData.careerTrack && studentData.learningLevels) {
-      const enhancedData = studentData.learningLevels.map((level: any) => ({
-        level: level.level || level.order || 1,
-        courseName: level.courseName || level.title || `Level ${level.level || level.order || 1}`,
-        description: level.description || 'Learning level',
-        status: level.status || 'not-started',
-        learn: {
-          completed: level.learn?.completed || false,
-          startTime: level.learn?.startTime || null,
-          endTime: level.learn?.endTime || null,
-          timeSpent: level.learn?.timeSpent || 0,
-          title: level.learn?.title || 'Learning Materials',
-          status: level.learn?.status || 'not-started',
-          materials: level.learn?.materials || level.learn?.content || []
-        },
-        test: {
-          completed: level.test?.completed || false,
-          score: level.test?.score || 0,
-          attempts: level.test?.attempts || 0,
-          startTime: level.test?.startTime || null,
-          endTime: level.test?.endTime || null,
-          title: level.test?.title || 'Assessment',
-          status: level.test?.status || 'not-started',
-          questions: level.test?.questions || level.test?.content || []
-        },
-        exercise: {
-          completed: level.exercise?.completed || false,
-          startTime: level.exercise?.startTime || null,
-          endTime: level.exercise?.endTime || null,
-          timeSpent: level.exercise?.timeSpent || 0,
-          title: level.exercise?.title || 'Practice Exercise',
-          status: level.exercise?.status || 'not-started',
-          tasks: level.exercise?.tasks || level.exercise?.content || []
+      const enhancedData = studentData.learningLevels.map((level: any) => {
+        // Calculate section completion status
+        const learnCompleted = level.learn?.completed || false;
+        const testCompleted = level.test?.completed || false;
+        const exerciseCompleted = level.exercise?.completed || false;
+        
+        // Calculate overall level status
+        let status = 'not-started';
+        if (learnCompleted && testCompleted && exerciseCompleted) {
+          status = 'completed';
+        } else if (learnCompleted || testCompleted || exerciseCompleted || 
+                   level.learn?.startTime || level.test?.startTime || level.exercise?.startTime) {
+          status = 'in-progress';
         }
-      }));
+
+        // Calculate progress for each section
+        const learnProgress = learnCompleted ? 100 : 
+          level.learn?.materials?.filter((m: any) => m.completed).length / (level.learn?.materials?.length || 1) * 100 || 0;
+        
+        const testProgress = testCompleted ? 100 : 
+          level.test?.score || 0;
+        
+        const exerciseProgress = exerciseCompleted ? 100 :
+          level.exercise?.tasks?.filter((t: any) => t.completed).length / (level.exercise?.tasks?.length || 1) * 100 || 0;
+
+        return {
+          level: level.level || level.order || 1,
+          courseName: level.courseName || level.title || `Level ${level.level || level.order || 1}`,
+          description: level.description || 'Learning level',
+          status,
+          learn: {
+            completed: learnCompleted,
+            startTime: level.learn?.startTime || null,
+            endTime: level.learn?.endTime || null,
+            timeSpent: level.learn?.timeSpent || 0,
+            title: level.learn?.title || 'Learning Materials',
+            status: learnCompleted ? 'completed' : level.learn?.startTime ? 'in-progress' : 'not-started',
+            materials: level.learn?.materials?.map((m: any) => ({
+              ...m,
+              completed: m.completed || false,
+              accessedAt: m.accessedAt || null
+            })) || [],
+            progress: learnProgress
+          },
+          test: {
+            completed: testCompleted,
+            score: level.test?.score || 0,
+            attempts: level.test?.attempts || 0,
+            startTime: level.test?.startTime || null,
+            endTime: level.test?.endTime || null,
+            title: level.test?.title || 'Assessment',
+            status: testCompleted ? 'completed' : level.test?.startTime ? 'in-progress' : 'not-started',
+            questions: level.test?.questions?.map((q: any) => ({
+              ...q,
+              answered: q.answered || false,
+              correct: q.correct || false
+            })) || [],
+            progress: testProgress
+          },
+          exercise: {
+            completed: exerciseCompleted,
+            startTime: level.exercise?.startTime || null,
+            endTime: level.exercise?.endTime || null,
+            timeSpent: level.exercise?.timeSpent || 0,
+            title: level.exercise?.title || 'Practice Exercise',
+            status: exerciseCompleted ? 'completed' : level.exercise?.startTime ? 'in-progress' : 'not-started',
+            tasks: level.exercise?.tasks?.map((t: any) => ({
+              ...t,
+              completed: t.completed || false,
+              submissionLink: t.submissionLink || `https://github.com/yourusername/portfolio-submissions/issues/new?title=${encodeURIComponent(`Task Submission: ${t.title}`)}&body=${encodeURIComponent(`# Task: ${t.title}\n\n## Description\n${t.description}\n\n## Submission\n[Your submission here]`)}`
+            })) || [],
+            progress: exerciseProgress
+          }
+        };
+      });
       
       setEnhancedTimeline(enhancedData);
       console.log('📚 Enhanced timeline data from portfolio:', enhancedData);
