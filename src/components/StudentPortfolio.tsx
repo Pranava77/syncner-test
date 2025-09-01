@@ -574,51 +574,58 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                                 </span>
                               </div>
                                                               <div className="bg-white rounded-lg p-4 shadow-sm">
-                                  <div className="grid grid-cols-2 gap-6 text-sm">
-                                <div>
-                                  <span style={{ color: 'var(--color-text-secondary)' }}>Status:</span>
-                                  <span className="ml-2" style={{ color: 'var(--color-text-primary)' }}>
-                                    {level.learn?.status || 'Not started'}
-                                  </span>
-                                </div>
-                                <div>
-                                  <span style={{ color: 'var(--color-text-secondary)' }}>Time Spent:</span>
-                                  <span className="ml-2" style={{ color: 'var(--color-text-primary)' }}>
-                                    {level.learn?.timeSpent ? formatTimeSpent(level.learn.timeSpent) : '0h 0m'}
-                                  </span>
-                                </div>
-                                {level.learn?.startTime && (
+                                <div className="grid grid-cols-2 gap-6 text-sm">
                                   <div>
-                                    <span style={{ color: 'var(--color-text-secondary)' }}>Started:</span>
+                                    <span style={{ color: 'var(--color-text-secondary)' }}>Status:</span>
                                     <span className="ml-2" style={{ color: 'var(--color-text-primary)' }}>
-                                      {formatDate(level.learn.startTime)}
+                                      {level.learn?.status || 'Not started'}
                                     </span>
                                   </div>
-                                )}
-                                {level.learn?.endTime && (
                                   <div>
-                                    <span style={{ color: 'var(--color-text-secondary)' }}>Completed:</span>
+                                    <span style={{ color: 'var(--color-text-secondary)' }}>Time Spent:</span>
                                     <span className="ml-2" style={{ color: 'var(--color-text-primary)' }}>
-                                      {formatDate(level.learn.endTime)}
+                                      {level.learn?.timeSpent ? formatTimeSpent(level.learn.timeSpent) : '0h 0m'}
                                     </span>
                                   </div>
-                                )}
+                                  {level.learn?.startTime && (
+                                    <div>
+                                      <span style={{ color: 'var(--color-text-secondary)' }}>Started:</span>
+                                      <span className="ml-2" style={{ color: 'var(--color-text-primary)' }}>
+                                        {formatDate(level.learn.startTime)}
+                                      </span>
+                                    </div>
+                                  )}
+                                  {level.learn?.endTime && (
+                                    <div>
+                                      <span style={{ color: 'var(--color-text-secondary)' }}>Completed:</span>
+                                      <span className="ml-2" style={{ color: 'var(--color-text-primary)' }}>
+                                        {formatDate(level.learn.endTime)}
+                                      </span>
+                                    </div>
+                                  )}
+                                </div>
                               </div>
                             </div>
 
                             {/* Test Section Details */}
-                            <div className="mb-6">
-                              <h4 className="font-semibold mb-3 flex items-center gap-2" style={{ color: 'var(--color-text-primary)' }}>
-                                📝 Assessment
-                                <span className={`px-2 py-1 rounded-full text-xs ${
+                            <div className="mb-8">
+                              <div className="flex items-center justify-between mb-4">
+                                <h4 className="font-semibold text-lg flex items-center gap-3" style={{ color: 'var(--color-text-primary)' }}>
+                                  <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
+                                    📝
+                                  </div>
+                                  Assessment
+                                </h4>
+                                <span className={`px-3 py-1 rounded-full text-sm font-medium ${
                                   level.test?.completed 
-                                    ? 'bg-green-100 text-green-800' 
-                                    : 'bg-yellow-100 text-yellow-800'
+                                    ? 'bg-green-100 text-green-800 border border-green-200' 
+                                    : 'bg-yellow-100 text-yellow-800 border border-yellow-200'
                                 }`}>
-                                  {level.test?.completed ? 'Completed' : 'Not Attempted'}
+                                  {level.test?.completed ? '✅ Completed' : '⏳ Not Attempted'}
                                 </span>
-                              </h4>
-                              <div className="grid grid-cols-2 gap-4 text-sm">
+                              </div>
+                              <div className="bg-white rounded-lg p-4 shadow-sm">
+                                <div className="grid grid-cols-2 gap-6 text-sm">
                                 <div>
                                   <span style={{ color: 'var(--color-text-secondary)' }}>Score:</span>
                                   <span className="ml-2" style={{ color: 'var(--color-text-primary)' }}>
@@ -653,6 +660,8 @@ const StudentPortfolio: React.FC<StudentPortfolioProps> = ({
                                     </span>
                                   </div>
                                 )}
+                                  </div>
+                                </div>
                               </div>
                             </div>
 
