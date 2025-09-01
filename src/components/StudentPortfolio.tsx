@@ -54,6 +54,36 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
   const [studentData, setStudentData] = useState<StudentPortfolioData | null>(initialStudentData || null);
   const [loading, setLoading] = useState(!initialStudentData);
   const [error, setError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
+  const maxRetries = 3;
+
+  // Retry fetching data with exponential backoff
+  const fetchWithRetry = async (attempt: number = 0): Promise<StudentPortfolioData> => {
+    try {
+      let data;
+      if (initialStudentData) {
+        data = initialStudentData;
+      } else if (studentId) {
+        data = await PortfolioService.getStudentPortfolio(studentId);
+      } else {
+        throw new Error('No student data or ID provided');
+      }
+
+      // Validate required data
+      if (!data.student || !data.progress || !data.learningLevels) {
+        throw new Error('Invalid portfolio data structure');
+      }
+
+      return data;
+    } catch (err) {
+      if (attempt < maxRetries) {
+        // Exponential backoff: wait 2^attempt seconds before retrying
+        await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+        return fetchWithRetry(attempt + 1);
+      }
+      throw err;
+    }
+  };
 
   // Use the data passed from parent component or fetch from API
   useEffect(() => {
@@ -64,35 +94,22 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
         setLoading(true);
         setError(null);
         
-        let data;
-        if (initialStudentData) {
-          console.log('Portfolio: Using provided data');
-          data = initialStudentData;
-        } else if (studentId) {
-          console.log('Portfolio: Fetching from API...');
-          data = await PortfolioService.getStudentPortfolio(studentId);
-        } else {
-          throw new Error('No student data or ID provided');
-        }
-        
+        const data = await fetchWithRetry();
         console.log('Portfolio data:', data);
         
-        // Validate required data
-        if (!data.student || !data.progress || !data.learningLevels) {
-          throw new Error('Invalid portfolio data structure');
-        }
-        
         setStudentData(data);
+        setRetryCount(0); // Reset retry count on success
       } catch (err) {
         console.error('Error loading portfolio:', err);
         setError(err instanceof Error ? err.message : 'Failed to load portfolio data');
+        setRetryCount(prev => prev + 1);
       } finally {
         setLoading(false);
       }
     };
     
     fetchPortfolioData();
-  }, [studentId, initialStudentData]);
+  }, [studentId, initialStudentData, retryCount]);
 
   // Show loading state
   if (loading) {

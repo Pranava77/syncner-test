@@ -36,7 +36,62 @@ export interface StudentPortfolioData {
       timeScore: number;
     };
   };
-  learningLevels: any[];
+  learningLevels: {
+    level: number;
+    courseName: string;
+    description: string;
+    status: 'not-started' | 'in-progress' | 'completed';
+    learn: {
+      completed: boolean;
+      startTime: string | null;
+      endTime: string | null;
+      timeSpent: number;
+      content: any[];
+      title: string;
+      status: string;
+      materials: {
+        id: string;
+        title: string;
+        description: string;
+        externalLink?: string;
+        order: number;
+      }[];
+    };
+    test: {
+      completed: boolean;
+      score: number;
+      attempts: number;
+      startTime: string | null;
+      endTime: string | null;
+      content: any[];
+      title: string;
+      status: string;
+      questions: {
+        id: string;
+        title: string;
+        question: string;
+        options: string[];
+        answer: string;
+        order: number;
+      }[];
+    };
+    exercise: {
+      completed: boolean;
+      startTime: string | null;
+      endTime: string | null;
+      timeSpent: number;
+      content: any[];
+      title: string;
+      status: string;
+      tasks: {
+        id: string;
+        title: string;
+        description: string;
+        content: string;
+        order: number;
+      }[];
+    };
+  }[];
 }
 
 
