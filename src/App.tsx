@@ -17,6 +17,7 @@ import LoadingScreen from './components/LoadingScreen';
 import ErrorBoundary from './components/ErrorBoundary';
 import { KeepAlive } from 'react-activation';
 import StudentProfile from './pages/StudentProfile';
+import StudentPortfolioPage from './pages/StudentPortfolioPage';
 import AdminProfile from './pages/AdminProfile';
 import { AnimatePresence, motion } from 'framer-motion';
 import { fetchCurrentUser, restoreSession } from './redux/slices/authSlice';
@@ -117,6 +118,7 @@ function App() {
             <Route path="training/:levelId/exercise" element={<LevelExercisePage />} />
 
             <Route path="projects" element={<ProjectsPage />} />
+            <Route path="portfolio" element={<StudentPortfolioPage />} />
             <Route path="profile" element={
               <motion.div
                 initial={{ opacity: 0, y: 20 }}

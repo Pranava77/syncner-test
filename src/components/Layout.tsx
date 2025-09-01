@@ -21,6 +21,7 @@ import {
   EnvelopeClosedIcon,
   StarIcon,
   GroupIcon as Users,
+  IdCardIcon as PortfolioIcon,
 } from '@radix-ui/react-icons';
 import logo from '../assets/syncner-logo.png';
 import LoadingScreen from './LoadingScreen';
@@ -146,7 +147,7 @@ const Layout: React.FC = () => {
   const mainStudentNavItems = [
     { path: '/student/dashboard', icon: HomeIcon, label: 'Dashboard' },
     { path: '/student/training/current', icon: LightningBoltIcon, label: 'Training' },
-
+    { path: '/student/portfolio', icon: PortfolioIcon, label: 'Portfolio' },
     { path: '/student/projects', icon: FileTextIcon, label: 'Projects' },
     { path: '/student/my-resume', icon: IdCardIcon, label: 'My Resume', locked: true },
     { path: '/student/mock-interview', icon: ChatBubbleIcon, label: 'Mock Interview', locked: true },
