@@ -51,23 +51,6 @@ const StudentPortfolioPage: React.FC = () => {
 
           {/* Portfolio Component */}
           <StudentPortfolio studentId={user._id || user.id || 'me'} />
-          
-          {/* Debug Info */}
-          <div className="mt-4 p-4 rounded-lg border" style={{ 
-            backgroundColor: 'var(--color-tertiary-bg)', 
-            borderColor: 'var(--color-border)' 
-          }}>
-            <h3 className="font-semibold mb-2" style={{ color: 'var(--color-text-primary)' }}>
-              Debug Information
-            </h3>
-            <div className="text-sm space-y-1" style={{ color: 'var(--color-text-secondary)' }}>
-              <div>User ID: {user._id || 'Not set'}</div>
-              <div>User ID (alt): {user.id || 'Not set'}</div>
-              <div>User Role: {user.role}</div>
-              <div>User Email: {user.email}</div>
-              <div>Token exists: {localStorage.getItem('token') ? 'Yes' : 'No'}</div>
-            </div>
-          </div>
         </div>
       </motion.div>
     </ErrorBoundary>

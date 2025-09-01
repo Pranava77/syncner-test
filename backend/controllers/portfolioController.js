@@ -7,15 +7,8 @@ import LeaderboardService from '../services/leaderboardService.js';
 export const getStudentPortfolio = async (req, res) => {
   try {
     const { studentId } = req.params;
-    const isOwnPortfolio = req.isOwnPortfolio || false;
 
-    console.log('Portfolio Controller - Request details:', {
-      studentId,
-      isOwnPortfolio,
-      userId: req.user?._id,
-      userRole: req.user?.role,
-      params: req.params
-    });
+
 
     // Validate studentId
     if (!studentId) {
@@ -26,23 +19,14 @@ export const getStudentPortfolio = async (req, res) => {
     }
 
     // Check if user has permission to view this portfolio
-    if (!isOwnPortfolio && req.user.role !== 'admin' && req.user.role !== 'staff') {
+    const isOwnPortfolio = req.user._id.toString() === studentId.toString();
+    const isStaffOrAdmin = req.user.role === 'admin' || req.user.role === 'staff';
+    
+    if (!isOwnPortfolio && !isStaffOrAdmin) {
       return res.status(403).json({
         success: false,
         message: 'Access denied. Only students can view their own portfolio, and staff/admin can view any portfolio.'
       });
-    }
-
-    // For own portfolio requests, the middleware has already validated the user
-    if (isOwnPortfolio) {
-      if (!req.user) {
-        return res.status(401).json({
-          success: false,
-          message: 'User not authenticated'
-        });
-      }
-      
-      console.log('Portfolio Controller - Own portfolio request validated for user:', req.user._id);
     }
 
     // Fetch student data

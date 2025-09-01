@@ -5,21 +5,11 @@ const router = express.Router();
 
 import { getStudentPortfolio } from '../controllers/portfolioController.js';
 
-// Portfolio routes
+// Portfolio routes - simplified permission logic in controller
 router.get('/portfolio/me', protect, (req, res, next) => {
-  try {
-    // Set the studentId param to the logged-in user's ID as a string
-    req.params.studentId = req.user._id.toString();
-    req.isOwnPortfolio = true; // Add flag to indicate this is own portfolio request
-    console.log('StudentRoutes - /portfolio/me middleware:', {
-      userId: req.user._id,
-      studentId: req.params.studentId,
-      isOwnPortfolio: req.isOwnPortfolio
-    });
-    next();
-  } catch (error) {
-    next(error);
-  }
+  // Redirect to the user's own portfolio
+  req.params.studentId = req.user._id.toString();
+  next();
 }, getStudentPortfolio);
 
 // Get student portfolio data - accessible by student (own data) and staff/admin
