@@ -9,7 +9,12 @@ const userProgressSchema = new mongoose.Schema({
   careerTrack: {
     type: String,
     required: true,
-    enum: ['full-stack', 'ai-ml', 'ui-ux', 'data-science']
+    enum: ['full-stack', 'fullstack', 'ai-ml', 'ui-ux', 'data-science'],
+    set: function(value) {
+      // Normalize legacy values
+      if (value === 'fullstack') return 'full-stack';
+      return value;
+    }
   },
   completedLevels: [{
     levelId: {
@@ -246,15 +251,39 @@ userProgressSchema.methods.canRetakeTest = function(levelId) {
 
 // Method to mark level as completed
 userProgressSchema.methods.markLevelCompleted = function(levelId, levelOrder, section) {
+  // Validate inputs
+  if (!levelId || !levelOrder || !section) {
+    throw new Error('Invalid parameters: levelId, levelOrder, and section are required');
+  }
+
+  if (!['learn', 'exercise', 'test'].includes(section)) {
+    throw new Error('Invalid section: must be learn, exercise, or test');
+  }
+
   const existingLevel = this.completedLevels.find(
     level => level.levelId === levelId
   );
   
   if (existingLevel) {
+    // Update existing level
     existingLevel.completedSections[section] = true;
     existingLevel.completedAt = new Date();
+
+    // Check if all sections are completed
+    const allSectionsCompleted = Object.values(existingLevel.completedSections).every(val => val === true);
+    
+    if (allSectionsCompleted) {
+      // Award points for completing all sections
+      this.totalPoints += 100;
+      
+      // Update current level if this is a higher level and all sections are completed
+      if (levelOrder > this.currentLevel) {
+        this.currentLevel = levelOrder;
+      }
+    }
   } else {
-    this.completedLevels.push({
+    // Create new level entry
+    const newLevel = {
       levelId,
       levelOrder,
       completedSections: {
@@ -262,16 +291,27 @@ userProgressSchema.methods.markLevelCompleted = function(levelId, levelOrder, se
         exercise: section === 'exercise',
         test: section === 'test'
       },
-      completedAt: new Date()
-    });
+      completedAt: new Date(),
+      learnProgress: {
+        timeSpent: 0,
+        linksAccessed: [],
+        isCompleted: section === 'learn'
+      },
+      testProgress: {
+        attempts: [],
+        isCompleted: section === 'test'
+      },
+      exerciseSubmissions: []
+    };
+
+    this.completedLevels.push(newLevel);
   }
   
-  // Update current level if this is a higher level
-  if (levelOrder > this.currentLevel) {
-    this.currentLevel = levelOrder;
-  }
-  
+  // Always update last activity
   this.lastActivity = new Date();
+
+  // Sort completedLevels by order for consistent access
+  this.completedLevels.sort((a, b) => a.levelOrder - b.levelOrder);
 };
 
 // Method to update learn progress
@@ -452,76 +492,114 @@ userProgressSchema.methods.markDailyAttendance = function(date = new Date(), tot
 // Method to update attendance statistics
 userProgressSchema.methods.updateAttendanceStats = function() {
   const today = new Date();
-  const enrollmentDate = this.createdAt;
+  today.setHours(0, 0, 0, 0); // Normalize to start of day
   
-  // Calculate total days from enrollment
-  const totalDays = Math.ceil((today.getTime() - enrollmentDate.getTime()) / (1000 * 60 * 60 * 24));
+  const enrollmentDate = new Date(this.createdAt);
+  enrollmentDate.setHours(0, 0, 0, 0); // Normalize to start of day
+  
+  // Calculate total days from enrollment (excluding future dates)
+  const totalDays = Math.max(
+    1,
+    Math.ceil((today.getTime() - enrollmentDate.getTime()) / (1000 * 60 * 60 * 24))
+  );
+  
+  // Sort daily activity by date (newest first) and normalize dates
+  const sortedActivity = [...this.dailyActivity]
+    .map(entry => ({
+      ...entry,
+      date: new Date(entry.date.setHours(0, 0, 0, 0)) // Normalize to start of day
+    }))
+    .sort((a, b) => b.date.getTime() - a.date.getTime());
   
   // Count present days (days with activity)
-  const presentDays = this.dailyActivity.filter(entry => entry.isPresent).length;
+  const presentDays = sortedActivity.filter(entry => 
+    entry.isPresent && entry.date.getTime() <= today.getTime()
+  ).length;
   
-  // Calculate total time spent on different activities
-  const totalLearningTime = this.dailyActivity.reduce((total, entry) => total + (entry.learningTime || 0), 0);
-  const totalTestTime = this.dailyActivity.reduce((total, entry) => total + (entry.testTime || 0), 0);
-  const totalExerciseTime = this.dailyActivity.reduce((total, entry) => total + (entry.exerciseTime || 0), 0);
+  // Calculate activity times with validation
+  const calculateTotalTime = (activityType) => {
+    return sortedActivity.reduce((total, entry) => {
+      const time = entry[activityType] || 0;
+      // Validate time is reasonable (max 24 hours per day)
+      return total + Math.min(Math.max(0, time), 24 * 60);
+    }, 0);
+  };
   
-  // Calculate current streak with improved logic
+  const totalLearningTime = calculateTotalTime('learningTime');
+  const totalTestTime = calculateTotalTime('testTime');
+  const totalExerciseTime = calculateTotalTime('exerciseTime');
+  
+  // Calculate streaks
   let currentStreak = 0;
-  let longestStreak = this.attendanceStats.longestStreak || 0;
+  let longestStreak = this.attendanceStats?.longestStreak || 0;
   let lastPresentDate = null;
+  let inStreak = true;
+  let lastDate = today;
   
-  // Sort daily activity by date (newest first)
-  const sortedActivity = [...this.dailyActivity].sort((a, b) => b.date - a.date);
-  
-  // Calculate current streak (consecutive days from today backwards)
-  for (let i = 0; i < sortedActivity.length; i++) {
-    const entry = sortedActivity[i];
+  // Process each day's activity
+  for (const entry of sortedActivity) {
+    // Skip future dates
+    if (entry.date.getTime() > today.getTime()) continue;
+    
+    // Calculate days between this entry and last processed date
+    const dayDiff = Math.floor(
+      (lastDate.getTime() - entry.date.getTime()) / (1000 * 60 * 60 * 24)
+    );
+    
     if (entry.isPresent) {
-      if (currentStreak === 0) {
-        // Start of a streak
-        currentStreak = 1;
-        lastPresentDate = entry.date;
-        
-        // Check if this is part of a longer streak
-        let streakLength = 1;
-        for (let j = i + 1; j < sortedActivity.length; j++) {
-          const nextEntry = sortedActivity[j];
-          const dayDiff = Math.ceil((entry.date.getTime() - nextEntry.date.getTime()) / (1000 * 60 * 60 * 24));
-          
-          if (dayDiff === 1 && nextEntry.isPresent) {
-            streakLength++;
-          } else {
-            break;
+      if (inStreak) {
+        // Continue streak if consecutive days
+        if (dayDiff === 1) {
+          currentStreak++;
+          if (currentStreak > longestStreak) {
+            longestStreak = currentStreak;
           }
+        } else {
+          // Break in streak
+          inStreak = false;
+          if (currentStreak > longestStreak) {
+            longestStreak = currentStreak;
+          }
+          currentStreak = 1;
         }
-        
-        if (streakLength > longestStreak) {
-          longestStreak = streakLength;
-        }
+      } else if (dayDiff === 1) {
+        // Start new streak
+        inStreak = true;
+        currentStreak = 2; // Count both today and this entry
       } else {
-        // Continue current streak
-        currentStreak++;
+        currentStreak = 1;
+      }
+      
+      if (!lastPresentDate) {
+        lastPresentDate = entry.date;
       }
     } else {
-      // Break in streak
-      break;
+      // Break streak on absent day
+      inStreak = false;
+      if (currentStreak > longestStreak) {
+        longestStreak = currentStreak;
+      }
+      currentStreak = 0;
     }
+    
+    lastDate = entry.date;
   }
   
-  // Update attendance stats with total time tracking
+  // Update attendance stats with validated data
   this.attendanceStats = {
-    totalDays: Math.max(1, totalDays),
+    totalDays: totalDays,
     presentDays: presentDays,
-    currentStreak: currentStreak,
-    longestStreak: longestStreak,
-    lastPresentDate: lastPresentDate,
-    totalLearningTime: totalLearningTime,
-    totalTestTime: totalTestTime,
-    totalExerciseTime: totalExerciseTime
+    currentStreak: Math.max(0, currentStreak),
+    longestStreak: Math.max(0, longestStreak),
+    lastPresentDate: lastPresentDate || this.attendanceStats?.lastPresentDate,
+    totalLearningTime: Math.max(0, totalLearningTime),
+    totalTestTime: Math.max(0, totalTestTime),
+    totalExerciseTime: Math.max(0, totalExerciseTime),
+    attendancePercentage: Math.round((presentDays / totalDays) * 100)
   };
   
   // Update last activity
-  this.lastActivity = today;
+  this.lastActivity = new Date();
 };
 
 // Method to get attendance percentage
