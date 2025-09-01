@@ -89,6 +89,7 @@ export interface StudentPortfolioData {
         description: string;
         content: string;
         order: number;
+        completed: boolean;
       }[];
     };
   }[];

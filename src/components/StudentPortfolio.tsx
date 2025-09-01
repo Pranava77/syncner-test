@@ -2,6 +2,104 @@ import React, { useState, useEffect } from 'react';
 import ErrorBoundary from './ErrorBoundary';
 import { PortfolioService, StudentPortfolioData } from '../services/portfolioService';
 
+interface Task {
+  id: string;
+  title: string;
+  description: string;
+  content: string;
+  order: number;
+  completed: boolean;
+  submissionLink?: string;
+}
+
+interface TaskModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  task: {
+    title: string;
+    description: string;
+    content: string;
+    submissionLink?: string;
+  } | null;
+}
+
+const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, task }) => {
+  if (!isOpen || !task) return null;
+
+  return (<>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div 
+        className="relative w-full max-w-2xl p-6 rounded-xl"
+        style={{ 
+          backgroundColor: 'var(--color-surface)',
+          boxShadow: 'var(--shadow-lg)'
+        }}
+      >
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 p-2 rounded-lg hover:bg-opacity-10"
+          style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        {/* Content */}
+        <div className="mt-2">
+          <h3 className="text-xl font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
+            {task.title}
+          </h3>
+          <div className="space-y-4">
+            <div>
+              <h4 className="font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>Description:</h4>
+              <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                {task.description}
+              </p>
+            </div>
+            <div>
+              <h4 className="font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>Instructions:</h4>
+              <div 
+                className="text-sm p-4 rounded-lg"
+                style={{ 
+                  backgroundColor: 'var(--color-tertiary-bg)',
+                  color: 'var(--color-text-secondary)'
+                }}
+              >
+                {task.content}
+              </div>
+            </div>
+            {task.submissionLink && (
+              <div>
+                <h4 className="font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>Submission Link:</h4>
+                <a 
+                  href={task.submissionLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm px-4 py-2 rounded-lg inline-block"
+                  style={{ 
+                    backgroundColor: 'var(--color-accent-primary)',
+                    color: 'white'
+                  }}
+                >
+                  Submit Task
+                </a>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  </>);
+};
+
+const formatTimeSpent = (seconds: number): string => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  return `${hours}h ${minutes}m`;
+};
+
 const getRecommendedRoles = (careerTrack: string): string[] => {
   switch (careerTrack.toLowerCase()) {
     case 'full-stack':
@@ -81,6 +179,12 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
   studentId,
   studentData: initialStudentData
 }) => {
+  const [selectedTask, setSelectedTask] = useState<{
+    title: string;
+    description: string;
+    content: string;
+    submissionLink?: string;
+  } | null>(null);
   console.log('StudentPortfolio component rendered with:', { studentId, initialStudentData });
   const [studentData, setStudentData] = useState<StudentPortfolioData | null>(initialStudentData || null);
   const [loading, setLoading] = useState(!initialStudentData);
@@ -206,6 +310,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
 
 
   return (
+    <>
     <div className="min-h-screen p-6" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
@@ -412,9 +517,9 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                             {level.courseName}
                           </h3>
                           <div className="flex items-center gap-4 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                            <span>Time: 5h-20m</span>
-                            <span>MCQ {level.test?.score || 0}%</span>
-                            <span>Tasks {level.exercise?.completed ? '5/5' : '0/5'}</span>
+                            <span>Time: {formatTimeSpent(level.learn?.timeSpent || 0)}</span>
+                            <span>MCQ {level.test?.score || 0}% ({level.test?.attempts || 0} attempts)</span>
+                            <span>Tasks {level.exercise?.tasks?.filter(t => t.completed)?.length || 0}/{level.exercise?.tasks?.length || 0}</span>
                           </div>
                         </div>
                       </div>
@@ -448,7 +553,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
 
                     {/* Tasks */}
                     <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {level.exercise.tasks.map((task) => (
+                      {level.exercise.tasks.map((task: Task) => (
                         <div
                           key={task.id}
                           className="p-4 rounded-xl"
@@ -464,15 +569,35 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                               </p>
                             </div>
                             <button
-                              className="px-3 py-1 rounded text-sm"
+                              onClick={() => setSelectedTask({
+                                title: task.title,
+                                description: task.description,
+                                content: task.content,
+                                submissionLink: `https://github.com/yourusername/portfolio-submissions/issues/new?title=${encodeURIComponent(`Task Submission: ${task.title}`)}&body=${encodeURIComponent(`# Task: ${task.title}\n\n## Description\n${task.description}\n\n## Submission\n[Your submission here]`)}`
+                              })}
+                              className="px-3 py-1 rounded text-sm transition-colors duration-200"
                               style={{
-                                backgroundColor: 'var(--color-tertiary-bg)',
-                                color: 'var(--color-text-secondary)'
+                                backgroundColor: 'var(--color-accent-primary)',
+                                color: 'white'
                               }}
                             >
-                              View
+                              View Details
                             </button>
                           </div>
+                          {task.completed && (
+                            <div 
+                              className="mt-2 text-xs px-2 py-1 rounded inline-flex items-center gap-1"
+                              style={{
+                                backgroundColor: 'var(--color-success-bg)',
+                                color: 'var(--color-success)'
+                              }}
+                            >
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                              </svg>
+                              Completed
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -484,6 +609,12 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
         </div>
       </div>
     </div>
+    <TaskModal 
+      isOpen={!!selectedTask}
+      onClose={() => setSelectedTask(null)}
+      task={selectedTask}
+    />
+    </>
   );
 };
 
