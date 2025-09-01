@@ -11,6 +11,9 @@ export interface StudentPortfolioData {
     college?: string;
     department?: string;
     createdAt: string;
+    introduction?: string;
+    readyToHire?: boolean;
+    duration?: string;
   };
   progress: {
     currentLevel: number;

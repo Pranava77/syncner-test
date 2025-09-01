@@ -550,7 +550,10 @@ export const getStudentPortfolio = async (req, res) => {
         careerTrack: student.careerTrack,
         college: student.college || 'Not specified',
         department: student.department || 'Not specified',
-        createdAt: student.createdAt || new Date()
+        createdAt: student.createdAt || new Date(),
+        introduction: student.introduction || null,
+        readyToHire: student.readyToHire || false,
+        duration: student.duration || '6 months'
       },
       progress: {
         currentLevel: Math.max(progress?.currentLevel || 1, 1), // Ensure minimum level 1

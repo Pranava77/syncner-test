@@ -328,23 +328,25 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                 style={{ color: 'var(--color-text-primary)' }}>
                 {studentData?.student?.name?.charAt(0)?.toUpperCase() || 'S'}
               </div>
-            </div>
-
+                </div>
+                
             {/* Basic Info */}
             <div>
               <div className="flex items-center gap-3 mb-2">
                 <h1 className="text-3xl font-bold" style={{ color: 'var(--color-text-primary)' }}>
                   {studentData?.student?.name || 'Student Name'}
-                </h1>
-                <span 
-                  className="px-3 py-1 rounded-full text-sm font-medium"
-                  style={{
-                    backgroundColor: 'var(--color-success-bg)',
-                    color: 'var(--color-success)'
-                  }}
-                >
-                  Ready to Hire
-                    </span>
+                  </h1>
+                {studentData?.student?.readyToHire && (
+                    <span 
+                    className="px-3 py-1 rounded-full text-sm font-medium"
+                    style={{
+                      backgroundColor: 'var(--color-success-bg)',
+                      color: 'var(--color-success)'
+                    }}
+                  >
+                    Ready to Hire
+                  </span>
+                )}
               </div>
               <p className="text-lg mb-3" style={{ color: 'var(--color-text-secondary)' }}>
                 {studentData?.student?.college || 'Location'}, {studentData?.student?.department || 'India'}
@@ -362,7 +364,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>Duration:</span>
                   <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                    6 months
+                    {studentData?.student?.duration || '6 months'}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -474,8 +476,10 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                 Introduction:
               </h2>
               <p className="text-base" style={{ color: 'var(--color-text-secondary)' }}>
-                Full-stack developer in the making, passionate about solving real business problems with code. Skilled in
-                SQL, Python, and data visualization, and ready to contribute to impactful projects.
+                {studentData?.student?.introduction || `${studentData?.student?.careerTrack || 'Full-stack'} developer in the making, passionate about solving real business problems with code. Skilled in ${studentData?.learningLevels?.reduce((skills: string[], level) => {
+                  const levelSkills = level.description?.match(/\b(?:SQL|Python|JavaScript|React|Node\.js|Express|MongoDB|HTML|CSS|Git|API|REST|GraphQL|TypeScript|AWS|Docker|Testing|CI\/CD|Agile|Scrum)\b/g) || [];
+                  return [...new Set([...skills, ...levelSkills])];
+                }, []).slice(0, 3).join(', ') || 'modern technologies'}, and ready to contribute to impactful projects.`}
               </p>
             </div>
             

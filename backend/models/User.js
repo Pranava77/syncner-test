@@ -100,6 +100,19 @@ const userSchema = new mongoose.Schema({
   },
   activeTodayDate: {
     type: Date
+  },
+  introduction: {
+    type: String,
+    trim: true,
+    maxlength: [500, 'Introduction cannot exceed 500 characters']
+  },
+  readyToHire: {
+    type: Boolean,
+    default: false
+  },
+  duration: {
+    type: String,
+    default: '6 months'
   }
 }, {
   timestamps: true,
