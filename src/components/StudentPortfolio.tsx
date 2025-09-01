@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  ChevronRightIcon,
-  ChevronDownIcon,
-  MarginIcon
-} from '@radix-ui/react-icons';
 import ErrorBoundary from './ErrorBoundary';
-import LevelExpandedDetails from './LevelExpandedDetails';
 import { PortfolioService, StudentPortfolioData } from '../services/portfolioService';
 
 // Commented out as it's currently unused
@@ -41,16 +35,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
   studentId,
   studentData: initialStudentData
 }) => {
-  // Helper function to format time spent
-  const formatTimeSpent = (seconds: number): string => {
-    if (!seconds || seconds === 0) return '0h 0m';
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    return `${hours}h ${minutes}m`;
-  };
   console.log('StudentPortfolio component rendered with:', { studentId, initialStudentData });
-  // const [activeTab, setActiveTab] = useState<'topics'>('topics');
-  const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set());
   const [studentData, setStudentData] = useState<StudentPortfolioData | null>(initialStudentData || null);
   const [loading, setLoading] = useState(!initialStudentData);
   const [error, setError] = useState<string | null>(null);
@@ -172,202 +157,171 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
     );
   }
 
-  const toggleModule = (moduleId: string) => {
-    const newExpanded = new Set(expandedModules);
-    if (newExpanded.has(moduleId)) {
-      newExpanded.delete(moduleId);
-    } else {
-      newExpanded.add(moduleId);
-    }
-    setExpandedModules(newExpanded);
-  };
 
-  const formatDate = (dateString: string | null) => {
-    if (!dateString) return 'Not completed';
-    try {
-      return new Date(dateString).toLocaleDateString('en-US', {
-        month: 'short',
-        day: '2-digit',
-        year: 'numeric'
-      });
-    } catch {
-      return 'Invalid date';
-    }
-  };
 
   return (
     <div className="min-h-screen p-6" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
-          {/* Left Sidebar - User Profile & Skills */}
-          <div className="lg:col-span-1 space-y-6">
-            
-            {/* User Profile Card */}
+        {/* Header Section */}
+        <div className="mb-8 flex items-start justify-between">
+          <div className="flex items-center gap-6">
+            {/* Profile Image */}
             <div 
-              className="p-6 rounded-2xl border"
-              style={{
+              className="w-24 h-24 rounded-2xl overflow-hidden border-4"
+              style={{ 
                 backgroundColor: 'var(--color-surface)',
-                borderColor: 'var(--color-border)',
-                boxShadow: 'var(--shadow-md)'
+                borderColor: 'var(--color-accent-primary)'
               }}
             >
-              {/* Profile Picture & Basic Info */}
-              <div className="flex items-start gap-4 mb-6">
-                <div 
-                  className="w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold"
-                  style={{
-                    backgroundColor: 'var(--color-tertiary-bg)',
-                    color: 'var(--color-text-primary)',
-                    border: '3px solid var(--color-border)'
-                  }}
-                >
-                  {studentData.student?.name?.charAt(0).toUpperCase() || 'S'}
-                </div>
-                
-                <div className="flex-1">
-                  <h1 
-                    className="text-2xl font-bold mb-2"
-                    style={{ color: 'var(--color-text-primary)' }}
-                  >
-                    {studentData.student?.name || 'Student Name'}
-                  </h1>
-                  
-                  <div className="flex items-center gap-2 mb-3">
-                    <MarginIcon className="w-4 h-4" style={{ color: 'var(--color-text-tertiary)' }} />
-                    <span 
-                      className="text-sm"
-                      style={{ color: 'var(--color-text-tertiary)' }}
-                    >
-                      {studentData.student?.college ? `${studentData.student.college}, ${studentData.student.department || 'Unknown'}` : 'Location not specified'}
-                    </span>
-                  </div>
-                  
-                  {/* Completion Badge */}
-                  <div 
-                    className="px-4 py-2 rounded-lg text-center font-semibold"
-                    style={{
-                      backgroundColor: 'var(--color-success)',
-                      color: 'white'
-                    }}
-                  >
-                    {studentData.progress?.percentage || 0}% completed
-                    <div className="text-xs mt-1">Level {studentData.progress?.currentLevel || 1} of {studentData.progress?.totalLevels || 0}</div>
-                  </div>
-                </div>
+              <div className="w-full h-full flex items-center justify-center text-3xl font-bold"
+                style={{ color: 'var(--color-text-primary)' }}>
+                {studentData?.student?.name?.charAt(0)?.toUpperCase() || 'S'}
               </div>
-              
-              {/* Track & Duration Info */}
-              <div className="space-y-3 mb-6">
-                <div 
-                  className="px-3 py-2 rounded-lg text-sm font-medium"
+            </div>
+
+            {/* Basic Info */}
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <h1 className="text-3xl font-bold" style={{ color: 'var(--color-text-primary)' }}>
+                  {studentData?.student?.name || 'Student Name'}
+                </h1>
+                <span 
+                  className="px-3 py-1 rounded-full text-sm font-medium"
                   style={{
-                    backgroundColor: 'var(--color-success)',
-                    color: 'white'
+                    backgroundColor: 'var(--color-success-bg)',
+                    color: 'var(--color-success)'
                   }}
                 >
-                  Track: {studentData.student?.careerTrack || 'Unknown'}
-                </div>
-                
-                <div 
-                  className="px-3 py-2 rounded-lg text-sm font-medium"
-                  style={{
-                    backgroundColor: 'var(--color-success)',
-                    color: 'white'
-                  }}
-                >
-                  Enrolled: {studentData.student?.createdAt ? formatDate(studentData.student.createdAt) : 'Unknown'}
-                </div>
-                
-                <div 
-                  className="px-3 py-2 rounded-lg text-sm font-medium"
-                  style={{
-                    backgroundColor: 'var(--color-success)',
-                    color: 'white'
-                  }}
-                >
-                  College: {studentData.student?.college || 'Not specified'}
-                </div>
+                  Ready to Hire
+                </span>
               </div>
-              
-              {/* Progress Summary */}
-              <div className="mb-6">
-                <h3 
-                  className="text-sm font-semibold mb-3 uppercase tracking-wider"
-                  style={{ color: 'var(--color-text-primary)' }}
-                >
-                  Progress Summary
-                </h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span style={{ color: 'var(--color-text-secondary)' }}>Current Level:</span>
-                    <span style={{ color: 'var(--color-text-primary)' }}>{studentData.progress?.currentLevel || 1}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span style={{ color: 'var(--color-text-secondary)' }}>Completed:</span>
-                    <span style={{ color: 'var(--color-text-primary)' }}>{studentData.progress?.completedLevels || 0} / {studentData.progress?.totalLevels || 0}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span style={{ color: 'var(--color-text-primary)' }}>Total Points:</span>
-                    <span style={{ color: 'var(--color-text-primary)' }}>{studentData.progress?.totalPoints || 0}</span>
-                  </div>
+              <p className="text-lg mb-3" style={{ color: 'var(--color-text-secondary)' }}>
+                {studentData?.student?.college || 'Location'}, {studentData?.student?.department || 'India'}
+              </p>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>Track:</span>
+                  <span className="text-sm font-medium px-3 py-1 rounded-full" style={{ 
+                    backgroundColor: 'var(--color-accent-tertiary)',
+                    color: 'var(--color-accent-primary)'
+                  }}>
+                    {studentData?.student?.careerTrack || 'Full Stack Development'}
+                  </span>
                 </div>
-              </div>
-              
-              {/* Attendance */}
-              <div>
-                <h3 
-                  className="text-sm font-semibold mb-2 uppercase tracking-wider"
-                  style={{ color: 'var(--color-text-primary)' }}
-                >
-                  Attendance
-                </h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span style={{ color: 'var(--color-text-secondary)' }}>Present:</span>
-                    <span style={{ color: 'var(--color-text-primary)' }}>{studentData.attendance?.presentDays || 0} / {studentData.attendance?.totalDays || 0}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span style={{ color: 'var(--color-text-primary)' }}>Percentage:</span>
-                    <span style={{ color: 'var(--color-text-primary)' }}>{studentData.attendance?.percentage || 0}%</span>
-                  </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>Duration:</span>
+                  <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                    6 months
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>Last verified:</span>
+                  <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                    {new Date(studentData?.student?.createdAt || '').toLocaleDateString('en-US', { 
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric'
+                    })}
+                  </span>
                 </div>
               </div>
             </div>
-            
-
           </div>
-          
-          {/* Right Side - Main Content */}
-          <div className="lg:col-span-2 space-y-6">
-            
-            {/* Student Info */}
+        </div>
+
+        {/* Skills Section */}
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            {['SQL', 'Python', 'EDA', 'Data Viz', 'Communication'].map((skill) => (
+              <span
+                key={skill}
+                className="px-4 py-2 rounded-full text-sm font-medium"
+                style={{
+                  backgroundColor: 'var(--color-tertiary-bg)',
+                  color: 'var(--color-text-primary)'
+                }}
+              >
+                {skill}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Sidebar - Recommended Roles */}
+          <div className="lg:col-span-1">
             <div 
-              className="p-6 rounded-2xl border"
+              className="p-6 rounded-2xl border mb-6"
               style={{
                 backgroundColor: 'var(--color-surface)',
                 borderColor: 'var(--color-border)',
                 boxShadow: 'var(--shadow-md)'
               }}
             >
-              <h2 
-                className="text-xl font-bold mb-4"
-                style={{ color: 'var(--color-text-primary)' }}
-              >
-                Student Information:
+              <h2 className="text-lg font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
+                RECOMMENDED ROLES
               </h2>
               <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span style={{ color: 'var(--color-text-secondary)' }}>Email:</span>
-                  <span style={{ color: 'var(--color-text-primary)' }}>{studentData.student?.email || 'Not provided'}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span style={{ color: 'var(--color-text-secondary)' }}>Department:</span>
-                  <span style={{ color: 'var(--color-text-primary)' }}>{studentData.student?.department || 'Not specified'}</span>
-                </div>
+                {['Full Stack Developer', 'Front-end Developer', 'Back-end Developer', 'Software Developer', 'AI Full stack Developer'].map((role) => (
+                  <div
+                    key={role}
+                    className="p-3 rounded-xl flex items-center justify-between"
+                    style={{
+                      backgroundColor: 'var(--color-tertiary-bg)',
+                      color: 'var(--color-text-primary)'
+                    }}
+                  >
+                    <span className="text-sm font-medium">{role}</span>
+                    <span className="text-xs opacity-50">...</span>
+                  </div>
+                ))}
               </div>
             </div>
-            
+
+            <div 
+              className="p-6 rounded-2xl border"
+              style={{
+                backgroundColor: 'var(--color-surface)',
+                borderColor: 'var(--color-border)',
+                boxShadow: 'var(--shadow-md)'
+              }}
+            >
+              <h2 className="text-lg font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
+                CERTIFICATE ID
+              </h2>
+              <div 
+                className="p-3 rounded-xl"
+                style={{
+                  backgroundColor: 'var(--color-tertiary-bg)',
+                  color: 'var(--color-text-primary)'
+                }}
+              >
+                <span className="text-sm font-mono">SYNCNER-2025-STU1234-9X5T7K</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Content - Portfolio */}
+          <div className="lg:col-span-2">
+            {/* Introduction Section */}
+            <div 
+              className="p-6 rounded-2xl border mb-6"
+              style={{
+                backgroundColor: 'var(--color-surface)',
+                borderColor: 'var(--color-border)',
+                boxShadow: 'var(--shadow-md)'
+              }}
+            >
+              <h2 className="text-xl font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
+                Introduction:
+              </h2>
+              <p className="text-base" style={{ color: 'var(--color-text-secondary)' }}>
+                Full-stack developer in the making, passionate about solving real business problems with code. Skilled in
+                SQL, Python, and data visualization, and ready to contribute to impactful projects.
+              </p>
+            </div>
+
             {/* Portfolio Section */}
             <div 
               className="p-6 rounded-2xl border"
@@ -377,223 +331,101 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                 boxShadow: 'var(--shadow-md)'
               }}
             >
-              <h2 
-                className="text-xl font-bold mb-6"
-                style={{ color: 'var(--color-text-primary)' }}
-              >
-                Learning Progress & Details:
+              <h2 className="text-xl font-semibold mb-6" style={{ color: 'var(--color-text-primary)' }}>
+                Portfolio:
               </h2>
-              
-                          {/* Learning Levels Section */}
-            <div className="mb-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-                  🎯 Learning Levels
-                </h3>
-                <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                  <span className="flex items-center gap-1">
-                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                    Completed
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                    In Progress
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <div className="w-3 h-3 rounded-full bg-gray-400"></div>
-                    Not Started
-                  </span>
-                </div>
-              </div>
-            </div>
-              
-                                          {/* Topics Content */}
-              <div className="space-y-4">
-                {/* Data Check */}
-                <div className="mb-4 p-3 bg-blue-50 rounded-lg">
-                  <p className="text-sm text-blue-800">
-                    <strong>Data Check:</strong> {studentData.learningLevels?.length || 0} learning levels loaded | Student: {studentData.student?.name || 'Unknown'} | Track: {studentData.student?.careerTrack || 'Unknown'} | Progress: {studentData.progress?.percentage || 0}% | Attendance: {studentData.attendance?.percentage || 0}%
-                  </p>
-                </div>
-                
-                {studentData.learningLevels && studentData.learningLevels.length > 0 ? (
-                  studentData.learningLevels.map((level: any, index: number) => (
-                    <div
-                      key={level.id || `level-${index}`}
-                      className={`border rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg ${
-                        level.status === 'completed' ? 'border-green-200' : 
-                        level.status === 'in-progress' ? 'border-yellow-200' : 'border-gray-200'
-                      }`}
-                      style={{
-                        borderColor: level.status === 'completed' ? 'var(--color-success)' : 
-                                   level.status === 'in-progress' ? 'var(--color-warning)' : 'var(--color-border)',
-                        backgroundColor: 'var(--color-tertiary-bg)'
-                      }}
+
+              {/* Learning Journey */}
+              <div className="space-y-6">
+                {studentData?.learningLevels?.map((level, index) => (
+                  <div 
+                    key={index}
+                    className="border rounded-xl overflow-hidden"
+                    style={{ borderColor: 'var(--color-border)' }}
+                  >
+                    {/* Level Header */}
+                    <div 
+                      className="p-4 flex items-center justify-between"
+                      style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
                     >
-                      {/* Module Header */}
-                      <div 
-                        className="p-6 cursor-pointer hover:bg-opacity-90 transition-all duration-200 group"
-                        onClick={() => toggleModule(level.id || `level-${index}`)}
-                        style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-4">
-                            {/* Module Number Badge */}
-                            <div 
-                              className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold transition-all duration-200 group-hover:scale-110 ${
-                                level.status === 'completed' ? 'bg-green-500 shadow-lg' : 
-                                level.status === 'in-progress' ? 'bg-yellow-500 shadow-lg' : 'bg-gray-400'
-                              }`}
-                              style={{
-                                color: 'white'
-                              }}
-                            >
-                              {level.level || index + 1}
-                            </div>
-                            
-                            {/* Module Info */}
-                            <div className="flex-1">
-                              <h3 
-                                className="text-lg font-bold mb-2"
-                                style={{ color: 'var(--color-text-primary)' }}
-                              >
-                                {level.courseName || `Level ${level.level || index + 1}`}
-                              </h3>
-                              
-                              {level.description && (
-                                <p className="text-sm mb-2" style={{ color: 'var(--color-text-secondary)' }}>
-                                  {level.description}
-                                </p>
-                              )}
-                              
-                              <div className="flex items-center gap-4 text-sm">
-                                <span style={{ color: 'var(--color-text-tertiary)' }}>
-                                  Status: {level.status || 'unknown'}
-                                </span>
-                                <span style={{ color: 'var(--color-text-tertiary)' }}>
-                                  Learn: {level.learn?.completed ? '✅' : '⏳'} {level.learn?.timeSpent ? formatTimeSpent(level.learn.timeSpent) : '0h 0m'}
-                                </span>
-                                <span style={{ color: 'var(--color-text-tertiary)' }}>
-                                  Test: {level.test?.completed ? '✅' : '⏳'} {level.test?.score || 0}/100 ({level.test?.attempts || 0} attempts)
-                                </span>
-                                <span style={{ color: 'var(--color-text-tertiary)' }}>
-                                  Exercise: {level.exercise?.completed ? '✅' : '⏳'} {level.exercise?.timeSpent ? formatTimeSpent(level.exercise.timeSpent) : '0h 0m'}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                          
-                          {/* Progress Badges */}
-                          <div className="flex items-center gap-4">
-                            {/* Learn Progress */}
-                            <div className="text-center">
-                              <div className="flex items-center gap-1 mb-1">
-                                <span className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>Learn</span>
-                                {level.learn?.completed ? (
-                                  <span className="text-green-500">✅</span>
-                                ) : (
-                                  <span className="text-yellow-500">⏳</span>
-                                )}
-                              </div>
-                              <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                <div 
-                                  className="h-full transition-all duration-300"
-                                  style={{
-                                    backgroundColor: level.learn?.completed ? 'var(--color-success)' : 'var(--color-warning)',
-                                    width: level.learn?.completed ? '100%' : '50%'
-                                  }}
-                                ></div>
-                              </div>
-                            </div>
-
-                            {/* Test Progress */}
-                            <div className="text-center">
-                              <div className="flex items-center gap-1 mb-1">
-                                <span className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>Test</span>
-                                {level.test?.completed ? (
-                                  <span className="text-green-500">✅</span>
-                                ) : (
-                                  <span className="text-yellow-500">⏳</span>
-                                )}
-                              </div>
-                              <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                <div 
-                                  className="h-full transition-all duration-300"
-                                  style={{
-                                    backgroundColor: level.test?.completed ? 'var(--color-success)' : 'var(--color-warning)',
-                                    width: level.test?.completed ? '100%' : '0%'
-                                  }}
-                                ></div>
-                              </div>
-                              <div className="text-xs font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                                {level.test?.score || 0}%
-                              </div>
-                            </div>
-
-                            {/* Exercise Progress */}
-                            <div className="text-center">
-                              <div className="flex items-center gap-1 mb-1">
-                                <span className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>Exercise</span>
-                                {level.exercise?.completed ? (
-                                  <span className="text-green-500">✅</span>
-                                ) : (
-                                  <span className="text-yellow-500">⏳</span>
-                                )}
-                              </div>
-                              <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                <div 
-                                  className="h-full transition-all duration-300"
-                                  style={{
-                                    backgroundColor: level.exercise?.completed ? 'var(--color-success)' : 'var(--color-warning)',
-                                    width: level.exercise?.completed ? '100%' : '0%'
-                                  }}
-                                ></div>
-                              </div>
-                            </div>
-                            
-                            {/* Status Badge */}
-                            <span 
-                              className="px-3 py-1 rounded-lg text-sm font-medium"
-                              style={{
-                                backgroundColor: level.status === 'completed' ? 'var(--color-success-bg)' : 'var(--color-warning-bg)',
-                                color: level.status === 'completed' ? 'var(--color-success)' : 'var(--color-warning)'
-                              }}
-                            >
-                              {level.status === 'completed' ? '✅ Completed' : '⏳ In Progress'}
-                            </span>
-                            
-                            {/* Expand/Collapse Icon */}
-                            {expandedModules.has(level.id || `level-${index}`) ? (
-                              <ChevronDownIcon className="w-5 h-5" style={{ color: 'var(--color-text-tertiary)' }} />
-                            ) : (
-                              <ChevronRightIcon className="w-5 h-5" style={{ color: 'var(--color-text-tertiary)' }} />
-                            )}
+                      <div className="flex items-center gap-4">
+                        <div 
+                          className="w-10 h-10 rounded-lg flex items-center justify-center text-lg font-bold"
+                          style={{ backgroundColor: 'var(--color-accent-primary)', color: 'white' }}
+                        >
+                          {String(index + 1).padStart(2, '0')}
+                        </div>
+                        <div>
+                          <h3 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                            {level.courseName}
+                          </h3>
+                          <div className="flex items-center gap-4 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                            <span>Time: 5h-20m</span>
+                            <span>MCQ {level.test?.score || 0}%</span>
+                            <span>Tasks {level.exercise?.completed ? '5/5' : '0/5'}</span>
                           </div>
                         </div>
                       </div>
-                      
-                                            {/* Expanded Details */}
-                      {expandedModules.has(level.id || `level-${index}`) && (
-                        <LevelExpandedDetails
-                          level={level}
-                          index={index}
-                          formatTimeSpent={formatTimeSpent}
-                          formatDate={formatDate}
-                        />
-                      )}
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>MCQ</span>
+                          <span 
+                            className="px-2 py-1 rounded text-xs font-medium"
+                            style={{
+                              backgroundColor: 'var(--color-success-bg)',
+                              color: 'var(--color-success)'
+                            }}
+                          >
+                            {level.test?.score || 0}%
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>Tasks</span>
+                          <span 
+                            className="px-2 py-1 rounded text-xs font-medium"
+                            style={{
+                              backgroundColor: 'var(--color-success-bg)',
+                              color: 'var(--color-success)'
+                            }}
+                          >
+                            5/5
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                  ))
-                ) : (
-                  <div className="text-center py-8">
-                    <div className="text-4xl mb-4">📚</div>
-                    <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--color-text-primary)' }}>
-                      No Learning Levels Found
-                    </h3>
-                    <p style={{ color: 'var(--color-text-secondary)' }}>
-                      No learning levels available for this student.
-                    </p>
+
+                    {/* Tasks */}
+                    <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {[1, 2, 3, 4, 5].map((taskNum) => (
+                        <div
+                          key={taskNum}
+                          className="p-4 rounded-xl"
+                          style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
+                        >
+                          <div className="flex items-start justify-between mb-2">
+                            <div>
+                              <h4 className="font-medium mb-1" style={{ color: 'var(--color-text-primary)' }}>
+                                Task: Build a web using HTML/CSS
+                              </h4>
+                              <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                                Brief: Create a HTML Website
+                              </p>
+                            </div>
+                            <button
+                              className="px-3 py-1 rounded text-sm"
+                              style={{
+                                backgroundColor: 'var(--color-tertiary-bg)',
+                                color: 'var(--color-text-secondary)'
+                              }}
+                            >
+                              View
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                )}
+                ))}
               </div>
             </div>
           </div>
