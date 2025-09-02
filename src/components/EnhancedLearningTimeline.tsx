@@ -125,7 +125,68 @@ const EnhancedLearningTimeline: React.FC<EnhancedLearningTimelineProps> = ({
 
   return (
     <div className="w-full">
-
+      {/* Overall Progress Summary */}
+      <div 
+        className="p-6 rounded-xl border mb-8"
+        style={{
+          backgroundColor: 'var(--color-surface)',
+          borderColor: 'var(--color-border)',
+          boxShadow: 'var(--shadow-md)'
+        }}
+      >
+        <h3 className="text-xl font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
+          Learning Journey Progress
+        </h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="text-center">
+            <div className="text-3xl font-bold" style={{ color: 'var(--color-success)' }}>
+              {timeline.filter(l => l.status === 'completed').length}
+            </div>
+            <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Completed</div>
+          </div>
+          <div className="text-center">
+            <div className="text-3xl font-bold" style={{ color: 'var(--color-warning)' }}>
+              {timeline.filter(l => l.status === 'in-progress').length}
+            </div>
+            <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>In Progress</div>
+          </div>
+          <div className="text-center">
+            <div className="text-3xl font-bold" style={{ color: 'var(--color-info)' }}>
+              {timeline.filter(l => l.status === 'not-started').length}
+            </div>
+            <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Not Started</div>
+          </div>
+          <div className="text-center">
+            <div className="text-3xl font-bold" style={{ color: 'var(--color-text-primary)' }}>
+              {timeline.length}
+            </div>
+            <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Total Levels</div>
+          </div>
+        </div>
+        
+        {/* Overall Progress Bar */}
+        <div className="mt-6">
+          <div className="flex justify-between text-sm mb-2">
+            <span style={{ color: 'var(--color-text-secondary)' }}>Overall Progress</span>
+            <span style={{ color: 'var(--color-text-primary)' }}>
+              {timeline.length > 0 
+                ? `${Math.round((timeline.filter(l => l.status === 'completed').length / timeline.length) * 100)}%`
+                : '0%'}
+            </span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-4">
+            <div 
+              className="h-4 rounded-full transition-all duration-500"
+              style={{
+                backgroundColor: 'var(--color-accent-primary)',
+                width: timeline.length > 0 
+                  ? `${Math.round((timeline.filter(l => l.status === 'completed').length / timeline.length) * 100)}%`
+                  : '0%'
+              }}
+            />
+          </div>
+        </div>
+      </div>
 
       {/* Timeline Container */}
       <div className="relative">
@@ -179,25 +240,34 @@ const EnhancedLearningTimeline: React.FC<EnhancedLearningTimelineProps> = ({
                 <div className="flex-1">
                   {/* Level Header */}
                   <div className="mb-4">
-                    <div className="flex items-center gap-3 mb-2">
-                      <span 
-                        className="px-3 py-1 rounded-full text-xs font-semibold"
-                        style={{
-                          backgroundColor: level.status === 'completed' 
-                            ? 'var(--color-success-bg)' 
-                            : level.status === 'in-progress'
-                            ? 'var(--color-warning-bg)'
-                            : 'var(--color-info-bg)',
-                          color: level.status === 'completed' 
-                            ? 'var(--color-success)' 
-                            : level.status === 'in-progress'
-                            ? 'var(--color-warning)'
-                            : 'var(--color-info)'
-                        }}
-                      >
-                        {level.status === 'completed' ? 'Completed' : 
-                         level.status === 'in-progress' ? 'In Progress' : 'Upcoming'}
-                      </span>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <span 
+                          className="px-3 py-1 rounded-full text-xs font-semibold"
+                          style={{
+                            backgroundColor: level.status === 'completed' 
+                              ? 'var(--color-success-bg)' 
+                              : level.status === 'in-progress'
+                              ? 'var(--color-warning-bg)'
+                              : 'var(--color-info-bg)',
+                            color: level.status === 'completed' 
+                              ? 'var(--color-success)' 
+                              : level.status === 'in-progress'
+                              ? 'var(--color-warning)'
+                              : 'var(--color-info)'
+                          }}
+                        >
+                          {level.status === 'completed' ? 'Completed' : 
+                           level.status === 'in-progress' ? 'In Progress' : 'Upcoming'}
+                        </span>
+                      </div>
+                      
+                      {/* Quick Stats */}
+                      <div className="flex items-center gap-4 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                        <span>Time: {formatTimeSpent(level.learn?.timeSpent || 0)}</span>
+                        <span>MCQ: {level.test?.score || 0}%</span>
+                        <span>Tasks: {level.exercise?.tasks?.filter(t => t.completed)?.length || 0}/{level.exercise?.tasks?.length || 0}</span>
+                      </div>
                     </div>
                     
                     <h3 
