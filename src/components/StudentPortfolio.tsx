@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { 
   fetchPortfolio, 
@@ -6,6 +6,7 @@ import {
   selectPortfolioLoading, 
   selectPortfolioError 
 } from '../redux/slices/portfolioSlice';
+import { useLevels } from '../hooks/useLevels';
 import ErrorBoundary from './ErrorBoundary';
 import { motion } from 'framer-motion';
 import { StudentPortfolioData } from '../services/portfolioService';
@@ -247,6 +248,9 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
   // If studentData is provided, use that instead of fetching
   const data = studentData || portfolio;
 
+  // Use the levels hook to get curriculum data
+  const { levels: curriculumLevels, loading: curriculumLoading } = useLevels(data?.student?.careerTrack);
+
   useEffect(() => {
     // Only fetch if studentData is not provided
     if (!studentData) {
@@ -254,7 +258,30 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
     }
   }, [dispatch, studentId, studentData]);
 
-  if (!studentData && loading) {
+  // Merge portfolio data with curriculum data
+  const mergedLevels = useMemo(() => {
+    if (!data?.learningLevels || !curriculumLevels) return [];
+    
+    return data.learningLevels.map((portfolioLevel: { level: number }) => {
+      // Find matching curriculum level
+      const curriculumLevel = curriculumLevels.find((cl: { order: number }) => cl.order === portfolioLevel.level);
+      
+      if (!curriculumLevel) return portfolioLevel;
+
+      // Merge the data, preferring portfolio data for progress/completion
+      return {
+        ...portfolioLevel,
+        readFirst: curriculumLevel.readFirst,
+        difficulty: curriculumLevel.difficulty,
+        duration: curriculumLevel.duration,
+        estimatedHours: curriculumLevel.estimatedHours,
+        skills: curriculumLevel.skills,
+        prerequisites: curriculumLevel.prerequisites
+      };
+    });
+  }, [data?.learningLevels, curriculumLevels]);
+
+  if ((!studentData && loading) || curriculumLoading) {
     return (
       <div className="min-h-screen p-6 flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
         <div className="text-center">
@@ -475,7 +502,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
           Portfolio
         </h2>
         <div className="space-y-4">
-          {data.learningLevels.map((level) => (
+          {mergedLevels.map((level: any) => (
             <div 
               key={level.level}
               className="border rounded-xl overflow-hidden"
@@ -506,7 +533,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                     <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
                       <div>MCQ {level.test.score}%</div>
                       <div>•</div>
-                      <div>Tasks {level.exercise.tasks.filter(t => t.completed).length}/{level.exercise.tasks.length}</div>
+                      <div>Tasks {level.exercise.tasks.filter((t: Task) => t.completed).length}/{level.exercise.tasks.length}</div>
                     </div>
                   </div>
                 </div>
@@ -638,7 +665,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                         </h4>
                       </div>
                       <div className="space-y-2">
-                        {level.exercise.tasks.map((task) => (
+                        {level.exercise.tasks.map((task: Task) => (
                           <div 
                             key={task.id}
                             className="p-3 rounded-lg border cursor-pointer transition-all duration-200 hover:border-accent-primary"
@@ -676,7 +703,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                             </div>
                             {task.submissionLinks && task.submissionLinks.length > 0 && (
                               <div className="flex items-center gap-2 mt-1">
-                                {task.submissionLinks.map((link, index) => (
+                                {task.submissionLinks.map((link: string, index: number) => (
                                   <a
                                     key={index}
                                     href={link}
