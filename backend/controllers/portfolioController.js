@@ -75,10 +75,12 @@ export const getStudentPortfolio = async (req, res) => {
     }
 
     // Check if user has permission to view this portfolio
-    const isOwnPortfolio = req.user._id.toString() === studentId.toString();
-    const isStaffOrAdmin = req.user.role === 'admin' || req.user.role === 'staff';
+    const isPublicRoute = req.path.includes('/public/');
+    const isOwnPortfolio = req.user && req.user._id.toString() === studentId.toString();
+    const isStaffOrAdmin = req.user && (req.user.role === 'admin' || req.user.role === 'staff');
     
-    if (!isOwnPortfolio && !isStaffOrAdmin) {
+    // Allow access if it's a public route, user owns the portfolio, or user is staff/admin
+    if (!isPublicRoute && !isOwnPortfolio && !isStaffOrAdmin) {
       return res.status(403).json({
         success: false,
         message: 'Access denied. Only students can view their own portfolio, and staff/admin can view any portfolio.'

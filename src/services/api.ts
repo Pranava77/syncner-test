@@ -527,6 +527,26 @@ class ApiService {
     }
   }
 
+  async getPublicPortfolio(studentId: string): Promise<any> {
+    const url = `${this.baseURL}/student/portfolio/public/${studentId}`;
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async getStaffAnalytics(): Promise<StaffAnalyticsApiResponse> {
     const response = await fetch(`${this.baseURL}/staff/analytics`, {
       method: 'GET',

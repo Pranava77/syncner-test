@@ -31,6 +31,7 @@ import LevelLearnPage from './pages/LevelLearnPage';
 import LevelTestPage from './pages/LevelTestPage';
 import LevelExercisePage from './pages/LevelExercisePage';
 import ProjectsPage from './pages/ProjectsPage';
+import PublicPortfolio from './pages/PublicPortfolio';
 
 
 function AdminWrapper() {
@@ -89,6 +90,7 @@ function App() {
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/portfolio/public/:studentId" element={<PublicPortfolio />} />
           <Route path="/login" element={
             isAuthenticated && user && !isLoading && !isRestoringSession ? (
               <Navigate to={getDefaultRoute(user)} replace />

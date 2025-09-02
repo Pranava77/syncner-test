@@ -16,7 +16,8 @@ import {
   ExternalLinkIcon,
   ClockIcon,
   CheckCircledIcon,
-  Cross2Icon
+  Cross2Icon,
+  Share1Icon
 } from '@radix-ui/react-icons';
 
 interface Task {
@@ -276,6 +277,47 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
     return data?.learningLevels || [];
   }, [data?.learningLevels]);
 
+  // Share functionality
+  const handleShare = async () => {
+    const shareUrl = `${window.location.origin}/portfolio/public/${data?.student?._id || studentId}`;
+    const shareText = `Check out ${data?.student?.name}'s portfolio on Syncner!`;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `${data?.student?.name}'s Portfolio`,
+          text: shareText,
+          url: shareUrl,
+        });
+      } catch (err) {
+        console.log('Error sharing:', err);
+        // Fallback to copy to clipboard
+        copyToClipboard(shareUrl);
+      }
+    } else {
+      // Fallback to copy to clipboard
+      copyToClipboard(shareUrl);
+    }
+  };
+
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      // You could add a toast notification here
+      alert('Portfolio link copied to clipboard!');
+    } catch (err) {
+      console.error('Failed to copy: ', err);
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      alert('Portfolio link copied to clipboard!');
+    }
+  };
+
   if ((!studentData && loading)) {
     return (
       <div className="min-h-screen p-6 flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
@@ -398,18 +440,39 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
               </div>
             </div>
 
-            {/* Ready to Hire Badge */}
-            {data.student.readyToHire && (
-              <div 
-                className="inline-block px-6 py-2 rounded-full text-lg font-bold"
-                style={{ 
-                  backgroundColor: 'var(--color-success)',
+            {/* Ready to Hire Badge and Share Button */}
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              {data.student.readyToHire && (
+                <div 
+                  className="inline-block px-6 py-2 rounded-full text-lg font-bold"
+                  style={{ 
+                    backgroundColor: 'var(--color-success)',
+                    color: 'var(--color-text-inverse)'
+                  }}
+                >
+                  Ready to Hire
+                </div>
+              )}
+              
+              {/* Share Button */}
+              <button
+                onClick={handleShare}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:shadow-md"
+                style={{
+                  backgroundColor: 'var(--color-accent-primary)',
                   color: 'var(--color-text-inverse)'
                 }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                }}
               >
-                Ready to Hire
-              </div>
-            )}
+                <Share1Icon className="w-4 h-4" />
+                Share Portfolio
+              </button>
+            </div>
           </div>
         </div>
 
@@ -491,38 +554,28 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
 
         {/* Recommended Roles Section */}
         <div 
-          className="mb-8 p-6 rounded-xl border"
+          className="mb-8 p-4 rounded-lg border"
           style={{
             backgroundColor: 'var(--color-surface)',
             borderColor: 'var(--color-border)'
           }}
         >
-          <h2 className="text-xl font-bold mb-4" style={{ color: 'var(--color-text-primary)' }}>
-            Recommended Roles:
+          <h2 className="text-sm font-medium mb-3" style={{ color: 'var(--color-text-secondary)' }}>
+            Recommended Roles
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {data.student.recommendedRoles.map((role, index) => (
-              <div
+          <div className="flex flex-wrap gap-2">
+            {data.student.recommendedRoles.map((role) => (
+              <span
                 key={role}
-                className="p-4 rounded-lg border text-center"
+                className="px-3 py-1 rounded-full text-sm"
                 style={{
-                  backgroundColor: 'var(--color-tertiary-bg)',
-                  borderColor: 'var(--color-border)'
+                  backgroundColor: 'var(--color-secondary-bg)',
+                  color: 'var(--color-text-tertiary)',
+                  border: '1px solid var(--color-border)'
                 }}
               >
-                <div 
-                  className="w-12 h-12 mx-auto mb-3 rounded-full flex items-center justify-center text-xl font-bold"
-                  style={{
-                    backgroundColor: 'var(--color-accent-tertiary)',
-                    color: 'var(--color-accent-primary)'
-                  }}
-                >
-                  {index + 1}
-                </div>
-                <h3 className="text-base font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-                  {role}
-                </h3>
-              </div>
+                {role}
+              </span>
             ))}
           </div>
         </div>
