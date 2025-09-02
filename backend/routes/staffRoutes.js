@@ -22,6 +22,26 @@ const router = express.Router();
  * - No more fake timestamps that change on every refresh
  */
 
+// Test route to debug the issue
+router.get('/test/:id', protect, authorize('staff', 'admin'), async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log('🧪 Test route called with ID:', id);
+    
+    const student = await User.findById(id).select('-password').lean();
+    console.log('🧪 Student found:', !!student);
+    
+    if (!student) {
+      return res.status(404).json({ success: false, message: 'Student not found' });
+    }
+    
+    res.json({ success: true, data: { student } });
+  } catch (error) {
+    console.error('🧪 Test route error:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
 // Get all students with pagination and filtering
 router.get('/students', protect, authorize('staff', 'admin'), async (req, res) => {
   try {
@@ -309,13 +329,18 @@ router.get('/students', protect, authorize('staff', 'admin'), async (req, res) =
 // Get detailed student information
 router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, res) => {
   try {
+    console.log('🔍 Student details route called with ID:', req.params.id);
     const { id } = req.params;
     
+    console.log('🔍 Step 1: Fetching student from database...');
     const student = await User.findById(id)
       .select('-password')
       .lean();
     
+    console.log('🔍 Step 1 result: Student found:', !!student);
+    
     if (!student) {
+      console.log('❌ Student not found');
       return res.status(404).json({
         success: false,
         message: 'Student not found'
@@ -350,23 +375,29 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
     
     console.log('🔄 Normalized career track:', normalizedCareerTrack);
     
+    console.log('🔍 Step 2: Fetching user progress...');
     // Get detailed progress data
     const progress = await UserProgress.findOne({ user: id })
       .lean();
     
+    console.log('🔍 Step 2 result: Progress found:', !!progress);
+    
+    console.log('🔍 Step 3: Fetching curriculum items...');
     // Get ALL curriculum items for this career track to determine total levels
     const curriculumItems = await Curriculum.find({ 
       careerTrack: normalizedCareerTrack, 
       isActive: true 
     }).sort({ order: 1 }).lean();
     
+    console.log('🔍 Step 3 result: Curriculum items found:', curriculumItems.length);
+    
     // Get unique level orders from curriculum
     const curriculumLevelOrders = [...new Set(curriculumItems.map(item => item.order))].sort((a, b) => a - b);
     
     // Also include completed level orders that might not be in current curriculum
     const completedLevelOrders = progress?.completedLevels?.map(l => l.levelOrder).filter(order => order > 0) || [];
-    const allLevelOrders = [...new Set([...curriculumLevelOrders, ...completedLevelOrders])].sort((a, b) => a - b);
-    const totalLevels = allLevelOrders.length;
+    let allLevelOrders = [...new Set([...curriculumLevelOrders, ...completedLevelOrders])].sort((a, b) => a - b);
+    let totalLevels = allLevelOrders.length;
     
     console.log('📚 Staff route curriculum debug:', {
       studentId: id,
@@ -582,7 +613,7 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
     const detailedLearningTimeline = [];
     
     console.log('🔨 Starting timeline generation with:', {
-      levelOrders: levelOrders,
+      levelOrders: allLevelOrders,
       curriculumItemsCount: curriculumItems.length,
       progressExists: !!progress,
       progressCompletedLevels: progress?.completedLevels?.length || 0
