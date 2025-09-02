@@ -479,7 +479,7 @@ export const getStudentPortfolio = async (req, res) => {
       }
     };
 
-    // Generate certificate ID
+    // Generate certificate ID (deterministic based on user ID)
     const generateCertificateId = (userId, careerTrack) => {
       const prefix = {
         'full-stack': 'FSE',
@@ -489,9 +489,12 @@ export const getStudentPortfolio = async (req, res) => {
       }[careerTrack] || 'STU';
 
       const year = new Date().getFullYear().toString().slice(-2);
-      const randomDigits = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
       
-      return `SYNCNER-${prefix}${year}-${userId.toString().slice(-5)}-${randomDigits}`;
+      // Create deterministic "random" digits based on user ID
+      const userIdHash = userId.toString().split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+      const deterministicDigits = (userIdHash % 10000).toString().padStart(4, '0');
+      
+      return `SYNCNER-${prefix}${year}-${userId.toString().slice(-5)}-${deterministicDigits}`;
     };
 
     // Build the response

@@ -499,6 +499,24 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
       return roles[normalizedCareerTrack] || ['Software Developer', 'Technical Specialist', 'IT Professional'];
     };
     
+    // Generate certificate ID (deterministic based on user ID - same logic as portfolio controller)
+    const generateCertificateId = (userId, careerTrack) => {
+      const prefix = {
+        'full-stack': 'FSE',
+        'data-science': 'DSE',
+        'ai-ml': 'AIM',
+        'ui-ux': 'UXD'
+      }[careerTrack] || 'STU';
+
+      const year = new Date().getFullYear().toString().slice(-2);
+      
+      // Create deterministic "random" digits based on user ID
+      const userIdHash = userId.toString().split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+      const deterministicDigits = (userIdHash % 10000).toString().padStart(4, '0');
+      
+      return `SYNCNER-${prefix}${year}-${userId.toString().slice(-5)}-${deterministicDigits}`;
+    };
+    
     // Get track information for additional details
     const trackInfo = await Track.findOne({ name: normalizedCareerTrack }).lean();
     
@@ -1099,6 +1117,7 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
       simpleTimeline: limitedSimpleTimeline, // Keep simple timeline for backward compatibility
       skills: getSkillsForTrack(),
       recommendedRoles: getRecommendedRoles(),
+      certificateId: generateCertificateId(student._id, normalizedCareerTrack),
       trackInfo: trackInfo || null,
       enrolledDate: student.createdAt ? new Date(student.createdAt).toLocaleDateString('en-GB') : 'N/A',
       createdAt: student.createdAt, // Add raw createdAt for frontend use
