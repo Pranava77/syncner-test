@@ -571,82 +571,6 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                       <h3 className="text-lg sm:text-xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>
                         {level.courseName || `Foundations: Linux & Shell`}
                       </h3>
-                      <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-4 text-xs sm:text-sm">
-                        <div 
-                          className="flex items-center gap-1 sm:gap-2"
-                          style={{ color: 'var(--color-text-secondary)' }}
-                        >
-                          <span>Completed:</span>
-                          <span className="font-medium">
-                            {new Date(level.test?.endTime || level.learn?.endTime || Date.now()).toLocaleDateString('en-US', {
-                              month: 'short',
-                              day: '2-digit'
-                            })}
-                          </span>
-                        </div>
-                        <div 
-                          className="flex items-center gap-1 sm:gap-2"
-                          style={{ color: 'var(--color-text-secondary)' }}
-                        >
-                          <span>Assessed:</span>
-                          <span className="font-medium">{level.test?.score || 0}/100</span>
-                        </div>
-                        <div 
-                          className="flex items-center gap-1 sm:gap-2"
-                          style={{ color: 'var(--color-text-secondary)' }}
-                        >
-                          <span>Time:</span>
-                          <span className="font-medium">
-                            {Math.floor((level.learn?.timeSpent || 0 + level.exercise?.timeSpent || 0) / 60)}h{((level.learn?.timeSpent || 0 + level.exercise?.timeSpent || 0) % 60)}m
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {/* Progress Badge */}
-                    <div className="text-center sm:text-right">
-                      <div 
-                        className="px-3 sm:px-4 py-2 rounded-full text-sm font-bold mb-2"
-                        style={{
-                          backgroundColor: (level.status || 'not-started') === 'completed' 
-                            ? 'var(--color-success)'
-                            : (level.status || 'not-started') === 'in-progress'
-                            ? 'var(--color-warning)'
-                            : 'var(--color-error)',
-                          color: 'var(--color-text-inverse)'
-                        }}
-                      >
-                        MCQ {level.test?.score || 86}%
-                      </div>
-                      <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
-                        Tasks {level.exercise?.tasks?.filter((t: Task) => t.completed).length || 0}/{level.exercise?.tasks?.length || 5}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Progress Bar */}
-                  <div className="mt-4">
-                    <div className="flex justify-between text-xs mb-2" style={{ color: 'var(--color-text-tertiary)' }}>
-                      <span>Progress</span>
-                      <span>
-                        {Math.round(((level.learn?.completed ? 1 : 0) + 
-                                    (level.test?.completed ? 1 : 0) + 
-                                    (level.exercise?.completed ? 1 : 0)) / 3 * 100)}%
-                      </span>
-                    </div>
-                    <div 
-                      className="w-full h-2 rounded-full overflow-hidden"
-                      style={{ backgroundColor: 'var(--color-border)' }}
-                    >
-                      <div 
-                        className="h-full transition-all duration-500"
-                        style={{ 
-                          width: `${Math.round(((level.learn?.completed ? 1 : 0) + 
-                                               (level.test?.completed ? 1 : 0) + 
-                                               (level.exercise?.completed ? 1 : 0)) / 3 * 100)}%`,
-                          backgroundColor: 'var(--color-success)'
-                        }}
-                      />
                     </div>
                   </div>
                 </div>
@@ -662,7 +586,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                     style={{ borderColor: 'var(--color-border)' }}
                   >
                     <div className="p-6">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
                         {/* Dynamic Task Items based on actual exercise data */}
                         {level.exercise?.tasks && level.exercise.tasks.length > 0 ? (
                           level.exercise.tasks.map((task: Task, i: number) => (
