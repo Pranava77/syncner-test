@@ -258,13 +258,44 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
     }
   }, [dispatch, studentId, studentData]);
 
-  // Use student levels directly since they already contain all needed data
+  // Merge portfolio learning levels with student levels data
   const mergedLevels = useMemo(() => {
-    if (!studentLevels || !Array.isArray(studentLevels)) return [];
-    return studentLevels.filter(level => level && typeof level === 'object');
-  }, [studentLevels]);
+    if (!data?.learningLevels || !studentLevels || !Array.isArray(studentLevels)) {
+      return data?.learningLevels || [];
+    }
+    
+    return data.learningLevels.map(portfolioLevel => {
+      // Find matching student level by order
+      const studentLevel = studentLevels.find(sl => sl.order === portfolioLevel.level);
+      
+      if (!studentLevel) return portfolioLevel;
 
-  if ((!studentData && loading) || levelsLoading) {
+      // Merge the data, keeping portfolio progress data but using student level status
+      return {
+        ...portfolioLevel,
+        // Use student level completion status
+        isCompleted: studentLevel.isCompleted,
+        isUnlocked: studentLevel.isUnlocked,
+        completedSections: studentLevel.completedSections,
+        // Keep portfolio progress data for learn/test/exercise sections
+        learn: {
+          ...portfolioLevel.learn,
+          // Update completion status from student level
+          completed: studentLevel.completedSections?.learn || portfolioLevel.learn.completed
+        },
+        test: {
+          ...portfolioLevel.test,
+          completed: studentLevel.completedSections?.test || portfolioLevel.test.completed
+        },
+        exercise: {
+          ...portfolioLevel.exercise,
+          completed: studentLevel.completedSections?.exercise || portfolioLevel.exercise.completed
+        }
+      };
+    });
+  }, [data?.learningLevels, studentLevels]);
+
+  if ((!studentData && loading) || (!data && levelsLoading)) {
     return (
       <div className="min-h-screen p-6 flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
         <div className="text-center">

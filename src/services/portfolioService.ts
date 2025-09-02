@@ -138,25 +138,8 @@ export class PortfolioService {
 
       const portfolioData = portfolioResponse.data;
 
-      // Get curriculum levels data for the student's career track
-      if (portfolioData.student.careerTrack) {
-        const levelsResponse = await apiService.get(`/training/levels?track=${portfolioData.student.careerTrack}`);
-        
-        if (levelsResponse.success) {
-          // Merge curriculum data with portfolio data
-          const levelsMap = new Map(levelsResponse.data.map((level: any) => [level.order, level]));
-          
-          portfolioData.learningLevels = portfolioData.learningLevels.map((level: any) => ({
-            ...level,
-            readFirst: levelsMap.get(level.level)?.readFirst || null,
-            difficulty: levelsMap.get(level.level)?.difficulty || 'beginner',
-            duration: levelsMap.get(level.level)?.duration || '1h 0m',
-            estimatedHours: levelsMap.get(level.level)?.estimatedHours || 1,
-            skills: levelsMap.get(level.level)?.skills || [],
-            prerequisites: levelsMap.get(level.level)?.prerequisites || []
-          }));
-        }
-      }
+      // Note: Curriculum data merging is now handled in the component using useStudentLevels hook
+      // This keeps the portfolio service focused on portfolio-specific data
 
       return portfolioData;
     } catch (error) {
