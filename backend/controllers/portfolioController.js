@@ -220,12 +220,12 @@ export const getStudentPortfolio = async (req, res) => {
           const taskSubmissions = exerciseSubmissions.filter(sub => sub.exerciseTitle === task.title);
           // Get all links from all submissions
           const allLinks = taskSubmissions.reduce((links, sub) => [...links, ...(sub.links || [])], []);
-          // Get the latest submission status
+          // Get the latest submission status and links
           const latestSubmission = taskSubmissions[taskSubmissions.length - 1];
           
           return {
             ...task,
-            submissionLinks: allLinks,
+            submissionLinks: latestSubmission ? latestSubmission.links || [] : [],
             status: latestSubmission ? latestSubmission.status : 'not-submitted',
             completed: latestSubmission ? latestSubmission.status === 'approved' : false
           };
