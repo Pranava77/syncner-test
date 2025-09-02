@@ -1,7 +1,5 @@
 import apiService from './api';
 
-
-
 export interface StudentPortfolioData {
   student: {
     _id: string;
@@ -11,9 +9,9 @@ export interface StudentPortfolioData {
     college?: string;
     department?: string;
     createdAt: string;
-    introduction?: string;
-    readyToHire?: boolean;
-    duration?: string;
+    introduction?: string | null;
+    readyToHire: boolean;
+    duration: string;
   };
   progress: {
     currentLevel: number;
@@ -49,7 +47,14 @@ export interface StudentPortfolioData {
       startTime: string | null;
       endTime: string | null;
       timeSpent: number;
-      content: any[];
+      content: Array<{
+        id: string;
+        title: string;
+        description: string;
+        content: string;
+        externalLink?: string;
+        order: number;
+      }>;
       title: string;
       status: string;
       materials: {
@@ -58,6 +63,7 @@ export interface StudentPortfolioData {
         description: string;
         externalLink?: string;
         order: number;
+        completed?: boolean;
       }[];
     };
     test: {
@@ -66,7 +72,12 @@ export interface StudentPortfolioData {
       attempts: number;
       startTime: string | null;
       endTime: string | null;
-      content: any[];
+      content: Array<{
+        id: string;
+        title: string;
+        question: string;
+        order: number;
+      }>;
       title: string;
       status: string;
       questions: {
@@ -74,7 +85,7 @@ export interface StudentPortfolioData {
         title: string;
         question: string;
         options: string[];
-        answer: string;
+        answer?: string;
         order: number;
       }[];
     };
@@ -83,7 +94,13 @@ export interface StudentPortfolioData {
       startTime: string | null;
       endTime: string | null;
       timeSpent: number;
-      content: any[];
+      content: Array<{
+        id: string;
+        title: string;
+        description: string;
+        content: string;
+        order: number;
+      }>;
       title: string;
       status: string;
       tasks: {
@@ -93,18 +110,16 @@ export interface StudentPortfolioData {
         content: string;
         order: number;
         completed: boolean;
-        submissionLink?: string;
-        score?: number;
-        attempts?: number;
-        lastAttemptAt?: string;
-        feedback?: string;
-        status?: 'submitted' | 'approved' | 'rejected';
+        submissionLinks: string[];
+        score: number;
+        attempts: number;
+        lastAttemptAt: string | null;
+        feedback: string;
+        status: 'not-submitted' | 'submitted' | 'approved' | 'rejected';
       }[];
     };
   }[];
 }
-
-
 
 export class PortfolioService {
   /**
@@ -126,6 +141,4 @@ export class PortfolioService {
       throw new Error('Failed to fetch portfolio data');
     }
   }
-
-
 }

@@ -29,8 +29,12 @@ interface Task {
   content: string;
   order: number;
   completed: boolean;
-  submissionLink?: string;
-  status?: 'submitted' | 'approved' | 'rejected' | 'not-submitted';
+  submissionLinks: string[];
+  score?: number;
+  attempts?: number;
+  lastAttemptAt?: string | null;
+  feedback?: string;
+  status?: 'not-submitted' | 'submitted' | 'approved' | 'rejected';
 }
 
 interface Material {
@@ -97,43 +101,57 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, task }) => {
                 {task.content}
               </div>
             </div>
-            {task.submissionLink && (
+            {task.submissionLinks && task.submissionLinks.length > 0 && (
               <div>
-                <h4 className="font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>Submission:</h4>
-                <div className="flex items-center gap-2">
-                  <a 
-                    href={task.submissionLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105"
-                    style={{ 
-                      backgroundColor: 'var(--color-accent-primary)',
-                      color: 'var(--color-text-inverse)'
-                    }}
-                  >
-                    <ExternalLinkIcon className="w-4 h-4" />
-                    View Submission
-                  </a>
-                  <div 
-                    className="px-3 py-1 rounded-full text-sm"
-                    style={{
-                      backgroundColor: task.status === 'approved' 
-                        ? 'var(--color-success-bg)'
-                        : task.status === 'submitted'
-                        ? 'var(--color-warning-bg)'
-                        : 'var(--color-error-bg)',
-                      color: task.status === 'approved'
-                        ? 'var(--color-success)'
-                        : task.status === 'submitted'
-                        ? 'var(--color-warning)'
-                        : 'var(--color-error)'
-                    }}
-                  >
-                    {task.status === 'approved' ? 'Approved' : 
-                     task.status === 'submitted' ? 'Submitted' : 
-                     'Not Submitted'}
-                  </div>
+                <h4 className="font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
+                  {task.submissionLinks.length > 1 ? 'Submissions:' : 'Submission:'}
+                </h4>
+                <div className="flex flex-col gap-2">
+                  {task.submissionLinks.map((link, index) => (
+                    <div key={index} className="flex items-center justify-between">
+                      <a 
+                        href={link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105"
+                        style={{ 
+                          backgroundColor: 'var(--color-accent-primary)',
+                          color: 'var(--color-text-inverse)'
+                        }}
+                      >
+                        <ExternalLinkIcon className="w-4 h-4" />
+                        {task.submissionLinks.length > 1 ? `View Submission #${index + 1}` : 'View Submission'}
+                      </a>
+                      <div 
+                        className="px-3 py-1 rounded-full text-sm"
+                        style={{
+                          backgroundColor: task.status === 'approved' 
+                            ? 'var(--color-success-bg)'
+                            : task.status === 'submitted'
+                            ? 'var(--color-warning-bg)'
+                            : 'var(--color-error-bg)',
+                          color: task.status === 'approved'
+                            ? 'var(--color-success)'
+                            : task.status === 'submitted'
+                            ? 'var(--color-warning)'
+                            : 'var(--color-error)'
+                        }}
+                      >
+                        {task.status === 'approved' ? 'Approved' : 
+                         task.status === 'submitted' ? 'Submitted' : 
+                         'Not Submitted'}
+                      </div>
+                    </div>
+                  ))}
                 </div>
+                {task.feedback && (
+                  <div className="mt-4">
+                    <h4 className="font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>Feedback:</h4>
+                    <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                      {task.feedback}
+                    </p>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -236,15 +254,17 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
             <h1 className="text-3xl font-bold" style={{ color: 'var(--color-text-primary)' }}>
               {data.student.name}
             </h1>
-            <div 
-              className="px-3 py-1 rounded-lg text-sm font-medium"
-              style={{ 
-                backgroundColor: 'var(--color-success-bg)',
-                color: 'var(--color-success)'
-              }}
-            >
-              Ready to Hire
-            </div>
+            {data.student.readyToHire && (
+              <div 
+                className="px-3 py-1 rounded-lg text-sm font-medium"
+                style={{ 
+                  backgroundColor: 'var(--color-success-bg)',
+                  color: 'var(--color-success)'
+                }}
+              >
+                Ready to Hire
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-4 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
             <div>{data.student.college || 'Not specified'}</div>
@@ -294,7 +314,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
           Introduction
         </h2>
         <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-          Full-stack developer in the making, passionate about solving real business problems with code. Skilled in SQL, Python, and data visualization, and ready to contribute to impactful projects.
+          {data.student.introduction || 'Full-stack developer in the making, passionate about solving real business problems with code. Skilled in SQL, Python, and data visualization, and ready to contribute to impactful projects.'}
         </p>
       </div>
 
@@ -587,18 +607,23 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                                 </div>
                               )}
                             </div>
-                            {task.submissionLink && (
-                              <a
-                                href={task.submissionLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-1 text-xs"
-                                style={{ color: 'var(--color-accent-primary)' }}
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                <ExternalLinkIcon className="w-3 h-3" />
-                                View Submission
-                              </a>
+                            {task.submissionLinks && task.submissionLinks.length > 0 && (
+                              <div className="flex items-center gap-2 mt-1">
+                                {task.submissionLinks.map((link, index) => (
+                                  <a
+                                    key={index}
+                                    href={link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-1 text-xs"
+                                    style={{ color: 'var(--color-accent-primary)' }}
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    <ExternalLinkIcon className="w-3 h-3" />
+                                    {task.submissionLinks.length > 1 ? `Submission #${index + 1}` : 'View Submission'}
+                                  </a>
+                                ))}
+                              </div>
                             )}
                           </div>
                         ))}
