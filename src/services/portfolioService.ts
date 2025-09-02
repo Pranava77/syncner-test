@@ -131,14 +131,12 @@ export class PortfolioService {
       // Get portfolio data
       const endpoint = studentId === 'me' ? '/student/portfolio/me' : `/student/portfolio/${studentId}`;
       const portfolioResponse = await apiService.get(endpoint);
-      console.log('Portfolio API response:', portfolioResponse);
       
       if (!portfolioResponse.success) {
         throw new Error(portfolioResponse.message || 'Failed to fetch portfolio data');
       }
 
       const portfolioData = portfolioResponse.data;
-      console.log('Portfolio data extracted:', portfolioData);
 
       // Note: Curriculum data merging is now handled in the component using useStudentLevels hook
       // This keeps the portfolio service focused on portfolio-specific data

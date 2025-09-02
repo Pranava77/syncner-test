@@ -257,7 +257,6 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
 
   // Use portfolio data directly - it already contains all the information we need
   const mergedLevels = useMemo(() => {
-    console.log('Portfolio data received:', data);
     return data?.learningLevels || [];
   }, [data?.learningLevels]);
 
