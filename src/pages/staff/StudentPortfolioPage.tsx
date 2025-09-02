@@ -2,15 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import StudentPortfolio from '../../components/StudentPortfolio';
 import { PortfolioService } from '../../services/portfolioService';
+import LoadingScreen from '../../components/LoadingScreen';
 
 const StudentPortfolioPage: React.FC = () => {
   const { studentId } = useParams<{ studentId: string }>();
   const [portfolioData, setPortfolioData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
-  console.log('StudentPortfolioPage rendered with studentId:', studentId);
-  console.log('StudentPortfolioPage: Current URL pathname:', window.location.pathname);
 
   // Fetch portfolio data when component mounts
   useEffect(() => {
@@ -19,12 +17,10 @@ const StudentPortfolioPage: React.FC = () => {
         try {
           setLoading(true);
           setError(null);
-          console.log('StudentPortfolioPage: Fetching portfolio data for student:', studentId);
           const data = await PortfolioService.getStudentPortfolio(studentId);
-          console.log('StudentPortfolioPage: Portfolio data received:', data);
           setPortfolioData(data);
         } catch (err) {
-          console.error('StudentPortfolioPage: Error fetching portfolio:', err);
+          console.error('Error fetching portfolio:', err);
           setError(err instanceof Error ? err.message : 'Failed to fetch portfolio data');
         } finally {
           setLoading(false);
@@ -52,19 +48,7 @@ const StudentPortfolioPage: React.FC = () => {
   }
 
   if (loading) {
-    return (
-      <div className="min-h-screen p-6 flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-current border-t-transparent rounded-full animate-spin mx-auto mb-4" style={{ color: 'var(--color-accent-primary)' }}></div>
-          <h2 className="text-xl font-semibold mb-2" style={{ color: 'var(--color-text-primary)' }}>
-            Loading Portfolio...
-          </h2>
-          <p style={{ color: 'var(--color-text-secondary)' }}>
-            Fetching student portfolio data
-          </p>
-        </div>
-      </div>
-    );
+    return <LoadingScreen message="Loading Student Portfolio..." />;
   }
 
   if (error) {
@@ -96,7 +80,7 @@ const StudentPortfolioPage: React.FC = () => {
   return (
     <StudentPortfolio 
       studentId={studentId}
-      studentData={portfolioData} // Pass the fetched data
+      studentData={portfolioData}
     />
   );
 };
