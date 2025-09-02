@@ -93,6 +93,12 @@ export interface StudentPortfolioData {
         content: string;
         order: number;
         completed: boolean;
+        submissionLink?: string;
+        score?: number;
+        attempts?: number;
+        lastAttemptAt?: string;
+        feedback?: string;
+        status?: 'submitted' | 'approved' | 'rejected';
       }[];
     };
   }[];

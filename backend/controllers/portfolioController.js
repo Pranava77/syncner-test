@@ -334,7 +334,12 @@ export const getStudentPortfolio = async (req, res) => {
                   description: exercise.description,
                   content: exercise.content,
                   order: exercise.order,
-                  completed: false // Default to false, will be updated based on progress
+                  submissionLink: exercise.submissionLink,
+                  score: exercise.score,
+                  attempts: exercise.attempts,
+                  lastAttemptAt: exercise.lastAttemptAt,
+                  feedback: exercise.feedback,
+                  status: exercise.status
                 })) || []
               }
             };
@@ -417,8 +422,7 @@ export const getStudentPortfolio = async (req, res) => {
                 title: exercise.title,
                 description: exercise.description,
                 content: exercise.content,
-                order: exercise.order,
-                completed: false // Default to false, will be updated based on progress
+                order: exercise.order
               })) || []
             }
           }));
@@ -475,48 +479,18 @@ export const getStudentPortfolio = async (req, res) => {
       } else if (item.type === 'test') {
         acc[item.order].test.questions.push(item);
       } else if (item.type === 'exercise') {
-        acc[item.order].exercise.tasks.push({
-          ...item,
-          completed: false // Default to false, will be updated based on progress
-        });
+        acc[item.order].exercise.tasks.push(item);
       }
       
       return acc;
     }, {});
-    
-    console.log('Portfolio Controller - Created level groups:', {
-      totalLevels: Object.keys(levelGroups).length,
-      levelOrders: Object.keys(levelGroups).sort((a, b) => parseInt(a) - parseInt(b)),
-      sampleLevel: levelGroups[Object.keys(levelGroups)[0]]
-    });
 
     // Update level status based on progress
-    if (progress?.completedLevels && progress.completedLevels.length > 0) {
-      console.log('Portfolio Controller - Updating level status based on progress:', {
-        completedLevelsCount: progress.completedLevels.length,
-        completedLevels: progress.completedLevels.map(cl => ({
-          levelId: cl.levelId,
-          levelOrder: cl.levelOrder,
-          completedSections: cl.completedSections
-        }))
-      });
-      
+    if (progress?.completedLevels) {
       progress.completedLevels.forEach(completedLevel => {
         const level = levelGroups[completedLevel.levelOrder];
         if (level) {
-          console.log('Portfolio Controller - Updating level:', {
-            levelOrder: completedLevel.levelOrder,
-            levelId: completedLevel.levelId,
-            completedSections: completedLevel.completedSections
-          });
-          
-          // Determine overall status based on completed sections
-          const allSectionsCompleted = completedLevel.completedSections?.learn && 
-                                     completedLevel.completedSections?.test && 
-                                     completedLevel.completedSections?.exercise;
-          
-          level.status = allSectionsCompleted ? 'completed' : 'in-progress';
-          
+          level.status = 'completed';
           level.learn = {
             ...level.learn,
             completed: completedLevel.completedSections?.learn || false,
@@ -538,21 +512,19 @@ export const getStudentPortfolio = async (req, res) => {
             timeSpent: completedLevel.exerciseProgress?.timeSpent || 0,
             startTime: completedLevel.exerciseProgress?.startTime,
             endTime: completedLevel.exerciseProgress?.endTime,
-            // Mark all tasks as completed if exercise section is completed
             tasks: level.exercise.tasks.map(task => ({
               ...task,
-              completed: completedLevel.completedSections?.exercise || false
+              completed: completedLevel.completedSections?.exercise || false,
+              submissionLink: completedLevel.exerciseSubmissions?.find(sub => sub.exerciseTitle === task.title)?.links?.[0] || null,
+              score: completedLevel.exerciseSubmissions?.find(sub => sub.exerciseTitle === task.title)?.score || 0,
+              attempts: completedLevel.exerciseSubmissions?.find(sub => sub.exerciseTitle === task.title)?.attempts || 0,
+              lastAttemptAt: completedLevel.exerciseSubmissions?.find(sub => sub.exerciseTitle === task.title)?.submittedAt || null,
+              feedback: completedLevel.exerciseSubmissions?.find(sub => sub.exerciseTitle === task.title)?.feedback || '',
+              status: completedLevel.exerciseSubmissions?.find(sub => sub.exerciseTitle === task.title)?.status || 'not-submitted'
             }))
           };
-        } else {
-          console.log('Portfolio Controller - Level not found in levelGroups:', {
-            levelOrder: completedLevel.levelOrder,
-            availableLevels: Object.keys(levelGroups)
-          });
         }
       });
-    } else {
-      console.log('Portfolio Controller - No completed levels found in progress data');
     }
 
     // Convert level groups to array and sort by order

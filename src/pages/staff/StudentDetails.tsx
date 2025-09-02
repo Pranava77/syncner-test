@@ -55,7 +55,7 @@ const StudentDetails: React.FC = () => {
         const testCompleted = level.test?.completed || false;
         const exerciseCompleted = level.exercise?.completed || false;
         
-        // Calculate overall level status
+        // Calculate overall level status based on section completion
         let status = 'not-started';
         if (learnCompleted && testCompleted && exerciseCompleted) {
           status = 'completed';
@@ -73,6 +73,17 @@ const StudentDetails: React.FC = () => {
         
         const exerciseProgress = exerciseCompleted ? 100 :
           level.exercise?.tasks?.filter((t: any) => t.completed).length / (level.exercise?.tasks?.length || 1) * 100 || 0;
+
+        // Get submission links and scores from the API response
+        const exerciseTasks = level.exercise?.tasks?.map((task: any) => ({
+          ...task,
+          submissionLink: task.submissionLink || `https://github.com/yourusername/portfolio-submissions/issues/new?title=${encodeURIComponent(`Task Submission: ${task.title}`)}&body=${encodeURIComponent(`# Task: ${task.title}\n\n## Description\n${task.description}\n\n## Submission\n[Your submission here]`)}`,
+          score: task.score || 0,
+          attempts: task.attempts || 0,
+          lastAttemptAt: task.lastAttemptAt || null,
+          feedback: task.feedback || '',
+          status: task.status || 'not-submitted'
+        })) || [];
 
         return {
           level: level.level || level.order || 1,
@@ -115,11 +126,7 @@ const StudentDetails: React.FC = () => {
             timeSpent: level.exercise?.timeSpent || 0,
             title: level.exercise?.title || 'Practice Exercise',
             status: exerciseCompleted ? 'completed' : level.exercise?.startTime ? 'in-progress' : 'not-started',
-            tasks: level.exercise?.tasks?.map((t: any) => ({
-              ...t,
-              completed: t.completed || false,
-              submissionLink: t.submissionLink || `https://github.com/yourusername/portfolio-submissions/issues/new?title=${encodeURIComponent(`Task Submission: ${t.title}`)}&body=${encodeURIComponent(`# Task: ${t.title}\n\n## Description\n${t.description}\n\n## Submission\n[Your submission here]`)}`
-            })) || [],
+            tasks: exerciseTasks,
             progress: exerciseProgress
           }
         };

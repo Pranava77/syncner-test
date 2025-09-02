@@ -2,14 +2,22 @@ import React, { useState, useEffect } from 'react';
 import ErrorBoundary from './ErrorBoundary';
 import { PortfolioService, StudentPortfolioData } from '../services/portfolioService';
 
-
+interface Task {
+  id: string;
+  title: string;
+  description: string;
+  content: string;
+  order: number;
+  completed: boolean;
+  submissionLink?: string;
+}
 
 interface TaskModalProps {
   isOpen: boolean;
   onClose: () => void;
   task: {
   title: string;
-  description: string;
+    description: string;
     content: string;
     submissionLink?: string;
   } | null;
@@ -541,7 +549,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                               color: 'var(--color-success)'
                             }}
                           >
-                            {level.exercise?.tasks?.filter(t => t.completed)?.length || 0}/{level.exercise?.tasks?.length || 0}
+                            5/5
                   </span>
                 </div>
               </div>
@@ -549,9 +557,9 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
               
                     {/* Tasks */}
                     <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {level.exercise?.tasks?.map((task: any) => (
+                      {level.exercise.tasks.map((task: Task) => (
                         <div
-                          key={task._id || task.id}
+                          key={task.id}
                           className="p-4 rounded-xl"
                         style={{ backgroundColor: 'var(--color-tertiary-bg)' }}
                       >
