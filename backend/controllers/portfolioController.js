@@ -350,6 +350,68 @@ export const getStudentPortfolio = async (req, res) => {
       }
     };
 
+    // Get recommended roles based on career track and progress
+    const getRecommendedRoles = (careerTrack, progressPercentage) => {
+      const baseRoles = {
+        'full-stack': [
+          'Junior Frontend Developer',
+          'Junior Backend Developer',
+          'Full Stack Developer',
+          'React Developer',
+          'Node.js Developer'
+        ],
+        'data-science': [
+          'Junior Data Analyst',
+          'Data Scientist',
+          'Business Intelligence Analyst',
+          'Data Visualization Specialist',
+          'Machine Learning Engineer'
+        ],
+        'ai-ml': [
+          'Machine Learning Engineer',
+          'AI Developer',
+          'Deep Learning Engineer',
+          'Computer Vision Engineer',
+          'NLP Engineer'
+        ],
+        'ui-ux': [
+          'UI Designer',
+          'UX Researcher',
+          'Product Designer',
+          'Interaction Designer',
+          'Design Systems Engineer'
+        ]
+      };
+
+      // Get roles based on progress level
+      const trackRoles = baseRoles[careerTrack] || baseRoles['full-stack'];
+      if (progressPercentage >= 80) {
+        // Return all roles for high progress
+        return trackRoles;
+      } else if (progressPercentage >= 50) {
+        // Return first 3 roles for medium progress
+        return trackRoles.slice(0, 3);
+      } else {
+        // Return first 2 roles for beginners
+        return trackRoles.slice(0, 2);
+      }
+    };
+
+    // Generate certificate ID
+    const generateCertificateId = (userId, careerTrack) => {
+      const prefix = {
+        'full-stack': 'FSE',
+        'data-science': 'DSE',
+        'ai-ml': 'AIM',
+        'ui-ux': 'UXD'
+      }[careerTrack] || 'STU';
+
+      const year = new Date().getFullYear().toString().slice(-2);
+      const randomDigits = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+      
+      return `SYNCNER-${prefix}${year}-${userId.toString().slice(-5)}-${randomDigits}`;
+    };
+
     // Build the response
     const portfolioData = {
       student: {
@@ -363,7 +425,9 @@ export const getStudentPortfolio = async (req, res) => {
         introduction: student.introduction || null,
         readyToHire: student.readyToHire || false,
         duration: student.duration || '6 months',
-        skills: getSkillsForTrack(student.careerTrack)
+        skills: getSkillsForTrack(student.careerTrack),
+        certificateId: generateCertificateId(student._id, student.careerTrack),
+        recommendedRoles: getRecommendedRoles(student.careerTrack, progressPercentage)
       },
       progress: {
         currentLevel: Math.max(progress?.currentLevel || 1, 1),

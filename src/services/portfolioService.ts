@@ -13,6 +13,8 @@ export interface StudentPortfolioData {
     readyToHire: boolean;
     duration: string;
     skills?: string[];
+    certificateId: string;
+    recommendedRoles: string[];
   };
   progress: {
     currentLevel: number;

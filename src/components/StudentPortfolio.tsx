@@ -412,6 +412,47 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
           </div>
         </div>
 
+        {/* Certificate ID Section */}
+        <div 
+          className="mb-8 p-6 rounded-xl border"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            borderColor: 'var(--color-border)'
+          }}
+        >
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <h2 className="text-xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>
+                Certificate ID:
+              </h2>
+              <p 
+                className="text-base sm:text-lg font-mono"
+                style={{ color: 'var(--color-accent-primary)' }}
+              >
+                {data.student.certificateId}
+              </p>
+            </div>
+            <button
+              className="px-6 py-2 rounded-lg text-sm font-medium transition-colors"
+              style={{
+                backgroundColor: 'var(--color-accent-primary)',
+                color: 'var(--color-text-inverse)'
+              }}
+              onClick={() => {
+                navigator.clipboard.writeText(data.student.certificateId);
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+              }}
+            >
+              Copy ID
+            </button>
+          </div>
+        </div>
+
         {/* Introduction Section */}
         <div 
           className="mb-8 p-6 rounded-xl border"
@@ -426,6 +467,44 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
           <p className="text-base leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
             {data.student.introduction || 'Full-stack developer in the making, passionate about solving real business problems with code. Skilled in SQL, Python, and data visualization, and ready to contribute to impactful projects.'}
           </p>
+        </div>
+
+        {/* Recommended Roles Section */}
+        <div 
+          className="mb-8 p-6 rounded-xl border"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            borderColor: 'var(--color-border)'
+          }}
+        >
+          <h2 className="text-xl font-bold mb-4" style={{ color: 'var(--color-text-primary)' }}>
+            Recommended Roles:
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {data.student.recommendedRoles.map((role, index) => (
+              <div
+                key={role}
+                className="p-4 rounded-lg border text-center"
+                style={{
+                  backgroundColor: 'var(--color-tertiary-bg)',
+                  borderColor: 'var(--color-border)'
+                }}
+              >
+                <div 
+                  className="w-12 h-12 mx-auto mb-3 rounded-full flex items-center justify-center text-xl font-bold"
+                  style={{
+                    backgroundColor: 'var(--color-accent-tertiary)',
+                    color: 'var(--color-accent-primary)'
+                  }}
+                >
+                  {index + 1}
+                </div>
+                <h3 className="text-base font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                  {role}
+                </h3>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Portfolio Section - Matching the image design */}
