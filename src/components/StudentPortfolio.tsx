@@ -260,8 +260,8 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
 
   // Use student levels directly since they already contain all needed data
   const mergedLevels = useMemo(() => {
-    if (!studentLevels) return [];
-    return studentLevels;
+    if (!studentLevels || !Array.isArray(studentLevels)) return [];
+    return studentLevels.filter(level => level && typeof level === 'object');
   }, [studentLevels]);
 
   if ((!studentData && loading) || levelsLoading) {
@@ -507,16 +507,16 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                       color: 'var(--color-accent-primary)'
                     }}
                   >
-                    {level.level.toString().padStart(2, '0')}
+                    {(level.level || 0).toString().padStart(2, '0')}
                   </div>
                   <div>
                     <h3 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>
                       {level.courseName}
                     </h3>
                     <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                      <div>MCQ {level.test.score}%</div>
+                      <div>MCQ {level.test?.score || 0}%</div>
                       <div>•</div>
-                      <div>Tasks {level.exercise.tasks.filter((t: Task) => t.completed).length}/{level.exercise.tasks.length}</div>
+                      <div>Tasks {level.exercise?.tasks?.filter((t: Task) => t.completed).length || 0}/{level.exercise?.tasks?.length || 0}</div>
                     </div>
                   </div>
                 </div>
@@ -524,19 +524,19 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                   <div 
                     className="px-3 py-1 rounded-full text-sm"
                     style={{
-                      backgroundColor: level.status === 'completed' 
+                      backgroundColor: (level.status || 'not-started') === 'completed' 
                         ? 'var(--color-success-bg)'
-                        : level.status === 'in-progress'
+                        : (level.status || 'not-started') === 'in-progress'
                         ? 'var(--color-warning-bg)'
                         : 'var(--color-error-bg)',
-                      color: level.status === 'completed'
+                      color: (level.status || 'not-started') === 'completed'
                         ? 'var(--color-success)'
-                        : level.status === 'in-progress'
+                        : (level.status || 'not-started') === 'in-progress'
                         ? 'var(--color-warning)'
                         : 'var(--color-error)'
                     }}
                   >
-                    {level.status}
+                    {level.status || 'not-started'}
                   </div>
                   {expandedLevel === level.level ? (
                     <ChevronDownIcon className="w-5 h-5" style={{ color: 'var(--color-text-tertiary)' }} />
@@ -559,7 +559,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                         </h4>
                       </div>
                       <div className="space-y-2">
-                        {level.learn.materials.map((material: Material) => (
+                        {(level.learn?.materials || []).map((material: Material) => (
                           <div 
                             key={material.id}
                             className="p-3 rounded-lg border"
@@ -615,7 +615,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                           <div className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
                             MCQ Test
                           </div>
-                          {level.test.completed && (
+                          {level.test?.completed && (
                             <CheckCircledIcon 
                               className="w-4 h-4" 
                               style={{ color: 'var(--color-success)' }} 
@@ -626,13 +626,13 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                           <div className="flex items-center justify-between text-xs" style={{ color: 'var(--color-text-secondary)' }}>
                             <span>Score:</span>
                             <span className="font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                              {level.test.score}%
+                              {level.test?.score || 0}%
                             </span>
                           </div>
                           <div className="flex items-center justify-between text-xs" style={{ color: 'var(--color-text-secondary)' }}>
                             <span>Attempts:</span>
                             <span className="font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                              {level.test.attempts}
+                              {level.test?.attempts || 0}
                             </span>
                           </div>
                         </div>
@@ -648,7 +648,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                         </h4>
                       </div>
                       <div className="space-y-2">
-                        {level.exercise.tasks.map((task: Task) => (
+                        {(level.exercise?.tasks || []).map((task: Task) => (
                           <div 
                             key={task.id}
                             className="p-3 rounded-lg border cursor-pointer transition-all duration-200 hover:border-accent-primary"
