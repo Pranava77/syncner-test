@@ -215,7 +215,21 @@ export const getStudentPortfolio = async (req, res) => {
         content: level.exercise,
         title: 'Practice Exercise',
         status: completedSections.exercise ? 'completed' : 'not-started',
-        tasks: level.exercise.map(task => mapExerciseSubmission(task, exerciseSubmissions))
+        tasks: level.exercise.map(task => {
+          // Find all submissions for this task
+          const taskSubmissions = exerciseSubmissions.filter(sub => sub.exerciseTitle === task.title);
+          // Get all links from all submissions
+          const allLinks = taskSubmissions.reduce((links, sub) => [...links, ...(sub.links || [])], []);
+          // Get the latest submission status
+          const latestSubmission = taskSubmissions[taskSubmissions.length - 1];
+          
+          return {
+            ...task,
+            submissionLinks: allLinks,
+            status: latestSubmission ? latestSubmission.status : 'not-submitted',
+            completed: latestSubmission ? latestSubmission.status === 'approved' : false
+          };
+        })
       };
 
       // Calculate overall level status
