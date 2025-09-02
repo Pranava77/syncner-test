@@ -295,7 +295,21 @@ export const getStudentPortfolio = async (req, res) => {
       };
     });
 
-    const progressPercentage = Math.round((completedLevels / totalLevels) * 100);
+    // Calculate progress based on completed sections across all levels
+    let totalSectionsCompleted = 0;
+    let totalSectionsAvailable = totalLevels * 3; // Each level has 3 sections
+    
+    if (progress && progress.completedLevels) {
+      progress.completedLevels.forEach(level => {
+        if (level.completedSections) {
+          if (level.completedSections.learn) totalSectionsCompleted++;
+          if (level.completedSections.test) totalSectionsCompleted++;
+          if (level.completedSections.exercise) totalSectionsCompleted++;
+        }
+      });
+    }
+    
+    const progressPercentage = totalSectionsAvailable > 0 ? Math.round((totalSectionsCompleted / totalSectionsAvailable) * 100) : 0;
 
     // Get attendance stats
     const attendanceStats = await Attendance.aggregate([
@@ -431,7 +445,9 @@ export const getStudentPortfolio = async (req, res) => {
       },
       progress: {
         currentLevel: Math.max(progress?.currentLevel || 1, 1),
-        completedLevels,
+        completedLevels: progress ? progress.completedLevels.filter(level => 
+          level.completedSections?.learn && level.completedSections?.test && level.completedSections?.exercise
+        ).length : 0,
         totalLevels,
         percentage: progressPercentage,
         totalPoints: Math.max(progress?.totalPoints || 0, 0)

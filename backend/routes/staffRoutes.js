@@ -180,8 +180,19 @@ router.get('/students', protect, authorize('staff', 'admin'), async (req, res) =
         // Calculate comprehensive leaderboard score for students list
         let leaderboardScore = 0;
         if (studentProgress && studentProgress.completedLevels) {
-          // Base score from progress (40% weight)
-          const progressScore = Math.round((studentProgress.completedLevels.length / totalLevels) * 100);
+          // Base score from progress (40% weight) - calculate based on section completion
+          let totalSectionsCompleted = 0;
+          let totalSectionsAvailable = totalLevels * 3;
+          
+          studentProgress.completedLevels.forEach(level => {
+            if (level.completedSections) {
+              if (level.completedSections.learn) totalSectionsCompleted++;
+              if (level.completedSections.test) totalSectionsCompleted++;
+              if (level.completedSections.exercise) totalSectionsCompleted++;
+            }
+          });
+          
+          const progressScore = totalSectionsAvailable > 0 ? Math.round((totalSectionsCompleted / totalSectionsAvailable) * 100) : 0;
           
           // Attendance score (30% weight)
           const attendanceScore = attendancePercentage;
@@ -211,7 +222,23 @@ router.get('/students', protect, authorize('staff', 'admin'), async (req, res) =
         return {
           ...student,
           careerTrack: normalizedCareerTrack, // Use normalized value
-          progress: studentProgress && studentProgress.completedLevels ? Math.round((studentProgress.completedLevels.length / totalLevels) * 100) : 0,
+          progress: (() => {
+            if (!studentProgress || !studentProgress.completedLevels) return 0;
+            
+            // Calculate progress based on completed sections across all levels
+            let totalSectionsCompleted = 0;
+            let totalSectionsAvailable = totalLevels * 3; // Each level has 3 sections
+            
+            studentProgress.completedLevels.forEach(level => {
+              if (level.completedSections) {
+                if (level.completedSections.learn) totalSectionsCompleted++;
+                if (level.completedSections.test) totalSectionsCompleted++;
+                if (level.completedSections.exercise) totalSectionsCompleted++;
+              }
+            });
+            
+            return totalSectionsAvailable > 0 ? Math.round((totalSectionsCompleted / totalSectionsAvailable) * 100) : 0;
+          })(),
           level: studentProgress ? `Level ${studentProgress.currentLevel}` : 'Level 1', // Fix: use 'level' instead of 'currentLevel'
           totalPoints: studentProgress?.totalPoints || 0,
           streakDays: studentProgress?.streakDays || 0,
@@ -896,9 +923,78 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
       }
     }
     
+    // Build learning levels for portfolio-style display (matching portfolio controller structure)
+    const learningLevels = levelOrders.map(levelOrder => {
+      const levelProgress = progress?.completedLevels?.find(
+        level => level.levelOrder === levelOrder
+      );
+      
+      const curriculumItem = levelToCurriculumMap[levelOrder];
+      
+      // Calculate level status
+      let status = 'not-started';
+      if (levelProgress && levelProgress.completedSections) {
+        const sectionsCompleted = Object.values(levelProgress.completedSections).filter(Boolean).length;
+        if (sectionsCompleted === 3) {
+          status = 'completed';
+        } else if (sectionsCompleted > 0) {
+          status = 'in-progress';
+        }
+      }
+      
+      return {
+        level: levelOrder,
+        courseName: curriculumItem?.title || `Level ${levelOrder}`,
+        description: curriculumItem?.description || `Training content for level ${levelOrder}`,
+        status: status,
+        learn: {
+          completed: levelProgress?.completedSections?.learn || false,
+          startTime: levelProgress?.learnProgress?.startDate || null,
+          endTime: levelProgress?.completedSections?.learn ? levelProgress?.completedAt : null,
+          timeSpent: levelProgress?.learnProgress?.timeSpent || 0,
+          title: 'Learning Materials',
+          status: levelProgress?.completedSections?.learn ? 'completed' : 'not-started',
+          materials: [] // Will be populated by frontend if needed
+        },
+        test: {
+          completed: levelProgress?.completedSections?.test || false,
+          score: levelProgress?.testProgress?.attempts?.length > 0 
+            ? Math.max(...levelProgress.testProgress.attempts.map(a => a.score || 0))
+            : 0,
+          attempts: levelProgress?.testProgress?.attempts?.length || 0,
+          startTime: levelProgress?.testProgress?.startDate || null,
+          endTime: levelProgress?.completedSections?.test ? levelProgress?.completedAt : null,
+          title: 'Assessment',
+          status: levelProgress?.completedSections?.test ? 'completed' : 'not-started'
+        },
+        exercise: {
+          completed: levelProgress?.completedSections?.exercise || false,
+          startTime: levelProgress?.exerciseProgress?.startDate || null,
+          endTime: levelProgress?.completedSections?.exercise ? levelProgress?.completedAt : null,
+          timeSpent: levelProgress?.exerciseProgress?.timeSpent || 0,
+          title: 'Practice Exercise',
+          status: levelProgress?.completedSections?.exercise ? 'completed' : 'not-started',
+          tasks: levelProgress?.exerciseSubmissions?.map(submission => ({
+            id: submission._id || submission.exerciseTitle,
+            title: submission.exerciseTitle,
+            description: submission.exerciseTitle,
+            content: submission.exerciseTitle,
+            completed: submission.status === 'approved',
+            submissionLinks: submission.links || [],
+            score: submission.score || 0,
+            attempts: 1,
+            lastAttemptAt: submission.submittedAt,
+            feedback: submission.feedback || '',
+            status: submission.status || 'not-submitted'
+          })) || []
+        }
+      };
+    });
+
     const studentDetails = {
       ...student,
       learningTimeline: detailedLearningTimeline, // Use the new detailed timeline
+      learningLevels: learningLevels, // Add portfolio-style learning levels
       comprehensiveActivityTimeline: comprehensiveActivityTimeline, // Add comprehensive activity timeline
       simpleTimeline: limitedSimpleTimeline, // Keep simple timeline for backward compatibility
       skills: getSkillsForTrack(),
@@ -908,7 +1004,23 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
       createdAt: student.createdAt, // Add raw createdAt for frontend use
       // Add missing fields that the frontend expects
       attendancePercentage: attendancePercentage,
-      progress: progress ? Math.round((progress.completedLevels.length / totalLevels) * 100) : 0,
+      progress: (() => {
+        if (!progress || !progress.completedLevels) return 0;
+        
+        // Calculate progress based on completed sections across all levels
+        let totalSectionsCompleted = 0;
+        let totalSectionsAvailable = totalLevels * 3; // Each level has 3 sections
+        
+        progress.completedLevels.forEach(level => {
+          if (level.completedSections) {
+            if (level.completedSections.learn) totalSectionsCompleted++;
+            if (level.completedSections.test) totalSectionsCompleted++;
+            if (level.completedSections.exercise) totalSectionsCompleted++;
+          }
+        });
+        
+        return totalSectionsAvailable > 0 ? Math.round((totalSectionsCompleted / totalSectionsAvailable) * 100) : 0;
+      })(),
       leaderboardScore: leaderboardScore,
       // Ensure these fields exist for the frontend
       currentLevel: progress?.currentLevel || 1,

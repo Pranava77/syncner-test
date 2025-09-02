@@ -251,6 +251,26 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
     }
   }, [dispatch, studentId, studentData]);
 
+  // Listen for progress updates to refresh portfolio data
+  useEffect(() => {
+    if (!studentData) { // Only listen for updates if we're fetching our own data
+      const handleProgressUpdate = () => {
+        dispatch(fetchPortfolio(studentId));
+      };
+
+      // Listen for progress update events
+      window.addEventListener('progress-updated', handleProgressUpdate);
+      window.addEventListener('section-completed', handleProgressUpdate);
+      window.addEventListener('level-completed', handleProgressUpdate);
+      
+      return () => {
+        window.removeEventListener('progress-updated', handleProgressUpdate);
+        window.removeEventListener('section-completed', handleProgressUpdate);
+        window.removeEventListener('level-completed', handleProgressUpdate);
+      };
+    }
+  }, [dispatch, studentId, studentData]);
+
   // Use portfolio data directly - it already contains all the information we need
   const mergedLevels = useMemo(() => {
     return data?.learningLevels || [];

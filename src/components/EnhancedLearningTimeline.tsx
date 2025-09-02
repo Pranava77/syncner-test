@@ -1,7 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useAppSelector } from '../redux/store';
-import { selectLearningProgress } from '../redux/slices/learningJourneySlice';
 import { 
   CheckCircledIcon, 
   ReaderIcon,
@@ -76,29 +74,49 @@ interface EnhancedLearningTimelineProps {
 const EnhancedLearningTimeline: React.FC<EnhancedLearningTimelineProps> = ({
   timeline
 }) => {
-  const learningProgress = useAppSelector(selectLearningProgress);
+  // Note: We're not using Redux learning progress here as the timeline data
+  // from the staff route already contains the most up-to-date progress information
 
-  // Merge timeline data with learning progress
+  // Use timeline data as-is since it already contains the most up-to-date progress information
+  // The staff route provides complete data, so we don't need to merge with Redux state
   const mergedTimeline = timeline.map(level => {
-    const progress = learningProgress.find(p => p.levelId === level.level.toString());
-    if (progress) {
-      return {
-        ...level,
-        learn: {
-          ...level.learn,
-          ...progress.learn
-        },
-        test: {
-          ...level.test,
-          ...progress.test
-        },
-        exercise: {
-          ...level.exercise,
-          ...progress.exercise
-        }
-      };
-    }
-    return level;
+    // Ensure all required fields are present with proper defaults
+    return {
+      ...level,
+      learn: {
+        completed: level.learn?.completed || false,
+        startTime: level.learn?.startTime || null,
+        endTime: level.learn?.endTime || null,
+        timeSpent: level.learn?.timeSpent || 0,
+        title: level.learn?.title || 'Learning Materials',
+        status: level.learn?.status || 'not-started',
+        materials: level.learn?.materials || [],
+        progress: level.learn?.completed ? 100 : 0
+      },
+      test: {
+        completed: level.test?.completed || false,
+        score: level.test?.score || 0,
+        attempts: level.test?.attempts || 0,
+        startTime: level.test?.startTime || null,
+        endTime: level.test?.endTime || null,
+        title: level.test?.title || 'Assessment',
+        status: level.test?.status || 'not-started',
+        questions: level.test?.questions || [],
+        progress: level.test?.completed ? 100 : level.test?.score || 0
+      },
+      exercise: {
+        completed: level.exercise?.completed || false,
+        startTime: level.exercise?.startTime || null,
+        endTime: level.exercise?.endTime || null,
+        timeSpent: level.exercise?.timeSpent || 0,
+        title: level.exercise?.title || 'Practice Exercise',
+        status: level.exercise?.status || 'not-started',
+        tasks: level.exercise?.tasks || [],
+        progress: level.exercise?.completed ? 100 : 
+          level.exercise?.tasks?.length > 0 ? 
+            Math.round((level.exercise.tasks.filter((t: any) => t.completed).length / level.exercise.tasks.length) * 100) : 0
+      }
+    };
   });
 
   return (

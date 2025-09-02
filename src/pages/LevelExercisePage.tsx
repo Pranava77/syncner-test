@@ -264,6 +264,7 @@ const LevelExercisePage: React.FC = () => {
       
       // Trigger dashboard progress update
       window.dispatchEvent(new CustomEvent('progress-updated'));
+      window.dispatchEvent(new CustomEvent('section-completed', { detail: { section: 'exercise', levelId: level.id } }));
       window.dispatchEvent(new CustomEvent('exercise-completed'));
       window.dispatchEvent(new CustomEvent('level-completed'));
       localStorage.setItem('level-progress-updated', Date.now().toString());

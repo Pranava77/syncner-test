@@ -2,8 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../redux/store';
 import LevelsSidebar from '../components/LevelsSidebar';
-import { PlayIcon, ReaderIcon, FileTextIcon, ChevronUpIcon, ChevronDownIcon, ExternalLinkIcon, ClockIcon, LockClosedIcon, CheckCircledIcon, ChevronRightIcon } from '@radix-ui/react-icons';
-import { motion, AnimatePresence } from 'framer-motion';
+import { ReaderIcon, ExternalLinkIcon, ClockIcon, LockClosedIcon, CheckCircledIcon, ChevronRightIcon } from '@radix-ui/react-icons';
+import { motion } from 'framer-motion';
 import apiService from '../services/api';
 import syncnerLogo from '../assets/syncner-logo.png';
 
@@ -53,7 +53,7 @@ const LevelLearnPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const [readFirstExpanded, setReadFirstExpanded] = useState(true);
+
   
   // New state for learn progress tracking
   const [learnProgress, setLearnProgress] = useState<LearnProgress>({
@@ -230,6 +230,7 @@ const LevelLearnPage: React.FC = () => {
             
             // Trigger dashboard progress update
             window.dispatchEvent(new CustomEvent('progress-updated'));
+            window.dispatchEvent(new CustomEvent('section-completed', { detail: { section: 'learn', levelId: level.id } }));
             localStorage.setItem('level-progress-updated', Date.now().toString());
           } catch (completionError) {
             console.error('Error marking learn section as completed:', completionError);
@@ -240,16 +241,6 @@ const LevelLearnPage: React.FC = () => {
       }
     } catch (error) {
       console.error('Frontend: Error updating learn progress:', error);
-    }
-  };
-
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case 'video': return 'var(--color-error)';
-      case 'reading': return 'var(--color-accent-primary)';
-      case 'slide': return 'var(--color-success)';
-      case 'learn': return 'var(--color-accent-primary)';
-      default: return 'var(--color-text-muted)';
     }
   };
 

@@ -229,7 +229,7 @@ const LevelTestPage: React.FC = () => {
     if (submitted) return;
     setAnswers((prev) => ({
       ...prev,
-      [qIdx]: prev[qIdx].map((checked, i) => (i === optIdx ? true : false)), // Set selected option to true, others to false
+      [qIdx]: prev[qIdx].map((_, i) => (i === optIdx ? true : false)), // Set selected option to true, others to false
     }));
   };
 
@@ -269,7 +269,7 @@ const LevelTestPage: React.FC = () => {
     const passed = score >= 60;
     
     // Prepare answers for submission
-    const answersForSubmission = randomizedQuestions.map((question, qIdx) => ({
+    const answersForSubmission = randomizedQuestions.map((_, qIdx) => ({
       questionIndex: qIdx,
       selectedOption: answers[qIdx]?.findIndex(a => a) || -1
     }));
@@ -295,13 +295,14 @@ const LevelTestPage: React.FC = () => {
         // If test is passed, mark the test section as completed
         if (passed && level) {
           try {
-            const completionResult = await apiService.markLevelCompleted(level.id, level.order, 'test');
+            await apiService.markLevelCompleted(level.id, level.order, 'test');
             
             // Trigger sidebar refresh to update unlock status
             setRefreshTrigger(prev => prev + 1);
             
             // Trigger dashboard progress update
             window.dispatchEvent(new CustomEvent('progress-updated'));
+            window.dispatchEvent(new CustomEvent('section-completed', { detail: { section: 'test', levelId: level.id } }));
             localStorage.setItem('level-progress-updated', Date.now().toString());
           } catch (completionError) {
             console.error('Error marking test section as completed:', completionError);

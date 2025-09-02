@@ -48,36 +48,58 @@ const StudentDetails: React.FC = () => {
 
   // Transform portfolio data for enhanced timeline
   useEffect(() => {
-    if (studentData && studentData.careerTrack && studentData.learningLevels) {
-      const enhancedData = studentData.learningLevels.map((level: any) => {
-        // Calculate section completion status
-        const learnCompleted = level.learn?.completed || false;
-        const testCompleted = level.test?.completed || false;
-        const exerciseCompleted = level.exercise?.completed || false;
+    if (studentData && studentData.careerTrack) {
+      // Use learningLevels if available, otherwise use learningTimeline
+      const levelsData = studentData.learningLevels || studentData.learningTimeline || [];
+      
+      const enhancedData = levelsData.map((level: any) => {
+        // Handle both learningLevels format and learningTimeline format
+        const isTimelineFormat = level.sections !== undefined;
+        
+        let learnCompleted, testCompleted, exerciseCompleted;
+        let learnProgress, testProgress, exerciseProgress;
+        
+        if (isTimelineFormat) {
+          // Using learningTimeline format
+          learnCompleted = level.sections?.learn?.status === 'completed';
+          testCompleted = level.sections?.test?.status === 'completed';
+          exerciseCompleted = level.sections?.exercise?.status === 'completed';
+          
+          learnProgress = learnCompleted ? 100 : 0;
+          testProgress = level.sections?.test?.details?.bestScore || 0;
+          exerciseProgress = exerciseCompleted ? 100 : 0;
+        } else {
+          // Using learningLevels format
+          learnCompleted = level.learn?.completed || false;
+          testCompleted = level.test?.completed || false;
+          exerciseCompleted = level.exercise?.completed || false;
+          
+          learnProgress = learnCompleted ? 100 : 
+            level.learn?.materials?.filter((m: any) => m.completed).length / (level.learn?.materials?.length || 1) * 100 || 0;
+          
+          testProgress = testCompleted ? 100 : level.test?.score || 0;
+          
+          exerciseProgress = exerciseCompleted ? 100 :
+            level.exercise?.tasks?.filter((t: any) => t.completed).length / (level.exercise?.tasks?.length || 1) * 100 || 0;
+        }
         
         // Calculate overall level status based on section completion
         let status = 'not-started';
         if (learnCompleted && testCompleted && exerciseCompleted) {
           status = 'completed';
-        } else if (learnCompleted || testCompleted || exerciseCompleted || 
-                   level.learn?.startTime || level.test?.startTime || level.exercise?.startTime) {
+        } else if (learnCompleted || testCompleted || exerciseCompleted) {
           status = 'in-progress';
         }
 
-        // Calculate progress for each section
-        const learnProgress = learnCompleted ? 100 : 
-          level.learn?.materials?.filter((m: any) => m.completed).length / (level.learn?.materials?.length || 1) * 100 || 0;
-        
-        const testProgress = testCompleted ? 100 : 
-          level.test?.score || 0;
-        
-        const exerciseProgress = exerciseCompleted ? 100 :
-          level.exercise?.tasks?.filter((t: any) => t.completed).length / (level.exercise?.tasks?.length || 1) * 100 || 0;
+        // Get level number from either format
+        const levelNumber = isTimelineFormat ? level.levelOrder : level.level;
+        const levelTitle = isTimelineFormat ? level.levelTitle : level.courseName;
+        const levelDescription = isTimelineFormat ? level.levelDescription : level.description;
 
         // Get submission links and scores from the API response
         const exerciseTasks = level.exercise?.tasks?.map((task: any) => ({
           ...task,
-          submissionLink: task.submissionLink || `https://github.com/yourusername/portfolio-submissions/issues/new?title=${encodeURIComponent(`Task Submission: ${task.title}`)}&body=${encodeURIComponent(`# Task: ${task.title}\n\n## Description\n${task.description}\n\n## Submission\n[Your submission here]`)}`,
+          submissionLink: task.submissionLinks?.[0] || task.submissionLink || null,
           score: task.score || 0,
           attempts: task.attempts || 0,
           lastAttemptAt: task.lastAttemptAt || null,
@@ -86,22 +108,18 @@ const StudentDetails: React.FC = () => {
         })) || [];
 
         return {
-          level: level.level || level.order || 1,
-          courseName: level.courseName || level.title || `Level ${level.level || level.order || 1}`,
-          description: level.description || 'Learning level',
-          status,
+          level: levelNumber,
+          courseName: levelTitle,
+          description: levelDescription,
+          status: status as 'completed' | 'in-progress' | 'not-started',
           learn: {
             completed: learnCompleted,
             startTime: level.learn?.startTime || null,
             endTime: level.learn?.endTime || null,
             timeSpent: level.learn?.timeSpent || 0,
             title: level.learn?.title || 'Learning Materials',
-            status: learnCompleted ? 'completed' : level.learn?.startTime ? 'in-progress' : 'not-started',
-            materials: level.learn?.materials?.map((m: any) => ({
-              ...m,
-              completed: m.completed || false,
-              accessedAt: m.accessedAt || null
-            })) || [],
+            status: level.learn?.status || 'not-started',
+            materials: level.learn?.materials || [],
             progress: learnProgress
           },
           test: {
@@ -111,12 +129,8 @@ const StudentDetails: React.FC = () => {
             startTime: level.test?.startTime || null,
             endTime: level.test?.endTime || null,
             title: level.test?.title || 'Assessment',
-            status: testCompleted ? 'completed' : level.test?.startTime ? 'in-progress' : 'not-started',
-            questions: level.test?.questions?.map((q: any) => ({
-              ...q,
-              answered: q.answered || false,
-              correct: q.correct || false
-            })) || [],
+            status: level.test?.status || 'not-started',
+            questions: level.test?.questions || [],
             progress: testProgress
           },
           exercise: {
@@ -125,7 +139,7 @@ const StudentDetails: React.FC = () => {
             endTime: level.exercise?.endTime || null,
             timeSpent: level.exercise?.timeSpent || 0,
             title: level.exercise?.title || 'Practice Exercise',
-            status: exerciseCompleted ? 'completed' : level.exercise?.startTime ? 'in-progress' : 'not-started',
+            status: level.exercise?.status || 'not-started',
             tasks: exerciseTasks,
             progress: exerciseProgress
           }
@@ -133,34 +147,30 @@ const StudentDetails: React.FC = () => {
       });
       
       setEnhancedTimeline(enhancedData);
-      console.log('📚 Enhanced timeline data from portfolio:', enhancedData);
-      
-      // Debug: Log enrollment date data
-      console.log('📅 Enrollment Date Debug:', {
-        createdAt: studentData.createdAt,
-        enrolledDate: studentData.enrolledDate,
-        formattedCreatedAt: studentData.createdAt ? new Date(studentData.createdAt).toLocaleDateString('en-GB') : null
-      });
-      
-      // Debug: Log learning levels data
-      console.log('📚 Learning Levels Debug:', {
-        hasLearningLevels: !!studentData.learningLevels,
-        learningLevelsCount: studentData.learningLevels?.length || 0,
-        learningLevels: studentData.learningLevels
-      });
     }
-  }, [studentData?.careerTrack, studentData?.learningLevels]);
+  }, [studentData]);
 
+  // Listen for progress updates from other components
+  useEffect(() => {
+    const handleProgressUpdate = () => {
+      // Refetch student details when progress is updated
+      if (studentId) {
+        getStudentDetails(studentId);
+      }
+    };
 
+    // Listen for progress update events
+    window.addEventListener('progress-updated', handleProgressUpdate);
+    window.addEventListener('level-completed', handleProgressUpdate);
+    window.addEventListener('section-completed', handleProgressUpdate);
+    
+    return () => {
+      window.removeEventListener('progress-updated', handleProgressUpdate);
+      window.removeEventListener('level-completed', handleProgressUpdate);
+      window.removeEventListener('section-completed', handleProgressUpdate);
+    };
+  }, [studentId, getStudentDetails]);
 
-
-
-
-
-
-
-
-  
   // Show loading state while data is being fetched
   if (studentDetailsLoading) {
     return (
