@@ -4,11 +4,66 @@ import Attendance from '../models/Attendance.js';
 import Curriculum from '../models/Curriculum.js';
 import LeaderboardService from '../services/leaderboardService.js';
 
+// Helper function to calculate section progress
+const calculateSectionProgress = (section, completedSections, submissions = []) => {
+  if (!section || !Array.isArray(section)) return 0;
+  
+  switch (section.type) {
+    case 'learn':
+      return completedSections?.learn ? 100 : 0;
+    case 'test':
+      return completedSections?.test ? 100 : 0;
+    case 'exercise':
+      if (!section.tasks || !Array.isArray(section.tasks)) return 0;
+      const completedTasks = section.tasks.filter(task => 
+        submissions.some(sub => 
+          sub.exerciseTitle === task.title && 
+          ['approved', 'submitted'].includes(sub.status)
+        )
+      ).length;
+      return (completedTasks / section.tasks.length) * 100;
+    default:
+      return 0;
+  }
+};
+
+// Helper function to map exercise submission details
+const mapExerciseSubmission = (task, submissions = []) => {
+  const submission = submissions.find(sub => sub.exerciseTitle === task.title);
+  return {
+    ...task,
+    completed: submission?.status === 'approved',
+    submissionLink: submission?.links?.[0] || null,
+    score: submission?.score || 0,
+    attempts: submission?.attempts || 0,
+    lastAttemptAt: submission?.submittedAt || null,
+    feedback: submission?.feedback || '',
+    status: submission ? submission.status : 'not-submitted'
+  };
+};
+
+// Helper function to calculate overall level progress
+const calculateLevelProgress = (level, completedSections, submissions) => {
+  const sections = ['learn', 'test', 'exercise'];
+  let totalProgress = 0;
+
+  if (level.learn) {
+    totalProgress += calculateSectionProgress('learn', completedSections);
+  }
+  if (level.test) {
+    totalProgress += calculateSectionProgress('test', completedSections);
+  }
+  if (level.exercise) {
+    totalProgress += calculateSectionProgress('exercise', completedSections, submissions);
+  }
+
+  const activeSections = sections.filter(section => level[section]).length;
+  return activeSections > 0 ? totalProgress / activeSections : 0;
+};
+
 export const getStudentPortfolio = async (req, res) => {
   try {
     const { studentId } = req.params;
-
-
 
     // Validate studentId
     if (!studentId) {
@@ -46,502 +101,135 @@ export const getStudentPortfolio = async (req, res) => {
         select: 'order title description type content options answer externalLink'
       })
       .lean();
-    
-    // Debug: Log what we found in UserProgress
-    console.log('Portfolio Controller - UserProgress query result:', {
-      studentId,
-      foundProgress: !!progress,
-      progressId: progress?._id,
-      progressStructure: progress ? {
-        user: progress.user,
-        careerTrack: progress.careerTrack,
-        currentLevel: progress.currentLevel,
-        totalPoints: progress.totalPoints,
-        completedLevelsCount: progress.completedLevels?.length || 0,
-        hasCompletedLevels: progress.completedLevels && progress.completedLevels.length > 0,
-        completedLevelsSample: progress.completedLevels?.[0] || null
-      } : null
-    });
-    
-    // Get real attendance data from Attendance model
-    let attendanceStats = { totalDays: 0, presentDays: 0, currentStreak: 0, longestStreak: 0 };
-    
-    try {
-      // Get attendance records for this student
-      const attendanceRecords = await Attendance.find({ user: studentId })
-        .sort({ date: -1 })
-        .lean();
-      
-      if (attendanceRecords && attendanceRecords.length > 0) {
-        // Calculate total days since enrollment
-        const totalDays = Math.ceil((Date.now() - new Date(student.createdAt)) / (1000 * 60 * 60 * 24));
-        
-        // Count present days from actual attendance records
-        const presentDays = attendanceRecords.filter(record => record.status === 'present').length;
-        
-        // Calculate current streak from attendance records
-        let currentStreak = 0;
-        let longestStreak = 0;
-        let tempStreak = 0;
-        
-        // Sort records by date (newest first) to calculate current streak
-        const sortedRecords = [...attendanceRecords].sort((a, b) => new Date(b.date) - new Date(a.date));
-        
-        for (let i = 0; i < sortedRecords.length; i++) {
-          const record = sortedRecords[i];
-          if (record.status === 'present') {
-            tempStreak++;
-            if (i === 0) { // First record (most recent)
-              currentStreak = tempStreak;
-            }
-          } else {
-            longestStreak = Math.max(longestStreak, tempStreak);
-            tempStreak = 0;
-          }
-        }
-        longestStreak = Math.max(longestStreak, tempStreak);
-        
-        attendanceStats = { totalDays, presentDays, currentStreak, longestStreak };
-        
-        console.log('Portfolio Controller - Real attendance stats from Attendance model:', attendanceStats);
-        console.log('Portfolio Controller - Attendance records found:', attendanceRecords.length);
-      } else {
-        // No attendance records found, calculate based on enrollment time
-        const totalDays = Math.ceil((Date.now() - new Date(student.createdAt)) / (1000 * 60 * 60 * 24));
-        attendanceStats = { 
-          totalDays, 
-          presentDays: 0, 
-          currentStreak: 0, 
-          longestStreak: 0 
-        };
-        
-        console.log('Portfolio Controller - No attendance records found, using enrollment-based calculation');
-      }
-    } catch (error) {
-      console.error('Portfolio Controller - Error fetching attendance data:', error);
-      // Fallback to enrollment-based calculation
-      const totalDays = Math.ceil((Date.now() - new Date(student.createdAt)) / (1000 * 60 * 60 * 24));
-      attendanceStats = { 
-        totalDays, 
-        presentDays: 0, 
-        currentStreak: 0, 
-        longestStreak: 0 
-      };
-    }
 
-    // Calculate real progress based on completed levels
-    let realProgress = 0;
-    let totalLevels = 10; // Default total levels
-    
-    // Debug: Log the progress object structure
-    console.log('Portfolio Controller - Progress object:', {
-      hasProgress: !!progress,
-      completedLevels: progress?.completedLevels,
-      completedLevelsLength: progress?.completedLevels?.length,
-      currentLevel: progress?.currentLevel,
-      totalPoints: progress?.totalPoints,
-      careerTrack: progress?.careerTrack
-    });
-    
-    // Try to get total levels from curriculum if we have career track
-    if (progress?.careerTrack) {
-      try {
-        const curriculumCount = await Curriculum.countDocuments({ 
-          careerTrack: progress.careerTrack,
-          type: 'syllabus'
-        });
-        if (curriculumCount > 0) {
-          totalLevels = curriculumCount;
-          console.log('Portfolio Controller - Total levels from curriculum:', totalLevels);
-        }
-      } catch (error) {
-        console.log('Portfolio Controller - Could not get curriculum count:', error.message);
-      }
-    }
-    
-    if (progress?.completedLevels && Array.isArray(progress.completedLevels) && progress.completedLevels.length > 0) {
-      // Student has completed levels
-      realProgress = Math.round((progress.completedLevels.length / totalLevels) * 100);
-      console.log('Portfolio Controller - Progress based on completed levels:', { 
-        completedLevels: progress.completedLevels.length, 
-        totalLevels,
-        realProgress 
-      });
-    } else {
-      // If no completed levels, check if there's any progress data
-      if (progress?.currentLevel && progress.currentLevel > 1) {
-        // Student has started but not completed any levels
-        realProgress = Math.round(((progress.currentLevel - 1) / totalLevels) * 100);
-        console.log('Portfolio Controller - Progress based on current level:', { 
-          currentLevel: progress.currentLevel, 
-          totalLevels,
-          realProgress 
-        });
-      } else if (progress?.totalPoints && progress.totalPoints > 0) {
-        // Student has earned points but no level progress
-        realProgress = Math.min(100, Math.round((progress.totalPoints / 1000) * 100)); // Assume 1000 points = 100%
-        console.log('Portfolio Controller - Progress based on total points:', { totalPoints: progress.totalPoints, realProgress });
-      } else {
-        // No progress at all
-        realProgress = 0;
-        console.log('Portfolio Controller - No progress data found, setting to 0');
-      }
-    }
-    
-    // Use unified leaderboard service for consistent scoring
-    let leaderboardData = null;
-    if (progress?.careerTrack) {
-      try {
-        leaderboardData = await LeaderboardService.updateStudentScore(studentId, progress.careerTrack);
-        console.log('Portfolio Controller - Leaderboard data from service:', leaderboardData);
-      } catch (error) {
-        console.log('Portfolio Controller - Could not get leaderboard data:', error.message);
-      }
-    }
-    
-    // Fallback to old calculation if leaderboard service fails
-    if (!leaderboardData) {
-      console.log('Portfolio Controller - Using fallback leaderboard calculation');
-      if (progress || attendanceStats.presentDays > 0) {
-        // Base score from progress (40% weight)
-        const progressScore = realProgress;
-        
-        // Attendance score (30% weight)
-        const attendanceScore = Math.round((attendanceStats.presentDays / Math.max(attendanceStats.totalDays, 1)) * 100);
-        
-        // Consistency/streak bonus (30% weight)
-        let consistencyScore = 0;
-        if (attendanceStats.currentStreak >= 2) {
-          // Bonus for continuous attendance: 2+ days = 100%, 1 day = 50%
-          consistencyScore = Math.min(100, attendanceStats.currentStreak * 25); // Cap at 100%
-        } else if (attendanceStats.longestStreak >= 2) {
-          // Use longest streak if current streak not available
-          consistencyScore = Math.min(100, attendanceStats.longestStreak * 20); // Cap at 100%
-        }
-        
-        // Calculate weighted leaderboard score
-        const realLeaderboardScore = Math.round(
-          (progressScore * 0.4) + 
-          (attendanceScore * 0.3) + 
-          (consistencyScore * 0.3)
-        );
-        
-        leaderboardData = {
-          totalScore: realLeaderboardScore,
-          breakdown: {
-            progressScore,
-            attendanceScore,
-            consistencyScore,
-            timeScore: 0
-          },
-          rank: null
-        };
-      }
-    }
-
-
-
-    // Generate learning levels data from curriculum
-    let learningLevelsData = [];
-    if (progress?.careerTrack) {
-      try {
-        // Get curriculum items for this career track
-        const curriculumItems = await Curriculum.find({ 
-          careerTrack: progress.careerTrack,
-          type: 'syllabus'
-        }).sort({ order: 1 });
-        
-        if (curriculumItems && curriculumItems.length > 0) {
-          learningLevelsData = curriculumItems.map(item => {
-            // Find progress for this specific level by matching curriculum ID or order
-            const levelProgress = progress.completedLevels.find(l => 
-              l.levelId === item._id.toString() || l.levelOrder === item.order
-            );
-            
-            // Determine overall status for this level
-            let overallStatus = 'not-started';
-            if (levelProgress) {
-              // Check if all sections are completed
-              const allSectionsCompleted = levelProgress.completedSections?.learn && 
-                                         levelProgress.completedSections?.test && 
-                                         levelProgress.completedSections?.exercise;
-              overallStatus = allSectionsCompleted ? 'completed' : 'in-progress';
-            } else if (progress?.currentLevel === item.order) {
-              overallStatus = 'in-progress';
-            }
-            
-            // Get timestamps for each section if available
-            const learnStartTime = levelProgress?.learnProgress?.startTime || null;
-            const learnEndTime = levelProgress?.learnProgress?.endTime || null;
-            const testStartTime = levelProgress?.testProgress?.lastAttemptAt || null;
-            const testEndTime = levelProgress?.testProgress?.lastAttemptAt || null; // Assuming test end time is same as last attempt
-            const exerciseStartTime = levelProgress?.exerciseSubmissions?.[0]?.submittedAt || null;
-            const exerciseEndTime = levelProgress?.exerciseSubmissions?.[0]?.submittedAt || null; // Assuming exercise end time is same as submission
-
-            return {
-              level: item.order,
-              courseName: item.title,
-              description: item.description,
-              status: overallStatus,
-              learn: {
-                completed: levelProgress?.completedSections?.learn || false,
-                startTime: learnStartTime,
-                endTime: learnEndTime,
-                timeSpent: levelProgress?.learnProgress?.timeSpent || 0,
-                content: item.learn || [],
-                title: 'Learning Materials',
-                status: levelProgress?.completedSections?.learn ? 'completed' : learnStartTime ? 'in-progress' : 'not-started',
-                // Additional content details
-                materials: item.learn?.map(material => ({
-                  id: material.id,
-                  title: material.title,
-                  description: material.description,
-                  externalLink: material.externalLink,
-                  order: material.order
-                })) || []
-              },
-              test: {
-                completed: levelProgress?.completedSections?.test || false,
-                score: levelProgress?.testProgress?.attempts?.[0]?.score || 0,
-                attempts: levelProgress?.testProgress?.attempts?.length || 0,
-                startTime: testStartTime,
-                endTime: testEndTime,
-                content: item.test || [],
-                title: 'Assessment',
-                status: levelProgress?.completedSections?.test ? 'completed' : testStartTime ? 'in-progress' : 'not-started',
-                // Additional test details
-                questions: item.test?.map(test => ({
-                  id: test.id,
-                  title: test.title,
-                  question: test.question,
-                  options: test.options,
-                  answer: test.answer,
-                  order: test.order
-                })) || []
-              },
-              exercise: {
-                completed: levelProgress?.completedSections?.exercise || false,
-                startTime: exerciseStartTime,
-                endTime: exerciseEndTime,
-                timeSpent: levelProgress?.exerciseSubmissions?.[0]?.timeSpent || 0,
-                content: item.exercise || [],
-                title: 'Practice Exercise',
-                status: levelProgress?.completedSections?.exercise ? 'completed' : exerciseStartTime ? 'in-progress' : 'not-started',
-                // Additional exercise details
-                tasks: item.exercise?.map(exercise => ({
-                  id: exercise.id,
-                  title: exercise.title,
-                  description: exercise.description,
-                  content: exercise.content,
-                  order: exercise.order,
-                  submissionLink: exercise.submissionLink,
-                  score: exercise.score,
-                  attempts: exercise.attempts,
-                  lastAttemptAt: exercise.lastAttemptAt,
-                  feedback: exercise.feedback,
-                  status: exercise.status
-                })) || []
-              }
-            };
-          });
-          
-          console.log('Portfolio Controller - Generated learning levels data:', {
-            totalLevels: learningLevelsData.length,
-            sampleLevel: learningLevelsData[0],
-            progressData: {
-              hasProgress: !!progress,
-              completedLevelsCount: progress?.completedLevels?.length || 0,
-              currentLevel: progress?.currentLevel
-            }
-          });
-        }
-      } catch (error) {
-        console.log('Portfolio Controller - Could not get curriculum items:', error.message);
-      }
-    }
-    
-    // If no learning levels data was generated, create a basic structure from curriculum
-    if (learningLevelsData.length === 0 && progress?.careerTrack) {
-      try {
-        console.log('Portfolio Controller - No learning levels data generated, creating basic structure from curriculum');
-        const curriculumItems = await Curriculum.find({ 
-          careerTrack: progress.careerTrack,
-          type: 'syllabus'
-        }).sort({ order: 1 });
-        
-        if (curriculumItems && curriculumItems.length > 0) {
-          learningLevelsData = curriculumItems.map(item => ({
-            level: item.order,
-            courseName: item.title,
-            description: item.description,
-            status: 'not-started',
-            learn: {
-              completed: false,
-              startTime: null,
-              endTime: null,
-              timeSpent: 0,
-              content: item.learn || [],
-              title: 'Learning Materials',
-              status: 'not-started',
-              materials: item.learn?.map(material => ({
-                id: material.id,
-                title: material.title,
-                description: material.description,
-                externalLink: material.externalLink,
-                order: material.order
-              })) || []
-            },
-            test: {
-              completed: false,
-              score: 0,
-              attempts: 0,
-              startTime: null,
-              endTime: null,
-              content: item.test || [],
-              title: 'Assessment',
-              status: 'not-started',
-              questions: item.test?.map(test => ({
-                id: test.id,
-                title: test.title,
-                question: test.question,
-                options: test.options,
-                answer: test.answer,
-                order: test.order
-              })) || []
-            },
-            exercise: {
-              completed: false,
-              startTime: null,
-              endTime: null,
-              timeSpent: 0,
-              content: item.exercise || [],
-              title: 'Practice Exercise',
-              status: 'not-started',
-              tasks: item.exercise?.map(exercise => ({
-                id: exercise.id,
-                title: exercise.title,
-                description: exercise.description,
-                content: exercise.content,
-                order: exercise.order
-              })) || []
-            }
-          }));
-          
-          console.log('Portfolio Controller - Created basic learning levels structure:', {
-            totalLevels: learningLevelsData.length,
-            sampleLevel: learningLevelsData[0]
-          });
-        }
-      } catch (error) {
-        console.log('Portfolio Controller - Could not create basic curriculum structure:', error.message);
-      }
-    }
-
-    // Normalize career track to handle legacy values
-    const normalizedCareerTrack = student.careerTrack === 'fullstack' ? 'full-stack' : student.careerTrack;
-
-    // Get all curriculum items for this career track with complete data
+    // Fetch all curriculum items for the career track
     const curriculumItems = await Curriculum.find({
-      careerTrack: normalizedCareerTrack,
+      careerTrack: student.careerTrack,
       isActive: true
-    })
-    .sort({ order: 1 })
-    .lean();
+    }).sort({ order: 'asc' }).lean();
 
-    // Group curriculum items by level order
-    const levelGroups = curriculumItems.reduce((acc, item) => {
-      if (!acc[item.order]) {
-        acc[item.order] = {
-          id: item._id,
+    // Group curriculum items by level
+    const levelGroups = {};
+    curriculumItems.forEach(item => {
+      const levelKey = item.order;
+      if (!levelGroups[levelKey]) {
+        levelGroups[levelKey] = {
+          id: item._id.toString(),
           level: item.order,
           courseName: item.title,
           description: item.description,
           status: 'not-started',
-          learn: { completed: false, timeSpent: 0, materials: [] },
-          test: { completed: false, score: 0, attempts: 0, questions: [] },
-          exercise: { completed: false, timeSpent: 0, tasks: [] }
+          learn: {
+            completed: false,
+            timeSpent: 0,
+            materials: []
+          },
+          test: {
+            completed: false,
+            score: 0,
+            attempts: 0,
+            questions: []
+          },
+          exercise: {
+            completed: false,
+            timeSpent: 0,
+            tasks: []
+          }
         };
       }
-      
-      // Add item to appropriate section
-      if (item.type === 'learn') {
-        acc[item.order].learn.materials.push({
-          id: item._id,
-          title: item.title,
-          description: item.description,
-          content: item.content,
-          externalLink: item.externalLink,
-          order: item.order,
-          completed: false
-        });
-      } else if (item.type === 'test') {
-        acc[item.order].test.questions.push({
-          id: item._id,
-          title: item.title,
-          question: item.content,
-          options: item.options,
-          answer: item.answer,
-          order: item.order,
-          completed: false
-        });
-      } else if (item.type === 'exercise') {
-        acc[item.order].exercise.tasks.push({
-          id: item._id,
-          title: item.title,
-          description: item.description,
-          content: item.content,
-          order: item.order,
-          completed: false,
-          submissionLink: null,
-          score: 0,
-          attempts: 0,
-          lastAttemptAt: null,
-          feedback: '',
-          status: 'not-submitted'
-        });
-      }
-      
-      return acc;
-    }, {});
 
-    // Update level status based on progress
+      // Map items based on their type
+      switch (item.type) {
+        case 'learn':
+          levelGroups[levelKey].learn.materials.push({
+            id: item._id.toString(),
+            title: item.title,
+            description: item.description,
+            content: item.content,
+            externalLink: item.externalLink,
+            order: item.order,
+            completed: false
+          });
+          break;
+        case 'test':
+          levelGroups[levelKey].test.questions.push({
+            id: item._id.toString(),
+            title: item.title,
+            question: item.content,
+            order: item.order,
+            completed: false
+          });
+          break;
+        case 'exercise':
+          levelGroups[levelKey].exercise.tasks.push({
+            id: item._id.toString(),
+            title: item.title,
+            description: item.description,
+            content: item.content,
+            order: item.order,
+            completed: false
+          });
+          break;
+      }
+    });
+
+    // Update level groups with user progress
     if (progress?.completedLevels) {
       progress.completedLevels.forEach(completedLevel => {
         const level = levelGroups[completedLevel.levelOrder];
         if (level) {
-          level.status = 'completed';
+          // Update learn section
           level.learn = {
             ...level.learn,
             completed: completedLevel.completedSections?.learn || false,
             timeSpent: completedLevel.learnProgress?.timeSpent || 0,
             startTime: completedLevel.learnProgress?.startTime,
-            endTime: completedLevel.learnProgress?.endTime
+            endTime: completedLevel.learnProgress?.endTime,
+            materials: level.learn.materials.map(material => ({
+              ...material,
+              completed: completedLevel.learnProgress?.linksAccessed?.includes(material.externalLink) || false
+            }))
           };
+
+          // Update test section
           level.test = {
             ...level.test,
             completed: completedLevel.completedSections?.test || false,
-            score: completedLevel.testProgress?.attempts?.[0]?.score || 0,
+            score: completedLevel.testProgress?.attempts?.length > 0 
+              ? Math.max(...completedLevel.testProgress.attempts.map(a => a.score))
+              : 0,
             attempts: completedLevel.testProgress?.attempts?.length || 0,
-            startTime: completedLevel.testProgress?.startTime,
-            endTime: completedLevel.testProgress?.endTime
+            startTime: completedLevel.testProgress?.attempts?.[0]?.completedAt,
+            endTime: completedLevel.testProgress?.lastAttemptAt,
+            questions: level.test.questions.map(question => ({
+              ...question,
+              completed: completedLevel.testProgress?.attempts?.some(attempt => 
+                attempt.answers?.some(answer => answer.questionIndex === question.order)
+              ) || false
+            }))
           };
+
+          // Update exercise section
           level.exercise = {
             ...level.exercise,
             completed: completedLevel.completedSections?.exercise || false,
             timeSpent: completedLevel.exerciseProgress?.timeSpent || 0,
             startTime: completedLevel.exerciseProgress?.startTime,
             endTime: completedLevel.exerciseProgress?.endTime,
-            tasks: level.exercise.tasks.map(task => ({
-              ...task,
-              completed: completedLevel.completedSections?.exercise || false,
-              submissionLink: completedLevel.exerciseSubmissions?.find(sub => sub.exerciseTitle === task.title)?.links?.[0] || null,
-              score: completedLevel.exerciseSubmissions?.find(sub => sub.exerciseTitle === task.title)?.score || 0,
-              attempts: completedLevel.exerciseSubmissions?.find(sub => sub.exerciseTitle === task.title)?.attempts || 0,
-              lastAttemptAt: completedLevel.exerciseSubmissions?.find(sub => sub.exerciseTitle === task.title)?.submittedAt || null,
-              feedback: completedLevel.exerciseSubmissions?.find(sub => sub.exerciseTitle === task.title)?.feedback || '',
-              status: completedLevel.exerciseSubmissions?.find(sub => sub.exerciseTitle === task.title)?.status || 'not-submitted'
-            }))
+            tasks: level.exercise.tasks.map(task => 
+              mapExerciseSubmission(task, completedLevel.exerciseSubmissions)
+            )
           };
+
+          // Calculate level status
+          const levelProgress = calculateLevelProgress(
+            level,
+            completedLevel.completedSections,
+            completedLevel.exerciseSubmissions
+          );
+          level.status = levelProgress === 100 ? 'completed' 
+            : levelProgress > 0 ? 'in-progress' 
+            : 'not-started';
         }
       });
     }
@@ -549,30 +237,27 @@ export const getStudentPortfolio = async (req, res) => {
     // Convert level groups to array and sort by order
     const learningLevels = Object.values(levelGroups).sort((a, b) => a.level - b.level);
 
-    // Validate required data before building response
-    if (!student || !student.careerTrack) {
-      throw new Error('Invalid student data: missing required fields');
-    }
-
-    if (!learningLevels || !Array.isArray(learningLevels)) {
-      throw new Error('Invalid learning levels data');
-    }
-
-    // Calculate progress percentage safely
-    const levelCount = learningLevels.length || 1; // Avoid division by zero
-    const completedLevelsCount = progress?.completedLevels?.length || 0;
-    const progressPercentage = Math.min(
-      Math.round((completedLevelsCount / levelCount) * 100),
-      100 // Cap at 100%
+    // Calculate overall progress
+    const totalLevels = learningLevels.length;
+    const completedLevels = learningLevels.filter(level => level.status === 'completed').length;
+    const inProgressLevels = learningLevels.filter(level => level.status === 'in-progress').length;
+    
+    const progressPercentage = Math.round(
+      ((completedLevels + (inProgressLevels * 0.5)) / totalLevels) * 100
     );
 
-    // Calculate attendance percentage safely
-    const attendancePercentage = Math.min(
-      Math.round((attendanceStats.presentDays / Math.max(attendanceStats.totalDays, 1)) * 100),
-      100 // Cap at 100%
-    );
+    // Fetch attendance stats
+    const attendanceStats = progress?.attendanceStats || {
+      totalDays: 0,
+      presentDays: 0,
+      currentStreak: 0,
+      longestStreak: 0
+    };
 
-    // Build comprehensive response with data validation
+    // Get leaderboard data
+    const leaderboardData = await LeaderboardService.getStudentRank(studentId, student.careerTrack);
+
+    // Build the response
     const portfolioData = {
       student: {
         _id: student._id,
@@ -587,16 +272,16 @@ export const getStudentPortfolio = async (req, res) => {
         duration: student.duration || '6 months'
       },
       progress: {
-        currentLevel: Math.max(progress?.currentLevel || 1, 1), // Ensure minimum level 1
-        completedLevels: completedLevelsCount,
-        totalLevels: levelCount,
+        currentLevel: Math.max(progress?.currentLevel || 1, 1),
+        completedLevels: completedLevels,
+        totalLevels: totalLevels,
         percentage: progressPercentage,
-        totalPoints: Math.max(progress?.totalPoints || 0, 0) // Ensure non-negative
+        totalPoints: Math.max(progress?.totalPoints || 0, 0)
       },
       attendance: {
         totalDays: Math.max(attendanceStats.totalDays || 0, 0),
         presentDays: Math.max(attendanceStats.presentDays || 0, 0),
-        percentage: attendancePercentage,
+        percentage: Math.round((attendanceStats.presentDays / Math.max(attendanceStats.totalDays, 1)) * 100),
         currentStreak: Math.max(attendanceStats.currentStreak || 0, 0),
         longestStreak: Math.max(attendanceStats.longestStreak || 0, 0)
       },
@@ -604,10 +289,10 @@ export const getStudentPortfolio = async (req, res) => {
         score: Math.max(leaderboardData?.totalScore || 0, 0),
         rank: leaderboardData?.rank || null,
         breakdown: {
-          progressScore: Math.max(leaderboardData?.breakdown?.progressScore || 0, 0),
-          attendanceScore: Math.max(leaderboardData?.breakdown?.attendanceScore || 0, 0),
-          consistencyScore: Math.max(leaderboardData?.breakdown?.consistencyScore || 0, 0),
-          timeScore: Math.max(leaderboardData?.breakdown?.timeScore || 0, 0)
+          progressScore: progressPercentage,
+          attendanceScore: Math.round((attendanceStats.presentDays / Math.max(attendanceStats.totalDays, 1)) * 100),
+          consistencyScore: Math.round((attendanceStats.currentStreak / 30) * 100), // Assuming 30 days as max streak
+          timeScore: Math.round((progress?.totalPoints || 0) / 100) // Normalize points to percentage
         }
       },
       learningLevels
@@ -620,10 +305,10 @@ export const getStudentPortfolio = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Portfolio Controller - Error:', error);
+    console.error('Error in getStudentPortfolio:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error while retrieving portfolio',
+      message: 'Error retrieving portfolio',
       error: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
