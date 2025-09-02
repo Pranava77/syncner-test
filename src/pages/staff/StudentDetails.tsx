@@ -33,6 +33,24 @@ const StudentDetails: React.FC = () => {
   
   // Use selectedStudent data from backend
   const studentData = selectedStudent;
+  
+  // Debug: Log the student data to see what we're receiving
+  useEffect(() => {
+    if (studentData) {
+      console.log('🔍 StudentDetails received data:', {
+        name: studentData.name,
+        careerTrack: studentData.careerTrack,
+        progress: studentData.progress,
+        currentLevel: studentData.currentLevel,
+        completedLevels: studentData.completedLevels,
+        totalLevels: studentData.totalLevels,
+        hasLearningLevels: !!studentData.learningLevels,
+        learningLevelsCount: studentData.learningLevels?.length || 0,
+        hasLearningTimeline: !!studentData.learningTimeline,
+        learningTimelineCount: studentData.learningTimeline?.length || 0
+      });
+    }
+  }, [studentData]);
 
   // Fetch student details when component mounts
   useEffect(() => {
@@ -225,9 +243,9 @@ const StudentDetails: React.FC = () => {
 
   // Radar chart data for performance overview using real endpoint data
   const radarData = [
-    { metric: 'Attendance', value: studentData.attendancePercentage || 0 },
-    { metric: 'Leaderboard', value: studentData.leaderboardScore || 0 },
-    { metric: 'Progress', value: studentData.progress || 0 }
+    { metric: 'Attendance', value: studentData?.attendancePercentage || 0 },
+    { metric: 'Leaderboard', value: studentData?.leaderboardScore || 0 },
+    { metric: 'Progress', value: studentData?.progress || 0 }
   ];
 
   const getAttendanceLabel = (percentage: number) => {
@@ -575,12 +593,12 @@ const StudentDetails: React.FC = () => {
             <p 
               className="text-2xl font-bold"
               style={{ color: 'var(--color-text-primary)' }}
-            >{studentData.attendancePercentage}%</p>
+            >{studentData?.attendancePercentage || 0}%</p>
             <p 
               className="text-xs flex items-center mt-1"
               style={{ color: 'var(--color-accent-primary)' }}
             >
-              {getAttendanceLabel(studentData.attendancePercentage)}
+              {getAttendanceLabel(studentData?.attendancePercentage || 0)}
             </p>
             <p 
               className="text-xs mt-1"
@@ -615,18 +633,18 @@ const StudentDetails: React.FC = () => {
             <p 
               className="text-2xl font-bold"
               style={{ color: 'var(--color-text-primary)' }}
-            >{studentData.progress}%</p>
+            >{studentData?.progress || 0}%</p>
             <p 
               className="text-xs flex items-center mt-1"
               style={{ color: 'var(--color-accent-primary)' }}
             >
-              {getProgressLabel(studentData.progress)}
+              {getProgressLabel(studentData?.progress || 0)}
             </p>
             <p 
               className="text-xs mt-1"
               style={{ color: 'var(--color-text-muted)' }}
             >
-              Level {studentData.currentLevel} • {studentData.completedLevels}/{studentData.totalLevels} completed
+              Level {studentData?.currentLevel || 1} • {studentData?.completedLevels || 0}/{studentData?.totalLevels || 0} completed
             </p>
           </div>
         </div>
@@ -655,12 +673,12 @@ const StudentDetails: React.FC = () => {
             <p 
               className="text-2xl font-bold"
               style={{ color: 'var(--color-text-primary)' }}
-            >{studentData.leaderboardScore}</p>
+            >{studentData?.leaderboardScore || 0}</p>
             <p 
               className="text-xs flex items-center mt-1"
               style={{ color: 'var(--color-accent-primary)' }}
             >
-              {getLeaderboardLabel(studentData.leaderboardScore)}
+              {getLeaderboardLabel(studentData?.leaderboardScore || 0)}
             </p>
             <p 
               className="text-xs mt-1"

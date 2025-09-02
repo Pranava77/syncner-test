@@ -7,7 +7,6 @@ import {
   PaginationState 
 } from '../../types/staff';
 import apiService from '../../services/api';
-import { StudentTimelineService } from '../../services/studentTimelineService';
 
 // Async thunks
 export const fetchStudents = createAsyncThunk(
@@ -26,40 +25,31 @@ export const fetchStudentDetails = createAsyncThunk(
   'staff/fetchStudentDetails',
   async (studentId: string, { rejectWithValue }) => {
     try {
-      // Use the new StudentTimelineService for clean two-API approach
-      const combinedTimeline = await StudentTimelineService.generateStudentTimeline(studentId);
+      console.log('🔍 Staff slice: Fetching student details for ID:', studentId);
       
-      // Get additional student data from portfolio for other fields
-      const portfolioResponse = await apiService.getStudentPortfolio(studentId);
-      const portfolioData = portfolioResponse.data;
+      // Use the staff API endpoint directly which has all the correct progress data
+      const response = await apiService.getStudentDetails(studentId);
       
-      // Combine student data with portfolio data
-      const studentData = {
-        ...portfolioData.student,
-        // Flatten portfolio data for easy access in frontend
-        attendancePercentage: portfolioData.attendance?.percentage || 0,
-        totalDays: portfolioData.attendance?.totalDays || 0,
-        presentDays: portfolioData.attendance?.presentDays || 0,
-        currentStreak: portfolioData.attendance?.currentStreak || 0,
-        longestStreak: portfolioData.attendance?.longestStreak || 0,
-        
-        leaderboardScore: portfolioData.leaderboard?.score || 0,
-        leaderboardRank: portfolioData.leaderboard?.rank || null,
-        
-        progress: portfolioData.progress?.percentage || 0,
-        currentLevel: portfolioData.progress?.currentLevel || 1,
-        completedLevels: portfolioData.progress?.completedLevels || 0,
-        totalLevels: portfolioData.progress?.totalLevels || 0,
-        
-        // Add learning levels from portfolio for timeline generation
-        learningLevels: portfolioData.learningLevels || [],
-        
-        // Add the combined timeline
-        learningTimeline: combinedTimeline
-      };
+      console.log('🔍 Staff slice: API response:', {
+        success: response.success,
+        hasData: !!response.data,
+        hasStudent: !!response.data?.student,
+        studentProgress: response.data?.student?.progress,
+        studentLevels: response.data?.student?.totalLevels
+      });
       
-      return studentData;
+      if (!response.success) {
+        throw new Error(response.message || 'Failed to fetch student details');
+      }
+      
+      if (!response.data || !response.data.student) {
+        throw new Error('Invalid response structure from staff API');
+      }
+      
+      console.log('✅ Staff slice: Successfully fetched student details');
+      return response.data.student;
     } catch (error: any) {
+      console.error('❌ Staff slice: Error fetching student details:', error);
       return rejectWithValue(error.message || 'Failed to fetch student details');
     }
   }
