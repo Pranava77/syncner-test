@@ -86,22 +86,16 @@ const EnhancedLearningTimeline: React.FC<EnhancedLearningTimelineProps> = ({
         ...level,
         learn: {
           ...level.learn,
-          progress: progress.learnProgress || 0,
-          completed: progress.learnProgress === 100
+          ...progress.learn
         },
         test: {
           ...level.test,
-          progress: progress.testProgress || 0,
-          score: progress.testProgress || 0,
-          completed: progress.testProgress === 100
+          ...progress.test
         },
         exercise: {
           ...level.exercise,
-          progress: progress.exerciseProgress || 0,
-          completed: progress.exerciseProgress === 100
-        },
-        status: progress.overallProgress === 100 ? 'completed' :
-               progress.overallProgress > 0 ? 'in-progress' : 'not-started'
+          ...progress.exercise
+        }
       };
     }
     return level;

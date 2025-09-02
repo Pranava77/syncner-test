@@ -412,18 +412,6 @@ export const getStudentPortfolio = async (req, res) => {
       return `SYNCNER-${prefix}${year}-${userId.toString().slice(-5)}-${randomDigits}`;
     };
 
-    // Calculate progress for each level
-    const levelProgressData = progress.completedLevels.map(level => ({
-      levelId: level.levelId,
-      learnProgress: progress.calculateSectionProgress(level.levelId, 'learn'),
-      testProgress: progress.calculateSectionProgress(level.levelId, 'test'),
-      exerciseProgress: progress.calculateSectionProgress(level.levelId, 'exercise'),
-      overallProgress: progress.calculateLevelProgress(level.levelId)
-    }));
-
-    // Calculate overall journey progress
-    const overallProgress = progress.calculateOverallProgress();
-
     // Build the response
     const portfolioData = {
       student: {
@@ -439,7 +427,7 @@ export const getStudentPortfolio = async (req, res) => {
         duration: student.duration || '6 months',
         skills: getSkillsForTrack(student.careerTrack),
         certificateId: generateCertificateId(student._id, student.careerTrack),
-        recommendedRoles: getRecommendedRoles(student.careerTrack, overallProgress)
+        recommendedRoles: getRecommendedRoles(student.careerTrack, progressPercentage)
       },
       progress: {
         currentLevel: Math.max(progress?.currentLevel || 1, 1),

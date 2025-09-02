@@ -32,10 +32,6 @@ interface LevelProgress {
   learn: LearningProgress;
   test: TestProgress;
   exercise: ExerciseProgress;
-  learnProgress: number;
-  testProgress: number;
-  exerciseProgress: number;
-  overallProgress: number;
 }
 
 interface LearningJourneyState {
@@ -127,17 +123,7 @@ const learningJourneySlice = createSlice({
       })
       .addCase(fetchLearningProgress.fulfilled, (state, action) => {
         state.loading = false;
-        // Transform the progress data to include section progress
-        state.progress = action.payload.map((level: any) => ({
-          levelId: level.levelId,
-          learn: level.learn,
-          test: level.test,
-          exercise: level.exercise,
-          learnProgress: level.learnProgress || 0,
-          testProgress: level.testProgress || 0,
-          exerciseProgress: level.exerciseProgress || 0,
-          overallProgress: level.overallProgress || 0
-        }));
+        state.progress = action.payload;
         state.lastUpdated = Date.now();
       })
       .addCase(fetchLearningProgress.rejected, (state, action) => {
