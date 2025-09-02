@@ -20,14 +20,14 @@ const calculateSectionProgress = (section, completedSections, submissions = []) 
           sub.exerciseTitle === task.title && 
           ['approved', 'submitted'].includes(sub.status)
         )
-      ).length;
-      return (completedTasks / section.tasks.length) * 100;
+      );
+      return Math.round((completedTasks.length / section.tasks.length) * 100);
     default:
       return 0;
   }
 };
 
-// Helper function to map exercise submission details
+// Helper function to map exercise submission data
 const mapExerciseSubmission = (task, submissions = []) => {
   const submission = submissions.find(sub => sub.exerciseTitle === task.title);
   return {
@@ -42,24 +42,22 @@ const mapExerciseSubmission = (task, submissions = []) => {
   };
 };
 
-// Helper function to calculate overall level progress
+// Helper function to calculate level progress
 const calculateLevelProgress = (level, completedSections, submissions) => {
   const sections = ['learn', 'test', 'exercise'];
   let totalProgress = 0;
   let activeSections = 0;
 
-  if (level.learn) {
-    totalProgress += calculateSectionProgress('learn', completedSections);
-    activeSections++;
-  }
-  if (level.test) {
-    totalProgress += calculateSectionProgress('test', completedSections);
-    activeSections++;
-  }
-  if (level.exercise) {
-    totalProgress += calculateSectionProgress('exercise', completedSections, submissions);
-    activeSections++;
-  }
+  sections.forEach(section => {
+    if (level[section] && Array.isArray(level[section])) {
+      activeSections++;
+      totalProgress += calculateSectionProgress(
+        { type: section, tasks: level[section] },
+        completedSections,
+        submissions
+      );
+    }
+  });
 
   return activeSections > 0 ? totalProgress / activeSections : 0;
 };
@@ -104,7 +102,7 @@ export const getStudentPortfolio = async (req, res) => {
         select: 'order title description type content options answer externalLink'
       })
       .lean();
-
+    
     // Fetch all curriculum items for the career track
     const curriculumItems = await Curriculum.find({
       careerTrack: student.careerTrack,
@@ -121,100 +119,125 @@ export const getStudentPortfolio = async (req, res) => {
           courseName: item.title,
           description: item.description,
           status: 'not-started',
-          learn: {
-            completed: false,
-            timeSpent: 0,
-            materials: []
-          },
-          test: {
-            completed: false,
-            score: 0,
-            attempts: 0,
-            questions: []
-          },
-          exercise: {
-            completed: false,
-            timeSpent: 0,
-            tasks: []
-          }
+          learn: [],
+          test: [],
+          exercise: []
         };
       }
 
-      // Add item to appropriate section
+      // Add item to appropriate section array
       switch (item.type) {
         case 'learn':
-          levelGroups[levelKey].learn.materials.push({
-            id: item._id,
+          levelGroups[levelKey].learn.push({
+          id: item._id,
+          title: item.title,
+          description: item.description,
+          content: item.content,
+          externalLink: item.externalLink,
+            order: item.order
+        });
+          break;
+        case 'test':
+          levelGroups[levelKey].test.push({
+          id: item._id,
+          title: item.title,
+          question: item.content,
+          options: item.options,
+          answer: item.answer,
+            order: item.order
+        });
+          break;
+        case 'exercise':
+          levelGroups[levelKey].exercise.push({
+          id: item._id,
             title: item.title,
             description: item.description,
             content: item.content,
-            externalLink: item.externalLink
-          });
-          break;
-        case 'test':
-          levelGroups[levelKey].test.questions.push({
-            id: item._id,
-            title: item.title,
-            question: item.content,
-            options: item.options,
-            answer: item.answer
-          });
-          break;
-        case 'exercise':
-          levelGroups[levelKey].exercise.tasks.push({
-            id: item._id,
-            title: item.title,
-            description: item.description,
-            content: item.content
+            order: item.order
           });
           break;
       }
     });
 
-    // Calculate progress and merge with user progress data
+    // Calculate completion status for each level
+    let completedLevels = 0;
+    const totalLevels = Object.keys(levelGroups).length;
     const learningLevels = Object.values(levelGroups).map(level => {
-      const userLevel = progress?.completedLevels?.find(l => l.levelOrder === level.level);
-      
-      if (userLevel) {
-        // Update level status
-        level.status = userLevel.completedSections.exercise ? 'completed' :
-                      userLevel.completedSections.learn || userLevel.completedSections.test ? 'in-progress' :
-                      'not-started';
+      const levelProgress = progress?.completedLevels?.find(l => l.levelOrder === level.level);
+      const completedSections = levelProgress?.completedSections || {};
+      const exerciseSubmissions = levelProgress?.exerciseSubmissions || [];
 
-        // Update learn section
-        if (userLevel.learnProgress) {
-          level.learn.completed = userLevel.completedSections.learn;
-          level.learn.timeSpent = userLevel.learnProgress.timeSpent;
-          level.learn.materials = level.learn.materials.map(material => ({
-            ...material,
-            completed: userLevel.learnProgress.linksAccessed.includes(material.externalLink)
-          }));
-        }
+      // Map learn section
+      const learnSection = {
+        completed: completedSections.learn || false,
+        startTime: levelProgress?.learnProgress?.startTime || null,
+        endTime: levelProgress?.learnProgress?.endTime || null,
+        timeSpent: levelProgress?.learnProgress?.timeSpent || 0,
+        content: level.learn,
+        title: 'Learning Materials',
+        status: completedSections.learn ? 'completed' : 'not-started',
+        materials: level.learn.map(item => ({
+          id: item.id,
+          title: item.title,
+          description: item.description,
+          externalLink: item.externalLink,
+          order: item.order,
+          completed: levelProgress?.learnProgress?.linksAccessed?.includes(item.externalLink)
+        }))
+      };
 
-        // Update test section
-        if (userLevel.testProgress) {
-          level.test.completed = userLevel.completedSections.test;
-          level.test.score = userLevel.testProgress.attempts.length > 0 
-            ? Math.max(...userLevel.testProgress.attempts.map(a => a.score))
-            : 0;
-          level.test.attempts = userLevel.testProgress.attempts.length;
-        }
+      // Map test section
+      const testSection = {
+        completed: completedSections.test || false,
+        score: levelProgress?.testProgress?.attempts?.slice(-1)[0]?.score || 0,
+        attempts: levelProgress?.testProgress?.attempts?.length || 0,
+        startTime: levelProgress?.testProgress?.startTime || null,
+        endTime: levelProgress?.testProgress?.endTime || null,
+        content: level.test,
+        title: 'Assessment',
+        status: completedSections.test ? 'completed' : 'not-started',
+        questions: level.test.map(item => ({
+          id: item.id,
+          title: item.title,
+          question: item.question,
+          options: item.options,
+          answer: item.answer,
+          order: item.order
+        }))
+      };
 
-        // Update exercise section with all submission links
-        if (userLevel.exerciseSubmissions) {
-          level.exercise.completed = userLevel.completedSections.exercise;
-          level.exercise.tasks = level.exercise.tasks.map(task => 
-            mapExerciseSubmission(task, userLevel.exerciseSubmissions)
-          );
-        }
+      // Map exercise section with submission data
+      const exerciseSection = {
+        completed: completedSections.exercise || false,
+        startTime: levelProgress?.exerciseProgress?.startTime || null,
+        endTime: levelProgress?.exerciseProgress?.endTime || null,
+        timeSpent: levelProgress?.exerciseProgress?.timeSpent || 0,
+        content: level.exercise,
+        title: 'Practice Exercise',
+        status: completedSections.exercise ? 'completed' : 'not-started',
+        tasks: level.exercise.map(task => mapExerciseSubmission(task, exerciseSubmissions))
+      };
+
+      // Calculate overall level status
+      let status = 'not-started';
+      if (completedSections.learn && completedSections.test && completedSections.exercise) {
+        status = 'completed';
+        completedLevels++;
+      } else if (completedSections.learn || completedSections.test || completedSections.exercise) {
+        status = 'in-progress';
       }
 
-      return level;
+      return {
+        level: level.level,
+        courseName: level.courseName,
+        description: level.description,
+        status,
+        learn: learnSection,
+        test: testSection,
+        exercise: exerciseSection
+      };
     });
 
-    // Calculate completion stats
-    const completedLevels = learningLevels.filter(level => level.status === 'completed').length;
-    const totalLevels = learningLevels.length;
     const progressPercentage = Math.round((completedLevels / totalLevels) * 100);
 
     // Get attendance stats
@@ -273,10 +296,10 @@ export const getStudentPortfolio = async (req, res) => {
         score: Math.max(leaderboardData?.totalScore || 0, 0),
         rank: leaderboardData?.rank || null,
         breakdown: {
-          progressScore: progressPercentage,
-          attendanceScore: Math.round((stats.presentDays / Math.max(stats.totalDays, 1)) * 100),
-          consistencyScore: Math.round((stats.currentStreak / 30) * 100), // Assuming 30 days as max streak
-          timeScore: Math.round((progress?.totalPoints || 0) / 100) // Normalize points to percentage
+          progressScore: Math.max(leaderboardData?.progressScore || 0, 0),
+          attendanceScore: Math.max(leaderboardData?.attendanceScore || 0, 0),
+          consistencyScore: Math.max(leaderboardData?.consistencyScore || 0, 0),
+          timeScore: Math.max(leaderboardData?.timeScore || 0, 0)
         }
       },
       learningLevels
@@ -284,12 +307,11 @@ export const getStudentPortfolio = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      data: portfolioData,
-      message: 'Portfolio retrieved successfully'
+      data: portfolioData
     });
 
   } catch (error) {
-    console.error('Error in getStudentPortfolio:', error);
+    console.error('Get student portfolio error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error while fetching portfolio',
