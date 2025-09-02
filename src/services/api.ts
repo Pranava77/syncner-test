@@ -1,7 +1,6 @@
 import { 
   StudentsApiResponse, 
-  StaffAnalyticsApiResponse, 
-  StudentFilters,
+  StaffAnalyticsApiResponse,
   ApiResponse 
 } from '../types/staff';
 
