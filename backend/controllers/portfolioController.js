@@ -198,8 +198,57 @@ export const getStudentPortfolio = async (req, res) => {
 
     // Calculate completion status for each level
     let completedLevels = 0;
-    const totalLevels = Object.keys(levelGroups).length;
-    const learningLevels = Object.values(levelGroups).map(level => {
+    
+    // Create learning levels for all levels (both curriculum and completed)
+    const learningLevelsMap = new Map();
+    
+    // First, add curriculum-based levels
+    Object.values(levelGroups).forEach(level => {
+      learningLevelsMap.set(level.level, level);
+    });
+    
+    // Then, add any completed levels that aren't in curriculum
+    if (progress?.completedLevels) {
+      progress.completedLevels.forEach(completedLevel => {
+        if (completedLevel.levelOrder > 0 && !learningLevelsMap.has(completedLevel.levelOrder)) {
+          // Create a placeholder level for completed levels not in current curriculum
+          learningLevelsMap.set(completedLevel.levelOrder, {
+            level: completedLevel.levelOrder,
+            courseName: `Level ${completedLevel.levelOrder}`,
+            description: `Completed training level ${completedLevel.levelOrder}`,
+            status: 'not-started', // Will be updated below
+            learn: [],
+            test: [],
+            exercise: []
+          });
+        }
+      });
+    }
+    
+    // Calculate total levels including both curriculum levels and completed levels
+    const curriculumLevelOrders = Object.keys(levelGroups).map(Number);
+    const completedLevelOrders = progress?.completedLevels?.map(l => l.levelOrder).filter(order => order > 0) || [];
+    const allLevelOrders = [...new Set([...curriculumLevelOrders, ...completedLevelOrders])].sort((a, b) => a - b);
+    const totalLevels = learningLevelsMap.size;
+    
+    console.log('📚 Portfolio Controller Debug:', {
+      studentId,
+      careerTrack: student.careerTrack,
+      curriculumItemsFound: curriculumItems.length,
+      curriculumLevelOrders,
+      completedLevelOrders,
+      allLevelOrders,
+      totalLevels,
+      learningLevelsMapSize: learningLevelsMap.size,
+      progressCompletedLevels: progress?.completedLevels?.length || 0,
+      progressData: progress?.completedLevels?.map(l => ({
+        levelId: l.levelId,
+        levelOrder: l.levelOrder,
+        completedSections: l.completedSections
+      }))
+    });
+    
+    const learningLevels = Array.from(learningLevelsMap.values()).sort((a, b) => a.level - b.level).map(level => {
       const levelProgress = progress?.completedLevels?.find(l => l.levelOrder === level.level);
       const completedSections = levelProgress?.completedSections || {};
       const exerciseSubmissions = levelProgress?.exerciseSubmissions || [];

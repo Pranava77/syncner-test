@@ -82,8 +82,12 @@ router.get('/students', protect, authorize('staff', 'admin'), async (req, res) =
         }).sort({ order: 1 }).lean();
         
         // Get unique level orders from curriculum
-        const levelOrders = [...new Set(curriculumItems.map(item => item.order))].sort((a, b) => a - b);
-        const totalLevels = levelOrders.length;
+        const curriculumLevelOrders = [...new Set(curriculumItems.map(item => item.order))].sort((a, b) => a - b);
+        
+        // Also include completed level orders that might not be in current curriculum
+        const studentProgressLevelOrders = studentProgress?.completedLevels?.map(l => l.levelOrder).filter(order => order > 0) || [];
+        const allStudentLevelOrders = [...new Set([...curriculumLevelOrders, ...studentProgressLevelOrders])].sort((a, b) => a - b);
+        const totalLevels = allStudentLevelOrders.length;
         
         console.log(`📚 Student ${student.name}: Curriculum items found:`, curriculumItems.length, 'for track:', normalizedCareerTrack, 'Total levels:', totalLevels);
         
@@ -357,11 +361,25 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
     }).sort({ order: 1 }).lean();
     
     // Get unique level orders from curriculum
-    const levelOrders = [...new Set(curriculumItems.map(item => item.order))].sort((a, b) => a - b);
-    const totalLevels = levelOrders.length;
+    const curriculumLevelOrders = [...new Set(curriculumItems.map(item => item.order))].sort((a, b) => a - b);
+    
+    // Also include completed level orders that might not be in current curriculum
+    const completedLevelOrders = progress?.completedLevels?.map(l => l.levelOrder).filter(order => order > 0) || [];
+    const allLevelOrders = [...new Set([...curriculumLevelOrders, ...completedLevelOrders])].sort((a, b) => a - b);
+    const totalLevels = allLevelOrders.length;
+    
+    console.log('📚 Staff route curriculum debug:', {
+      studentId: id,
+      careerTrack: normalizedCareerTrack,
+      curriculumItemsFound: curriculumItems.length,
+      curriculumLevelOrders,
+      completedLevelOrders,
+      allLevelOrders,
+      totalLevels
+    });
     
     console.log('📚 Staff route: Curriculum items found:', curriculumItems.length, 'for track:', normalizedCareerTrack);
-    console.log('🎯 Staff route: Level orders found:', levelOrders, 'Total levels:', totalLevels);
+    console.log('🎯 Staff route: Level orders found:', allLevelOrders, 'Total levels:', totalLevels);
     console.log('📋 Sample curriculum items:', curriculumItems.slice(0, 3).map(item => ({
       order: item.order,
       title: item.title,
@@ -382,13 +400,49 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
       ];
       
       curriculumItems.push(...fallbackLevels);
-      levelOrders.push(...fallbackLevels.map(l => l.order));
-      totalLevels = levelOrders.length;
+      const fallbackOrders = fallbackLevels.map(l => l.order);
+      allLevelOrders.push(...fallbackOrders);
+      totalLevels = allLevelOrders.length;
       
       console.log('🔄 Created fallback curriculum with', totalLevels, 'levels');
     }
     
-
+    // Get default course names based on level and track
+    const getDefaultCourseName = (order, careerTrack) => {
+      const courseNames = {
+        'full-stack': [
+          'Foundations: HTML & CSS',
+          'JavaScript Fundamentals', 
+          'React Development',
+          'Backend with Node.js',
+          'Full Stack Project'
+        ],
+        'data-science': [
+          'Foundations: Linux & Shell',
+          'Python Programming',
+          'Data Analysis & EDA',
+          'Data Visualization',
+          'Machine Learning Basics'
+        ],
+        'ai-ml': [
+          'Python Fundamentals',
+          'Statistics & Mathematics',
+          'Machine Learning Algorithms',
+          'Deep Learning',
+          'AI Project Development'
+        ],
+        'ui-ux': [
+          'Design Principles',
+          'User Research Methods',
+          'Wireframing & Prototyping',
+          'UI Design Systems',
+          'UX Testing & Iteration'
+        ]
+      };
+      
+      const trackCourses = courseNames[careerTrack] || courseNames['full-stack'];
+      return trackCourses[order - 1] || `Level ${order}`;
+    };
     
     // Get skills for career track
     const getSkillsForTrack = () => {
@@ -559,31 +613,37 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
       ];
       
       curriculumItems.push(...fallbackLevels);
-      levelOrders.push(...fallbackLevels.map(l => l.order));
-      totalLevels = levelOrders.length;
+      const fallbackOrders2 = fallbackLevels.map(l => l.order);
+      allLevelOrders.push(...fallbackOrders2);
+      totalLevels = allLevelOrders.length;
       
       console.log('🔄 Created fallback curriculum with', totalLevels, 'levels');
     }
     
     // Build timeline for each level in the curriculum
-    console.log('🔨 Starting timeline generation loop with levelOrders:', levelOrders);
+    console.log('🔨 Starting timeline generation loop with allLevelOrders:', allLevelOrders);
     console.log('🗺️ Level to curriculum mapping available:', Object.keys(levelToCurriculumMap));
     
-    levelOrders.forEach(levelOrder => {
+    allLevelOrders.forEach(levelOrder => {
       const curriculumItem = levelToCurriculumMap[levelOrder];
       console.log(`🔍 Processing level ${levelOrder}:`, { 
         foundCurriculumItem: !!curriculumItem, 
         curriculumItem: curriculumItem 
       });
       
+      // If no curriculum item found, create a placeholder for completed levels
+      let levelData = curriculumItem;
       if (!curriculumItem) {
-        console.log(`⚠️ No curriculum item found for level ${levelOrder}, skipping`);
-        return;
+        console.log(`⚠️ No curriculum item found for level ${levelOrder}, creating placeholder`);
+        levelData = {
+          title: getDefaultCourseName(levelOrder, normalizedCareerTrack),
+          description: `Training content for level ${levelOrder}`
+        };
       }
       
       // Find progress data for this level
       const levelProgress = progress?.completedLevels?.find(
-        level => level.levelOrder === levelOrder || level.levelId === curriculumItem._id.toString()
+        level => level.levelOrder === levelOrder || (curriculumItem && level.levelId === curriculumItem._id.toString())
       );
       
       // Determine overall level status
@@ -638,8 +698,8 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
       // Create level timeline entry
       const levelEntry = {
         levelOrder: levelOrder,
-        levelTitle: curriculumItem.title,
-        levelDescription: curriculumItem.description,
+        levelTitle: levelData.title,
+        levelDescription: levelData.description,
         overallStatus: overallStatus,
         sections: {
         learn: { 
@@ -926,7 +986,7 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
     }
     
     // Build learning levels for portfolio-style display (matching portfolio controller structure)
-    const learningLevels = levelOrders.map(levelOrder => {
+    const learningLevels = allLevelOrders.map(levelOrder => {
       const levelProgress = progress?.completedLevels?.find(
         level => level.levelOrder === levelOrder
       );
@@ -944,9 +1004,16 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
         }
       }
       
+      // Use default course names if curriculum item not found
+      let courseName = curriculumItem?.title;
+      if (!courseName) {
+        const defaultNames = getDefaultCourseName(levelOrder, normalizedCareerTrack);
+        courseName = defaultNames;
+      }
+      
       return {
         level: levelOrder,
-        courseName: curriculumItem?.title || `Level ${levelOrder}`,
+        courseName: courseName || `Level ${levelOrder}`,
         description: curriculumItem?.description || `Training content for level ${levelOrder}`,
         status: status,
         learn: {
