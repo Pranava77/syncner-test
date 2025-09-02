@@ -120,6 +120,10 @@ app.get('/api/curriculum/health', (req, res) => {
   res.status(200).json({ success: true, message: 'Curriculum service is healthy' });
 });
 
+// Public routes (no authentication required)
+import { getStudentPortfolio } from './controllers/portfolioController.js';
+app.get('/api/student/portfolio/public/:studentId', getStudentPortfolio);
+
 // All routes below require authentication and activity tracking
 app.use('/api', protect, trackActivity);
 

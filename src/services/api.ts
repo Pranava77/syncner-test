@@ -535,7 +535,7 @@ class ApiService {
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include',
+        // No credentials for public route
       });
       if (!response.ok) {
         const errorData = await response.json();
