@@ -43,7 +43,7 @@ export const getStudentPortfolio = async (req, res) => {
       .populate({
         path: 'completedLevels.levelId',
         model: 'Curriculum',
-        select: 'order title description'
+        select: 'order title description type content options answer externalLink'
       })
       .lean();
     
@@ -440,20 +440,10 @@ export const getStudentPortfolio = async (req, res) => {
     // Normalize career track to handle legacy values
     const normalizedCareerTrack = student.careerTrack === 'fullstack' ? 'full-stack' : student.careerTrack;
 
-    // Get all curriculum items for this career track with efficient projection
+    // Get all curriculum items for this career track with complete data
     const curriculumItems = await Curriculum.find({
       careerTrack: normalizedCareerTrack,
       isActive: true
-    }, {
-      _id: 1,
-      order: 1,
-      title: 1,
-      description: 1,
-      type: 1,
-      content: 1,
-      materials: 1,
-      questions: 1,
-      tasks: 1
     })
     .sort({ order: 1 })
     .lean();
@@ -475,11 +465,40 @@ export const getStudentPortfolio = async (req, res) => {
       
       // Add item to appropriate section
       if (item.type === 'learn') {
-        acc[item.order].learn.materials.push(item);
+        acc[item.order].learn.materials.push({
+          id: item._id,
+          title: item.title,
+          description: item.description,
+          content: item.content,
+          externalLink: item.externalLink,
+          order: item.order,
+          completed: false
+        });
       } else if (item.type === 'test') {
-        acc[item.order].test.questions.push(item);
+        acc[item.order].test.questions.push({
+          id: item._id,
+          title: item.title,
+          question: item.content,
+          options: item.options,
+          answer: item.answer,
+          order: item.order,
+          completed: false
+        });
       } else if (item.type === 'exercise') {
-        acc[item.order].exercise.tasks.push(item);
+        acc[item.order].exercise.tasks.push({
+          id: item._id,
+          title: item.title,
+          description: item.description,
+          content: item.content,
+          order: item.order,
+          completed: false,
+          submissionLink: null,
+          score: 0,
+          attempts: 0,
+          lastAttemptAt: null,
+          feedback: '',
+          status: 'not-submitted'
+        });
       }
       
       return acc;

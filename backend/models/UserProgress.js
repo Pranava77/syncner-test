@@ -189,7 +189,7 @@ userProgressSchema.methods.isLearnUnlocked = function(levelId, levelOrder) {
 // Method to check if test is unlocked (learn must be completed)
 userProgressSchema.methods.isTestUnlocked = function(levelId) {
   const level = this.completedLevels.find(l => l.levelId === levelId);
-  return level && level.learnProgress && level.learnProgress.isCompleted;
+  return level && level.completedSections && level.completedSections.learn === true;
 };
 
 // Method to check if exercise is unlocked (test must be passed)
@@ -268,6 +268,22 @@ userProgressSchema.methods.markLevelCompleted = function(levelId, levelOrder, se
     // Update existing level
     existingLevel.completedSections[section] = true;
     existingLevel.completedAt = new Date();
+
+    // Update section-specific progress
+    if (section === 'learn') {
+      existingLevel.learnProgress = {
+        ...existingLevel.learnProgress,
+        isCompleted: true,
+        timeSpent: existingLevel.learnProgress?.timeSpent || 0,
+        linksAccessed: existingLevel.learnProgress?.linksAccessed || []
+      };
+    } else if (section === 'test') {
+      existingLevel.testProgress = {
+        ...existingLevel.testProgress,
+        isCompleted: true,
+        attempts: existingLevel.testProgress?.attempts || []
+      };
+    }
 
     // Check if all sections are completed
     const allSectionsCompleted = Object.values(existingLevel.completedSections).every(val => val === true);
