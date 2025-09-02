@@ -122,4 +122,47 @@ router.post('/fix-progress-orders', protect, authorize('admin'), async (req, res
   }
 });
 
+// Clean up orphaned UserProgress records (where user was deleted)
+router.post('/cleanup-orphaned-progress', protect, authorize('admin'), async (req, res) => {
+  try {
+    const UserProgress = (await import('../models/UserProgress.js')).default;
+    const User = (await import('../models/User.js')).default;
+    
+    // Find all UserProgress records
+    const allProgress = await UserProgress.find({}).lean();
+    
+    let orphanedCount = 0;
+    let cleanedCount = 0;
+    
+    for (const progress of allProgress) {
+      // Check if the referenced user still exists
+      const userExists = await User.findById(progress.user);
+      
+      if (!userExists) {
+        console.log(`Removing orphaned UserProgress for deleted user: ${progress.user}`);
+        await UserProgress.deleteOne({ _id: progress._id });
+        orphanedCount++;
+        cleanedCount++;
+      }
+    }
+    
+    res.status(200).json({
+      success: true,
+      data: {
+        totalRecords: allProgress.length,
+        orphanedFound: orphanedCount,
+        cleanedUp: cleanedCount
+      },
+      message: `Cleaned up ${cleanedCount} orphaned UserProgress records`
+    });
+    
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error cleaning up orphaned UserProgress records',
+      error: error.message
+    });
+  }
+});
+
 export default router; 

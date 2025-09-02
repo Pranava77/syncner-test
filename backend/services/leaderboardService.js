@@ -37,10 +37,27 @@ class LeaderboardService {
         type: 'syllabus' 
       }) || 10; // Fallback to 10 if no curriculum found
 
-      // Calculate progress score (40% weight)
+      // Calculate progress score (40% weight) - use section-based calculation
       let progressScore = 0;
       if (progress.completedLevels && progress.completedLevels.length > 0) {
-        progressScore = Math.round((progress.completedLevels.length / totalLevels) * 100);
+        // Calculate based on completed sections across all levels
+        let totalSectionsCompleted = 0;
+        let totalSectionsAvailable = totalLevels * 3; // Each level has 3 sections
+        
+        progress.completedLevels.forEach(level => {
+          // Skip levels with invalid levelOrder (0 or undefined)
+          if (!level.levelOrder || level.levelOrder === 0) {
+            return;
+          }
+          
+          if (level.completedSections) {
+            if (level.completedSections.learn) totalSectionsCompleted++;
+            if (level.completedSections.test) totalSectionsCompleted++;
+            if (level.completedSections.exercise) totalSectionsCompleted++;
+          }
+        });
+        
+        progressScore = totalSectionsAvailable > 0 ? Math.round((totalSectionsCompleted / totalSectionsAvailable) * 100) : 0;
       } else if (progress.currentLevel && progress.currentLevel > 1) {
         progressScore = Math.round(((progress.currentLevel - 1) / totalLevels) * 100);
       }
@@ -127,16 +144,38 @@ class LeaderboardService {
         return [];
       }
 
-      // Calculate scores for all students
+      // Calculate scores for all students (filter out null users)
+      const validStudents = students.filter(student => student.user && student.user._id);
+      
+      if (validStudents.length === 0) {
+        console.log('LeaderboardService - No valid students found after filtering null users');
+        return [];
+      }
+      
       const studentScores = await Promise.all(
-        students.map(async (student) => {
-          const scoreData = await this.calculateStudentScore(student.user._id, careerTrack);
-          return {
-            userId: student.user._id,
-            name: student.user.name,
-            email: student.user.email,
-            ...scoreData
-          };
+        validStudents.map(async (student) => {
+          try {
+            const scoreData = await this.calculateStudentScore(student.user._id, careerTrack);
+            return {
+              userId: student.user._id,
+              name: student.user.name || 'Unknown Student',
+              email: student.user.email || 'No email',
+              ...scoreData
+            };
+          } catch (error) {
+            console.error(`LeaderboardService - Error calculating score for student ${student.user._id}:`, error);
+            // Return a default score object for students with errors
+            return {
+              userId: student.user._id,
+              name: student.user.name || 'Unknown Student',
+              email: student.user.email || 'No email',
+              totalScore: 0,
+              progressScore: 0,
+              attendanceScore: 0,
+              consistencyScore: 0,
+              timeScore: 0
+            };
+          }
         })
       );
 
@@ -164,11 +203,51 @@ class LeaderboardService {
   static async getStudentRank(userId, careerTrack) {
     try {
       const leaderboard = await this.getLeaderboard(careerTrack, 1000); // Get all students
-      const studentEntry = leaderboard.find(student => student.userId.toString() === userId);
-      return studentEntry ? studentEntry.rank : null;
+      
+      if (!leaderboard || leaderboard.length === 0) {
+        console.log('LeaderboardService - No leaderboard data available');
+        return {
+          rank: null,
+          totalScore: 0,
+          progressScore: 0,
+          attendanceScore: 0,
+          consistencyScore: 0,
+          timeScore: 0
+        };
+      }
+      
+      const studentEntry = leaderboard.find(student => 
+        student && student.userId && student.userId.toString() === userId.toString()
+      );
+      
+      if (studentEntry) {
+        return {
+          rank: studentEntry.rank,
+          totalScore: studentEntry.totalScore || 0,
+          progressScore: studentEntry.progressScore || 0,
+          attendanceScore: studentEntry.attendanceScore || 0,
+          consistencyScore: studentEntry.consistencyScore || 0,
+          timeScore: studentEntry.timeScore || 0
+        };
+      } else {
+        // Student not found in leaderboard, calculate their score directly
+        console.log(`LeaderboardService - Student ${userId} not found in leaderboard, calculating directly`);
+        const scoreData = await this.calculateStudentScore(userId, careerTrack);
+        return {
+          rank: null,
+          ...scoreData
+        };
+      }
     } catch (error) {
       console.error('LeaderboardService - Error getting student rank:', error);
-      return null;
+      return {
+        rank: null,
+        totalScore: 0,
+        progressScore: 0,
+        attendanceScore: 0,
+        consistencyScore: 0,
+        timeScore: 0
+      };
     }
   }
 

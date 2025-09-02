@@ -351,8 +351,21 @@ export const getStudentPortfolio = async (req, res) => {
       longestStreak: stats.longestStreak
     };
 
-    // Get leaderboard data
-    const leaderboardData = await LeaderboardService.getStudentRank(studentId, student.careerTrack);
+    // Get leaderboard data with error handling
+    let leaderboardData;
+    try {
+      leaderboardData = await LeaderboardService.getStudentRank(studentId, student.careerTrack);
+    } catch (error) {
+      console.error('Portfolio Controller - Error getting leaderboard data:', error);
+      leaderboardData = {
+        rank: null,
+        totalScore: 0,
+        progressScore: 0,
+        attendanceScore: 0,
+        consistencyScore: 0,
+        timeScore: 0
+      };
+    }
 
     // Get skills based on career track
     const getSkillsForTrack = (careerTrack) => {
@@ -466,13 +479,13 @@ export const getStudentPortfolio = async (req, res) => {
         longestStreak: Math.max(correctedStats.longestStreak || 0, 0)
       },
       leaderboard: {
-        score: Math.max(leaderboardData?.totalScore || 0, 0),
-        rank: leaderboardData?.rank || null,
+        score: Math.max(leaderboardData.totalScore || 0, 0),
+        rank: leaderboardData.rank || null,
         breakdown: {
-          progressScore: Math.max(leaderboardData?.progressScore || 0, 0),
-          attendanceScore: Math.max(leaderboardData?.attendanceScore || 0, 0),
-          consistencyScore: Math.max(leaderboardData?.consistencyScore || 0, 0),
-          timeScore: Math.max(leaderboardData?.timeScore || 0, 0)
+          progressScore: Math.max(leaderboardData.progressScore || 0, 0),
+          attendanceScore: Math.max(leaderboardData.attendanceScore || 0, 0),
+          consistencyScore: Math.max(leaderboardData.consistencyScore || 0, 0),
+          timeScore: Math.max(leaderboardData.timeScore || 0, 0)
         }
       },
       learningLevels
