@@ -6,6 +6,7 @@ import { body } from 'express-validator';
 import { validateRequest } from '../middleware/errorHandler.js';
 import User from '../models/User.js';
 import fetch from 'node-fetch';
+import { fixUserProgressLevelOrders, checkUserProgressLevelOrders } from '../utils/fixUserProgressLevelOrders.js';
 
 const router = express.Router();
 
@@ -83,6 +84,42 @@ router.get('/diagnostics', protect, authorize('admin'), async (req, res) => {
     diagnostics: results,
     timestamp: new Date().toISOString()
   });
+});
+
+// Check UserProgress levelOrder status
+router.get('/check-progress-orders', protect, authorize('admin'), async (req, res) => {
+  try {
+    const result = await checkUserProgressLevelOrders();
+    res.status(200).json({
+      success: true,
+      data: result,
+      message: 'UserProgress levelOrder status checked'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error checking UserProgress levelOrders',
+      error: error.message
+    });
+  }
+});
+
+// Fix UserProgress levelOrder issues
+router.post('/fix-progress-orders', protect, authorize('admin'), async (req, res) => {
+  try {
+    const result = await fixUserProgressLevelOrders();
+    res.status(200).json({
+      success: true,
+      data: result,
+      message: 'UserProgress levelOrders fixed successfully'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error fixing UserProgress levelOrders',
+      error: error.message
+    });
+  }
 });
 
 export default router; 

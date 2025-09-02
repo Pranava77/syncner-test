@@ -301,6 +301,12 @@ export const getStudentPortfolio = async (req, res) => {
     
     if (progress && progress.completedLevels) {
       progress.completedLevels.forEach(level => {
+        // Skip levels with invalid levelOrder (0 or undefined)
+        if (!level.levelOrder || level.levelOrder === 0) {
+          console.log('⚠️ Portfolio: Skipping level with invalid levelOrder:', level.levelId, 'levelOrder:', level.levelOrder);
+          return;
+        }
+        
         if (level.completedSections) {
           if (level.completedSections.learn) totalSectionsCompleted++;
           if (level.completedSections.test) totalSectionsCompleted++;

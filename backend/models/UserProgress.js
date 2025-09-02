@@ -339,14 +339,19 @@ userProgressSchema.methods.markLevelCompleted = function(levelId, levelOrder, se
 };
 
 // Method to update learn progress
-userProgressSchema.methods.updateLearnProgress = function(levelId, timeSpent, linksAccessed) {
+userProgressSchema.methods.updateLearnProgress = async function(levelId, timeSpent, linksAccessed) {
   let level = this.completedLevels.find(l => l.levelId === levelId);
   
   if (!level) {
+    // Look up the level order from curriculum
+    const Curriculum = mongoose.model('Curriculum');
+    const curriculumItem = await Curriculum.findById(levelId);
+    const levelOrder = curriculumItem ? curriculumItem.order : 1;
+    
     // Create new level entry if it doesn't exist
     level = {
       levelId,
-      levelOrder: 0, // Will be set when marking as completed
+      levelOrder: levelOrder, // Set proper level order
       completedSections: { learn: false, exercise: false, test: false },
       learnProgress: { timeSpent: 0, linksAccessed: [], isCompleted: false },
       testProgress: { attempts: [], isCompleted: false },
@@ -378,13 +383,18 @@ userProgressSchema.methods.updateLearnProgress = function(levelId, timeSpent, li
 };
 
 // Method to submit test attempt
-userProgressSchema.methods.submitTestAttempt = function(levelId, score, answers) {
+userProgressSchema.methods.submitTestAttempt = async function(levelId, score, answers) {
   let level = this.completedLevels.find(l => l.levelId === levelId);
   
   if (!level) {
+    // Look up the level order from curriculum
+    const Curriculum = mongoose.model('Curriculum');
+    const curriculumItem = await Curriculum.findById(levelId);
+    const levelOrder = curriculumItem ? curriculumItem.order : 1;
+    
     level = {
       levelId,
-      levelOrder: 0,
+      levelOrder: levelOrder, // Set proper level order
       completedSections: { learn: false, exercise: false, test: false },
       learnProgress: { timeSpent: 0, linksAccessed: [], isCompleted: false },
       testProgress: { attempts: [], isCompleted: false },
@@ -420,14 +430,19 @@ userProgressSchema.methods.submitTestAttempt = function(levelId, score, answers)
 };
 
 // Method to submit exercise
-userProgressSchema.methods.submitExercise = function(levelId, exerciseTitle, links, score = 0, feedback = '') {
+userProgressSchema.methods.submitExercise = async function(levelId, exerciseTitle, links, score = 0, feedback = '') {
   let level = this.completedLevels.find(l => l.levelId === levelId);
   
   if (!level) {
+    // Look up the level order from curriculum
+    const Curriculum = mongoose.model('Curriculum');
+    const curriculumItem = await Curriculum.findById(levelId);
+    const levelOrder = curriculumItem ? curriculumItem.order : 1;
+    
     // Create new level entry if it doesn't exist
     level = {
       levelId,
-      levelOrder: 0, // Will be set when marking as completed
+      levelOrder: levelOrder, // Set proper level order
       completedSections: { learn: false, exercise: false, test: false },
       learnProgress: { timeSpent: 0, linksAccessed: [], isCompleted: false },
       testProgress: { attempts: [], isCompleted: false },
@@ -456,14 +471,19 @@ userProgressSchema.methods.submitExercise = function(levelId, exerciseTitle, lin
 };
 
 // Method to update exercise submission
-userProgressSchema.methods.updateExercise = function(levelId, exerciseTitle, links, score = 0, feedback = '') {
+userProgressSchema.methods.updateExercise = async function(levelId, exerciseTitle, links, score = 0, feedback = '') {
   let level = this.completedLevels.find(l => l.levelId === levelId);
   
   if (!level) {
+    // Look up the level order from curriculum
+    const Curriculum = mongoose.model('Curriculum');
+    const curriculumItem = await Curriculum.findById(levelId);
+    const levelOrder = curriculumItem ? curriculumItem.order : 1;
+    
     // Create new level entry if it doesn't exist
     level = {
       levelId,
-      levelOrder: 0, // Will be set when marking as completed
+      levelOrder: levelOrder, // Set proper level order
       completedSections: { learn: false, exercise: false, test: false },
       learnProgress: { timeSpent: 0, linksAccessed: [], isCompleted: false },
       testProgress: { attempts: [], isCompleted: false },

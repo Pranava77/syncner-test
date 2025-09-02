@@ -179,12 +179,29 @@ router.get('/students', protect, authorize('staff', 'admin'), async (req, res) =
         
         // Calculate comprehensive leaderboard score for students list
         let leaderboardScore = 0;
+        let progressScore = 0;
+        
         if (studentProgress && studentProgress.completedLevels) {
           // Base score from progress (40% weight) - calculate based on section completion
           let totalSectionsCompleted = 0;
           let totalSectionsAvailable = totalLevels * 3;
           
+          console.log('🔍 Progress calculation debug for student list:', {
+            studentId: student._id,
+            studentName: student.name,
+            careerTrack: normalizedCareerTrack,
+            totalLevels,
+            totalSectionsAvailable,
+            completedLevelsCount: studentProgress.completedLevels.length
+          });
+          
           studentProgress.completedLevels.forEach(level => {
+            // Skip levels with invalid levelOrder (0 or undefined)
+            if (!level.levelOrder || level.levelOrder === 0) {
+              console.log('⚠️ Skipping level with invalid levelOrder in student list:', level.levelId, 'levelOrder:', level.levelOrder);
+              return;
+            }
+            
             if (level.completedSections) {
               if (level.completedSections.learn) totalSectionsCompleted++;
               if (level.completedSections.test) totalSectionsCompleted++;
@@ -192,7 +209,8 @@ router.get('/students', protect, authorize('staff', 'admin'), async (req, res) =
             }
           });
           
-          const progressScore = totalSectionsAvailable > 0 ? Math.round((totalSectionsCompleted / totalSectionsAvailable) * 100) : 0;
+          progressScore = totalSectionsAvailable > 0 ? Math.round((totalSectionsCompleted / totalSectionsAvailable) * 100) : 0;
+          console.log(`📊 Student ${student.name} final progress: ${progressScore}% (${totalSectionsCompleted}/${totalSectionsAvailable} sections)`);
           
           // Attendance score (30% weight)
           const attendanceScore = attendancePercentage;
@@ -222,23 +240,7 @@ router.get('/students', protect, authorize('staff', 'admin'), async (req, res) =
         return {
           ...student,
           careerTrack: normalizedCareerTrack, // Use normalized value
-          progress: (() => {
-            if (!studentProgress || !studentProgress.completedLevels) return 0;
-            
-            // Calculate progress based on completed sections across all levels
-            let totalSectionsCompleted = 0;
-            let totalSectionsAvailable = totalLevels * 3; // Each level has 3 sections
-            
-            studentProgress.completedLevels.forEach(level => {
-              if (level.completedSections) {
-                if (level.completedSections.learn) totalSectionsCompleted++;
-                if (level.completedSections.test) totalSectionsCompleted++;
-                if (level.completedSections.exercise) totalSectionsCompleted++;
-              }
-            });
-            
-            return totalSectionsAvailable > 0 ? Math.round((totalSectionsCompleted / totalSectionsAvailable) * 100) : 0;
-          })(),
+          progress: progressScore, // Use the calculated progressScore from above
           level: studentProgress ? `Level ${studentProgress.currentLevel}` : 'Level 1', // Fix: use 'level' instead of 'currentLevel'
           totalPoints: studentProgress?.totalPoints || 0,
           streakDays: studentProgress?.streakDays || 0,
@@ -1011,15 +1013,48 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
         let totalSectionsCompleted = 0;
         let totalSectionsAvailable = totalLevels * 3; // Each level has 3 sections
         
+        console.log('🔍 Progress calculation debug for student details:', {
+          userId: id,
+          careerTrack: normalizedCareerTrack,
+          totalLevels,
+          totalSectionsAvailable,
+          completedLevelsCount: progress.completedLevels.length,
+          completedLevels: progress.completedLevels.map(l => ({
+            levelId: l.levelId,
+            levelOrder: l.levelOrder,
+            completedSections: l.completedSections
+          }))
+        });
+        
         progress.completedLevels.forEach(level => {
+          // Skip levels with invalid levelOrder (0 or undefined)
+          if (!level.levelOrder || level.levelOrder === 0) {
+            console.log('⚠️ Skipping level with invalid levelOrder:', level.levelId, 'levelOrder:', level.levelOrder);
+            return;
+          }
+          
           if (level.completedSections) {
+            const sectionsInThisLevel = {
+              learn: level.completedSections.learn,
+              test: level.completedSections.test,
+              exercise: level.completedSections.exercise
+            };
+            console.log(`📊 Level ${level.levelOrder} sections:`, sectionsInThisLevel);
+            
             if (level.completedSections.learn) totalSectionsCompleted++;
             if (level.completedSections.test) totalSectionsCompleted++;
             if (level.completedSections.exercise) totalSectionsCompleted++;
           }
         });
         
-        return totalSectionsAvailable > 0 ? Math.round((totalSectionsCompleted / totalSectionsAvailable) * 100) : 0;
+        const finalPercentage = totalSectionsAvailable > 0 ? Math.round((totalSectionsCompleted / totalSectionsAvailable) * 100) : 0;
+        console.log('🎯 Final progress calculation:', {
+          totalSectionsCompleted,
+          totalSectionsAvailable,
+          finalPercentage
+        });
+        
+        return finalPercentage;
       })(),
       leaderboardScore: leaderboardScore,
       // Ensure these fields exist for the frontend

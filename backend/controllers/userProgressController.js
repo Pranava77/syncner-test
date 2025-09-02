@@ -81,7 +81,7 @@ export const updateLearnProgress = async (req, res) => {
     const progress = await UserProgress.getOrCreate(userId, careerTrack);
     console.log('Before update - Progress:', JSON.stringify(progress.completedLevels, null, 2));
     
-    progress.updateLearnProgress(levelId, timeSpent || 0, linksAccessed || []);
+    await progress.updateLearnProgress(levelId, timeSpent || 0, linksAccessed || []);
     await progress.save();
     
     console.log('After update - Progress:', JSON.stringify(progress.completedLevels, null, 2));
@@ -166,7 +166,7 @@ export const submitTestAttempt = async (req, res) => {
       }
     }
 
-    progress.submitTestAttempt(levelId, score, answers);
+    await progress.submitTestAttempt(levelId, score, answers);
     await progress.save();
 
     // Get the updated test progress
@@ -324,7 +324,7 @@ export const submitExercise = async (req, res) => {
     }
 
     const progress = await UserProgress.getOrCreate(userId, careerTrack);
-    progress.submitExercise(levelId, exerciseTitle, links, score, feedback);
+    await progress.submitExercise(levelId, exerciseTitle, links, score, feedback);
     await progress.save();
 
     res.status(200).json({
@@ -359,7 +359,7 @@ export const updateExercise = async (req, res) => {
     }
 
     const progress = await UserProgress.getOrCreate(userId, careerTrack);
-    progress.updateExercise(levelId, exerciseTitle, links, score, feedback);
+    await progress.updateExercise(levelId, exerciseTitle, links, score, feedback);
     await progress.save();
 
     res.status(200).json({
