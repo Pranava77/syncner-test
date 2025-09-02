@@ -572,6 +572,26 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                         {level.courseName || `Foundations: Linux & Shell`}
                       </h3>
                     </div>
+                    
+                    {/* MCQ and Tasks Info */}
+                    <div className="text-center sm:text-right">
+                      <div 
+                        className="px-3 sm:px-4 py-2 rounded-full text-sm font-bold mb-2"
+                        style={{
+                          backgroundColor: (level.status || 'not-started') === 'completed' 
+                            ? 'var(--color-success)'
+                            : (level.status || 'not-started') === 'in-progress'
+                            ? 'var(--color-warning)'
+                            : 'var(--color-error)',
+                          color: 'var(--color-text-inverse)'
+                        }}
+                      >
+                        MCQ {level.test?.score || 86}%
+                      </div>
+                      <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                        Tasks {level.exercise?.tasks?.filter((t: Task) => t.completed).length || 0}/{level.exercise?.tasks?.length || 5}
+                      </div>
+                    </div>
                   </div>
                 </div>
 
