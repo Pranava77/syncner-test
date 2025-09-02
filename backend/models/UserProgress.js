@@ -99,7 +99,15 @@ const userProgressSchema = new mongoose.Schema({
         enum: ['submitted', 'approved', 'rejected'],
         default: 'submitted'
       },
-      links: [String] // Store submitted links
+      links: [String], // Store submitted links
+      score: {
+        type: Number,
+        default: 0
+      },
+      feedback: {
+        type: String,
+        default: ''
+      }
     }]
   }],
   currentLevel: {
@@ -412,41 +420,87 @@ userProgressSchema.methods.submitTestAttempt = function(levelId, score, answers)
 };
 
 // Method to submit exercise
-userProgressSchema.methods.submitExercise = function(levelId, exerciseTitle, links) {
-  const level = this.completedLevels.find(l => l.levelId === levelId);
-  if (level) {
+userProgressSchema.methods.submitExercise = function(levelId, exerciseTitle, links, score = 0, feedback = '') {
+  let level = this.completedLevels.find(l => l.levelId === levelId);
+  
+  if (!level) {
+    // Create new level entry if it doesn't exist
+    level = {
+      levelId,
+      levelOrder: 0, // Will be set when marking as completed
+      completedSections: { learn: false, exercise: false, test: false },
+      learnProgress: { timeSpent: 0, linksAccessed: [], isCompleted: false },
+      testProgress: { attempts: [], isCompleted: false },
+      exerciseSubmissions: []
+    };
+    this.completedLevels.push(level);
+  }
+  
+  level.exerciseSubmissions.push({
+    exerciseTitle,
+    submittedAt: new Date(),
+    status: 'submitted',
+    links: links || [],
+    score: score,
+    feedback: feedback
+  });
+  
+  // Mark exercise section as completed with at least 1 submission
+  // For levels with only 1 exercise, completion requires 1 submission
+  // For levels with multiple exercises, completion requires at least 1 submission (can be adjusted)
+  if (level.exerciseSubmissions.length >= 1) {
+    level.completedSections.exercise = true;
+  }
+  
+  this.lastActivity = new Date();
+};
+
+// Method to update exercise submission
+userProgressSchema.methods.updateExercise = function(levelId, exerciseTitle, links, score = 0, feedback = '') {
+  let level = this.completedLevels.find(l => l.levelId === levelId);
+  
+  if (!level) {
+    // Create new level entry if it doesn't exist
+    level = {
+      levelId,
+      levelOrder: 0, // Will be set when marking as completed
+      completedSections: { learn: false, exercise: false, test: false },
+      learnProgress: { timeSpent: 0, linksAccessed: [], isCompleted: false },
+      testProgress: { attempts: [], isCompleted: false },
+      exerciseSubmissions: []
+    };
+    this.completedLevels.push(level);
+  }
+  
+  if (!level.exerciseSubmissions) {
+    level.exerciseSubmissions = [];
+  }
+  
+  const submission = level.exerciseSubmissions.find(sub => sub.exerciseTitle === exerciseTitle);
+  if (submission) {
+    submission.links = links || [];
+    submission.submittedAt = new Date();
+    submission.status = 'submitted';
+    submission.score = score;
+    submission.feedback = feedback;
+  } else {
+    // If no existing submission found, create a new one
     level.exerciseSubmissions.push({
       exerciseTitle,
       submittedAt: new Date(),
       status: 'submitted',
-      links: links || []
+      links: links || [],
+      score: score,
+      feedback: feedback
     });
-    
-    // Mark exercise section as completed with at least 1 submission
-    // For levels with only 1 exercise, completion requires 1 submission
-    // For levels with multiple exercises, completion requires at least 1 submission (can be adjusted)
-    if (level.exerciseSubmissions.length >= 1) {
-      level.completedSections.exercise = true;
-    }
   }
-};
-
-// Method to update exercise submission
-userProgressSchema.methods.updateExercise = function(levelId, exerciseTitle, links) {
-  const level = this.completedLevels.find(l => l.levelId === levelId);
-  if (level && level.exerciseSubmissions) {
-    const submission = level.exerciseSubmissions.find(sub => sub.exerciseTitle === exerciseTitle);
-    if (submission) {
-      submission.links = links || [];
-      submission.submittedAt = new Date();
-      submission.status = 'updated';
-    }
-    
-    // Mark exercise section as completed with at least 1 submission
-    if (level.exerciseSubmissions.length >= 1) {
-      level.completedSections.exercise = true;
-    }
+  
+  // Mark exercise section as completed with at least 1 submission
+  if (level.exerciseSubmissions.length >= 1) {
+    level.completedSections.exercise = true;
   }
+  
+  this.lastActivity = new Date();
 };
 
 // Method to check if exercise links are submitted

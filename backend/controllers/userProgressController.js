@@ -312,7 +312,7 @@ export const checkExerciseLinks = async (req, res) => {
 // @access  Private
 export const submitExercise = async (req, res) => {
   try {
-    const { levelId, exerciseTitle, links } = req.body;
+    const { levelId, exerciseTitle, links, score, feedback } = req.body;
     const userId = req.user._id;
     const { careerTrack } = req.user;
 
@@ -324,7 +324,7 @@ export const submitExercise = async (req, res) => {
     }
 
     const progress = await UserProgress.getOrCreate(userId, careerTrack);
-    progress.submitExercise(levelId, exerciseTitle, links);
+    progress.submitExercise(levelId, exerciseTitle, links, score, feedback);
     await progress.save();
 
     res.status(200).json({
@@ -347,7 +347,7 @@ export const submitExercise = async (req, res) => {
 // @access  Private
 export const updateExercise = async (req, res) => {
   try {
-    const { levelId, exerciseTitle, links } = req.body;
+    const { levelId, exerciseTitle, links, score, feedback } = req.body;
     const userId = req.user._id;
     const { careerTrack } = req.user;
 
@@ -359,7 +359,7 @@ export const updateExercise = async (req, res) => {
     }
 
     const progress = await UserProgress.getOrCreate(userId, careerTrack);
-    progress.updateExercise(levelId, exerciseTitle, links);
+    progress.updateExercise(levelId, exerciseTitle, links, score, feedback);
     await progress.save();
 
     res.status(200).json({

@@ -218,16 +218,22 @@ export const getStudentPortfolio = async (req, res) => {
         tasks: level.exercise.map(task => {
           // Find all submissions for this task
           const taskSubmissions = exerciseSubmissions.filter(sub => sub.exerciseTitle === task.title);
-          // Get all links from all submissions
-          const allLinks = taskSubmissions.reduce((links, sub) => [...links, ...(sub.links || [])], []);
           // Get the latest submission status and links
           const latestSubmission = taskSubmissions[taskSubmissions.length - 1];
           
           return {
-            ...task,
+            id: task.id,
+            title: task.title,
+            description: task.description,
+            content: task.content,
+            order: task.order,
+            completed: latestSubmission ? latestSubmission.status === 'approved' : false,
             submissionLinks: latestSubmission ? latestSubmission.links || [] : [],
-            status: latestSubmission ? latestSubmission.status : 'not-submitted',
-            completed: latestSubmission ? latestSubmission.status === 'approved' : false
+            score: latestSubmission?.score || 0,
+            attempts: taskSubmissions.length,
+            lastAttemptAt: latestSubmission?.submittedAt || null,
+            feedback: latestSubmission?.feedback || '',
+            status: latestSubmission ? latestSubmission.status : 'not-submitted'
           };
         })
       };

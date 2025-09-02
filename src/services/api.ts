@@ -220,22 +220,22 @@ class ApiService {
     return this.handleResponse(response);
   }
 
-  async submitExercise(levelId: string, exerciseTitle: string, links?: string[]) {
+  async submitExercise(levelId: string, exerciseTitle: string, links?: string[], score?: number, feedback?: string) {
     const response = await fetch(`${this.baseURL}/progress/submit-exercise`, {
       method: 'POST',
       headers: this.getHeaders(),
       credentials: 'include',
-      body: JSON.stringify({ levelId, exerciseTitle, links }),
+      body: JSON.stringify({ levelId, exerciseTitle, links, score, feedback }),
     });
     return this.handleResponse(response);
   }
 
-  async updateExercise(levelId: string, exerciseTitle: string, links?: string[]) {
+  async updateExercise(levelId: string, exerciseTitle: string, links?: string[], score?: number, feedback?: string) {
     const response = await fetch(`${this.baseURL}/progress/update-exercise`, {
       method: 'PUT',
       headers: this.getHeaders(),
       credentials: 'include',
-      body: JSON.stringify({ levelId, exerciseTitle, links }),
+      body: JSON.stringify({ levelId, exerciseTitle, links, score, feedback }),
     });
     return this.handleResponse(response);
   }

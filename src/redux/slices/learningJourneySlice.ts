@@ -90,9 +90,9 @@ export const submitTestAttempt = createAsyncThunk(
 
 export const submitExercise = createAsyncThunk(
   'learningJourney/submitExercise',
-  async ({ levelId, exerciseTitle, links }: { levelId: string; exerciseTitle: string; links: string[] }, { rejectWithValue }) => {
+  async ({ levelId, exerciseTitle, links, score, feedback }: { levelId: string; exerciseTitle: string; links: string[]; score?: number; feedback?: string }, { rejectWithValue }) => {
     try {
-      const response = await apiService.submitExercise(levelId, exerciseTitle, links);
+      const response = await apiService.submitExercise(levelId, exerciseTitle, links, score, feedback);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to submit exercise');

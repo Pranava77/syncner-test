@@ -140,6 +140,7 @@ const TaskSubmissionModal: React.FC<TaskSubmissionModalProps> = ({ isOpen, onClo
       ].filter(link => link.trim() !== '');
       
       // Submit or update exercise with links
+      // Note: exercise.id is actually the levelId (set in LevelExercisePage)
       if (isEditMode) {
         await apiService.updateExercise(exercise.id || '', exercise.title, links);
       } else {
