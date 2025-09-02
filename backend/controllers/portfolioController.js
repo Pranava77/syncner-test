@@ -109,6 +109,43 @@ export const getStudentPortfolio = async (req, res) => {
       isActive: true
     }).sort({ order: 'asc' }).lean();
 
+    // Get default course names based on level and track
+    const getDefaultCourseName = (order, careerTrack) => {
+      const courseNames = {
+        'full-stack': [
+          'Foundations: HTML & CSS',
+          'JavaScript Fundamentals', 
+          'React Development',
+          'Backend with Node.js',
+          'Full Stack Project'
+        ],
+        'data-science': [
+          'Foundations: Linux & Shell',
+          'Python Programming',
+          'Data Analysis & EDA',
+          'Data Visualization',
+          'Machine Learning Basics'
+        ],
+        'ai-ml': [
+          'Python Fundamentals',
+          'Statistics & Mathematics',
+          'Machine Learning Algorithms',
+          'Deep Learning',
+          'AI Project Development'
+        ],
+        'ui-ux': [
+          'Design Principles',
+          'User Research Methods',
+          'Wireframing & Prototyping',
+          'UI Design Systems',
+          'UX Testing & Iteration'
+        ]
+      };
+      
+      const trackCourses = courseNames[careerTrack] || courseNames['full-stack'];
+      return trackCourses[order - 1] || `Level ${order}`;
+    };
+
     // Group curriculum items by level
     const levelGroups = {};
     curriculumItems.forEach(item => {
@@ -116,8 +153,8 @@ export const getStudentPortfolio = async (req, res) => {
       if (!levelGroups[levelKey]) {
         levelGroups[levelKey] = {
           level: item.order,
-          courseName: item.title,
-          description: item.description,
+          courseName: item.title || getDefaultCourseName(item.order, student.careerTrack),
+          description: item.description || `Training content for level ${item.order}`,
           status: 'not-started',
           learn: [],
           test: [],
@@ -297,6 +334,22 @@ export const getStudentPortfolio = async (req, res) => {
     // Get leaderboard data
     const leaderboardData = await LeaderboardService.getStudentRank(studentId, student.careerTrack);
 
+    // Get skills based on career track
+    const getSkillsForTrack = (careerTrack) => {
+      switch (careerTrack) {
+        case 'full-stack':
+          return ['HTML/CSS', 'JavaScript', 'React', 'Node.js', 'Databases'];
+        case 'ai-ml':
+          return ['Python', 'Machine Learning', 'TensorFlow', 'Data Analysis', 'Statistics'];
+        case 'ui-ux':
+          return ['Figma', 'Design Systems', 'Prototyping', 'User Research', 'Wireframing'];
+        case 'data-science':
+          return ['SQL', 'Python', 'EDA', 'Data Viz', 'Communication'];
+        default:
+          return ['SQL', 'Python', 'EDA', 'Data Viz', 'Communication'];
+      }
+    };
+
     // Build the response
     const portfolioData = {
       student: {
@@ -309,7 +362,8 @@ export const getStudentPortfolio = async (req, res) => {
         createdAt: student.createdAt || new Date(),
         introduction: student.introduction || null,
         readyToHire: student.readyToHire || false,
-        duration: student.duration || '6 months'
+        duration: student.duration || '6 months',
+        skills: getSkillsForTrack(student.careerTrack)
       },
       progress: {
         currentLevel: Math.max(progress?.currentLevel || 1, 1),

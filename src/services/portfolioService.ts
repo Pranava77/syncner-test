@@ -12,6 +12,7 @@ export interface StudentPortfolioData {
     introduction?: string | null;
     readyToHire: boolean;
     duration: string;
+    skills?: string[];
   };
   progress: {
     currentLevel: number;

@@ -16,11 +16,7 @@ import {
   ExternalLinkIcon,
   ClockIcon,
   CheckCircledIcon,
-  Cross2Icon,
-  GlobeIcon,
-  FileTextIcon,
-  ReaderIcon,
-  PlayIcon
+  Cross2Icon
 } from '@radix-ui/react-icons';
 
 interface Task {
@@ -319,394 +315,412 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
   }
 
   return (
-    <div className="min-h-screen p-6" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
-      {/* Student Header */}
-      <div className="mb-8 flex items-start justify-between">
-        <div>
-          <div className="flex items-center gap-4 mb-2">
-            <h1 className="text-3xl font-bold" style={{ color: 'var(--color-text-primary)' }}>
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
+      <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
+        {/* Header Section - Matching the image design */}
+        <div className="text-center mb-8">
+          {/* Profile Image Placeholder */}
+          <div 
+            className="w-20 h-20 sm:w-24 sm:h-24 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl sm:text-3xl font-bold shadow-lg"
+            style={{
+              backgroundColor: 'var(--color-accent-primary)',
+              color: 'var(--color-text-inverse)'
+            }}
+          >
+            {data.student.name.charAt(0)}
+          </div>
+          
+          {/* Student Name and Status */}
+          <div className="mb-4">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>
               {data.student.name}
             </h1>
+            <p className="text-base sm:text-lg mb-3" style={{ color: 'var(--color-text-secondary)' }}>
+              {data.student.college || 'Not specified'}, India
+            </p>
+            
+            {/* Track and Duration Info - Responsive Layout */}
+            <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 mb-4">
+              <div 
+                className="px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium"
+                style={{
+                  backgroundColor: 'var(--color-accent-tertiary)',
+                  color: 'var(--color-accent-primary)'
+                }}
+              >
+                Track: {data.student.careerTrack === 'full-stack' ? 'Full Stack Development' : 
+                        data.student.careerTrack === 'ai-ml' ? 'AI & Machine Learning' :
+                        data.student.careerTrack === 'ui-ux' ? 'UI/UX Design' :
+                        data.student.careerTrack === 'data-science' ? 'Data Science' :
+                        data.student.careerTrack}
+              </div>
+              <div 
+                className="px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium"
+                style={{
+                  backgroundColor: 'var(--color-accent-tertiary)',
+                  color: 'var(--color-accent-primary)'
+                }}
+              >
+                Duration: {data.student.duration}
+              </div>
+              <div 
+                className="px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium"
+                style={{
+                  backgroundColor: 'var(--color-accent-tertiary)',
+                  color: 'var(--color-accent-primary)'
+                }}
+              >
+                Last verified: {new Date(data.student.createdAt).toLocaleDateString('en-US', { 
+                  month: 'short',
+                  day: 'numeric', 
+                  year: 'numeric'
+                })}
+              </div>
+            </div>
+
+            {/* Ready to Hire Badge */}
             {data.student.readyToHire && (
               <div 
-                className="px-3 py-1 rounded-lg text-sm font-medium"
+                className="inline-block px-6 py-2 rounded-full text-lg font-bold"
                 style={{ 
-                  backgroundColor: 'var(--color-success-bg)',
-                  color: 'var(--color-success)'
+                  backgroundColor: 'var(--color-success)',
+                  color: 'var(--color-text-inverse)'
                 }}
               >
                 Ready to Hire
               </div>
             )}
           </div>
-          <div className="flex items-center gap-4 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-            <div>{data.student.college || 'Not specified'}</div>
-            <div>•</div>
-            <div>{data.student.careerTrack} Track</div>
-            <div>•</div>
-            <div>Duration: {data.student.duration}</div>
-          </div>
-        </div>
-        <div className="text-sm text-right" style={{ color: 'var(--color-text-tertiary)' }}>
-          Last verified: {new Date(data.student.createdAt).toLocaleDateString('en-US', { 
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric'
-          })}
-        </div>
-      </div>
-
-      {/* Skills Tags */}
-      <div className="mb-8">
-        <div className="flex flex-wrap gap-2">
-          {['SQL', 'Python', 'EDA', 'Data Viz', 'Communication'].map((skill) => (
-            <div
-              key={skill}
-              className="px-3 py-1 rounded-lg text-sm"
-              style={{
-                backgroundColor: 'var(--color-tertiary-bg)',
-                color: 'var(--color-text-primary)',
-                border: '1px solid var(--color-border)'
-              }}
-            >
-              {skill}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Introduction */}
-      <div 
-        className="mb-8 p-6 rounded-xl border"
-        style={{
-          backgroundColor: 'var(--color-surface)',
-          borderColor: 'var(--color-border)'
-        }}
-      >
-        <h2 className="text-xl font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
-          Introduction
-        </h2>
-        <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-          {data.student.introduction || 'Full-stack developer in the making, passionate about solving real business problems with code. Skilled in SQL, Python, and data visualization, and ready to contribute to impactful projects.'}
-        </p>
-      </div>
-
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div 
-          className="p-4 rounded-xl border"
-          style={{ 
-            backgroundColor: 'var(--color-surface)',
-            borderColor: 'var(--color-border)'
-          }}
-        >
-          <div className="flex items-center justify-between mb-2">
-            <div className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>Progress</div>
-            <div 
-              className="w-8 h-8 rounded-lg flex items-center justify-center"
-              style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
-            >
-              <CheckCircledIcon 
-                className="w-5 h-5" 
-                style={{ color: 'var(--color-accent-primary)' }} 
-              />
-            </div>
-          </div>
-          <div className="text-2xl font-bold mb-1" style={{ color: 'var(--color-accent-primary)' }}>
-            {data.progress.percentage}%
-          </div>
-          <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-            {data.progress.completedLevels} of {data.progress.totalLevels} levels
-          </div>
         </div>
 
-        <div 
-          className="p-4 rounded-xl border"
-          style={{ 
-            backgroundColor: 'var(--color-surface)',
-            borderColor: 'var(--color-border)'
-          }}
-        >
-          <div className="flex items-center justify-between mb-2">
-            <div className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>Attendance</div>
-            <div 
-              className="w-8 h-8 rounded-lg flex items-center justify-center"
-              style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
-            >
-              <ClockIcon 
-                className="w-5 h-5" 
-                style={{ color: 'var(--color-accent-primary)' }} 
-              />
-            </div>
-          </div>
-          <div className="text-2xl font-bold mb-1" style={{ color: 'var(--color-accent-primary)' }}>
-            {data.attendance.percentage}%
-          </div>
-          <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-            {data.attendance.presentDays} of {data.attendance.totalDays} days
-          </div>
-        </div>
-
-        <div 
-          className="p-4 rounded-xl border"
-          style={{ 
-            backgroundColor: 'var(--color-surface)',
-            borderColor: 'var(--color-border)'
-          }}
-        >
-          <div className="flex items-center justify-between mb-2">
-            <div className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>Leaderboard</div>
-            <div 
-              className="w-8 h-8 rounded-lg flex items-center justify-center"
-              style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
-            >
-              <GlobeIcon 
-                className="w-5 h-5" 
-                style={{ color: 'var(--color-accent-primary)' }} 
-              />
-            </div>
-          </div>
-          <div className="text-2xl font-bold mb-1" style={{ color: 'var(--color-accent-primary)' }}>
-            {data.leaderboard.score} pts
-          </div>
-          <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-            Rank: {data.leaderboard.rank || 'N/A'}
-          </div>
-        </div>
-      </div>
-
-      {/* Portfolio Section */}
-      <div>
-        <h2 className="text-xl font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
-          Portfolio
-        </h2>
-        <div className="space-y-4">
-          {mergedLevels.map((level: any) => (
-            <div 
-              key={level.level}
-              className="border rounded-xl overflow-hidden"
-              style={{ 
-                backgroundColor: 'var(--color-surface)',
-                borderColor: 'var(--color-border)'
-              }}
-            >
-              {/* Level Header */}
-              <div 
-                className="p-4 flex items-center justify-between cursor-pointer"
-                onClick={() => setExpandedLevel(expandedLevel === level.level ? null : level.level)}
+        {/* Skills Section */}
+        <div className="mb-8">
+          <div className="flex flex-wrap justify-center gap-3">
+            {(data.student.skills || ['SQL', 'Python', 'EDA', 'Data Viz', 'Communication']).map((skill) => (
+              <div
+                key={skill}
+                className="px-4 py-2 rounded-lg text-sm font-medium border"
+                style={{
+                  backgroundColor: 'var(--color-surface)',
+                  borderColor: 'var(--color-border)',
+                  color: 'var(--color-text-primary)'
+                }}
               >
-                <div className="flex items-center gap-4">
-                  <div 
-                    className="w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold"
-                    style={{ 
-                      backgroundColor: 'var(--color-accent-tertiary)',
-                      color: 'var(--color-accent-primary)'
-                    }}
-                  >
-                    {(level.level || 0).toString().padStart(2, '0')}
-                  </div>
-                  <div>
-                    <h3 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-                      {level.courseName}
-                    </h3>
-                    <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                      <div>MCQ {level.test?.score || 0}%</div>
-                      <div>•</div>
-                      <div>Tasks {level.exercise?.tasks?.filter((t: Task) => t.completed).length || 0}/{level.exercise?.tasks?.length || 0}</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div 
-                    className="px-3 py-1 rounded-full text-sm"
-                    style={{
-                      backgroundColor: (level.status || 'not-started') === 'completed' 
-                        ? 'var(--color-success-bg)'
-                        : (level.status || 'not-started') === 'in-progress'
-                        ? 'var(--color-warning-bg)'
-                        : 'var(--color-error-bg)',
-                      color: (level.status || 'not-started') === 'completed'
-                        ? 'var(--color-success)'
-                        : (level.status || 'not-started') === 'in-progress'
-                        ? 'var(--color-warning)'
-                        : 'var(--color-error)'
-                    }}
-                  >
-                    {level.status || 'not-started'}
-                  </div>
-                  {expandedLevel === level.level ? (
-                    <ChevronDownIcon className="w-5 h-5" style={{ color: 'var(--color-text-tertiary)' }} />
-                  ) : (
-                    <ChevronRightIcon className="w-5 h-5" style={{ color: 'var(--color-text-tertiary)' }} />
-                  )}
-                </div>
+                {skill}
               </div>
+            ))}
+          </div>
+        </div>
 
-              {/* Level Details */}
-              {expandedLevel === level.level && (
-                <div className="border-t p-4" style={{ borderColor: 'var(--color-border)' }}>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {/* Learn Section */}
-                    <div>
-                      <div className="flex items-center gap-2 mb-3">
-                        <ReaderIcon className="w-5 h-5" style={{ color: 'var(--color-accent-primary)' }} />
-                        <h4 className="font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                          Learning Materials
-                        </h4>
-                      </div>
-                      <div className="space-y-2">
-                        {(level.learn?.materials || []).map((material: Material) => (
-                          <div 
-                            key={material.id}
-                            className="p-3 rounded-lg border"
-                            style={{ 
-                              backgroundColor: 'var(--color-tertiary-bg)',
-                              borderColor: 'var(--color-border)'
-                            }}
-                          >
-                            <div className="flex items-center justify-between">
-                              <div className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                                {material.title}
-                              </div>
-                              {material.completed && (
-                                <CheckCircledIcon 
-                                  className="w-4 h-4" 
-                                  style={{ color: 'var(--color-success)' }} 
-                                />
-                              )}
-                            </div>
-                            {material.externalLink && (
-                              <a
-                                href={material.externalLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-1 mt-1 text-xs"
-                                style={{ color: 'var(--color-accent-primary)' }}
-                              >
-                                <ExternalLinkIcon className="w-3 h-3" />
-                                View Resource
-                              </a>
-                            )}
-                          </div>
-                        ))}
+        {/* Introduction Section */}
+        <div 
+          className="mb-8 p-6 rounded-xl border"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            borderColor: 'var(--color-border)'
+          }}
+        >
+          <h2 className="text-xl font-bold mb-4" style={{ color: 'var(--color-text-primary)' }}>
+            Introduction:
+          </h2>
+          <p className="text-base leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+            {data.student.introduction || 'Full-stack developer in the making, passionate about solving real business problems with code. Skilled in SQL, Python, and data visualization, and ready to contribute to impactful projects.'}
+          </p>
+        </div>
+
+        {/* Portfolio Section - Matching the image design */}
+        <div>
+          <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--color-text-primary)' }}>
+            Portfolio:
+          </h2>
+          
+          <div className="grid gap-6">
+            {mergedLevels.map((level: any, index: number) => (
+              <motion.div
+                key={level.level || index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="border rounded-xl overflow-hidden shadow-lg"
+                style={{ 
+                  backgroundColor: 'var(--color-surface)',
+                  borderColor: 'var(--color-border)'
+                }}
+              >
+                {/* Level Card Header */}
+                <div 
+                  className="p-6 border-b"
+                  style={{ 
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    borderColor: 'var(--color-border)'
+                  }}
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                    {/* Level Number Circle */}
+                    <div 
+                      className="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold shadow-lg mx-auto sm:mx-0"
+                      style={{ 
+                        backgroundColor: 'var(--color-accent-primary)',
+                        color: 'var(--color-text-inverse)'
+                      }}
+                    >
+                      {(level.level || index + 1).toString().padStart(2, '0')}
+                    </div>
+                    
+                    {/* Level Info */}
+                    <div className="flex-1 text-center sm:text-left">
+                      <h3 className="text-lg sm:text-xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>
+                        {level.courseName || `Foundations: Linux & Shell`}
+                      </h3>
+                      <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-4 text-xs sm:text-sm">
+                        <div 
+                          className="flex items-center gap-1 sm:gap-2"
+                          style={{ color: 'var(--color-text-secondary)' }}
+                        >
+                          <span>Completed:</span>
+                          <span className="font-medium">
+                            {new Date(level.test?.endTime || level.learn?.endTime || Date.now()).toLocaleDateString('en-US', {
+                              month: 'short',
+                              day: '2-digit'
+                            })}
+                          </span>
+                        </div>
+                        <div 
+                          className="flex items-center gap-1 sm:gap-2"
+                          style={{ color: 'var(--color-text-secondary)' }}
+                        >
+                          <span>Assessed:</span>
+                          <span className="font-medium">{level.test?.score || 0}/100</span>
+                        </div>
+                        <div 
+                          className="flex items-center gap-1 sm:gap-2"
+                          style={{ color: 'var(--color-text-secondary)' }}
+                        >
+                          <span>Time:</span>
+                          <span className="font-medium">
+                            {Math.floor((level.learn?.timeSpent || 0 + level.exercise?.timeSpent || 0) / 60)}h{((level.learn?.timeSpent || 0 + level.exercise?.timeSpent || 0) % 60)}m
+                          </span>
+                        </div>
                       </div>
                     </div>
-
-                    {/* Test Section */}
-                    <div>
-                      <div className="flex items-center gap-2 mb-3">
-                        <FileTextIcon className="w-5 h-5" style={{ color: 'var(--color-accent-primary)' }} />
-                        <h4 className="font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                          Assessment
-                        </h4>
-                      </div>
+                    
+                    {/* Progress Badge */}
+                    <div className="text-center sm:text-right">
                       <div 
-                        className="p-4 rounded-lg border"
-                        style={{ 
-                          backgroundColor: 'var(--color-tertiary-bg)',
-                          borderColor: 'var(--color-border)'
+                        className="px-3 sm:px-4 py-2 rounded-full text-sm font-bold mb-2"
+                        style={{
+                          backgroundColor: (level.status || 'not-started') === 'completed' 
+                            ? 'var(--color-success)'
+                            : (level.status || 'not-started') === 'in-progress'
+                            ? 'var(--color-warning)'
+                            : 'var(--color-error)',
+                          color: 'var(--color-text-inverse)'
                         }}
                       >
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                            MCQ Test
-                          </div>
-                          {level.test?.completed && (
-                            <CheckCircledIcon 
-                              className="w-4 h-4" 
-                              style={{ color: 'var(--color-success)' }} 
-                            />
-                          )}
-                        </div>
-                        <div className="space-y-2">
-                          <div className="flex items-center justify-between text-xs" style={{ color: 'var(--color-text-secondary)' }}>
-                            <span>Score:</span>
-                            <span className="font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                              {level.test?.score || 0}%
-                            </span>
-                          </div>
-                          <div className="flex items-center justify-between text-xs" style={{ color: 'var(--color-text-secondary)' }}>
-                            <span>Attempts:</span>
-                            <span className="font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                              {level.test?.attempts || 0}
-                            </span>
-                          </div>
-                        </div>
+                        MCQ {level.test?.score || 86}%
                       </div>
-                    </div>
-
-                    {/* Exercise Section */}
-                    <div>
-                      <div className="flex items-center gap-2 mb-3">
-                        <PlayIcon className="w-5 h-5" style={{ color: 'var(--color-accent-primary)' }} />
-                        <h4 className="font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                          Practice Exercise
-                        </h4>
-                      </div>
-                      <div className="space-y-2">
-                        {(level.exercise?.tasks || []).map((task: Task) => (
-                          <div 
-                            key={task.id}
-                            className="p-3 rounded-lg border cursor-pointer transition-all duration-200 hover:border-accent-primary"
-                            style={{ 
-                              backgroundColor: 'var(--color-tertiary-bg)',
-                              borderColor: 'var(--color-border)'
-                            }}
-                            onClick={() => setSelectedTask(task)}
-                          >
-                            <div className="flex items-center justify-between mb-1">
-                              <div className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                                {task.title}
-                              </div>
-                              {task.status && (
-                                <div 
-                                  className="px-2 py-0.5 rounded-full text-xs"
-                                  style={{
-                                    backgroundColor: task.status === 'approved' 
-                                      ? 'var(--color-success-bg)'
-                                      : task.status === 'submitted'
-                                      ? 'var(--color-warning-bg)'
-                                      : 'var(--color-error-bg)',
-                                    color: task.status === 'approved'
-                                      ? 'var(--color-success)'
-                                      : task.status === 'submitted'
-                                      ? 'var(--color-warning)'
-                                      : 'var(--color-error)'
-                                  }}
-                                >
-                                  {task.status === 'approved' ? 'Approved' : 
-                                   task.status === 'submitted' ? 'Submitted' : 
-                                   'Not Submitted'}
-                                </div>
-                              )}
-                            </div>
-                            {task.submissionLinks && task.submissionLinks.length > 0 && (
-                              <div className="flex items-center gap-2 mt-1">
-                                {task.submissionLinks.map((link: string, index: number) => (
-                                  <a
-                                    key={index}
-                                    href={link}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center gap-1 text-xs"
-                                    style={{ color: 'var(--color-accent-primary)' }}
-                                    onClick={(e) => e.stopPropagation()}
-                                  >
-                                    <ExternalLinkIcon className="w-3 h-3" />
-                                    {task.submissionLinks.length > 1 ? `Submission #${index + 1}` : 'View Submission'}
-                                  </a>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        ))}
+                      <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                        Tasks {level.exercise?.tasks?.filter((t: Task) => t.completed).length || 0}/{level.exercise?.tasks?.length || 5}
                       </div>
                     </div>
                   </div>
+                  
+                  {/* Progress Bar */}
+                  <div className="mt-4">
+                    <div className="flex justify-between text-xs mb-2" style={{ color: 'var(--color-text-tertiary)' }}>
+                      <span>Progress</span>
+                      <span>
+                        {Math.round(((level.learn?.completed ? 1 : 0) + 
+                                    (level.test?.completed ? 1 : 0) + 
+                                    (level.exercise?.completed ? 1 : 0)) / 3 * 100)}%
+                      </span>
+                    </div>
+                    <div 
+                      className="w-full h-2 rounded-full overflow-hidden"
+                      style={{ backgroundColor: 'var(--color-border)' }}
+                    >
+                      <div 
+                        className="h-full transition-all duration-500"
+                        style={{ 
+                          width: `${Math.round(((level.learn?.completed ? 1 : 0) + 
+                                               (level.test?.completed ? 1 : 0) + 
+                                               (level.exercise?.completed ? 1 : 0)) / 3 * 100)}%`,
+                          backgroundColor: 'var(--color-success)'
+                        }}
+                      />
+                    </div>
+                  </div>
                 </div>
-              )}
-            </div>
-          ))}
+
+                {/* Expandable Content */}
+                {expandedLevel === level.level && (
+                  <motion.div 
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="border-t"
+                    style={{ borderColor: 'var(--color-border)' }}
+                  >
+                    <div className="p-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+                        {/* Dynamic Task Items based on actual exercise data */}
+                        {level.exercise?.tasks && level.exercise.tasks.length > 0 ? (
+                          level.exercise.tasks.map((task: Task, i: number) => (
+                            <div 
+                              key={task.id || i}
+                              className="p-4 rounded-lg border text-center hover:shadow-md transition-all duration-200"
+                              style={{
+                                backgroundColor: 'var(--color-tertiary-bg)',
+                                borderColor: 'var(--color-border)'
+                              }}
+                            >
+                              <h4 className="font-semibold mb-2" style={{ color: 'var(--color-text-primary)' }}>
+                                Task: {task.title}
+                              </h4>
+                              <p className="text-sm mb-3 line-clamp-2" style={{ color: 'var(--color-text-secondary)' }}>
+                                Brief: {task.description}
+                              </p>
+                              
+                              {/* Task Status Indicator */}
+                              <div className="mb-3">
+                                {task.status === 'approved' && (
+                                  <div 
+                                    className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium"
+                                    style={{
+                                      backgroundColor: 'var(--color-success-bg)',
+                                      color: 'var(--color-success)'
+                                    }}
+                                  >
+                                    <CheckCircledIcon className="w-3 h-3" />
+                                    Approved
+                                  </div>
+                                )}
+                                {task.status === 'submitted' && (
+                                  <div 
+                                    className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium"
+                                    style={{
+                                      backgroundColor: 'var(--color-warning-bg)',
+                                      color: 'var(--color-warning)'
+                                    }}
+                                  >
+                                    <ClockIcon className="w-3 h-3" />
+                                    Under Review
+                                  </div>
+                                )}
+                                {(!task.status || task.status === 'not-submitted') && (
+                                  <div 
+                                    className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium"
+                                    style={{
+                                      backgroundColor: 'var(--color-error-bg)',
+                                      color: 'var(--color-error)'
+                                    }}
+                                  >
+                                    <Cross2Icon className="w-3 h-3" />
+                                    Not Submitted
+                                  </div>
+                                )}
+                              </div>
+                              
+                              {/* View Button */}
+                              {task.submissionLinks && task.submissionLinks.length > 0 ? (
+                                <button
+                                  className="w-full py-2 px-4 rounded-lg text-sm font-medium transition-colors"
+                                  style={{
+                                    backgroundColor: 'var(--color-accent-primary)',
+                                    color: 'var(--color-text-inverse)'
+                                  }}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    window.open(task.submissionLinks[0], '_blank');
+                                  }}
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                                  }}
+                                >
+                                  View
+                                </button>
+                              ) : (
+                                <button
+                                  className="w-full py-2 px-4 rounded-lg text-sm font-medium"
+                                  style={{
+                                    backgroundColor: 'var(--color-tertiary-bg)',
+                                    color: 'var(--color-text-muted)',
+                                    cursor: 'not-allowed'
+                                  }}
+                                  disabled
+                                >
+                                  View
+                                </button>
+                              )}
+                            </div>
+                          ))
+                        ) : (
+                          // Fallback placeholder tasks if no exercise data
+                          Array.from({ length: 5 }, (_, i) => (
+                            <div 
+                              key={i}
+                              className="p-4 rounded-lg border text-center"
+                              style={{
+                                backgroundColor: 'var(--color-tertiary-bg)',
+                                borderColor: 'var(--color-border)'
+                              }}
+                            >
+                              <h4 className="font-semibold mb-2" style={{ color: 'var(--color-text-primary)' }}>
+                                Task: Build a web using HTML/CSS
+                              </h4>
+                              <p className="text-sm mb-3" style={{ color: 'var(--color-text-secondary)' }}>
+                                Brief: Create a HTML Website
+                              </p>
+                              
+                              <button
+                                className="w-full py-2 px-4 rounded-lg text-sm font-medium"
+                                style={{
+                                  backgroundColor: 'var(--color-tertiary-bg)',
+                                  color: 'var(--color-text-muted)',
+                                  cursor: 'not-allowed'
+                                }}
+                                disabled
+                              >
+                                View
+                              </button>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+                
+                {/* Click to Expand Indicator */}
+                <div 
+                  className="p-4 text-center border-t cursor-pointer hover:bg-opacity-50 transition-colors"
+                  style={{ 
+                    backgroundColor: 'var(--color-secondary-bg)',
+                    borderColor: 'var(--color-border)'
+                  }}
+                  onClick={() => setExpandedLevel(expandedLevel === level.level ? null : level.level)}
+                >
+                  <div className="flex items-center justify-center gap-2 text-sm" style={{ color: 'var(--color-accent-primary)' }}>
+                    {expandedLevel === level.level ? (
+                      <>
+                        <ChevronDownIcon className="w-4 h-4" />
+                        <span>Hide Details</span>
+                      </>
+                    ) : (
+                      <>
+                        <ChevronRightIcon className="w-4 h-4" />
+                        <span>View Details</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
 
