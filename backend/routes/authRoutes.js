@@ -42,6 +42,7 @@ const updateProfileValidation = [
 router.post('/register', registerValidation, register);
 router.post('/login', loginValidation, login);
 router.post('/logout', protect, logout);
+router.get('/me', protect, getProfile);
 router.get('/profile', protect, getProfile);
 router.put('/profile', protect, updateProfileValidation, updateProfile);
 router.post('/forgot-password', forgotPassword);
