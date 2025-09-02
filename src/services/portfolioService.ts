@@ -128,14 +128,37 @@ export class PortfolioService {
    */
   static async getStudentPortfolio(studentId: string = 'me'): Promise<StudentPortfolioData> {
     try {
+      // Get portfolio data
       const endpoint = studentId === 'me' ? '/student/portfolio/me' : `/student/portfolio/${studentId}`;
-      const response = await apiService.get(endpoint);
+      const portfolioResponse = await apiService.get(endpoint);
       
-      if (response.success) {
-        return response.data;
-      } else {
-        throw new Error(response.message || 'Failed to fetch portfolio data');
+      if (!portfolioResponse.success) {
+        throw new Error(portfolioResponse.message || 'Failed to fetch portfolio data');
       }
+
+      const portfolioData = portfolioResponse.data;
+
+      // Get curriculum levels data for the student's career track
+      if (portfolioData.student.careerTrack) {
+        const levelsResponse = await apiService.get(`/training/levels?track=${portfolioData.student.careerTrack}`);
+        
+        if (levelsResponse.success) {
+          // Merge curriculum data with portfolio data
+          const levelsMap = new Map(levelsResponse.data.map((level: any) => [level.order, level]));
+          
+          portfolioData.learningLevels = portfolioData.learningLevels.map((level: any) => ({
+            ...level,
+            readFirst: levelsMap.get(level.level)?.readFirst || null,
+            difficulty: levelsMap.get(level.level)?.difficulty || 'beginner',
+            duration: levelsMap.get(level.level)?.duration || '1h 0m',
+            estimatedHours: levelsMap.get(level.level)?.estimatedHours || 1,
+            skills: levelsMap.get(level.level)?.skills || [],
+            prerequisites: levelsMap.get(level.level)?.prerequisites || []
+          }));
+        }
+      }
+
+      return portfolioData;
     } catch (error) {
       console.error('PortfolioService: Error fetching portfolio:', error);
       throw new Error('Failed to fetch portfolio data');

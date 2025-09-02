@@ -12,7 +12,56 @@ interface SectionUpdatePayload {
 }
 
 export interface PortfolioState {
-  data: StudentPortfolioData | null;
+  data: (StudentPortfolioData & {
+    learningLevels: Array<{
+      level: number;
+      courseName: string;
+      description: string;
+      status: 'not-started' | 'in-progress' | 'completed';
+      readFirst?: {
+        brief?: string;
+        whyLearn?: string;
+        whereUsed?: string;
+        customExample?: string;
+      };
+      difficulty: string;
+      duration: string;
+      estimatedHours: number;
+      skills: string[];
+      prerequisites: string[];
+      learn: {
+        completed: boolean;
+        startTime: string | null;
+        endTime: string | null;
+        timeSpent: number;
+        content: Array<any>;
+        title: string;
+        status: string;
+        materials: Array<any>;
+      };
+      test: {
+        completed: boolean;
+        score: number;
+        attempts: number;
+        startTime: string | null;
+        endTime: string | null;
+        content: Array<any>;
+        title: string;
+        status: string;
+        questions: Array<any>;
+      };
+      exercise: {
+        completed: boolean;
+        startTime: string | null;
+        endTime: string | null;
+        timeSpent: number;
+        content: Array<any>;
+        title: string;
+        status: string;
+        tasks: Array<any>;
+      };
+    }>;
+  }) | null;
   loading: boolean;
   error: string | null;
   lastFetched: number | null;
