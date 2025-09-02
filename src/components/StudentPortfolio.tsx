@@ -606,52 +606,129 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                     style={{ borderColor: 'var(--color-border)' }}
                   >
                     <div className="p-6">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+                      <div className="grid grid-cols-1 gap-4">
                         {/* Dynamic Task Items based on actual exercise data */}
                         {level.exercise?.tasks && level.exercise.tasks.length > 0 ? (
                           level.exercise.tasks.map((task: Task, i: number) => (
                             <div 
                               key={task.id || i}
-                              className="p-4 rounded-lg border text-center hover:shadow-md transition-all duration-200"
+                              className="p-4 rounded-lg border hover:shadow-md transition-all duration-200"
                               style={{
                                 backgroundColor: 'var(--color-tertiary-bg)',
                                 borderColor: 'var(--color-border)'
                               }}
                             >
-                              <h4 className="font-semibold mb-2" style={{ color: 'var(--color-text-primary)' }}>
-                                Task: {task.title}
-                              </h4>
-                              <p className="text-sm mb-3 line-clamp-2" style={{ color: 'var(--color-text-secondary)' }}>
-                                Brief: {task.description}
-                              </p>
-                              
-                              {/* Task Status Indicator */}
-                              <div className="mb-3">
-                                {task.status === 'approved' && (
-                                  <div 
-                                    className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium"
-                                    style={{
-                                      backgroundColor: 'var(--color-success-bg)',
-                                      color: 'var(--color-success)'
-                                    }}
-                                  >
-                                    <CheckCircledIcon className="w-3 h-3" />
-                                    Approved
+                              <div className="flex items-start justify-between gap-4">
+                                <div className="flex-1">
+                                  <h4 className="font-semibold mb-2" style={{ color: 'var(--color-text-primary)' }}>
+                                    Task: {task.title}
+                                  </h4>
+                                  <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                                    Brief: {task.description}
+                                  </p>
+                                </div>
+                                
+                                <div className="flex flex-col items-end gap-3">
+                                  {/* Task Status Indicator */}
+                                  <div>
+                                    {task.status === 'approved' && (
+                                      <div 
+                                        className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium"
+                                        style={{
+                                          backgroundColor: 'var(--color-success-bg)',
+                                          color: 'var(--color-success)'
+                                        }}
+                                      >
+                                        <CheckCircledIcon className="w-3 h-3" />
+                                        Approved
+                                      </div>
+                                    )}
+                                    {task.status === 'submitted' && (
+                                      <div 
+                                        className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium"
+                                        style={{
+                                          backgroundColor: 'var(--color-warning-bg)',
+                                          color: 'var(--color-warning)'
+                                        }}
+                                      >
+                                        <ClockIcon className="w-3 h-3" />
+                                        Under Review
+                                      </div>
+                                    )}
+                                    {(!task.status || task.status === 'not-submitted') && (
+                                      <div 
+                                        className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium"
+                                        style={{
+                                          backgroundColor: 'var(--color-error-bg)',
+                                          color: 'var(--color-error)'
+                                        }}
+                                      >
+                                        <Cross2Icon className="w-3 h-3" />
+                                        Not Submitted
+                                      </div>
+                                    )}
                                   </div>
-                                )}
-                                {task.status === 'submitted' && (
-                                  <div 
-                                    className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium"
-                                    style={{
-                                      backgroundColor: 'var(--color-warning-bg)',
-                                      color: 'var(--color-warning)'
-                                    }}
-                                  >
-                                    <ClockIcon className="w-3 h-3" />
-                                    Under Review
-                                  </div>
-                                )}
-                                {(!task.status || task.status === 'not-submitted') && (
+                                  
+                                  {/* View Button */}
+                                  {task.submissionLinks && task.submissionLinks.length > 0 ? (
+                                    <button
+                                      className="py-2 px-4 rounded-lg text-sm font-medium transition-colors"
+                                      style={{
+                                        backgroundColor: 'var(--color-accent-primary)',
+                                        color: 'var(--color-text-inverse)'
+                                      }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        window.open(task.submissionLinks[0], '_blank');
+                                      }}
+                                      onMouseEnter={(e) => {
+                                        e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                                      }}
+                                      onMouseLeave={(e) => {
+                                        e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                                      }}
+                                    >
+                                      View
+                                    </button>
+                                  ) : (
+                                    <button
+                                      className="py-2 px-4 rounded-lg text-sm font-medium"
+                                      style={{
+                                        backgroundColor: 'var(--color-tertiary-bg)',
+                                        color: 'var(--color-text-muted)',
+                                        cursor: 'not-allowed'
+                                      }}
+                                      disabled
+                                    >
+                                      View
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          // Fallback placeholder tasks if no exercise data
+                          Array.from({ length: 5 }, (_, i) => (
+                            <div 
+                              key={i}
+                              className="p-4 rounded-lg border"
+                              style={{
+                                backgroundColor: 'var(--color-tertiary-bg)',
+                                borderColor: 'var(--color-border)'
+                              }}
+                            >
+                              <div className="flex items-start justify-between gap-4">
+                                <div className="flex-1">
+                                  <h4 className="font-semibold mb-2" style={{ color: 'var(--color-text-primary)' }}>
+                                    Task: Build a web using HTML/CSS
+                                  </h4>
+                                  <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                                    Brief: Create a HTML Website
+                                  </p>
+                                </div>
+                                
+                                <div className="flex flex-col items-end gap-3">
                                   <div 
                                     className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium"
                                     style={{
@@ -662,74 +739,20 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                                     <Cross2Icon className="w-3 h-3" />
                                     Not Submitted
                                   </div>
-                                )}
+                                  
+                                  <button
+                                    className="py-2 px-4 rounded-lg text-sm font-medium"
+                                    style={{
+                                      backgroundColor: 'var(--color-tertiary-bg)',
+                                      color: 'var(--color-text-muted)',
+                                      cursor: 'not-allowed'
+                                    }}
+                                    disabled
+                                  >
+                                    View
+                                  </button>
+                                </div>
                               </div>
-                              
-                              {/* View Button */}
-                              {task.submissionLinks && task.submissionLinks.length > 0 ? (
-                                <button
-                                  className="w-full py-2 px-4 rounded-lg text-sm font-medium transition-colors"
-                                  style={{
-                                    backgroundColor: 'var(--color-accent-primary)',
-                                    color: 'var(--color-text-inverse)'
-                                  }}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    window.open(task.submissionLinks[0], '_blank');
-                                  }}
-                                  onMouseEnter={(e) => {
-                                    e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
-                                  }}
-                                  onMouseLeave={(e) => {
-                                    e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
-                                  }}
-                                >
-                                  View
-                                </button>
-                              ) : (
-                                <button
-                                  className="w-full py-2 px-4 rounded-lg text-sm font-medium"
-                                  style={{
-                                    backgroundColor: 'var(--color-tertiary-bg)',
-                                    color: 'var(--color-text-muted)',
-                                    cursor: 'not-allowed'
-                                  }}
-                                  disabled
-                                >
-                                  View
-                                </button>
-                              )}
-                            </div>
-                          ))
-                        ) : (
-                          // Fallback placeholder tasks if no exercise data
-                          Array.from({ length: 5 }, (_, i) => (
-                            <div 
-                              key={i}
-                              className="p-4 rounded-lg border text-center"
-                              style={{
-                                backgroundColor: 'var(--color-tertiary-bg)',
-                                borderColor: 'var(--color-border)'
-                              }}
-                            >
-                              <h4 className="font-semibold mb-2" style={{ color: 'var(--color-text-primary)' }}>
-                                Task: Build a web using HTML/CSS
-                              </h4>
-                              <p className="text-sm mb-3" style={{ color: 'var(--color-text-secondary)' }}>
-                                Brief: Create a HTML Website
-                              </p>
-                              
-                              <button
-                                className="w-full py-2 px-4 rounded-lg text-sm font-medium"
-                                style={{
-                                  backgroundColor: 'var(--color-tertiary-bg)',
-                                  color: 'var(--color-text-muted)',
-                                  cursor: 'not-allowed'
-                                }}
-                                disabled
-                              >
-                                View
-                              </button>
                             </div>
                           ))
                         )}
