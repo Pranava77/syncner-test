@@ -261,6 +261,19 @@ export const getStudentPortfolio = async (req, res) => {
       longestStreak: 0
     };
 
+    // Calculate actual total days since enrollment
+    const enrollmentDate = new Date(student.createdAt);
+    const today = new Date();
+    const actualTotalDays = Math.ceil((today - enrollmentDate) / (1000 * 60 * 60 * 24));
+    
+    // Use the actual total days instead of just counting attendance records
+    const correctedStats = {
+      totalDays: Math.max(actualTotalDays, stats.totalDays),
+      presentDays: stats.presentDays,
+      currentStreak: stats.currentStreak,
+      longestStreak: stats.longestStreak
+    };
+
     // Get leaderboard data
     const leaderboardData = await LeaderboardService.getStudentRank(studentId, student.careerTrack);
 
@@ -286,11 +299,11 @@ export const getStudentPortfolio = async (req, res) => {
         totalPoints: Math.max(progress?.totalPoints || 0, 0)
       },
       attendance: {
-        totalDays: Math.max(stats.totalDays || 0, 0),
-        presentDays: Math.max(stats.presentDays || 0, 0),
-        percentage: Math.round((stats.presentDays / Math.max(stats.totalDays, 1)) * 100),
-        currentStreak: Math.max(stats.currentStreak || 0, 0),
-        longestStreak: Math.max(stats.longestStreak || 0, 0)
+        totalDays: Math.max(correctedStats.totalDays || 0, 0),
+        presentDays: Math.max(correctedStats.presentDays || 0, 0),
+        percentage: Math.round((correctedStats.presentDays / Math.max(correctedStats.totalDays, 1)) * 100),
+        currentStreak: Math.max(correctedStats.currentStreak || 0, 0),
+        longestStreak: Math.max(correctedStats.longestStreak || 0, 0)
       },
       leaderboard: {
         score: Math.max(leaderboardData?.totalScore || 0, 0),
