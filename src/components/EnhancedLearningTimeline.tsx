@@ -174,36 +174,154 @@ const EnhancedLearningTimeline: React.FC<EnhancedLearningTimelineProps> = ({
               {/* Section Progress */}
               <div className="mt-4 ml-20 grid grid-cols-3 gap-4">
                 {/* Learn Section */}
-                <div className="p-4 rounded-lg border" style={{ backgroundColor: 'var(--color-surface)' }}>
-                  <div className="flex items-center gap-2 mb-2">
+                <div className="p-4 rounded-lg border" style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
+                  <div className="flex items-center gap-2 mb-3">
                     <ReaderIcon className="w-5 h-5" style={{ color: 'var(--color-accent-primary)' }} />
-                    <span className="font-medium">Learn</span>
+                    <span className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Learn</span>
                   </div>
-                  <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                    Progress: {level.learn.progress}%
+                  
+                  {/* Progress Bar */}
+                  <div className="mb-3">
+                    <div className="flex justify-between text-xs mb-1">
+                      <span style={{ color: 'var(--color-text-secondary)' }}>Progress</span>
+                      <span style={{ color: 'var(--color-text-secondary)' }}>{level.learn.progress}%</span>
+                    </div>
+                    <div 
+                      className="w-full h-2 rounded-full overflow-hidden"
+                      style={{ backgroundColor: 'var(--color-border)' }}
+                    >
+                      <div 
+                        className="h-full transition-all duration-500 ease-out"
+                        style={{
+                          width: `${level.learn.progress}%`,
+                          backgroundColor: level.learn.completed ? 'var(--color-success)' : 'var(--color-accent-primary)'
+                        }}
+                      />
+                    </div>
                   </div>
+
+                  {/* Time Information */}
+                  {level.learn.startTime && (
+                    <div className="space-y-1">
+                      <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                        <span className="font-medium">Started:</span> {new Date(level.learn.startTime).toLocaleDateString('en-US', { 
+                          month: 'short', 
+                          day: 'numeric', 
+                          hour: '2-digit', 
+                          minute: '2-digit' 
+                        })}
+                      </div>
+                      {level.learn.endTime && (
+                        <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                          <span className="font-medium">Completed:</span> {new Date(level.learn.endTime).toLocaleDateString('en-US', { 
+                            month: 'short', 
+                            day: 'numeric', 
+                            hour: '2-digit', 
+                            minute: '2-digit' 
+                          })}
+                        </div>
+                      )}
+                      {level.learn.timeSpent > 0 && (
+                        <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                          <span className="font-medium">Time Spent:</span> {Math.floor(level.learn.timeSpent / 60)}m {level.learn.timeSpent % 60}s
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 {/* Test Section */}
-                <div className="p-4 rounded-lg border" style={{ backgroundColor: 'var(--color-surface)' }}>
-                  <div className="flex items-center gap-2 mb-2">
+                <div className="p-4 rounded-lg border" style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
+                  <div className="flex items-center gap-2 mb-3">
                     <FileTextIcon className="w-5 h-5" style={{ color: 'var(--color-accent-primary)' }} />
-                    <span className="font-medium">Test</span>
+                    <span className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Test</span>
                   </div>
-                  <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                    Score: {level.test.score}%
+                  
+                  {/* Score Display */}
+                  <div className="mb-3">
+                    <div className="flex justify-between text-xs mb-1">
+                      <span style={{ color: 'var(--color-text-secondary)' }}>Score</span>
+                      <span style={{ color: 'var(--color-text-secondary)' }}>{level.test.score}%</span>
+                    </div>
+                    <div 
+                      className="w-full h-2 rounded-full overflow-hidden"
+                      style={{ backgroundColor: 'var(--color-border)' }}
+                    >
+                      <div 
+                        className="h-full transition-all duration-500 ease-out"
+                        style={{
+                          width: `${level.test.score}%`,
+                          backgroundColor: level.test.completed ? 'var(--color-success)' : 'var(--color-accent-primary)'
+                        }}
+                      />
+                    </div>
                   </div>
+
+                  {/* Test Information */}
+                  {level.test.startTime && (
+                    <div className="space-y-1">
+                      <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                        <span className="font-medium">Attempts:</span> {level.test.attempts}
+                      </div>
+                      {level.test.endTime && (
+                        <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                          <span className="font-medium">Last Attempt:</span> {new Date(level.test.endTime).toLocaleDateString('en-US', { 
+                            month: 'short', 
+                            day: 'numeric', 
+                            hour: '2-digit', 
+                            minute: '2-digit' 
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 {/* Exercise Section */}
-                <div className="p-4 rounded-lg border" style={{ backgroundColor: 'var(--color-surface)' }}>
-                  <div className="flex items-center gap-2 mb-2">
+                <div className="p-4 rounded-lg border" style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
+                  <div className="flex items-center gap-2 mb-3">
                     <CodeIcon className="w-5 h-5" style={{ color: 'var(--color-accent-primary)' }} />
-                    <span className="font-medium">Exercise</span>
+                    <span className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Exercise</span>
                   </div>
-                  <div className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                    Progress: {level.exercise.progress}%
+                  
+                  {/* Progress Bar */}
+                  <div className="mb-3">
+                    <div className="flex justify-between text-xs mb-1">
+                      <span style={{ color: 'var(--color-text-secondary)' }}>Progress</span>
+                      <span style={{ color: 'var(--color-text-secondary)' }}>{level.exercise.progress}%</span>
+                    </div>
+                    <div 
+                      className="w-full h-2 rounded-full overflow-hidden"
+                      style={{ backgroundColor: 'var(--color-border)' }}
+                    >
+                      <div 
+                        className="h-full transition-all duration-500 ease-out"
+                        style={{
+                          width: `${level.exercise.progress}%`,
+                          backgroundColor: level.exercise.completed ? 'var(--color-success)' : 'var(--color-accent-primary)'
+                        }}
+                      />
+                    </div>
                   </div>
+
+                  {/* Exercise Information */}
+                  {level.exercise.startTime && (
+                    <div className="space-y-1">
+                      <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                        <span className="font-medium">Tasks:</span> {level.exercise.tasks.filter((t: any) => t.completed).length}/{level.exercise.tasks.length} completed
+                      </div>
+                      {level.exercise.endTime && (
+                        <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                          <span className="font-medium">Last Activity:</span> {new Date(level.exercise.endTime).toLocaleDateString('en-US', { 
+                            month: 'short', 
+                            day: 'numeric', 
+                            hour: '2-digit', 
+                            minute: '2-digit' 
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>

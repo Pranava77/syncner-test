@@ -676,37 +676,42 @@ const StudentDetails: React.FC = () => {
 
       {/* Dynamic Learning Timeline Section */}
          <div className="mb-8">
-           <div className="flex items-center justify-between mb-6">
+           <div className="flex items-center justify-between mb-8">
              <div>
                <h2
-                 className="text-3xl font-heading mb-3"
+                 className="text-2xl font-bold mb-2"
                  style={{ color: 'var(--color-text-primary)' }}
                >
-                 🚀 Learning Journey
+                 Learning Journey
                </h2>
                <p
-                 className="font-label text-lg"
-                 style={{ color: 'var(--color-text-tertiary)' }}
+                 className="text-sm"
+                 style={{ color: 'var(--color-text-secondary)' }}
                >
-                 Real-time progress tracking with completion timestamps
+                 Track student progress across all learning levels
                </p>
              </div>
              
              {/* Portfolio Button */}
              <button
-               className="px-6 py-3 rounded-xl font-semibold transition-all duration-200 hover:scale-105 hover:shadow-lg"
+               className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:shadow-md"
                style={{
                  backgroundColor: 'var(--color-accent-primary)',
-                 color: 'white',
-                 boxShadow: 'var(--shadow-md)'
+                 color: 'var(--color-text-inverse)',
+                 border: '1px solid var(--color-accent-primary)'
+               }}
+               onMouseEnter={(e) => {
+                 e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+               }}
+               onMouseLeave={(e) => {
+                 e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
                }}
                onClick={() => {
-                 // Navigate to portfolio page
-                       console.log('Portfolio button clicked, navigating to:', `/staff/portfolio/${studentId}`);
-      navigate(`/staff/portfolio/${studentId}`);
+                 console.log('Portfolio button clicked, navigating to:', `/staff/portfolio/${studentId}`);
+                 navigate(`/staff/portfolio/${studentId}`);
                }}
              >
-               📁 View Portfolio
+               View Portfolio
              </button>
            </div>
 
@@ -736,12 +741,25 @@ const StudentDetails: React.FC = () => {
                    </div>
                  </div>
                ) : (
-                 <div>
-                   <div className="text-8xl mb-6">🚀</div>
-                   <h3 className="text-2xl font-bold mb-3" style={{ color: 'var(--color-text-primary)' }}>
-                     Learning Journey Ready
+                 <div 
+                   className="rounded-xl border-2 border-dashed p-12 text-center"
+                   style={{ 
+                     borderColor: 'var(--color-border)',
+                     backgroundColor: 'var(--color-secondary-bg)'
+                   }}
+                 >
+                   <div 
+                     className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center"
+                     style={{ backgroundColor: 'var(--color-accent-tertiary)' }}
+                   >
+                     <TargetIcon className="w-8 h-8" style={{ color: 'var(--color-accent-primary)' }} />
+                   </div>
+                   <h3 className="text-xl font-semibold mb-2" style={{ color: 'var(--color-text-primary)' }}>
+                     Learning Journey
                    </h3>
-                   <p className="text-lg mb-6">Learning journey data will be displayed when available</p>
+                   <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                     Learning progress will be displayed when available
+                   </p>
                  </div>
                )}
              </motion.div>
