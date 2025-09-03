@@ -159,6 +159,19 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, task }) => {
   );
 };
 
+// Function to generate track-specific introductions
+const getTrackSpecificIntroduction = (careerTrack: string): string => {
+  const trackIntroductions = {
+    'full-stack': `Full-stack developer in the making, passionate about solving real business problems with code. Skilled in modern web technologies including React, Node.js, and databases, ready to contribute to impactful projects that bridge the gap between frontend and backend development.`,
+    'data-science': `Data science enthusiast with a passion for extracting meaningful insights from complex datasets. Skilled in statistical analysis, machine learning, and data visualization using Python, R, and SQL. Ready to drive data-driven decision making in real-world applications.`,
+    'ai-ml': `AI/ML practitioner focused on building intelligent systems that can learn and adapt. Passionate about developing machine learning models and AI solutions using Python, TensorFlow, and PyTorch. Ready to solve complex problems and improve human experiences through artificial intelligence.`,
+    'ui-ux': `UI/UX designer with a keen eye for creating intuitive and engaging user experiences. Passionate about understanding user needs and translating them into beautiful, functional designs using Figma, Adobe Creative Suite, and modern design principles. Ready to make technology more accessible and enjoyable.`
+  };
+
+  return trackIntroductions[careerTrack as keyof typeof trackIntroductions] || 
+    `Passionate ${careerTrack.replace('-', ' ')} professional in the making, dedicated to continuous learning and growth in the field. Ready to apply skills and knowledge to create meaningful impact in the industry.`;
+};
+
 interface StudentPortfolioProps {
   studentId?: string;
   studentData?: StudentPortfolioData & {
@@ -548,7 +561,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
             Introduction:
           </h2>
           <p className="text-base leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-            {data.student.introduction || 'Full-stack developer in the making, passionate about solving real business problems with code. Skilled in SQL, Python, and data visualization, and ready to contribute to impactful projects.'}
+            {data.student.introduction || getTrackSpecificIntroduction(data.student.careerTrack)}
           </p>
         </div>
 
