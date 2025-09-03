@@ -200,34 +200,46 @@ const EnhancedLearningTimeline: React.FC<EnhancedLearningTimelineProps> = ({
                     </div>
                   </div>
 
-                  {/* Time Information */}
-                  {level.learn.startTime && (
-                    <div className="space-y-1">
+                  {/* Date Information */}
+                  <div className="space-y-2">
+                    {level.learn.startTime ? (
                       <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
-                        <span className="font-medium">Started:</span> {new Date(level.learn.startTime).toLocaleDateString('en-US', { 
+                        <span className="font-medium">Start Date:</span> {new Date(level.learn.startTime).toLocaleDateString('en-US', { 
                           month: 'short', 
                           day: 'numeric', 
+                          year: 'numeric',
                           hour: '2-digit', 
                           minute: '2-digit' 
                         })}
                       </div>
-                      {level.learn.endTime && (
-                        <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
-                          <span className="font-medium">Completed:</span> {new Date(level.learn.endTime).toLocaleDateString('en-US', { 
-                            month: 'short', 
-                            day: 'numeric', 
-                            hour: '2-digit', 
-                            minute: '2-digit' 
-                          })}
-                        </div>
-                      )}
-                      {level.learn.timeSpent > 0 && (
-                        <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
-                          <span className="font-medium">Time Spent:</span> {Math.floor(level.learn.timeSpent / 60)}m {level.learn.timeSpent % 60}s
-                        </div>
-                      )}
-                    </div>
-                  )}
+                    ) : (
+                      <div className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                        <span className="font-medium">Start Date:</span> Not started
+                      </div>
+                    )}
+                    
+                    {level.learn.endTime ? (
+                      <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                        <span className="font-medium">End Date:</span> {new Date(level.learn.endTime).toLocaleDateString('en-US', { 
+                          month: 'short', 
+                          day: 'numeric', 
+                          year: 'numeric',
+                          hour: '2-digit', 
+                          minute: '2-digit' 
+                        })}
+                      </div>
+                    ) : (
+                      <div className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                        <span className="font-medium">End Date:</span> In progress
+                      </div>
+                    )}
+                    
+                    {level.learn.timeSpent > 0 && (
+                      <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                        <span className="font-medium">Time Spent:</span> {Math.floor(level.learn.timeSpent / 60)}m {level.learn.timeSpent % 60}s
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Test Section */}
@@ -257,24 +269,46 @@ const EnhancedLearningTimeline: React.FC<EnhancedLearningTimelineProps> = ({
                     </div>
                   </div>
 
-                  {/* Test Information */}
-                  {level.test.startTime && (
-                    <div className="space-y-1">
+                  {/* Date Information */}
+                  <div className="space-y-2">
+                    {level.test.startTime ? (
+                      <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                        <span className="font-medium">Start Date:</span> {new Date(level.test.startTime).toLocaleDateString('en-US', { 
+                          month: 'short', 
+                          day: 'numeric', 
+                          year: 'numeric',
+                          hour: '2-digit', 
+                          minute: '2-digit' 
+                        })}
+                      </div>
+                    ) : (
+                      <div className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                        <span className="font-medium">Start Date:</span> Not started
+                      </div>
+                    )}
+                    
+                    {level.test.endTime ? (
+                      <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                        <span className="font-medium">End Date:</span> {new Date(level.test.endTime).toLocaleDateString('en-US', { 
+                          month: 'short', 
+                          day: 'numeric', 
+                          year: 'numeric',
+                          hour: '2-digit', 
+                          minute: '2-digit' 
+                        })}
+                      </div>
+                    ) : (
+                      <div className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                        <span className="font-medium">End Date:</span> In progress
+                      </div>
+                    )}
+                    
+                    {level.test.attempts > 0 && (
                       <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
                         <span className="font-medium">Attempts:</span> {level.test.attempts}
                       </div>
-                      {level.test.endTime && (
-                        <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
-                          <span className="font-medium">Last Attempt:</span> {new Date(level.test.endTime).toLocaleDateString('en-US', { 
-                            month: 'short', 
-                            day: 'numeric', 
-                            hour: '2-digit', 
-                            minute: '2-digit' 
-                          })}
-                        </div>
-                      )}
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
 
                 {/* Exercise Section */}
@@ -304,24 +338,46 @@ const EnhancedLearningTimeline: React.FC<EnhancedLearningTimelineProps> = ({
                     </div>
                   </div>
 
-                  {/* Exercise Information */}
-                  {level.exercise.startTime && (
-                    <div className="space-y-1">
+                  {/* Date Information */}
+                  <div className="space-y-2">
+                    {level.exercise.startTime ? (
+                      <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                        <span className="font-medium">Start Date:</span> {new Date(level.exercise.startTime).toLocaleDateString('en-US', { 
+                          month: 'short', 
+                          day: 'numeric', 
+                          year: 'numeric',
+                          hour: '2-digit', 
+                          minute: '2-digit' 
+                        })}
+                      </div>
+                    ) : (
+                      <div className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                        <span className="font-medium">Start Date:</span> Not started
+                      </div>
+                    )}
+                    
+                    {level.exercise.endTime ? (
+                      <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                        <span className="font-medium">End Date:</span> {new Date(level.exercise.endTime).toLocaleDateString('en-US', { 
+                          month: 'short', 
+                          day: 'numeric', 
+                          year: 'numeric',
+                          hour: '2-digit', 
+                          minute: '2-digit' 
+                        })}
+                      </div>
+                    ) : (
+                      <div className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                        <span className="font-medium">End Date:</span> In progress
+                      </div>
+                    )}
+                    
+                    {level.exercise.tasks.length > 0 && (
                       <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
                         <span className="font-medium">Tasks:</span> {level.exercise.tasks.filter((t: any) => t.completed).length}/{level.exercise.tasks.length} completed
                       </div>
-                      {level.exercise.endTime && (
-                        <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
-                          <span className="font-medium">Last Activity:</span> {new Date(level.exercise.endTime).toLocaleDateString('en-US', { 
-                            month: 'short', 
-                            day: 'numeric', 
-                            hour: '2-digit', 
-                            minute: '2-digit' 
-                          })}
-                        </div>
-                      )}
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
               </div>
             </motion.div>
