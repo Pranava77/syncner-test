@@ -70,12 +70,7 @@ const StudentTracking: React.FC = () => {
     }
   };
 
-  const getProgressColor = (progress: number) => {
-    if (progress >= 80) return 'var(--color-success)';
-    if (progress >= 60) return 'var(--color-accent-primary)';
-    if (progress >= 40) return 'var(--color-warning)';
-    return 'var(--color-error)';
-  };
+
 
   const formatLastActive = (lastActive: string) => {
     const date = new Date(lastActive);
@@ -239,9 +234,6 @@ const StudentTracking: React.FC = () => {
                     Track
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-text-secondary)' }}>
-                    Progress
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-text-secondary)' }}>
                     Status
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-text-secondary)' }}>
@@ -284,30 +276,6 @@ const StudentTracking: React.FC = () => {
                          student.careerTrack === 'ui-ux' ? 'UI/UX Design' :
                          student.careerTrack === 'data-science' ? 'Data Science' :
                          student.careerTrack}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                            {student.progress}%
-                          </span>
-                          <span className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
-                            Complete
-                          </span>
-                        </div>
-                        <div 
-                          className="w-full rounded-full h-2 overflow-hidden"
-                          style={{ backgroundColor: 'var(--color-border)' }}
-                        >
-                          <div
-                            className="h-full rounded-full transition-all duration-500 ease-out"
-                            style={{
-                              width: `${student.progress}%`,
-                              backgroundColor: getProgressColor(student.progress)
-                            }}
-                          />
-                        </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
