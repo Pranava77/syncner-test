@@ -645,10 +645,10 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                           color: 'var(--color-text-inverse)'
                         }}
                       >
-                        MCQ {level.test?.score || 86}%
+                        MCQ {level.test?.score || 0}%
                       </div>
                       <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
-                        Tasks {level.exercise?.tasks?.filter((t: Task) => t.completed).length || 0}/{level.exercise?.tasks?.length || 5}
+                        Tasks {level.exercise?.tasks?.filter((t: Task) => t.completed).length || 0}/{level.exercise?.tasks?.length || 0}
                       </div>
                     </div>
                 </div>
