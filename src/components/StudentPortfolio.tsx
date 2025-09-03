@@ -385,72 +385,38 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-primary-bg)' }}>
       <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
-        {/* Header Section - Matching the image design */}
-        <div className="text-center mb-8">
-          {/* Profile Image Placeholder */}
-          <div 
-            className="w-20 h-20 sm:w-24 sm:h-24 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl sm:text-3xl font-bold shadow-lg"
-            style={{
-              backgroundColor: 'var(--color-accent-primary)',
-              color: 'var(--color-text-inverse)'
-            }}
-          >
-            {data.student.name.charAt(0)}
-          </div>
-          
-          {/* Student Name and Status */}
-          <div className="mb-4">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>
-              {data.student.name}
-            </h1>
-            <p className="text-base sm:text-lg mb-3" style={{ color: 'var(--color-text-secondary)' }}>
-              {data.student.college || 'Not specified'}, India
-            </p>
-            
-            {/* Track and Duration Info - Responsive Layout */}
-            <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 mb-4">
+        {/* Header Section - New Layout */}
+        <div className="mb-8">
+          {/* Top Row: Profile and Basic Info */}
+          <div className="flex flex-col lg:flex-row items-center lg:items-start gap-6 mb-6">
+            {/* Profile Section */}
+            <div className="flex flex-col items-center lg:items-start">
               <div 
-                className="px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium"
-                style={{ 
-                  backgroundColor: 'var(--color-accent-tertiary)',
-                  color: 'var(--color-accent-primary)'
+                className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold shadow-lg mb-4"
+                style={{
+                  backgroundColor: 'var(--color-accent-primary)',
+                  color: 'var(--color-text-inverse)'
                 }}
               >
-                Track: {data.student.careerTrack === 'full-stack' ? 'Full Stack Development' : 
-                        data.student.careerTrack === 'ai-ml' ? 'AI & Machine Learning' :
-                        data.student.careerTrack === 'ui-ux' ? 'UI/UX Design' :
-                        data.student.careerTrack === 'data-science' ? 'Data Science' :
-                        data.student.careerTrack}
+                {data.student.name.charAt(0)}
               </div>
-              <div 
-                className="px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium"
-                style={{
-                  backgroundColor: 'var(--color-accent-tertiary)',
-                  color: 'var(--color-accent-primary)'
-                }}
-              >
-                Duration: {data.student.duration}
-          </div>
-              <div 
-                className="px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium"
-                style={{
-                  backgroundColor: 'var(--color-accent-tertiary)',
-                  color: 'var(--color-accent-primary)'
-                }}
-              >
-          Last verified: {new Date(data.student.createdAt).toLocaleDateString('en-US', { 
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric'
-          })}
-        </div>
-      </div>
+              
+              {/* Student Name and College */}
+              <div className="text-center lg:text-left">
+                <h1 className="text-3xl lg:text-4xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>
+                  {data.student.name}
+                </h1>
+                <p className="text-lg mb-3" style={{ color: 'var(--color-text-secondary)' }}>
+                  {data.student.college || 'Not specified'}, India
+                </p>
+              </div>
+            </div>
 
-            {/* Ready to Hire Badge and Share Button */}
-            <div className="flex flex-wrap items-center justify-center gap-4">
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row items-center gap-4 lg:ml-auto">
               {data.student.readyToHire && (
                 <div 
-                  className="inline-block px-6 py-2 rounded-full text-lg font-bold"
+                  className="px-6 py-3 rounded-full text-lg font-bold"
                   style={{ 
                     backgroundColor: 'var(--color-success)',
                     color: 'var(--color-text-inverse)'
@@ -460,10 +426,9 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                 </div>
               )}
               
-              {/* Share Button */}
               <button
                 onClick={handleShare}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:shadow-md"
+                className="flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-medium transition-colors hover:shadow-md"
                 style={{
                   backgroundColor: 'var(--color-accent-primary)',
                   color: 'var(--color-text-inverse)'
@@ -480,111 +445,195 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
               </button>
             </div>
           </div>
-        </div>
 
-        {/* Skills Section */}
-      <div className="mb-8">
-          <div className="flex flex-wrap justify-center gap-3">
-            {(data.student.skills || ['SQL', 'Python', 'EDA', 'Data Viz', 'Communication']).map((skill) => (
-            <div
-              key={skill}
-                className="px-4 py-2 rounded-lg text-sm font-medium border"
+          {/* Info Cards Row */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            {/* Track Card */}
+            <div 
+              className="p-4 rounded-xl border text-center"
               style={{
-                  backgroundColor: 'var(--color-surface)',
-                  borderColor: 'var(--color-border)',
-                  color: 'var(--color-text-primary)'
+                backgroundColor: 'var(--color-surface)',
+                borderColor: 'var(--color-border)'
               }}
             >
-              {skill}
+              <h3 className="text-sm font-medium mb-2" style={{ color: 'var(--color-text-secondary)' }}>
+                Career Track
+              </h3>
+              <p className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                {data.student.careerTrack === 'full-stack' ? 'Full Stack Development' : 
+                 data.student.careerTrack === 'ai-ml' ? 'AI & Machine Learning' :
+                 data.student.careerTrack === 'ui-ux' ? 'UI/UX Design' :
+                 data.student.careerTrack === 'data-science' ? 'Data Science' :
+                 data.student.careerTrack}
+              </p>
             </div>
-          ))}
-        </div>
-      </div>
 
-        {/* Certificate ID Section */}
-      <div 
-        className="mb-8 p-6 rounded-xl border"
-        style={{
-          backgroundColor: 'var(--color-surface)',
-          borderColor: 'var(--color-border)'
-        }}
-      >
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div>
-              <h2 className="text-xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>
-                Certificate ID:
-        </h2>
-              <p 
-                className="text-base sm:text-lg font-mono"
-                style={{ color: 'var(--color-accent-primary)' }}
-              >
-                {data.student.certificateId}
-        </p>
-      </div>
-            <button
-              className="px-6 py-2 rounded-lg text-sm font-medium transition-colors"
-          style={{ 
-                backgroundColor: 'var(--color-accent-primary)',
-                color: 'var(--color-text-inverse)'
-              }}
-              onClick={() => {
-                navigator.clipboard.writeText(data.student.certificateId);
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+            {/* Duration Card */}
+            <div 
+              className="p-4 rounded-xl border text-center"
+              style={{
+                backgroundColor: 'var(--color-surface)',
+                borderColor: 'var(--color-border)'
               }}
             >
-              Copy ID
-            </button>
+              <h3 className="text-sm font-medium mb-2" style={{ color: 'var(--color-text-secondary)' }}>
+                Program Duration
+              </h3>
+              <p className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                {data.student.duration}
+              </p>
+            </div>
+
+            {/* Verification Card */}
+            <div 
+              className="p-4 rounded-xl border text-center"
+              style={{
+                backgroundColor: 'var(--color-surface)',
+                borderColor: 'var(--color-border)'
+              }}
+            >
+              <h3 className="text-sm font-medium mb-2" style={{ color: 'var(--color-text-secondary)' }}>
+                Last Verified
+              </h3>
+              <p className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                {new Date(data.student.createdAt).toLocaleDateString('en-US', { 
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric'
+                })}
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Introduction Section */}
-        <div 
-          className="mb-8 p-6 rounded-xl border"
-          style={{ 
-            backgroundColor: 'var(--color-surface)',
-            borderColor: 'var(--color-border)'
-          }}
-        >
-          <h2 className="text-xl font-bold mb-4" style={{ color: 'var(--color-text-primary)' }}>
-            Introduction:
-          </h2>
-          <p className="text-base leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-            {data.student.introduction || getTrackSpecificIntroduction(data.student.careerTrack)}
-          </p>
-        </div>
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          {/* Left Column */}
+          <div className="space-y-6">
+            {/* Introduction Section */}
+            <div 
+              className="p-6 rounded-xl border"
+              style={{ 
+                backgroundColor: 'var(--color-surface)',
+                borderColor: 'var(--color-border)'
+              }}
+            >
+              <h2 className="text-xl font-bold mb-4" style={{ color: 'var(--color-text-primary)' }}>
+                About
+              </h2>
+              <p className="text-base leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+                {data.student.introduction || getTrackSpecificIntroduction(data.student.careerTrack)}
+              </p>
+            </div>
 
-        {/* Recommended Roles Section */}
-        <div 
-          className="mb-8 p-4 rounded-lg border"
-          style={{ 
-            backgroundColor: 'var(--color-surface)',
-            borderColor: 'var(--color-border)'
-          }}
-        >
-          <h2 className="text-sm font-medium mb-3" style={{ color: 'var(--color-text-secondary)' }}>
-            Recommended Roles
-          </h2>
-          <div className="flex flex-wrap gap-2">
-            {data.student.recommendedRoles.map((role) => (
-              <span
-                key={role}
-                className="px-3 py-1 rounded-full text-sm"
-                style={{
-                  backgroundColor: 'var(--color-secondary-bg)',
-                  color: 'var(--color-text-tertiary)',
-                  border: '1px solid var(--color-border)'
-                }}
-              >
-                {role}
-              </span>
-            ))}
+            {/* Skills Section */}
+            <div 
+              className="p-6 rounded-xl border"
+              style={{
+                backgroundColor: 'var(--color-surface)',
+                borderColor: 'var(--color-border)'
+              }}
+            >
+              <h2 className="text-xl font-bold mb-4" style={{ color: 'var(--color-text-primary)' }}>
+                Skills
+              </h2>
+              <div className="flex flex-wrap gap-3">
+                {(data.student.skills || ['SQL', 'Python', 'EDA', 'Data Viz', 'Communication']).map((skill) => (
+                  <div
+                    key={skill}
+                    className="px-4 py-2 rounded-lg text-sm font-medium border"
+                    style={{
+                      backgroundColor: 'var(--color-secondary-bg)',
+                      borderColor: 'var(--color-border)',
+                      color: 'var(--color-text-primary)'
+                    }}
+                  >
+                    {skill}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column */}
+          <div className="space-y-6">
+            {/* Certificate ID Section */}
+            <div 
+              className="p-6 rounded-xl border"
+              style={{
+                backgroundColor: 'var(--color-surface)',
+                borderColor: 'var(--color-border)'
+              }}
+            >
+              <h2 className="text-xl font-bold mb-4" style={{ color: 'var(--color-text-primary)' }}>
+                Certificate
+              </h2>
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm font-medium mb-2" style={{ color: 'var(--color-text-secondary)' }}>
+                    Certificate ID
+                  </p>
+                  <p 
+                    className="text-lg font-mono p-3 rounded-lg"
+                    style={{ 
+                      backgroundColor: 'var(--color-secondary-bg)',
+                      color: 'var(--color-accent-primary)',
+                      border: '1px solid var(--color-border)'
+                    }}
+                  >
+                    {data.student.certificateId}
+                  </p>
+                </div>
+                <button
+                  className="w-full px-4 py-3 rounded-lg text-sm font-medium transition-colors"
+                  style={{ 
+                    backgroundColor: 'var(--color-accent-primary)',
+                    color: 'var(--color-text-inverse)'
+                  }}
+                  onClick={() => {
+                    navigator.clipboard.writeText(data.student.certificateId);
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = 'var(--color-accent-secondary)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
+                  }}
+                >
+                  Copy Certificate ID
+                </button>
+              </div>
+            </div>
+
+            {/* Recommended Roles Section */}
+            <div 
+              className="p-6 rounded-xl border"
+              style={{ 
+                backgroundColor: 'var(--color-surface)',
+                borderColor: 'var(--color-border)'
+              }}
+            >
+              <h2 className="text-xl font-bold mb-4" style={{ color: 'var(--color-text-primary)' }}>
+                Recommended Roles
+              </h2>
+              <div className="flex flex-wrap gap-3">
+                {data.student.recommendedRoles.map((role) => (
+                  <span
+                    key={role}
+                    className="px-4 py-2 rounded-lg text-sm font-medium"
+                    style={{
+                      backgroundColor: 'var(--color-accent-tertiary)',
+                      color: 'var(--color-accent-primary)',
+                      border: '1px solid var(--color-accent-primary)'
+                    }}
+                  >
+                    {role}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
 
         {/* Portfolio Section - Matching the image design */}
       <div>
