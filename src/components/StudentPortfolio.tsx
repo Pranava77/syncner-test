@@ -124,19 +124,13 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, task }) => {
                         style={{
                           backgroundColor: task.status === 'approved' 
                             ? 'var(--color-success-bg)'
-                            : task.status === 'submitted'
-                            ? 'var(--color-warning-bg)'
                             : 'var(--color-error-bg)',
                           color: task.status === 'approved'
                             ? 'var(--color-success)'
-                            : task.status === 'submitted'
-                            ? 'var(--color-warning)'
                             : 'var(--color-error)'
                         }}
                       >
-                        {task.status === 'approved' ? 'Approved' : 
-                         task.status === 'submitted' ? 'Submitted' : 
-                         'Not Submitted'}
+                        {task.status === 'approved' ? 'Approved' : 'Not Submitted'}
                       </div>
                     </div>
                   ))}
@@ -417,7 +411,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
             <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 mb-4">
               <div 
                 className="px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium"
-                style={{
+                style={{ 
                   backgroundColor: 'var(--color-accent-tertiary)',
                   color: 'var(--color-accent-primary)'
                 }}
@@ -436,7 +430,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                 }}
               >
                 Duration: {data.student.duration}
-              </div>
+          </div>
               <div 
                 className="px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium"
                 style={{
@@ -444,13 +438,13 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                   color: 'var(--color-accent-primary)'
                 }}
               >
-                Last verified: {new Date(data.student.createdAt).toLocaleDateString('en-US', { 
-                  month: 'short',
-                  day: 'numeric', 
-                  year: 'numeric'
-                })}
-              </div>
-            </div>
+          Last verified: {new Date(data.student.createdAt).toLocaleDateString('en-US', { 
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric'
+          })}
+        </div>
+      </div>
 
             {/* Ready to Hire Badge and Share Button */}
             <div className="flex flex-wrap items-center justify-center gap-4">
@@ -489,47 +483,47 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
         </div>
 
         {/* Skills Section */}
-        <div className="mb-8">
+      <div className="mb-8">
           <div className="flex flex-wrap justify-center gap-3">
             {(data.student.skills || ['SQL', 'Python', 'EDA', 'Data Viz', 'Communication']).map((skill) => (
-              <div
-                key={skill}
+            <div
+              key={skill}
                 className="px-4 py-2 rounded-lg text-sm font-medium border"
-                style={{
+              style={{
                   backgroundColor: 'var(--color-surface)',
                   borderColor: 'var(--color-border)',
                   color: 'var(--color-text-primary)'
-                }}
-              >
-                {skill}
-              </div>
-            ))}
-          </div>
+              }}
+            >
+              {skill}
+            </div>
+          ))}
         </div>
+      </div>
 
         {/* Certificate ID Section */}
-        <div 
-          className="mb-8 p-6 rounded-xl border"
-          style={{
-            backgroundColor: 'var(--color-surface)',
-            borderColor: 'var(--color-border)'
-          }}
-        >
+      <div 
+        className="mb-8 p-6 rounded-xl border"
+        style={{
+          backgroundColor: 'var(--color-surface)',
+          borderColor: 'var(--color-border)'
+        }}
+      >
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
               <h2 className="text-xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>
                 Certificate ID:
-              </h2>
+        </h2>
               <p 
                 className="text-base sm:text-lg font-mono"
                 style={{ color: 'var(--color-accent-primary)' }}
               >
                 {data.student.certificateId}
-              </p>
-            </div>
+        </p>
+      </div>
             <button
               className="px-6 py-2 rounded-lg text-sm font-medium transition-colors"
-              style={{
+          style={{ 
                 backgroundColor: 'var(--color-accent-primary)',
                 color: 'var(--color-text-inverse)'
               }}
@@ -551,7 +545,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
         {/* Introduction Section */}
         <div 
           className="mb-8 p-6 rounded-xl border"
-          style={{
+          style={{ 
             backgroundColor: 'var(--color-surface)',
             borderColor: 'var(--color-border)'
           }}
@@ -567,7 +561,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
         {/* Recommended Roles Section */}
         <div 
           className="mb-8 p-4 rounded-lg border"
-          style={{
+          style={{ 
             backgroundColor: 'var(--color-surface)',
             borderColor: 'var(--color-border)'
           }}
@@ -589,14 +583,14 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                 {role}
               </span>
             ))}
-          </div>
         </div>
+      </div>
 
         {/* Portfolio Section - Matching the image design */}
-        <div>
+      <div>
           <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--color-text-primary)' }}>
             Portfolio:
-          </h2>
+        </h2>
           
           <div className="grid gap-6">
             {mergedLevels.map((level: any, index: number) => (
@@ -606,11 +600,11 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 className="border rounded-xl overflow-hidden shadow-lg"
-                style={{ 
-                  backgroundColor: 'var(--color-surface)',
-                  borderColor: 'var(--color-border)'
-                }}
-              >
+              style={{ 
+                backgroundColor: 'var(--color-surface)',
+                borderColor: 'var(--color-border)'
+              }}
+            >
                 {/* Level Card Header */}
                 <div 
                   className="p-6 border-b"
@@ -623,30 +617,30 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                     {/* Level Number Circle */}
                     <div 
                       className="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold shadow-lg mx-auto sm:mx-0"
-                      style={{ 
+                    style={{ 
                         backgroundColor: 'var(--color-accent-primary)',
                         color: 'var(--color-text-inverse)'
-                      }}
-                    >
+                    }}
+                  >
                       {(level.level || index + 1).toString().padStart(2, '0')}
-                    </div>
+                  </div>
                     
                     {/* Level Info */}
                     <div className="flex-1 text-center sm:text-left">
                       <h3 className="text-lg sm:text-xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>
                         {level.courseName || `Foundations: Linux & Shell`}
-                      </h3>
+                    </h3>
                     </div>
                     
                     {/* MCQ and Tasks Info */}
                     <div className="text-center sm:text-right">
                       <div 
                         className="px-3 sm:px-4 py-2 rounded-full text-sm font-bold mb-2"
-                        style={{
-                          backgroundColor: (level.status || 'not-started') === 'completed' 
-                            ? 'var(--color-success)'
-                            : (level.status || 'not-started') === 'in-progress'
-                            ? 'var(--color-warning)'
+                    style={{
+                      backgroundColor: (level.status || 'not-started') === 'completed' 
+                        ? 'var(--color-success)'
+                        : (level.status || 'not-started') === 'in-progress'
+                        ? 'var(--color-warning)'
                             : 'var(--color-error)',
                           color: 'var(--color-text-inverse)'
                         }}
@@ -657,11 +651,11 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                         Tasks {level.exercise?.tasks?.filter((t: Task) => t.completed).length || 0}/{level.exercise?.tasks?.length || 5}
                       </div>
                     </div>
-                  </div>
                 </div>
+              </div>
 
                 {/* Expandable Content */}
-                {expandedLevel === level.level && (
+              {expandedLevel === level.level && (
                   <motion.div 
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
@@ -678,11 +672,11 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                             <div 
                               key={task.id || i}
                               className="p-4 rounded-lg border hover:shadow-md transition-all duration-200"
-                              style={{
-                                backgroundColor: 'var(--color-tertiary-bg)',
-                                borderColor: 'var(--color-border)'
-                              }}
-                            >
+                            style={{ 
+                              backgroundColor: 'var(--color-tertiary-bg)',
+                              borderColor: 'var(--color-border)'
+                            }}
+                          >
                               <div className="flex items-start justify-between gap-4">
                                 <div className="flex-1">
                                   <h4 className="font-semibold mb-2" style={{ color: 'var(--color-text-primary)' }}>
@@ -719,9 +713,9 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                                       >
                                         <Cross2Icon className="w-3 h-3" />
                                         Not Submitted
-                                      </div>
-                                    )}
-                                  </div>
+                              </div>
+                              )}
+                            </div>
                                   
                                   {/* View Button */}
                                   {task.submissionLinks && task.submissionLinks.length > 0 ? (
@@ -756,59 +750,27 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                                     >
                                       View
                                     </button>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
+                            )}
+                          </div>
+                      </div>
+                    </div>
                           ))
                         ) : (
-                          // Fallback placeholder tasks if no exercise data
-                          Array.from({ length: 5 }, (_, i) => (
-                            <div 
-                              key={i}
-                              className="p-4 rounded-lg border"
-                              style={{
-                                backgroundColor: 'var(--color-tertiary-bg)',
-                                borderColor: 'var(--color-border)'
-                              }}
-                            >
-                              <div className="flex items-start justify-between gap-4">
-                                <div className="flex-1">
-                                  <h4 className="font-semibold mb-2" style={{ color: 'var(--color-text-primary)' }}>
-                                    Task: Build a web using HTML/CSS
-                                  </h4>
-                                  <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                                    Brief: Create a HTML Website
-                                  </p>
-                                </div>
-                                
-                                <div className="flex flex-col items-end gap-3">
-                                  <div 
-                                    className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium"
-                                    style={{
-                                      backgroundColor: 'var(--color-error-bg)',
-                                      color: 'var(--color-error)'
-                                    }}
-                                  >
-                                    <Cross2Icon className="w-3 h-3" />
-                                    Not Submitted
-                                  </div>
-                                  
-                                  <button
-                                    className="py-2 px-4 rounded-lg text-sm font-medium"
-                                    style={{
-                                      backgroundColor: 'var(--color-tertiary-bg)',
-                                      color: 'var(--color-text-muted)',
-                                      cursor: 'not-allowed'
-                                    }}
-                                    disabled
-                                  >
-                                    View
-                                  </button>
-                                </div>
-                              </div>
+                          // No tasks available message
+                          <div 
+                            className="p-6 text-center rounded-lg border"
+                            style={{ 
+                              backgroundColor: 'var(--color-tertiary-bg)',
+                              borderColor: 'var(--color-border)'
+                            }}
+                          >
+                            <div className="text-lg mb-2" style={{ color: 'var(--color-text-primary)' }}>
+                              📋
                             </div>
-                          ))
+                            <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                              No tasks available for this level yet
+                            </p>
+                          </div>
                         )}
                       </div>
                     </div>
@@ -840,7 +802,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                 </div>
               </motion.div>
             ))}
-          </div>
+            </div>
         </div>
       </div>
 
