@@ -14,7 +14,6 @@ import {
   ChevronDownIcon,
   ChevronRightIcon,
   ExternalLinkIcon,
-  ClockIcon,
   CheckCircledIcon,
   Cross2Icon,
   Share1Icon
@@ -709,18 +708,7 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                                         Approved
                                       </div>
                                     )}
-                                    {task.status === 'submitted' && (
-                                      <div 
-                                        className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium"
-                                        style={{
-                                          backgroundColor: 'var(--color-warning-bg)',
-                                          color: 'var(--color-warning)'
-                                        }}
-                                      >
-                                        <ClockIcon className="w-3 h-3" />
-                                        Under Review
-                                      </div>
-                                    )}
+
                                     {(!task.status || task.status === 'not-submitted') && (
                                       <div 
                                         className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium"
