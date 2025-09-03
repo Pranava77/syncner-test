@@ -593,7 +593,16 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
         </h2>
           
           <div className="grid gap-6">
-            {mergedLevels.map((level: any, index: number) => (
+            {mergedLevels.map((level: any, index: number) => {
+              // Debug: Log the exercise data structure
+              console.log(`Level ${level.level} exercise data:`, {
+                hasExercise: !!level.exercise,
+                hasTasks: !!level.exercise?.tasks,
+                tasksLength: level.exercise?.tasks?.length,
+                tasks: level.exercise?.tasks
+              });
+              
+              return (
               <motion.div
                 key={level.level || index}
                 initial={{ opacity: 0, y: 20 }}
@@ -647,9 +656,15 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                       >
                         MCQ {level.test?.score || 0}%
                       </div>
-                      <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
-                        Tasks {level.exercise?.tasks?.filter((t: Task) => t.completed).length || 0}/{level.exercise?.tasks?.length || 0}
-                      </div>
+                      {level.exercise?.tasks && level.exercise.tasks.length > 0 ? (
+                        <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                          Tasks {level.exercise.tasks.filter((t: Task) => t.completed).length}/{level.exercise.tasks.length}
+                        </div>
+                      ) : (
+                        <div className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                          No tasks
+                        </div>
+                      )}
                     </div>
                 </div>
               </div>
@@ -801,7 +816,8 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
                   </div>
                 </div>
               </motion.div>
-            ))}
+              );
+            })}
             </div>
         </div>
       </div>
