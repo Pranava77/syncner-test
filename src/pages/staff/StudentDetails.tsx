@@ -600,12 +600,6 @@ const StudentDetails: React.FC = () => {
             >
               {getAttendanceLabel(studentData?.attendancePercentage || 0)}
             </p>
-            <p 
-              className="text-xs mt-1"
-              style={{ color: 'var(--color-text-muted)' }}
-            >
-              {studentData.presentDays}/{studentData.totalDays} days • Streak: {studentData.currentStreak}
-            </p>
           </div>
         </div>
 
@@ -640,12 +634,6 @@ const StudentDetails: React.FC = () => {
             >
               {getProgressLabel(studentData?.progress || 0)}
             </p>
-            <p 
-              className="text-xs mt-1"
-              style={{ color: 'var(--color-text-muted)' }}
-            >
-              Level {studentData?.currentLevel || 1} • {studentData?.completedLevels || 0}/{studentData?.totalLevels || 0} completed
-            </p>
           </div>
         </div>
 
@@ -679,12 +667,6 @@ const StudentDetails: React.FC = () => {
               style={{ color: 'var(--color-accent-primary)' }}
             >
               {getLeaderboardLabel(studentData?.leaderboardScore || 0)}
-            </p>
-            <p 
-              className="text-xs mt-1"
-              style={{ color: 'var(--color-text-muted)' }}
-            >
-              {studentData.leaderboardRank ? `Rank: ${studentData.leaderboardRank}` : 'No rank yet'}
             </p>
           </div>
         </div>
