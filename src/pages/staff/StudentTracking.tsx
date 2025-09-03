@@ -3,17 +3,13 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
   PersonIcon,
-  BarChartIcon,
-  CheckCircledIcon,
   ClockIcon,
-  StarIcon,
   MagnifyingGlassIcon,
   StarFilledIcon,
   ChevronLeftIcon,
   ChevronRightIcon
 } from '@radix-ui/react-icons';
 import { useStaff } from '../../hooks/useStaff';
-import syncnerLogo from '../../assets/syncner-logo.png';
 
 const StudentTracking: React.FC = () => {
   const navigate = useNavigate();
@@ -240,7 +236,7 @@ const StudentTracking: React.FC = () => {
                     Student
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-text-secondary)' }}>
-                    Track & Level
+                    Track
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-text-secondary)' }}>
                     Progress
@@ -282,31 +278,36 @@ const StudentTracking: React.FC = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div>
-                        <div className="font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                          {student.careerTrack}
-                        </div>
-                        <div className="text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
-                          {student.level}
-                        </div>
+                      <div className="font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                        {student.careerTrack === 'full-stack' ? 'Full Stack Development' : 
+                         student.careerTrack === 'ai-ml' ? 'AI & Machine Learning' :
+                         student.careerTrack === 'ui-ux' ? 'UI/UX Design' :
+                         student.careerTrack === 'data-science' ? 'Data Science' :
+                         student.careerTrack}
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="flex items-center">
-                        <div className="flex-1 mr-3">
-                          <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div
-                              className="h-2 rounded-full transition-all duration-300"
-                              style={{
-                                width: `${student.progress}%`,
-                                backgroundColor: getProgressColor(student.progress)
-                              }}
-                            />
-                          </div>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                            {student.progress}%
+                          </span>
+                          <span className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
+                            Complete
+                          </span>
                         </div>
-                        <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                          {student.progress}%
-                        </span>
+                        <div 
+                          className="w-full rounded-full h-2 overflow-hidden"
+                          style={{ backgroundColor: 'var(--color-border)' }}
+                        >
+                          <div
+                            className="h-full rounded-full transition-all duration-500 ease-out"
+                            style={{
+                              width: `${student.progress}%`,
+                              backgroundColor: getProgressColor(student.progress)
+                            }}
+                          />
+                        </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
