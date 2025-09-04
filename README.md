@@ -1,192 +1,247 @@
-# Syncner - College Career Platform
+# Syncner - Learning Management System
 
-A comprehensive learning management system built with React, TypeScript, and Node.js for college students to track their career development and learning progress.
+## 🎯 Project Overview
 
-## 🚀 Recent Fixes & Improvements
+Syncner is a comprehensive Learning Management System (LMS) designed to provide an interactive and engaging learning experience for students across multiple career tracks. The platform offers structured learning paths, progress tracking, portfolio management, and administrative tools for educational institutions.
 
-### Critical Issues Fixed:
-- ✅ **Fixed missing `useCallback` import** in `LevelStatus.tsx`
-- ✅ **Standardized career track naming** across the entire application
-- ✅ **Added proper TypeScript types** for all interfaces (LearnItem, TestItem, ExerciseItem)
-- ✅ **Improved error handling** in backend controllers with proper validation
-- ✅ **Enhanced JWT token verification** with better security checks
-- ✅ **Added environment variable validation** to prevent startup issues
-- ✅ **Created ErrorBoundary component** for graceful error handling
-- ✅ **Improved API service** with comprehensive error handling
-- ✅ **Fixed Vercel deployment configuration** for proper SPA routing
-- ✅ **Added example environment file** for easy setup
+## ✨ Key Features
 
-## 🛠️ Tech Stack
+### 🎓 For Students
+- **Interactive Learning Paths**: Structured curriculum with Learn, Test, and Exercise sections
+- **Progress Tracking**: Real-time progress monitoring with visual indicators
+- **Portfolio Management**: Dynamic portfolio generation with shareable links
+- **AI Career Mentor**: Integrated AI chat for learning assistance
+- **Attendance Tracking**: Automated attendance marking and streak tracking
+- **Leaderboard**: Gamified learning with rankings and achievements
+
+### 👨‍🏫 For Staff
+- **Student Management**: Comprehensive student tracking and analytics
+- **Progress Monitoring**: Detailed learning journey visualization
+- **Portfolio Review**: Access to student portfolios and progress reports
+- **Analytics Dashboard**: Performance metrics and insights
+- **Attendance Management**: Track student attendance and engagement
+
+### 🔧 For Administrators
+- **User Management**: Complete user lifecycle management
+- **Curriculum Management**: Create and manage learning content
+- **System Analytics**: Platform-wide performance metrics
+- **Settings Configuration**: System-wide settings and preferences
+- **Content Management**: Manage learning materials, tests, and exercises
+
+## 🏗️ Technical Architecture
 
 ### Frontend
-- **React 18** with TypeScript
-- **Redux Toolkit** for state management
-- **Tailwind CSS** for styling
-- **Framer Motion** for animations
-- **React Router** for navigation
-- **Radix UI** for accessible components
+- **Framework**: React 18 with TypeScript
+- **State Management**: Redux Toolkit
+- **Styling**: Tailwind CSS with custom design system
+- **Animations**: Framer Motion
+- **Routing**: React Router v6
+- **Build Tool**: Vite
 
 ### Backend
-- **Node.js** with Express.js
-- **MongoDB** with Mongoose ODM
-- **JWT** for authentication
-- **bcryptjs** for password hashing
-- **Express Validator** for input validation
+- **Runtime**: Node.js with Express.js
+- **Database**: MongoDB with Mongoose ODM
+- **Authentication**: JWT-based authentication
+- **File Storage**: Local file system with upload capabilities
+- **AI Integration**: Google Gemini API for AI chat functionality
 
-## 📋 Prerequisites
-
-- Node.js (v16 or higher)
-- MongoDB (local or cloud instance)
-- npm or yarn package manager
+### Key Technologies
+- **Frontend**: React, TypeScript, Redux Toolkit, Tailwind CSS, Framer Motion
+- **Backend**: Node.js, Express.js, MongoDB, Mongoose, JWT
+- **AI**: Google Gemini API
+- **Deployment**: Vercel (Frontend), Render (Backend)
 
 ## 🚀 Quick Start
 
-### 1. Clone the Repository
-```bash
-git clone <repository-url>
-cd syncner-test
-```
+### Prerequisites
+- Node.js 18+ 
+- MongoDB 6+
+- npm or yarn
 
-### 2. Backend Setup
-```bash
-cd backend
+### Installation
 
-# Install dependencies
-npm install
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd syncner
+   ```
 
-# Copy environment file
-cp env.example .env
+2. **Install dependencies**
+   ```bash
+   # Frontend
+   cd src
+   npm install
+   
+   # Backend
+   cd ../backend
+   npm install
+   ```
 
-# Edit .env file with your configuration
-# Required variables:
-# - MONGODB_URI
-# - JWT_SECRET
-# - JWT_EXPIRE (optional, defaults to 7d)
-# - NODE_ENV (optional, defaults to development)
+3. **Environment Setup**
+   ```bash
+   # Backend environment variables
+   cp backend/.env.example backend/.env
+   # Edit backend/.env with your configuration
+   ```
 
-# Start development server
-npm run dev
-```
+4. **Database Setup**
+   ```bash
+   # Start MongoDB
+   mongod
+   
+   # Run database migrations (if any)
+   cd backend
+   node migrations/fixCareerTracks.js
+   ```
 
-### 3. Frontend Setup
-```bash
-# From the root directory
-npm install
+5. **Start Development Servers**
+   ```bash
+   # Backend (Terminal 1)
+   cd backend
+   npm run dev
+   
+   # Frontend (Terminal 2)
+   cd src
+   npm run dev
+   ```
 
-# Start development server
-npm run dev
-```
-
-### 4. Database Setup
-```bash
-# Optional: Seed the database with sample data
-cd backend
-npm run sample
-```
-
-## 🔧 Environment Configuration
-
-### Backend (.env)
-```env
-# Database Configuration
-MONGODB_URI=mongodb://localhost:27017/syncner
-
-# JWT Configuration
-JWT_SECRET=your-super-secret-jwt-key-here
-JWT_EXPIRE=7d
-
-# Server Configuration
-PORT=5000
-NODE_ENV=development
-
-# CORS Configuration
-CORS_ORIGIN=http://localhost:5173
-
-# Gemini AI Configuration (optional)
-GEMINI_API_KEY=your-gemini-api-key-here
-```
+6. **Access the Application**
+   - Frontend: http://localhost:5173
+   - Backend API: http://localhost:5000
 
 ## 📁 Project Structure
 
 ```
-syncner-test/
-├── backend/                 # Backend API
-│   ├── controllers/         # Route controllers
-│   ├── middleware/          # Custom middleware
-│   ├── models/             # MongoDB schemas
-│   ├── routes/             # API routes
-│   ├── services/           # Business logic
-│   └── utils/              # Utility functions
-├── src/                    # Frontend React app
-│   ├── components/         # Reusable components
-│   ├── hooks/              # Custom React hooks
-│   ├── pages/              # Page components
-│   ├── redux/              # Redux store and slices
-│   ├── services/           # API service layer
-│   └── utils/              # Utility functions
-└── public/                 # Static assets
+syncner/
+├── src/                          # Frontend React application
+│   ├── components/              # Reusable UI components
+│   ├── pages/                   # Page components
+│   ├── redux/                   # State management
+│   ├── services/                # API services
+│   ├── hooks/                   # Custom React hooks
+│   ├── utils/                   # Utility functions
+│   └── types/                   # TypeScript type definitions
+├── backend/                     # Backend Node.js application
+│   ├── controllers/             # Route controllers
+│   ├── models/                  # Database models
+│   ├── routes/                  # API routes
+│   ├── middleware/              # Custom middleware
+│   ├── services/                # Business logic services
+│   ├── utils/                   # Utility functions
+│   └── migrations/              # Database migrations
+└── docs/                        # Documentation
+    ├── API.md                   # API documentation
+    ├── DEPLOYMENT.md            # Deployment guide
+    ├── USER_MANUAL.md           # User manual
+    └── TROUBLESHOOTING.md       # Troubleshooting guide
 ```
 
-## 🔐 Authentication & Authorization
+## 🔐 User Roles & Permissions
 
-The application supports three user roles:
-- **Student**: Access to learning modules, progress tracking
-- **Admin**: Full system access, user management, curriculum management
-- **Staff**: Limited access (placeholder for future features)
+### Student
+- Access to learning materials and curriculum
+- Submit tests and exercises
+- View personal progress and portfolio
+- Access AI chat assistance
 
-## 📚 API Endpoints
+### Staff
+- View student progress and analytics
+- Access student portfolios
+- Monitor attendance and engagement
+- Generate reports
 
-### Authentication
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
-- `GET /api/auth/profile` - Get user profile
-- `PUT /api/auth/profile` - Update user profile
+### Admin
+- Full system access
+- User management (create, edit, delete)
+- Curriculum management
+- System configuration
+- Analytics and reporting
 
-### Training & Curriculum
-- `GET /api/training/levels` - Get all training levels
-- `GET /api/training/levels/:id` - Get specific level
-- `GET /api/curriculum` - Get curriculum items (admin)
-- `POST /api/curriculum` - Create curriculum item (admin)
+## 🎨 Design System
 
-### Admin Operations
-- `GET /api/admin/users` - Get all users
-- `POST /api/admin/users` - Create user
-- `GET /api/admin/analytics` - Get system analytics
+The application uses a custom design system with:
+- **Color Palette**: Primary, secondary, accent colors with dark/light mode support
+- **Typography**: Consistent font hierarchy and sizing
+- **Components**: Reusable UI components with consistent styling
+- **Responsive Design**: Mobile-first approach with breakpoints
+
+## 🔧 Configuration
+
+### Environment Variables
+
+#### Backend (.env)
+```env
+NODE_ENV=development
+PORT=5000
+MONGODB_URI=mongodb://localhost:27017/syncner
+JWT_SECRET=your-jwt-secret
+JWT_EXPIRE=30d
+GEMINI_API_KEY=your-gemini-api-key
+```
+
+#### Frontend (.env)
+```env
+VITE_API_URL=http://localhost:5000
+VITE_APP_NAME=Syncner
+```
+
+## 📊 Database Schema
+
+### Core Models
+- **User**: Student, staff, and admin user accounts
+- **Curriculum**: Learning content and levels
+- **UserProgress**: Student progress tracking
+- **Attendance**: Attendance records
+- **Settings**: System configuration
 
 ## 🚀 Deployment
 
-### Frontend (Vercel)
-```bash
-npm run build
-# Deploy to Vercel using their CLI or dashboard
-```
+### Production Deployment
+1. **Frontend (Vercel)**
+   - Connect GitHub repository
+   - Configure build settings
+   - Set environment variables
 
-### Backend (Vercel/Render)
-```bash
-# The backend is configured for Vercel deployment
-# vercel.json is already configured
-```
+2. **Backend (Render)**
+   - Connect GitHub repository
+   - Configure build and start commands
+   - Set environment variables
+   - Configure MongoDB Atlas connection
 
-## 🐛 Troubleshooting
+### Environment Setup
+- Production MongoDB: MongoDB Atlas
+- File Storage: Local storage or cloud storage
+- SSL: Automatic with Vercel/Render
 
-### Common Issues
+## 📈 Performance & Monitoring
 
-1. **MongoDB Connection Error**
-   - Ensure MongoDB is running
-   - Check MONGODB_URI in .env file
-   - Verify network connectivity
+### Performance Optimizations
+- Code splitting and lazy loading
+- Image optimization
+- Caching strategies
+- Database indexing
 
-2. **JWT Token Issues**
-   - Ensure JWT_SECRET is set in .env
-   - Check token expiration settings
+### Monitoring
+- Error tracking and logging
+- Performance metrics
+- User analytics
+- System health monitoring
 
-3. **CORS Errors**
-   - Verify CORS_ORIGIN in backend .env
-   - Check frontend API base URL
+## 🔒 Security Features
 
-4. **Missing Dependencies**
-   - Run `npm install` in both frontend and backend
-   - Clear node_modules and reinstall if needed
+- JWT-based authentication
+- Role-based access control
+- Input validation and sanitization
+- CORS configuration
+- Rate limiting
+- Secure file uploads
+
+## 📱 Browser Support
+
+- Chrome 90+
+- Firefox 88+
+- Safari 14+
+- Edge 90+
 
 ## 🤝 Contributing
 
@@ -198,15 +253,22 @@ npm run build
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+This project is proprietary software. All rights reserved.
 
-## 🆘 Support
+## 📞 Support
 
-For support and questions:
-- Check the troubleshooting section above
-- Review the API documentation
-- Create an issue in the repository
+For technical support or questions:
+- Email: support@syncner.com
+- Documentation: See `/docs` folder
+- Issues: Create GitHub issues for bugs
+
+## 🔄 Version History
+
+- **v1.0.0** - Initial release with core features
+- **v1.1.0** - Added AI chat integration
+- **v1.2.0** - Enhanced portfolio system
+- **v1.3.0** - Improved analytics and reporting
 
 ---
 
-**Note**: This application is designed for educational purposes and may require additional security measures for production use.
+**Built with ❤️ for modern education**
