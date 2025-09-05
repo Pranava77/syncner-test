@@ -11,9 +11,6 @@ import { groupCurriculumIntoLevels } from '../utils/levelUtils.js';
 // @access  Private
 export const getAllLevels = async (req, res) => {
   try {
-    console.log('Training controller: getAllLevels called');
-    console.log('Training controller: User:', req.user);
-    console.log('Training controller: Query params:', req.query);
     
     const { track } = req.query;
     const filter = { isActive: true };
@@ -36,13 +33,11 @@ export const getAllLevels = async (req, res) => {
     // Ensure deterministic ordering within a level: first by level order, then by creation time
     const curriculumItems = await Curriculum.find(filter).sort({ order: 1, createdAt: 1 });
     
-    console.log(`Found ${curriculumItems.length} curriculum items for filter:`, filter);
     
     // Group curriculum items into levels
     let levels = [];
     if (curriculumItems && curriculumItems.length > 0) {
       levels = groupCurriculumIntoLevels(curriculumItems);
-      console.log(`Grouped into ${levels.length} levels from curriculum items`);
     }
     
     // Sort by order and filter active ones
@@ -50,11 +45,9 @@ export const getAllLevels = async (req, res) => {
       .filter(level => level.isActive)
       .sort((a, b) => a.order - b.order);
     
-    console.log(`Final result: ${finalLevels.length} levels:`, finalLevels.map(l => ({ id: l.id, title: l.title, careerTrack: l.careerTrack })));
 
     res.status(200).json({ success: true, data: finalLevels });
   } catch (error) {
-    console.error('Get all levels error:', error);
     res.status(500).json({ 
       success: false, 
       message: 'Server error while fetching levels',
@@ -68,7 +61,6 @@ export const getAllLevels = async (req, res) => {
 // @access  Private
 export const getLevelById = async (req, res) => {
   try {
-    console.log('Training controller: getLevelById called with ID:', req.params.id);
     
     const { id } = req.params;
     
@@ -83,19 +75,12 @@ export const getLevelById = async (req, res) => {
     const representativeItem = await Curriculum.findById(id);
 
     if (!representativeItem) {
-      console.log('Training controller: No curriculum item found with ID:', id);
       return res.status(404).json({ 
         success: false, 
         message: 'Level not found' 
       });
     }
 
-    console.log('Training controller: Found representative item:', {
-      id: representativeItem._id,
-      title: representativeItem.title,
-      careerTrack: representativeItem.careerTrack,
-      type: representativeItem.type
-    });
 
     // Find all items that constitute this level (same order and career track)
     const curriculumItems = await Curriculum.find({
@@ -104,7 +89,6 @@ export const getLevelById = async (req, res) => {
       isActive: true
     }).sort({ order: 'asc' });
 
-    console.log('Training controller: Found curriculum items for level:', curriculumItems.length);
 
     if (!curriculumItems || curriculumItems.length === 0) {
       return res.status(404).json({ 
@@ -124,18 +108,9 @@ export const getLevelById = async (req, res) => {
     }
 
     const level = levels[0];
-    console.log('Training controller: Returning level:', {
-      id: level.id,
-      title: level.title,
-      careerTrack: level.careerTrack,
-      learnCount: level.learn.length,
-      testCount: level.test.length,
-      exerciseCount: level.exercise.length
-    });
 
     res.status(200).json({ success: true, data: level });
   } catch (error) {
-    console.error('Get level by ID error:', error);
     res.status(500).json({ 
       success: false, 
       message: 'Server error while fetching level',

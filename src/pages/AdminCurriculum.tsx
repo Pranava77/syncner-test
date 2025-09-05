@@ -371,7 +371,6 @@ const AdminCurriculum: React.FC = () => {
         }
       }
     } catch (error) {
-      console.error('Error submitting level:', error);
       const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
       setFormError(errorMessage);
     } finally {
@@ -397,7 +396,6 @@ const AdminCurriculum: React.FC = () => {
           setError(response.message || 'Failed to delete level');
         }
       } catch (error) {
-        console.error('Error deleting level:', error);
         const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
         setError(errorMessage);
       } finally {
@@ -447,7 +445,6 @@ const AdminCurriculum: React.FC = () => {
           setError(result.message);
         }
       } catch (error) {
-        console.error('Error deleting content:', error);
         setError('Failed to delete content');
       } finally {
         setLoadingOpen(false);

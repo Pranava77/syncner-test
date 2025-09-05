@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>API_ENDPOINTS_SUMMARY.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="syncner-learning-management-system---api-endpoints-summary">Syncner Learning Management System - API Endpoints Summary</h1>
+<h2 id="document-information">Document Information</h2>
+<ul>
+<li><strong>Version</strong>: 1.0</li>
+<li><strong>Date</strong>: September 2025</li>
+<li><strong>Author</strong>: Pranav Holla -- WEBFIXUS</li>
+<li><strong>Status</strong>: Production Ready</li>
+</ul>
+<h2 id="complete-api-endpoints-overview">Complete API Endpoints Overview</h2>
+<pre><code class="language-mermaid"><div class="mermaid">graph TB
+    subgraph "🔐 Authentication (8 endpoints)"
+        A1[POST /api/auth/register]
+        A2[POST /api/auth/login]
+        A3[POST /api/auth/logout]
+        A4[GET /api/auth/profile]
+        A5[PUT /api/auth/profile]
+        A6[POST /api/auth/forgot-password]
+        A7[POST /api/auth/reset-password]
+        A8[GET /api/auth/health]
+    end
+    
+    subgraph "👤 User Management (4 endpoints)"
+        U1[GET /api/users/profile]
+        U2[PUT /api/users/profile]
+        U3[GET /api/users/]
+        U4[GET /api/users/health]
+    end
+    
+    subgraph "🎓 Student (3 endpoints)"
+        ST1[GET /api/student/portfolio/me]
+        ST2[GET /api/student/portfolio/:studentId]
+        ST3[GET /api/student/portfolio/public/:studentId]
+    end
+    
+    subgraph "👨‍🏫 Staff (6 endpoints)"
+        S1[GET /api/staff/students]
+        S2[GET /api/staff/students/:id]
+        S3[GET /api/staff/analytics]
+        S4[GET /api/staff/leaderboard]
+        S5[GET /api/staff/leaderboard/:careerTrack]
+        S6[GET /api/staff/test/:id]
+    end
+    
+    subgraph "⚙️ Admin (12 endpoints)"
+        AD1[GET /api/admin/users]
+        AD2[POST /api/admin/users]
+        AD3[PUT /api/admin/users/:id]
+        AD4[DELETE /api/admin/users/:id]
+        AD5[POST /api/admin/users/:id/reset-password]
+        AD6[GET /api/admin/analytics]
+        AD7[GET /api/admin/level-progress]
+        AD8[GET /api/admin/health]
+        AD9[GET /api/admin/diagnostics]
+        AD10[GET /api/admin/check-progress-orders]
+        AD11[POST /api/admin/fix-progress-orders]
+        AD12[POST /api/admin/cleanup-orphaned-progress]
+    end
+    
+    subgraph "📚 Curriculum (18 endpoints)"
+        C1[GET /api/curriculum]
+        C2[POST /api/curriculum]
+        C3[GET /api/curriculum/:id]
+        C4[PUT /api/curriculum/:id]
+        C5[DELETE /api/curriculum/:id]
+        C6[PATCH /api/curriculum/:id/toggle]
+        C7[GET /api/curriculum/stats]
+        C8[POST /api/curriculum/invalidate-cache]
+        C9[PUT /api/curriculum/bulk-order]
+        C10[DELETE /api/curriculum/level]
+        C11[PUT /api/curriculum/level/reorder]
+        C12[GET /api/curriculum/type/:type/track/:careerTrack]
+        C13[GET /api/curriculum/content/:type]
+        C14[GET /api/curriculum/content/:type/track/:careerTrack]
+        C15[POST /api/curriculum/content]
+        C16[PUT /api/curriculum/content/:id]
+        C17[DELETE /api/curriculum/content/:id]
+        C18[GET /api/curriculum/health]
+    end
+    
+    subgraph "📊 Progress (12 endpoints)"
+        PR1[GET /api/progress/:careerTrack]
+        PR2[GET /api/progress/levels-status]
+        PR3[GET /api/progress/unlocked/:levelOrder]
+        PR4[GET /api/progress/test-unlocked/:levelId]
+        PR5[GET /api/progress/exercise-unlocked/:levelId]
+        PR6[GET /api/progress/exercise-links/:levelId]
+        PR7[GET /api/progress/level-sections/:levelId]
+        PR8[POST /api/progress/complete]
+        PR9[POST /api/progress/learn-progress]
+        PR10[POST /api/progress/test-attempt]
+        PR11[POST /api/progress/submit-exercise]
+        PR12[PUT /api/progress/update-exercise]
+    end
+    
+    subgraph "🏫 Training (3 endpoints)"
+        T1[GET /api/training/levels]
+        T2[GET /api/training/levels/:id]
+        T3[GET /api/training/health]
+    end
+    
+    subgraph "📅 Attendance (3 endpoints)"
+        AT1[POST /api/attendance/mark]
+        AT2[GET /api/attendance/:userId]
+        AT3[GET /api/attendance/stats/:userId]
+    end
+    
+    subgraph "🤖 AI (2 endpoints)"
+        AI1[POST /api/ai/chat]
+        AI2[GET /api/ai/health]
+    end
+    
+    subgraph "⚙️ Settings (3 endpoints)"
+        SET1[GET /api/admin/settings]
+        SET2[PUT /api/admin/settings]
+        SET3[GET /api/admin/settings/health]
+    end
+    
+    subgraph "🎯 Track (3 endpoints)"
+        TR1[GET /api/tracks]
+        TR2[GET /api/tracks/:id]
+        TR3[GET /api/tracks/health]
+    end
+    
+    subgraph "🏥 Health (9 endpoints)"
+        H1[GET /api/health]
+        H2[GET /api/auth/health]
+        H3[GET /api/users/health]
+        H4[GET /api/tracks/health]
+        H5[GET /api/training/health]
+        H6[GET /api/admin/health]
+        H7[GET /api/admin/settings/health]
+        H8[GET /api/ai/health]
+        H9[GET /api/curriculum/health]
+    end
+    
+    subgraph "🌍 Public (1 endpoint)"
+        PUB1[GET /api/student/portfolio/public/:studentId]
+    end
+    
+    subgraph "📁 Upload (1 endpoint)"
+        F1[POST /api/upload]
+    end
+    
+    %% Styling
+    style A1 fill:#e1f5fe
+    style U1 fill:#e8f5e8
+    style ST1 fill:#fff3e0
+    style S1 fill:#f3e5f5
+    style AD1 fill:#fce4ec
+    style C1 fill:#fff8e1
+    style PR1 fill:#e0f2f1
+    style T1 fill:#f1f8e9
+    style AT1 fill:#fce4ec
+    style AI1 fill:#e8eaf6
+    style SET1 fill:#fff3e0
+    style TR1 fill:#e0f2f1
+    style H1 fill:#f3e5f5
+    style PUB1 fill:#e1f5fe
+    style F1 fill:#fff8e1
+</div></code></pre>
+<h2 id="api-endpoints-by-category">API Endpoints by Category</h2>
+<h3 id="%F0%9F%94%90-authentication-8-endpoints">🔐 Authentication (8 endpoints)</h3>
+<ul>
+<li><strong>POST</strong> <code>/api/auth/register</code> - User registration</li>
+<li><strong>POST</strong> <code>/api/auth/login</code> - User login</li>
+<li><strong>POST</strong> <code>/api/auth/logout</code> - User logout</li>
+<li><strong>GET</strong> <code>/api/auth/profile</code> - Get user profile</li>
+<li><strong>PUT</strong> <code>/api/auth/profile</code> - Update user profile</li>
+<li><strong>POST</strong> <code>/api/auth/forgot-password</code> - Request password reset</li>
+<li><strong>POST</strong> <code>/api/auth/reset-password</code> - Reset password</li>
+<li><strong>GET</strong> <code>/api/auth/health</code> - Auth service health check</li>
+</ul>
+<h3 id="%F0%9F%91%A4-user-management-4-endpoints">👤 User Management (4 endpoints)</h3>
+<ul>
+<li><strong>GET</strong> <code>/api/users/profile</code> - Get user profile</li>
+<li><strong>PUT</strong> <code>/api/users/profile</code> - Update user profile</li>
+<li><strong>GET</strong> <code>/api/users/</code> - Get all users (admin)</li>
+<li><strong>GET</strong> <code>/api/users/health</code> - Users service health check</li>
+</ul>
+<h3 id="%F0%9F%8E%93-student-3-endpoints">🎓 Student (3 endpoints)</h3>
+<ul>
+<li><strong>GET</strong> <code>/api/student/portfolio/me</code> - Get current student's portfolio</li>
+<li><strong>GET</strong> <code>/api/student/portfolio/:studentId</code> - Get specific student's portfolio</li>
+<li><strong>GET</strong> <code>/api/student/portfolio/public/:studentId</code> - Get public portfolio</li>
+</ul>
+<h3 id="%F0%9F%91%A8%E2%80%8D%F0%9F%8F%AB-staff-6-endpoints">👨‍🏫 Staff (6 endpoints)</h3>
+<ul>
+<li><strong>GET</strong> <code>/api/staff/students</code> - Get all students with filters</li>
+<li><strong>GET</strong> <code>/api/staff/students/:id</code> - Get detailed student information</li>
+<li><strong>GET</strong> <code>/api/staff/analytics</code> - Get staff analytics data</li>
+<li><strong>GET</strong> <code>/api/staff/leaderboard</code> - Get overall leaderboard</li>
+<li><strong>GET</strong> <code>/api/staff/leaderboard/:careerTrack</code> - Get track-specific leaderboard</li>
+<li><strong>GET</strong> <code>/api/staff/test/:id</code> - Get test details</li>
+</ul>
+<h3 id="%E2%9A%99%EF%B8%8F-admin-12-endpoints">⚙️ Admin (12 endpoints)</h3>
+<ul>
+<li><strong>GET</strong> <code>/api/admin/users</code> - Get all users with management</li>
+<li><strong>POST</strong> <code>/api/admin/users</code> - Create new user</li>
+<li><strong>PUT</strong> <code>/api/admin/users/:id</code> - Update user</li>
+<li><strong>DELETE</strong> <code>/api/admin/users/:id</code> - Delete user</li>
+<li><strong>POST</strong> <code>/api/admin/users/:id/reset-password</code> - Reset user password</li>
+<li><strong>GET</strong> <code>/api/admin/analytics</code> - Get admin analytics</li>
+<li><strong>GET</strong> <code>/api/admin/level-progress</code> - Get level progress analytics</li>
+<li><strong>GET</strong> <code>/api/admin/health</code> - Admin service health check</li>
+<li><strong>GET</strong> <code>/api/admin/diagnostics</code> - System diagnostics</li>
+<li><strong>GET</strong> <code>/api/admin/check-progress-orders</code> - Check progress consistency</li>
+<li><strong>POST</strong> <code>/api/admin/fix-progress-orders</code> - Fix progress issues</li>
+<li><strong>POST</strong> <code>/api/admin/cleanup-orphaned-progress</code> - Cleanup orphaned data</li>
+</ul>
+<h3 id="%F0%9F%93%9A-curriculum-18-endpoints">📚 Curriculum (18 endpoints)</h3>
+<ul>
+<li><strong>GET</strong> <code>/api/curriculum</code> - Get all curriculum items</li>
+<li><strong>POST</strong> <code>/api/curriculum</code> - Create curriculum item</li>
+<li><strong>GET</strong> <code>/api/curriculum/:id</code> - Get curriculum item by ID</li>
+<li><strong>PUT</strong> <code>/api/curriculum/:id</code> - Update curriculum item</li>
+<li><strong>DELETE</strong> <code>/api/curriculum/:id</code> - Delete curriculum item</li>
+<li><strong>PATCH</strong> <code>/api/curriculum/:id/toggle</code> - Toggle curriculum status</li>
+<li><strong>GET</strong> <code>/api/curriculum/stats</code> - Get curriculum statistics</li>
+<li><strong>POST</strong> <code>/api/curriculum/invalidate-cache</code> - Invalidate cache</li>
+<li><strong>PUT</strong> <code>/api/curriculum/bulk-order</code> - Update bulk order</li>
+<li><strong>DELETE</strong> <code>/api/curriculum/level</code> - Delete level by track and order</li>
+<li><strong>PUT</strong> <code>/api/curriculum/level/reorder</code> - Reorder levels</li>
+<li><strong>GET</strong> <code>/api/curriculum/type/:type/track/:careerTrack</code> - Get by type and track</li>
+<li><strong>GET</strong> <code>/api/curriculum/content/:type</code> - Get content by type</li>
+<li><strong>GET</strong> <code>/api/curriculum/content/:type/track/:careerTrack</code> - Get content by type and track</li>
+<li><strong>POST</strong> <code>/api/curriculum/content</code> - Create content item</li>
+<li><strong>PUT</strong> <code>/api/curriculum/content/:id</code> - Update content item</li>
+<li><strong>DELETE</strong> <code>/api/curriculum/content/:id</code> - Delete content item</li>
+<li><strong>GET</strong> <code>/api/curriculum/health</code> - Curriculum service health check</li>
+</ul>
+<h3 id="%F0%9F%93%8A-progress-12-endpoints">📊 Progress (12 endpoints)</h3>
+<ul>
+<li><strong>GET</strong> <code>/api/progress/:careerTrack</code> - Get user progress for track</li>
+<li><strong>GET</strong> <code>/api/progress/levels-status</code> - Get levels status</li>
+<li><strong>GET</strong> <code>/api/progress/unlocked/:levelOrder</code> - Check if level is unlocked</li>
+<li><strong>GET</strong> <code>/api/progress/test-unlocked/:levelId</code> - Check if test is unlocked</li>
+<li><strong>GET</strong> <code>/api/progress/exercise-unlocked/:levelId</code> - Check if exercise is unlocked</li>
+<li><strong>GET</strong> <code>/api/progress/exercise-links/:levelId</code> - Get exercise links</li>
+<li><strong>GET</strong> <code>/api/progress/level-sections/:levelId</code> - Get level sections status</li>
+<li><strong>POST</strong> <code>/api/progress/complete</code> - Mark level as completed</li>
+<li><strong>POST</strong> <code>/api/progress/learn-progress</code> - Update learning progress</li>
+<li><strong>POST</strong> <code>/api/progress/test-attempt</code> - Submit test attempt</li>
+<li><strong>POST</strong> <code>/api/progress/submit-exercise</code> - Submit exercise</li>
+<li><strong>PUT</strong> <code>/api/progress/update-exercise</code> - Update exercise submission</li>
+</ul>
+<h3 id="%F0%9F%8F%AB-training-3-endpoints">🏫 Training (3 endpoints)</h3>
+<ul>
+<li><strong>GET</strong> <code>/api/training/levels</code> - Get all training levels</li>
+<li><strong>GET</strong> <code>/api/training/levels/:id</code> - Get specific training level</li>
+<li><strong>GET</strong> <code>/api/training/health</code> - Training service health check</li>
+</ul>
+<h3 id="%F0%9F%93%85-attendance-3-endpoints">📅 Attendance (3 endpoints)</h3>
+<ul>
+<li><strong>POST</strong> <code>/api/attendance/mark</code> - Mark attendance</li>
+<li><strong>GET</strong> <code>/api/attendance/:userId</code> - Get user attendance</li>
+<li><strong>GET</strong> <code>/api/attendance/stats/:userId</code> - Get attendance statistics</li>
+</ul>
+<h3 id="%F0%9F%A4%96-ai-2-endpoints">🤖 AI (2 endpoints)</h3>
+<ul>
+<li><strong>POST</strong> <code>/api/ai/chat</code> - Chat with AI</li>
+<li><strong>GET</strong> <code>/api/ai/health</code> - AI service health check</li>
+</ul>
+<h3 id="%E2%9A%99%EF%B8%8F-settings-3-endpoints">⚙️ Settings (3 endpoints)</h3>
+<ul>
+<li><strong>GET</strong> <code>/api/admin/settings</code> - Get platform settings</li>
+<li><strong>PUT</strong> <code>/api/admin/settings</code> - Update platform settings</li>
+<li><strong>GET</strong> <code>/api/admin/settings/health</code> - Settings service health check</li>
+</ul>
+<h3 id="%F0%9F%8E%AF-track-3-endpoints">🎯 Track (3 endpoints)</h3>
+<ul>
+<li><strong>GET</strong> <code>/api/tracks</code> - Get all career tracks</li>
+<li><strong>GET</strong> <code>/api/tracks/:id</code> - Get specific career track</li>
+<li><strong>GET</strong> <code>/api/tracks/health</code> - Tracks service health check</li>
+</ul>
+<h3 id="%F0%9F%8F%A5-health-9-endpoints">🏥 Health (9 endpoints)</h3>
+<ul>
+<li><strong>GET</strong> <code>/api/health</code> - Main health check</li>
+<li><strong>GET</strong> <code>/api/auth/health</code> - Auth service health</li>
+<li><strong>GET</strong> <code>/api/users/health</code> - Users service health</li>
+<li><strong>GET</strong> <code>/api/tracks/health</code> - Tracks service health</li>
+<li><strong>GET</strong> <code>/api/training/health</code> - Training service health</li>
+<li><strong>GET</strong> <code>/api/admin/health</code> - Admin service health</li>
+<li><strong>GET</strong> <code>/api/admin/settings/health</code> - Settings service health</li>
+<li><strong>GET</strong> <code>/api/ai/health</code> - AI service health</li>
+<li><strong>GET</strong> <code>/api/curriculum/health</code> - Curriculum service health</li>
+</ul>
+<h3 id="%F0%9F%8C%8D-public-1-endpoint">🌍 Public (1 endpoint)</h3>
+<ul>
+<li><strong>GET</strong> <code>/api/student/portfolio/public/:studentId</code> - Get public portfolio</li>
+</ul>
+<h3 id="%F0%9F%93%81-upload-1-endpoint">📁 Upload (1 endpoint)</h3>
+<ul>
+<li><strong>POST</strong> <code>/api/upload</code> - Upload file</li>
+</ul>
+<h2 id="summary-statistics">Summary Statistics</h2>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Endpoints</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Authentication</strong></td>
+<td>8</td>
+<td>User authentication and profile management</td>
+</tr>
+<tr>
+<td><strong>User Management</strong></td>
+<td>4</td>
+<td>User profile operations</td>
+</tr>
+<tr>
+<td><strong>Student</strong></td>
+<td>3</td>
+<td>Student portfolio access</td>
+</tr>
+<tr>
+<td><strong>Staff</strong></td>
+<td>6</td>
+<td>Staff management and analytics</td>
+</tr>
+<tr>
+<td><strong>Admin</strong></td>
+<td>12</td>
+<td>Administrative functions and diagnostics</td>
+</tr>
+<tr>
+<td><strong>Curriculum</strong></td>
+<td>18</td>
+<td>Course content management</td>
+</tr>
+<tr>
+<td><strong>Progress</strong></td>
+<td>12</td>
+<td>Learning progress tracking</td>
+</tr>
+<tr>
+<td><strong>Training</strong></td>
+<td>3</td>
+<td>Training level management</td>
+</tr>
+<tr>
+<td><strong>Attendance</strong></td>
+<td>3</td>
+<td>Attendance tracking</td>
+</tr>
+<tr>
+<td><strong>AI</strong></td>
+<td>2</td>
+<td>AI chat functionality</td>
+</tr>
+<tr>
+<td><strong>Settings</strong></td>
+<td>3</td>
+<td>Platform configuration</td>
+</tr>
+<tr>
+<td><strong>Track</strong></td>
+<td>3</td>
+<td>Career track management</td>
+</tr>
+<tr>
+<td><strong>Health</strong></td>
+<td>9</td>
+<td>System health monitoring</td>
+</tr>
+<tr>
+<td><strong>Public</strong></td>
+<td>1</td>
+<td>Public portfolio access</td>
+</tr>
+<tr>
+<td><strong>Upload</strong></td>
+<td>1</td>
+<td>File upload functionality</td>
+</tr>
+<tr>
+<td><strong>TOTAL</strong></td>
+<td><strong>87</strong></td>
+<td><strong>Complete API endpoint count</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="authentication-requirements">Authentication Requirements</h2>
+<h3 id="public-endpoints-no-authentication">Public Endpoints (No Authentication)</h3>
+<ul>
+<li><code>GET /api/health</code></li>
+<li><code>GET /api/auth/health</code></li>
+<li><code>GET /api/users/health</code></li>
+<li><code>GET /api/tracks/health</code></li>
+<li><code>GET /api/training/health</code></li>
+<li><code>GET /api/admin/health</code></li>
+<li><code>GET /api/admin/settings/health</code></li>
+<li><code>GET /api/ai/health</code></li>
+<li><code>GET /api/curriculum/health</code></li>
+<li><code>GET /api/student/portfolio/public/:studentId</code></li>
+</ul>
+<h3 id="protected-endpoints-authentication-required">Protected Endpoints (Authentication Required)</h3>
+<ul>
+<li>All other endpoints require JWT token in Authorization header</li>
+<li>Role-based access control for admin and staff endpoints</li>
+</ul>
+<h2 id="base-url">Base URL</h2>
+<pre class="hljs"><code><div>Production: https://syncner-test.onrender.com/api
+Development: http://localhost:5000/api
+</div></code></pre>
+<hr>
+<p><strong>Document Version</strong>: v1.0<br>
+<strong>Submitted On</strong>: September 2025</p>
+
+</body>
+</html>

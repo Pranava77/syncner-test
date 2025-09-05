@@ -139,7 +139,6 @@ router.post('/cleanup-orphaned-progress', protect, authorize('admin'), async (re
       const userExists = await User.findById(progress.user);
       
       if (!userExists) {
-        console.log(`Removing orphaned UserProgress for deleted user: ${progress.user}`);
         await UserProgress.deleteOne({ _id: progress._id });
         orphanedCount++;
         cleanedCount++;

@@ -125,17 +125,13 @@ const TrainingLevels: React.FC = () => {
   useEffect(() => {
     // Listen for curriculum changes from admin
     const handleCurriculumChange = (event: CustomEvent) => {
-      console.log('Curriculum change detected:', event.detail);
       if (event.detail.track === user?.careerTrack) {
-        console.log('Refreshing levels due to curriculum change in admin');
         refetch();
       }
     };
     
     const handleLevelsRefreshRequired = (event: CustomEvent) => {
-      console.log('Immediate refresh required:', event.detail);
       if (event.detail.track === user?.careerTrack) {
-        console.log('Force refreshing levels due to immediate refresh requirement');
         // Force immediate refresh using the enhanced function
         setTimeout(() => forceRefresh(), 100);
       }
@@ -159,7 +155,6 @@ const TrainingLevels: React.FC = () => {
     if (levels.length > 0 && currentLevel) {
       const levelExists = levels.find(level => level.id === currentLevel);
       if (!levelExists) {
-        console.log('Current level no longer exists, redirecting to first available level');
         // Redirect to the first available level
         const firstLevel = levels[0];
         if (firstLevel) {

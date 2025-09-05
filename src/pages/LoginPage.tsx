@@ -105,7 +105,6 @@ const LoginPage: React.FC = () => {
         // Generic error will still show in the main error area
       }
     } catch (error) {
-      console.error('Login error:', error);
     }
 
     // No redirect here; App.tsx will handle it

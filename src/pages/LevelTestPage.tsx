@@ -110,9 +110,6 @@ const LevelTestPage: React.FC = () => {
       if (response.success) {
         const { test } = response.data;
         
-        console.log('Test progress data:', test);
-        console.log('Test attempts array:', test.progress?.attempts);
-        console.log('Attempts length:', test.progress?.attempts?.length);
         setIsTestUnlocked(test.isUnlocked);
         setTestProgress(test.progress || { attempts: [], isCompleted: false });
         
@@ -160,20 +157,16 @@ const LevelTestPage: React.FC = () => {
   // Listen for curriculum changes from admin
   useEffect(() => {
     const handleCurriculumChange = (event: CustomEvent) => {
-      console.log('LevelTestPage: Curriculum change detected:', event.detail);
       // Check both level career track and user career track as fallback
       if (event.detail.track === level?.careerTrack || event.detail.track === user?.careerTrack) {
-        console.log('LevelTestPage: Refreshing level due to curriculum change in admin');
         // Refresh the current level data
         fetchLevel();
       }
     };
     
     const handleLevelsRefreshRequired = (event: CustomEvent) => {
-      console.log('LevelTestPage: Immediate refresh required:', event.detail);
       // Check both level career track and user career track as fallback
       if (event.detail.track === level?.careerTrack || event.detail.track === user?.careerTrack) {
-        console.log('LevelTestPage: Force refreshing level due to immediate refresh requirement');
         // Force immediate refresh
         setTimeout(() => fetchLevel(), 100);
       }
@@ -305,7 +298,6 @@ const LevelTestPage: React.FC = () => {
             window.dispatchEvent(new CustomEvent('section-completed', { detail: { section: 'test', levelId: level.id } }));
             localStorage.setItem('level-progress-updated', Date.now().toString());
           } catch (completionError) {
-            console.error('Error marking test section as completed:', completionError);
           }
         }
         
@@ -422,14 +414,12 @@ const LevelTestPage: React.FC = () => {
     if (level && levelId) {
       // If we have level data but it's not active, it might have been deleted
       if (!level.isActive) {
-        console.log('LevelTestPage: Current level is not active, redirecting to training page');
         navigate('/student/training');
         return;
       }
       
       // If the level ID doesn't match the level data, it might have been changed
       if (level.id !== levelId) {
-        console.log('LevelTestPage: Level ID mismatch, redirecting to training page');
         navigate('/student/training');
         return;
       }

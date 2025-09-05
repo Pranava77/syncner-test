@@ -16,7 +16,6 @@ const LevelStatus: React.FC<LevelStatusProps> = ({ onLevelsLoaded }) => {
     
     try {
       const response = await apiService.get('/training/levels');
-      console.log('Levels API Response:', response);
       
       let levels = [];
       if (response && response.data) {
@@ -31,7 +30,6 @@ const LevelStatus: React.FC<LevelStatusProps> = ({ onLevelsLoaded }) => {
       onLevelsLoaded(levels);
       
     } catch (error) {
-      console.error('Error checking levels:', error);
       setStatus('error');
       setMessage(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }

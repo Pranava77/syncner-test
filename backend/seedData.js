@@ -8,9 +8,7 @@ dotenv.config();
 const connectDB = async () => {
   try {
     const conn = await mongoose.connect(process.env.MONGODB_URI);
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.error('Error connecting to MongoDB:', error);
     process.exit(1);
   }
 };
@@ -21,14 +19,12 @@ const seedData = async () => {
 
     // Clear existing curriculum data
     await Curriculum.deleteMany({});
-    console.log('Cleared existing curriculum data');
 
     // Find or create an admin user for metadata
     let adminUser = await User.findOne({ role: 'admin' });
     if (!adminUser) {
       adminUser = await User.findOne({ role: 'student' });
       if (!adminUser) {
-        console.log('No users found. Please create a user first.');
         return;
       }
     }
@@ -743,18 +739,13 @@ const seedData = async () => {
 
     // Insert the curriculum data
     const curriculumItems = await Curriculum.insertMany(dummyCurriculumData);
-    console.log(`Successfully seeded ${curriculumItems.length} curriculum items`);
 
     // Log the created items for verification
-    console.log('\nCreated curriculum items:');
     curriculumItems.forEach(item => {
-      console.log(`- ${item.title} (${item.type}) - ${item.careerTrack}`);
     });
 
-    console.log('\nSeed data insertion completed successfully!');
     process.exit(0);
   } catch (error) {
-    console.error('Error seeding data:', error);
     process.exit(1);
   }
 };

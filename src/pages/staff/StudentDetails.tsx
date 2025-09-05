@@ -34,23 +34,6 @@ const StudentDetails: React.FC = () => {
   // Use selectedStudent data from backend
   const studentData = selectedStudent;
   
-  // Debug: Log the student data to see what we're receiving
-  useEffect(() => {
-    if (studentData) {
-      console.log('🔍 StudentDetails received data:', {
-        name: studentData.name,
-        careerTrack: studentData.careerTrack,
-        progress: studentData.progress,
-        currentLevel: studentData.currentLevel,
-        completedLevels: studentData.completedLevels,
-        totalLevels: studentData.totalLevels,
-        hasLearningLevels: !!studentData.learningLevels,
-        learningLevelsCount: studentData.learningLevels?.length || 0,
-        hasLearningTimeline: !!studentData.learningTimeline,
-        learningTimelineCount: studentData.learningTimeline?.length || 0
-      });
-    }
-  }, [studentData]);
 
   // Fetch student details when component mounts
   useEffect(() => {
@@ -707,7 +690,6 @@ const StudentDetails: React.FC = () => {
                  e.currentTarget.style.backgroundColor = 'var(--color-accent-primary)';
                }}
                onClick={() => {
-                 console.log('Portfolio button clicked, navigating to:', `/staff/portfolio/${studentId}`);
                  navigate(`/staff/portfolio/${studentId}`);
                }}
              >

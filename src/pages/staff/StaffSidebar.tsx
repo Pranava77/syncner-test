@@ -56,7 +56,6 @@ const StaffSidebar: React.FC = () => {
       await dispatch(logoutUser());
       navigate('/login');
     } catch (error) {
-      console.error('StaffSidebar: Logout failed:', error);
     } finally {
       setIsLoggingOut(false);
     }

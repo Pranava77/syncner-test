@@ -69,23 +69,13 @@ export class StudentTimelineService {
    * Step 2: Fetch curriculum levels for the student's career track
    */
   static async fetchCurriculumLevels(careerTrack: string) {
-    console.log('🔄 Step 2: Fetching curriculum levels for track:', careerTrack);
     try {
       const response = await apiService.getCurriculumLevels(careerTrack);
       const curriculumLevels = response.data;
       
-      console.log('✅ Step 2 Complete - Curriculum levels received:', {
-        track: careerTrack,
-        levelsCount: curriculumLevels.length,
-        levels: curriculumLevels.map((l: any) => ({ 
-          order: l.order, 
-          title: l.title 
-        }))
-      });
       
       return curriculumLevels;
     } catch (error) {
-      console.error('❌ Step 2 Failed - Curriculum fetch error:', error);
       throw new Error('Failed to fetch curriculum levels');
     }
   }

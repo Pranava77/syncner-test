@@ -296,7 +296,6 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
           url: shareUrl,
         });
       } catch (err) {
-        console.log('Error sharing:', err);
         // Fallback to copy to clipboard
         copyToClipboard(shareUrl);
       }
@@ -312,7 +311,6 @@ const StudentPortfolioContent: React.FC<StudentPortfolioProps> = ({
       // You could add a toast notification here
       alert('Portfolio link copied to clipboard!');
     } catch (err) {
-      console.error('Failed to copy: ', err);
       // Fallback for older browsers
       const textArea = document.createElement('textarea');
       textArea.value = text;

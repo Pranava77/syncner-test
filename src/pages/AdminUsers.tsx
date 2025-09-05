@@ -52,7 +52,6 @@ const AdminUsers: React.FC = () => {
         await dispatch(fetchAllUsers({ role: 'student' })).unwrap();
       } catch (err: any) {
         setError(err.message || 'Failed to load users');
-        console.error('User load error:', err);
       }
     };
     loadUsers();
@@ -96,7 +95,6 @@ const AdminUsers: React.FC = () => {
         setTimeout(() => setSuccessMessage(null), 3000);
       } catch (err: any) {
         setError(err.message || 'An error occurred while deleting user');
-        console.error('User delete error:', err);
       }
     }
   };
@@ -139,7 +137,6 @@ const AdminUsers: React.FC = () => {
       }
     } catch (err: any) {
       setError(err.message || 'An error occurred while saving user');
-      console.error('User save error:', err);
     } finally {
       setIsSubmitting(false);
     }
@@ -753,7 +750,6 @@ const AdminUsers: React.FC = () => {
             setTimeout(() => setSuccessMessage(null), 3000);
           } catch (err: any) {
             setError(err.message || 'Failed to reset password');
-            console.error('Password reset error:', err);
             throw err; // Re-throw so the modal can handle it
           }
         }}

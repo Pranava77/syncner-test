@@ -25,18 +25,10 @@ export const fetchStudentDetails = createAsyncThunk(
   'staff/fetchStudentDetails',
   async (studentId: string, { rejectWithValue }) => {
     try {
-      console.log('🔍 Staff slice: Fetching student details for ID:', studentId);
       
       // Use the staff API endpoint directly which has all the correct progress data
       const response = await apiService.getStudentDetails(studentId);
       
-      console.log('🔍 Staff slice: API response:', {
-        success: response.success,
-        hasData: !!response.data,
-        hasStudent: !!response.data?.student,
-        studentProgress: response.data?.student?.progress,
-        studentLevels: response.data?.student?.totalLevels
-      });
       
       if (!response.success) {
         throw new Error(response.message || 'Failed to fetch student details');
@@ -46,10 +38,8 @@ export const fetchStudentDetails = createAsyncThunk(
         throw new Error('Invalid response structure from staff API');
       }
       
-      console.log('✅ Staff slice: Successfully fetched student details');
       return response.data.student;
     } catch (error: any) {
-      console.error('❌ Staff slice: Error fetching student details:', error);
       return rejectWithValue(error.message || 'Failed to fetch student details');
     }
   }

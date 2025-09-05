@@ -20,7 +20,6 @@ const StudentPortfolioPage: React.FC = () => {
           const data = await PortfolioService.getStudentPortfolio(studentId);
           setPortfolioData(data);
         } catch (err) {
-          console.error('Error fetching portfolio:', err);
           setError(err instanceof Error ? err.message : 'Failed to fetch portfolio data');
         } finally {
           setLoading(false);

@@ -12,7 +12,6 @@ const getAllTracks = async (req, res) => {
       data: tracks
     });
   } catch (error) {
-    console.error('Get tracks error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
@@ -40,7 +39,6 @@ const getTrackById = async (req, res) => {
       data: track
     });
   } catch (error) {
-    console.error('Get track error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'

@@ -146,7 +146,6 @@ export class PortfolioService {
 
       return portfolioData;
     } catch (error) {
-      console.error('PortfolioService: Error fetching portfolio:', error);
       throw new Error('Failed to fetch portfolio data');
     }
   }

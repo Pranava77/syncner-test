@@ -147,9 +147,7 @@ const StudentDashboard: React.FC = () => {
   // Listen for curriculum changes from admin
   useEffect(() => {
     const handleCurriculumChange = (event: CustomEvent) => {
-      console.log('StudentDashboard: Curriculum change detected:', event.detail);
       if (event.detail.track === user?.careerTrack) {
-        console.log('StudentDashboard: Refreshing levels due to curriculum change in admin');
         // Clear cache and refetch to get updated data
         dispatch(clearCache());
         setTimeout(() => {
@@ -159,9 +157,7 @@ const StudentDashboard: React.FC = () => {
     };
     
     const handleLevelsRefreshRequired = (event: CustomEvent) => {
-      console.log('StudentDashboard: Immediate refresh required:', event.detail);
       if (event.detail.track === user?.careerTrack) {
-        console.log('StudentDashboard: Force refreshing levels due to immediate refresh requirement');
         // Force immediate refresh using the enhanced function
         setTimeout(() => forceRefresh(), 100);
       }
@@ -212,7 +208,6 @@ const StudentDashboard: React.FC = () => {
     if (levels.length > 0 && currentLevel) {
       const levelExists = levels.find(level => level.id === currentLevel.id);
       if (!levelExists) {
-        console.log('StudentDashboard: Current level no longer exists, updating current level');
         // Update current level to the first available level
         const firstLevel = levels[0];
         if (firstLevel) {

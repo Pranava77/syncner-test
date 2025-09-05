@@ -16,7 +16,6 @@ export const getUserProgress = async (req, res) => {
       data: progress
     });
   } catch (error) {
-    console.error('Get user progress error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error while fetching user progress',
@@ -51,7 +50,6 @@ export const markLevelCompleted = async (req, res) => {
       message: `${section} section completed for level ${levelOrder}`
     });
   } catch (error) {
-    console.error('Mark level completed error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error while marking level as completed',
@@ -69,7 +67,6 @@ export const updateLearnProgress = async (req, res) => {
     const userId = req.user._id;
     const { careerTrack } = req.user;
 
-    console.log('UpdateLearnProgress - Request:', { levelId, timeSpent, linksAccessed, userId, careerTrack });
 
     if (!levelId) {
       return res.status(400).json({
@@ -79,18 +76,15 @@ export const updateLearnProgress = async (req, res) => {
     }
 
     const progress = await UserProgress.getOrCreate(userId, careerTrack);
-    console.log('Before update - Progress:', JSON.stringify(progress.completedLevels, null, 2));
     
     await progress.updateLearnProgress(levelId, timeSpent || 0, linksAccessed || []);
     await progress.save();
     
-    console.log('After update - Progress:', JSON.stringify(progress.completedLevels, null, 2));
 
     // Get the updated level progress
     const level = progress.completedLevels.find(l => l.levelId === levelId);
     const learnProgress = level ? level.learnProgress : null;
     
-    console.log('Updated learn progress:', learnProgress);
 
     res.status(200).json({
       success: true,
@@ -101,7 +95,6 @@ export const updateLearnProgress = async (req, res) => {
       message: 'Learn progress updated successfully'
     });
   } catch (error) {
-    console.error('Update learn progress error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error while updating learn progress',
@@ -186,7 +179,6 @@ export const submitTestAttempt = async (req, res) => {
       message: passed ? 'Test passed! Exercise unlocked.' : 'Test failed. You can retry immediately if you have attempts remaining.'
     });
   } catch (error) {
-    console.error('Submit test attempt error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error while submitting test attempt',
@@ -228,7 +220,6 @@ export const checkTestUnlocked = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Check test unlocked error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error while checking test unlock status',
@@ -264,7 +255,6 @@ export const checkExerciseUnlocked = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Check exercise unlocked error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error while checking exercise unlock status',
@@ -298,7 +288,6 @@ export const checkExerciseLinks = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Check exercise links error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error while checking exercise links',
@@ -333,7 +322,6 @@ export const submitExercise = async (req, res) => {
       message: 'Exercise submitted successfully'
     });
   } catch (error) {
-    console.error('Submit exercise error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error while submitting exercise',
@@ -368,7 +356,6 @@ export const updateExercise = async (req, res) => {
       message: 'Exercise updated successfully'
     });
   } catch (error) {
-    console.error('Update exercise error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error while updating exercise',
@@ -398,7 +385,6 @@ export const checkLevelUnlocked = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Check level unlocked error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error while checking level status',
@@ -481,7 +467,6 @@ export const getLevelsStatus = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Get levels status error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error while getting levels status',
@@ -517,7 +502,6 @@ export const getLevelSectionStatus = async (req, res) => {
       data: sectionStatus
     });
   } catch (error) {
-    console.error('Get level section status error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error while fetching level section status',

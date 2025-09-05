@@ -48,7 +48,6 @@ export const useStudentLevels = (careerTrack?: string) => {
         if (response.success && response.data) {
           // Handle both direct array response and nested levels response
           const levelsData = Array.isArray(response.data) ? response.data : response.data.levels || [];
-          console.log('Levels data received:', levelsData);
           setLevels(levelsData);
           setCurrentLevel(response.data.currentLevel || 1);
           setTotalPoints(response.data.totalPoints || 0);
@@ -56,7 +55,6 @@ export const useStudentLevels = (careerTrack?: string) => {
           throw new Error(response.message || 'Failed to fetch levels');
         }
       } catch (err) {
-        console.error('Error fetching levels:', err);
         setError(err instanceof Error ? err.message : 'Failed to fetch levels');
         setLevels([]);
       } finally {

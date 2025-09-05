@@ -271,4 +271,4 @@ For technical support or questions:
 
 ---
 
-**Built with ❤️ for modern education**
+**Built with ❤️ By WEBFIXUS for modern education**

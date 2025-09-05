@@ -26,10 +26,8 @@ const router = express.Router();
 router.get('/test/:id', protect, authorize('staff', 'admin'), async (req, res) => {
   try {
     const { id } = req.params;
-    console.log('🧪 Test route called with ID:', id);
     
     const student = await User.findById(id).select('-password').lean();
-    console.log('🧪 Student found:', !!student);
     
     if (!student) {
       return res.status(404).json({ success: false, message: 'Student not found' });
@@ -37,7 +35,6 @@ router.get('/test/:id', protect, authorize('staff', 'admin'), async (req, res) =
     
     res.json({ success: true, data: { student } });
   } catch (error) {
-    console.error('🧪 Test route error:', error);
     res.status(500).json({ success: false, message: error.message });
   }
 });
@@ -83,11 +80,9 @@ router.get('/students', protect, authorize('staff', 'admin'), async (req, res) =
     const totalStudents = await User.countDocuments(filterQuery);
     
     // Get progress data for each student
-    console.log(`Processing ${students.length} students...`);
     const studentsWithProgress = await Promise.all(
       students.map(async (student, index) => {
         try {
-          console.log(`Processing student ${index + 1}/${students.length}: ${student.name}`);
         const progress = await UserProgress.findOne({ user: student._id })
           .select('currentLevel completedLevels totalPoints streakDays attendanceStats dailyActivity lastActivity createdAt')
           .lean();
@@ -109,7 +104,6 @@ router.get('/students', protect, authorize('staff', 'admin'), async (req, res) =
         const allStudentLevelOrders = [...new Set([...curriculumLevelOrders, ...studentProgressLevelOrders])].sort((a, b) => a - b);
         const totalLevels = allStudentLevelOrders.length;
         
-        console.log(`📚 Student ${student.name}: Curriculum items found:`, curriculumItems.length, 'for track:', normalizedCareerTrack, 'Total levels:', totalLevels);
         
         // Initialize default values for students with no progress
         const defaultProgress = {
@@ -210,19 +204,10 @@ router.get('/students', protect, authorize('staff', 'admin'), async (req, res) =
           let totalSectionsCompleted = 0;
           let totalSectionsAvailable = totalLevels * 3;
           
-          console.log('🔍 Progress calculation debug for student list:', {
-            studentId: student._id,
-            studentName: student.name,
-            careerTrack: normalizedCareerTrack,
-            totalLevels,
-            totalSectionsAvailable,
-            completedLevelsCount: studentProgress.completedLevels.length
-          });
           
           studentProgress.completedLevels.forEach(level => {
             // Skip levels with invalid levelOrder (0 or undefined)
             if (!level.levelOrder || level.levelOrder === 0) {
-              console.log('⚠️ Skipping level with invalid levelOrder in student list:', level.levelId, 'levelOrder:', level.levelOrder);
               return;
             }
             
@@ -234,7 +219,6 @@ router.get('/students', protect, authorize('staff', 'admin'), async (req, res) =
           });
           
           progressScore = totalSectionsAvailable > 0 ? Math.round((totalSectionsCompleted / totalSectionsAvailable) * 100) : 0;
-          console.log(`📊 Student ${student.name} final progress: ${progressScore}% (${totalSectionsCompleted}/${totalSectionsAvailable} sections)`);
           
           // Attendance score (30% weight)
           const attendanceScore = attendancePercentage;
@@ -280,7 +264,6 @@ router.get('/students', protect, authorize('staff', 'admin'), async (req, res) =
           leaderboardScore: leaderboardScore
         };
         } catch (studentError) {
-          console.error(`Error processing student ${student.name}:`, studentError);
           // Return a basic student object with default values
           return {
             ...student,
@@ -316,7 +299,6 @@ router.get('/students', protect, authorize('staff', 'admin'), async (req, res) =
       }
     });
   } catch (error) {
-    console.error('Error fetching students:', error);
     res.status(500).json({
       success: false,
       message: 'Internal server error',
@@ -329,18 +311,14 @@ router.get('/students', protect, authorize('staff', 'admin'), async (req, res) =
 // Get detailed student information
 router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, res) => {
   try {
-    console.log('🔍 Student details route called with ID:', req.params.id);
     const { id } = req.params;
     
-    console.log('🔍 Step 1: Fetching student from database...');
     const student = await User.findById(id)
       .select('-password')
       .lean();
     
-    console.log('🔍 Step 1 result: Student found:', !!student);
     
     if (!student) {
-      console.log('❌ Student not found');
       return res.status(404).json({
         success: false,
         message: 'Student not found'
@@ -357,7 +335,6 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
     // Normalize career track to handle legacy "fullstack" vs "full-stack" and other variations
     const normalizedCareerTrack = (() => {
       const track = student.careerTrack?.toLowerCase() || '';
-      console.log('🔍 Original career track:', student.careerTrack);
       
       if (track.includes('full') || track.includes('stack')) {
         return 'full-stack';
@@ -368,28 +345,22 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
       } else if (track.includes('data') || track.includes('science')) {
         return 'data-science';
       } else {
-        console.log('⚠️ Unknown career track, defaulting to full-stack:', track);
         return 'full-stack'; // Default fallback
       }
     })();
     
-    console.log('🔄 Normalized career track:', normalizedCareerTrack);
     
-    console.log('🔍 Step 2: Fetching user progress...');
     // Get detailed progress data
     const progress = await UserProgress.findOne({ user: id })
       .lean();
     
-    console.log('🔍 Step 2 result: Progress found:', !!progress);
     
-    console.log('🔍 Step 3: Fetching curriculum items...');
     // Get ALL curriculum items for this career track to determine total levels
     const curriculumItems = await Curriculum.find({ 
       careerTrack: normalizedCareerTrack, 
       isActive: true 
     }).sort({ order: 1 }).lean();
     
-    console.log('🔍 Step 3 result: Curriculum items found:', curriculumItems.length);
     
     // Get unique level orders from curriculum
     const curriculumLevelOrders = [...new Set(curriculumItems.map(item => item.order))].sort((a, b) => a - b);
@@ -399,31 +370,10 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
     let allLevelOrders = [...new Set([...curriculumLevelOrders, ...completedLevelOrders])].sort((a, b) => a - b);
     let totalLevels = allLevelOrders.length;
     
-    console.log('📚 Staff route curriculum debug:', {
-      studentId: id,
-      careerTrack: normalizedCareerTrack,
-      curriculumItemsFound: curriculumItems.length,
-      curriculumLevelOrders,
-      completedLevelOrders,
-      allLevelOrders,
-      totalLevels
-    });
     
-    console.log('📚 Staff route: Curriculum items found:', curriculumItems.length, 'for track:', normalizedCareerTrack);
-    console.log('🎯 Staff route: Level orders found:', allLevelOrders, 'Total levels:', totalLevels);
-    console.log('📋 Sample curriculum items:', curriculumItems.slice(0, 3).map(item => ({
-      order: item.order,
-      title: item.title,
-      type: item.type,
-      _id: item._id,
-      hasExercise: !!item.exercise,
-      exerciseCount: item.exercise?.length || 0,
-      exerciseData: item.exercise ? item.exercise.slice(0, 2) : 'No exercise data'
-    })));
     
     // If no curriculum items found, create a fallback structure
     if (curriculumItems.length === 0) {
-      console.log('⚠️ No curriculum items found, creating fallback structure');
       const fallbackLevels = [
         { order: 1, title: 'Introduction to Programming', description: 'Basic programming concepts and fundamentals' },
         { order: 2, title: 'Core Concepts', description: 'Essential programming principles and practices' },
@@ -435,7 +385,6 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
       allLevelOrders.push(...fallbackOrders);
       totalLevels = allLevelOrders.length;
       
-      console.log('🔄 Created fallback curriculum with', totalLevels, 'levels');
     }
     
     // Get default course names based on level and track
@@ -630,12 +579,6 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
     // Build detailed learning timeline with level-by-level breakdown
     const detailedLearningTimeline = [];
     
-    console.log('🔨 Starting timeline generation with:', {
-      levelOrders: allLevelOrders,
-      curriculumItemsCount: curriculumItems.length,
-      progressExists: !!progress,
-      progressCompletedLevels: progress?.completedLevels?.length || 0
-    });
     
     // Create a mapping of level order to curriculum data for proper naming
     const levelToCurriculumMap = {};
@@ -649,12 +592,9 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
       };
     });
     
-    console.log('🗺️ Level to curriculum mapping:', levelToCurriculumMap);
-    console.log('📊 Progress data structure:', JSON.stringify(progress?.completedLevels, null, 2));
     
     // If no curriculum items found, create a fallback structure
     if (curriculumItems.length === 0) {
-      console.log('⚠️ No curriculum items found, creating fallback structure');
       const fallbackLevels = [
         { order: 1, title: 'Introduction to Programming', description: 'Basic programming concepts and fundamentals' },
         { order: 2, title: 'Core Concepts', description: 'Essential programming principles and practices' },
@@ -666,24 +606,16 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
       allLevelOrders.push(...fallbackOrders2);
       totalLevels = allLevelOrders.length;
       
-      console.log('🔄 Created fallback curriculum with', totalLevels, 'levels');
     }
     
     // Build timeline for each level in the curriculum
-    console.log('🔨 Starting timeline generation loop with allLevelOrders:', allLevelOrders);
-    console.log('🗺️ Level to curriculum mapping available:', Object.keys(levelToCurriculumMap));
     
     allLevelOrders.forEach(levelOrder => {
       const curriculumItem = levelToCurriculumMap[levelOrder];
-      console.log(`🔍 Processing level ${levelOrder}:`, { 
-        foundCurriculumItem: !!curriculumItem, 
-        curriculumItem: curriculumItem 
-      });
       
       // If no curriculum item found, create a placeholder for completed levels
       let levelData = curriculumItem;
       if (!curriculumItem) {
-        console.log(`⚠️ No curriculum item found for level ${levelOrder}, creating placeholder`);
         levelData = {
           title: getDefaultCourseName(levelOrder, normalizedCareerTrack),
           description: `Training content for level ${levelOrder}`
@@ -775,8 +707,6 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
     // Sort by level order (highest first for display)
     detailedLearningTimeline.sort((a, b) => b.levelOrder - a.levelOrder);
     
-    console.log('📚 Staff route: Built detailed learning timeline with', detailedLearningTimeline.length, 'levels');
-    console.log('📋 Final timeline structure:', JSON.stringify(detailedLearningTimeline, null, 2));
     
     // Now build a comprehensive activity timeline with real data from multiple sources
     const comprehensiveActivityTimeline = [];
@@ -931,8 +861,6 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
     // Sort comprehensive timeline by date (newest first)
     comprehensiveActivityTimeline.sort((a, b) => new Date(b.date) - new Date(a.date));
     
-    console.log('📚 Staff route: Built comprehensive activity timeline with', comprehensiveActivityTimeline.length, 'activities');
-    console.log('📋 Activity timeline sample:', comprehensiveActivityTimeline.slice(0, 3));
     
     // Keep the old simple timeline for backward compatibility (but limit it)
     const simpleTimeline = [];
@@ -940,7 +868,6 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
     // Add completed levels to simple timeline
     if (progress?.completedLevels && Array.isArray(progress.completedLevels)) {
       progress.completedLevels.forEach(level => {
-        console.log(`🔍 Processing level data:`, level);
         
         if (level.completedAt) {
           // Get proper level name from curriculum - handle both levelOrder and levelId
@@ -963,7 +890,6 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
             levelName = levelInfo.title || levelInfo.courseName || `Level ${levelOrder}`;
           }
           
-          console.log(`📚 Processing level ${levelOrder}:`, levelName, level);
           
           // Add learn section completion
           if (level.completedSections?.learn) {
@@ -1030,7 +956,6 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
           });
         });
         
-        console.log('📚 Staff route: Generated sample timeline data for new student');
       }
     }
     
@@ -1130,23 +1055,10 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
         let totalSectionsCompleted = 0;
         let totalSectionsAvailable = totalLevels * 3; // Each level has 3 sections
         
-        console.log('🔍 Progress calculation debug for student details:', {
-          userId: id,
-          careerTrack: normalizedCareerTrack,
-          totalLevels,
-          totalSectionsAvailable,
-          completedLevelsCount: progress.completedLevels.length,
-          completedLevels: progress.completedLevels.map(l => ({
-            levelId: l.levelId,
-            levelOrder: l.levelOrder,
-            completedSections: l.completedSections
-          }))
-        });
         
         progress.completedLevels.forEach(level => {
           // Skip levels with invalid levelOrder (0 or undefined)
           if (!level.levelOrder || level.levelOrder === 0) {
-            console.log('⚠️ Skipping level with invalid levelOrder:', level.levelId, 'levelOrder:', level.levelOrder);
             return;
           }
           
@@ -1156,7 +1068,6 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
               test: level.completedSections.test,
               exercise: level.completedSections.exercise
             };
-            console.log(`📊 Level ${level.levelOrder} sections:`, sectionsInThisLevel);
             
             if (level.completedSections.learn) totalSectionsCompleted++;
             if (level.completedSections.test) totalSectionsCompleted++;
@@ -1165,11 +1076,6 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
         });
         
         const finalPercentage = totalSectionsAvailable > 0 ? Math.round((totalSectionsCompleted / totalSectionsAvailable) * 100) : 0;
-        console.log('🎯 Final progress calculation:', {
-          totalSectionsCompleted,
-          totalSectionsAvailable,
-          finalPercentage
-        });
         
         return finalPercentage;
       })(),
@@ -1182,14 +1088,6 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
     };
     
     // Debug: Log the final response structure
-    console.log('🚀 FINAL RESPONSE DEBUG:');
-    console.log('📊 Student ID:', student._id);
-    console.log('📚 Career Track:', student.careerTrack);
-    console.log('🔄 Normalized Track:', normalizedCareerTrack);
-    console.log('🎯 Total Levels Found:', totalLevels);
-    console.log('📈 Learning Timeline Length:', detailedLearningTimeline.length);
-    console.log('📋 Learning Timeline Structure:', JSON.stringify(detailedLearningTimeline, null, 2));
-    console.log('🔍 Sample Timeline Entry:', detailedLearningTimeline[0]);
     
     res.status(200).json({
       success: true,
@@ -1198,7 +1096,6 @@ router.get('/students/:id', protect, authorize('staff', 'admin'), async (req, re
       }
     });
   } catch (error) {
-    console.error('Error fetching student details:', error);
     res.status(500).json({
       success: false,
       message: 'Internal server error'
@@ -1302,7 +1199,6 @@ router.get('/analytics', protect, authorize('staff', 'admin'), async (req, res) 
       }
     });
   } catch (error) {
-    console.error('Error fetching staff analytics:', error);
     res.status(500).json({
       success: false,
       message: 'Internal server error'
@@ -1328,7 +1224,6 @@ router.get('/leaderboard/:careerTrack', protect, authorize('staff', 'admin'), as
       message: 'Leaderboard retrieved successfully'
     });
   } catch (error) {
-    console.error('Error fetching leaderboard:', error);
     res.status(500).json({ success: false, message: 'Server error' });
   }
 });
@@ -1376,7 +1271,6 @@ router.get('/leaderboard', protect, authorize('staff', 'admin'), async (req, res
       message: 'Global leaderboard retrieved successfully'
     });
   } catch (error) {
-    console.error('Error fetching global leaderboard:', error);
     res.status(500).json({ success: false, message: 'Server error' });
   }
 });

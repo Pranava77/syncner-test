@@ -118,9 +118,6 @@ const customContentValidation = (req, res, next) => {
   const { type, content, question, options, answer, description, externalLink } = req.body;
   
   // Debug logging
-  console.log('Custom validation - Request body:', req.body);
-  console.log('Custom validation - Type:', type);
-  console.log('Custom validation - Content:', content);
   
   if (type === 'learn') {
     if (!content || content.trim().length < 10) {
@@ -141,12 +138,9 @@ const customContentValidation = (req, res, next) => {
       }
     }
   } else if (type === 'test') {
-    console.log('Custom validation - Processing test type');
-    console.log('Custom validation - Test content:', content);
     
     // For test items, validate that content contains the required structure
     if (!content || content.trim().length < 10) {
-      console.log('Custom validation - Test content too short:', content?.length || 0);
       return res.status(400).json({
         success: false,
         message: 'Test content must be at least 10 characters'
@@ -156,11 +150,8 @@ const customContentValidation = (req, res, next) => {
     // Check if content contains question and options structure
     const lines = content.split('\n');
     const question = lines[0];
-    console.log('Custom validation - Test question:', question);
-    console.log('Custom validation - Test lines:', lines);
     
     if (!question || question.trim().length < 5) {
-      console.log('Custom validation - Test question too short:', question?.length || 0);
       return res.status(400).json({
         success: false,
         message: 'Test question must be at least 5 characters'
@@ -171,17 +162,14 @@ const customContentValidation = (req, res, next) => {
     const hasOptions = lines.some(line => 
       line.trim().startsWith('A)') || line.trim().startsWith('B)')
     );
-    console.log('Custom validation - Has options:', hasOptions);
     
     if (!hasOptions) {
-      console.log('Custom validation - Missing options');
       return res.status(400).json({
         success: false,
         message: 'Test must have at least 2 options (A and B)'
       });
     }
     
-    console.log('Custom validation - Test validation passed');
   } else if (type === 'exercise') {
     if (!description || description.trim().length < 10) {
       return res.status(400).json({

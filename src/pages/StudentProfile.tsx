@@ -49,7 +49,6 @@ const StudentProfile: React.FC = () => {
           });
         }
       } catch (error) {
-        console.error('Error fetching profile:', error);
       }
     };
     fetchData();

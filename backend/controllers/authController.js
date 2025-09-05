@@ -52,7 +52,6 @@ const register = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Register error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error during registration'
@@ -121,7 +120,6 @@ const login = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Login error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error during login'
@@ -149,7 +147,6 @@ const getProfile = async (req, res) => {
       data: { user }
     });
   } catch (error) {
-    console.error('Get profile error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
@@ -192,7 +189,6 @@ const updateProfile = async (req, res) => {
       data: { user } 
     });
   } catch (error) {
-    console.error('Update profile error:', error);
     res.status(400).json({ 
       success: false, 
       message: error.message 
@@ -212,7 +208,6 @@ const logout = async (req, res) => {
       message: 'Logged out successfully'
     });
   } catch (error) {
-    console.error('Logout error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error during logout'
@@ -242,7 +237,6 @@ const forgotPassword = async (req, res) => {
       message: 'Password reset email sent'
     });
   } catch (error) {
-    console.error('Forgot password error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
@@ -264,7 +258,6 @@ const resetPassword = async (req, res) => {
       message: 'Password reset successfully'
     });
   } catch (error) {
-    console.error('Reset password error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'

@@ -37,7 +37,6 @@ export const trackActivity = async (req, res, next) => {
     await user.save();
     req.user = user; // Attach updated user to request
 
-    console.log(`[ATTENDANCE DEBUG] User: ${user.name} (${user._id}), activeTodayMinutes: ${user.activeTodayMinutes}, dateKey: ${todayKey}`);
     
     // Auto-mark attendance if activeTodayMinutes >= 2 and not already marked for today
     if (user.activeTodayMinutes >= 2) {
@@ -55,15 +54,12 @@ export const trackActivity = async (req, res, next) => {
           date: startOfDay, // Use start of day for consistency
           status: 'present'
         });
-        console.log(`[ATTENDANCE DEBUG] Attendance marked for user: ${user.name} (${user._id}) on ${startOfDay.toISOString()}`);
       } else {
-        console.log(`[ATTENDANCE DEBUG] Attendance already exists for user: ${user.name} (${user._id}) on ${startOfDay.toISOString()}`);
       }
     }
 
     next();
   } catch (err) {
-    console.error('[ATTENDANCE ERROR]', err);
     next();
   }
 }; 

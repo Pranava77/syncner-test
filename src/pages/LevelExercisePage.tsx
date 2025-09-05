@@ -54,9 +54,7 @@ const LevelExercisePage: React.FC = () => {
   const fetchLevel = useCallback(async () => {
     try {
       setLoading(true);
-      console.log('LevelExercisePage: Fetching level with ID:', levelId);
       const response = await apiService.getLevel(levelId!);
-      console.log('LevelExercisePage: Level data response:', response);
       
       let levelData = null;
       if (response && response.data) {
@@ -69,17 +67,11 @@ const LevelExercisePage: React.FC = () => {
       
       // Debug exercise data
       if (levelData && levelData.exercise) {
-        console.log('LevelExercisePage: Exercise data:', levelData.exercise);
-        console.log('LevelExercisePage: Exercise data length:', levelData.exercise.length);
         levelData.exercise.forEach((exercise: any, index: number) => {
-          console.log(`LevelExercisePage: Exercise ${index}:`, exercise);
-          console.log(`LevelExercisePage: Exercise ${index} resources:`, exercise.resources);
         });
       } else {
-        console.log('LevelExercisePage: No exercise data found in level:', levelData);
       }
     } catch (error) {
-      console.error('LevelExercisePage: Error fetching level:', error);
       setError(`Failed to load exercise content: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setLoading(false);
@@ -97,17 +89,12 @@ const LevelExercisePage: React.FC = () => {
       if (response.success) {
         const { exercise, test } = response.data;
         
-        console.log('Exercise status response:', response.data);
-        console.log('Exercise data:', exercise);
-        console.log('Test data:', test);
         
         // Check if test is completed (either through test.isCompleted or test.progress.isCompleted)
         const isTestCompleted = test?.isCompleted || test?.progress?.isCompleted || false;
-        console.log('Is test completed:', isTestCompleted);
         
         // Exercise is unlocked if test is completed OR if exercise.isUnlocked is true
         const exerciseUnlocked = exercise?.isUnlocked || isTestCompleted;
-        console.log('Exercise unlocked:', exerciseUnlocked);
         
         setIsExerciseUnlocked(exerciseUnlocked);
         
@@ -117,10 +104,8 @@ const LevelExercisePage: React.FC = () => {
         setHasExerciseLinks(submittedExercises >= 1); // Complete with at least 1 exercise
         setExerciseSubmissions(exercise.submissions || []);
       } else {
-        console.error('Failed to fetch exercise status:', response);
       }
     } catch (error) {
-      console.error('Error fetching exercise status:', error);
     }
   }, [levelId, level?.exercise?.length]);
 
@@ -142,7 +127,6 @@ const LevelExercisePage: React.FC = () => {
     try {
       setLevelsLoading(true);
       if (!user?.careerTrack) {
-        console.error('No career track found for user');
         return;
       }
       
@@ -154,7 +138,6 @@ const LevelExercisePage: React.FC = () => {
         setAllLevels(currentTrackLevels);
       }
     } catch (error) {
-      console.error('Error fetching all levels:', error);
     } finally {
       setLevelsLoading(false);
     }
@@ -167,20 +150,16 @@ const LevelExercisePage: React.FC = () => {
   // Listen for curriculum changes from admin
   useEffect(() => {
     const handleCurriculumChange = (event: CustomEvent) => {
-      console.log('LevelExercisePage: Curriculum change detected:', event.detail);
       // Check both level career track and user career track as fallback
       if (event.detail.track === level?.careerTrack || event.detail.track === user?.careerTrack) {
-        console.log('LevelExercisePage: Refreshing level due to curriculum change in admin');
         // Refresh the current level data
         fetchLevel();
       }
     };
     
     const handleLevelsRefreshRequired = (event: CustomEvent) => {
-      console.log('LevelExercisePage: Immediate refresh required:', event.detail);
       // Check both level career track and user career track as fallback
       if (event.detail.track === level?.careerTrack || event.detail.track === user?.careerTrack) {
-        console.log('LevelExercisePage: Force refreshing level due to immediate refresh requirement');
         // Force immediate refresh
         setTimeout(() => fetchLevel(), 100);
       }
@@ -200,14 +179,12 @@ const LevelExercisePage: React.FC = () => {
     if (level && levelId) {
       // If we have level data but it's not active, it might have been deleted
       if (!level.isActive) {
-        console.log('LevelExercisePage: Current level is not active, redirecting to training page');
         navigate('/student/training');
         return;
       }
       
       // If the level ID doesn't match the level data, it might have been changed
       if (level.id !== levelId) {
-        console.log('LevelExercisePage: Level ID mismatch, redirecting to training page');
         navigate('/student/training');
         return;
       }
@@ -254,9 +231,7 @@ const LevelExercisePage: React.FC = () => {
       
       // Mark the current level as completed (exercise section)
       if (level && level.id && level.order) {
-        console.log('Marking level as completed:', { levelId: level.id, levelOrder: level.order, section: 'exercise' });
         const result = await apiService.markLevelCompleted(level.id, level.order, 'exercise');
-        console.log('Level completion result:', result);
       }
       
       // Trigger sidebar refresh to update unlock status
@@ -283,16 +258,13 @@ const LevelExercisePage: React.FC = () => {
           navigate(`/student/training/${nextLevel.id}/learn`);
         } else {
           // No next level found - this is the last level or no more levels
-          console.log('No next level found - bootcamp completed or no more levels available');
           navigate('/student/training');
         }
       } else {
         // Fallback to training levels page
-        console.log('No levels data available - navigating to training page');
         navigate('/student/training');
       }
     } catch (error) {
-      console.error('Error marking level as completed:', error);
       // Still navigate even if marking as completed fails
       if (level && level.order && allLevels.length > 0) {
         const currentTrackLevels = allLevels.filter(l => l.careerTrack === user?.careerTrack);
@@ -340,9 +312,7 @@ const LevelExercisePage: React.FC = () => {
       
       // Mark the current level as completed (exercise section)
       if (level && level.id && level.order) {
-        console.log('Marking final level as completed:', { levelId: level.id, levelOrder: level.order, section: 'exercise' });
         const result = await apiService.markLevelCompleted(level.id, level.order, 'exercise');
-        console.log('Final level completion result:', result);
       }
       
       // Trigger sidebar refresh to update unlock status
@@ -355,10 +325,8 @@ const LevelExercisePage: React.FC = () => {
       localStorage.setItem('level-progress-updated', Date.now().toString());
       
       // Navigate to training levels page or dashboard
-      console.log('Bootcamp completed - navigating to training page');
       navigate('/student/training');
     } catch (error) {
-      console.error('Error marking final level as completed:', error);
       navigate('/student/training');
     } finally {
       setUnlockingLevel(false);

@@ -7,7 +7,6 @@ import Curriculum from '../models/Curriculum.js';
  * This will look up the correct levelOrder from the Curriculum collection
  */
 export const fixUserProgressLevelOrders = async () => {
-  console.log('🔧 Starting UserProgress levelOrder fix...');
   
   try {
     // Find all UserProgress records with levels that have levelOrder: 0
@@ -15,7 +14,6 @@ export const fixUserProgressLevelOrders = async () => {
       'completedLevels.levelOrder': 0
     });
 
-    console.log(`Found ${progressRecords.length} UserProgress records with levelOrder: 0`);
 
     let fixedCount = 0;
     let errorCount = 0;
@@ -30,11 +28,9 @@ export const fixUserProgressLevelOrders = async () => {
             const curriculumItem = await Curriculum.findById(level.levelId);
             
             if (curriculumItem && curriculumItem.order) {
-              console.log(`Fixing levelOrder for user ${progress.user}: levelId ${level.levelId} -> order ${curriculumItem.order}`);
               level.levelOrder = curriculumItem.order;
               modified = true;
             } else {
-              console.log(`⚠️ Could not find curriculum item for levelId: ${level.levelId}`);
             }
           }
         }
@@ -44,24 +40,17 @@ export const fixUserProgressLevelOrders = async () => {
           progress.completedLevels.sort((a, b) => a.levelOrder - b.levelOrder);
           await progress.save();
           fixedCount++;
-          console.log(`✅ Fixed UserProgress for user: ${progress.user}`);
         }
         
       } catch (error) {
-        console.error(`❌ Error fixing UserProgress for user ${progress.user}:`, error);
         errorCount++;
       }
     }
 
-    console.log(`🎉 UserProgress levelOrder fix complete:`);
-    console.log(`   Fixed: ${fixedCount} records`);
-    console.log(`   Errors: ${errorCount} records`);
-    console.log(`   Total processed: ${progressRecords.length} records`);
     
     return { fixedCount, errorCount, totalProcessed: progressRecords.length };
     
   } catch (error) {
-    console.error('❌ Error in fixUserProgressLevelOrders:', error);
     throw error;
   }
 };
@@ -77,10 +66,6 @@ export const checkUserProgressLevelOrders = async () => {
     
     const totalRecords = await UserProgress.countDocuments({});
     
-    console.log(`📊 UserProgress levelOrder status:`);
-    console.log(`   Total UserProgress records: ${totalRecords}`);
-    console.log(`   Records needing fix: ${recordsNeedingFix}`);
-    console.log(`   Records already fixed: ${totalRecords - recordsNeedingFix}`);
     
     return {
       total: totalRecords,
@@ -89,7 +74,6 @@ export const checkUserProgressLevelOrders = async () => {
     };
     
   } catch (error) {
-    console.error('❌ Error in checkUserProgressLevelOrders:', error);
     throw error;
   }
 };

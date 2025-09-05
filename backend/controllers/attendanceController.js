@@ -41,7 +41,6 @@ export const markAttendance = async (req, res) => {
     } catch (createError) {
       // Handle any remaining duplicate key errors
       if (createError.code === 11000) {
-        console.log('[ATTENDANCE DEBUG] Duplicate key error, attempting to find existing record');
         // Try to find the existing record that was created by another request
         const existingRecord = await Attendance.findOne({
           user: userId,
@@ -64,7 +63,6 @@ export const markAttendance = async (req, res) => {
       }
     }
   } catch (error) {
-    console.error('[ATTENDANCE ERROR]', error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
@@ -74,7 +72,6 @@ export const getAttendance = async (req, res) => {
   try {
     const { userId } = req.params;
     const records = await Attendance.find({ user: userId }).sort({ date: 1 });
-    console.log(`[ATTENDANCE DEBUG] getAttendance for userId: ${userId}, records found: ${records.length}`);
     res.set('Cache-Control', 'no-store');
     res.json({ success: true, data: records });
   } catch (error) {

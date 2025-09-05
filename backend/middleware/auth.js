@@ -53,7 +53,6 @@ const protect = async (req, res, next) => {
 
       next();
     } catch (error) {
-      console.error('Token verification error:', error);
       
       if (error.name === 'TokenExpiredError') {
         return res.status(401).json({

@@ -20,7 +20,6 @@ router.get('/profile', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Error fetching user profile:', error);
     res.status(500).json({
       success: false,
       message: 'Internal server error'
@@ -67,7 +66,6 @@ router.put('/profile', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Error updating user profile:', error);
     res.status(500).json({
       success: false,
       message: 'Internal server error'

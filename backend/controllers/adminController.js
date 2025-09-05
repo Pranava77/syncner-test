@@ -19,7 +19,6 @@ const getAllUsers = async (req, res) => {
     const users = await User.find(filter).select('-password');
     res.status(200).json({ success: true, count: users.length, data: users });
   } catch (error) {
-    console.error('Get users error:', error);
     res.status(500).json({ success: false, message: 'Server error' });
   }
 };
@@ -58,7 +57,6 @@ const getAnalytics = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Get analytics error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
@@ -78,7 +76,6 @@ const getLevelProgress = async (req, res) => {
       data: levelProgressData
     });
   } catch (error) {
-    console.error('Get level progress error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
@@ -143,7 +140,6 @@ const getLevelProgressAnalytics = async () => {
       }
     };
   } catch (error) {
-    console.error('Error getting level progress analytics:', error);
     return {
       levelProgress: [],
       overallMetrics: {
@@ -181,7 +177,6 @@ const createUser = async (req, res) => {
     user.password = undefined;
     res.status(201).json({ success: true, message: 'User created', data: user });
   } catch (error) {
-    console.error('Create user error:', error);
     res.status(500).json({ success: false, message: 'Server error' });
   }
 };
@@ -200,7 +195,6 @@ const updateUser = async (req, res) => {
     }
     res.status(200).json({ success: true, message: 'User updated', data: user });
   } catch (error) {
-    console.error('Update user error:', error);
     res.status(500).json({ success: false, message: 'Server error' });
   }
 };
@@ -216,7 +210,6 @@ const deleteUser = async (req, res) => {
     }
     res.status(200).json({ success: true, message: 'User deleted' });
   } catch (error) {
-    console.error('Delete user error:', error);
     res.status(500).json({ success: false, message: 'Server error' });
   }
 };
@@ -239,7 +232,6 @@ const resetPassword = async (req, res) => {
     await user.save();
     res.status(200).json({ success: true, message: 'Password reset successfully' });
   } catch (error) {
-    console.error('Reset password error:', error);
     res.status(500).json({ success: false, message: 'Server error' });
   }
 };

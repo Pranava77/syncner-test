@@ -68,9 +68,7 @@ const LevelLearnPage: React.FC = () => {
   const fetchLevel = useCallback(async () => {
     try {
       setLoading(true);
-      console.log('LevelLearnPage: Fetching level with ID:', levelId);
       const response = await apiService.getLevel(levelId!);
-      console.log('LevelLearnPage: Level data response:', response);
       
       let levelData = null;
       if (response && response.data) {
@@ -83,16 +81,11 @@ const LevelLearnPage: React.FC = () => {
       
       // Debug learn data
       if (levelData && levelData.learn) {
-        console.log('LevelLearnPage: Learn data:', levelData.learn);
-        console.log('LevelLearnPage: Learn data length:', levelData.learn.length);
         levelData.learn.forEach((learn: any, index: number) => {
-          console.log(`LevelLearnPage: Learn ${index}:`, learn);
         });
       } else {
-        console.log('LevelLearnPage: No learn data found in level:', levelData);
       }
     } catch (error) {
-      console.error('LevelLearnPage: Error fetching level:', error);
       setError(`Failed to load learning content: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setLoading(false);
@@ -105,12 +98,9 @@ const LevelLearnPage: React.FC = () => {
     
     try {
       const response = await apiService.getLevelSectionStatus(levelId);
-      console.log('Fetch learn progress response:', response);
       
       if (response.success && response.data) {
         const { learn, test } = response.data;
-        console.log('Learn data:', learn);
-        console.log('Test data:', test);
         
         // Safely handle learn data
         const learnProgress = learn?.progress || {
@@ -119,14 +109,12 @@ const LevelLearnPage: React.FC = () => {
           isCompleted: false
         };
         
-        console.log('Setting learn progress:', learnProgress);
         setLearnProgress(learnProgress);
         setIsLearnUnlocked(learn?.isUnlocked ?? true); // Default to true for first level
         setIsTestUnlocked(learnProgress.isCompleted || false); // Test is unlocked when learn is completed
         setAccessedLinks(learnProgress.linksAccessed || []);
       }
     } catch (error) {
-      console.error('Error fetching learn progress:', error);
       // Set default values on error
       setLearnProgress({
         timeSpent: 0,
@@ -149,20 +137,16 @@ const LevelLearnPage: React.FC = () => {
   // Listen for curriculum changes from admin
   useEffect(() => {
     const handleCurriculumChange = (event: CustomEvent) => {
-      console.log('LevelLearnPage: Curriculum change detected:', event.detail);
       // Check both level career track and user career track as fallback
       if (event.detail.track === level?.careerTrack || event.detail.track === user?.careerTrack) {
-        console.log('LevelLearnPage: Refreshing level due to curriculum change in admin');
         // Refresh the current level data
         fetchLevel();
       }
     };
     
     const handleLevelsRefreshRequired = (event: CustomEvent) => {
-      console.log('LevelLearnPage: Immediate refresh required:', event.detail);
       // Check both level career track and user career track as fallback
       if (event.detail.track === level?.careerTrack || event.detail.track === user?.careerTrack) {
-        console.log('LevelLearnPage: Force refreshing level due to immediate refresh requirement');
         // Force immediate refresh
         setTimeout(() => fetchLevel(), 100);
       }
@@ -182,14 +166,12 @@ const LevelLearnPage: React.FC = () => {
     if (level && levelId) {
       // If we have level data but it's not active, it might have been deleted
       if (!level.isActive) {
-        console.log('LevelLearnPage: Current level is not active, redirecting to training page');
         navigate('/student/training');
         return;
       }
       
       // If the level ID doesn't match the level data, it might have been changed
       if (level.id !== levelId) {
-        console.log('LevelLearnPage: Level ID mismatch, redirecting to training page');
         navigate('/student/training');
         return;
       }
@@ -200,11 +182,8 @@ const LevelLearnPage: React.FC = () => {
     if (!levelId) return;
     
     try {
-      console.log('Frontend: Updating learn progress with links:', linksAccessed);
-      console.log('Frontend: Level ID:', levelId);
       
       const response = await apiService.updateLearnProgress(levelId, 0, linksAccessed);
-      console.log('Frontend: Update learn progress response:', response);
       
       if (response.success) {
         // Update local state with new progress
@@ -214,16 +193,13 @@ const LevelLearnPage: React.FC = () => {
           isCompleted: response.data.isCompleted || false
         };
         
-        console.log('Frontend: Setting new learn progress:', newLearnProgress);
         setLearnProgress(newLearnProgress);
         setIsTestUnlocked(response.data.isCompleted || false);
         
         // If learn is completed, mark the learn section as completed
         if (response.data.isCompleted && level) {
           try {
-            console.log('Marking learn section as completed:', { levelId: level.id, levelOrder: level.order, section: 'learn' });
             const completionResult = await apiService.markLevelCompleted(level.id, level.order, 'learn');
-            console.log('Learn section completion result:', completionResult);
             
             // Trigger sidebar refresh to update unlock status
             setRefreshTrigger(prev => prev + 1);
@@ -233,14 +209,12 @@ const LevelLearnPage: React.FC = () => {
             window.dispatchEvent(new CustomEvent('section-completed', { detail: { section: 'learn', levelId: level.id } }));
             localStorage.setItem('level-progress-updated', Date.now().toString());
           } catch (completionError) {
-            console.error('Error marking learn section as completed:', completionError);
           }
         }
         
 
       }
     } catch (error) {
-      console.error('Frontend: Error updating learn progress:', error);
     }
   };
 
@@ -252,7 +226,6 @@ const LevelLearnPage: React.FC = () => {
       linkUrl = item.externalLink;
     } else {
       // No link available - show message or handle gracefully
-      console.log('No external link available for this item');
       return; // Don't proceed if no link is available
     }
     
@@ -268,12 +241,9 @@ const LevelLearnPage: React.FC = () => {
   };
 
   const handleTakeTest = () => {
-    console.log('Take Test clicked - learnProgress.isCompleted:', learnProgress.isCompleted, 'isTestUnlocked:', isTestUnlocked);
     if (learnProgress.isCompleted && isTestUnlocked) {
-      console.log('Navigating to test page');
       navigate(`/student/training/${levelId}/test`);
     } else {
-      console.log('Test not unlocked - learn completed:', learnProgress.isCompleted, 'test unlocked:', isTestUnlocked);
     }
   };
 

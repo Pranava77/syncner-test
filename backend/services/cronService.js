@@ -10,23 +10,18 @@ class CronService {
 
   // Initialize all cron jobs
   init() {
-    console.log('[CRON SERVICE] Initializing cron jobs...');
     
     // Mark absences for yesterday every day at 1 AM
     this.scheduleAttendanceMarking();
     
-    console.log('[CRON SERVICE] Cron jobs initialized successfully');
   }
 
   // Schedule daily attendance marking
   scheduleAttendanceMarking() {
     const job = cron.schedule('0 1 * * *', async () => {
-      console.log('[CRON SERVICE] Running daily attendance marking job...');
       try {
         const result = await this.markAbsencesForYesterday();
-        console.log(`[CRON SERVICE] Attendance marking completed: ${result.markedAbsences} absences marked, ${result.skipped} skipped`);
       } catch (error) {
-        console.error('[CRON SERVICE] Error in attendance marking job:', error);
       }
     }, {
       scheduled: true,
@@ -34,7 +29,6 @@ class CronService {
     });
 
     this.jobs.set('attendance', job);
-    console.log('[CRON SERVICE] Daily attendance marking scheduled for 1:00 AM UTC');
   }
 
   // Mark absences for yesterday
@@ -50,11 +44,9 @@ class CronService {
       const targetDate = new Date(date);
       targetDate.setUTCHours(0, 0, 0, 0);
       
-      console.log(`[CRON SERVICE] Marking absences for date: ${targetDate.toISOString()}`);
       
       // Get all students
       const students = await User.find({ role: 'student' });
-      console.log(`[CRON SERVICE] Found ${students.length} students`);
       
       let markedAbsences = 0;
       let skipped = 0;
@@ -67,7 +59,6 @@ class CronService {
         });
         
         if (existingAttendance) {
-          console.log(`[CRON SERVICE] Attendance already exists for student ${student.name} on ${targetDate.toISOString()}`);
           skipped++;
           continue;
         }
@@ -79,24 +70,19 @@ class CronService {
           status: 'absent'
         });
         
-        console.log(`[CRON SERVICE] Marked absent for student ${student.name} on ${targetDate.toISOString()}`);
         markedAbsences++;
       }
       
-      console.log(`[CRON SERVICE] Completed: marked ${markedAbsences} absences, skipped ${skipped} existing records`);
       return { markedAbsences, skipped, date: targetDate };
     } catch (error) {
-      console.error('[CRON SERVICE ERROR]', error);
       throw error;
     }
   }
 
   // Stop all cron jobs
   stop() {
-    console.log('[CRON SERVICE] Stopping all cron jobs...');
     this.jobs.forEach((job, name) => {
       job.stop();
-      console.log(`[CRON SERVICE] Stopped job: ${name}`);
     });
     this.jobs.clear();
   }
@@ -116,13 +102,10 @@ class CronService {
 
   // Manually trigger attendance marking
   async triggerAttendanceMarking() {
-    console.log('[CRON SERVICE] Manually triggering attendance marking...');
     try {
       const result = await this.markAbsencesForYesterday();
-      console.log(`[CRON SERVICE] Manual attendance marking completed: ${result.markedAbsences} absences marked, ${result.skipped} skipped`);
       return result;
     } catch (error) {
-      console.error('[CRON SERVICE] Error in manual attendance marking:', error);
       throw error;
     }
   }

@@ -38,7 +38,6 @@ const getAllCurriculumItems = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error('Get all curriculum items error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
@@ -67,7 +66,6 @@ const getCurriculumItemById = async (req, res) => {
       data: curriculumItem
     });
   } catch (error) {
-    console.error('Get curriculum item error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
@@ -139,7 +137,6 @@ const createCurriculumItem = async (req, res) => {
       data: curriculumItem
     });
   } catch (error) {
-    console.error('Create curriculum item error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
@@ -188,7 +185,6 @@ const updateCurriculumItem = async (req, res) => {
       data: updatedItem
     });
   } catch (error) {
-    console.error('Update curriculum item error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
@@ -217,7 +213,6 @@ const deleteCurriculumItem = async (req, res) => {
       message: 'Curriculum item deleted successfully'
     });
   } catch (error) {
-    console.error('Delete curriculum item error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
@@ -287,7 +282,6 @@ const getCurriculumStats = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Get curriculum stats error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
@@ -314,7 +308,6 @@ const getCurriculumByTypeAndTrack = async (req, res) => {
       data: items
     });
   } catch (error) {
-    console.error('Get curriculum by type and track error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
@@ -348,7 +341,6 @@ const updateCurriculumOrder = async (req, res) => {
       data: updatedItems
     });
   } catch (error) {
-    console.error('Update curriculum order error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
@@ -382,7 +374,6 @@ const toggleCurriculumStatus = async (req, res) => {
       data: curriculumItem
     });
   } catch (error) {
-    console.error('Toggle curriculum status error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
@@ -412,7 +403,6 @@ const getContentByType = async (req, res) => {
       data: items
     });
   } catch (error) {
-    console.error('Get content by type error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
@@ -480,7 +470,6 @@ const createContentItem = async (req, res) => {
       data: curriculumItem
     });
   } catch (error) {
-    console.error('Create content item error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
@@ -535,7 +524,6 @@ const updateContentItem = async (req, res) => {
       data: curriculumItem
     });
   } catch (error) {
-    console.error('Update content item error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
@@ -564,7 +552,6 @@ const deleteContentItem = async (req, res) => {
       message: 'Content item deleted successfully'
     });
   } catch (error) {
-    console.error('Delete content item error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
@@ -585,7 +572,6 @@ const invalidateCache = async (req, res) => {
       message: 'Cache invalidation request received'
     });
   } catch (error) {
-    console.error('Cache invalidation error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error while invalidating cache'
@@ -628,7 +614,6 @@ const deleteLevelByTrackAndOrder = async (req, res) => {
       message: `Deleted ${result.deletedCount || 0} items for track ${normalizedCareerTrack} level order ${levelOrder}`
     });
   } catch (error) {
-    console.error('Bulk delete level by track+order error:', error);
     return res.status(500).json({
       success: false,
       message: 'Server error while deleting level content'
@@ -643,10 +628,8 @@ const reorderLevelsByTrack = async (req, res) => {
   try {
     const { careerTrack, from, to } = req.body;
     
-    console.log('Reorder request received:', { careerTrack, from, to, body: req.body });
 
     if (!careerTrack || !from || !to) {
-      console.log('Missing required fields:', { careerTrack, from, to });
       return res.status(400).json({
         success: false,
         message: 'careerTrack, from, and to are required'
@@ -657,10 +640,8 @@ const reorderLevelsByTrack = async (req, res) => {
     const fromOrder = parseInt(from, 10);
     const toOrder = parseInt(to, 10);
     
-    console.log('Parsed values:', { normalizedCareerTrack, fromOrder, toOrder });
 
     if (Number.isNaN(fromOrder) || Number.isNaN(toOrder) || fromOrder < 1 || toOrder < 1) {
-      console.log('Invalid order values:', { fromOrder, toOrder });
       return res.status(400).json({
         success: false,
         message: 'from and to must be positive integers'
@@ -680,13 +661,8 @@ const reorderLevelsByTrack = async (req, res) => {
       order: toOrder
     });
     
-    console.log('Found levels:', { 
-      fromLevel: fromLevel ? { id: fromLevel._id, order: fromLevel.order } : null,
-      toLevel: toLevel ? { id: toLevel._id, order: toLevel.order } : null
-    });
 
     if (!fromLevel && !toLevel) {
-      console.log('No levels found for reordering');
       return res.status(404).json({
         success: false,
         message: 'Both levels not found'
@@ -697,7 +673,6 @@ const reorderLevelsByTrack = async (req, res) => {
     const updatePromises = [];
 
     if (fromLevel) {
-      console.log('Updating fromLevel:', fromLevel._id, 'to order:', toOrder);
       updatePromises.push(
         Curriculum.findByIdAndUpdate(
           fromLevel._id,
@@ -707,7 +682,6 @@ const reorderLevelsByTrack = async (req, res) => {
     }
 
     if (toLevel) {
-      console.log('Updating toLevel:', toLevel._id, 'to order:', fromOrder);
       updatePromises.push(
         Curriculum.findByIdAndUpdate(
           toLevel._id,
@@ -717,14 +691,12 @@ const reorderLevelsByTrack = async (req, res) => {
     }
 
     await Promise.all(updatePromises);
-    console.log('Reorder completed successfully');
 
     return res.status(200).json({
       success: true,
       message: `Swapped levels ${fromOrder} and ${toOrder} for track ${normalizedCareerTrack}`
     });
   } catch (error) {
-    console.error('Reorder levels by track error:', error);
     return res.status(500).json({
       success: false,
       message: 'Server error while reordering levels'

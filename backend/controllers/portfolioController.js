@@ -233,22 +233,6 @@ export const getStudentPortfolio = async (req, res) => {
     const allLevelOrders = [...new Set([...curriculumLevelOrders, ...completedLevelOrders])].sort((a, b) => a - b);
     const totalLevels = learningLevelsMap.size;
     
-    console.log('📚 Portfolio Controller Debug:', {
-      studentId,
-      careerTrack: student.careerTrack,
-      curriculumItemsFound: curriculumItems.length,
-      curriculumLevelOrders,
-      completedLevelOrders,
-      allLevelOrders,
-      totalLevels,
-      learningLevelsMapSize: learningLevelsMap.size,
-      progressCompletedLevels: progress?.completedLevels?.length || 0,
-      progressData: progress?.completedLevels?.map(l => ({
-        levelId: l.levelId,
-        levelOrder: l.levelOrder,
-        completedSections: l.completedSections
-      }))
-    });
     
     const learningLevels = Array.from(learningLevelsMap.values()).sort((a, b) => a.level - b.level).map(level => {
       const levelProgress = progress?.completedLevels?.find(l => l.levelOrder === level.level);
@@ -354,7 +338,6 @@ export const getStudentPortfolio = async (req, res) => {
       progress.completedLevels.forEach(level => {
         // Skip levels with invalid levelOrder (0 or undefined)
         if (!level.levelOrder || level.levelOrder === 0) {
-          console.log('⚠️ Portfolio: Skipping level with invalid levelOrder:', level.levelId, 'levelOrder:', level.levelOrder);
           return;
         }
         
@@ -407,7 +390,6 @@ export const getStudentPortfolio = async (req, res) => {
     try {
       leaderboardData = await LeaderboardService.getStudentRank(studentId, student.careerTrack);
     } catch (error) {
-      console.error('Portfolio Controller - Error getting leaderboard data:', error);
       leaderboardData = {
         rank: null,
         totalScore: 0,
@@ -551,7 +533,6 @@ export const getStudentPortfolio = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Get student portfolio error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error while fetching portfolio',

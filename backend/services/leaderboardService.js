@@ -113,7 +113,6 @@ class LeaderboardService {
         rank: null
       };
     } catch (error) {
-      console.error('LeaderboardService - Error calculating student score:', error);
       return {
         totalScore: 0,
         breakdown: {
@@ -148,7 +147,6 @@ class LeaderboardService {
       const validStudents = students.filter(student => student.user && student.user._id);
       
       if (validStudents.length === 0) {
-        console.log('LeaderboardService - No valid students found after filtering null users');
         return [];
       }
       
@@ -163,7 +161,6 @@ class LeaderboardService {
               ...scoreData
             };
           } catch (error) {
-            console.error(`LeaderboardService - Error calculating score for student ${student.user._id}:`, error);
             // Return a default score object for students with errors
             return {
               userId: student.user._id,
@@ -189,7 +186,6 @@ class LeaderboardService {
 
       return studentScores;
     } catch (error) {
-      console.error('LeaderboardService - Error getting leaderboard:', error);
       return [];
     }
   }
@@ -205,7 +201,6 @@ class LeaderboardService {
       const leaderboard = await this.getLeaderboard(careerTrack, 1000); // Get all students
       
       if (!leaderboard || leaderboard.length === 0) {
-        console.log('LeaderboardService - No leaderboard data available');
         return {
           rank: null,
           totalScore: 0,
@@ -231,7 +226,6 @@ class LeaderboardService {
         };
       } else {
         // Student not found in leaderboard, calculate their score directly
-        console.log(`LeaderboardService - Student ${userId} not found in leaderboard, calculating directly`);
         const scoreData = await this.calculateStudentScore(userId, careerTrack);
         return {
           rank: null,
@@ -239,7 +233,6 @@ class LeaderboardService {
         };
       }
     } catch (error) {
-      console.error('LeaderboardService - Error getting student rank:', error);
       return {
         rank: null,
         totalScore: 0,
@@ -267,7 +260,6 @@ class LeaderboardService {
         rank
       };
     } catch (error) {
-      console.error('LeaderboardService - Error updating student score:', error);
       return null;
     }
   }
