@@ -17,7 +17,7 @@ const register = async (req, res) => {
       });
     }
 
-    const { name, email, password, college, role = 'student' } = req.body;
+    const { name, email, password, college, careerTrack, role = 'student' } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -34,6 +34,7 @@ const register = async (req, res) => {
       email,
       password,
       college,
+      careerTrack,
       role
     });
 
