@@ -11,6 +11,8 @@ const requiredEnvVars = ['MONGODB_URI', 'JWT_SECRET'];
 const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
 
 if (missingEnvVars.length > 0) {
+  console.error('❌ Missing required environment variables:', missingEnvVars.join(', '));
+  console.error('Please check your .env file and ensure all required variables are set.');
   process.exit(1);
 }
 
@@ -31,6 +33,7 @@ const server = app.listen(PORT, () => {
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err, promise) => {
+  console.error('❌ Unhandled Promise Rejection:', err);
   // Close server & exit process
   server.close(() => {
     process.exit(1);
@@ -39,6 +42,7 @@ process.on('unhandledRejection', (err, promise) => {
 
 // Handle uncaught exceptions
 process.on('uncaughtException', (err) => {
+  console.error('❌ Uncaught Exception:', err);
   process.exit(1);
 });
 
