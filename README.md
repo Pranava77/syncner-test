@@ -1,274 +1,151 @@
-# Syncner - Learning Management System
+# Syncner
 
-## 🎯 Project Overview
+A learning platform with a Gemini-backed career mentor. React and TypeScript on the front end, an Express and MongoDB API behind it, and separate surfaces for students, staff and admins.
 
-Syncner is a comprehensive Learning Management System (LMS) designed to provide an interactive and engaging learning experience for students across multiple career tracks. The platform offers structured learning paths, progress tracking, portfolio management, and administrative tools for educational institutions.
+**[Live demo](https://syncner-test.netlify.app)** · Built by [Pranava Holla](https://github.com/Pranava77) at [WEBFIXUS](https://webfixus.com)
 
-## ✨ Key Features
-
-### 🎓 For Students
-- **Interactive Learning Paths**: Structured curriculum with Learn, Test, and Exercise sections
-- **Progress Tracking**: Real-time progress monitoring with visual indicators
-- **Portfolio Management**: Dynamic portfolio generation with shareable links
-- **AI Career Mentor**: Integrated AI chat for learning assistance
-- **Attendance Tracking**: Automated attendance marking and streak tracking
-- **Leaderboard**: Gamified learning with rankings and achievements
-
-### 👨‍🏫 For Staff
-- **Student Management**: Comprehensive student tracking and analytics
-- **Progress Monitoring**: Detailed learning journey visualization
-- **Portfolio Review**: Access to student portfolios and progress reports
-- **Analytics Dashboard**: Performance metrics and insights
-- **Attendance Management**: Track student attendance and engagement
-
-### 🔧 For Administrators
-- **User Management**: Complete user lifecycle management
-- **Curriculum Management**: Create and manage learning content
-- **System Analytics**: Platform-wide performance metrics
-- **Settings Configuration**: System-wide settings and preferences
-- **Content Management**: Manage learning materials, tests, and exercises
-
-## 🏗️ Technical Architecture
-
-### Frontend
-- **Framework**: React 18 with TypeScript
-- **State Management**: Redux Toolkit
-- **Styling**: Tailwind CSS with custom design system
-- **Animations**: Framer Motion
-- **Routing**: React Router v6
-- **Build Tool**: Vite
-
-### Backend
-- **Runtime**: Node.js with Express.js
-- **Database**: MongoDB with Mongoose ODM
-- **Authentication**: JWT-based authentication
-- **File Storage**: Local file system with upload capabilities
-- **AI Integration**: Google Gemini API for AI chat functionality
-
-### Key Technologies
-- **Frontend**: React, TypeScript, Redux Toolkit, Tailwind CSS, Framer Motion
-- **Backend**: Node.js, Express.js, MongoDB, Mongoose, JWT
-- **AI**: Google Gemini API
-- **Deployment**: Vercel (Frontend), Render (Backend)
-
-## 🚀 Quick Start
-
-### Prerequisites
-- Node.js 18+ 
-- MongoDB 6+
-- npm or yarn
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd syncner
-   ```
-
-2. **Install dependencies**
-   ```bash
-   # Frontend
-   cd src
-   npm install
-   
-   # Backend
-   cd ../backend
-   npm install
-   ```
-
-3. **Environment Setup**
-   ```bash
-   # Backend environment variables
-   cp backend/.env.example backend/.env
-   # Edit backend/.env with your configuration
-   ```
-
-4. **Database Setup**
-   ```bash
-   # Start MongoDB
-   mongod
-   
-   # Run database migrations (if any)
-   cd backend
-   node migrations/fixCareerTracks.js
-   ```
-
-5. **Start Development Servers**
-   ```bash
-   # Backend (Terminal 1)
-   cd backend
-   npm run dev
-   
-   # Frontend (Terminal 2)
-   cd src
-   npm run dev
-   ```
-
-6. **Access the Application**
-   - Frontend: http://localhost:5173
-   - Backend API: http://localhost:5000
-
-## 📁 Project Structure
-
-```
-syncner/
-├── src/                          # Frontend React application
-│   ├── components/              # Reusable UI components
-│   ├── pages/                   # Page components
-│   ├── redux/                   # State management
-│   ├── services/                # API services
-│   ├── hooks/                   # Custom React hooks
-│   ├── utils/                   # Utility functions
-│   └── types/                   # TypeScript type definitions
-├── backend/                     # Backend Node.js application
-│   ├── controllers/             # Route controllers
-│   ├── models/                  # Database models
-│   ├── routes/                  # API routes
-│   ├── middleware/              # Custom middleware
-│   ├── services/                # Business logic services
-│   ├── utils/                   # Utility functions
-│   └── migrations/              # Database migrations
-└── docs/                        # Documentation
-    ├── API.md                   # API documentation
-    ├── DEPLOYMENT.md            # Deployment guide
-    ├── USER_MANUAL.md           # User manual
-    └── TROUBLESHOOTING.md       # Troubleshooting guide
-```
-
-## 🔐 User Roles & Permissions
-
-### Student
-- Access to learning materials and curriculum
-- Submit tests and exercises
-- View personal progress and portfolio
-- Access AI chat assistance
-
-### Staff
-- View student progress and analytics
-- Access student portfolios
-- Monitor attendance and engagement
-- Generate reports
-
-### Admin
-- Full system access
-- User management (create, edit, delete)
-- Curriculum management
-- System configuration
-- Analytics and reporting
-
-## 🎨 Design System
-
-The application uses a custom design system with:
-- **Color Palette**: Primary, secondary, accent colors with dark/light mode support
-- **Typography**: Consistent font hierarchy and sizing
-- **Components**: Reusable UI components with consistent styling
-- **Responsive Design**: Mobile-first approach with breakpoints
-
-## 🔧 Configuration
-
-### Environment Variables
-
-#### Backend (.env)
-```env
-NODE_ENV=development
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/syncner
-JWT_SECRET=your-jwt-secret
-JWT_EXPIRE=30d
-GEMINI_API_KEY=your-gemini-api-key
-```
-
-#### Frontend (.env)
-```env
-VITE_API_URL=http://localhost:5000
-VITE_APP_NAME=Syncner
-```
-
-## 📊 Database Schema
-
-### Core Models
-- **User**: Student, staff, and admin user accounts
-- **Curriculum**: Learning content and levels
-- **UserProgress**: Student progress tracking
-- **Attendance**: Attendance records
-- **Settings**: System configuration
-
-## 🚀 Deployment
-
-### Production Deployment
-1. **Frontend (Vercel)**
-   - Connect GitHub repository
-   - Configure build settings
-   - Set environment variables
-
-2. **Backend (Render)**
-   - Connect GitHub repository
-   - Configure build and start commands
-   - Set environment variables
-   - Configure MongoDB Atlas connection
-
-### Environment Setup
-- Production MongoDB: MongoDB Atlas
-- File Storage: Local storage or cloud storage
-- SSL: Automatic with Vercel/Render
-
-## 📈 Performance & Monitoring
-
-### Performance Optimizations
-- Code splitting and lazy loading
-- Image optimization
-- Caching strategies
-- Database indexing
-
-### Monitoring
-- Error tracking and logging
-- Performance metrics
-- User analytics
-- System health monitoring
-
-## 🔒 Security Features
-
-- JWT-based authentication
-- Role-based access control
-- Input validation and sanitization
-- CORS configuration
-- Rate limiting
-- Secure file uploads
-
-## 📱 Browser Support
-
-- Chrome 90+
-- Firefox 88+
-- Safari 14+
-- Edge 90+
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
-
-## 📄 License
-
-This project is proprietary software. All rights reserved.
-
-## 📞 Support
-
-For technical support or questions:
-- Email: support@syncner.com
-- Documentation: See `/docs` folder
-- Issues: Create GitHub issues for bugs
-
-## 🔄 Version History
-
-- **v1.0.0** - Initial release with core features
-- **v1.1.0** - Added AI chat integration
-- **v1.2.0** - Enhanced portfolio system
-- **v1.3.0** - Improved analytics and reporting
+`React 18 · TypeScript · Redux Toolkit · Tailwind · Express · MongoDB · JWT · Gemini`
 
 ---
 
-**Built with ❤️ By WEBFIXUS for modern education**
+## What it does
+
+Students pick one of four career tracks (Full Stack, AI/ML, UI/UX, Data Science) and work through levels. Each level has three parts, and each part gates the next:
+
+1. **Learn**: lesson content, with progress tracked as you go.
+2. **Test**: unlocks after the Learn section. The pass mark is 60%, with three attempts.
+3. **Exercise**: unlocks when the test is passed.
+
+Progress feeds a generated portfolio with a public share link (`/portfolio/public/:studentId`) and a leaderboard for staff. Students also get an AI mentor to chat with.
+
+| Role | Can do |
+|---|---|
+| **Student** | Learning path, tests and exercises, portfolio, AI mentor |
+| **Staff** | Track students, view each student's learning timeline and portfolio, leaderboard |
+| **Admin** | Manage users, staff and curriculum; platform analytics; system settings, including the Gemini key |
+
+## How it's built
+
+The front end is a fairly standard React app. The interesting half is the API.
+
+- **Accounts and roles.** JWT auth, with `authorize(role)` guarding staff and admin routes. Public signup only creates students; staff and admin accounts are created by an admin through `POST /api/admin/users`, so the role field on signup can't be used to escalate.
+- **Validation at the edge.** Auth routes validate and normalise input with `express-validator` before a controller runs.
+- **The model key lives in settings.** The Gemini key is read from the admin settings document first and falls back to `GEMINI_API_KEY`. Rotating a key is a settings change rather than a redeploy. Calls go through the API (`POST /api/ai/chat`, authenticated), so the key never reaches the browser.
+- **Attendance without a check-in button.** Any authenticated request marks the student present for that day. In production, a nightly job (01:00 UTC) marks everyone who didn't show up as absent.
+- **A leaderboard that rewards showing up.** Each student's score weights learning progress at 40%, attendance at 25%, streak at 20% and time spent learning at 15%.
+- **Production hardening.** `helmet`, response compression, and a rate limit of 100 requests per 15 minutes per IP on `/api` when `NODE_ENV=production`.
+
+## Running it locally
+
+**You'll need** Node.js 20.19+ (required by Vite 7) and MongoDB 6+, either installed locally or on [MongoDB Atlas](https://www.mongodb.com/atlas).
+
+```bash
+git clone https://github.com/Pranava77/syncner-test.git
+cd syncner-test
+npm install
+npm --prefix backend install
+```
+
+**Configure the backend.** Copy the example file, then set at least `MONGODB_URI` and a fresh `JWT_SECRET` (for example from `openssl rand -hex 32`):
+
+```bash
+cp backend/.env.example backend/.env
+```
+
+On macOS, port 5000 is taken by AirPlay Receiver, so set `PORT=5001` in `backend/.env`.
+
+**Point the front end at it.** Create `.env` in the project root. The value must end in `/api`:
+
+```env
+VITE_API_URL=http://localhost:5001/api
+```
+
+> If `VITE_API_URL` isn't set, the front end falls back to the **production** API, and anything you do locally will write to the live database.
+
+**Start both servers** in separate terminals:
+
+```bash
+npm --prefix backend run dev   # API on http://localhost:5001
+npm run dev                    # app on http://localhost:5173
+```
+
+The API's CORS settings allow `localhost:5173` and `localhost:3000`, so keep the front end on one of those ports.
+
+**Add curriculum and an admin.** The seed script needs at least one user to exist, so register through the app first, then run it. It replaces all existing curriculum:
+
+```bash
+cd backend && node seedData.js
+```
+
+Signup only creates students. To get your first admin, change that user's role directly in the database:
+
+```bash
+mongosh "mongodb://127.0.0.1:27017/Syncner-test" --eval 'db.users.updateOne({ email: "you@example.com" }, { $set: { role: "admin" } })'
+```
+
+### Environment variables
+
+Backend (`backend/.env`):
+
+| Variable | Required | Purpose |
+|---|---|---|
+| `MONGODB_URI` | Yes | MongoDB connection string |
+| `JWT_SECRET` | Yes | Signs auth tokens. Use a long random value |
+| `PORT` | No | API port (default `5000`) |
+| `JWT_EXPIRE` | No | Token lifetime (default `7d`) |
+| `GEMINI_API_KEY` | No | Fallback when no key is saved in admin settings |
+| `NODE_ENV` | No | `production` turns on rate limiting and the nightly attendance job |
+| `DIAGNOSTICS_BASE_URL` | No | Base URL the admin diagnostics endpoint uses to call the API's health checks |
+
+The backend refuses to start without `MONGODB_URI` and `JWT_SECRET`, and logs which one is missing.
+
+Front end (`.env`):
+
+| Variable | Purpose |
+|---|---|
+| `VITE_API_URL` | API base URL, including `/api`. Falls back to the production API |
+
+## Deployment
+
+| Part | Where | Notes |
+|---|---|---|
+| Front end | Netlify | `public/_redirects` proxies `/api/*` to the Render API and serves `index.html` for client-side routes |
+| API | Render | Set the backend variables above, with `NODE_ENV=production` |
+| Database | MongoDB Atlas | Allow connections from Render under Network Access |
+
+`vercel.json` files are also included if you'd rather deploy either half to Vercel.
+
+## Project layout
+
+```
+src/
+  pages/            Student and admin screens; staff screens in pages/staff/
+  redux/slices/     Auth, curriculum, learning journey, portfolio, staff, analytics, settings, theme, ...
+  services/         API client (api.ts) and portfolio/timeline helpers
+backend/
+  routes/           Express routers, one per area (auth, admin, curriculum, progress, ...)
+  controllers/      Request handlers
+  models/           Mongoose schemas: User, Curriculum, UserProgress, Attendance, Track, Settings
+  middleware/       JWT auth, activity tracking, validation, error handling
+  services/         Gemini client, leaderboard scoring, scheduled jobs
+  migrations/       One-off data fixes
+docs/               Architecture, API, schema, setup and deployment guides
+```
+
+## Documentation
+
+The [`docs/`](docs) folder has the longer-form material:
+
+- **Design:** [high-level design](docs/HLD.pdf), [low-level design](docs/LLD.pdf), [technical architecture](docs/TECHNICAL_ARCHITECTURE.pdf), [application flow](docs/APPLICATION_FLOW_DIAGRAM.html)
+- **API:** [API reference](docs/API.pdf), [complete endpoint list](docs/COMPLETE_API_ENDPOINTS.pdf), [endpoint summary](docs/API_ENDPOINTS_SUMMARY.html)
+- **Data:** [database schema](docs/DATABASE_SCHEMA.pdf), [schema diagrams](docs/SCHEMA_DIAGRAMS.html)
+- **Operations:** [setup guide](docs/SETUP_GUIDE.md), [deployment](docs/DEPLOYMENT.pdf), [troubleshooting](docs/TROUBLESHOOTING.pdf), [user manual](docs/USER_MANUAL.pdf)
+
+## Author
+
+**Pranava Holla**, full-stack AI engineer in Bangalore, running [WEBFIXUS](https://webfixus.com).
+[GitHub](https://github.com/Pranava77) · [pranavarholla@gmail.com](mailto:pranavarholla@gmail.com)
+
+## License
+
+Proprietary. All rights reserved.
