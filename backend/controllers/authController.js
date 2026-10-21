@@ -17,7 +17,7 @@ const register = async (req, res) => {
       });
     }
 
-    const { name, email, password, college, careerTrack, role = 'student' } = req.body;
+    const { name, email, password, college, careerTrack } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -28,14 +28,14 @@ const register = async (req, res) => {
       });
     }
 
-    // Create user
+    // Create user (public signup is students only; staff and admins are created by an admin)
     const user = await User.create({
       name,
       email,
       password,
       college,
       careerTrack,
-      role
+      role: 'student'
     });
 
     // Generate token
