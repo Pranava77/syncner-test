@@ -14,7 +14,7 @@ const registerValidation = [
   body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
   body('college').trim().notEmpty().withMessage('College is required'),
   body('careerTrack').isIn(['ai-ml', 'full-stack', 'fullstack', 'ui-ux', 'data-science']).withMessage('Invalid career track. Must be one of: full-stack, fullstack, ai-ml, ui-ux, data-science'),
-  body('role').isIn(['student', 'admin', 'staff']).withMessage('Invalid role'),
+  body('role').optional().equals('student').withMessage('Only student accounts can be created through registration'),
   validateRequest
 ];
 
